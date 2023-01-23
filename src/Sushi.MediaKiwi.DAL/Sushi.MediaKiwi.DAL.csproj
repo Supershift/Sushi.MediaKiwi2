@@ -4,10 +4,11 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Sushi.MicroORM" Version="3.0.0-a" />
+    <PackageReference Include="Sushi.MicroORM" Version="3.0.0-a1" />
   </ItemGroup>
 
 </Project>
