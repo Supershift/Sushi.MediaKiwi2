@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sushi.MediaKiwi.DAL", "src\Sushi.MediaKiwi.DAL\Sushi.MediaKiwi.DAL.csproj", "{A541B063-508E-4C44-8DA0-C584F73F292B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sushi.MediaKiwi.DAL.UnitTests", "tests\Sushi.MediaKiwi.DAL.UnitTests\Sushi.MediaKiwi.DAL.UnitTests.csproj", "{8F19C9B3-129D-4AF3-8103-B0342104F9D4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A541B063-508E-4C44-8DA0-C584F73F292B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A541B063-508E-4C44-8DA0-C584F73F292B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A541B063-508E-4C44-8DA0-C584F73F292B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A541B063-508E-4C44-8DA0-C584F73F292B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F19C9B3-129D-4AF3-8103-B0342104F9D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F19C9B3-129D-4AF3-8103-B0342104F9D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F19C9B3-129D-4AF3-8103-B0342104F9D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F19C9B3-129D-4AF3-8103-B0342104F9D4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7C0DA249-319F-4B70-AC2F-DD5AB1CFB211}
+	EndGlobalSection
+EndGlobal
