@@ -10,7 +10,7 @@ namespace Sushi.MediaKiwi.DAL.Repository
     /// <summary>
     /// Contains methods to read and write <see cref="Section"/> objects.
     /// </summary>
-    public class SectionRepository
+    public class SectionRepository : ISectionRepository
     {
         private readonly IConnector<Section> _connector;
 
@@ -18,7 +18,7 @@ namespace Sushi.MediaKiwi.DAL.Repository
         /// Creates a new instance of <see cref="SectionRepository"/>.
         /// </summary>
         /// <param name="connector"></param>
-        public SectionRepository(IConnector<Section> connector) 
+        public SectionRepository(IConnector<Section> connector)
         {
             _connector = connector;
         }

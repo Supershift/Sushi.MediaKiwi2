@@ -1,0 +1,34 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Sushi.MediaKiwi.Services.Model
+{
+    public class ListResult<T>
+    {
+        public ListResult() : this(null, null) { }
+
+        public ListResult(List<T> result) : this(result, null, null) { }
+
+        public ListResult(int? totalCount, int? pageCount) : this(new List<T>(), totalCount, pageCount) { }
+
+        public ListResult(List<T> result, int? totalCount, int? pageCount)
+        {
+            Result = result;
+            TotalCount = totalCount;
+            PageCount = pageCount;
+        }
+
+        public List<T> Result { get; }
+        /// <summary>
+        /// The total number of records.
+        /// </summary>
+        public int? TotalCount { get; }
+        /// <summary>
+        /// The total number of pages, based on the requested page size.
+        /// </summary>
+        public int? PageCount { get; }
+    }
+}

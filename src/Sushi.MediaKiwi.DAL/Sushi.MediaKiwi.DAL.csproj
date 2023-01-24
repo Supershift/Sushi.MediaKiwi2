@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Sushi.MicroORM" Version="3.0.0-a1" />
+    <PackageReference Include="Sushi.MicroORM" Version="3.0.0-a2" />
   </ItemGroup>
 
 </Project>
