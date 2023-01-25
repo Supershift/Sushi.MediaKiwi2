@@ -7,11 +7,18 @@ using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.Services.Model
 {
+    /// <summary>
+    /// Contains Automapper mappings for mapping DAL objects to Model objects.
+    /// </summary>
     public class AutoMapperProfile : Profile
     {
+        /// <summary>
+        /// Creates a new instance of <see cref="AutoMapperProfile"/>.
+        /// </summary>
         public AutoMapperProfile()
         {
             CreateMap<DAL.Section, Section>();
+            CreateMap<DAL.Screen, Screen>();
         }
     }
 }

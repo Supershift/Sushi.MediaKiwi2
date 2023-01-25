@@ -3,7 +3,7 @@
 namespace Sushi.MediaKiwi.DAL.Repository
 {
     /// <summary>
-    /// Contains methods to read and write <see cref="Section"/> objects.
+    /// Provides methods to read and write <see cref="Section"/> objects.
     /// </summary>
     public interface ISectionRepository
     {

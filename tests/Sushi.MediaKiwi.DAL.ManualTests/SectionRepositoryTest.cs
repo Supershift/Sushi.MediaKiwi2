@@ -6,20 +6,20 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
     public class SectionRepositoryTest : IClassFixture<ConfigFixture>
     {
         private readonly ConfigFixture _configFixture;
+        private readonly ISectionRepository _repository;
 
         public SectionRepositoryTest(ConfigFixture configFixture)
         {
             _configFixture = configFixture;
+            _repository = _configFixture.Services.GetRequiredService<ISectionRepository>();
         }
         
         [Fact]
         public async Task GetAllTest()
         {
-            var repository = _configFixture.Services.GetRequiredService<SectionRepository>();
+            var sections = await _repository.GetAllAsync();
 
-            var sections = await repository.GetAllAsync();
-
-            Assert.Equal(1, sections.Count);
+            Assert.Equal(2, sections.Count);
         }
     }
 }

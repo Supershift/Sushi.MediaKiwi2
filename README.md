@@ -1,1 +1,1 @@
-# Sushi.MediaKiwi2
+# Sushi.MediaKiwi
