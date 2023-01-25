@@ -7,9 +7,7 @@ using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.DAL.Repository
 {
-    /// <summary>
-    /// Contains methods to read and write <see cref="Section"/> objects.
-    /// </summary>
+    /// <inheritdoc/>
     public class SectionRepository : ISectionRepository
     {
         private readonly IConnector<Section> _connector;
@@ -23,13 +21,10 @@ namespace Sushi.MediaKiwi.DAL.Repository
             _connector = connector;
         }
 
-        /// <summary>
-        /// Gets all sections from the database.
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public async Task<QueryListResult<Section>> GetAllAsync()
         {
-            var query = _connector.CreateQuery();
+            var query = _connector.CreateQuery();            
             var result = await _connector.GetAllAsync(query);
             return result;
         }

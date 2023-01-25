@@ -13,7 +13,8 @@ namespace Sushi.MediaKiwi.Services
         ValidationFailed,
         NotFound,
         NotAllowed,        
-        Failed        
+        Failed,
+        DeleteConstraintViolation
     }
 
     public class Result

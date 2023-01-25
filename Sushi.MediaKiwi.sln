@@ -9,9 +9,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sushi.MediaKiwi.DAL.UnitTes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sushi.MediaKiwi.DAL.ManualTests", "tests\Sushi.MediaKiwi.DAL.ManualTests\Sushi.MediaKiwi.DAL.ManualTests.csproj", "{2CFF3199-CFE4-4FDA-B463-56F95A7A558C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sushi.MediaKiwi.Services", "src\Sushi.MediaKiwi.Services\Sushi.MediaKiwi.Services.csproj", "{83A2193D-7C86-46AE-9590-B63D13655A2C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sushi.MediaKiwi.Services", "src\Sushi.MediaKiwi.Services\Sushi.MediaKiwi.Services.csproj", "{83A2193D-7C86-46AE-9590-B63D13655A2C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sushi.MediaKiwi.Services.UnitTests", "tests\Sushi.MediaKiwi.Services.UnitTests\Sushi.MediaKiwi.Services.UnitTests.csproj", "{3FD7C698-819F-4B34-8C38-B9DF456AC660}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sushi.MediaKiwi.Services.UnitTests", "tests\Sushi.MediaKiwi.Services.UnitTests\Sushi.MediaKiwi.Services.UnitTests.csproj", "{3FD7C698-819F-4B34-8C38-B9DF456AC660}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sushi.MediaKiwi.WebAPI", "src\Sushi.MediaKiwi.WebAPI\Sushi.MediaKiwi.WebAPI.csproj", "{18257B9E-DF4B-48D8-B800-873404149E90}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sushi.MediaKiwi.WebAPI.UnitTests", "Sushi.MediaKiwi.WebAPI.UnitTests\Sushi.MediaKiwi.WebAPI.UnitTests.csproj", "{5F439C65-9412-4402-91BC-C7E90C455A84}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sushi.MediaKiwi.SampleAPI", "src\Sushi.MediaKiwi.SampleAPI\Sushi.MediaKiwi.SampleAPI.csproj", "{122479F5-C88A-4CBE-9A1D-C83B4A938D21}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F5870DA1-CB60-40F3-83D7-C1E8C106587C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,9 +47,27 @@ Global
 		{3FD7C698-819F-4B34-8C38-B9DF456AC660}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FD7C698-819F-4B34-8C38-B9DF456AC660}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FD7C698-819F-4B34-8C38-B9DF456AC660}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18257B9E-DF4B-48D8-B800-873404149E90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18257B9E-DF4B-48D8-B800-873404149E90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18257B9E-DF4B-48D8-B800-873404149E90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18257B9E-DF4B-48D8-B800-873404149E90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F439C65-9412-4402-91BC-C7E90C455A84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F439C65-9412-4402-91BC-C7E90C455A84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F439C65-9412-4402-91BC-C7E90C455A84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F439C65-9412-4402-91BC-C7E90C455A84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{122479F5-C88A-4CBE-9A1D-C83B4A938D21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{122479F5-C88A-4CBE-9A1D-C83B4A938D21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{122479F5-C88A-4CBE-9A1D-C83B4A938D21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{122479F5-C88A-4CBE-9A1D-C83B4A938D21}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8F19C9B3-129D-4AF3-8103-B0342104F9D4} = {F5870DA1-CB60-40F3-83D7-C1E8C106587C}
+		{2CFF3199-CFE4-4FDA-B463-56F95A7A558C} = {F5870DA1-CB60-40F3-83D7-C1E8C106587C}
+		{3FD7C698-819F-4B34-8C38-B9DF456AC660} = {F5870DA1-CB60-40F3-83D7-C1E8C106587C}
+		{5F439C65-9412-4402-91BC-C7E90C455A84} = {F5870DA1-CB60-40F3-83D7-C1E8C106587C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C0DA249-319F-4B70-AC2F-DD5AB1CFB211}

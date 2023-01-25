@@ -16,7 +16,7 @@ namespace Sushi.MediaKiwi.DAL
         {
             services.AddMicroORM(defaultConnectionString, config);
 
-            services.TryAddTransient<SectionRepository>();
+            services.TryAddTransient<ISectionRepository, SectionRepository>();
 
             return services;
         }
