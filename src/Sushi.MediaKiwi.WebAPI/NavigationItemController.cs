@@ -4,18 +4,18 @@ using Sushi.MediaKiwi.Services.Model;
 
 namespace Sushi.MediaKiwi.WebAPI
 {       
-    [Route("mediakiwi/api/navigationitems")]
-    public class NavigationItemController : MediaKiwiControllerBase
+    [Route("mediakiwi/api/screens")]
+    public class ScreenController : MediaKiwiControllerBase
     {
-        private readonly NavigationItemService _screenService;
+        private readonly ScreenService _screenService;
 
-        public NavigationItemController(NavigationItemService screenService)
+        public ScreenController(ScreenService screenService)
         {
             _screenService = screenService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<ListResult<NavigationItem>>> GetNavigationItems([FromQuery] int? sectionID)
+        public async Task<ActionResult<ListResult<Screen>>> GetScreens([FromQuery] int? sectionID)
         {
             var result = await _screenService.GetAllAsync(sectionID);
             return this.CreateResponse(result);

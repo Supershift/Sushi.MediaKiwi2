@@ -14,6 +14,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             serviceProvider.GetRequiredService<SectionService>();
             serviceProvider.GetRequiredService<ScreenService>();
+            serviceProvider.GetRequiredService<NavigationItemService>();
         }
     }
 }
