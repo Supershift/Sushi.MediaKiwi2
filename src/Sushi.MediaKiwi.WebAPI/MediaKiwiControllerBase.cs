@@ -1,0 +1,18 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Sushi.MediaKiwi.WebAPI
+{
+    /// <summary>
+    /// Serves as a base class for all MediaKiwi controllers, setting shared attributes.
+    /// </summary>
+    [ApiController]
+    [ApiExplorerSettings(GroupName = "MediaKiwi")]
+    public abstract class MediaKiwiControllerBase : ControllerBase
+    {
+    }
+}

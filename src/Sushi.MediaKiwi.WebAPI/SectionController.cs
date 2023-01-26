@@ -3,9 +3,7 @@ using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
 
 namespace Sushi.MediaKiwi.WebAPI
-{
-    [ApiExplorerSettings(GroupName = "MediaKiwi")]
-    [ApiController]
+{   
     [Route("mediakiwi/api/sections")]
     public class SectionController : ControllerBase
     {

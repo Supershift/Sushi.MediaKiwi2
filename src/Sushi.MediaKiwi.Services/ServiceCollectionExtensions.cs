@@ -14,18 +14,26 @@ namespace Sushi.MediaKiwi.Services
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddMediaKiwiServices(this IServiceCollection services, string defaultConnectionString, Action<MicroOrmConfigurationBuilder>? config = null)
+        /// <summary>
+        /// Adds all services needed to run MediaKiwi to the <paramref name="collection"/>, including Sushi.MicroOrm.
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <param name="defaultConnectionString"></param>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddMediaKiwiServices(this IServiceCollection collection, string defaultConnectionString, Action<MicroOrmConfigurationBuilder>? config = null)
         {
             // add DAL (which includes MicroORM)
-            services.AddMediaKiwiDAL(defaultConnectionString, config);
+            collection.AddMediaKiwiDAL(defaultConnectionString, config);
 
             // add automapper
-            services.AddAutoMapper(c => c.AddProfile<AutoMapperProfile>());
+            collection.AddAutoMapper(c => c.AddProfile<AutoMapperProfile>());
 
             // add services
-            services.TryAddTransient<SectionService>();
+            collection.TryAddTransient<SectionService>();
+            collection.TryAddTransient<ScreenService>();
 
-            return services;
+            return collection;
         }
     }
 }
