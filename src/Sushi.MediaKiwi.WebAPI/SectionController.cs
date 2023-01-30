@@ -3,9 +3,9 @@ using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
 
 namespace Sushi.MediaKiwi.WebAPI
-{   
-    [Route("mediakiwi/api/sections")]
-    public class SectionController : ControllerBase
+{
+    [Route($"{BaseRoute}/sections")]
+    public class SectionController : MediaKiwiControllerBase
     {
         private readonly SectionService _sectionService;
 
