@@ -1,0 +1,34 @@
+﻿using Swashbuckle.AspNetCore.Annotations;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Sushi.MediaKiwi.Services.Model
+{
+    /// <summary>
+    /// Represents a section containing related screens within a portal.
+    /// </summary>
+    public class Section
+    {
+        /// <summary>
+        /// Unique identifier for this section.
+        /// </summary>
+        [SwaggerSchema(ReadOnly = true)]
+        public int Id { get; set; }
+
+        /// <summary>
+        /// Name for this section.
+        /// </summary>
+        [Required, StringLength(128)]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Value used when sorting sections.
+        /// </summary>
+        [SwaggerSchema(ReadOnly = true)]
+        public int SortOrder { get; set; }
+    }
+}
