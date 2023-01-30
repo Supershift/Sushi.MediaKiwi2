@@ -14,5 +14,9 @@ namespace Sushi.MediaKiwi.WebAPI
     [ApiExplorerSettings(GroupName = "MediaKiwi")]
     public abstract class MediaKiwiControllerBase : ControllerBase
     {
+        /// <summary>
+        /// The basepath to be used for all MediaKiwi endpoints.
+        /// </summary>
+        public const string BaseRoute = "mediakiwi/api";
     }
 }
