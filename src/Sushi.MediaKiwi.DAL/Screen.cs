@@ -16,15 +16,17 @@ namespace Sushi.MediaKiwi.DAL
             {
                 Table("mk_Screens");
                 Id(x => x.Id, "ScreenID");
-                Map(x => x.Name, "Name").SqlType(SqlDbType.NVarChar);
-                Map(x => x.SectionId, "SectionID");
-                Map(x => x.ExternalId, "ExternalID").SqlType(SqlDbType.VarChar);
-                Map(x => x.FilePath, "FilePath").SqlType(SqlDbType.VarChar);
+                Map(x => x.ComponentName, "ComponentName").SqlType(SqlDbType.VarChar);
+                Map(x => x.Name, "Name").SqlType(SqlDbType.NVarChar);                
+                Map(x => x.SectionId, "SectionID");                                
             }
         }
         
         public int Id { get; set; }
-        public string ExternalId { get; set; }
+        /// <summary>
+        /// Gets or sets the registered name of the Vue the component implementing this screen.
+        /// </summary>
+        public string ComponentName { get; set; }
         public string Name { get; set; }
         public string FilePath { get; set; }
         public int SectionId { get; set; }

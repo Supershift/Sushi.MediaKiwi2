@@ -26,6 +26,12 @@ namespace Sushi.MediaKiwi.Services.Model
         public string Name { get; set; }
 
         /// <summary>
+        /// The registered name of the Vue the component implementing this screen.
+        /// </summary>
+        [Required, StringLength(128)]
+        public string ComponentName { get; set; }
+
+        /// <summary>
         /// Section to which this screen belongs.
         /// </summary>
         [SwaggerSchema(ReadOnly = true)]

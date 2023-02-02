@@ -15,7 +15,7 @@ const myValue = 'hello';
   </div> 
   <div>
     <component :is="currentScreen"></component>
-  </div> 
+  </div>   
 </template>
 
 
