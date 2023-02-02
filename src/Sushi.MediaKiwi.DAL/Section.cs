@@ -12,9 +12,9 @@ namespace Sushi.MediaKiwi.DAL
             public SectionMap()
             {
                 Table("mk_Sections");
-                Id(x => x.Id, "Section_Id");
-                Map(x => x.Name, "Section_Name").SqlType(System.Data.SqlDbType.NVarChar);
-                Map(x => x.SortOrder, "Section_SortOrder");
+                Id(x => x.Id, "SectionID");
+                Map(x => x.Name, "Name").SqlType(System.Data.SqlDbType.NVarChar);
+                Map(x => x.SortOrder, "SortOrder");
             }
         }
         
