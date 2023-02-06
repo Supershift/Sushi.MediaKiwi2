@@ -1,29 +1,42 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import { ref, defineAsyncComponent } from 'vue'
+import Navigation from './components/Navigation.vue'
+
+const screens = [
+  { id: 1, componentFileName: 'Screen1.vue' },
+  { id: 2, componentFileName: 'Screen2.vue' },
+  { id: 3, componentFileName: 'Screen3.vue' },
+]
+
+const currentScreen = ref(screens[0]);
+
+function loadCurrentScreen()
+{
+  return defineAsyncComponent(() => import(/* @vite-ignore */`./components/${currentScreen.value.componentFileName}`));
+}
+
+function changeScreen(screenId: number) {    
+  // search for screen to get componentname
+  let selectedScreen = screens.find(x => x.id == screenId);
+  if(selectedScreen != undefined)
+  {
+    currentScreen.value = selectedScreen;    
+  }
+}
+
 </script>
 
 <template>
+  <h1>Hello</h1>
   <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+    <Navigation @change="changeScreen" />
+  </div>  
+  <div>    
+    Current screen name: {{ currentScreen.componentFileName }}
   </div>
-  <HelloWorld msg="Vite + Vue" />
+  <div>
+    <component :is="loadCurrentScreen()"></component>
+  </div>   
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
+

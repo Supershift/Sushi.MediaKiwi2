@@ -26,10 +26,11 @@ namespace Sushi.MediaKiwi.Services.Model
         public string Name { get; set; }
 
         /// <summary>
-        /// The registered name of the Vue the component implementing this screen.
+        /// The filename of the Vue the component implementing this screen, 
+        /// relative to the components folder, e.g. MyScreen.vue, checkout/Payment.vue
         /// </summary>
         [Required, StringLength(128)]
-        public string ComponentName { get; set; }
+        public string ComponentFileName { get; set; }
 
         /// <summary>
         /// Section to which this screen belongs.
