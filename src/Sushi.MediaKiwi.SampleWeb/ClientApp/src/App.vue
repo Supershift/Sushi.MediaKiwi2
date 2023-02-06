@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { reactive, ref, defineAsyncComponent, computed } from 'vue'
+import { ref, defineAsyncComponent } from 'vue'
 import Navigation from './components/Navigation.vue'
 
 const screens = [
-  { id: 1, componentName: 'Screen1.vue' },
-  { id: 2, componentName: 'Screen2.vue' },
-  { id: 3, componentName: 'Screen3.vue' },
+  { id: 1, componentFileName: 'Screen1.vue' },
+  { id: 2, componentFileName: 'Screen2.vue' },
+  { id: 3, componentFileName: 'Screen3.vue' },
 ]
 
 const currentScreen = ref(screens[0]);
 
 function loadCurrentScreen()
 {
-  return defineAsyncComponent(() => import(/* @vite-ignore */`./components/${currentScreen.value.componentName}`));
+  return defineAsyncComponent(() => import(/* @vite-ignore */`./components/${currentScreen.value.componentFileName}`));
 }
 
 function changeScreen(screenId: number) {    
@@ -32,7 +32,7 @@ function changeScreen(screenId: number) {
     <Navigation @change="changeScreen" />
   </div>  
   <div>    
-    Current screen name: {{ currentScreen.componentName }}
+    Current screen name: {{ currentScreen.componentFileName }}
   </div>
   <div>
     <component :is="loadCurrentScreen()"></component>
