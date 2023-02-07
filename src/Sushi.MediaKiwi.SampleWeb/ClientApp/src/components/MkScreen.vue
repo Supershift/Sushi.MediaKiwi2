@@ -1,26 +1,17 @@
 <script setup lang="ts">
-    import { defineAsyncComponent, PropType  } from 'vue'
-    
-    interface MkIScreen
-    {
-        componentFileName : string
+import { defineAsyncComponent } from 'vue'
+import { store } from '../mkstore'
+
+function loadScreen2() {
+    var currentScreen = store.getCurrentScreen();    
+    if (currentScreen !== undefined) {
+        return defineAsyncComponent(() => import(/* @vite-ignore */`../components/${currentScreen.componentFileName}`));
     }
-
-    const props = defineProps({
-        currentScreen: Object as PropType<MkIScreen>
-    })
-
-    function loadScreen(myScreen: MkIScreen | undefined)
-    {
-        if(myScreen !== undefined)
-        {
-            return defineAsyncComponent(() => import(/* @vite-ignore */`../components/${myScreen.componentFileName}`));
-        }
-    }    
+}
 </script>
 
 <template>
     <v-main style="min-height: 300px;">
-        <component :is="loadScreen(props.currentScreen)"></component>
+        <component :is="loadScreen2()"></component>
     </v-main>
 </template>

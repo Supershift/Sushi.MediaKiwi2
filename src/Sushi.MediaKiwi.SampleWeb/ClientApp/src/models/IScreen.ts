@@ -1,6 +1,6 @@
-export default interface IScreen {
+export interface IScreen {
   id: number;
   name: string;
-  componentName: string;
+  componentFileName: string;
   sectionId: number;  
 }
