@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, defineAsyncComponent } from 'vue'
-import Navigation from './components/Navigation.vue'
+import { ref, defineAsyncComponent, computed } from 'vue'
+import MkNavigation from './components/MkNavigation.vue';
+import MkScreen from './components/MkScreen.vue';
 
 const screens = [
   { id: 1, componentFileName: 'Screen1.vue' },
@@ -10,9 +11,9 @@ const screens = [
 
 const currentScreen = ref(screens[0]);
 
-function loadCurrentScreen()
+function loadScreen(myScreen: { componentFileName: any; })
 {
-  return defineAsyncComponent(() => import(/* @vite-ignore */`./components/${currentScreen.value.componentFileName}`));
+  return defineAsyncComponent(() => import(/* @vite-ignore */`./components/${myScreen.componentFileName}`));
 }
 
 function changeScreen(screenId: number) {    
@@ -23,20 +24,18 @@ function changeScreen(screenId: number) {
     currentScreen.value = selectedScreen;    
   }
 }
-
 </script>
 
 <template>
-  <h1>Hello</h1>
-  <div>
-    <Navigation @change="changeScreen" />
-  </div>  
-  <div>    
-    Current screen name: {{ currentScreen.componentFileName }}
-  </div>
-  <div>
-    <component :is="loadCurrentScreen()"></component>
-  </div>   
+  <v-card>
+    <v-layout>
+      <v-app-bar title="Application bar"></v-app-bar>
+
+      <MkNavigation @change="changeScreen"></MkNavigation>
+      <MkScreen :current-screen="currentScreen"></MkScreen>
+      
+    </v-layout>
+  </v-card>
 </template>
 
 
