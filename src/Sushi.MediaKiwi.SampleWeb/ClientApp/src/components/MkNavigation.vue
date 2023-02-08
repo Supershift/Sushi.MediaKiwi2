@@ -8,7 +8,7 @@ const router = useRouter()
 
 function itemClick(navigationItem : INavigationItem)
 {
-    router.push(`/${navigationItem.name}`);
+    router.push(navigationItem.path);
 }
 
 </script>

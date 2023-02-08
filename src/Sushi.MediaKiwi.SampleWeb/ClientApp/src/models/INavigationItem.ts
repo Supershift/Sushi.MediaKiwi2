@@ -5,4 +5,5 @@ export interface INavigationItem {
   sectionId: number;
   parentNavigationItemId: number | null;
   screenId: number | null;
+  path: string;
 }

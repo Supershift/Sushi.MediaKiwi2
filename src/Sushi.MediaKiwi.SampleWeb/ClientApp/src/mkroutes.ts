@@ -1,6 +1,9 @@
 import type { App } from 'vue'
 import { store } from '../src/mkstore'
 import { createRouter, RouterOptions, RouteRecordRaw, createWebHashHistory } from 'vue-router'
+import type { INavigationItem } from './models/INavigationItem';
+
+
 
 export function addRoutes(app: App) {
     // get all navigation items and screens
@@ -17,13 +20,15 @@ export function addRoutes(app: App) {
             if (screen != null && screen !== undefined) {                
                 var route = <RouteRecordRaw>
                     {
-                        path: `/${navigationItem.name}`,                        
+                        path: navigationItem.path,
                         component: () => import(/* @vite-ignore */`./components/${screen?.componentFileName}`)
                     };
                 routes.push(route);
             }
         }
     });
+
+    console.log(routes);
 
     // add default route
     routes.push({ path: '/', component: () => routes[0].component});
