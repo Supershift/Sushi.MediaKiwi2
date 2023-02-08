@@ -1,26 +1,19 @@
 <script setup lang="ts">
 
 import { store } from '../mkstore'
-import { useRouter } from 'vue-router'
-import type { INavigationItem } from '../models/INavigationItem';
+import MkNavigationItem from './MkNavigationItem.vue';
 
-const router = useRouter()
-
-function itemClick(navigationItem : INavigationItem)
-{
-    router.push(navigationItem.path);
-}
+// get root level navigation items
+var rootLevelItems = store.navigationItems.filter(item => item.parentNavigationItemId == null);
 
 </script>
 
 <template>    
     <v-navigation-drawer>
-        <v-list>            
-            <v-list-item v-for="navigationItem in store.navigationItems" :value="navigationItem.id"
-                @click="itemClick(navigationItem)">
-                {{ navigationItem.name }}
-            </v-list-item>       
+        <v-list>
+            <MkNavigationItem v-for="navigationItem in rootLevelItems" :navigation-item="navigationItem">
+            </MkNavigationItem>
         </v-list>
-    </v-navigation-drawer>
+    </v-navigation-drawer>    
 </template>
 

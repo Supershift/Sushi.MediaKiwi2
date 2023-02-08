@@ -5,9 +5,11 @@ import type { IScreen } from './models/IScreen'
 // get the navigation items
 const navigationItems = <INavigationItem[]>[
   { id: 1, name: "Hotels", screenId: 1, typeId: 3, sectionId: 1, parentNavigationItemId: null },
-  { id: 11, name: "Hotel sub 1", screenId: 3, typeId: 1, sectionId: 1, parentNavigationItemId: 1 },
+  { id: 11, name: "Hotel sub 1", screenId: 3, typeId: 3, sectionId: 1, parentNavigationItemId: 1 },
   { id: 111, name: "Hotel deeper sub 1", screenId: 3, typeId: 1, sectionId: 1, parentNavigationItemId: 11 },
   { id: 2, name: "Customers", screenId: 2, typeId: 1, sectionId: 1, parentNavigationItemId: null },
+  { id: 21, name: "Category", screenId: null, typeId: 2, sectionId: 1, parentNavigationItemId: 2 },
+  { id: 211, name: "Deep level", screenId: 1, typeId: 1, sectionId: 1, parentNavigationItemId: 21 },
   { id: 3, name: "Something else", screenId: 3, typeId: 1, sectionId: 1, parentNavigationItemId: null },
 ]
 
