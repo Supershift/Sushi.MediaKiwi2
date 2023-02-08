@@ -1,4 +1,4 @@
-export default interface INavigationItem {
+export interface INavigationItem {
   id: number;
   name: string | null;
   typeId: number;
