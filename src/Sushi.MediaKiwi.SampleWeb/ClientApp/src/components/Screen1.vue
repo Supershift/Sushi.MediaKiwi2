@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import { defineAsyncComponent } from 'vue';
 import MkDataTable from './MkDataTable.vue';
 import type { ITableMap } from '../models/ITableMap';
+import type { ITableMapItem } from "../models/ITableMapItem"
+import SampleCustomCell from '../components/SampleCustomCell.vue';
 
 interface Product {
     id: number,
@@ -14,11 +17,13 @@ const products = <Product[]>[
 ]
 
 const myMap = <ITableMap<Product>>{
-    Items: [
-        { HeaderTitle: "ID", Value: (entity) => entity.id },
-        { HeaderTitle: "Naam", Value: (entity) => entity.name },
-        { HeaderTitle: "Voorraad", Value: (entity) => entity.inStock },
-        { HeaderTitle: "Prijs", Value: (entity) => entity.price },
+    items: [
+        { headerTitle: "ID", value: (entity) => entity.id },
+        { headerTitle: "Naam", value: (entity) => entity.name },
+        { headerTitle: "Voorraad", value: (entity) => entity.inStock },
+        { headerTitle: "Prijs", value: (entity) => entity.price },
+        { headerTitle: "Custom", component: SampleCustomCell },
+        { headerTitle: "Custom 2", component: defineAsyncComponent(() =>  import('../components/SampleCustomCell.vue')) },
     ]
 }
 </script>
@@ -26,10 +31,10 @@ const myMap = <ITableMap<Product>>{
 <template>
     <MkDataTable :map="myMap" :data="products">
         <template v-slot:header>
-        <h1>I am the table</h1>
+            <h1>I am the table</h1>
         </template>
-  <template v-slot:footer>
-    You know, I am the footer.
-  </template>
+        <template v-slot:footer>
+            You know, I am the footer.
+        </template>
     </MkDataTable>
 </template>
