@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
-import MkDataTable from './MkDataTable.vue';
-import type { ITableMap } from '../models/ITableMap';
+import MkDataTable from '@/components/table/MkDataTable.vue';
+import type { ITableMap } from '@/models/table/ITableMap';
 
 interface Customer
 {

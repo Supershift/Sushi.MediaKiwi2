@@ -1,6 +1,6 @@
 import { reactive } from 'vue'
-import type { INavigationItem } from './models/INavigationItem'
-import type { IScreen } from './models/IScreen'
+import { INavigationItem } from './models/navigation';
+import { IScreen } from './models/screen/IScreen';
 
 // get the navigation items
 const navigationItems = <INavigationItem[]>[
@@ -28,9 +28,9 @@ function getPath(navigationItem: INavigationItem): string {
 navigationItems.forEach((item) => { item.path = getPath(item)});
 
 const screens = <IScreen[]>[
-  { id: 1, componentFileName: 'Screen1.vue', sectionId: 1, name: 'Screen 1' },
-  { id: 2, componentFileName: 'Screen2.vue', sectionId: 2, name: 'Screen 2' },
-  { id: 3, componentFileName: 'Screen3.vue', sectionId: 3, name: 'Screen 3' },
+  { id: 1, componentFileName: 'samples/Screen1.vue', sectionId: 1, name: 'Screen 1' },
+  { id: 2, componentFileName: 'samples/Screen2.vue', sectionId: 2, name: 'Screen 2' },
+  { id: 3, componentFileName: 'samples/Screen3.vue', sectionId: 3, name: 'Screen 3' },
 ]
 
 class MkStore {  

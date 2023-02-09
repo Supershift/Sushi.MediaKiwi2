@@ -1,5 +1,5 @@
 <script setup lang=ts>
-import type { INavigationItem } from '../models/INavigationItem';
+import type { INavigationItem } from '@/models/navigation';
 import { store } from '../mkstore';
 import { useRouter } from 'vue-router'
 

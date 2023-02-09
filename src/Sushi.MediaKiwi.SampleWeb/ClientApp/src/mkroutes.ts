@@ -1,7 +1,7 @@
 import type { App } from 'vue'
 import { store } from '../src/mkstore'
 import { createRouter, RouterOptions, RouteRecordRaw, createWebHashHistory } from 'vue-router'
-import type { INavigationItem } from './models/INavigationItem';
+import { INavigationItem } from './models/navigation';
 
 
 

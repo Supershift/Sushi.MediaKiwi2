@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { ITableMap } from '../models/ITableMap';
+import { ITableMap } from '@/models/table/ITableMap';
 
 
 const props = defineProps<{
