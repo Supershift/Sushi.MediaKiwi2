@@ -1,7 +1,7 @@
 import type { App } from 'vue'
 import { store } from '../src/mkstore'
 import { createRouter, RouterOptions, RouteRecordRaw, createWebHashHistory } from 'vue-router'
-import type { INavigationItem } from './models/INavigationItem';
+import { INavigationItem } from './models/navigation';
 
 
 
@@ -27,8 +27,6 @@ export function addRoutes(app: App) {
             }
         }
     });
-
-    console.log(routes);
 
     // add default route
     routes.push({ path: '/', component: () => routes[0].component});
