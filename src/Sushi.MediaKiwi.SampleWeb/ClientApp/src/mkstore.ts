@@ -33,19 +33,13 @@ const screens = <IScreen[]>[
   { id: 3, componentFileName: 'Screen3.vue', sectionId: 3, name: 'Screen 3' },
 ]
 
-class MkStore {
-  currentScreenId: number = 0;
+class MkStore {  
   navigationItems: INavigationItem[] = [];
-  screens: IScreen[] = [];
-  getCurrentScreen(): IScreen | undefined {
-    let result = screens.find(x => x.id == this.currentScreenId);
-    return result;
-  }
+  screens: IScreen[] = [];  
 }
 
 const store = reactive<MkStore>(new MkStore());
 store.navigationItems = navigationItems;
 store.screens = screens;
-store.currentScreenId = screens[0].id;
 
 export { store };
