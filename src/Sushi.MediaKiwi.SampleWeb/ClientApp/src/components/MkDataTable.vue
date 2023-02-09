@@ -16,14 +16,14 @@ const props = defineProps<{
         <thead>
             <tr>
                 <!-- render a header cell for each mapping item -->
-                <th v-for="mapItem in props.map.Items">{{ mapItem.headerTitle }}</th>
+                <th v-for="mapItem in props.map.items">{{ mapItem.headerTitle }}</th>
             </tr>
         </thead>
         <tbody>
             <!-- render a row for each provided data entity -->
             <tr v-for="item in props.data">
                 <!-- render a cell for each mapping item -->
-                <td v-for="mapItem in props.map.Items">
+                <td v-for="mapItem in props.map.items">
                     <!-- render the result for calling 'value()'-->
                     <template v-if="mapItem.value !== undefined">
                         <!-- render a boolean -->

@@ -28,8 +28,6 @@ export function addRoutes(app: App) {
         }
     });
 
-    console.log(routes);
-
     // add default route
     routes.push({ path: '/', component: () => routes[0].component});
 
