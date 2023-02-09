@@ -1,4 +1,4 @@
-export default interface IScreen {
+export interface IScreen {
   id: number;
   name: string;
   componentFileName: string;

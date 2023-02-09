@@ -1,23 +1,19 @@
 <script setup lang="ts">
-const navigationItems = [
-  { id: 1, name: "Hotels", screenId: 1, typeId: 1 },
-  { id: 2, name: "Customers", screenId: 2, typeId: 1 },
-  { id: 3, name: "Something else", screenId: 3, typeId: 1 },
-];
+import { defineEmits } from "vue";
+import { store } from '../mkstore'
+import MkNavigationItem from './MkNavigationItem.vue';
+
+// get root level navigation items
+var rootLevelItems = store.navigationItems.filter(item => item.parentNavigationItemId == null);
 
 const emit = defineEmits(["change"]);
 </script>
 
-<template>
-  <v-navigation-drawer>
-    <v-list>
-      <v-list-item
-        v-for="navigationItem in navigationItems"
-        :value="navigationItem.id"
-        @click="$emit('change', navigationItem.screenId)"
-      >
-        {{ navigationItem.name }}
-      </v-list-item>
-    </v-list>
-  </v-navigation-drawer>
+<template>    
+    <v-navigation-drawer>
+        <v-list>
+            <MkNavigationItem v-for="navigationItem in rootLevelItems" :navigation-item="navigationItem">
+            </MkNavigationItem>
+        </v-list>
+    </v-navigation-drawer>    
 </template>
