@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { reactive } from 'vue'
 import MkDataTable from './MkDataTable.vue';
 import type { ITableMap } from '../models/ITableMap';
 
@@ -15,10 +16,10 @@ interface Order {
     customer: Customer
 }
 
-const products = <Order[]>[
+const orders = reactive(<Order[]>[
     { id: 12, orderNumber: '20230001', total: 500.95, customer: { name: 'Jack Sparerib', address: 'Rum Island'} },
     { id: 15, orderNumber: '20230002', total: 235.95, customer: { name: 'Pino', address: 'Sesamstraat'} },
-]
+])
 
 const myMap = <ITableMap<Order>>{
     items: [        
@@ -31,9 +32,12 @@ const myMap = <ITableMap<Order>>{
 </script>
 
 <template>
-    <MkDataTable :map="myMap" :data="products">
+    <MkDataTable :map="myMap" :data="orders">
         <template v-slot:header>
             <h1>Orders</h1>
         </template>        
     </MkDataTable>
+
+    <button @click="orders[0].total += 100">Ophogen</button>
+    
 </template>
