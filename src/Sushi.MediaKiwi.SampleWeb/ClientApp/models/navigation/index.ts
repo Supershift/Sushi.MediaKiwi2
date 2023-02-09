@@ -1,1 +1,1 @@
-export * from "@/models/navigation/INavigationItem";
+export * from '@/models/navigation/INavigationItem'

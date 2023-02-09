@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, defineAsyncComponent, computed } from 'vue'
-import MkNavigation from './components/MkNavigation.vue';
-import MkScreen from './components/MkScreen.vue';
+  import { ref, defineAsyncComponent, computed } from 'vue'
+  import MkNavigation from './components/MkNavigation.vue'
+  import MkScreen from './components/MkScreen.vue'
 </script>
 
 <template>
@@ -11,7 +11,6 @@ import MkScreen from './components/MkScreen.vue';
 
       <MkNavigation></MkNavigation>
       <MkScreen></MkScreen>
-      
     </v-layout>
   </v-card>
 </template>

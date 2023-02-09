@@ -1,2 +1,2 @@
-export { NavigationAPIServices } from "@/services/Navigation";
-export { ScreenAPIServices } from "@/services/Screen";
+export { NavigationAPIServices } from '@/services/Navigation'
+export { ScreenAPIServices } from '@/services/Screen'

@@ -25,6 +25,7 @@
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.4",
     "@types/node": "^18.13.0",
+    "@types/jsdom": "^20.0.1",
     "@mdi/font": "^7.1.96",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.51.0",
