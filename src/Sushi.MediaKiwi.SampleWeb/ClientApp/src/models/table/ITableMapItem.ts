@@ -8,6 +8,6 @@ export interface ITableMapItem<Type> {
     /** This function will be called for each bound entity and the return value will be displayed.d */
     value: ((entity: Type) => string | number | boolean | object) | undefined,
     /** Reference a component which will be dynamically mounted for each bound entity. 
-     * Use the property 'item' to pass the entity to the component. */
+     * Use the property 'data' to pass the entity to the component. */
     component: Component | DefineComponent | undefined
 }

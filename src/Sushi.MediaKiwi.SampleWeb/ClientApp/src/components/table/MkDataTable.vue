@@ -21,11 +21,11 @@ const props = defineProps<{
         </thead>
         <tbody>
             <!-- render a row for each provided data entity -->
-            <tr v-for="item in props.data">
+            <tr v-for="dataItem in props.data">
                 <!-- render a cell for each mapping item -->
                 <MkDataCell 
                     v-for="mapItem in props.map.items" 
-                    :item="item"
+                    :data="dataItem"
                     :map-item="mapItem">
                 </MkDataCell>
             </tr>

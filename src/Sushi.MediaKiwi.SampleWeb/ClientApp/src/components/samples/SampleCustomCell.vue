@@ -1,9 +1,9 @@
 <script setup lang="ts">
     const props = defineProps<{
-        item: any
+        data: any
     }>();
 </script>
 
 <template>
-    Custom, item name is {{ item.name }}
+    Custom, data name is {{ data.name }}
 </template>
