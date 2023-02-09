@@ -3,7 +3,7 @@ export interface INavigationItem {
   name: string | null;
   typeId: number;
   sectionId: number;
-  parentNavigationItemId: number | null;
-  screenId: number | null;
+  parentNavigationItemId?: number | null;
+  screenId?: number | null;
   path: string;
 }
