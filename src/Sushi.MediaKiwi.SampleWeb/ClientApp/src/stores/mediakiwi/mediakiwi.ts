@@ -79,9 +79,9 @@ navigationItems.forEach((item) => {
 });
 
 const screens = <IScreen[]>[
-  { id: 1, componentFileName: "Screen1.vue", sectionId: 1, name: "Screen 1" },
-  { id: 2, componentFileName: "Screen2.vue", sectionId: 2, name: "Screen 2" },
-  { id: 3, componentFileName: "Screen3.vue", sectionId: 3, name: "Screen 3" },
+  { id: 1, componentFileName: "Screen1", sectionId: 1, name: "Screen 1" },
+  { id: 2, componentFileName: "Screen2", sectionId: 2, name: "Screen 2" },
+  { id: 3, componentFileName: "Screen3", sectionId: 3, name: "Screen 3" },
 ];
 
 class MkStore {
