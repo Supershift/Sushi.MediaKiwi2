@@ -1,7 +1,6 @@
 <script setup lang="ts">
-  import { ref, defineAsyncComponent, computed } from 'vue'
-  import MkNavigation from './components/MkNavigation.vue'
-  import MkScreen from './components/MkScreen.vue'
+  import MkNavigation from "@/components/MkNavigation.vue";
+  import MkScreen from "@/components/MkScreen.vue";
 </script>
 
 <template>

@@ -1,5 +1,13 @@
 {
-    "singleQuote": true,
-    "semi": false,
-    "vueIndentScriptAndStyle": true
+    "singleQuote": false,
+    "semi": true,
+    "vueIndentScriptAndStyle": true,
+    "prettier/prettier": [
+        "error",
+        {
+          "endOfLine": "auto"
+        }
+    ],
+    "printWidth": 200,
+    "trailingComma": "es5"
 }
