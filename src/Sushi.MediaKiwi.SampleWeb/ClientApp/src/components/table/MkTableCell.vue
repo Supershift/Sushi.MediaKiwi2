@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { ITableMapItem } from '@/models/table/ITableMapItem';
+    import type { ITableMapItem } from '@/models/table/ITableMapItem';
     
     defineProps<{
         data: any,

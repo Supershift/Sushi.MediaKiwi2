@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
-import MkDataTable from '@/components/table/MkDataTable.vue';
+import MkTableView from '@/components/table/MkTableView.vue';
 import type { ITableMap } from '@/models/table/ITableMap';
+import MkTableFilter from '../table/MkTableFilter.vue';
 
 interface Customer
 {
@@ -32,11 +33,14 @@ const myMap = <ITableMap<Order>>{
 </script>
 
 <template>
-    <MkDataTable :map="myMap" :data="orders">
+    
+    <MkTableFilter></MkTableFilter>
+    
+    <MkTableView :map="myMap" :data="orders">
         <template v-slot:header>
             <h1>Orders</h1>
         </template>        
-    </MkDataTable>
+    </MkTableView>
 
     <button @click="orders[0].total += 100">Ophogen</button>
     
