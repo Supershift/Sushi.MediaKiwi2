@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import SampleTable1 from './SampleTable1.vue';
-import SampleTable2 from './SampleTable2.vue';
+import SampleTable1 from './samples/SampleTable1.vue';
+import SampleTable2 from './samples/SampleTable2.vue';
 </script>
 
 <template>

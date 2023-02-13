@@ -1,4 +1,3 @@
-
 import { HttpStatusCodeEnum } from "@/models/enum/HttpStatusCodeEnum";
 
 export default interface ApiResultConstructor<T> {
