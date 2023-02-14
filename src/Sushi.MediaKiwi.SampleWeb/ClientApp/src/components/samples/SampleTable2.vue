@@ -2,7 +2,13 @@
 import { reactive } from 'vue'
 import MkTableView from '@/components/table/MkTableView.vue';
 import type { ITableMap } from '@/models/table/ITableMap';
+import type { ITableFilterValue } from '@/models/table/ITableFilterValue';
+import type { ITableFilterItem } from '@/models/table/ITableFilterItem';
 import MkTableFilter from '../table/MkTableFilter.vue';
+import MkTableFilterTextField from '../table/MkTableFilterTextField.vue'
+import MkTableFilterSelect from '../table/MkTableFilterSelect.vue'
+import SampleCustomTableFilterInput from './SampleCustomTableFilterInput.vue';
+import { stringifyExpression } from '@vue/compiler-core';
 
 interface Customer
 {
@@ -30,11 +36,34 @@ const myMap = <ITableMap<Order>>{
         { headerTitle: "Adres", value: (order) => order.customer.address}        
     ]
 }
+
+const filters = <ITableFilterItem[]>[
+    {
+        id: 'Name',
+        title: 'Naam',        
+        component: MkTableFilterTextField
+    },
+    {
+        id: 'Country',
+        title: 'Land',
+        options: [{ title: 'Nederland', value: 'NL' }, { title: 'België', value: 'BE' }],
+        component: MkTableFilterSelect
+    },
+    {
+        id: 'FullName',
+        title: 'Volledige naam',        
+        component: SampleCustomTableFilterInput
+    },
+];
+
+const selectedFilters = reactive(new Map<string, ITableFilterValue>());
+
+
 </script>
 
 <template>
     
-    <MkTableFilter></MkTableFilter>
+    <MkTableFilter :filter-mapping="filters" v-model="selectedFilters"></MkTableFilter>
     
     <MkTableView :map="myMap" :data="orders">
         <template v-slot:header>

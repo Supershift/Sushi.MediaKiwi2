@@ -1,4 +1,4 @@
-import { Component, DefineComponent } from "vue";
+import type { Component, DefineComponent } from "vue";
 
 /** Represents a column in a table, mapping bound entities to table cells.  */
 export interface ITableMapItem<Type> {

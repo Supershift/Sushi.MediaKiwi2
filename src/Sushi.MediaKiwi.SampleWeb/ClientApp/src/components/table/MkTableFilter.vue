@@ -1,61 +1,49 @@
 <script setup lang="ts">
-import { propsToAttrMap } from '@vue/shared';
-import { reactive } from 'vue';
-import { ref } from 'vue';
-enum FilterInputTypeEnum {
-    Text,
-    Select,
-    Custom
-}
+import { shallowReactive } from 'vue';
+import type { ITableFilterItem } from '../../models/table/ITableFilterItem'
+import type { ITableFilterValue } from '../../models/table/ITableFilterValue';
 
-interface IFilterValue {
-    title: string,
-    value: any
-}
+const props = defineProps<{
+    filterMapping: ITableFilterItem[],
+    modelValue: Map<string, ITableFilterValue>
+}>();
 
+const emit = defineEmits<{  
+  (e: 'update:modelValue', value: Map<string, ITableFilterValue>): void
+}>()
 
-interface IFilterItem {
-    id: string,
-    title: string,
-    inputType: FilterInputTypeEnum,
-    selectedValue: IFilterValue | undefined,
-    options: any[] | undefined
-}
+// holds the current filter being edited and its value
+const state = shallowReactive({
+    currentFilter: <ITableFilterItem | undefined>undefined,
+    currentFilterValue: <ITableFilterValue | undefined>undefined
+});
 
-
-const filters = reactive(<IFilterItem[]>[
-    {
-        id: 'Name',
-        title: 'Naam',
-        inputType: FilterInputTypeEnum.Text
-    },
-    {
-        id: 'Country',
-        title: 'Land',
-        inputType: FilterInputTypeEnum.Select,
-        options: [{ title: 'Nederland', value: 'NL' }, { title: 'België', value: 'BE' }]
-    }
-]);
-
-const state = reactive({ currentFilter: <IFilterItem | undefined>undefined });
-let filterValue = <any | undefined>undefined;
-
-function changeCurrentFilter(selectedFilter: IFilterItem) {
+/* Sets the provided filter as currently selected filter */
+function changeCurrentFilter(selectedFilter: ITableFilterItem) {
     state.currentFilter = selectedFilter;
-    filterValue = undefined;
+    state.currentFilterValue = undefined;
 }
 
-function applyFilter(value: IFilterValue) {
+/* Reads the value currently set in the filter input and sets it on the filter as the selected value. */
+function applyFilter() {        
+    // get value and set it to selected filter values
     if (state.currentFilter !== undefined) {
-        state.currentFilter.selectedValue = value
+        if (state.currentFilterValue !== undefined) {
+            props.modelValue.set(state.currentFilter.id, state.currentFilterValue);
+        }
+        else if(props.modelValue.has(state.currentFilter.id)) {
+            // delete the filter value if we had a value, but it is now undefined
+            props.modelValue.delete(state.currentFilter.id);
+        }
     }
-    filterValue = undefined;
-    state.currentFilter = undefined;
-}
+    
+    // emit an event telling the selected filters have changed
+    emit('update:modelValue', props.modelValue);
 
-function switchSelect(event) {
-      console.log(event);
-    }
+    // close the filter
+    state.currentFilterValue = undefined;
+    state.currentFilter = undefined;    
+}
 
 </script>
 
@@ -68,25 +56,21 @@ function switchSelect(event) {
                 </v-btn>
             </template>
             <v-list>
-                <v-list-item v-for="filter in filters" :value="filter" @click="changeCurrentFilter(filter)">
+                <v-list-item v-for="filter in filterMapping" :value="filter" @click="changeCurrentFilter(filter)">
                     <v-list-item-title>{{ filter.title }}</v-list-item-title>
                 </v-list-item>
             </v-list>
         </v-menu>
-        <template v-for="filter in filters">
-            <v-chip v-if="filter.selectedValue !== undefined">{{ filter.title }}:{{ filter.selectedValue }}</v-chip>
+        <template v-for="filter in filterMapping">
+            <v-chip v-if="modelValue.has(filter.id)">{{ filter.title }} : {{
+                modelValue.get(filter.id)?.title
+            }}</v-chip>
         </template>
     </v-toolbar>
-    <v-card :title="state.currentFilter.title" v-if="state.currentFilter !== undefined">        
-        <v-text-field v-if="state.currentFilter.inputType == FilterInputTypeEnum.Text" 
-        
-        @input="filterValue = $event.target.value"
-            label="Voer in" >
-        
-        </v-text-field>
-        <v-select v-else-if="state.currentFilter.inputType == FilterInputTypeEnum.Select" v-model="filterValue"            
-            :items="state.currentFilter.options" label="Kies">
-        </v-select>
+    <v-card :title="state.currentFilter.title" v-if="state.currentFilter !== undefined">
+        <component :is="state.currentFilter.component" :table-filter-item="state.currentFilter"
+            v-model="state.currentFilterValue">
+        </component>
         <v-card-actions>
             <v-btn @click="applyFilter()">Apply</v-btn>
         </v-card-actions>
