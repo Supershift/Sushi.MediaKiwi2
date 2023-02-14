@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import { shallowReactive } from 'vue';
-import type { ITableFilterItem } from '../../models/table/ITableFilterItem'
-import type { ITableFilterValue } from '../../models/table/ITableFilterValue';
+import type { ITableFilterItem, TableFilterValueCollection, ITableFilterValue } from '@/models/table/';
 
 const props = defineProps<{
     filterMapping: ITableFilterItem[],
-    modelValue: Map<string, ITableFilterValue>
+    modelValue: TableFilterValueCollection
 }>();
 
 const emit = defineEmits<{  
-  (e: 'update:modelValue', value: Map<string, ITableFilterValue>): void
+  (e: 'update:modelValue', value: TableFilterValueCollection): void
 }>()
 
 // holds the current filter being edited and its value
@@ -67,7 +66,7 @@ function applyFilter() {
             }}</v-chip>
         </template>
     </v-toolbar>
-    <v-card :title="state.currentFilter.title" v-if="state.currentFilter !== undefined">
+    <v-card width="400" :title="state.currentFilter.title" v-if="state.currentFilter !== undefined">
         <component :is="state.currentFilter.component" :table-filter-item="state.currentFilter"
             v-model="state.currentFilterValue">
         </component>

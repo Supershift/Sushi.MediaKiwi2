@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import type { ITableFilterItem } from '@/models/table/ITableFilterItem';
-import type { ITableFilterValue } from '@/models/table/ITableFilterValue';
+import type { ITableFilterItem, ITableFilterValue } from '@/models/table/';
 
 const props = defineProps<{
     tableFilterItem: ITableFilterItem,
     modelValue: ITableFilterValue
 }>();
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits<{  
+  (e: 'update:modelValue', value: ITableFilterValue): void
+}>()
 
 function textFieldChanged(selectedValue: string) {
     emit('update:modelValue', { title: selectedValue, value: selectedValue });
@@ -15,9 +16,8 @@ function textFieldChanged(selectedValue: string) {
 
 </script>
 
-<template>
-    <!-- render a text input -->
+<template>    
     <v-text-field 
-        :value="modelValue?.value" @update:model-value="textFieldChanged" label="Voer in">
+        :value="modelValue?.value" @update:model-value="textFieldChanged" label="Value">
     </v-text-field>
 </template>

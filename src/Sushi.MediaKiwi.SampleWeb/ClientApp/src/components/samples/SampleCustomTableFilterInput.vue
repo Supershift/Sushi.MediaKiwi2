@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import type { ITableFilterItem } from '@/models/table/ITableFilterItem';
 import type { ITableFilterValue } from '@/models/table/ITableFilterValue';
 
@@ -8,7 +7,9 @@ const props = defineProps<{
     modelValue: ITableFilterValue
 }>();
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits<{  
+  (e: 'update:modelValue', value: ITableFilterValue): void
+}>()
 
 
 function firstNameChanged(firstName: string){

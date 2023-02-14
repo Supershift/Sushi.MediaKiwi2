@@ -1,6 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import SampleTable3 from './samples/SampleTable3.vue';
+</script>
 
 <template>
   <h1>MyComponent 2</h1>
-  <p>Hi, I am component 2.</p>
+  
+    <SampleTable3></SampleTable3>
+  
 </template>

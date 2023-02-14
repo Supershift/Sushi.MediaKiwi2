@@ -28,7 +28,7 @@ const myMap = <ITableMap<Product>>{
 </script>
 
 <template>
-    <MkTableView :map="myMap" :data="products">
+    <MkTableView :table-map="myMap" :data="products">
         <template v-slot:header>
             <h1>I am the table</h1>
         </template>
