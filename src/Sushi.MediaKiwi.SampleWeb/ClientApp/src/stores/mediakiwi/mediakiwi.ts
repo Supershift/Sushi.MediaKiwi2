@@ -47,7 +47,7 @@ const navigationItems = <INavigationItem[]>[
   {
     id: 211,
     name: "Deep level",
-    screenId: 1,
+    screenId: 3,
     typeId: 1,
     sectionId: 1,
     parentNavigationItemId: 21,
@@ -55,7 +55,7 @@ const navigationItems = <INavigationItem[]>[
   {
     id: 3,
     name: "Something else",
-    screenId: 3,
+    screenId: 2,
     typeId: 1,
     sectionId: 1,
     parentNavigationItemId: null,

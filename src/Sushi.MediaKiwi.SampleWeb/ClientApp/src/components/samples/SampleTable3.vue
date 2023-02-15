@@ -9,6 +9,7 @@ import SampleCustomTableFilterInput from './SampleCustomTableFilterInput.vue';
 import type { ISampleData } from './ISampleData';
 import { SampleDataService } from './SampleDataService';
 
+// define a mapping between source data and desired columns in the table
 const myMap = <ITableMap<ISampleData>>{
     items: [
         { headerTitle: "Naam", value: (dataItem) => dataItem.name },
@@ -16,6 +17,7 @@ const myMap = <ITableMap<ISampleData>>{
     ]
 }
 
+// define filters for the data
 const filters = <ITableFilterItem[]>[
     {
         id: 'Name',
@@ -35,8 +37,17 @@ const filters = <ITableFilterItem[]>[
     },
 ];
 
+// create an object which will hold selected filter values
 const selectedFilters = reactive(new TableFilterValueCollection());
-const sampleData = computed(() => SampleDataService.GetAll(selectedFilters.get('Country')?.value));
+
+// get the data, using the selected filters
+const sampleData = computed(() => {
+    // get country filter
+    let country = selectedFilters.get('Country')?.value;
+    // get the data
+    let result = SampleDataService.GetAll(country);
+    return result;
+});
 </script>
 
 <template>

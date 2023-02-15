@@ -2,7 +2,7 @@ import type { ISampleData } from './ISampleData'
 
 export const SampleDataService = {
   GetAll(countryCode: string | undefined): ISampleData[] {
-    console.log('calling sample data service');
+    
     let result = <ISampleData[]>[];
     for (let i = 1; i <= 10; i++) {
       let resultItem = <ISampleData>{
