@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { shallowReactive } from 'vue';
-import type { ITableFilterItem, TableFilterValueCollection, ITableFilterValue } from '@/models/table/';
+import type { ITableFilter, ITableFilterItem, TableFilterValueCollection, ITableFilterValue } from '@/models/table/';
 
 const props = defineProps<{
-    filterMapping: ITableFilterItem[],
+    filterMap: ITableFilter,
     modelValue: TableFilterValueCollection
 }>();
 
@@ -55,12 +55,12 @@ function applyFilter() {
                 </v-btn>
             </template>
             <v-list>
-                <v-list-item v-for="filter in filterMapping" :value="filter" @click="changeCurrentFilter(filter)">
+                <v-list-item v-for="filter in filterMap.items" :value="filter" @click="changeCurrentFilter(filter)">
                     <v-list-item-title>{{ filter.title }}</v-list-item-title>
                 </v-list-item>
             </v-list>
         </v-menu>
-        <template v-for="filter in filterMapping">
+        <template v-for="filter in filterMap.items">
             <v-chip v-if="modelValue.has(filter.id)">{{ filter.title }} : {{
                 modelValue.get(filter.id)?.title
             }}</v-chip>
