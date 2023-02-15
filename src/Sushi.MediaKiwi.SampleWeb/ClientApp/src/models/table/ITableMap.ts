@@ -1,4 +1,4 @@
-import { ITableMapItem } from "../table/ITableMapItem";
+import type { ITableMapItem } from "../table/ITableMapItem";
 
 /** Represents the mapping between an instance of Type and a table. */
 export interface ITableMap<Type> {

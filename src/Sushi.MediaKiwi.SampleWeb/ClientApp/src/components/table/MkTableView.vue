@@ -1,10 +1,9 @@
 <script setup lang="ts">
-
-import { ITableMap } from '@/models/table/ITableMap';
-import MkDataCell from './MkDataCell.vue';
+import type { ITableMap } from '@/models/table/ITableMap';
+import MkTableCell from './MkTableCell.vue';
 
 const props = defineProps<{
-    map: ITableMap<any>,
+    tableMap: ITableMap<any>,
     data: any[]
 }>();
 
@@ -16,18 +15,18 @@ const props = defineProps<{
         <thead>
             <tr>
                 <!-- render a header cell for each mapping item -->
-                <th v-for="mapItem in props.map.items">{{ mapItem.headerTitle }}</th>
+                <th v-for="mapItem in props.tableMap.items">{{ mapItem.headerTitle }}</th>
             </tr>
         </thead>
         <tbody>
             <!-- render a row for each provided data entity -->
             <tr v-for="dataItem in props.data">
                 <!-- render a cell for each mapping item -->
-                <MkDataCell 
-                    v-for="mapItem in props.map.items" 
+                <MkTableCell 
+                    v-for="mapItem in props.tableMap.items" 
                     :data="dataItem"
                     :map-item="mapItem">
-                </MkDataCell>
+                </MkTableCell>
             </tr>
         </tbody>
     </v-table>
