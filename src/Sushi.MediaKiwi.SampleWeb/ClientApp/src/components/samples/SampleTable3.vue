@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, computed } from 'vue'
 import MkTable from '../table/MkTable.vue';
-import type { ITableMap, ITableFilterItem } from '@/models/table/';
+import type { ITableMap, ITableFilter, ITableFilterItem } from '@/models/table/';
 import { TableFilterValueCollection } from '@/models/table/';
 import MkTableFilterTextField from '../table/MkTableFilterTextField.vue'
 import MkTableFilterSelect from '../table/MkTableFilterSelect.vue'
@@ -18,11 +18,12 @@ const myMap = <ITableMap<ISampleData>>{
 }
 
 // define filters for the data
-const filters = <ITableFilterItem[]>[
+const filters = <ITableFilter>{ 
+    items: [
     {
         id: 'Name',
         title: 'Naam',
-        component: MkTableFilterTextField
+        component: MkTableFilterTextField        
     },
     {
         id: 'Country',
@@ -35,7 +36,7 @@ const filters = <ITableFilterItem[]>[
         title: 'Volledige naam',
         component: SampleCustomTableFilterInput
     },
-];
+]};
 
 // create an object which will hold selected filter values
 const selectedFilters = reactive(new TableFilterValueCollection());
@@ -51,6 +52,6 @@ const sampleData = computed(() => {
 </script>
 
 <template>
-    <MkTable :filter-mapping="filters" v-model:selected-filters="selectedFilters" :table-map="myMap" :data="sampleData">
+    <MkTable :filter-map="filters" v-model:selected-filters="selectedFilters" :table-map="myMap" :data="sampleData">
     </MkTable>
 </template>

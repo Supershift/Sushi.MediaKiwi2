@@ -10,7 +10,7 @@ const props = defineProps<{
 </script>
 
 <template>
-    <slot name="header"></slot>
+    
     <v-table>
         <thead>
             <tr>
@@ -30,5 +30,5 @@ const props = defineProps<{
             </tr>
         </tbody>
     </v-table>
-    <slot name="footer"></slot>
+    
 </template>

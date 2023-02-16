@@ -1,6 +1,6 @@
 import type { Component, DefineComponent } from "vue"
 
-/** Represents a filter for table data  */
+/** Represents a single filter for table data  */
 export interface ITableFilterItem {
     /** Unique id for the filter, will be used as key in the result TableFilterValueCollection. */ 
     id: string,
