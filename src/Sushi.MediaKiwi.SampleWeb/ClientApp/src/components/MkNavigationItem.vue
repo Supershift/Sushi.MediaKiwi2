@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import type { INavigationItem } from "@/models/INavigationItem";
+  import type { INavigationItem } from "@/models/navigation/INavigationItem";
   import { store } from "@/stores/mediakiwi/mediakiwi";
   import { useRouter } from "vue-router";
 
@@ -26,5 +26,5 @@
     </template>
     <MkNavigationItem v-for="child in children" :navigation-item="child"></MkNavigationItem>
   </v-list-group>
-  <v-list-item v-else :title="navigationItem.name" @click="navigationItem.screenId != null ? itemClick(navigationItem) : {}"> </v-list-item>
+  <v-list-item v-else :title="navigationItem.name ?? ''" @click="navigationItem.screenId != null ? itemClick(navigationItem) : {}"> </v-list-item>
 </template>

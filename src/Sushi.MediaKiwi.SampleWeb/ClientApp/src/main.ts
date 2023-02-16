@@ -12,6 +12,8 @@ import { md3 } from "vuetify/blueprints";
 
 import { addRoutes } from "../src/mkroutes";
 
+import {createPinia} from "pinia"
+
 const app = createApp(App);
 // load fonts
 const webFontLoader = await import(/* webpackChunkName: "webfontloader" */ "webfontloader");
@@ -23,8 +25,10 @@ webFontLoader.load({
 });
 
 const vuetify = createVuetify({ blueprint: md3, components, directives });
+const pinia = createPinia();
 
 app.use(vuetify);
+app.use(pinia);
 // add routing
 addRoutes(app);
 

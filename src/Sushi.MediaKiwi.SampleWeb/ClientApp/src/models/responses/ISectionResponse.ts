@@ -1,3 +1,3 @@
-import ISection from "@/models/section/ISection";
+import type ISection from "@/models/section/ISection";
 
 export default interface ISectionResponse extends ISection {}

@@ -1,7 +1,7 @@
-import { HttpStatusCodeEnum } from '@/models/enum/HttpStatusCodeEnum'
-import { mediaKiwiAxiosInstance } from '@/services/interceptors/Mediakiwi'
-import ListResult from '@/models/api/ListResult'
-import ISectionResponse from '@/models/responses/ISectionResponse'
+import { HttpStatusCodeEnum } from "@/models/enum/HttpStatusCodeEnum";
+import mediaKiwiAxiosInstance from "../services/interceptors/Mediakiwi";
+import type ListResult from "@/models/api/ListResult";
+import type ISectionResponse from "@/models/responses/ISectionResponse";
 
 export const SectionAPIServices = {
   GetSections(): Promise<ListResult<ISectionResponse>> {
@@ -9,14 +9,17 @@ export const SectionAPIServices = {
       mediaKiwiAxiosInstance
         .get<ListResult<ISectionResponse>>(`/sections`)
         .then((response) => {
+          console.log(response);
           if (response.status === HttpStatusCodeEnum.Ok) {
-            resolve(response.data)
+            resolve(response.data);
           }
         })
         .catch((err) => {
           //TODO: Show notification eventually
-          reject(err)
-        })
-    })
+          console.log(err);
+
+          reject(err);
+        });
+    });
   },
-}
+};

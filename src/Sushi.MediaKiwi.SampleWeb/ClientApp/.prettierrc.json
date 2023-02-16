@@ -9,5 +9,6 @@
         }
     ],
     "printWidth": 200,
-    "trailingComma": "es5"
+    "trailingComma": "es5",
+    "endOfLine":"auto"
 }

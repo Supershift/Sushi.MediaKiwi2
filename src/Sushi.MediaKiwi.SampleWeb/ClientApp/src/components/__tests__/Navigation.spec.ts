@@ -1,11 +1,12 @@
 import { mount } from "@vue/test-utils";
-import Navigation from "../Navigation.vue";
+import MkNavigation from "../MkNavigation.vue";
+import { describe, it, expect } from "vitest";
 
-describe("Navigation", () => {
+describe("MkNavigation", () => {
   it("should display header text", () => {
-    const msg = "Navigation";
-    const wrapper = mount(Navigation, { props: { msg } });
+    const msg = "MkNavigation";
+    const wrapper = mount(MkNavigation, { props: { msg } });
 
-    expect(wrapper.find("h1").text()).toEqual(msg);
+    expect(wrapper.text()).toEqual(msg);
   });
 });
