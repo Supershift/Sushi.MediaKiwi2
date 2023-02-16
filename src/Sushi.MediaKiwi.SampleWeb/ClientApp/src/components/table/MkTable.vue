@@ -12,7 +12,8 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-    (e: 'update:selectedFilters', value: TableFilterValueCollection): void
+    (e: 'update:selectedFilters', value: TableFilterValueCollection): void,
+    (e: 'click:row', value: any): void
 }>()
 
 const hasFilter = props.filterMap !== undefined && props.selectedFilters !== undefined;
@@ -28,6 +29,7 @@ const hasFilter = props.filterMap !== undefined && props.selectedFilters !== und
             @update:model-value="(e) => emit('update:selectedFilters', e)">
         </MkTableFilter>
     </template>
-    <MkTableView :table-map="tableMap" :data="data"></MkTableView>
+    <MkTableView :table-map="tableMap" :data="data"
+        @click:row="(e) => emit('click:row', e)"></MkTableView>
     <slot name="footer"></slot>
 </template>

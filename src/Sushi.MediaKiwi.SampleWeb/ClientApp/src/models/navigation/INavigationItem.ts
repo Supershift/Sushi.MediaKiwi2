@@ -6,4 +6,6 @@ export interface INavigationItem {
   parentNavigationItemId?: number | null;
   screenId?: number | null;
   path: string;
+  isItem: boolean;
+  itemParamName: string;
 }
