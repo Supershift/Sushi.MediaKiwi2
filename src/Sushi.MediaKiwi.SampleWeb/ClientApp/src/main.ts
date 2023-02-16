@@ -24,7 +24,7 @@ webFontLoader.load({
   },
 });
 
-const vuetify = createVuetify({ blueprint: md3, components, directives });
+const vuetify = createVuetify({ blueprint: md3, components, directives, theme: { defaultTheme: "dark" }});
 const pinia = createPinia();
 
 app.use(vuetify);
