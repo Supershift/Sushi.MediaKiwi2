@@ -1,11 +1,11 @@
 export interface INavigationItem {
   id: number;
-  name: string | null;
+  name: string;
   typeId: number;
   sectionId: number;
-  parentNavigationItemId?: number | null;
-  screenId?: number | null;
+  parentNavigationItemId?: number;
+  screenId?: number;
   path: string;
   isItem: boolean;
-  itemParamName: string;
+  itemParamName?: string;
 }

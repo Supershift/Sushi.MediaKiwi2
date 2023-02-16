@@ -15,6 +15,7 @@ const router = useRouter();
 
 // define a mapping between source data and desired columns in the table
 const myMap = <ITableMap<ISampleData>>{
+    itemId: (item) => { console.log(item); return item.id; },
     items: [
         { headerTitle: "Naam", value: (dataItem) => dataItem.name },
         { headerTitle: "Land", value: (dataItem) => dataItem.countryName },
@@ -62,6 +63,6 @@ const sampleData = computed(() => {
 
 <template>
     <MkTable :filter-map="filters" v-model:selected-filters="selectedFilters" :table-map="myMap" :data="sampleData"
-        @click:row="onRowClick">
+        item-screen-name="SampleDataEdit">
     </MkTable>
 </template>

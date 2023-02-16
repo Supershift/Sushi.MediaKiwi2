@@ -8,7 +8,9 @@ const props = defineProps<{
     filterMap?: ITableFilter,
     selectedFilters?: TableFilterValueCollection,
     tableMap: ITableMap<any>,
-    data: any[]
+    data: any[],
+    /** Name of the IScreen instance to which the user is pushed when clicking a row */
+    itemScreenName?: string
 }>();
 
 const emit = defineEmits<{
@@ -29,7 +31,7 @@ const hasFilter = props.filterMap !== undefined && props.selectedFilters !== und
             @update:model-value="(e) => emit('update:selectedFilters', e)">
         </MkTableFilter>
     </template>
-    <MkTableView :table-map="tableMap" :data="data"
+    <MkTableView :table-map="tableMap" :data="data" :item-screen-name="itemScreenName" 
         @click:row="(e) => emit('click:row', e)"></MkTableView>
     <slot name="footer"></slot>
 </template>
