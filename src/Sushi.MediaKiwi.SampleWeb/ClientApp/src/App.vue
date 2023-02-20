@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import MkNavigation from "@/components/MkNavigation.vue";
+  import MkNavigation from "@/components/navigation/MkNavigation.vue";
   import MkScreen from "@/components/MkScreen.vue";
 </script>
 

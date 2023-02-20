@@ -67,8 +67,8 @@ const navigationItems = <INavigationItem[]>[
     typeId: 1,
     sectionId: 1,
     parentNavigationItemId: 3,
-    isItem: true,
-    itemParamName: 'sampleDataId'
+    isDynamicRoute: true,
+    dynamicRouteParamaterName: 'sampleDataId'
   },
 ];
 
@@ -84,8 +84,8 @@ function getPath(navigationItem: INavigationItem): string {
   }
 
   // if it is a dynamic route to an item instance, add :id to the path
-  if (navigationItem.isItem) {
-    return parentPath + `/${navigationItem.name}/:${navigationItem.itemParamName}`;
+  if (navigationItem.isDynamicRoute) {
+    return parentPath + `/${navigationItem.name}/:${navigationItem.dynamicRouteParamaterName}`;
   }
   else {
     return parentPath + `/${navigationItem.name}`;

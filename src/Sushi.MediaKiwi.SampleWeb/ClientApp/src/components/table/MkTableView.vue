@@ -35,15 +35,17 @@ function onRowClick(event: Event, dataItem: any) {
 
         // try to resolve route parameter
         let routeParams = <RouteParamsRaw>{};
-        if (navigationItem.itemParamName !== undefined) {
+        if (navigationItem.isDynamicRoute !== undefined) {
             if (props.tableMap.itemId === undefined) {
-                throw new Error(`No itemId function found to resolve ${navigationItem.itemParamName}`);
+                throw new Error(`No itemId function found to resolve ${navigationItem.dynamicRouteParamaterName}`);
             }
             let itemId = props.tableMap.itemId(dataItem);
             if (itemId === undefined) {
                 throw new Error(`No value returned by itemId function`);
             }
-            routeParams[navigationItem.itemParamName] = itemId;
+            if (navigationItem.dynamicRouteParamaterName !== undefined) {
+                routeParams[navigationItem.dynamicRouteParamaterName] = itemId;
+            }
         }
 
         router.push({ name: navigationItem.name, params: routeParams });
@@ -53,7 +55,6 @@ function onRowClick(event: Event, dataItem: any) {
 </script>
 
 <template>
-
     <v-table>
         <thead>
             <tr>
@@ -69,6 +70,5 @@ function onRowClick(event: Event, dataItem: any) {
                 </MkTableCell>
             </tr>
         </tbody>
-    </v-table>
-
+</v-table>
 </template>
