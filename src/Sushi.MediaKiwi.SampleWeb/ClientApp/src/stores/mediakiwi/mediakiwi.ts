@@ -70,6 +70,16 @@ const navigationItems = <INavigationItem[]>[
     isDynamicRoute: true,
     dynamicRouteParamaterName: 'sampleDataId'
   },
+  {
+    id: 311,
+    name: "Sample-deep-data-edit",
+    screenId: 5,
+    typeId: 1,
+    sectionId: 1,
+    parentNavigationItemId: 31,
+    isDynamicRoute: true,
+    dynamicRouteParamaterName: 'deepDataId'
+  },
 ];
 
 // determines the path for a navigation item by recursively calling itself
@@ -99,9 +109,10 @@ navigationItems.forEach((item) => {
 
 const screens = <IScreen[]>[
   { id: 1, componentFileName: 'Screen1', sectionId: 1, name: "Screen 1" },
-  { id: 2, componentFileName: "Screen2", sectionId: 2, name: "Screen 2" },
-  { id: 3, componentFileName: "SampleData", sectionId: 3, name: "Sample data overview" },
-  { id: 4, componentFileName: "SampleDataEdit", sectionId: 3, name: "SampleDataEdit" },
+  { id: 2, componentFileName: "Screen2", sectionId: 1, name: "Screen 2" },
+  { id: 3, componentFileName: "SampleData", sectionId: 1, name: "Sample data overview" },
+  { id: 4, componentFileName: "SampleDataEdit", sectionId: 1, name: "SampleDataEdit" },
+  { id: 5, componentFileName: "SampleDeepDataEdit", sectionId: 1, name: "SampleDeepDataEdit" },
 ];
 
 class MkStore {
