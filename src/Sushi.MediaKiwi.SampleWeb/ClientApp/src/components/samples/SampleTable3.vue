@@ -8,9 +8,14 @@ import MkTableFilterSelect from '../table/MkTableFilterSelect.vue'
 import SampleCustomTableFilterInput from './SampleCustomTableFilterInput.vue';
 import type { ISampleData } from './ISampleData';
 import { SampleDataService } from './SampleDataService';
+import { useRoute, useRouter } from 'vue-router';
+
+const route = useRoute();
+const router = useRouter();
 
 // define a mapping between source data and desired columns in the table
 const myMap = <ITableMap<ISampleData>>{
+    itemId: (item) => { console.log(item); return item.id; },
     items: [
         { headerTitle: "Naam", value: (dataItem) => dataItem.name },
         { headerTitle: "Land", value: (dataItem) => dataItem.countryName },
@@ -18,25 +23,30 @@ const myMap = <ITableMap<ISampleData>>{
 }
 
 // define filters for the data
-const filters = <ITableFilter>{ 
+const filters = <ITableFilter>{
     items: [
-    {
-        id: 'Name',
-        title: 'Naam',
-        component: MkTableFilterTextField        
-    },
-    {
-        id: 'Country',
-        title: 'Land',
-        options: [{ title: 'Nederland', value: 'NL' }, { title: 'België', value: 'BE' }],
-        component: MkTableFilterSelect
-    },
-    {
-        id: 'FullName',
-        title: 'Volledige naam',
-        component: SampleCustomTableFilterInput
-    },
-]};
+        {
+            id: 'Name',
+            title: 'Naam',
+            component: MkTableFilterTextField
+        },
+        {
+            id: 'Country',
+            title: 'Land',
+            options: [{ title: 'Nederland', value: 'NL' }, { title: 'België', value: 'BE' }],
+            component: MkTableFilterSelect
+        },
+        {
+            id: 'FullName',
+            title: 'Volledige naam',
+            component: SampleCustomTableFilterInput
+        },
+    ]
+};
+
+function onRowClick(dataItem: ISampleData){
+    router.push({ name: 'Sample-data-edit', params: { sampleDataId: dataItem.id }});
+}
 
 // create an object which will hold selected filter values
 const selectedFilters = reactive(new TableFilterValueCollection());
@@ -52,6 +62,7 @@ const sampleData = computed(() => {
 </script>
 
 <template>
-    <MkTable :filter-map="filters" v-model:selected-filters="selectedFilters" :table-map="myMap" :data="sampleData">
+    <MkTable :filter-map="filters" v-model:selected-filters="selectedFilters" :table-map="myMap" :data="sampleData"
+        item-screen-name="SampleDataEdit">
     </MkTable>
 </template>

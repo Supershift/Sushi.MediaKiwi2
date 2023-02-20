@@ -1,6 +1,6 @@
 import { reactive } from "vue";
-import type { INavigationItem } from "@models/navigation/INavigationItem";
-import type { IScreen } from "@models/screen/IScreen";
+import type { INavigationItem } from "@/models/navigation";
+import type { IScreen } from "@/models/screen/IScreen";
 
 // get the navigation items
 const navigationItems = <INavigationItem[]>[
@@ -14,7 +14,7 @@ const navigationItems = <INavigationItem[]>[
   },
   {
     id: 11,
-    name: "Hotel sub 1",
+    name: "Hotel-sub-1",
     screenId: 3,
     typeId: 3,
     sectionId: 1,
@@ -22,7 +22,7 @@ const navigationItems = <INavigationItem[]>[
   },
   {
     id: 111,
-    name: "Hotel deeper sub 1",
+    name: "Hotel-deeper-sub-1",
     screenId: 3,
     typeId: 1,
     sectionId: 1,
@@ -46,7 +46,7 @@ const navigationItems = <INavigationItem[]>[
   },
   {
     id: 211,
-    name: "Deep level",
+    name: "Deep-level",
     screenId: 3,
     typeId: 1,
     sectionId: 1,
@@ -54,15 +54,25 @@ const navigationItems = <INavigationItem[]>[
   },
   {
     id: 3,
-    name: "Something else",
+    name: "Sample-data-overview",
     screenId: 2,
     typeId: 1,
     sectionId: 1,
     parentNavigationItemId: null,
   },
+  {
+    id: 31,
+    name: "Sample-data-edit",
+    screenId: 4,
+    typeId: 1,
+    sectionId: 1,
+    parentNavigationItemId: 3,
+    isDynamicRoute: true,
+    dynamicRouteParamaterName: 'sampleDataId'
+  },
 ];
 
-// apply path to all navigation items
+// determines the path for a navigation item by recursively calling itself
 function getPath(navigationItem: INavigationItem): string {
   // get the full path for this item by recursively going up the tree
   let parentPath: string = "";
@@ -72,16 +82,26 @@ function getPath(navigationItem: INavigationItem): string {
       parentPath = getPath(parent);
     }
   }
-  return parentPath + `/${navigationItem.name}`;
+
+  // if it is a dynamic route to an item instance, add :id to the path
+  if (navigationItem.isDynamicRoute) {
+    return parentPath + `/${navigationItem.name}/:${navigationItem.dynamicRouteParamaterName}`;
+  }
+  else {
+    return parentPath + `/${navigationItem.name}`;
+  }
 }
+
+// determine path for all navigation items
 navigationItems.forEach((item) => {
   item.path = getPath(item);
 });
 
 const screens = <IScreen[]>[
-  { id: 1, componentFileName: "Screen1", sectionId: 1, name: "Screen 1" },
+  { id: 1, componentFileName: 'Screen1', sectionId: 1, name: "Screen 1" },
   { id: 2, componentFileName: "Screen2", sectionId: 2, name: "Screen 2" },
-  { id: 3, componentFileName: "Screen3", sectionId: 3, name: "Screen 3" },
+  { id: 3, componentFileName: "SampleData", sectionId: 3, name: "Sample data overview" },
+  { id: 4, componentFileName: "SampleDataEdit", sectionId: 3, name: "SampleDataEdit" },
 ];
 
 class MkStore {

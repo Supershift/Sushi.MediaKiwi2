@@ -12,12 +12,12 @@ export function addRoutes(app: App) {
   navigationItems.forEach((navigationItem) => {
     // if the navigation item points to a screen, get the screen
     if (navigationItem.screenId != null && navigationItem.screenId !== undefined) {
-      const screen = screens.find((x) => x.id == navigationItem.screenId);
-
+      const screen = screens.find((x) => x.id == navigationItem.screenId);           
       if (screen != null && screen !== undefined) {
         const route = <RouteRecordRaw>{
           path: navigationItem.path,
-          component: () => import(/* @vite-ignore */ `@/components/${screen?.componentFileName}.vue`),
+          name: navigationItem.name,                    
+          component: () => import(`./components/${screen.componentFileName}.vue`),
         };
         routes.push(route);
       }

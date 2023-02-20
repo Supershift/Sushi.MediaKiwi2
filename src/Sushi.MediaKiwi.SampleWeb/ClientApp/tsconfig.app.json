@@ -12,7 +12,8 @@
       "@services/*": ["./src/services"],
       "@models/*": ["./src/models"],
       "@utils/*": ["./src/utils"],
-      "@stores/*": ["./src/stores"]
+      "@stores/*": ["./src/stores"],
+      "@helpers/*": ["./src/helpers"]
     }
   },
   "allowJs": true,
