@@ -1,16 +1,22 @@
-﻿using System;
+﻿using Azure.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sushi.MediaKiwi.WebAPI.Paging
+namespace Sushi.MediaKiwi.DAL.Paging
 {
     /// <summary>
     /// Represents values used when paging datasets.
     /// </summary>
-    public class PagingValues
+    public record PagingValues
     {
+        /// <summary>
+        /// Gets a <see cref="PagingValues"/> instance with default values (pagesize = 10, index = 0).
+        /// </summary>
+        public static readonly PagingValues Default = new PagingValues(0, 10);
+        
         /// <summary>
         /// Creates a new instance of <see cref="PagingValues"/>.
         /// </summary>
@@ -21,7 +27,7 @@ namespace Sushi.MediaKiwi.WebAPI.Paging
             PageIndex = pageIndex;
             PageSize = pageSize;
         }
-        
+
         /// <summary>
         /// Gets the request zero based index.
         /// </summary>

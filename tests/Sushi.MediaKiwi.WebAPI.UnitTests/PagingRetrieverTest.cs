@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using Moq;
+using Sushi.MediaKiwi.DAL.Paging;
 using Sushi.MediaKiwi.WebAPI.Paging;
 using System;
 using System.Collections.Generic;

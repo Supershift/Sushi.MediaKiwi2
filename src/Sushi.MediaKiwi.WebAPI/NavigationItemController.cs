@@ -21,8 +21,8 @@ namespace Sushi.MediaKiwi.WebAPI
         [Paging]
         public async Task<ActionResult<ListResult<NavigationItem>>> GetNavigationItems([FromQuery] int? sectionID)
         {
-            var paging = _pagingRetriever.GetPaging();
-            var result = await _screenService.GetAllAsync(sectionID);
+            var pagingValues = _pagingRetriever.GetPaging();
+            var result = await _screenService.GetAllAsync(sectionID, pagingValues);
             return this.CreateResponse(result);
         }
     }
