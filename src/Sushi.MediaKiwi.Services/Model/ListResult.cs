@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.Services.Model
 {
-    public class ListResult<T>
+    public class ListResult<T> : IPagingResult
     {
         public ListResult() : this(null, null) { }
 
@@ -22,13 +22,11 @@ namespace Sushi.MediaKiwi.Services.Model
         }
 
         public List<T> Result { get; }
-        /// <summary>
-        /// The total number of records.
-        /// </summary>
+        
+        /// <inheritdoc/>        
         public int? TotalCount { get; }
-        /// <summary>
-        /// The total number of pages, based on the requested page size.
-        /// </summary>
+        
+        /// <inheritdoc/>
         public int? PageCount { get; }
     }
 }
