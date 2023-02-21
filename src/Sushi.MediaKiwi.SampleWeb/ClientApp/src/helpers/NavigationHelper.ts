@@ -18,6 +18,6 @@ export function getNavigationItemChildren(navigationItem: INavigationItem | unde
 
 export function getNavigationItemForRoute(route: RouteLocationNormalizedLoaded , navigationItems: INavigationItem[]) : INavigationItem | undefined
 {
-    var result = navigationItems.find(item => item.name == route.name);
+    var result = navigationItems.find(item => item.id.toString() == route.name);
     return result;
 }
