@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Sushi.MediaKiwi.DAL.Paging;
 using Sushi.MediaKiwi.DAL.Repository;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
         [Fact]
         public async Task GetAllTest()
         {
-            var screens = await _repository.GetAllAsync(null);
+            var screens = await _repository.GetAllAsync(null, PagingValues.Default);
 
             Assert.NotEqual(1, screens.Count);
         }
@@ -30,7 +31,7 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
         [Fact]
         public async Task GetAllTest_BySectionID()
         {
-            var screens = await _repository.GetAllAsync(1);
+            var screens = await _repository.GetAllAsync(1, PagingValues.Default);
 
             Assert.All(screens, screen => Assert.Equal(1, screen.SectionId));
         }
