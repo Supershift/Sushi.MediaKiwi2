@@ -7,20 +7,30 @@ using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.WebAPI.Paging
 {
+    /// <summary>
+    /// Attribute adding paging querystring parameters when applied to a WebAPI method. <see cref="PagingValues"/> can be retrieved using <see cref="PagingRetriever"/>.
+    /// </summary>
     public class PagingAttribute : ActionFilterAttribute
     {
         private readonly int _defaultPageSize;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="PagingAttribute"/>.
+        /// </summary>
         public PagingAttribute()
         {
             _defaultPageSize = 10;
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="PagingAttribute"/>.
+        /// </summary>
         public PagingAttribute(int defaultPageSize)
         {
             _defaultPageSize = defaultPageSize;
         }
 
+        /// <inheritdoc/>        
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             var request = context.HttpContext.Request;
@@ -47,7 +57,5 @@ namespace Sushi.MediaKiwi.WebAPI.Paging
 
             base.OnActionExecuting(context);
         }
-
-
     }
 }

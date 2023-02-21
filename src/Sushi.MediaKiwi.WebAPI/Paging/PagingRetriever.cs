@@ -7,15 +7,26 @@ using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.WebAPI.Paging
 {
+    /// <summary>
+    /// Retrieves <see cref="PagingValues"/> from <see cref="HttpContext"/>.
+    /// </summary>
     public class PagingRetriever
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="PagingRetriever"/>.
+        /// </summary>
+        /// <param name="httpContextAccessor"></param>
         public PagingRetriever(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }
 
+        /// <summary>
+        /// Gets <see cref="PagingValues"/> from the current <see cref="HttpContext"/>.
+        /// </summary>
+        /// <returns></returns>
         public PagingValues GetPaging()
         {
             var context = _httpContextAccessor.HttpContext;

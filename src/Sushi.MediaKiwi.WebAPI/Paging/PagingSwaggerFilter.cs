@@ -11,8 +11,12 @@ using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.WebAPI.Paging
 {
+    /// <summary>
+    /// Adds paging parameters to Swagger docs for every operation decorated with <see cref="PagingAttribute"/>.
+    /// </summary>
     public class PagingSwaggerFilter : IOperationFilter
     {
+        /// <inheritdoc/>        
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
             // check if method has PagingAttribute
