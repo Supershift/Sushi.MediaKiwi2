@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
-import { store } from "@/stores/mediakiwi/mediakiwi";
+import { store } from "@/stores/mediakiwi/mock";
 import MkNavigationItem from "./MkNavigationItem.vue";
 import { getNavigationItemForRoute, getNavigationItemChildren } from '@/helpers/NavigationHelper'
 import type { INavigationItem } from "@/models/navigation";
