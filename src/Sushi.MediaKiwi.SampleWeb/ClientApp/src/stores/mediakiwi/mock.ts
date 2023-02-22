@@ -1,6 +1,7 @@
 import { reactive } from "vue";
 import type { INavigationItem } from "@models/navigation/INavigationItem";
 import type { IScreen } from "@models/screen/IScreen";
+import type ISection from "@/models/section/ISection";
 
 // {@depricated} soon
 // get the navigation items
@@ -85,13 +86,35 @@ const screens = <IScreen[]>[
   { id: 3, componentFileName: "Screen3.vue", sectionId: 3, name: "Screen 3" },
 ];
 
+// We use stubs for now
+const sections = Array<ISection>();
+sections.push({
+  id: 1,
+  name: "Home",
+  sortOrder: 1,
+  icon: "mdi-home"
+});
+sections.push({
+  id: 2,
+  name: "Users",
+  sortOrder: 2,
+  icon: "mdi-account"
+});
+sections.push({
+  id: 999,
+  name: "Admin",
+  sortOrder: 1,
+  icon: "mdi-security"
+});
 class MkStore {
   navigationItems: INavigationItem[] = [];
   screens: IScreen[] = [];
+  sections: ISection[] = [];
 }
 
 const store = reactive<MkStore>(new MkStore());
 store.navigationItems = navigationItems;
 store.screens = screens;
+store.sections = sections;
 
 export { store };

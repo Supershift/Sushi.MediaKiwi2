@@ -1,23 +1,43 @@
-import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
+import type { App } from "vue";
+import { store } from "@/stores/mediakiwi/mock";
+import { useMediakiwiStore }from "@/stores/index";
+import { createRouter, createWebHashHistory, type RouteRecordRaw, type RouterOptions } from "vue-router";
+import type { INavigationItem } from "../models/navigation";
+import type { IScreen } from "../models/screen/IScreen";
 
-const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: "/",
-      name: "home",
-      component: HomeView,
-    },
-    {
-      path: "/about",
-      name: "about",
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import("../views/AboutView.vue"),
-    },
-  ],
+// const mediaKiwiStore = useMediakiwiStore();
+// mediaKiwiStore.GET_NAVIGATION_ITEMS();
+
+const navigationItems = store.navigationItems;
+const screens = store.screens;
+
+// create routes
+const routes = <RouteRecordRaw[]>[];
+navigationItems.forEach((navigationItem: INavigationItem) => {
+  // if the navigation item points to a screen, get the screen
+  if (navigationItem.screenId != null && navigationItem.screenId !== undefined) {
+    const screen = screens.find((x: IScreen) => x.id == navigationItem.screenId);
+
+    if (screen != null && screen !== undefined) {
+      const route = <RouteRecordRaw>{
+        path: navigationItem.path,
+        component: () => import(/* @vite-ignore */ `./components/${screen?.componentFileName}`),
+      };
+      routes.push(route);
+    }
+  }
 });
+
+// add default route
+routes.push({ path: "/", component: () => routes.find(x => x.name == "Home")?.component });
+
+const routerOptions = <RouterOptions>{
+  routes: routes,
+  history: createWebHashHistory(),
+};
+
+const router = createRouter(routerOptions);
+
+console.log(routes);
 
 export default router;

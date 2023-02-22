@@ -24,61 +24,61 @@ export const useMediakiwiStore = defineStore({
             mediakiwiNavigationItems: (state: MediaKiwiState) => state.navigationItems
         },
         actions: {
-            async GET_NAVIGATION_ITEMS(state: MediaKiwiState, sectionId: number){
+            async GET_NAVIGATION_ITEMS(){
                 //TODO: START UI loading 
-                return await NavigationAPIServices.GetNavigationItems(sectionId)
+                return await NavigationAPIServices.GetNavigationItems()
                 .then((response: ListResult<INavigationItem>) => {
-                    this.SET_NAVIGATION_ITEMS(state, response);
+                    this.SET_NAVIGATION_ITEMS(response);
                 })
                 .then(() => {
                     // TODO: STOP UI loading
                 });
             },
-            async GET_SCREENS(state: MediaKiwiState, sectionId: number){
+            async GET_SCREENS(){
                 //TODO: START UI loading 
-                return await ScreenAPIServices.GetScreens(sectionId)
+                return await ScreenAPIServices.GetScreens()
                 .then((response: ListResult<IScreen>) => {
-                    this.SET_SCREENS(state, response);
+                    this.SET_SCREENS(response);
                 })
                 .then(() => {
                     // TODO: STOP UI loading
                 });
             },
-            async GET_SECTIONS(state: MediaKiwiState){
+            async GET_SECTIONS(){
                 //TODO: START UI loading 
                 return await SectionAPIServices.GetSections()
                 .then((response: ListResult<ISection>) => {
-                    this.SET_SECTIONS(state, response);
+                    this.SET_SECTIONS(response);
                 })
                 .then(() => {
                     // TODO: STOP UI loading
                 });
             },
-            SET_NAVIGATION_ITEMS(state: MediaKiwiState, payload: ListResult<INavigationItem>){
+            SET_NAVIGATION_ITEMS(payload: ListResult<INavigationItem>){
                 if (payload) {
-                    state.navigationItems = payload.result;
-                    state.navigationItems.forEach((item) =>{
-                        item.path = this.CALCULATE_PATH(state, item);
+                    this.navigationItems = payload.result;
+                    this.navigationItems.forEach((item) =>{
+                        item.path = this.CALCULATE_PATH(item);
                     })
                 }
             },
-            SET_SCREENS(state: MediaKiwiState, payload: ListResult<IScreen>){
+            SET_SCREENS(payload: ListResult<IScreen>){
                 if (payload) {
-                    state.screens = payload.result;
+                    this.screens = payload.result;
                 }
             },
-            SET_SECTIONS(state: MediaKiwiState, payload: ListResult<ISection>){
+            SET_SECTIONS(payload: ListResult<ISection>){
                 if (payload) {
-                    state.sections = payload.result;
+                    this.sections = payload.result;
                 }
             },
-            CALCULATE_PATH(state: MediaKiwiState, payload: INavigationItem): string{
+            CALCULATE_PATH(payload: INavigationItem): string{
                 // get the full path for this item by recursively going up the tree
                 let parentPath: string = "";
                 if (payload.parentNavigationItemId != null) {
-                    const parent = state.navigationItems.find((item: INavigationItem) => item.id == payload.parentNavigationItemId);
+                    const parent = this.navigationItems.find((item: INavigationItem) => item.id == payload.parentNavigationItemId);
                 if (parent !== undefined) {
-                    parentPath = this.CALCULATE_PATH(state, parent);
+                    parentPath = this.CALCULATE_PATH(parent);
                 }
                 }
                 return parentPath + `/${payload.name}`;
