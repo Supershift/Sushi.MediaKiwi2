@@ -1,30 +1,56 @@
-<script setup lang="ts">
+<script lang="ts">
   import type { INavigationItem } from "@/models/navigation/INavigationItem";
-  import { store } from "@/stores/mediakiwi/mediakiwi";
-  import { useRouter } from "vue-router";
+  import { useNavigationStore } from "@/stores/navigation";
+  import { computed, defineComponent, type PropType } from "vue";
 
-  const props = defineProps<{
-    navigationItem: INavigationItem;
-  }>();
+  export default defineComponent({
+    setup(){
+      const navigationStore = useNavigationStore();
+      navigationStore.GET_NAVIGATION();
+      const navList = computed(() => navigationStore.navigationList);
 
-  // get the children for the navigation item
-  var children = store.navigationItems.filter((item) => item.parentNavigationItemId == props.navigationItem.id);
-
-  // hook up router
-  const router = useRouter();
-
-  // called to send user to target screen
-  function itemClick(navigationItem: INavigationItem) {
-    router.push(navigationItem.path);
-  }
+        // called to send user to target screen
+      function onItemClick(navigationItem: INavigationItem) {
+        if (navigationItem && navigationItem?.screenId && navigationItem?.path) {
+          navigationStore.NAVIGATE_TO(navigationItem.path, false);
+        }
+        return false;
+      }
+      // FIXME: I need to load all the child components!
+      function childItems(navigationItem: INavigationItem): Array<INavigationItem>{    
+        const filtered = navList.value.filter((item: INavigationItem) => {
+          if (item && item.parentNavigationItemId) {
+            return item?.parentNavigationItemId == navigationItem.id
+          }
+          return [];
+        });
+        // console.log(navList.value);
+        
+        return filtered;
+      }
+      return {
+        navigationStore,
+        navList,
+        onItemClick,
+        childItems
+      }
+    }, 
+    props:{
+      navigationItem: {
+        type: Object as PropType<INavigationItem>,
+        requeired: true,
+        default: () => {}
+      }
+    }
+  })
 </script>
 
 <template>
-  <v-list-group v-if="children.length > 0">
-    <template #activator="{ props }">
-      <v-list-item v-bind="props" :title="navigationItem.name" @click="navigationItem.screenId != null ? itemClick(navigationItem) : {}"> </v-list-item>
+  <v-list-group v-if="childItems(navigationItem).length > 0" :value="navigationItem.name">
+    <template #activator="{ navigationItem }">
+      <v-list-item v-bind:active="navigationItem" :title="navigationItem.name" @click="navigationItem?.screenId != null ? onItemClick(navigationItem) : {}"></v-list-item>
     </template>
-    <MkNavigationItem v-for="child in children" :navigation-item="child"></MkNavigationItem>
+    <mk-navigation-item v-for="child in childItems(navigationItem)" :navigation-item="child"></mk-navigation-item>
   </v-list-group>
-  <v-list-item v-else :title="navigationItem.name ?? ''" @click="navigationItem.screenId != null ? itemClick(navigationItem) : {}"> </v-list-item>
+  <v-list-item v-else :title="navigationItem.name ??  ''" @click="navigationItem?.screenId != null ? onItemClick(navigationItem) : {}"> </v-list-item>
 </template>

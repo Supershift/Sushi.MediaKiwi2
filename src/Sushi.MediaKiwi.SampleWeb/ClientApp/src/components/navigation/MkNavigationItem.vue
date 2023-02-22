@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "@vue/reactivity";
 import type { INavigationItem } from "@/models/navigation";
-import { store } from "@/stores/mediakiwi/mediakiwi";
+import { store } from "@/stores/mediakiwi/mock";
 import { useRoute, useRouter } from "vue-router";
 import { getNavigationItemChildren } from '@/helpers/NavigationHelper'
 
