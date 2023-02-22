@@ -1,4 +1,4 @@
-import IListResult from "./IListResult";
+import type IListResult from "./IListResult";
 
 export default class ListResult<T> implements IListResult<T> {
   result: Array<T> = [];
