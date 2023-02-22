@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Sushi.MediaKiwi.WebAPI.Paging
 {
     /// <summary>
-    /// Adds paging parameters to Swagger docs for every operation decorated with <see cref="PagingAttribute"/>.
+    /// Adds paging parameters to Swagger docs for every operation decorated with <see cref="QueryStringPagingAttribute"/>.
     /// </summary>
     public class PagingSwaggerFilter : IOperationFilter
     {
@@ -21,7 +21,7 @@ namespace Sushi.MediaKiwi.WebAPI.Paging
         {
             // check if method has PagingAttribute
             var attributes = context.ApiDescription.CustomAttributes();
-            var hasPaging = attributes.Any(x => x is PagingAttribute);
+            var hasPaging = attributes.Any(x => x is QueryStringPagingAttribute);
 
             if (hasPaging)
             {
@@ -30,7 +30,10 @@ namespace Sushi.MediaKiwi.WebAPI.Paging
                 if (descriptor != null)
                 {
                     // add parameters object if it doesn't exist
-                    if (operation.Parameters == null) operation.Parameters = new List<OpenApiParameter>();
+                    if (operation.Parameters == null)
+                    {
+                        operation.Parameters = new List<OpenApiParameter>();
+                    }
 
                     // add paging parameters
                     operation.Parameters.Add(new OpenApiParameter()

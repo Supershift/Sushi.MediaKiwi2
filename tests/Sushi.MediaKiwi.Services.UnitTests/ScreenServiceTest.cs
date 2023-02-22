@@ -59,7 +59,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var repositoryMock = new Mock<IScreenRepository>();
             repositoryMock
                 .Setup(x => x.GetAllAsync(It.IsAny<int?>(), It.IsAny<PagingValues>()))
-                .Callback( (int? screenID) => actualFilterID = screenID)
+                .Callback( (int? screenID, PagingValues pagingValues) => actualFilterID = screenID)
                 .ReturnsAsync(new QueryListResult<DAL.Screen>());
 
             var service = new ScreenService(repositoryMock.Object, mapper);

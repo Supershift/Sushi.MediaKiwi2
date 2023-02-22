@@ -18,7 +18,7 @@ namespace Sushi.MediaKiwi.WebAPI
         }
 
         [HttpGet]
-        [Paging]
+        [QueryStringPaging]
         public async Task<ActionResult<ListResult<NavigationItem>>> GetNavigationItems([FromQuery] int? sectionID)
         {
             var pagingValues = _pagingRetriever.GetPaging();

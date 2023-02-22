@@ -17,7 +17,7 @@ using Sushi.MediaKiwi.DAL.Paging;
 
 namespace Sushi.MediaKiwi.WebAPI.UnitTests
 {
-    public class PagingAttributeTest
+    public class QueryStringPagingAttributeTest
     {
         [Fact]
         public void AddPagingTest()
@@ -26,7 +26,7 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests
             int pageSize = 20;
             int pageIndex = 3;
 
-            var attribute = new PagingAttribute();
+            var attribute = new QueryStringPagingAttribute();
 
             var contextItems = new Dictionary<object, object?>();
             var queryStore = new Dictionary<string, StringValues>();
@@ -72,7 +72,7 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests
         {
             // arrange
             int pageSize = 33;
-            var attribute = new PagingAttribute(pageSize);
+            var attribute = new QueryStringPagingAttribute(pageSize);
 
             var contextItems = new Dictionary<object, object?>();
             var queryStore = new Dictionary<string, StringValues>();

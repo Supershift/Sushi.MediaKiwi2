@@ -11,22 +11,22 @@ namespace Sushi.MediaKiwi.WebAPI.Paging
     /// <summary>
     /// Attribute adding paging querystring parameters when applied to a WebAPI method. <see cref="PagingValues"/> can be retrieved using <see cref="PagingRetriever"/>.
     /// </summary>
-    public class PagingAttribute : ActionFilterAttribute
+    public class QueryStringPagingAttribute : ActionFilterAttribute
     {
         private readonly int _defaultPageSize;
 
         /// <summary>
-        /// Creates a new instance of <see cref="PagingAttribute"/>.
+        /// Creates a new instance of <see cref="QueryStringPagingAttribute"/>.
         /// </summary>
-        public PagingAttribute()
+        public QueryStringPagingAttribute()
         {
             _defaultPageSize = 10;
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="PagingAttribute"/>.
+        /// Creates a new instance of <see cref="QueryStringPagingAttribute"/>.
         /// </summary>
-        public PagingAttribute(int defaultPageSize)
+        public QueryStringPagingAttribute(int defaultPageSize)
         {
             _defaultPageSize = defaultPageSize;
         }
