@@ -47,8 +47,9 @@ function onRowClick(event: Event, dataItem: any) {
                 routeParams[navigationItem.dynamicRouteParamaterName] = itemId;
             }
         }
-
-        router.push({ name: navigationItem.name, params: routeParams });
+        
+        // push user to target page
+        router.push({ name: navigationItem.id.toString(), params: routeParams });
     }
 }
 
