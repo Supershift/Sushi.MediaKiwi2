@@ -1,17 +1,24 @@
 <script setup lang="ts">
-  import { store } from "@/stores/mediakiwi/mediakiwi";
-  import MkNavigationItem from "@/components/MkNavigationItem.vue";
-
-  // get root level navigation items
-  var rootLevelItems = store.navigationItems.filter((item) => item.parentNavigationItemId == null);
-
+  import MkNavigationRail from './MkNavigationRail.vue';
+  import MkDrawer from './MkDrawer.vue';
+  import { useMediakiwiStore } from '@/stores';
+  
   defineEmits(["change"]);
+  const mediaKiwiStore = useMediakiwiStore();
+  mediaKiwiStore.GET_NAVIGATION_ITEMS();
+  mediaKiwiStore.GET_SECTIONS();
+  mediaKiwiStore.GET_SCREENS();
+
 </script>
 
 <template>
-  <v-navigation-drawer>
-    <v-list>
-      <MkNavigationItem v-for="navigationItem in rootLevelItems" :key="navigationItem.id" :navigation-item="navigationItem"> </MkNavigationItem>
-    </v-list>
-  </v-navigation-drawer>
+  <v-layout class="mt-80">
+    <mk-navigation-rail></mk-navigation-rail>
+    <mk-drawer></mk-drawer>
+  </v-layout>
 </template>
+<style lang="css">
+.mt-80 {
+  margin-top: 80px;
+}
+</style>
