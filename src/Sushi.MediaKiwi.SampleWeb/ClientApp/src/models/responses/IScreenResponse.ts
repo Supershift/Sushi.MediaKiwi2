@@ -1,3 +1,3 @@
-import IScreen from "../screen/IScreen";
+import type {IScreen} from "../screen/IScreen";
 
 export default interface IScreenResponse extends IScreen {}

@@ -1,10 +1,18 @@
-import axios from "axios";
+import axios, { type InternalAxiosRequestConfig } from "axios";
+
+const CancelToken = axios.CancelToken;
 
 // Interceptor for handling calls to the API
-export const mediaKiwiAxiosInstance = axios.create({
-  baseURL: `${process.env.BASE_URL}/mediakiwi/api}`, // TODO: Fix this so we use the base URL and base route
-  headers: {
-    "Content-Type": "application/json", // TODO: Add Authentication
-  },
-  withCredentials: true, // eventually we would want to use credentials for the calls
+let mediaKiwiAxiosInstance = axios.create();
+mediaKiwiAxiosInstance.interceptors.request.use((config): any => {
+  // config.withCredentials = true;// TODO: Fix this so we use the base URL and base route
+  config.baseURL = `https://localhost:7223/mediakiwi/api`,// TODO: Add Authentication
+  config.headers["Content-Type"] = "application/json";// eventually we would want to use credentials for the calls
+  config.headers["Access-Control-Allow-Origin"] = "*";
+  // if(localStorage.getItem('profile')) {
+  //   config.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem('profile')?? "")?.token }`; //TODO: resolve auth method down the line
+  // }
+  return config;
 });
+
+export default mediaKiwiAxiosInstance;
