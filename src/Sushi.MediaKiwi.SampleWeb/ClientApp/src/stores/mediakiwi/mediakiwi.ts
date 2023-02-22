@@ -100,11 +100,11 @@ navigationItems.forEach((item) => {
 });
 
 const screens = <IScreen[]>[
-  { id: 1, componentFileName: 'Screen1.vue', sectionId: 1, name: "Screen 1" },
-  { id: 2, componentFileName: "Screen2.vue", sectionId: 1, name: "Screen 2" },
-  { id: 3, componentFileName: "SampleData.vue", sectionId: 1, name: "Sample data overview" },
-  { id: 4, componentFileName: "SampleDataEdit.vue", sectionId: 1, name: "SampleDataEdit" },
-  { id: 5, componentFileName: "SampleDeepDataEdit.vue", sectionId: 1, name: "SampleDeepDataEdit" },
+  { id: 1, componentFileName: 'Screen1', sectionId: 1, name: "Screen 1" },
+  { id: 2, componentFileName: "Screen2", sectionId: 1, name: "Screen 2" },
+  { id: 3, componentFileName: "SampleData", sectionId: 1, name: "Sample data overview" },
+  { id: 4, componentFileName: "SampleDataEdit", sectionId: 1, name: "SampleDataEdit" },
+  { id: 5, componentFileName: "SampleDeepDataEdit", sectionId: 1, name: "SampleDeepDataEdit" },
 ];
 
 class MkStore {
