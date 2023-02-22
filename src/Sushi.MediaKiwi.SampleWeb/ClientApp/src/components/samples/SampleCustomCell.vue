@@ -5,5 +5,5 @@
 </script>
 
 <template>
-    Custom, data name is {{ data.name }}
+    Custom, data name is {{ data }}
 </template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
-import MkDataTable from '@/components/table/MkDataTable.vue';
+import MkTable from '@/components/table/MkTable.vue';
 import type { ITableMap } from '@/models/table/ITableMap';
 import SampleCustomCell from '@/components/samples/SampleCustomCell.vue';
 
@@ -21,19 +21,24 @@ const myMap = <ITableMap<Product>>{
         { headerTitle: "Naam", value: (entity) => entity.name },
         { headerTitle: "Voorraad", value: (entity) => entity.inStock },
         { headerTitle: "Prijs", value: (entity) => entity.price },
-        { headerTitle: "Custom", component: SampleCustomCell },
-        { headerTitle: "Custom 2", component: defineAsyncComponent(() =>  import('@/components/samples/SampleCustomCell.vue')) },
+        { headerTitle: "Custom", value: (entity) => entity.name, component: SampleCustomCell },
+        {
+            headerTitle: "Custom 2",
+            value: (entity) => entity.name,
+            component: defineAsyncComponent(() => import('@/components/samples/SampleCustomCell.vue'))
+        },
     ]
 }
 </script>
 
 <template>
-    <MkDataTable :map="myMap" :data="products">
+
+    <MkTable :table-map="myMap" :data="products">
         <template v-slot:header>
             <h1>I am the table</h1>
         </template>
         <template v-slot:footer>
             You know, I am the footer.
         </template>
-    </MkDataTable>
+    </MkTable>
 </template>
