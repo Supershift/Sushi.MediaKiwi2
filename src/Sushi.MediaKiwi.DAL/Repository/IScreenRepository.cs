@@ -1,4 +1,5 @@
-﻿using Sushi.MicroORM;
+﻿using Sushi.MediaKiwi.DAL.Paging;
+using Sushi.MicroORM;
 
 namespace Sushi.MediaKiwi.DAL.Repository
 {
@@ -9,9 +10,8 @@ namespace Sushi.MediaKiwi.DAL.Repository
     {
         /// <summary>
         /// Gets all screens for the given filter parameters.
-        /// </summary>
-        /// <param name="sectionID"></param>
+        /// </summary>        
         /// <returns></returns>
-        Task<QueryListResult<Screen>> GetAllAsync(int? sectionID);
+        Task<QueryListResult<Screen>> GetAllAsync(int? sectionID, PagingValues pagingValues);
     }
 }

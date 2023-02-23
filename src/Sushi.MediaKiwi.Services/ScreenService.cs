@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Sushi.MediaKiwi.DAL.Paging;
 using Sushi.MediaKiwi.DAL.Repository;
 using Sushi.MediaKiwi.Services.Model;
 using System;
@@ -32,19 +33,18 @@ namespace Sushi.MediaKiwi.Services
 
         /// <summary>
         /// Gets all screens matching the provided filter parameters.
-        /// </summary>
-        /// <param name="sectionID"></param>
+        /// </summary>        
         /// <returns></returns>
-        public async Task<Result<ListResult<Screen>>> GetAllAsync(int? sectionID)
+        public async Task<Result<ListResult<Screen>>> GetAllAsync(int? sectionID, PagingValues pagingValues)
         {
             // get sections from datastore
-            var sections = await _screenRepository.GetAllAsync(sectionID);
+            var screens = await _screenRepository.GetAllAsync(sectionID, pagingValues);
 
             // create result object
-            var result = new ListResult<Screen>(sections.TotalNumberOfRows, sections.TotalNumberOfPages);
+            var result = new ListResult<Screen>(screens.TotalNumberOfRows, screens.TotalNumberOfPages);
 
             // map to result
-            _mapper.Map(sections, result.Result);
+            _mapper.Map(screens, result.Result);
 
             return new Result<ListResult<Screen>>(result);
         }

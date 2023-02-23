@@ -1,6 +1,8 @@
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Sushi.MediaKiwi.Services;
+using Sushi.MediaKiwi.WebAPI;
+using Sushi.MediaKiwi.WebAPI.Paging;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,15 +26,20 @@ services.AddEndpointsApiExplorer();
 // todo: move MK stuff to helper method
 services.AddSwaggerGen(options =>
 {
+    // add documentation
     var webModelFilename = $"{Assembly.GetAssembly(typeof(Sushi.MediaKiwi.Services.SectionService)).GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, webModelFilename));
 
+    // add paging parameters
+    options.OperationFilter<PagingSwaggerFilter>();
+
+    // add docs for mediakiw
     options.SwaggerDoc("MediaKiwi", new OpenApiInfo { Title = "MediaKiwi" });
 
     options.EnableAnnotations();
 });
 
-services.AddMediaKiwiServices(connectionString);
+services.AddMediaKiwiApi(connectionString);
 
 var app = builder.Build();
 

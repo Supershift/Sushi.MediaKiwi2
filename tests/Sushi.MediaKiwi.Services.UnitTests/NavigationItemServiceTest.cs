@@ -1,6 +1,7 @@
 using AutoMapper;
 using Moq;
 using NuGet.Frameworks;
+using Sushi.MediaKiwi.DAL.Paging;
 using Sushi.MediaKiwi.DAL.Repository;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MicroORM;
@@ -26,12 +27,12 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var mapper = config.CreateMapper();
 
             var repositoryMock = new Mock<INavigationItemRepository>();
-            repositoryMock.Setup(x => x.GetAllAsync(It.IsAny<int?>())).ReturnsAsync(stubs);
+            repositoryMock.Setup(x => x.GetAllAsync(It.IsAny<int?>(), It.IsAny<PagingValues>())).ReturnsAsync(stubs);
 
             var service = new NavigationItemService(repositoryMock.Object, mapper);
 
             // act
-            var result = await service.GetAllAsync(null);
+            var result = await service.GetAllAsync(null, PagingValues.Default);
 
             // assert
             Assert.NotNull(result);
@@ -57,14 +58,14 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             
             var repositoryMock = new Mock<INavigationItemRepository>();
             repositoryMock
-                .Setup(x => x.GetAllAsync(It.IsAny<int?>()))
-                .Callback( (int? screenID) => actualFilterID = screenID)
+                .Setup(x => x.GetAllAsync(It.IsAny<int?>(), It.IsAny<PagingValues>()))
+                .Callback( (int? screenID, PagingValues pagingValues) => actualFilterID = screenID)
                 .ReturnsAsync(new QueryListResult<DAL.NavigationItem>());
 
             var service = new NavigationItemService(repositoryMock.Object, mapper);
 
             // act
-            var result = await service.GetAllAsync(expectedFilterID);
+            var result = await service.GetAllAsync(expectedFilterID, PagingValues.Default);
 
             // assert
             Assert.Equal(expectedFilterID, actualFilterID);

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Sushi.MediaKiwi.DAL.Paging;
 using Sushi.MediaKiwi.DAL.Repository;
 using Sushi.MediaKiwi.Services.Model;
 using System;
@@ -22,10 +23,10 @@ namespace Sushi.MediaKiwi.Services
             _mapper = mapper;
         }
 
-        public async Task<Result<ListResult<NavigationItem>>> GetAllAsync(int? sectionID)
+        public async Task<Result<ListResult<NavigationItem>>> GetAllAsync(int? sectionID, PagingValues pagingValues)
         {
             // get navigationitems from datastore
-            var items = await _navigationItemRepository.GetAllAsync(sectionID);
+            var items = await _navigationItemRepository.GetAllAsync(sectionID, pagingValues);
 
             // create result object
             var result = new ListResult<NavigationItem>(items.TotalNumberOfRows, items.TotalNumberOfPages);
