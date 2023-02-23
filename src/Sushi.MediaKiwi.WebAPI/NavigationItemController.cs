@@ -8,12 +8,12 @@ namespace Sushi.MediaKiwi.WebAPI
     [Route($"{BaseRoute}/navigationitems")]
     public class NavigationItemController : MediaKiwiControllerBase
     {
-        private readonly NavigationItemService _screenService;
+        private readonly NavigationItemService _navigationItemService;
         private readonly PagingRetriever _pagingRetriever;
 
         public NavigationItemController(NavigationItemService screenService, PagingRetriever pagingRetriever)
         {
-            _screenService = screenService;
+            _navigationItemService = screenService;
             _pagingRetriever = pagingRetriever;
         }
 
@@ -22,7 +22,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<ListResult<NavigationItem>>> GetNavigationItems([FromQuery] int? sectionID)
         {
             var pagingValues = _pagingRetriever.GetPaging();
-            var result = await _screenService.GetAllAsync(sectionID, pagingValues);
+            var result = await _navigationItemService.GetAllAsync(sectionID, pagingValues);
             return this.CreateResponse(result);
         }
     }
