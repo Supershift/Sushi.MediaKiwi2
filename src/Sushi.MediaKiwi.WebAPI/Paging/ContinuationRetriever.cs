@@ -9,44 +9,44 @@ using System.Threading.Tasks;
 namespace Sushi.MediaKiwi.WebAPI.Paging
 {
     /// <summary>
-    /// Retrieves <see cref="PagingValues"/> from <see cref="HttpContext"/>.
+    /// Retrieves <see cref="ContinuationValues"/> from <see cref="HttpContext"/>.
     /// </summary>
-    public class PagingRetriever
+    public class ContinuationRetriever
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         /// <summary>
-        /// Creates a new instance of <see cref="PagingRetriever"/>.
+        /// Creates a new instance of <see cref="ContinuationRetriever"/>.
         /// </summary>
         /// <param name="httpContextAccessor"></param>
-        public PagingRetriever(IHttpContextAccessor httpContextAccessor)
+        public ContinuationRetriever(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }
 
         /// <summary>
-        /// Gets <see cref="PagingValues"/> from the current <see cref="HttpContext"/>.
+        /// Gets <see cref="ContinuationValues"/> from the current <see cref="HttpContext"/>.
         /// </summary>
         /// <returns></returns>
-        public PagingValues GetPaging()
+        public ContinuationValues GetContinuationValues()
         {
             var context = _httpContextAccessor.HttpContext;
 
-            PagingValues? result = null;
+            ContinuationValues? result = null;
 
             // get value from context
             if (context?.Items != null)
             {
-                if (context.Items.ContainsKey("paging"))
+                if (context.Items.ContainsKey("continuation"))
                 {
-                    result = context.Items["paging"] as PagingValues;
+                    result = context.Items["continuation"] as ContinuationValues;
                 }
             }
 
-            // create default if none paging data found
+            // create default if no continuation data found
             if(result == null)
             {
-                result = PagingValues.Default;
+                result = ContinuationValues.Default;
             }
 
             // return result

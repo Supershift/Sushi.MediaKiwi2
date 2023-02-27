@@ -27,11 +27,12 @@ services.AddEndpointsApiExplorer();
 services.AddSwaggerGen(options =>
 {
     // add documentation
-    var webModelFilename = $"{Assembly.GetAssembly(typeof(Sushi.MediaKiwi.Services.SectionService)).GetName().Name}.xml";
+    var webModelFilename = $"{Assembly.GetAssembly(typeof(SectionService))?.GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, webModelFilename));
 
     // add paging parameters
     options.OperationFilter<PagingSwaggerFilter>();
+    options.OperationFilter<ContinuationSwaggerFilter>();
 
     // add docs for mediakiw
     options.SwaggerDoc("MediaKiwi", new OpenApiInfo { Title = "MediaKiwi" });
