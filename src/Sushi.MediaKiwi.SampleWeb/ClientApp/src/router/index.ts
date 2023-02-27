@@ -21,7 +21,8 @@ navigationItems.forEach((navigationItem: INavigationItem) => {
     if (screen != null && screen !== undefined) {
       const route = <RouteRecordRaw>{
         path: navigationItem.path,
-        component: () => import(/* @vite-ignore */ `./components/${screen?.componentFileName}`),
+        name: navigationItem.id.toString(),
+        component: () => import(`../components/${screen?.componentFileName}.vue`),        
       };
       routes.push(route);
     }
@@ -29,7 +30,7 @@ navigationItems.forEach((navigationItem: INavigationItem) => {
 });
 
 // add default route
-routes.push({ path: "/", component: () => routes.find(x => x.name == "Home")?.component });
+// routes.push({ path: "/", component: () => routes.find(x => x.name == "Home")?.component });
 
 const routerOptions = <RouterOptions>{
   routes: routes,

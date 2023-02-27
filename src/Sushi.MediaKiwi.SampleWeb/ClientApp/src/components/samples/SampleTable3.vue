@@ -44,10 +44,6 @@ const filters = <ITableFilter>{
     ]
 };
 
-function onRowClick(dataItem: ISampleData){
-    router.push({ name: 'Sample-data-edit', params: { sampleDataId: dataItem.id }});
-}
-
 // create an object which will hold selected filter values
 const selectedFilters = reactive(new TableFilterValueCollection());
 

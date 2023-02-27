@@ -2,7 +2,7 @@
 import { useRouter, type RouteParamsRaw } from 'vue-router';
 import type { ITableMap } from '@/models/table/ITableMap';
 import MkTableCell from './MkTableCell.vue';
-import { store } from '@/stores/mediakiwi/mediakiwi';
+import { store } from '@/stores/mediakiwi/mock';
 
 const props = defineProps<{
     tableMap: ITableMap<any>,

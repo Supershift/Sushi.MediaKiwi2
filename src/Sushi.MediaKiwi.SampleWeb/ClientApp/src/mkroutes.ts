@@ -47,4 +47,6 @@ export function addRoutes(app: App) {
   const router = createRouter(routerOptions);
 
   app.use(router);
+
+  return router;
 }
