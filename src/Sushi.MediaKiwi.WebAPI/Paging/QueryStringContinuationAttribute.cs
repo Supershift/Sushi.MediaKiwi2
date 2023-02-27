@@ -20,7 +20,7 @@ namespace Sushi.MediaKiwi.WebAPI.Paging
         /// </summary>
         public QueryStringContinuationAttribute()
         {
-            _defaultMaxItems = 10;
+            _defaultMaxItems = ContinuationValues.Default.MaxItems;
         }
 
         /// <summary>
