@@ -20,7 +20,7 @@ namespace Sushi.MediaKiwi.WebAPI.Paging
         /// </summary>
         public QueryStringPagingAttribute()
         {
-            _defaultPageSize = 10;
+            _defaultPageSize = PagingValues.Default.PageSize;
         }
 
         /// <summary>
