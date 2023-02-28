@@ -1,5 +1,4 @@
 {
-  "files": ["./src/**"],
   "references": [
     {
       "path": "./tsconfig.config.json"
