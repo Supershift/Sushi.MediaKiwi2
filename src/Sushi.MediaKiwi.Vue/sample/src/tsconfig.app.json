@@ -1,0 +1,31 @@
+{
+  "target": "es5",
+  "extends": "@vue/tsconfig/tsconfig.web.json",
+  "include": ["./env.d.ts", "src/**/*", "src/**/*.vue", "**/*.d.ts", "src/**/**/*", "src/**/**/**/*.vue" ],
+  "exclude": ["node_modules", "src/**/__tests__/*", "./sample"],
+  "compilerOptions": {
+    "composite": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@interfaces/*": ["./src/models/interfaces/*"],
+      "@services/*": ["./src/services/*"],
+      "@models/*": ["./src/models/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@stores/*": ["./src/stores/*"]
+    },
+    "outDir": "./dist",
+  },
+  "allowJs": true,
+  "skipLibCheck": true,
+  "esModuleInterop": true,
+  "allowSyntheticDefaultImports": true,
+  "strict": true,
+  "forceConsistentCasingInFileNames": true,
+  "noFallthroughCasesInSwitch": true,
+  "module": "esnext",
+  "moduleResolution": "node",
+  "resolveJsonModule": true,
+  "isolatedModules": true,
+  "noEmit": true,
+}
