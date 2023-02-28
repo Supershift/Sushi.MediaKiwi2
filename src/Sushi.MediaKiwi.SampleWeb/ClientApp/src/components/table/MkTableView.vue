@@ -2,22 +2,22 @@
 import { useRouter, type RouteParamsRaw } from 'vue-router';
 import type { ITableMap } from '@/models/table/ITableMap';
 import MkTableCell from './MkTableCell.vue';
-import { store } from '@/stores/mediakiwi/mediakiwi';
+import { store } from '@/stores/mediakiwi/mock';
 
 const props = defineProps<{
-    tableMap: ITableMap<any>,
-    data: any[],
+    tableMap: ITableMap<unknown>,
+    data: unknown[],
     /** Name of the IScreen instance to which the user is pushed when clicking a row */
     itemScreenName?: string
 }>();
 
 const emit = defineEmits<{
-    (e: 'click:row', value: any): void
+    (e: 'click:row', value: unknown): void
 }>()
 
 const router = useRouter();
 
-function onRowClick(event: Event, dataItem: any) {
+function onRowClick(event: Event, dataItem: unknown) {
     // emit event
     emit('click:row', dataItem);
 

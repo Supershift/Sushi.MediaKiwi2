@@ -21,7 +21,8 @@ navigationItems.forEach((navigationItem: INavigationItem) => {
     if (screen != null && screen !== undefined) {
       const route = <RouteRecordRaw>{
         path: navigationItem.path,
-        component: () => import(/* @vite-ignore */ `./components/${screen?.componentFileName}`),
+        name: navigationItem.id.toString(),
+        component: () => import(`../components/${screen?.componentFileName}.vue`),        
       };
       routes.push(route);
     }
