@@ -49,4 +49,10 @@ export const SampleDataService = {
       data[index] = item;
     }
   },
+  Delete(id: number) {
+    var index = data.findIndex((x) => x.id == id);
+    if (index != -1) {
+      data.splice(index, 1);
+    }
+  },
 };

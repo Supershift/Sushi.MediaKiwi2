@@ -1,5 +1,6 @@
 {
   "editor.formatOnSave": true,
   "prettier.configPath": "ClientApp/.prettierrc.json",
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "volar.inlayHints.eventArgumentInInlineHandlers": false
 }
