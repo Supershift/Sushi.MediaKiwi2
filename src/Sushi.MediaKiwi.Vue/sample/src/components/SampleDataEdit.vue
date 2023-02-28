@@ -1,10 +1,10 @@
 <script setup lang="ts">
   import { useRoute, useRouter } from "vue-router";
-  import MkTableView from "./table/MkTableView.vue";
-  import MkForm from "./form/MkForm.vue";
-  import type { ITableMap } from "@/models/table";
-  import { SampleDataService } from "./samples/SampleDataService";
-  import type { ISampleData } from "./samples/ISampleData";
+  import MkTableView from "@supershift/mediakiwi-vue";
+  import MkForm from "@supershift/mediakiwi-vue";
+  import type { ITableMap } from "@supershift/mediakiwi-vue";
+  import { SampleDataService } from "./SampleDataService";
+  import type { ISampleData } from "./ISampleData";
   import { reactive, ref } from "vue";
 
   const route = useRoute();

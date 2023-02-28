@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { reactive, computed } from 'vue'
-import MkTable from '../table/MkTable.vue';
-import type { ITableMap, ITableFilter, ITableFilterItem } from '@/models/table/';
-import { TableFilterValueCollection } from '@/models/table/';
-import MkTableFilterTextField from '../table/MkTableFilterTextField.vue'
-import MkTableFilterSelect from '../table/MkTableFilterSelect.vue'
+import { MkTable } from '@supershift/mediakiwi-vue';
+import type { ITableMap, ITableFilter, ITableFilterItem } from '@supershift/mediakiwi-vue';
+import { TableFilterValueCollection } from '@supershift/mediakiwi-vue';
+import { MkTableFilterTextField } from '@supershift/mediakiwi-vue'
+import { MkTableFilterSelect } from '@supershift/mediakiwi-vue'
 import SampleCustomTableFilterInput from './SampleCustomTableFilterInput.vue';
 import type { ISampleData } from './ISampleData';
 import { SampleDataService } from './SampleDataService';

@@ -6,7 +6,8 @@
     "publish": "npm publish --access public",
     "build": "vite build",
     "build:watch": "vite build -w",
-    "pack": "npm pack"
+    "pack": "npm pack",
+    "link": "npm link @supershift/mediakiwi-vue"
   },
   "repository": {
     "type": "git",

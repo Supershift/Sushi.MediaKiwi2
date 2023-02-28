@@ -12,11 +12,13 @@ import { md3 } from "vuetify/blueprints";
 
 import { mdi, aliases } from "vuetify/iconsets/mdi";
 
-import router from "./router";
+// import router from "./router";
+import { createMediakiwiVue, router } from "@supershift/mediakiwi-vue";
 
 import { createPinia, type PiniaPluginContext } from "pinia";
 
 const pinia = createPinia();
+
 
 const app = createApp(App);
 
@@ -51,6 +53,12 @@ pinia.use(({ store }) => {
   store.hello = "Welcome to Mediakiwi 2.0";
   store.router = router;
 });
+
+const mediakiwi = createMediakiwiVue({
+  //
+});
+
+app.use(mediakiwi);
 
 app.use(pinia);
 

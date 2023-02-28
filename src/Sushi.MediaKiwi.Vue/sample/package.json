@@ -1,49 +1,23 @@
 {
-  "name": "@supershift/mediakiwi-vue",
-  "version": "0.0.1",
-  "description": "Vue 3 Library for the MediaKiwi Portal Builder",
+  "private": true,
   "scripts": {
-    "publish": "npm publish --access public",
-    "build": "vite build",
-    "build:watch": "vite build -w",
-    "pack": "npm pack"
+    "dev": "vite",
+    "build": "run-p type-check build-only",
+    "preview": "vite preview",
+    "test:unit": "vitest --environment jsdom --root src/",
+    "test:e2e": "start-server-and-test preview :4173 'cypress run --e2e'",
+    "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' :4173 'cypress open --e2e'",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "dotnet:run:api": "cd ../../Sushi.MediaKiwi.SampleAPI && dotnet build && dotnet watch run",
+    "test": "jest src",
+    "test:ui": "vitest --ui",
+    "reports": "vite preview --base __vitest__ --outDir ./html"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Supershift/Sushi.MediaKiwi2.UI.git",
-    "directory": "packages/mediakiwi-vue"
-  },
-  "license": "MIT",
-  "keywords": [
-    "mediakiwi",
-    "ui framework",
-    "portal",
-    "builder",
-    "vue",
-    "vuetify"
-  ],
-  "type": "module",
-  "files": [
-    "dist"
-  ],
-  "main": "./dist/mediakiwi-vue.umd.js",
-  "module": "./dist/mediakiwi-vue.es.js",
-  "exports": {
-    ".": {
-      "import": "./dist/mediakiwi-vue.es.js",
-      "require": "./dist/mediakiwi-vue.umd.js"
-    },
-    "./dist/mediakiwi-vue.css": {
-      "import": "./dist/mediakiwi-vue.css",
-      "require": "./dist/mediakiwi-vue.css"
-    }
-  },
-  "types": "./dist/main.d.ts",
   "dependencies": {
     "axios": "^1.3.2",
     "pinia": "^2.0.0-rc.10",
-    "rollup-plugin-typescript2": "^0.34.1",
-    "vite-plugin-dts": "^2.0.2",
     "vite-plugin-vuetify": "^1.0.2",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6",

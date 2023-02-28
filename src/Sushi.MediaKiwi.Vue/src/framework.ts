@@ -2,15 +2,24 @@ import type { App, Component } from 'vue';
 import * as components from "@/components";
 import { createPinia } from "pinia";
 import type { Pinia } from "pinia";
+// import mediakiwAxiosInstance from "./services/main";
+import type {AxiosInstance} from "axios"
 
 export interface IMediakiwiVueOptions {
-  piniaInstance?: Pinia
+  pinia?: Pinia,
 }
 
 export function createPiniaInstance(instance?: Pinia) : Pinia {
   return createPinia();
 }
 
+// function setAxiosDefaults(instance: AxiosInstance) {
+//   if (instance) {
+//     mediakiwAxiosInstance.defaults.baseURL = instance.defaults.baseURL;
+//     mediakiwAxiosInstance.defaults.cancelToken = instance.defaults.cancelToken;
+//     mediakiwAxiosInstance.defaults.headers = instance.defaults.headers;
+//   }
+// }
 
 export function createMediakiwiVue(options: IMediakiwiVueOptions) {
     const install = (app: App) => {
@@ -22,7 +31,8 @@ export function createMediakiwiVue(options: IMediakiwiVueOptions) {
       }
   
       // Create an instance of Pinia
-      const pinia = createPiniaInstance(options?.piniaInstance);      
+      const pinia = createPiniaInstance(options?.pinia);      
+      // setAxiosDefaults(options?.axiosInstance);
       
       app.use(pinia);      
     }

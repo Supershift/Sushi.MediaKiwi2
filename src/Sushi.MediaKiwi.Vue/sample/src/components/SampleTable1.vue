@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
-import MkTable from '@/components/table/MkTable.vue';
-import type { ITableMap } from '@/models/table/ITableMap';
-import SampleCustomCell from '@/components/samples/SampleCustomCell.vue';
+import { MkTable } from '@supershift/mediakiwi-vue';
+import type { ITableMap } from '@supershift/mediakiwi-vue';
+import SampleCustomCell from './SampleCustomCell.vue';
 
 interface Product {
     id: number,
@@ -25,7 +25,7 @@ const myMap = <ITableMap<Product>>{
         {
             headerTitle: "Custom 2",
             value: (entity) => entity.name,
-            component: defineAsyncComponent(() => import('@/components/samples/SampleCustomCell.vue'))
+            component: defineAsyncComponent(() => import('@/components/SampleCustomCell.vue'))
         },
     ]
 }

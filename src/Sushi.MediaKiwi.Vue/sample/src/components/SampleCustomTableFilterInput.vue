@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { ITableFilterItem } from '@/models/table/ITableFilterItem';
-import type { ITableFilterValue } from '@/models/table/ITableFilterValue';
+import type { ITableFilterItem } from '@supershift/mediakiwi-vue';
+import type { ITableFilterValue } from '@supershift/mediakiwi-vue';
 
 const props = defineProps<{
     tableFilterItem: ITableFilterItem,

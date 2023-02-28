@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import MkNavigation from "@/components/navigation/MkNavigation.vue";
-  import MkScreen from "@/components/MkScreen.vue";
+  import { MkNavigation } from "@supershift/mediakiwi-vue";
+  import { MkScreen } from "@supershift/mediakiwi-vue";
 </script>
 
 <template>
