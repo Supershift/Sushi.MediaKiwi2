@@ -30,7 +30,7 @@ navigationItems.forEach((navigationItem: INavigationItem) => {
 });
 
 // add default route
-// routes.push({ path: "/", component: () => routes.find(x => x.name == "Home")?.component });
+routes.push({ path: "/", component: () => routes.find(x => x.name == "Home")?.component });
 
 const routerOptions = <RouterOptions>{
   routes: routes,

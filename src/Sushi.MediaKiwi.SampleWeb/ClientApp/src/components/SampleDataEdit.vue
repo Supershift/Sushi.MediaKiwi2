@@ -2,7 +2,7 @@
   import { useRoute, useRouter } from "vue-router";
   import MkTableView from "./table/MkTableView.vue";
   import MkForm from "./form/MkForm.vue";
-  import type { ITableMap, ITableMapItem } from "@/models/table";
+  import type { ITableMap } from "@/models/table";
   import { SampleDataService } from "./samples/SampleDataService";
   import type { ISampleData } from "./samples/ISampleData";
   import { reactive, ref } from "vue";
@@ -25,13 +25,18 @@
     });
   }
 
-  const deepData = [
+  interface DeepData  {
+    id: string,
+    name: string
+  }
+
+  const deepDataItems: DeepData[] = [
     { id: "abc-123", name: "hello" },
     { id: "dfh-235", name: "good" },
     { id: "dfsdg", name: "bye" },
   ];
-
-  const myMap = <ITableMap<any>>{
+  
+  const myMap = <ITableMap<DeepData>>{
     itemId: (item) => item.id,
     items: [{ headerTitle: "Name", value: (dataItem) => dataItem.name }],
   };
@@ -51,7 +56,7 @@
     state.data = candidate ? candidate : <ISampleData>{};
   }
 
-  function onDelete(){
+  function onDelete() {
     SampleDataService.Delete(state.data.id);
   }
 
@@ -70,6 +75,6 @@
     Manually go a level deeper: <v-btn @click="onButtonClick">Level deeper</v-btn>
     <v-divider></v-divider>
     Use a table to go a level deeper:
-    <MkTableView :data="deepData" :table-map="myMap" item-screen-name="SampleDeepDataEdit"></MkTableView>
+    <MkTableView :data="deepDataItems" :table-map="myMap" item-screen-name="SampleDeepDataEdit"></MkTableView>
   </div>
 </template>
