@@ -4,13 +4,11 @@ import { createPinia } from "pinia";
 import type { Pinia } from "pinia";
 // import mediakiwAxiosInstance from "./services/main";
 import type {AxiosInstance} from "axios"
+import { useMediakiwiStore } from '@/stores/index';
+import useRouter from '@/router';
 
 export interface IMediakiwiVueOptions {
-  pinia?: Pinia,
-}
-
-export function createPiniaInstance(instance?: Pinia) : Pinia {
-  return createPinia();
+  modules: Record<string, () => Promise<unknown>>,
 }
 
 // function setAxiosDefaults(instance: AxiosInstance) {
@@ -21,8 +19,8 @@ export function createPiniaInstance(instance?: Pinia) : Pinia {
 //   }
 // }
 
-export function createMediakiwiVue(options: IMediakiwiVueOptions) {
-    const install = (app: App) => {
+export default {
+    install(app: App, options: IMediakiwiVueOptions) {
       // Auto import all components
       for (const componentKey in components) {
           const name = (components as any)[componentKey];
@@ -31,20 +29,30 @@ export function createMediakiwiVue(options: IMediakiwiVueOptions) {
       }
   
       // Create an instance of Pinia
-      const pinia = createPiniaInstance(options?.pinia);      
+      const pinia = createPinia();      
       // setAxiosDefaults(options?.axiosInstance);
-      
-      app.use(pinia);      
-    }
+      app.use(pinia);
+  
+      // Update or replace store ?
+      const s = useMediakiwiStore();
+      console.log("received modules", options?.modules);
+      s.SET_MODULES(options?.modules);
 
-    return {
-      install
-    }    
+      console.log("createMediakiwiRouter");
+      // // hook up router
+      const { router, createMediakiwiRouter } = useRouter();      
+      createMediakiwiRouter();
+
+      if(router.value) {
+        console.log("bind the router");
+        app.use(router.value);
+      }      
+    }
 }
 
 export * from "@/components";
 
-export { default as router } from "@/router";
+export { default as useRouter } from "@/router";
 
 export * from "@/helpers";
 
@@ -53,3 +61,5 @@ export * from "@/models";
 export * from "@/services";
 
 export * from "@/stores";
+
+export { store as MkMockStore } from "@/stores/mediakiwi/mock";

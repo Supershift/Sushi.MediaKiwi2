@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import type { INavigationItem } from "@/models/navigation"; 
 import { useMediakiwiStore } from ".";
 import type ISection from "@/models/section/ISection";
-import router from "@/router";
+import useRouter from "@/router";
 // import router from "@/router";
 
 type NavigationState = {
@@ -62,13 +62,15 @@ export const useNavigationStore = defineStore({
                     this.SET_CURRENT_SECTION(path);
                 }
                 // hook up router
-                if (path && router) {
+                const { router } = useRouter();
+
+                if (path && router.value) {
                     // called to send user to target screen
-                    router.push(path);
+                    router.value.push(path);
                     console.log(path);
 
                 }
-                console.log(router);
+                console.log(router.value);
                 
             },
         }

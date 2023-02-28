@@ -13,12 +13,13 @@ import { md3 } from "vuetify/blueprints";
 import { mdi, aliases } from "vuetify/iconsets/mdi";
 
 // import router from "./router";
-import { createMediakiwiVue, router } from "@supershift/mediakiwi-vue";
+import mediakiwi, { type IScreen, type INavigationItem, useRouter } from "@supershift/mediakiwi-vue";
+
+console.log("before");
 
 import { createPinia, type PiniaPluginContext } from "pinia";
 
 const pinia = createPinia();
-
 
 const app = createApp(App);
 
@@ -49,22 +50,33 @@ const vuetify = createVuetify({
 
 // add a property named `secret` to every store that is created
 // after this plugin is installed this could be in a different file
-pinia.use(({ store }) => {
-  store.hello = "Welcome to Mediakiwi 2.0";
-  store.router = router;
+// pinia.use(({ store }) => {
+//   store.hello = "Welcome to Mediakiwi 2.0";
+//   store.router = router;
+// });
+
+const modules = import.meta.glob('./components/**/*.vue')
+
+app.use(mediakiwi, {
+  modules,
 });
 
-const mediakiwi = createMediakiwiVue({
-  //
-});
+// const mediakiwi = createMediakiwiVue();
 
-app.use(mediakiwi);
+
+console.log("after");
+
+const { router }  = useRouter();
+
+if( router.value ) {
+  app.use(router.value)
+}
 
 app.use(pinia);
 
 app.use(vuetify);
 
 // add routing
-app.use(router);
+// app.use(router);
 
 app.mount("#app");

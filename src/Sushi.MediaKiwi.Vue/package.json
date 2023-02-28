@@ -4,8 +4,8 @@
   "description": "Vue 3 Library for the MediaKiwi Portal Builder",
   "scripts": {
     "publish": "npm publish --access public",
-    "build": "vite build",
-    "build:watch": "vite build -w",
+    "build": "vite build --mode development",
+    "build:watch": "vite build -w  --mode development",
     "pack": "npm pack",
     "link": "npm link @supershift/mediakiwi-vue"
   },
