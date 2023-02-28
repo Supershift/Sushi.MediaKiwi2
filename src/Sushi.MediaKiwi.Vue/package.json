@@ -10,8 +10,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Supershift/Sushi.MediaKiwi2.UI.git",
-    "directory": "packages/mediakiwi-vue"
+    "url": "https://github.com/Supershift/Sushi.MediaKiwi2.git",
+    "directory": "src/Sushi.MediaKiwi.Vue"
   },
   "license": "MIT",
   "keywords": [

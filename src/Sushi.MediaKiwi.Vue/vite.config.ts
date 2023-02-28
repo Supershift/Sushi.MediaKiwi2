@@ -16,7 +16,7 @@ export default defineConfig({
     typescript2({
       check: false,
       include: [
-        "src/components/**/*.vue",
+        "src/**/*.vue",
         "src/**/*.ts",
       ],
       tsconfigOverride: {
@@ -36,7 +36,7 @@ export default defineConfig({
       // Could also be a dictionary or array of multiple entry points
       entry: path.resolve(__dirname, "src/framework.ts"),
       name: 'mediakiwiVue',
-      formats: ["es", "cjs", "umd"],
+      formats: ["es", "umd"],
       fileName: format => `mediakiwi-vue.${format}.js`
     },
     rollupOptions: {
@@ -61,6 +61,11 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"), //'@': fileURLToPath(new URL('./src', import.meta.url)),
+      "@interfaces": path.resolve(__dirname, "./src/models/interfaces"), 
+      "@services": path.resolve(__dirname, "./src/services"), 
+      "@models": path.resolve(__dirname, "./src/models"), 
+      "@utils": path.resolve(__dirname, "./src/utils"), 
+      "@stores": path.resolve(__dirname, "./src/stores"), 
     },
   },
 });

@@ -1,8 +1,14 @@
 {
   "target": "es5",
   "extends": "@vue/tsconfig/tsconfig.web.json",
-  "include": ["./env.d.ts", "src/**/*", "src/**/*.vue", "**/*.d.ts", "src/**/**/*", "src/**/**/**/*.vue" ],
-  "exclude": ["node_modules", "src/**/__tests__/*", "./sample"],
+  "include": [
+    "./env.d.ts",    
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue"
+  ],
+  "exclude": ["node_modules", "src/**/__tests__/*", "./sample/**/*.*"],
   "compilerOptions": {
     "composite": true,
     "baseUrl": "./",

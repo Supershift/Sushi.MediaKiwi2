@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import MkNavigationList from "@/components/MkNavigationList.vue";
+  import MkNavigationList from "@/components/MkNavigation/MkNavigationList.vue";
   import { computed } from "vue";
   import { store } from "@/stores/mediakiwi/mock";
 

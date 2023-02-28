@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import MkNavigationRail from './MkNavigationRail.vue';
-  import MkDrawer from './MkDrawer.vue';
+  import MkNavigationRail from './MkNavigation/MkNavigationRail.vue';
+  import MkDrawer from './MkDrawer/MkDrawer.vue';
   import { useMediakiwiStore } from '@/stores';
   
   defineEmits(["change"]);
