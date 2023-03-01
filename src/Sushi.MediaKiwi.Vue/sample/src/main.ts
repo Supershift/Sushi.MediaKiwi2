@@ -13,9 +13,7 @@ import { md3 } from "vuetify/blueprints";
 import { mdi, aliases } from "vuetify/iconsets/mdi";
 
 // import router from "./router";
-import mediakiwi, { type IScreen, type INavigationItem, useRouter } from "@supershift/mediakiwi-vue";
-
-console.log("before");
+import mediakiwi, { useMkRouter } from "@supershift/mediakiwi-vue";
 
 import { createPinia, type PiniaPluginContext } from "pinia";
 
@@ -55,28 +53,21 @@ const vuetify = createVuetify({
 //   store.router = router;
 // });
 
-const modules = import.meta.glob('./components/**/*.vue')
+const modules = import.meta.glob('./components/**/*.vue');
 
 app.use(mediakiwi, {
   modules,
-});
-
-// const mediakiwi = createMediakiwiVue();
-
-
-console.log("after");
-
-const { router }  = useRouter();
-
-if( router.value ) {
-  app.use(router.value)
-}
+})
 
 app.use(pinia);
 
 app.use(vuetify);
 
-// add routing
-// app.use(router);
+const { router }  = useMkRouter();
+
+// Use the router as created by Mediakiwi
+if (router.value) {
+  app.use(router.value);
+}
 
 app.mount("#app");

@@ -11,16 +11,9 @@ import type { IScreen } from "../models/screen/IScreen";
 export default () =>  {
   const router = ref<Router>();
 
-  const createMediakiwiRouter = () => {
-    const mediakiwStore = useMediakiwiStore();
-    
-
+  const createMediakiwiRouter = (modules: Record<string, () => Promise<unknown>>) => {
     const navigationItems = store.navigationItems;
     const screens = store.screens;
-    const modules = mediakiwStore.GET_MODULES()
-    
-    console.log("i'm here", modules);
-    console.log("navigationItems", navigationItems);
     
     // create routes
     const routes = <RouteRecordRaw[]>[];
@@ -57,5 +50,3 @@ export default () =>  {
     router
   }
 }
-
-// export default router;

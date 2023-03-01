@@ -9,16 +9,14 @@ type MediaKiwiState = {
     navigationItems: Array<INavigationItem>;
     screens: Array<IScreen>;
     sections: Array<ISection>;
-    modules?: Record<string, () => Promise<unknown>>;
   };
-
 export const useMediakiwiStore = defineStore({
         id: "mediaKiwiStore",
         state: () =>
         ({
             navigationItems: [],
             screens: [],
-            sections: []            
+            sections: []
         } as MediaKiwiState),
         getters: {
             mediakiwiScreens: (state: MediaKiwiState) => state.screens,
@@ -84,12 +82,6 @@ export const useMediakiwiStore = defineStore({
                 }
                 }
                 return parentPath + `/${payload.name}`;
-            },
-            SET_MODULES(payload: Record<string, () => Promise<unknown>>) { 
-                this.modules = payload;
-            },
-            GET_MODULES() {
-                return this.modules
             }
         }
 });
