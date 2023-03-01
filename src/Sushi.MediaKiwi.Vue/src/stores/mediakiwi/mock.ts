@@ -132,7 +132,6 @@ class MkStore {
   navigationItems: INavigationItem[] = [];
   screens: IScreen[] = [];
   sections: ISection[] = [];
-  modules: Record<string, () => Promise<unknown>> = {};
 }
 
 const store = reactive<MkStore>(new MkStore());
