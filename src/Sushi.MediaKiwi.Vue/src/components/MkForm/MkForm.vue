@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import MkFormToolbar from "../form/MkFormToolbar.vue";
+  import MkFormToolbar from "./MkFormToolbar.vue";
   defineEmits(["save", "undo", "delete"]);
 </script>
 <template>

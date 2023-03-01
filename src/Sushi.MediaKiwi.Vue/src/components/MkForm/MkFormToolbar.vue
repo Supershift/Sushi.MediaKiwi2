@@ -5,7 +5,7 @@
 <template>
   <v-toolbar>
     <v-btn @click="$emit('undo', $event)">Undo changes</v-btn>
-    <v-btn @click="$emit('save', $event)">Save</v-btn>    
+    <v-btn @click="$emit('save', $event)">Save</v-btn>
 
     <v-btn icon color="primary">
       <v-icon>mdi-dots-vertical</v-icon>
