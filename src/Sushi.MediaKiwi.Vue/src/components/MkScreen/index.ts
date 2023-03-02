@@ -1,0 +1,1 @@
+export { default as MkScreen } from './MkScreen.vue'
