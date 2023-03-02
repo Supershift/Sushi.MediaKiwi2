@@ -1,7 +1,6 @@
 <script setup lang="ts">
-  import { useRoute, useRouter } from "vue-router";
-  import MkTableView from "@supershift/mediakiwi-vue";
-  import MkForm from "@supershift/mediakiwi-vue";
+  import { MkForm, MkTableView } from "@supershift/mediakiwi-vue";
+  import { useRoute, useRouter } from "@supershift/mediakiwi-vue";
   import type { ITableMap } from "@supershift/mediakiwi-vue";
   import { SampleDataService } from "./SampleDataService";
   import type { ISampleData } from "./ISampleData";
@@ -25,9 +24,9 @@
     });
   }
 
-  interface DeepData  {
-    id: string,
-    name: string
+  interface DeepData {
+    id: string;
+    name: string;
   }
 
   const deepDataItems: DeepData[] = [
@@ -35,7 +34,7 @@
     { id: "dfh-235", name: "good" },
     { id: "dfsdg", name: "bye" },
   ];
-  
+
   const myMap = <ITableMap<DeepData>>{
     itemId: (item) => item.id,
     items: [{ headerTitle: "Name", value: (dataItem) => dataItem.name }],

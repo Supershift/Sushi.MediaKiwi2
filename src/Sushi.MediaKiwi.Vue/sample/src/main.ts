@@ -13,13 +13,11 @@ import { md3 } from "vuetify/blueprints";
 import { mdi, aliases } from "vuetify/iconsets/mdi";
 
 // import router from "./router";
-import mediakiwi, { useMkRouter } from "@supershift/mediakiwi-vue";
+import mediakiwi from "@supershift/mediakiwi-vue";
 
 import { createPinia, type PiniaPluginContext } from "pinia";
 
 const pinia = createPinia();
-
-const app = createApp(App);
 
 // load fonts
 const webFontLoader = await import(/* webpackChunkName: "webfontloader" */ "webfontloader");
@@ -30,44 +28,32 @@ webFontLoader.load({
   },
 });
 
-const vuetify = createVuetify({ 
-  blueprint: md3, 
-  components: VComponents, 
-  directives: VDirectives, 
-  theme: { 
-    defaultTheme: "dark"
+const vuetify = createVuetify({
+  blueprint: md3,
+  components: VComponents,
+  directives: VDirectives,
+  theme: {
+    defaultTheme: "dark",
   },
   icons: {
     defaultSet: "mdi",
     aliases,
     sets: {
       mdi,
-    }
-  }
+    },
+  },
 });
 
-// add a property named `secret` to every store that is created
-// after this plugin is installed this could be in a different file
-// pinia.use(({ store }) => {
-//   store.hello = "Welcome to Mediakiwi 2.0";
-//   store.router = router;
-// });
-
-const modules = import.meta.glob('./components/**/*.vue');
-
-app.use(mediakiwi, {
-  modules,
-})
+const app = createApp(App);
 
 app.use(pinia);
 
 app.use(vuetify);
 
-const { router }  = useMkRouter();
+const modules = import.meta.glob("./components/**/*.vue");
 
-// Use the router as created by Mediakiwi
-if (router.value) {
-  app.use(router.value);
-}
+app.use(mediakiwi, {
+  modules,
+});
 
 app.mount("#app");

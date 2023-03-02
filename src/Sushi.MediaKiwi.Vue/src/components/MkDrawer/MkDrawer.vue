@@ -7,7 +7,6 @@
   // TODO: Change to actual Data
   const navigationItems = computed(() => store.navigationItems.filter((item) => item.parentNavigationItemId == null));
   defineEmits(["change"]);
-
 </script>
 <template>
   <v-navigation-drawer absolute>
