@@ -9,7 +9,6 @@ export const SectionAPIServices = {
       mediaKiwiAxiosInstance
         .get<ListResult<ISectionResponse>>(`/sections`)
         .then((response) => {
-          console.log(response);
           if (response.status === HttpStatusCodeEnum.Ok) {
             resolve(response.data);
           }

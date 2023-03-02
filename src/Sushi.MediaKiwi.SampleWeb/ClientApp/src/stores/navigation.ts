@@ -3,7 +3,6 @@ import type { INavigationItem } from "@/models/navigation";
 import { useMediakiwiStore } from ".";
 import type ISection from "@/models/section/ISection";
 import router from "@/router";
-// import router from "@/router";
 
 type NavigationState = {
     navigationItems: Array<INavigationItem>;
@@ -18,58 +17,63 @@ export const useNavigationStore = defineStore({
             navigationItems: [],
             sectionItems: [],
             currentSection: {
-                id: 0,
-                name: "Home",
-                sortOrder: 0
+                id: 1,
+                name: "Hotels",
+                sortOrder: 1
             }
 
         } as NavigationState),
         getters: {
             navigationList: (state: NavigationState) => state.navigationItems,
+            sectionList: (state: NavigationState) => state.sectionItems,
         },
         actions: {
-            GET_NAVIGATION(){
+            async GET_NAVIGATION(){
                 // grab the items from the main store
                 const mediaKiwiStore = useMediakiwiStore();
-                const items = mediaKiwiStore.navigationItems;
-                const sections = mediaKiwiStore.sections;
+                const items = mediaKiwiStore.mediakiwiNavigationItems;
+                const sections = mediaKiwiStore.mediakiwiSections;
 
                 // set sections
-                if (sections) {
+                if (sections && sections.length > 0) {
                     this.sectionItems = sections;
                 }
                 // set items
-                if (items) {
-                    this.navigationItems = items.filter(x => x.sectionId === this.currentSection?.id);
+                if (items && items.length > 0) {                    
+                    this.navigationItems = items.filter((x) => x.sectionId === this.currentSection?.id) ?? [];
                 }
             },
-            GET_CHILDREN_LIST(state: NavigationState, id: number): Array<INavigationItem>{
+            GET_SECTION_NAVIGATION_ITEMS(id: number): Array<INavigationItem>{
+                console.log(this.navigationItems.filter((item) => item?.parentNavigationItemId == id));
+                
                 if (id) {
-                    return state.navigationItems.filter((item) => item.parentNavigationItemId == id);
+                    return this.navigationItems.filter((item) => item?.sectionId == id ) ?? [];
                 }
                 return [];
             },
             SET_CURRENT_SECTION( name: string): void{
+                console.log(name, this.sectionItems, this.navigationItems);              
                 if (name && this.sectionItems) {
-                    this.currentSection = this.sectionItems.find(x => x.name == name);
+                    this.currentSection = this.sectionItems.find((x) => x.name == name);
                 }
-                this.GET_NAVIGATION();
-                return;
+                console.log(this.currentSection?.id);
+                
+                const items = this.GET_SECTION_NAVIGATION_ITEMS(this.currentSection?.id ?? 1);
+                if (items && items.length > 0) {
+                    this.navigationItems = items
+                }
             },
             NAVIGATE_TO(path: string, isSection: boolean){
-                // if it's the section, then we reset the navigation
-                if (isSection) {
-                    this.SET_CURRENT_SECTION(path);
-                }
                 // hook up router
                 if (path && router) {
+                    // if it's the section, then we reset the navigation
+                    if (isSection) {
+                        this.SET_CURRENT_SECTION(path);
+                        path = "/" + path;
+                    }
                     // called to send user to target screen
                     router.push(path);
-                    console.log(path);
-
-                }
-                console.log(router);
-                
+                }                
             },
         }
 });

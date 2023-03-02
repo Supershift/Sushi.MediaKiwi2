@@ -1,5 +1,5 @@
 import type { App } from "vue";
-import { store } from "@/stores/mediakiwi/mediakiwi";
+import { store } from "@/stores/mediakiwi/mock";
 import {useMediakiwiStore }from "@/stores/index";
 import { createRouter, createWebHashHistory, type RouteRecordRaw, type RouterOptions } from "vue-router";
 import type { INavigationItem } from "./models/navigation";
@@ -30,7 +30,7 @@ export function addRoutes(app: App) {
         const route = <RouteRecordRaw>{
           path: navigationItem.path,
           name: navigationItem.id.toString(),                    
-          component: () => import(`./components/${screen.componentFileName}.vue`),
+          component: () => import(`./components/${screen.componentFileName}`),
         };
         routes.push(route);
       }
