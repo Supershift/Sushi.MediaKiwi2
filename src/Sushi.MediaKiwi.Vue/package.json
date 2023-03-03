@@ -5,7 +5,7 @@
   "scripts": {
     "publish": "npm publish --access public",
     "build": "vite build --mode development",
-    "build:watch": "vite build -w  --mode development",
+    "build:watch": "vite build --mode development --watch",
     "pack": "npm pack",
     "link": "npm link @supershift/mediakiwi-vue"
   },
