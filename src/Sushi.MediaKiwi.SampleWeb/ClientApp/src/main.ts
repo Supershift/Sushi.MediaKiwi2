@@ -1,6 +1,6 @@
 import App from "./App.vue";
 
-import { createApp, markRaw } from "vue";
+import { createApp } from "vue";
 
 import mediakiwi from "@supershift/mediakiwi-vue";
 

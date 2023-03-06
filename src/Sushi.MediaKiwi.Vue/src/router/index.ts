@@ -3,11 +3,21 @@ import { createWebHashHistory, RouteLocationNormalizedLoaded, Router, type Route
 import { useRouter as useVueRouter, useRoute as useVueRoute, type RouteComponent } from "vue-router";
 import type { INavigationItem } from "../models/navigation";
 import type { IScreen } from "../models/screen/IScreen";
+import pinia from "@/stores/pinia";
+import { useMediakiwiStore }from "@/stores/index";
+
 
 /** Creates router options based on provided modules. */
 export function createMediakiwiRouterOptions(modules: Record<string, RouteComponent>): RouterOptions {
-  const navigationItems = store.navigationItems;
-  const screens = store.screens;
+  // Populate everything here first!
+  // since we've initialized the pinia first we can access it here now
+  const mediaKiwiStore = useMediakiwiStore(pinia);
+  mediaKiwiStore.GET_NAVIGATION_ITEMS();
+  mediaKiwiStore.GET_SECTIONS();
+  mediaKiwiStore.GET_SCREENS();
+
+  const navigationItems = mediaKiwiStore.mediakiwiNavigationItems;
+  const screens = mediaKiwiStore.screens;
 
   // create routes
   const routes = <RouteRecordRaw[]>[];

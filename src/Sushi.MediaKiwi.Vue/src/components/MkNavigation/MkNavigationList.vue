@@ -1,12 +1,7 @@
 <script setup lang="ts">
   import type { INavigationItem } from "@/models/navigation/INavigationItem";
   import { computed } from "vue";
-  import MkNavigationItem from "./MkNavigationItem.vue";
-
-  defineProps<{
-    navigationItems: Array<INavigationItem>;
-  }>();
-  
+  import MkNavigationItem from "../MkNavigationNew/MkNavigationItem.vue";
 
     const props = defineProps<{
       navigationItems:Array<INavigationItem>

@@ -1,7 +1,8 @@
 import type { App, Component } from "vue";
-import { createPinia } from "pinia";
+import pinia from "./stores/pinia";
 import { createMediakiwiRouterOptions } from "@/router";
 import { createRouter, RouteComponent } from "vue-router";
+
 export interface IMediakiwiVueOptions {
   modules: Record<string, RouteComponent>;
 }
@@ -9,7 +10,6 @@ export interface IMediakiwiVueOptions {
 export default {
   install(app: App, options: IMediakiwiVueOptions) {
     // Create an instance of Pinia
-    const pinia = createPinia();
     app.use(pinia);
 
     // create router options, which contains paths based on the modules
