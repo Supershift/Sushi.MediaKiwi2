@@ -21,6 +21,11 @@ export default {
     // use the router instance
     app.use(router);
 
+    // install the router as a plugin on pinia
+    pinia.use(({ store }) => {
+      store.router = router;
+    });
+
     app.provide("my key", "test");
   },
 };
