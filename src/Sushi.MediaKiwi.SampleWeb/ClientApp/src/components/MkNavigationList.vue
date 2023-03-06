@@ -1,17 +1,13 @@
-<script lang="ts">
+<script setup lang="ts">
   import type { INavigationItem } from "@/models/navigation/INavigationItem";
-  import { computed, defineComponent, type PropType } from "vue";
+  import { computed } from "vue";
   import MkNavigationItem from "./MkNavigationItem.vue";
   
-  export default defineComponent({
-    props:{
-      navigationItems:{
-          type: Object as PropType<Array<INavigationItem>>,
-          required: true,
-          default: () => []
-      } 
-    },
-    setup(props){
+
+    const props = defineProps<{
+      navigationItems:Array<INavigationItem>
+    }>();
+
       const parentItems = computed(() => {
         const filtered = props.navigationItems.filter((x: INavigationItem) => {
           if (x && x?.parentNavigationItemId == null) {
@@ -20,15 +16,6 @@
         });
         return filtered ?? [];
       });
-
-      return {
-        parentItems,
-      }
-    },
-    components: {
-      MkNavigationItem
-    }
-  })  
 </script>
 
 <template>    
