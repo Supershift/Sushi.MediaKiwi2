@@ -5,10 +5,15 @@
 
 <template>
   <v-card>
-    <v-layout>
+    <v-layout :full-height="true" class="container">
       <v-app-bar title="MediaKiwi 2.0" elevation="20"></v-app-bar>
       <mk-navigation-old></mk-navigation-old>
       <mk-screen></mk-screen>
     </v-layout>
   </v-card>
 </template>
+<style scoped lang="css">
+.container {
+  height: 100vh;
+}
+</style>
