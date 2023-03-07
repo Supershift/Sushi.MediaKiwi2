@@ -12,6 +12,7 @@
 
 const { NavigateToScreen } = useMediaKiwiRouting();
 const router = useRouter();
+
 function onItemClick(item: ISection){
   if (item) {
     NavigateToScreen(router, item.id, true)

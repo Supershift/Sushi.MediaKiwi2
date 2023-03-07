@@ -3,7 +3,7 @@ import { useNavigationStore } from "@/stores/navigation";
 import { Router } from "vue-router";
 
 /*
-  Returns the router functions
+  Returns the routing functions using the store and routers of mediakiwi
 */
 export default function () {
     const navigationStore = useNavigationStore();
@@ -17,11 +17,11 @@ export default function () {
             if (isSection) {
                 navigationStore.SET_CURRENT_SECTION(navigationItem);
             }
-            console.log(navigationItem)
             // called to send user to target screen
             router.push(navigationItem?.path ?? "/Home");
         }
     }
+
     return {
         NavigateToScreen
     }
