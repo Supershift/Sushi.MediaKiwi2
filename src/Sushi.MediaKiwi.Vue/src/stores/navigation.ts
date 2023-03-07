@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import type { INavigationItem } from "@/models/navigation";
 import { MediaKiwiState, useMediakiwiStore } from ".";
 import type ISection from "@/models/section/ISection";
+import { useRouter } from "vue-router";
 
 type NavigationState = {
   navigationItems: Array<INavigationItem>;
@@ -42,15 +43,11 @@ export const useNavigationStore = defineStore({
       }
     },
     SET_SECTION_NAVIGATION_ITEMS(id: number) {
-      console.log("current section nav items: "+ this.navigationItems.length);
-      console.log("id: "+ id);
       if (id !== null) {
-        const items = this.navigationItems.filter((item) => item?.sectionId == id);
-        console.log("set section nav items: "+ items);
+        const items = useMediakiwiStore().mediakiwiNavigationItems.filter((item) => item?.sectionId == id);
         
         if (items && items.length > 0) {
           this.navigationItems = items;
-          console.log("new section nav items: "+ this.navigationItems);
         }
       }
     },
@@ -64,6 +61,7 @@ export const useNavigationStore = defineStore({
       
     },
     NAVIGATE_TO(path: string, isSection: boolean) {
+
       // Since we are injecting the router via the sotre it is already up and running when we initiate
       if (path && this.router) {
         // if it's the section, then we reset the navigation
