@@ -1,3 +1,4 @@
+import { ISection } from "@/models";
 import type { INavigationItem } from "@/models/navigation";
 import type { RouteLocationNormalizedLoaded } from "vue-router";
 
@@ -13,11 +14,17 @@ export function getNavigationItemChildren(navigationItem: INavigationItem | unde
     if (excludeDataItems) {
         result = result.filter(item => !item.isDynamicRoute);
     }
+
     return result;
 }
 
-export function getNavigationItemForRoute(route: RouteLocationNormalizedLoaded , navigationItems: INavigationItem[]) : INavigationItem | undefined
-{
-    var result = navigationItems.find(item => item.id.toString() == route.name);
+export function getNavigationItemForRoute(route: RouteLocationNormalizedLoaded , navigationItems: INavigationItem[], section?: ISection) : INavigationItem | undefined
+{   
+    // check from route, otherwise check from store
+    var result = navigationItems.find(item => item.id.toString() == route?.name);
+    if (route !== undefined && route.name === undefined && section !== undefined && section.id) {
+        result = navigationItems.find(item => item.id.toString() == section?.id.toString());
+    }
+
     return result;
 }

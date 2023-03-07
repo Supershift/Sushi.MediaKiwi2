@@ -2,7 +2,6 @@ import { defineStore } from "pinia";
 import type { INavigationItem } from "@/models/navigation";
 import { useMediakiwiStore } from ".";
 import type ISection from "@/models/section/ISection";
-import { useRouter } from "vue-router";
 
 type NavigationState = {
   navigationItems: Array<INavigationItem>;
@@ -24,50 +23,42 @@ export const useNavigationStore = defineStore({
     } as NavigationState),
   getters: {
     navigationList: (state: NavigationState) => state.navigationItems,
+    sectionList: (state: NavigationState) => state.sectionItems,
   },
   actions: {
-    GET_NAVIGATION() {
-      // grab the items from the main store
+    async getNavigation() {
+      // grab the items from the main store/services or mock 
       const mediaKiwiStore = useMediakiwiStore();
       const items = mediaKiwiStore.navigationItems;
-      const sections = mediaKiwiStore.sections;
+      const sections = mediaKiwiStore.mediakiwiSections;
 
       // set sections
-      if (sections) {
+      if (sections && sections.length) {
         this.sectionItems = sections;
       }
       // set items
-      if (items) {
-        this.navigationItems = items.filter((x) => x.sectionId === this.currentSection?.id);
+      if (items && items.length) {
+        this.navigationItems = items.filter((x) => x.sectionId === this.currentSection?.id) ?? [];
       }
     },
-    GET_CHILDREN_LIST(state: NavigationState, id: number): Array<INavigationItem> {
-      if (id) {
-        return state.navigationItems.filter((item) => item.parentNavigationItemId == id);
+    setSectionNavigationItems(id: number) {
+      if (id !== null) {
+        const items = useMediakiwiStore().mediakiwiNavigationItems.filter((item) => item?.sectionId == id);
+        
+        if (items && items.length > 0) {
+          this.navigationItems = items;
+        }
       }
-      return [];
     },
-    SET_CURRENT_SECTION(name: string): void {
-      if (name && this.sectionItems) {
+    setCurrentSection(navigationItem: INavigationItem | undefined): void {
+      // Assign the right section with the given name
+      if (navigationItem && navigationItem.path && this.sectionItems) { 
+        const name = navigationItem.path.split("/")[1] ?? "Home";
         this.currentSection = this.sectionItems.find((x) => x.name == name);
       }
-      this.GET_NAVIGATION();
-      return;
-    },
-    NAVIGATE_TO(path: string, isSection: boolean) {
-      // if it's the section, then we reset the navigation
-      if (isSection) {
-        this.SET_CURRENT_SECTION(path);
-      }
-      // hook up router
-      const router = useRouter();
-
-      if (path && router) {
-        // called to send user to target screen
-        router.push(path);
-        console.log(path);
-      }
-      console.log(router);
+      // Repopulate the navigationItems with the correct section assigned items
+      this.setSectionNavigationItems(this.currentSection?.id ?? 0);      
+      
     },
   },
 });
