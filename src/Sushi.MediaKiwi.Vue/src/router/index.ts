@@ -1,11 +1,11 @@
 import { store } from "@/stores/mediakiwi/mock";
-import { createWebHashHistory, RouteLocationNormalizedLoaded, Router, type RouteRecordRaw, type RouterOptions } from "vue-router";
+import { createWebHistory, RouteLocationNormalizedLoaded, Router, type RouteRecordRaw, type RouterOptions } from "vue-router";
 import { useRouter as useVueRouter, useRoute as useVueRoute, type RouteComponent } from "vue-router";
 import type { INavigationItem } from "../models/navigation";
 import type { IScreen } from "../models/screen/IScreen";
 
 /** Creates router options based on provided modules. */
-export function createMediakiwiRouterOptions(modules: Record<string, RouteComponent>): RouterOptions {
+export function createMediakiwiRouterOptions(modules: Record<string, RouteComponent>, customRoutes: RouteRecordRaw[] | undefined): RouterOptions {
   const navigationItems = store.navigationItems;
   const screens = store.screens;
 
@@ -27,12 +27,17 @@ export function createMediakiwiRouterOptions(modules: Record<string, RouteCompon
     }
   });
 
+  // add custom routes
+  if (customRoutes !== undefined) {
+    customRoutes.forEach((customRoute) => routes.push(customRoute));
+  }
+
   // add default route
   routes.push({ path: "/", component: () => routes.find((x) => x.name == "Home")?.component });
 
   const routerOptions = <RouterOptions>{
     routes: routes,
-    history: createWebHashHistory(),
+    history: createWebHistory(),
   };
 
   return routerOptions;

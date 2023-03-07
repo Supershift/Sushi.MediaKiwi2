@@ -11,10 +11,8 @@ import * as VDirectives from "vuetify/directives";
 import { md3 } from "vuetify/blueprints";
 
 import { mdi, aliases } from "vuetify/iconsets/mdi";
-
-// import router from "./router";
+import { msalConfig } from "./authConfig";
 import mediakiwi from "@supershift/mediakiwi-vue";
-
 import { createPinia, type PiniaPluginContext } from "pinia";
 
 const pinia = createPinia();
@@ -50,10 +48,13 @@ app.use(pinia);
 
 app.use(vuetify);
 
-const modules = import.meta.glob("./components/**/*.vue");
+// create mediakiwi options, with modules
+const mediaKiwiOptions = {
+  modules: import.meta.glob("./components/**/*.vue"),
+  msalConfig: msalConfig,
+};
 
-app.use(mediakiwi, {
-  modules,
-});
+// install mediakiwi
+app.use(mediakiwi, mediaKiwiOptions);
 
 app.mount("#app");
