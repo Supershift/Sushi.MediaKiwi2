@@ -33,11 +33,11 @@ export const useNavigationStore = defineStore({
       const sections = mediaKiwiStore.mediakiwiSections;
 
       // set sections
-      if (sections.length > 0) {
+      if (sections && sections.length) {
         this.sectionItems = sections;
       }
       // set items
-      if (items.length > 0) {
+      if (items && items.length) {
         this.navigationItems = items.filter((x) => x.sectionId === this.currentSection?.id) ?? [];
       }
     },
@@ -45,7 +45,7 @@ export const useNavigationStore = defineStore({
       if (id !== null) {
         const items = useMediakiwiStore().mediakiwiNavigationItems.filter((item) => item?.sectionId == id);
         
-        if (items.length > 0) {
+        if (items && items.length > 0) {
           this.navigationItems = items;
         }
       }
