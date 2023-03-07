@@ -15,7 +15,7 @@ export default function () {
             const navigationItem = mediakiwiStore.mediakiwiNavigationItems.find((x) => x.screenId == screenId);
             // if it's the section, then we reset the navigation
             if (isSection) {
-                navigationStore.SET_CURRENT_SECTION(navigationItem);
+                navigationStore.setCurrentSection(navigationItem);
             }
             // called to send user to target screen
             router.push(navigationItem?.path ?? "/Home");

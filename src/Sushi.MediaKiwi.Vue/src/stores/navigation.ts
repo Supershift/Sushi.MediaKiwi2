@@ -1,8 +1,7 @@
 import { defineStore } from "pinia";
 import type { INavigationItem } from "@/models/navigation";
-import { MediaKiwiState, useMediakiwiStore } from ".";
+import { useMediakiwiStore } from ".";
 import type ISection from "@/models/section/ISection";
-import { useRouter } from "vue-router";
 
 type NavigationState = {
   navigationItems: Array<INavigationItem>;
@@ -27,7 +26,7 @@ export const useNavigationStore = defineStore({
     sectionList: (state: NavigationState) => state.sectionItems,
   },
   actions: {
-    async GET_NAVIGATION() {
+    async getNavigation() {
       // grab the items from the main store/services or mock 
       const mediaKiwiStore = useMediakiwiStore();
       const items = mediaKiwiStore.navigationItems;
@@ -42,7 +41,7 @@ export const useNavigationStore = defineStore({
         this.navigationItems = items.filter((x) => x.sectionId === this.currentSection?.id) ?? [];
       }
     },
-    SET_SECTION_NAVIGATION_ITEMS(id: number) {
+    setSectionNavigationItems(id: number) {
       if (id !== null) {
         const items = useMediakiwiStore().mediakiwiNavigationItems.filter((item) => item?.sectionId == id);
         
@@ -51,14 +50,14 @@ export const useNavigationStore = defineStore({
         }
       }
     },
-    SET_CURRENT_SECTION(navigationItem: INavigationItem | undefined): void {
+    setCurrentSection(navigationItem: INavigationItem | undefined): void {
       // Assign the right section with the given name
       if (navigationItem && navigationItem.path && this.sectionItems) { 
         const name = navigationItem.path.split("/")[1] ?? "Home";
         this.currentSection = this.sectionItems.find((x) => x.name == name);
       }
       // Repopulate the navigationItems wit hthee correct section assigned items
-      this.SET_SECTION_NAVIGATION_ITEMS(this.currentSection?.id ?? 0);      
+      this.setSectionNavigationItems(this.currentSection?.id ?? 0);      
       
     },
   },

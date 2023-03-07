@@ -12,7 +12,7 @@ export function createMediakiwiRouterOptions(modules: Record<string, RouteCompon
   // Populate everything here first!
   // since we've initialized the pinia first we can access it here now
   const mediaKiwiStore = useMediakiwiStore(pinia);
-  mediaKiwiStore.INIT();
+  mediaKiwiStore.init();
 
   const navigationItems = mediaKiwiStore.mediakiwiNavigationItems;
   const screens = mediaKiwiStore.screens;
