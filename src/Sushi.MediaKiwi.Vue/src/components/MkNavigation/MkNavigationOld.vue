@@ -8,7 +8,7 @@
   const route = useRoute();
 
   // deterine current navigation items
-  const currentNavigationItem = getNavigationItemForRoute(route, store.navigationItems, undefined);
+  const currentNavigationItem = getNavigationItemForRoute(route, store.navigationItems);
 
   let children: INavigationItem[] = [];
   if (currentNavigationItem !== undefined && currentNavigationItem.isDynamicRoute) {

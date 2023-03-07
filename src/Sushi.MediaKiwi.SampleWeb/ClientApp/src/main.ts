@@ -3,15 +3,14 @@ import App from "./App.vue";
 import { createApp } from "vue";
 
 import mediakiwi from "@supershift/mediakiwi-vue";
-
-import vuetify from "./vuetify"
+import vuetify from "./plugins/vuetify";
 
 const app = createApp(App);
 
+const modules = import.meta.glob("./components/**/*.vue");
+
 // add vuetify
 app.use(vuetify);
-
-const modules = import.meta.glob("./components/**/*.vue");
 
 app.use(mediakiwi, {
   modules,

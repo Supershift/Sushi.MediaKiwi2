@@ -95,7 +95,7 @@ export const useMediakiwiStore = defineStore({
                 if (payload) {
                     this.navigationItems = payload.result;
                     this.navigationItems.forEach((item) =>{
-                        item.path = this.calculatePath(item);
+                        item.path = this.getParentPath(item);
                     })
                 }
             },
@@ -109,13 +109,13 @@ export const useMediakiwiStore = defineStore({
                     this.sections = payload.result;
                 }
             },
-            calculatePath(payload: INavigationItem): string{
+            getParentPath (payload: INavigationItem): string{
                 // get the full path for this item by recursively going up the tree
                 let parentPath: string = "";
                 if (payload.parentNavigationItemId != null) {
                     const parent = this.navigationItems.find((item: INavigationItem) => item.id == payload.parentNavigationItemId);
                 if (parent !== undefined) {
-                    parentPath = this.calculatePath(parent);
+                    parentPath = this.getParentPath (parent);
                 }
                 }
                 return parentPath + `/${payload.name}`;

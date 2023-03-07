@@ -1,9 +1,8 @@
-import { store } from "@/stores/mediakiwi/mock";
 import { createWebHashHistory, RouteLocationNormalizedLoaded, Router, type RouteRecordRaw, type RouterOptions } from "vue-router";
 import { useRouter as useVueRouter, useRoute as useVueRoute, type RouteComponent } from "vue-router";
 import type { INavigationItem } from "../models/navigation";
 import type { IScreen } from "../models/screen/IScreen";
-import pinia from "../pluigins/pinia";
+import pinia from "../plugins/pinia";
 import { useMediakiwiStore }from "@/stores/index";
 
 
