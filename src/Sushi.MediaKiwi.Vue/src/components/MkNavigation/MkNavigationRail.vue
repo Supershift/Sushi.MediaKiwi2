@@ -1,18 +1,20 @@
 <script setup lang="ts">
+import useMediaKiwiRouting from '@/composables/useMediaKiwiRouting';
 import type ISection from '@/models/section/ISection';
-import { useNavigationStore } from '@/stores/navigation';
+import { useRouter } from '@/router';
 
 defineEmits(["change"]);
 defineProps<{
     railItems: Array<ISection>;
 }>();
 
-const navigationStore = useNavigationStore();
-
+const { NavigateToScreen } = useMediaKiwiRouting();
+const router = useRouter();
 function onItemClick(item: ISection){
+  console.log(item);
   
   if (item) {
-    navigationStore.NAVIGATE_TO(item.name, true);
+    NavigateToScreen(router, item.id, true)
   }
   return false;
 }

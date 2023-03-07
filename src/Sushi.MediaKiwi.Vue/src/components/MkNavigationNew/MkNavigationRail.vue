@@ -1,7 +1,8 @@
 <script setup lang="ts">
+  import useMediaKiwiRouting from '@/composables/useMediaKiwiRouting';
   import type ISection from '@/models/section/ISection';
-  import { useNavigationStore } from '@/stores/navigation';
-  import { useRoute, useRouter } from 'vue-router';
+  import { useRouter } from 'vue-router';
+  // import { useRouter } from '@/router';
 
 
   defineEmits(["change"]);
@@ -9,14 +10,14 @@
     railItems: Array<ISection>;
   }>();
 
-  const navigationStore = useNavigationStore();
-
-  function onItemClick(item: ISection){
-    if (item) {
-      navigationStore.NAVIGATE_TO(item.name, true);
-    }
-    return false;
+const { NavigateToScreen } = useMediaKiwiRouting();
+const router = useRouter();
+function onItemClick(item: ISection){
+  if (item) {
+    NavigateToScreen(router, item.id, true)
   }
+  return false;
+}
 </script>
 <template>
   <v-navigation-drawer rail :rail-width="72" permanent>

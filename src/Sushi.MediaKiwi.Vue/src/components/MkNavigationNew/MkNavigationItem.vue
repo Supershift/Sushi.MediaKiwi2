@@ -1,27 +1,30 @@
 <script setup lang="ts">
+  import useMediaKiwiRouting from "@/composables/useMediaKiwiRouting";
   import { getNavigationItemChildren } from "@/helpers";
   import type { INavigationItem } from "@/models/navigation/INavigationItem";
-  import { useNavigationStore } from "@/stores/navigation";
+  import { useRouter } from "@/router";
   import { computed } from "vue";
-  import { useRoute } from "vue-router";
+  import { useRoute } from "@/router";
 
   const props = defineProps<{
     navigationItem: INavigationItem,
     allItems: Array<INavigationItem>
   }>();
 
-  const navigationStore = useNavigationStore();
+  const { NavigateToScreen } = useMediaKiwiRouting();
+  const router = useRouter();
 
   const route = useRoute();
   const routeName = route.name;
 
-  const isActive = computed(() => routeName === props.navigationItem.name );
+  const isActive = computed(() => routeName === props.navigationItem.name);
 
   const nameLabel = computed(() => props.navigationItem?.name ?? "-empty-")
+  
   // called to send user to target screen
   function onItemClick(item: INavigationItem) {
     if (item && item?.screenId && item?.path) {
-      navigationStore.NAVIGATE_TO(item.path, false);
+      NavigateToScreen(router, item.screenId, false)
     }
     return false;
   }
@@ -33,7 +36,7 @@
 <template>
   <v-list-group v-if="children.length > 0" :value="nameLabel">
     <template #activator="{ props }" :is-active="isActive">
-      <v-list-item v-bind="props" :active="navigationItem" :title="nameLabel" @click="navigationItem?.screenId != null ? onItemClick(navigationItem) : {}"></v-list-item>
+      <v-list-item v-bind="props" :active="isActive"  :title="nameLabel" @click="navigationItem?.screenId != null ? onItemClick(navigationItem) : {}"></v-list-item>
     </template>
     <mk-navigation-item v-for="child in children" :navigation-item="child" :key="child.id" :all-items="allItems"></mk-navigation-item>
   </v-list-group>

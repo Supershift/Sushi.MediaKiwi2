@@ -2,7 +2,6 @@ import type { App, Component } from "vue";
 import pinia  from "./pluigins/pinia";
 import { createMediakiwiRouterOptions } from "@/router";
 import { createRouter, RouteComponent } from "vue-router";
-import { useMediakiwiStore } from "@/stores";
 
 export interface IMediakiwiVueOptions {
   modules: Record<string, RouteComponent>;
@@ -24,7 +23,7 @@ export default {
     
     pinia.use(({ store }) => {
       store.hello = "Welcome to Mediakiwi 2.0";
-      store.router = router;
+      // store.router = router;
     });
 
     app.provide("my key", "test");

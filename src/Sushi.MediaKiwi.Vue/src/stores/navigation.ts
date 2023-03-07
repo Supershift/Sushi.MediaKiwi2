@@ -51,27 +51,15 @@ export const useNavigationStore = defineStore({
         }
       }
     },
-    SET_CURRENT_SECTION(name: string): void {
+    SET_CURRENT_SECTION(navigationItem: INavigationItem | undefined): void {
       // Assign the right section with the given name
-      if (name && this.sectionItems) {
+      if (navigationItem && navigationItem.path && this.sectionItems) { 
+        const name = navigationItem.path.split("/")[1] ?? "Home";
         this.currentSection = this.sectionItems.find((x) => x.name == name);
       }
       // Repopulate the navigationItems wit hthee correct section assigned items
       this.SET_SECTION_NAVIGATION_ITEMS(this.currentSection?.id ?? 0);      
       
-    },
-    NAVIGATE_TO(path: string, isSection: boolean) {
-
-      // Since we are injecting the router via the sotre it is already up and running when we initiate
-      if (path && this.router) {
-        // if it's the section, then we reset the navigation
-        if (isSection) {
-          this.SET_CURRENT_SECTION(path);
-          path = "/" + path;
-        }
-        // called to send user to target screen
-        this.router.push(path);
-      }
     },
   },
 });
