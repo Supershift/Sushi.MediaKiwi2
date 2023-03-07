@@ -1,16 +1,17 @@
 <script setup lang="ts">
-  import MkNavigationList from "@/components/MkNavigation/MkNavigationList.vue";
+  import MkNavigationList from "@/components/MkNavigationNew/MkNavigationList.vue";
   import { computed } from "vue";
-  import { store } from "@/stores/mediakiwi/mock";
+  import { useNavigationStore } from "@/stores/navigation";
   import type { INavigationItem } from "@/models/navigation";
   defineEmits(["change"]);
   defineProps<{
     listItems: Array<INavigationItem>;
   }>();
 
+  const navigationStore = useNavigationStore();
+
   // get root level navigation items
-  // TODO: Change to actual Data
-  const navigationItems = computed(() => store.navigationItems.filter((item) => item.parentNavigationItemId == null));
+  const navigationItems = computed(() => navigationStore.navigationList);
 
 </script>
 <template>

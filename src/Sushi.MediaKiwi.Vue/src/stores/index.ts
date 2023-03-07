@@ -8,7 +8,7 @@ import { store } from "@/stores/mediakiwi/mock";
 
 const mockStore = store;
 
-type MediaKiwiState = {
+export type MediaKiwiState = {
     navigationItems: Array<INavigationItem>;
     screens: Array<IScreen>;
     sections: Array<ISection>;
@@ -29,6 +29,11 @@ export const useMediakiwiStore = defineStore({
             mediakiwiNavigationItems: (state: MediaKiwiState) => state.navigationItems
         },
         actions: {
+            INIT(){
+                this.GET_NAVIGATION_ITEMS();
+                this.GET_SECTIONS();
+                this.GET_SCREENS();
+            },
             async GET_NAVIGATION_ITEMS(){
                 if (this.isLocal) {
                     this.navigationItems = mockStore.navigationItems;

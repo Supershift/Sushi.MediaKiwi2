@@ -119,6 +119,12 @@ const screens = <IScreen[]>[
 // We use stubs for now
 const sections = Array<ISection>();
 sections.push({
+  id: 0,
+  name: "Home",
+  sortOrder: 0,
+  icon: "mdi-home"
+});
+sections.push({
   id: 1,
   name: "Hotels",
   sortOrder: 1,

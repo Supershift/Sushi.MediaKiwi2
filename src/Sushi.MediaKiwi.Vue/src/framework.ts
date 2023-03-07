@@ -1,7 +1,8 @@
 import type { App, Component } from "vue";
-import pinia from "./stores/pinia";
+import pinia  from "./pluigins/pinia";
 import { createMediakiwiRouterOptions } from "@/router";
 import { createRouter, RouteComponent } from "vue-router";
+import { useMediakiwiStore } from "@/stores";
 
 export interface IMediakiwiVueOptions {
   modules: Record<string, RouteComponent>;
@@ -20,9 +21,9 @@ export default {
 
     // use the router instance
     app.use(router);
-
-    // install the router as a plugin on pinia
+    
     pinia.use(({ store }) => {
+      store.hello = "Welcome to Mediakiwi 2.0";
       store.router = router;
     });
 

@@ -10,7 +10,6 @@
   const navigationStore = useNavigationStore();
   navigationStore.GET_NAVIGATION();
 
-  // //TODO: Add the main mediaKiwi store and helper instead of this
   const railItems = computed(() => navigationStore.sectionList ?? []);
   const listItems = computed(() => navigationStore.navigationList ?? []);
 </script>

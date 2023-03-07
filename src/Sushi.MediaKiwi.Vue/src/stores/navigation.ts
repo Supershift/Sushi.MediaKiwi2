@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import type { INavigationItem } from "@/models/navigation";
-import { useMediakiwiStore } from ".";
+import { MediaKiwiState, useMediakiwiStore } from ".";
 import type ISection from "@/models/section/ISection";
 
 type NavigationState = {
@@ -27,9 +27,9 @@ export const useNavigationStore = defineStore({
   },
   actions: {
     async GET_NAVIGATION() {
-      // grab the items from the main store
+      // grab the items from the main store/services or mock 
       const mediaKiwiStore = useMediakiwiStore();
-      const items = mediaKiwiStore.mediakiwiNavigationItems;
+      const items = mediaKiwiStore.navigationItems;
       const sections = mediaKiwiStore.mediakiwiSections;
 
       // set sections
@@ -41,28 +41,30 @@ export const useNavigationStore = defineStore({
         this.navigationItems = items.filter((x) => x.sectionId === this.currentSection?.id) ?? [];
       }
     },
-    GET_SECTION_NAVIGATION_ITEMS(id: number): Array<INavigationItem> {
-      console.log(this.navigationItems.filter((item) => item?.parentNavigationItemId == id));
-
-      if (id) {
-        return this.navigationItems.filter((item) => item?.sectionId == id) ?? [];
+    SET_SECTION_NAVIGATION_ITEMS(id: number) {
+      console.log("current section nav items: "+ this.navigationItems.length);
+      console.log("id: "+ id);
+      if (id !== null) {
+        const items = this.navigationItems.filter((item) => item?.sectionId == id);
+        console.log("set section nav items: "+ items);
+        
+        if (items && items.length > 0) {
+          this.navigationItems = items;
+          console.log("new section nav items: "+ this.navigationItems);
+        }
       }
-      return [];
     },
     SET_CURRENT_SECTION(name: string): void {
-      console.log(name, this.sectionItems, this.navigationItems);
+      // Assign the right section with the given name
       if (name && this.sectionItems) {
         this.currentSection = this.sectionItems.find((x) => x.name == name);
       }
-      console.log(this.currentSection?.id);
-
-      const items = this.GET_SECTION_NAVIGATION_ITEMS(this.currentSection?.id ?? 1);
-      if (items && items.length > 0) {
-        this.navigationItems = items;
-      }
+      // Repopulate the navigationItems wit hthee correct section assigned items
+      this.SET_SECTION_NAVIGATION_ITEMS(this.currentSection?.id ?? 0);      
+      
     },
     NAVIGATE_TO(path: string, isSection: boolean) {
-      // hook up router
+      // Since we are injecting the router via the sotre it is already up and running when we initiate
       if (path && this.router) {
         // if it's the section, then we reset the navigation
         if (isSection) {

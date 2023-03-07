@@ -3,7 +3,7 @@ import { createWebHashHistory, RouteLocationNormalizedLoaded, Router, type Route
 import { useRouter as useVueRouter, useRoute as useVueRoute, type RouteComponent } from "vue-router";
 import type { INavigationItem } from "../models/navigation";
 import type { IScreen } from "../models/screen/IScreen";
-import pinia from "@/stores/pinia";
+import pinia from "../pluigins/pinia";
 import { useMediakiwiStore }from "@/stores/index";
 
 
@@ -12,9 +12,7 @@ export function createMediakiwiRouterOptions(modules: Record<string, RouteCompon
   // Populate everything here first!
   // since we've initialized the pinia first we can access it here now
   const mediaKiwiStore = useMediakiwiStore(pinia);
-  mediaKiwiStore.GET_NAVIGATION_ITEMS();
-  mediaKiwiStore.GET_SECTIONS();
-  mediaKiwiStore.GET_SCREENS();
+  mediaKiwiStore.INIT();
 
   const navigationItems = mediaKiwiStore.mediakiwiNavigationItems;
   const screens = mediaKiwiStore.screens;
