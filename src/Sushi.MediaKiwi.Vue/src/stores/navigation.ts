@@ -33,11 +33,11 @@ export const useNavigationStore = defineStore({
       const sections = mediaKiwiStore.mediakiwiSections;
 
       // set sections
-      if (sections && sections.length > 0) {
+      if (sections && sections.length) {
         this.sectionItems = sections;
       }
       // set items
-      if (items && items.length > 0) {
+      if (items && items.length) {
         this.navigationItems = items.filter((x) => x.sectionId === this.currentSection?.id) ?? [];
       }
     },
@@ -56,7 +56,7 @@ export const useNavigationStore = defineStore({
         const name = navigationItem.path.split("/")[1] ?? "Home";
         this.currentSection = this.sectionItems.find((x) => x.name == name);
       }
-      // Repopulate the navigationItems wit hthee correct section assigned items
+      // Repopulate the navigationItems with the correct section assigned items
       this.setSectionNavigationItems(this.currentSection?.id ?? 0);      
       
     },

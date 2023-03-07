@@ -18,7 +18,7 @@ export function getNavigationItemChildren(navigationItem: INavigationItem | unde
     return result;
 }
 
-export function getNavigationItemForRoute(route: RouteLocationNormalizedLoaded , navigationItems: INavigationItem[], section: ISection | undefined) : INavigationItem | undefined
+export function getNavigationItemForRoute(route: RouteLocationNormalizedLoaded , navigationItems: INavigationItem[], section?: ISection) : INavigationItem | undefined
 {   
     // check from route, otherwise check from store
     var result = navigationItems.find(item => item.id.toString() == route?.name);

@@ -1,5 +1,5 @@
 import type { App, Component } from "vue";
-import pinia  from "./pluigins/pinia";
+import pinia  from "./plugins/pinia";
 import { createMediakiwiRouterOptions } from "@/router";
 import { createRouter, RouteComponent } from "vue-router";
 
