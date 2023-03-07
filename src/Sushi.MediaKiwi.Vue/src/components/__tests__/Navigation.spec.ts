@@ -1,12 +1,13 @@
 import { mount } from "@vue/test-utils";
-import MkNavigation from "../MkNavigation.vue";
+import MkNavigation from "../MkNavigationNew/MkNavigation.vue";
 import { describe, it, expect } from "vitest";
 
-describe("MkNavigation", () => {
-  it("should display header text", () => {
-    const msg = "MkNavigation";
-    const wrapper = mount(MkNavigation, { props: { msg } });
 
-    expect(wrapper.text()).toEqual(msg);
+describe("MkNavigation", () => {
+  it("Should display Navigation", () => {
+    const wrapper = mount(MkNavigation);
+
+    expect(wrapper).toHaveProperty("railItems");
+    expect(wrapper).toHaveProperty("listItems");
   });
 });
