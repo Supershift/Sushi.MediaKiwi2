@@ -11,6 +11,8 @@
     (e: "update:modelValue", value: TableFilterValueCollection): void;
   }>();
 
+  const menu = ref(false);
+
   // holds the current filter being edited and its value
   interface IState {
     currentFilter: ITableFilterItem | undefined;
@@ -28,6 +30,7 @@
     state.currentFilterValue = undefined;
   }
 
+  /** Sets the current filter, current filter value and opens the menu */
   function setCurrentFilter(selectedFilter: ITableFilterItem) {
     openMenu();
     state.currentFilterValue = props.modelValue.get(selectedFilter.id);
@@ -53,6 +56,7 @@
     closeMenu();
   }
 
+  /* Removed the filterItem id from the modelValue collection. */
   function removeFilter(filterItem: ITableFilterItem) {
     // delete the filter value if we had a value, but it is now undefined
     if (filterItem) {
@@ -77,8 +81,10 @@
     state.currentFilter = undefined;
   }
 
-  const menu = ref(false);
-
+  /**
+   * Watch for the menu ref
+   * Closes the filter when updated to false in any way (ie. click next to it)
+   */
   watch(menu, () => {
     if (!menu.value) {
       closeFilter();
