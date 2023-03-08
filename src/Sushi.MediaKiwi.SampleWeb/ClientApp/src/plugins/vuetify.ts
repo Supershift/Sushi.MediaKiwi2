@@ -24,7 +24,7 @@ const vuetify = createVuetify({
   components: VComponents,
   directives: VDirectives,
   theme: {
-    defaultTheme: "light",
+    defaultTheme: "dark",
     themes: {
       dark: mediaKiwiDarkTheme,
       light: mediaKiwiLightTheme,
