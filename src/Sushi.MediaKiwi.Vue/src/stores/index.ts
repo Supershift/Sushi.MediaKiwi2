@@ -4,11 +4,15 @@ import { NavigationAPIServices, ScreenAPIServices, SectionAPIServices } from "@/
 import type ListResult from "@/models/api/ListResult";
 import type { IScreen } from "@/models/screen/IScreen";
 import type ISection from "@/models/section/ISection";
+import { store } from "@/stores/mediakiwi/mock";
 
-type MediaKiwiState = {
+const mockStore = store;
+
+export type MediaKiwiState = {
     navigationItems: Array<INavigationItem>;
     screens: Array<IScreen>;
     sections: Array<ISection>;
+    isLocal: boolean;
   };
 export const useMediakiwiStore = defineStore({
         id: "mediaKiwiStore",
@@ -16,7 +20,8 @@ export const useMediakiwiStore = defineStore({
         ({
             navigationItems: [],
             screens: [],
-            sections: []
+            sections: [],
+            isLocal: true
         } as MediaKiwiState),
         getters: {
             mediakiwiScreens: (state: MediaKiwiState) => state.screens,
@@ -24,61 +29,93 @@ export const useMediakiwiStore = defineStore({
             mediakiwiNavigationItems: (state: MediaKiwiState) => state.navigationItems
         },
         actions: {
-            async GET_NAVIGATION_ITEMS(){
+            init(){
+                this.getNavigationItems();
+                this.getSections();
+                this.getScreens();
+            },
+            async getNavigationItems(){
+                if (this.isLocal) {
+                    this.navigationItems = mockStore.navigationItems;
+                    return;
+                }
                 //TODO: START UI loading 
                 return await NavigationAPIServices.GetNavigationItems()
-                .then((response: ListResult<INavigationItem>) => {
-                    this.SET_NAVIGATION_ITEMS(response);
+                .then((response: ListResult<INavigationItem>) => {                    
+                    this.setNavigationItems(response);
                 })
                 .then(() => {
                     // TODO: STOP UI loading
+                }).then(() =>{
+                    if (this.navigationItems.length === 0) {
+                        console.log("Empty items, Mocking now!");
+                        this.navigationItems = mockStore.navigationItems;
+                    }
                 });
             },
-            async GET_SCREENS(){
+            async getScreens(){
+                if (this.isLocal) {
+                    this.screens = mockStore.screens;
+                    return;
+                }
                 //TODO: START UI loading 
                 return await ScreenAPIServices.GetScreens()
                 .then((response: ListResult<IScreen>) => {
-                    this.SET_SCREENS(response);
+                    this.setScreens(response);
                 })
                 .then(() => {
                     // TODO: STOP UI loading
+                }).then(() =>{
+                    if (this.screens.length === 0) {
+                        console.log("Empty screens, Mocking now!");
+                        this.screens = mockStore.screens;
+                    }
                 });
             },
-            async GET_SECTIONS(){
+            async getSections(){
+                if (this.isLocal) {
+                    this.sections = mockStore.sections;
+                    return;
+                }
                 //TODO: START UI loading 
                 return await SectionAPIServices.GetSections()
                 .then((response: ListResult<ISection>) => {
-                    this.SET_SECTIONS(response);
+                    this.setSections(response);
                 })
                 .then(() => {
                     // TODO: STOP UI loading
+                }).then(() =>{
+                    if (this.sections.length === 0) {
+                        console.log("Empty sections, Mocking now!");
+                        this.sections = mockStore.sections;
+                    }
                 });
             },
-            SET_NAVIGATION_ITEMS(payload: ListResult<INavigationItem>){
+            setNavigationItems(payload: ListResult<INavigationItem>){                
                 if (payload) {
                     this.navigationItems = payload.result;
                     this.navigationItems.forEach((item) =>{
-                        item.path = this.CALCULATE_PATH(item);
+                        item.path = this.getParentPath(item);
                     })
                 }
             },
-            SET_SCREENS(payload: ListResult<IScreen>){
+            setScreens(payload: ListResult<IScreen>){
                 if (payload) {
                     this.screens = payload.result;
                 }
             },
-            SET_SECTIONS(payload: ListResult<ISection>){
+            setSections(payload: ListResult<ISection>){
                 if (payload) {
                     this.sections = payload.result;
                 }
             },
-            CALCULATE_PATH(payload: INavigationItem): string{
+            getParentPath (payload: INavigationItem): string{
                 // get the full path for this item by recursively going up the tree
                 let parentPath: string = "";
                 if (payload.parentNavigationItemId != null) {
                     const parent = this.navigationItems.find((item: INavigationItem) => item.id == payload.parentNavigationItemId);
                 if (parent !== undefined) {
-                    parentPath = this.CALCULATE_PATH(parent);
+                    parentPath = this.getParentPath (parent);
                 }
                 }
                 return parentPath + `/${payload.name}`;

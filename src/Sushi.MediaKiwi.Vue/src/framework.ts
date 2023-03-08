@@ -1,5 +1,5 @@
 import type { App, Component } from "vue";
-import { createPinia } from "pinia";
+import pinia from "./plugins/pinia";
 import { createMediakiwiRouterOptions } from "@/router";
 import { createRouter, RouteComponent, RouteRecordRaw, Router } from "vue-router";
 import { Configuration, PublicClientApplication } from "@azure/msal-browser";
@@ -20,7 +20,6 @@ let msalInstance: PublicClientApplication;
 export default {
   install(app: App, options: IMediakiwiVueOptions) {
     // Create an instance of Pinia
-    const pinia = createPinia();
     app.use(pinia);
 
     // create router options, which contains paths based on the modules
@@ -31,6 +30,11 @@ export default {
 
     // use the router instance
     app.use(router);
+
+    pinia.use(({ store }) => {
+      store.hello = "Welcome to Mediakiwi 2.0";
+      // store.router = router;
+    });
 
     // create msal instance and install plugin
     msalInstance = new PublicClientApplication(options.msalConfig);

@@ -7,6 +7,13 @@ import type ISection from "@/models/section/ISection";
 // get the navigation items
 const navigationItems = <INavigationItem[]>[
   {
+    id: 0,
+    name: "Home",
+    screenId: 0,    
+    sectionId: 0,
+    parentNavigationItemId: null,
+  },
+  {
     id: 1,
     name: "Hotels",
     screenId: 1,    
@@ -101,6 +108,7 @@ navigationItems.forEach((item) => {
 });
 
 const screens = <IScreen[]>[
+  { id: 0, componentFileName: 'Home', sectionId: 0, name: "Home" },
   { id: 1, componentFileName: 'Screen1', sectionId: 1, name: "Screen 1" },
   { id: 2, componentFileName: "Screen2", sectionId: 1, name: "Screen 2" },
   { id: 3, componentFileName: "SampleData", sectionId: 1, name: "Sample data overview" },
@@ -111,10 +119,16 @@ const screens = <IScreen[]>[
 // We use stubs for now
 const sections = Array<ISection>();
 sections.push({
-  id: 1,
+  id: 0,
   name: "Home",
-  sortOrder: 1,
+  sortOrder: 0,
   icon: "mdi-home"
+});
+sections.push({
+  id: 1,
+  name: "Hotels",
+  sortOrder: 1,
+  icon: "mdi-office-building"
 });
 sections.push({
   id: 2,

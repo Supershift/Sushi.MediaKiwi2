@@ -1,27 +1,33 @@
 <script setup lang="ts">
+import useMediaKiwiRouting from '@/composables/useMediaKiwiRouting';
 import type ISection from '@/models/section/ISection';
-import { store } from '@/stores/mediakiwi/mock';
-import { useNavigationStore } from '@/stores/navigation';
-import { computed } from 'vue';
+import { useRouter } from '@/router';
 
 defineEmits(["change"]);
+defineProps<{
+    railItems: Array<ISection>;
+}>();
 
-const navigationStore = useNavigationStore();
-navigationStore.GET_NAVIGATION();
-
-const railItems = computed(() => store.sections.filter((item) => item));
-
+const { NavigateToScreen } = useMediaKiwiRouting();
+const router = useRouter();
 function onItemClick(item: ISection){
+  console.log(item);
+  
   if (item) {
-    navigationStore.NAVIGATE_TO(item.name, true);
+    NavigateToScreen(router, item.id, true)
   }
   return false;
 }
 </script>
 <template>
-<v-navigation-drawer :rail="true" :rail-width="72" permanent>
+<v-navigation-drawer rail :rail-width="72" permanent>
     <v-list density="compact" open-strategy="list" nav>
-      <v-list-item v-for="item in railItems" :prepend-icon="item.icon" :title="item.name" :value="item.name" @click="onItemClick(item)"></v-list-item>
+      <v-list-item v-for="item in railItems || []" :key="item.id" :title="item.name" :value="item.name" @click="onItemClick(item)">
+        <template v-slot:prepend>
+          <v-icon v-if="item?.icon" :icon="item?.icon"></v-icon>
+          <v-icon v-else icon="mdi-puzzle"></v-icon>
+        </template>
+      </v-list-item>
     </v-list>
 </v-navigation-drawer>
 </template>
