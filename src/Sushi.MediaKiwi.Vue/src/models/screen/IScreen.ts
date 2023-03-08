@@ -1,9 +1,7 @@
-import { type RouteComponent } from "vue-router";
-
 export interface IScreen {
   id: number;
   name: string;
-  componentFileName: string;
-  sectionId: number;  
-  component: RouteComponent;
+  /** Unique key for the screen's component. Will be used to find a match in the modules provided when installing MediaKiwi */
+  componentKey: string;
+  sectionId: number;
 }

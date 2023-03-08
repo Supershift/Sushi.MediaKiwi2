@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import SampleTable3 from "./SampleTable3.vue";
+  import SampleTable3 from "../components/SampleTable3.vue";
 </script>
 
 <template>

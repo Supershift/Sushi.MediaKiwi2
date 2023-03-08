@@ -1,13 +1,13 @@
-import { createWebHashHistory, RouteLocationNormalizedLoaded, Router, type RouteRecordRaw, type RouterOptions } from "vue-router";
+import { createWebHistory, RouteLocationNormalizedLoaded, Router, type RouteRecordRaw, type RouterOptions } from "vue-router";
 import { useRouter as useVueRouter, useRoute as useVueRoute, type RouteComponent } from "vue-router";
 import type { INavigationItem } from "../models/navigation";
 import type { IScreen } from "../models/screen/IScreen";
 import pinia from "../plugins/pinia";
-import { useMediakiwiStore }from "@/stores/index";
-
+import { useMediakiwiStore } from "@/stores/index";
+import SignIn from "@/views/SignIn.vue";
 
 /** Creates router options based on provided modules. */
-export function createMediakiwiRouterOptions(modules: Record<string, RouteComponent>): RouterOptions {
+export function createMediakiwiRouterOptions(modules: Record<string, RouteComponent>, customRoutes?: RouteRecordRaw[]): RouterOptions {
   // Populate everything here first!
   // since we've initialized the pinia first we can access it here now
   const mediaKiwiStore = useMediakiwiStore(pinia);
@@ -24,22 +24,38 @@ export function createMediakiwiRouterOptions(modules: Record<string, RouteCompon
       const screen = screens.find((x: IScreen) => x.id == navigationItem.screenId);
 
       if (screen != null && screen !== undefined && modules) {
-        const route = <RouteRecordRaw>{
-          path: navigationItem.path,
-          name: navigationItem.id.toString(),
-          component: modules[`./components/${screen?.componentFileName}.vue`],
-        };
-        routes.push(route);
+        // find the module referenced by the screen
+        const module = modules[screen.componentKey];
+        if (module !== undefined) {
+          // add a route to the module
+          const route = <RouteRecordRaw>{
+            path: navigationItem.path,
+            name: navigationItem.id.toString(),
+            component: module,
+            meta: {
+              requiresAuth: true,
+            },
+          };
+          routes.push(route);
+        } else {
+          // no module found, give a warning
+          console.warn(`No module found for screenID: ${screen.id}, component key: ${screen.componentKey}`);
+        }
       }
     }
   });
 
-  // add default route
-  routes.push({ path: "/", component: () => routes.find((x) => x.name == "Home")?.component });
+  // add custom routes
+  if (customRoutes !== undefined) {
+    customRoutes.forEach((customRoute) => routes.push(customRoute));
+  }
+
+  // add sign in screen
+  routes.push({ path: "/signIn", component: SignIn });
 
   const routerOptions = <RouterOptions>{
     routes: routes,
-    history: createWebHashHistory(),
+    history: createWebHistory(),
   };
 
   return routerOptions;

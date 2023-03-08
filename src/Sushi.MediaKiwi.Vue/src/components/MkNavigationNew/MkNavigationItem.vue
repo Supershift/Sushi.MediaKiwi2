@@ -7,8 +7,8 @@
   import { useRoute } from "@/router";
 
   const props = defineProps<{
-    navigationItem: INavigationItem,
-    allItems: Array<INavigationItem>
+    navigationItem: INavigationItem;
+    allItems: Array<INavigationItem>;
   }>();
 
   const { NavigateToScreen } = useMediaKiwiRouting();
@@ -19,24 +19,23 @@
 
   const isActive = computed(() => routeName === props.navigationItem.name);
 
-  const nameLabel = computed(() => props.navigationItem?.name ?? "-empty-")
-  
+  const nameLabel = computed(() => props.navigationItem?.name ?? "-empty-");
+
   // called to send user to target screen
   function onItemClick(item: INavigationItem) {
-    if (item && item?.screenId && item?.path) {
-      NavigateToScreen(router, item.screenId, false)
+    if (item.screenId !== undefined) {
+      router.push(item.path);
     }
     return false;
   }
 
-  const children = computed(() => getNavigationItemChildren(props.navigationItem, props.allItems, true))
-    
+  const children = computed(() => getNavigationItemChildren(props.navigationItem, props.allItems, true));
 </script>
 
 <template>
   <v-list-group v-if="children.length > 0" :value="nameLabel">
     <template #activator="{ props }" :is-active="isActive">
-      <v-list-item v-bind="props" :active="isActive"  :title="nameLabel" @click="navigationItem?.screenId != null ? onItemClick(navigationItem) : {}"></v-list-item>
+      <v-list-item v-bind="props" :active="isActive" :title="nameLabel" @click="navigationItem?.screenId !== undefined ? onItemClick(navigationItem) : {}"></v-list-item>
     </template>
     <mk-navigation-item v-for="child in children" :navigation-item="child" :key="child.id" :all-items="allItems"></mk-navigation-item>
   </v-list-group>
