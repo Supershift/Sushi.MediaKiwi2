@@ -9,35 +9,35 @@ const navigationItems = <INavigationItem[]>[
   {
     id: 0,
     name: "Home",
-    screenId: 0,    
+    screenId: 0,
     sectionId: 0,
     parentNavigationItemId: null,
   },
   {
     id: 1,
     name: "Hotels",
-    screenId: 1,    
+    screenId: 1,
     sectionId: 1,
     parentNavigationItemId: null,
   },
   {
     id: 11,
     name: "Hotel-sub-1",
-    screenId: 3,    
+    screenId: 3,
     sectionId: 1,
     parentNavigationItemId: 1,
   },
   {
     id: 111,
     name: "Hotel-deeper-sub-1",
-    screenId: 3,    
+    screenId: 3,
     sectionId: 1,
     parentNavigationItemId: 11,
   },
   {
     id: 2,
     name: "Customers",
-    screenId: 2,    
+    screenId: 2,
     sectionId: 1,
     parentNavigationItemId: null,
   },
@@ -58,7 +58,7 @@ const navigationItems = <INavigationItem[]>[
   {
     id: 3,
     name: "Sample-data-overview",
-    screenId: 2,
+    screenId: 3,
     sectionId: 1,
     parentNavigationItemId: null,
   },
@@ -69,7 +69,7 @@ const navigationItems = <INavigationItem[]>[
     sectionId: 1,
     parentNavigationItemId: 3,
     isDynamicRoute: true,
-    dynamicRouteParamaterName: 'sampleDataId'
+    dynamicRouteParamaterName: "sampleDataId",
   },
   {
     id: 311,
@@ -78,7 +78,7 @@ const navigationItems = <INavigationItem[]>[
     sectionId: 1,
     parentNavigationItemId: 31,
     isDynamicRoute: true,
-    dynamicRouteParamaterName: 'deepDataId'
+    dynamicRouteParamaterName: "deepDataId",
   },
 ];
 
@@ -96,8 +96,7 @@ function getPath(navigationItem: INavigationItem): string {
   // if it is a dynamic route to an item instance, add :id to the path
   if (navigationItem.isDynamicRoute) {
     return parentPath + `/${navigationItem.name}/:${navigationItem.dynamicRouteParamaterName}`;
-  }
-  else {
+  } else {
     return parentPath + `/${navigationItem.name}`;
   }
 }
@@ -108,12 +107,12 @@ navigationItems.forEach((item) => {
 });
 
 const screens = <IScreen[]>[
-  { id: 0, componentFileName: 'Home', sectionId: 0, name: "Home" },
-  { id: 1, componentFileName: 'Screen1', sectionId: 1, name: "Screen 1" },
-  { id: 2, componentFileName: "Screen2", sectionId: 1, name: "Screen 2" },
-  { id: 3, componentFileName: "SampleData", sectionId: 1, name: "Sample data overview" },
-  { id: 4, componentFileName: "SampleDataEdit", sectionId: 1, name: "SampleDataEdit" },
-  { id: 5, componentFileName: "SampleDeepDataEdit", sectionId: 1, name: "SampleDeepDataEdit" },
+  { id: 0, componentKey: "./views/Home.vue", sectionId: 0, name: "Home" },
+  { id: 1, componentKey: "./views/Screen1.vue", sectionId: 1, name: "Screen 1" },
+  { id: 2, componentKey: "./views/Hotels.vue", sectionId: 1, name: "Screen 2" },
+  { id: 3, componentKey: "./views/SampleData.vue", sectionId: 1, name: "Sample data overview" },
+  { id: 4, componentKey: "./views/SampleDataEdit.vue", sectionId: 1, name: "SampleDataEdit" },
+  { id: 5, componentKey: "./views/SampleDeepDataEdit.vue", sectionId: 1, name: "SampleDeepDataEdit" },
 ];
 
 // We use stubs for now
@@ -122,25 +121,25 @@ sections.push({
   id: 0,
   name: "Home",
   sortOrder: 0,
-  icon: "mdi-home"
+  icon: "mdi-home",
 });
 sections.push({
   id: 1,
   name: "Hotels",
   sortOrder: 1,
-  icon: "mdi-office-building"
+  icon: "mdi-office-building",
 });
 sections.push({
   id: 2,
   name: "Users",
   sortOrder: 2,
-  icon: "mdi-account"
+  icon: "mdi-account",
 });
 sections.push({
   id: 999,
   name: "Admin",
   sortOrder: 1,
-  icon: "mdi-security"
+  icon: "mdi-security",
 });
 class MkStore {
   navigationItems: INavigationItem[] = [];

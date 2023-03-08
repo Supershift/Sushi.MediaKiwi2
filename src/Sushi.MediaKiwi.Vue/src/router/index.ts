@@ -1,10 +1,9 @@
-import { createWebHashHistory, RouteLocationNormalizedLoaded, Router, type RouteRecordRaw, type RouterOptions } from "vue-router";
+import { createWebHistory, RouteLocationNormalizedLoaded, Router, type RouteRecordRaw, type RouterOptions } from "vue-router";
 import { useRouter as useVueRouter, useRoute as useVueRoute, type RouteComponent } from "vue-router";
 import type { INavigationItem } from "../models/navigation";
 import type { IScreen } from "../models/screen/IScreen";
 import pinia from "../plugins/pinia";
-import { useMediakiwiStore }from "@/stores/index";
-
+import { useMediakiwiStore } from "@/stores/index";
 
 /** Creates router options based on provided modules. */
 export function createMediakiwiRouterOptions(modules: Record<string, RouteComponent>): RouterOptions {
@@ -24,12 +23,20 @@ export function createMediakiwiRouterOptions(modules: Record<string, RouteCompon
       const screen = screens.find((x: IScreen) => x.id == navigationItem.screenId);
 
       if (screen != null && screen !== undefined && modules) {
-        const route = <RouteRecordRaw>{
-          path: navigationItem.path,
-          name: navigationItem.id.toString(),
-          component: modules[`./components/${screen?.componentFileName}.vue`],
-        };
-        routes.push(route);
+        // find the module referenced by the screen
+        const module = modules[screen.componentKey];
+        if (module !== undefined) {
+          // add a route to the module
+          const route = <RouteRecordRaw>{
+            path: navigationItem.path,
+            name: navigationItem.id.toString(),
+            component: module,
+          };
+          routes.push(route);
+        } else {
+          // no module found, give a warning
+          console.warn(`No module found for screenID: ${screen.id}, component key: ${screen.componentKey}`);
+        }
       }
     }
   });
@@ -39,7 +46,7 @@ export function createMediakiwiRouterOptions(modules: Record<string, RouteCompon
 
   const routerOptions = <RouterOptions>{
     routes: routes,
-    history: createWebHashHistory(),
+    history: createWebHistory(),
   };
 
   return routerOptions;
