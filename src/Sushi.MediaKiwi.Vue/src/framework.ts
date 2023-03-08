@@ -1,5 +1,5 @@
 import type { App, Component } from "vue";
-import pinia  from "./plugins/pinia";
+import pinia from "./plugins/pinia";
 import { createMediakiwiRouterOptions } from "@/router";
 import { createRouter, RouteComponent } from "vue-router";
 
@@ -20,7 +20,7 @@ export default {
 
     // use the router instance
     app.use(router);
-    
+
     pinia.use(({ store }) => {
       store.hello = "Welcome to Mediakiwi 2.0";
       // store.router = router;
@@ -41,5 +41,7 @@ export * from "@/services";
 export * from "@/stores";
 
 export * from "@/router";
+
+export * from "@/plugins/vuetify";
 
 export { store as MkMockStore } from "@/stores/mediakiwi/mock";

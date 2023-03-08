@@ -8,6 +8,8 @@ import { md3 } from "vuetify/blueprints";
 
 import { mdi, aliases } from "vuetify/iconsets/mdi";
 
+import { mediaKiwiDarkTheme, mediaKiwiLightTheme } from "@supershift/mediakiwi-vue";
+
 // load fonts
 const webFontLoader = await import(/* webpackChunkName: "webfontloader" */ "webfontloader");
 
@@ -22,7 +24,11 @@ const vuetify = createVuetify({
   components: VComponents,
   directives: VDirectives,
   theme: {
-    defaultTheme: "dark",
+    defaultTheme: "light",
+    themes: {
+      dark: mediaKiwiDarkTheme,
+      light: mediaKiwiLightTheme,
+    },
   },
   icons: {
     defaultSet: "mdi",
