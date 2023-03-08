@@ -8,11 +8,11 @@
       <v-app-bar title="MediaKiwi 2.0" elevation="20"></v-app-bar>
       <mk-navigation_1></mk-navigation_1>
       <mk-screen></mk-screen>
-    </v-layout> 
+    </v-layout>
   </v-card>
 </template>
 <style scoped lang="css">
-.container {
-  height: 100vh;
-}
+  .container {
+    height: 100vh;
+  }
 </style>

@@ -7,14 +7,15 @@ import vuetify from "./plugins/vuetify";
 
 const app = createApp(App);
 
-const modules = import.meta.glob("./components/**/*.vue");
-
 // add vuetify
 app.use(vuetify);
 
+// import all views as models
+const modules = import.meta.glob("./views/**/*.vue");
+
 // create mediakiwi options, with modules
 const mediaKiwiOptions = {
-  modules: import.meta.glob("./components/**/*.vue"),
+  modules: modules,
   msalConfig: msalConfig,
 };
 

@@ -1,6 +1,6 @@
 <script setup async lang="ts">
-  import SampleTable1 from "./SampleTable1.vue";
-  import SampleTable2 from "./SampleTable2.vue";
+  import SampleTable1 from "../components/SampleTable1.vue";
+  import SampleTable2 from "../components/SampleTable2.vue";
 </script>
 
 <template>

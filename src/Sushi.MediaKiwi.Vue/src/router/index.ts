@@ -23,12 +23,20 @@ export function createMediakiwiRouterOptions(modules: Record<string, RouteCompon
       const screen = screens.find((x: IScreen) => x.id == navigationItem.screenId);
 
       if (screen != null && screen !== undefined && modules) {
-        const route = <RouteRecordRaw>{
-          path: navigationItem.path,
-          name: navigationItem.id.toString(),
-          component: modules[`./components/${screen?.componentFileName}.vue`],
-        };
-        routes.push(route);
+        // find the module referenced by the screen
+        const module = modules[screen.componentKey];
+        if (module !== undefined) {
+          // add a route to the module
+          const route = <RouteRecordRaw>{
+            path: navigationItem.path,
+            name: navigationItem.id.toString(),
+            component: module,
+          };
+          routes.push(route);
+        } else {
+          // no module found, give a warning
+          console.warn(`No module found for screenID: ${screen.id}, component key: ${screen.componentKey}`);
+        }
       }
     }
   });
