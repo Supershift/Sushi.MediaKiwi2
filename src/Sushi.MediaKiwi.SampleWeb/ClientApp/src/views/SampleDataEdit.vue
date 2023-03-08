@@ -1,9 +1,9 @@
 <script setup lang="ts">
-  import { MkForm, MkTableView } from "@supershift/mediakiwi-vue";
+  import { ITableMapItem, MkForm, MkTableView } from "@supershift/mediakiwi-vue";
   import { useRoute, useRouter } from "@supershift/mediakiwi-vue";
   import type { ITableMap } from "@supershift/mediakiwi-vue";
-  import { SampleDataService } from "./SampleDataService";
-  import type { ISampleData } from "./ISampleData";
+  import { SampleDataService } from "../components/SampleDataService";
+  import type { ISampleData } from "../components/ISampleData";
   import { reactive, ref } from "vue";
 
   const route = useRoute();
