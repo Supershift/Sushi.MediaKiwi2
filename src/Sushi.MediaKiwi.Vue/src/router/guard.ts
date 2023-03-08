@@ -1,20 +1,15 @@
 import { RouteLocationNormalized, Router } from "vue-router";
-import { msalInstance } from "../framework";
 import { InteractionType, PopupRequest, PublicClientApplication, RedirectRequest } from "@azure/msal-browser";
-
-// Add here scopes for id token to be used at MS Identity Platform endpoints.
-export const loginRequest = {
-  scopes: ["User.Read"],
-};
+import { identity } from "@/identity";
 
 export function registerGuard(router: Router) {
   router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormalized) => {
     if (to.meta.requiresAuth) {
       const request = {
-        ...loginRequest,
+        scopes: identity.scopes,
         redirectStartPage: to.fullPath,
       };
-      const shouldProceed = await isAuthenticated(msalInstance, InteractionType.Redirect, request);
+      const shouldProceed = await isAuthenticated(identity.msalInstance, InteractionType.Redirect, request);
       return shouldProceed || "/failed";
     }
 

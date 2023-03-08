@@ -9,13 +9,13 @@ import { msalPlugin } from "./plugins/msalPlugin";
 import { CustomNavigationClient } from "./router/navigationClient";
 import { registerGuard } from "./router/guard";
 
+import { identity } from "./identity";
+
 export interface IMediakiwiVueOptions {
   modules: Record<string, RouteComponent>;
   customRoutes?: RouteRecordRaw[];
   msalConfig: Configuration;
 }
-
-let msalInstance: PublicClientApplication;
 
 export default {
   install(app: App, options: IMediakiwiVueOptions) {
@@ -37,19 +37,17 @@ export default {
     });
 
     // create msal instance and install plugin
-    msalInstance = new PublicClientApplication(options.msalConfig);
-    app.use(msalPlugin, msalInstance);
+    identity.msalInstance = new PublicClientApplication(options.msalConfig);
+    app.use(msalPlugin, identity.msalInstance);
 
     // create navigation client for msal
     const navigationClient = new CustomNavigationClient(router);
-    msalInstance.setNavigationClient(navigationClient);
+    identity.msalInstance.setNavigationClient(navigationClient);
 
-    // register the msal guard on the router
+    // adds a guard to all routes with the meta property 'requireAuth' set to true
     registerGuard(router);
   },
 };
-
-export { msalInstance as msalInstance };
 
 export * from "@/components";
 

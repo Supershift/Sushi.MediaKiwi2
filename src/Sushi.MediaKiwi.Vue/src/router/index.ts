@@ -4,6 +4,7 @@ import type { INavigationItem } from "../models/navigation";
 import type { IScreen } from "../models/screen/IScreen";
 import pinia from "../plugins/pinia";
 import { useMediakiwiStore } from "@/stores/index";
+import SignIn from "@/views/SignIn.vue";
 
 /** Creates router options based on provided modules. */
 export function createMediakiwiRouterOptions(modules: Record<string, RouteComponent>, customRoutes?: RouteRecordRaw[]): RouterOptions {
@@ -31,6 +32,9 @@ export function createMediakiwiRouterOptions(modules: Record<string, RouteCompon
             path: navigationItem.path,
             name: navigationItem.id.toString(),
             component: module,
+            meta: {
+              requiresAuth: true,
+            },
           };
           routes.push(route);
         } else {
@@ -47,7 +51,10 @@ export function createMediakiwiRouterOptions(modules: Record<string, RouteCompon
   }
 
   // add default route
-  routes.push({ path: "/", component: () => routes.find((x) => x.name == "Home")?.component });
+  // routes.push({ path: "/", component: () => routes.find((x) => x.name == "Home")?.component });
+
+  // add sign in screen
+  routes.push({ path: "/signIn", component: SignIn });
 
   const routerOptions = <RouterOptions>{
     routes: routes,
