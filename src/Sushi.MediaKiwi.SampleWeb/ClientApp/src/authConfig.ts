@@ -1,6 +1,6 @@
 import { LogLevel, Configuration } from "@azure/msal-browser";
 
-// Config object to be passed to Msal on creation
+// Config object to be passed to mediakiwi's msal library
 export const msalConfig = <Configuration>{
   auth: {
     clientId: "7cd2eddb-b79e-4e04-ac24-0011821ccb8e",

@@ -50,9 +50,6 @@ export function createMediakiwiRouterOptions(modules: Record<string, RouteCompon
     customRoutes.forEach((customRoute) => routes.push(customRoute));
   }
 
-  // add default route
-  // routes.push({ path: "/", component: () => routes.find((x) => x.name == "Home")?.component });
-
   // add sign in screen
   routes.push({ path: "/signIn", component: SignIn });
 
