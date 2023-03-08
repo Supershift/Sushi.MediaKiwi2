@@ -7,7 +7,8 @@ import vuetify from "./plugins/vuetify";
 
 const app = createApp(App);
 
-const modules = import.meta.glob("./components/**/*.vue");
+// import all views as models
+const modules = import.meta.glob("./views/**/*.vue");
 
 // add vuetify
 app.use(vuetify);
