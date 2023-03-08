@@ -6,7 +6,7 @@
 <template>
   <v-card>
     <v-layout :full-height="true" class="container">
-      <v-app-bar title="MediaKiwi 2.0" elevation="2">
+      <v-app-bar title="MediaKiwi 2.0 Sample">
         <theme-toggle />
       </v-app-bar>
       <mk-navigation_1></mk-navigation_1>
