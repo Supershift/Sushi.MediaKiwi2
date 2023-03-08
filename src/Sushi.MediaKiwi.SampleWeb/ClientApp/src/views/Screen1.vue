@@ -6,6 +6,8 @@
 <template>
   <v-card class="ma-5">
     <SampleTable1></SampleTable1>
+  </v-card>
+  <v-card class="ma-5">
     <SampleTable2></SampleTable2>
   </v-card>
 </template>

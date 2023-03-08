@@ -68,7 +68,6 @@
       <v-text-field label="Name" v-model="state.data.name"></v-text-field>
       <v-select label="Country Code" v-model="state.data.countryCode" :items="countries"></v-select>
     </MkForm>
-    <v-divider></v-divider>
     <v-btn @click="showMore = !showMore">Show more</v-btn>
     <div v-show="showMore">
       <v-divider></v-divider>
