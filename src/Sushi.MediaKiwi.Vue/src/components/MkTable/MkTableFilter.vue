@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { shallowReactive } from "vue";
+  import { shallowReactive, ref, watch } from "vue";
   import type { ITableFilter, ITableFilterItem, TableFilterValueCollection, ITableFilterValue } from "@/models/table/";
 
   const props = defineProps<{
@@ -28,6 +28,12 @@
     state.currentFilterValue = undefined;
   }
 
+  function setCurrentFilter(selectedFilter: ITableFilterItem) {
+    openMenu();
+    state.currentFilterValue = props.modelValue.get(selectedFilter.id);
+    state.currentFilter = selectedFilter;
+  }
+
   /* Reads the value currently set in the filter input and sets it on the filter as the selected value. */
   function applyFilter() {
     // get value and set it to selected filter values
@@ -43,32 +49,74 @@
     // emit an event telling the selected filters have changed
     emit("update:modelValue", props.modelValue);
 
+    closeFilter();
+    closeMenu();
+  }
+
+  function removeFilter(filterItem: ITableFilterItem) {
+    // delete the filter value if we had a value, but it is now undefined
+    if (filterItem) {
+      props.modelValue.delete(filterItem.id);
+    }
+
+    // emit an event telling the selected filters have changed
+    emit("update:modelValue", props.modelValue);
+  }
+
+  function closeMenu() {
+    menu.value = false;
+  }
+
+  function openMenu() {
+    menu.value = true;
+  }
+
+  function closeFilter() {
     // close the filter
     state.currentFilterValue = undefined;
     state.currentFilter = undefined;
   }
+
+  const menu = ref(false);
+
+  watch(menu, () => {
+    if (!menu.value) {
+      closeFilter();
+    }
+  });
 </script>
 
 <template>
   <v-toolbar>
-    <v-menu>
+    <v-menu v-model="menu" :close-on-content-click="false" location="end">
+      <!-- Button -->
       <template v-slot:activator="{ props }">
-        <v-btn color="primary" v-bind="props"> Filter </v-btn>
+        <v-btn v-bind="props" color="primary" icon="mdi-filter-variant"> </v-btn>
       </template>
-      <v-list>
+
+      <!-- context menu -->
+      <v-list v-if="!state.currentFilter">
         <v-list-item v-for="filter in filterMap.items" :value="filter" @click="changeCurrentFilter(filter)">
           <v-list-item-title>{{ filter.title }}</v-list-item-title>
         </v-list-item>
       </v-list>
+
+      <!-- filter compoment -->
+      <v-card v-else-if="state.currentFilter" width="400" :title="state.currentFilter.title">
+        <component :is="state.currentFilter.component" :table-filter-item="state.currentFilter" v-model="state.currentFilterValue"> </component>
+        <v-card-actions>
+          <v-btn @click="applyFilter()">Apply</v-btn>
+          <v-btn @click="closeFilter()">Close</v-btn>
+        </v-card-actions>
+      </v-card>
     </v-menu>
+
+    <!-- Chips -->
     <template v-for="filter in filterMap.items">
-      <v-chip v-if="modelValue.has(filter.id)">{{ filter.title }} : {{ modelValue.get(filter.id)?.title }}</v-chip>
+      <v-chip class="ma-1" v-if="modelValue.has(filter.id)" @click="setCurrentFilter(filter)"
+        >{{ filter.title }} : {{ modelValue.get(filter.id)?.title }}
+        <v-btn class="ma-1" color="default" density="compact" size="small" icon="mdi-close-circle" @click.prevent="removeFilter(filter)"></v-btn>
+      </v-chip>
     </template>
   </v-toolbar>
-  <v-card width="400" :title="state.currentFilter.title" v-if="state.currentFilter !== undefined">
-    <component :is="state.currentFilter.component" :table-filter-item="state.currentFilter" v-model="state.currentFilterValue"> </component>
-    <v-card-actions>
-      <v-btn @click="applyFilter()">Apply</v-btn>
-    </v-card-actions>
-  </v-card>
 </template>
