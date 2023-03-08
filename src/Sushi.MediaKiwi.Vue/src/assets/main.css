@@ -33,3 +33,18 @@ a,
     padding: 0 2rem;
   }
 } */
+
+html {
+  overflow-y: hidden;
+}
+
+.mk-layout {
+  min-height: 100vh;
+}
+
+.v-main {
+  overflow-y: auto;
+  max-height: calc(100vh - var(--v-layout-top));
+  margin-top: var(--v-layout-top);
+  padding-top: 0;
+}

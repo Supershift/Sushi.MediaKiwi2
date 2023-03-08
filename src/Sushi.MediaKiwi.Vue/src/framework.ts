@@ -45,3 +45,5 @@ export * from "@/router";
 export * from "@/plugins/vuetify";
 
 export { store as MkMockStore } from "@/stores/mediakiwi/mock";
+
+import "@/assets/main.css";

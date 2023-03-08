@@ -5,7 +5,7 @@
 
 <template>
   <v-card>
-    <v-layout :full-height="true" class="container">
+    <v-layout :full-height="true" class="mk-layout">
       <v-app-bar title="MediaKiwi 2.0 Sample">
         <theme-toggle />
       </v-app-bar>
@@ -14,8 +14,3 @@
     </v-layout>
   </v-card>
 </template>
-<style scoped lang="css">
-  .container {
-    height: 100vh;
-  }
-</style>
