@@ -63,17 +63,19 @@
 </script>
 
 <template>
-  <MkForm title="Sample data edit" @save="onSave" @undo="onUndo" @delete="onDelete">
-    <v-text-field label="Name" v-model="state.data.name"></v-text-field>
-    <v-select label="Country Code" v-model="state.data.countryCode" :items="countries"></v-select>
-  </MkForm>
-  <v-divider></v-divider>
-  <v-btn @click="showMore = !showMore">Show more</v-btn>
-  <div v-show="showMore">
+  <v-card class="ma-5">
+    <MkForm title="Sample data edit" @save="onSave" @undo="onUndo" @delete="onDelete">
+      <v-text-field label="Name" v-model="state.data.name"></v-text-field>
+      <v-select label="Country Code" v-model="state.data.countryCode" :items="countries"></v-select>
+    </MkForm>
     <v-divider></v-divider>
-    Manually go a level deeper: <v-btn @click="onButtonClick">Level deeper</v-btn>
-    <v-divider></v-divider>
-    Use a table to go a level deeper:
-    <MkTableView :data="deepDataItems" :table-map="myMap" item-screen-name="SampleDeepDataEdit"></MkTableView>
-  </div>
+    <v-btn @click="showMore = !showMore">Show more</v-btn>
+    <div v-show="showMore">
+      <v-divider></v-divider>
+      Manually go a level deeper: <v-btn @click="onButtonClick">Level deeper</v-btn>
+      <v-divider></v-divider>
+      Use a table to go a level deeper:
+      <MkTableView :data="deepDataItems" :table-map="myMap" item-screen-name="SampleDeepDataEdit"></MkTableView>
+    </div>
+  </v-card>
 </template>

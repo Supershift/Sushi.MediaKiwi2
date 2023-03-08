@@ -4,7 +4,7 @@
 </script>
 
 <template>
-  <v-card>
+  <v-card class="ma-5">
     <SampleTable1></SampleTable1>
     <SampleTable2></SampleTable2>
   </v-card>
