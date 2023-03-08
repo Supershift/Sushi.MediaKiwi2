@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import type { ITableFilter, ITableMap, TableFilterValueCollection } from "@/models/table";
 
-  import MkTableFilter from "./MkTableFilter.vue";
+  import MkTableFilter from "@/components/MkTableFilter/MkTableFilter.vue";
   import MkTableView from "./MkTableView.vue";
 
   const props = defineProps<{
