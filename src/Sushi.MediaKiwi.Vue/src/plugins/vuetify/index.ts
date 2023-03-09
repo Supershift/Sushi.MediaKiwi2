@@ -1,6 +1,6 @@
 import "@mdi/font/css/materialdesignicons.css";
 import "vuetify/styles";
-import { createVuetify } from "vuetify";
+import { VuetifyOptions } from "vuetify";
 import * as VComponents from "vuetify/components";
 import * as VDirectives from "vuetify/directives";
 
@@ -12,7 +12,7 @@ import { mediaKiwiDarkTheme, mediaKiwiLightTheme } from "./Themes";
 
 import { mediaKiwiDefaults } from "./Defaults";
 
-const vuetify = createVuetify({
+const defaultVuetifyOptions = <VuetifyOptions>{
   blueprint: md3,
   components: VComponents,
   directives: VDirectives,
@@ -31,6 +31,6 @@ const vuetify = createVuetify({
       mdi,
     },
   },
-});
+};
 
-export default vuetify;
+export default defaultVuetifyOptions;
