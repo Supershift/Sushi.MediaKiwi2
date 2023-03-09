@@ -1,9 +1,10 @@
 import App from "./App.vue";
-
 import { createApp } from "vue";
 import { msalConfig } from "./authConfig";
 import mediakiwi from "@supershift/mediakiwi-vue";
 import vuetify from "./plugins/vuetify";
+// Import mediakiwi stylesheet AFTER vuetify to override
+import "@supershift/mediakiwi-vue/dist/mediakiwi-vue.css";
 
 const app = createApp(App);
 

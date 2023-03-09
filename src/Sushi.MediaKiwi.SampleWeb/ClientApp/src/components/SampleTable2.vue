@@ -1,44 +1,41 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
-import { MkTableView } from '@supershift/mediakiwi-vue';
-import type { ITableMap } from '@supershift/mediakiwi-vue';
+  import { reactive } from "vue";
+  import { MkTable } from "@supershift/mediakiwi-vue";
+  import type { ITableMap } from "@supershift/mediakiwi-vue";
 
-interface Customer {
-    address: string,
-    name: string
-}
+  interface Customer {
+    address: string;
+    name: string;
+  }
 
-interface Order {
-    id: number,
-    orderNumber: string,
-    total: number,
-    customer: Customer
-}
+  interface Order {
+    id: number;
+    orderNumber: string;
+    total: number;
+    customer: Customer;
+  }
 
-const orders = reactive(<Order[]>[
-    { id: 12, orderNumber: '20230001', total: 500.95, customer: { name: 'Jack Sparerib', address: 'Rum Island' } },
-    { id: 15, orderNumber: '20230002', total: 235.95, customer: { name: 'Pino', address: 'Sesamstraat' } },
-])
+  const orders = reactive(<Order[]>[
+    { id: 12, orderNumber: "20230001", total: 500.95, customer: { name: "Jack Sparerib", address: "Rum Island" } },
+    { id: 15, orderNumber: "20230002", total: 235.95, customer: { name: "Pino", address: "Sesamstraat" } },
+  ]);
 
-const myMap = <ITableMap<Order>>{
+  const myMap = <ITableMap<Order>>{
     items: [
-        { headerTitle: "Nummer", value: (order) => order.orderNumber },
-        { headerTitle: "Totaal", value: (order) => order.total },
-        { headerTitle: "Klant naam", value: (order) => order.customer.name },
-        { headerTitle: "Adres", value: (order) => order.customer.address }
-    ]
-}
-
+      { headerTitle: "Nummer", value: (order) => order.orderNumber },
+      { headerTitle: "Totaal", value: (order) => order.total },
+      { headerTitle: "Klant naam", value: (order) => order.customer.name },
+      { headerTitle: "Adres", value: (order) => order.customer.address },
+    ],
+  };
 </script>
 
 <template>
+  <MkTable :table-map="myMap" :data="orders">
+    <template v-slot:header>
+      <h1>Orders</h1>
+    </template>
+  </MkTable>
 
-    <MkTableView :table-map="myMap" :data="orders">
-        <template v-slot:header>
-            <h1>Orders</h1>
-        </template>
-    </MkTableView>
-
-    <button @click="orders[0].total += 100">Ophogen</button>
-
+  <v-btn @click="orders[0].total += 100">Ophogen</v-btn>
 </template>

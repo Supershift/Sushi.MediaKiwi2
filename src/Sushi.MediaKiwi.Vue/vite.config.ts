@@ -24,6 +24,12 @@ export default defineConfig({
     rollupOptions: {
       external: ["vue"],
       output: {
+        assetFileNames(assetInfo) {
+          if (assetInfo.name === "framework.css") {
+            return "mediakiwi-vue.css";
+          }
+          return assetInfo.name || "";
+        },
         exports: "named",
         globals: {
           vue: "Vue",

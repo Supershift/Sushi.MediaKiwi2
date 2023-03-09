@@ -3,5 +3,7 @@
 </script>
 
 <template>
-  <SampleTable3></SampleTable3>
+  <v-card class="ma-5">
+    <SampleTable3></SampleTable3>
+  </v-card>
 </template>
