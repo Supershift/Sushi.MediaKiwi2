@@ -1,6 +1,5 @@
 <script setup lang="ts">
-  import { MkNavigation_1, MkScreen, MkNavigationIcon, MkSignOutButton } from "@supershift/mediakiwi-vue";
-  import ThemeToggle from "./components/theme/ThemeToggle.vue";
+  import { MkNavigation_1, MkScreen, MkNavigationIcon, MkSignOutButton, MkThemeToggle } from "@supershift/mediakiwi-vue";
 </script>
 
 <template>
@@ -9,7 +8,7 @@
       <v-app-bar title="MediaKiwi 2.0">
         <mk-navigation-icon />
         <v-toolbar-title>MediaKiwi 2.0 Sample</v-toolbar-title>
-        <theme-toggle />
+        <mk-theme-toggle></mk-theme-toggle>
         <mk-sign-out-button></mk-sign-out-button>
       </v-app-bar>
       <mk-navigation_1></mk-navigation_1>

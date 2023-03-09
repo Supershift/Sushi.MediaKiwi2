@@ -114,7 +114,7 @@
     "src/**/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue"
-  ],
+, "../../Sushi.MediaKiwi.Vue/src/components/MkThemeSwitch/ThemeToggle.vue.ts"  ],
   "exclude": ["node_modules", "**/*.spec.ts", "./sample"]
 }
 
