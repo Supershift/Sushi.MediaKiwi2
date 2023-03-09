@@ -1,4 +1,3 @@
-
 import "@mdi/font/css/materialdesignicons.css";
 import "vuetify/styles";
 import { createVuetify } from "vuetify";
@@ -9,6 +8,8 @@ import { md3 } from "vuetify/blueprints";
 
 import { mdi, aliases } from "vuetify/iconsets/mdi";
 
+import { mediaKiwiDarkTheme, mediaKiwiLightTheme, mediaKiwiDefaults } from "@supershift/mediakiwi-vue";
+
 // load fonts
 const webFontLoader = await import(/* webpackChunkName: "webfontloader" */ "webfontloader");
 
@@ -18,20 +19,25 @@ webFontLoader.load({
   },
 });
 
-const vuetify = createVuetify({ 
-    blueprint: md3, 
-    components: VComponents, 
-    directives: VDirectives, 
-    theme: { 
-      defaultTheme: "dark"
+const vuetify = createVuetify({
+  blueprint: md3,
+  components: VComponents,
+  directives: VDirectives,
+  defaults: mediaKiwiDefaults,
+  theme: {
+    defaultTheme: "dark",
+    themes: {
+      dark: mediaKiwiDarkTheme,
+      light: mediaKiwiLightTheme,
     },
-    icons: {
-      defaultSet: "mdi",
-      aliases,
-      sets: {
-        mdi,
-      }
-    }
-  });
+  },
+  icons: {
+    defaultSet: "mdi",
+    aliases,
+    sets: {
+      mdi,
+    },
+  },
+});
 
-  export default vuetify;
+export default vuetify;

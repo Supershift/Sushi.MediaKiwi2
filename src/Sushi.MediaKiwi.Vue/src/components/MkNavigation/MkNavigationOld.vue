@@ -4,6 +4,7 @@
   import { getNavigationItemForRoute, getNavigationItemChildren } from "@/helpers/NavigationHelper";
   import type { INavigationItem } from "@/models/navigation";
   import { useRoute } from "vue-router";
+
   // hook up route
   const route = useRoute();
 
