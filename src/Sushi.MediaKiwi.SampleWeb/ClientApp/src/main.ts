@@ -2,14 +2,20 @@ import App from "./App.vue";
 import { createApp } from "vue";
 import { msalConfig } from "./authConfig";
 import mediakiwi from "@supershift/mediakiwi-vue";
-import vuetify from "./plugins/vuetify";
+
 // Import mediakiwi stylesheet AFTER vuetify to override
 import "@supershift/mediakiwi-vue/dist/mediakiwi-vue.css";
 
 const app = createApp(App);
 
-// add vuetify
-app.use(vuetify);
+// load fonts
+const webFontLoader = await import(/* webpackChunkName: "webfontloader" */ "webfontloader");
+
+webFontLoader.load({
+  google: {
+    families: ["Roboto:100,300,400,500,700,900&display=swap"],
+  },
+});
 
 // import all views as models
 const modules = import.meta.glob("./views/**/*.vue");

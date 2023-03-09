@@ -8,7 +8,7 @@ import { Configuration, PublicClientApplication } from "@azure/msal-browser";
 import { msalPlugin } from "./plugins/msalPlugin";
 import { CustomNavigationClient } from "./router/navigationClient";
 import { registerGuard } from "./router/guard";
-
+import vuetify from "./plugins/vuetify";
 import { identity } from "./identity";
 
 export interface IMediakiwiVueOptions {
@@ -19,6 +19,9 @@ export interface IMediakiwiVueOptions {
 
 export default {
   install(app: App, options: IMediakiwiVueOptions) {
+    // create vuetify
+    app.use(vuetify);
+
     // Create an instance of Pinia
     app.use(pinia);
 
@@ -60,8 +63,6 @@ export * from "@/services";
 export * from "@/stores";
 
 export * from "@/router";
-
-export * from "@/plugins/vuetify";
 
 export { store as MkMockStore } from "@/stores/mediakiwi/mock";
 
