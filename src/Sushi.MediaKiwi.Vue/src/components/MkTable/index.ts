@@ -1,6 +1,3 @@
-export { default as MkTable } from './MkTable.vue'
-export { default as MkTableCell } from './MkTableCell.vue'
-export { default as MkTableFilter } from './MkTableFilter.vue'
-export { default as MkTableFilterSelect } from './MkTableFilterSelect.vue'
-export { default as MkTableFilterTextField } from './MkTableFilterTextField.vue'
-export { default as MkTableView } from './MkTableView.vue'
+export { default as MkTable } from "./MkTable.vue";
+export { default as MkTableCell } from "./MkTableCell.vue";
+export { default as MkTableView } from "./MkTableView.vue";

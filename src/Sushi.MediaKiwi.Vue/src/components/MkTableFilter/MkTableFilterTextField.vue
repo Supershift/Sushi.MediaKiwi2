@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import type { ITableFilterItem, ITableFilterValue } from "@/models/table";
+  import { ref } from "vue";
 
   const props = defineProps<{
     tableFilterItem: ITableFilterItem;
@@ -10,11 +11,13 @@
     (e: "update:modelValue", value: ITableFilterValue): void;
   }>();
 
-  function selectChanged(selectedValue: ITableFilterValue) {
-    emit("update:modelValue", selectedValue);
+  function textFieldChanged(selectedValue: string) {
+    emit("update:modelValue", { title: selectedValue, value: selectedValue });
   }
+
+  const value = ref(props.modelValue?.value);
 </script>
 
 <template>
-  <v-select :items="tableFilterItem.options" label="Kies" return-object @update:model-value="selectChanged"> </v-select>
+  <v-text-field v-model="value" @update:model-value="textFieldChanged" label="Value"> </v-text-field>
 </template>
