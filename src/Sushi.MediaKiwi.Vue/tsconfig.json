@@ -114,7 +114,7 @@
     "src/**/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue"
-  ],
+ ],
   "exclude": ["node_modules", "**/*.spec.ts", "./sample"]
 }
 
