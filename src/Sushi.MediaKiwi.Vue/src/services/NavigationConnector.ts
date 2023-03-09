@@ -2,8 +2,9 @@ import type { INavigationResponse } from "@/models/responses";
 import { HttpStatusCodeEnum } from "@/models/enum/HttpStatusCodeEnum";
 import mediaKiwiAxiosInstance from "@/services/interceptors/Mediakiwi";
 import type ListResult from "@/models/api/ListResult";
+import { INavigationConnector } from "./INavigationConnector";
 
-export const NavigationAPIServices = {
+export class NavigationConnector implements INavigationConnector {
   GetNavigationItems(): Promise<ListResult<INavigationResponse>> {
     return new Promise((resolve, reject) => {
       mediaKiwiAxiosInstance
@@ -18,5 +19,5 @@ export const NavigationAPIServices = {
           reject(err);
         });
     });
-  },
-};
+  }
+}

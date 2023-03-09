@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Interceptor for handling calls to the API
-let mediaKiwiAxiosInstance = axios.create();
+const mediaKiwiAxiosInstance = axios.create();
 mediaKiwiAxiosInstance.interceptors.request.use((config): any => {
   // config.withCredentials = true; // TODO: Fix this so we use the base URL and base route
   config.baseURL = `https://localhost:7223/mediakiwi/api`; // TODO: Add Authentication
@@ -13,6 +13,5 @@ mediaKiwiAxiosInstance.interceptors.request.use((config): any => {
   // }
   return config;
 });
-
 
 export default mediaKiwiAxiosInstance;

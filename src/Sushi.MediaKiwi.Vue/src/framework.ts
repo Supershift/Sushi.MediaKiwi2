@@ -10,9 +10,18 @@ import { CustomNavigationClient } from "./router/navigationClient";
 import { registerGuard } from "./router/guard";
 import defaultVuetifyOptions from "./plugins/vuetify";
 import { identity } from "./identity";
+import { container } from "tsyringe";
+import { NavigationConnector } from "@services/NavigationConnector";
 
 export default {
   install(app: App, options: IMediakiwiVueOptions) {
+    // register dependencies
+    if (options.inavtype !== undefined) {
+      container.register("INavigationConnector", options.inavtype);
+    } else {
+      container.register("INavigationConnector", NavigationConnector);
+    }
+
     // create vuetify
     let vuetifyOptions: VuetifyOptions;
     if (options.vuetifyOptions !== undefined) {

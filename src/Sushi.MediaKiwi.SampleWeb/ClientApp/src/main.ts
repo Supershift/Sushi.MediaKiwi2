@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import App from "./App.vue";
 import { createApp } from "vue";
 import { msalConfig } from "./authConfig";
@@ -5,6 +6,9 @@ import mediakiwi from "@supershift/mediakiwi-vue";
 
 // Import mediakiwi stylesheet AFTER vuetify to override
 import "@supershift/mediakiwi-vue/dist/mediakiwi-vue.css";
+
+import { NavigationConnector } from "./NavigationConnector";
+import { container } from "tsyringe";
 
 const app = createApp(App);
 
@@ -24,9 +28,13 @@ const modules = import.meta.glob("./views/**/*.vue");
 const mediaKiwiOptions = {
   modules: modules,
   msalConfig: msalConfig,
+  inavtype: NavigationConnector,
 };
 
 // install mediakiwi
 app.use(mediakiwi, mediaKiwiOptions);
+
+const connector = new NavigationConnector();
+console.log(await connector.GetNavigationItems());
 
 app.mount("#app");
