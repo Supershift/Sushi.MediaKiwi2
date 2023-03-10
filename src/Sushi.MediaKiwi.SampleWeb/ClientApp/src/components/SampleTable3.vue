@@ -1,10 +1,7 @@
 <script setup lang="ts">
   import { reactive, computed } from "vue";
-  import { MkTable } from "@supershift/mediakiwi-vue";
   import type { ITableMap, ITableFilter, ITableFilterItem } from "@supershift/mediakiwi-vue";
-  import { TableFilterValueCollection } from "@supershift/mediakiwi-vue";
-  import { MkTableFilterTextField } from "@supershift/mediakiwi-vue";
-  import { MkTableFilterSelect } from "@supershift/mediakiwi-vue";
+  import { TableFilterValueCollection, MkTable, MkTableFilterSelect, MkTableFilterTextField, MkTableFilterRadioGroup } from "@supershift/mediakiwi-vue";
   import SampleCustomTableFilterInput from "./SampleCustomTableFilterInput.vue";
   import type { ISampleData } from "./ISampleData";
   import { SampleDataService } from "./SampleDataService";
@@ -41,6 +38,15 @@
         id: "FullName",
         title: "Volledige naam",
         component: SampleCustomTableFilterInput,
+      },
+      {
+        id: "City",
+        title: "Stad",
+        options: [
+          { title: "Rijswijk", value: "RSWK" },
+          { title: "Delft", value: "DLFT" },
+        ],
+        component: MkTableFilterRadioGroup,
       },
     ],
   };
