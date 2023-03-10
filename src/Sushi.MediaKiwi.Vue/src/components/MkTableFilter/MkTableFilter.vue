@@ -112,7 +112,6 @@
         <component :is="state.currentFilter.component" :table-filter-item="state.currentFilter" v-model="state.currentFilterValue"> </component>
         <v-card-actions>
           <v-btn @click="applyFilter()">Apply</v-btn>
-          <v-btn @click="closeFilter()">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-menu>
