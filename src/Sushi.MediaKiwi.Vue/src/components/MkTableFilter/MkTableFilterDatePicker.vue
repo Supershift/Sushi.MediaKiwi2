@@ -41,7 +41,14 @@
       :day-names="dayNames"
       :enable-time-picker="false"
       :hide-offset-dates="true"
-    />
+    >
+      <template #arrow-left>
+        <v-icon icon="mdi-chevron-left"></v-icon>
+      </template>
+      <template #arrow-right>
+        <v-icon icon="mdi-chevron-right"></v-icon>
+      </template>
+    </vue-date-picker>
   </v-card>
 </template>
 
