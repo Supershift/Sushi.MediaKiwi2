@@ -11,7 +11,7 @@
     allItems: Array<INavigationItem>;
   }>();
 
-  const { NavigateToScreen } = useMediaKiwiRouting();
+  const { navigateToScreen, generateBreadCrumbs } = useMediaKiwiRouting();
   const router = useRouter();
 
   const route = useRoute();
@@ -24,6 +24,7 @@
   // called to send user to target screen
   function onItemClick(item: INavigationItem) {
     if (item.screenId !== undefined) {
+      generateBreadCrumbs()
       router.push(item.path);
     }
     return false;

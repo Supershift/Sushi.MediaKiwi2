@@ -9,7 +9,7 @@ export default function () {
     const navigationStore = useNavigationStore();
     const mediakiwiStore = useMediakiwiStore();
 
-    const NavigateToScreen = (router: Router, screenId: number, isSection: boolean) => {        
+    const navigateToScreen = (router: Router, screenId: number, isSection: boolean) => {        
         // Since we are injecting the router via the sotre it is already up and running when we initiate
         if (screenId && router) {
             const navigationItem = mediakiwiStore.mediakiwiNavigationItems.find((x) => x.screenId == screenId);
@@ -22,7 +22,12 @@ export default function () {
         }
     }
 
+    const generateBreadCrumbs = () =>{
+        navigationStore.setBreadCrumbs(false);
+    }
+
     return {
-        NavigateToScreen
+        navigateToScreen,
+        generateBreadCrumbs
     }
 }
