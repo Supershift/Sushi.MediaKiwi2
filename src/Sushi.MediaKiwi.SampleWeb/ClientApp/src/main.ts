@@ -7,7 +7,7 @@ import mediakiwi from "@supershift/mediakiwi-vue";
 // Import mediakiwi stylesheet AFTER vuetify to override
 import "@supershift/mediakiwi-vue/dist/mediakiwi-vue.css";
 
-import { NavigationConnector } from "./NavigationConnector";
+import { NavigationConnector } from "./fakes/NavigationConnector";
 import { container } from "tsyringe";
 
 const app = createApp(App);
@@ -33,8 +33,5 @@ const mediaKiwiOptions = {
 
 // install mediakiwi
 app.use(mediakiwi, mediaKiwiOptions);
-
-const connector = new NavigationConnector();
-console.log(await connector.GetNavigationItems());
 
 app.mount("#app");

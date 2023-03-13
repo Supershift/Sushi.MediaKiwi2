@@ -3,7 +3,7 @@ import pinia from "./plugins/pinia";
 import { createMediakiwiRouterOptions } from "@/router";
 import { createRouter } from "vue-router";
 import { PublicClientApplication } from "@azure/msal-browser";
-import { IMediakiwiVueOptions } from "./models/options/IMediakiwiVueOptions";
+import { IMediakiwiVueOptions, IMediakiwiServiceRegistrations } from "./models/options/IMediakiwiVueOptions";
 import { createVuetify, VuetifyOptions } from "vuetify";
 import { msalPlugin } from "./plugins/msalPlugin";
 import { CustomNavigationClient } from "./router/navigationClient";
@@ -11,16 +11,12 @@ import { registerGuard } from "./router/guard";
 import defaultVuetifyOptions from "./plugins/vuetify";
 import { identity } from "./identity";
 import { container } from "tsyringe";
-import { NavigationConnector } from "@services/NavigationConnector";
+import { registerServices } from "./helpers/registerServices";
 
 export default {
   install(app: App, options: IMediakiwiVueOptions) {
     // register dependencies
-    if (options.inavtype !== undefined) {
-      container.register("INavigationConnector", options.inavtype);
-    } else {
-      container.register("INavigationConnector", NavigationConnector);
-    }
+    registerServices(container, options.serviceRegistrations);
 
     // create vuetify
     let vuetifyOptions: VuetifyOptions;
