@@ -110,7 +110,7 @@
           </v-list>
 
           <!-- filter compoment -->
-          <v-card v-else-if="state.currentFilter" width="400" :title="state.currentFilter.title">
+          <v-card v-else-if="state.currentFilter" width="300" :title="state.currentFilter.title">
             <component :is="state.currentFilter.component" :table-filter-item="state.currentFilter" v-model="state.currentFilterValue"> </component>
             <v-card-actions>
               <v-btn @click="applyFilter()">Apply</v-btn>

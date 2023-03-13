@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { reactive, computed } from "vue";
   import type { ITableMap, ITableFilter, ITableFilterItem } from "@supershift/mediakiwi-vue";
-  import { TableFilterValueCollection, MkTable, MkTableFilterSelect, MkTableFilterTextField, MkTableFilterRadioGroup } from "@supershift/mediakiwi-vue";
+  import { TableFilterValueCollection, MkTable, MkTableFilterSelect, MkTableFilterTextField, MkTableFilterRadioGroup, MkTableFilterDatePicker } from "@supershift/mediakiwi-vue";
   import SampleCustomTableFilterInput from "./SampleCustomTableFilterInput.vue";
   import type { ISampleData } from "./ISampleData";
   import { SampleDataService } from "./SampleDataService";
@@ -47,6 +47,11 @@
           { title: "Delft", value: "DLFT" },
         ],
         component: MkTableFilterRadioGroup,
+      },
+      {
+        id: "Date",
+        title: "Dates",
+        component: MkTableFilterDatePicker,
       },
     ],
   };
