@@ -1,6 +1,7 @@
 export * from "./api";
 export * from "./enum";
 export * from "./navigation";
+export * from "./options";
 export * from "./pinia/PiniaPluginExtension";
 export * from "./requests";
 export * from "./responses";

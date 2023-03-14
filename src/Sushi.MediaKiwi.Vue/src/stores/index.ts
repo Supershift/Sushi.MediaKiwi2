@@ -40,20 +40,9 @@ export const useMediakiwiStore = defineStore({
       // get instance of INavigationConnector
       const connector = container.resolve<INavigationConnector>("INavigationConnector");
       // get nav items and store them
-      return await connector
-        .GetNavigationItems()
-        .then((response: ListResult<INavigationItem>) => {
-          this.setNavigationItems(response);
-        })
-        .then(() => {
-          // TODO: STOP UI loading
-        })
-        .then(() => {
-          if (this.navigationItems.length === 0) {
-            console.log("Empty items, Mocking now!");
-            this.navigationItems = mockStore.navigationItems;
-          }
-        });
+      var navigationItems = await connector.GetNavigationItems();
+
+      this.setNavigationItems(navigationItems);
     },
     async getScreens() {
       if (this.isLocal) {

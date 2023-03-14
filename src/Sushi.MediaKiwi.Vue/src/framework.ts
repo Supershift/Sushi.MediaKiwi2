@@ -32,6 +32,11 @@ export default {
     // Create an instance of Pinia
     app.use(pinia);
 
+    pinia.use(({ store }) => {
+      store.hello = "Welcome to Mediakiwi 2.0";
+      // store.router = router;
+    });
+
     // create router options, which contains paths based on the modules
     const routerOptions = createMediakiwiRouterOptions(options?.modules, options?.customRoutes);
 
@@ -40,11 +45,6 @@ export default {
 
     // use the router instance
     app.use(router);
-
-    pinia.use(({ store }) => {
-      store.hello = "Welcome to Mediakiwi 2.0";
-      // store.router = router;
-    });
 
     // create msal instance and install plugin
     identity.msalInstance = new PublicClientApplication(options.msalConfig);

@@ -8,7 +8,6 @@ import mediakiwi from "@supershift/mediakiwi-vue";
 import "@supershift/mediakiwi-vue/dist/mediakiwi-vue.css";
 
 import { NavigationConnector } from "./fakes/NavigationConnector";
-import { container } from "tsyringe";
 
 const app = createApp(App);
 
@@ -28,7 +27,9 @@ const modules = import.meta.glob("./views/**/*.vue");
 const mediaKiwiOptions = {
   modules: modules,
   msalConfig: msalConfig,
-  inavtype: NavigationConnector,
+  serviceRegistrations: {
+    navigationConnector: NavigationConnector,
+  },
 };
 
 // install mediakiwi

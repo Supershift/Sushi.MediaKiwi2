@@ -1,5 +1,5 @@
 import { HttpStatusCodeEnum } from "@/models/enum/HttpStatusCodeEnum";
-import mediaKiwiAxiosInstance from "../services/interceptors/Mediakiwi";
+import mediaKiwiAxiosInstance from "./interceptors/MediakiwiAxiosInstance";
 import type ListResult from "@/models/api/ListResult";
 import type ISectionResponse from "@/models/responses/ISectionResponse";
 
