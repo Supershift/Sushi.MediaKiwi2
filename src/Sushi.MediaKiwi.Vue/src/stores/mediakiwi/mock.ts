@@ -35,6 +35,20 @@ const navigationItems = <INavigationItem[]>[
     parentNavigationItemId: 11,
   },
   {
+    id: 112,
+    name: "Truncateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee-Meeeeeeeeeee",
+    screenId: 3,
+    sectionId: 1,
+    parentNavigationItemId: 1,
+  },
+  {
+    id: 113,
+    name: "This-is-a-verrrrrrryyyyyyyyyyyy-long-titleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    screenId: 3,
+    sectionId: 1,
+    parentNavigationItemId: 112,
+  },
+  {
     id: 2,
     name: "Customers",
     screenId: 2,

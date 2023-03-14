@@ -46,7 +46,6 @@ export const useNavigationStore = defineStore({
 
       // set breadcrumbs
       if (breadcrumbs && breadcrumbs.length) {
-        this.setBreadCrumbs(true); 
         this.breadcrumbItems = breadcrumbs;
       }
       // set sections
@@ -59,6 +58,7 @@ export const useNavigationStore = defineStore({
       }
     },
     setSectionNavigationItems(id: number) {
+
       if (id !== null) {
         const items = useMediakiwiStore().mediakiwiNavigationItems.filter((item) => item?.sectionId == id);
 
@@ -75,20 +75,10 @@ export const useNavigationStore = defineStore({
       }
       // Repopulate the navigationItems with the correct section assigned items
       this.setSectionNavigationItems(this.currentSection?.id ?? 0);
-
-      //Since this is a section Click we know that the breadcrumbs are empty 
-      this.setBreadCrumbs(true)
     },
-    setBreadCrumbs(reset: boolean){
-      if (this.navigationItems.length && !reset) {
-        this.breadcrumbItems = [];
-        window.location.pathname.split("/").forEach((r) => {
-          if (r !== undefined && r !== null && r !== "") {
-            this.breadcrumbItems.push({title: r, disabled: false, bold: false, path: "/"+ r });
-          }
-        });
-      } else {
-        this.breadcrumbItems = [];
+    setBreadCrumbs(crumbs: Array<IBreadcrumbItem>){
+      if (crumbs.length) {
+        this.breadcrumbItems = crumbs;
       }
     },
     toggleDrawer() {

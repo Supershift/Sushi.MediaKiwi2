@@ -22,9 +22,8 @@
   const nameLabel = computed(() => props.navigationItem?.name ?? "-empty-");
 
   // called to send user to target screen
-  function onItemClick(item: INavigationItem) {
+  async function onItemClick(item: INavigationItem) {
     if (item.screenId !== undefined) {
-      generateBreadCrumbs()
       router.push(item.path);
     }
     return false;

@@ -1,5 +1,5 @@
-import { createWebHistory, RouteLocationNormalizedLoaded, Router, type RouteRecordRaw, type RouterOptions } from "vue-router";
-import { useRouter as useVueRouter, useRoute as useVueRoute, type RouteComponent } from "vue-router";
+import { createWebHistory, RouteLocationNormalizedLoaded, Router, RouteRecord, type RouteRecordRaw, type RouterOptions } from "vue-router";
+import { useRouter as useVueRouter, useRoute as useVueRoute, type RouteComponent, useLink as useVueLink, RouterLinkProps } from "vue-router";
 import type { INavigationItem } from "../models/navigation";
 import type { IScreen } from "../models/screen/IScreen";
 import pinia from "../plugins/pinia";
@@ -34,6 +34,10 @@ export function createMediakiwiRouterOptions(modules: Record<string, RouteCompon
             component: module,
             meta: {
               requiresAuth: true,
+              // breadcrumb: {
+              //   path: navigationItem.id.toString(),
+              //   title: navigationItem.name
+              // }
             },
           };
           routes.push(route);
@@ -73,4 +77,12 @@ export function useRouter(): Router {
  */
 export function useRoute(): RouteLocationNormalizedLoaded {
   return useVueRoute();
+}
+
+
+/**
+ * Returns the router instance.
+ */
+export function useLink(props: RouterLinkProps) {
+  return useVueLink(props);
 }
