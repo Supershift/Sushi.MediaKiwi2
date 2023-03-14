@@ -1,3 +1,4 @@
+import { ITableSortingValue, TableSortingType } from "@supershift/mediakiwi-vue";
 import type { ISampleData } from "./ISampleData";
 
 const data = <ISampleData[]>[
@@ -14,11 +15,25 @@ const data = <ISampleData[]>[
 ];
 
 export const SampleDataService = {
-  GetAll(countryCode: string | undefined): ISampleData[] {
-    let result = data;
+  GetAll(countryCode: string | undefined, sortOrder?: ITableSortingValue | undefined): ISampleData[] {
+    let result = [...data];
     if (countryCode !== undefined) {
       result = result.filter((x) => x.countryCode == countryCode);
     }
+
+    if (sortOrder) {
+      if (sortOrder.id === "countryName") {
+        result = [...result.sort((a, b) => a.countryName.localeCompare(b.countryName))];
+      } else if (sortOrder.id === "name") {
+        result = [...result.sort((a, b) => a.name.localeCompare(b.name))];
+      }
+
+      // Reverse sortorder
+      if (sortOrder.sortOption === TableSortingType.Desc) {
+        result = [...result.reverse()];
+      }
+    }
+
     return result;
   },
   Get(id: number): ISampleData | undefined {
