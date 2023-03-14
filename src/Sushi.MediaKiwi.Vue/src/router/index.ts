@@ -16,9 +16,6 @@ export function createMediakiwiRouterOptions(modules: Record<string, RouteCompon
   const navigationItems = mediaKiwiStore.mediakiwiNavigationItems;
   const screens = mediaKiwiStore.screens;
 
-  console.log(navigationItems);
-  console.log(screens);
-
   // create routes
   const routes = <RouteRecordRaw[]>[];
   navigationItems.forEach((navigationItem: INavigationItem) => {

@@ -1,6 +1,6 @@
 import { defineStore, DefineStoreOptions } from "pinia";
 import type { INavigationItem } from "@/models/navigation";
-import { INavigationConnector, NavigationConnector, ScreenAPIServices, SectionAPIServices } from "@/services";
+import { INavigationConnector, IScreenConnector, ISectionConnector } from "@/services";
 import type ListResult from "@/models/api/ListResult";
 import type { IScreen } from "@/models/screen/IScreen";
 import type ISection from "@/models/section/ISection";
@@ -45,44 +45,15 @@ export const useMediakiwiStore = defineStore({
       this.setNavigationItems(navigationItems);
     },
     async getScreens() {
-      if (this.isLocal) {
-        this.screens = mockStore.screens;
-        return;
-      }
-      //TODO: START UI loading
-      return await ScreenAPIServices.GetScreens()
-        .then((response: ListResult<IScreen>) => {
-          this.setScreens(response);
-        })
-        .then(() => {
-          // TODO: STOP UI loading
-        })
-        .then(() => {
-          if (this.screens.length === 0) {
-            console.log("Empty screens, Mocking now!");
-            this.screens = mockStore.screens;
-          }
-        });
+      const connector = container.resolve<IScreenConnector>("IScreenConnector");
+      var screens = await connector.GetScreens();
+      this.setScreens(screens);
     },
     async getSections() {
-      if (this.isLocal) {
-        this.sections = mockStore.sections;
-        return;
-      }
-      //TODO: START UI loading
-      return await SectionAPIServices.GetSections()
-        .then((response: ListResult<ISection>) => {
-          this.setSections(response);
-        })
-        .then(() => {
-          // TODO: STOP UI loading
-        })
-        .then(() => {
-          if (this.sections.length === 0) {
-            console.log("Empty sections, Mocking now!");
-            this.sections = mockStore.sections;
-          }
-        });
+      const connector = container.resolve<ISectionConnector>("ISectionConnector");
+      console.log(connector);
+      var sections = await connector.GetSections();
+      this.setSections(sections);
     },
     setNavigationItems(payload: ListResult<INavigationItem>) {
       if (payload) {

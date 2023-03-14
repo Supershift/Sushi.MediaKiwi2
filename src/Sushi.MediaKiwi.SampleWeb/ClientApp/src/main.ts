@@ -7,7 +7,7 @@ import mediakiwi from "@supershift/mediakiwi-vue";
 // Import mediakiwi stylesheet AFTER vuetify to override
 import "@supershift/mediakiwi-vue/dist/mediakiwi-vue.css";
 
-import { NavigationConnector } from "./fakes/NavigationConnector";
+import { NavigationConnector, ScreenConnector, SectionConnector } from "./fakes";
 
 const app = createApp(App);
 
@@ -29,6 +29,8 @@ const mediaKiwiOptions = {
   msalConfig: msalConfig,
   serviceRegistrations: {
     navigationConnector: NavigationConnector,
+    screenConnector: ScreenConnector,
+    sectionConnector: SectionConnector,
   },
 };
 

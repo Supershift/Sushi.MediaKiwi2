@@ -1,12 +1,7 @@
 import { RouteComponent, RouteRecordRaw } from "vue-router";
 import { Configuration } from "@azure/msal-browser";
 import { VuetifyOptions } from "vuetify/lib/framework.mjs";
-import { constructor } from "tsyringe/dist/typings/types";
-import { type INavigationConnector } from "@/services";
-
-export interface IMediakiwiServiceRegistrations {
-  navigationConnector?: constructor<INavigationConnector>;
-}
+import { IMediakiwiServiceRegistrations } from "./IMediakiwiServiceRegistrations";
 
 export interface IMediakiwiVueOptions {
   modules: Record<string, RouteComponent>;

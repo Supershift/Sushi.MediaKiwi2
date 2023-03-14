@@ -3,7 +3,7 @@ import pinia from "./plugins/pinia";
 import { createMediakiwiRouterOptions } from "@/router";
 import { createRouter } from "vue-router";
 import { PublicClientApplication } from "@azure/msal-browser";
-import { IMediakiwiVueOptions, IMediakiwiServiceRegistrations } from "./models/options/IMediakiwiVueOptions";
+import { IMediakiwiVueOptions } from "./models/options/IMediakiwiVueOptions";
 import { createVuetify, VuetifyOptions } from "vuetify";
 import { msalPlugin } from "./plugins/msalPlugin";
 import { CustomNavigationClient } from "./router/navigationClient";

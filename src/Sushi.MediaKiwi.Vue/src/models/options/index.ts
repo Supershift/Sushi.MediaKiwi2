@@ -1,1 +1,2 @@
-export type { IMediakiwiVueOptions, IMediakiwiServiceRegistrations } from "./IMediakiwiVueOptions";
+export type { IMediakiwiVueOptions } from "./IMediakiwiVueOptions";
+export type { IMediakiwiServiceRegistrations } from "./IMediakiwiServiceRegistrations";

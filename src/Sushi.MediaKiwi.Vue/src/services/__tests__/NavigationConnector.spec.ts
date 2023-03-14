@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { NavigationConnector } from "../NavigationConnector";
 import axiosMock from "axios";
 import { INavigationResponse } from "@/models/responses";
@@ -23,7 +23,8 @@ describe("NavigationConnector", () => {
     const result = await connector.GetNavigationItems();
 
     // assert
-    expect(axiosMock.get).toHaveBeenCalled();
+    expect(axiosMock.get).toHaveBeenCalledOnce();
+    expect(axiosMock.get).toHaveBeenCalledWith("/navigationitems");
     expect(result).toBe(expectedResult.data);
   });
 });

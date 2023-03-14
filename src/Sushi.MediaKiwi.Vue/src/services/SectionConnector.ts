@@ -1,15 +1,15 @@
-import type { IScreenResponse } from "@/models/responses";
+import type { ISectionResponse } from "@/models/responses";
 import { injectable, inject } from "tsyringe";
 import type { IMediakiwiAxiosInstance } from "@/services/interceptors/MediakiwiAxiosInstance";
 import type ListResult from "@/models/api/ListResult";
-import { IScreenConnector } from "./IScreenConnector";
+import { ISectionConnector } from "./ISectionConnector";
 
 @injectable()
-export class ScreenConnector implements IScreenConnector {
+export class SectionConnector implements ISectionConnector {
   constructor(@inject("IMediakiwiAxiosInstance") private axios: IMediakiwiAxiosInstance) {}
 
-  async GetScreens() {
-    const response = await this.axios.get<ListResult<IScreenResponse>>("/screens");
+  async GetSections() {
+    const response = await this.axios.get<ListResult<ISectionResponse>>("/sections");
     return response.data;
   }
 }
