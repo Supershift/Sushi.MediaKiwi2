@@ -12,11 +12,12 @@ import defaultVuetifyOptions from "./plugins/vuetify";
 import { identity } from "./identity";
 import { container } from "tsyringe";
 import { registerServices } from "./helpers/registerServices";
+import { registerOptions } from "./helpers/registerOptions";
 
 export default {
   install(app: App, options: IMediakiwiVueOptions) {
-    // set options
-    currentOptions.mediakiwiVueOptions = options;
+    // register options
+    registerOptions(container, options);
 
     // register dependencies
     registerServices(container, options.serviceRegistrations);
