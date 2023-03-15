@@ -38,7 +38,7 @@ export default {
     pinia.use(({ store }) => {});
 
     // create router options, which contains paths based on the modules
-    const routerOptions = createMediakiwiRouterOptions(options?.modules, options?.customRoutes);
+    const routerOptions = createMediakiwiRouterOptions(options?.customRoutes);
 
     // create the router
     const router = createRouter(routerOptions);

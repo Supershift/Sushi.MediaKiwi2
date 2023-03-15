@@ -55,7 +55,7 @@ export function updateRoutes() {
 }
 
 /** Creates default router options based on provided modules. */
-export function createMediakiwiRouterOptions(modules: Record<string, RouteComponent>, customRoutes?: RouteRecordRaw[]): RouterOptions {
+export function createMediakiwiRouterOptions(customRoutes?: RouteRecordRaw[]): RouterOptions {
   // create routes
   const routes = <RouteRecordRaw[]>[];
 
