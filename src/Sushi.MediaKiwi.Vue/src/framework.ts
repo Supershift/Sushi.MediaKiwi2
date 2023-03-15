@@ -42,7 +42,7 @@ export default {
 
     // create the router
     const router = createRouter(routerOptions);
-
+    
     // use the router instance
     app.use(router);
 

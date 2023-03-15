@@ -4,10 +4,7 @@ import { INavigationConnector, IScreenConnector, ISectionConnector } from "@/ser
 import type ListResult from "@/models/api/ListResult";
 import type { IScreen } from "@/models/screen/IScreen";
 import type ISection from "@/models/section/ISection";
-import { store } from "@/stores/mediakiwi/mock";
 import { container } from "tsyringe";
-
-const mockStore = store;
 
 export type MediaKiwiState = {
   navigationItems: Array<INavigationItem>;
@@ -41,7 +38,6 @@ export const useMediakiwiStore = defineStore({
       const connector = container.resolve<INavigationConnector>("INavigationConnector");
       // get nav items and store them
       var navigationItems = await connector.GetNavigationItems();
-
       this.setNavigationItems(navigationItems);
     },
     async getScreens() {
@@ -51,7 +47,6 @@ export const useMediakiwiStore = defineStore({
     },
     async getSections() {
       const connector = container.resolve<ISectionConnector>("ISectionConnector");
-      console.log(connector);
       var sections = await connector.GetSections();
       this.setSections(sections);
     },
