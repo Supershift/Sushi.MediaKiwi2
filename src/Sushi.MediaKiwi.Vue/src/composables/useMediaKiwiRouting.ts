@@ -41,12 +41,14 @@ export default function () {
                     if (r !== undefined && r !== null && r !== "") {
                         // we also need to match the current navigation Items to use its path to build the navigation routing when we click the breadcrumb item
                         const currentItem = navigationStore.navigationList.find(x => x.name.toString() === r.toString());
-                        if (currentItem?.path !== to.path) {
-                            // the rest should not be bolded or disabled
-                            breadcrumbs.value.push({title: decodeURI(r), disabled: false, bold: false,  path: currentItem?.path, to: currentItem?.path, exact: true});
-                        } else {
-                            // the last crumb should be disabled and bolded and disabled, since we are currently on it
-                            breadcrumbs.value.push({title: decodeURI(r), disabled: true, bold: true, path: currentItem?.path, to: currentItem?.path, exact: true});
+                        if (currentItem) {
+                            if (currentItem.path !== to.path) {
+                                // the rest should not be bolded or disabled
+                                breadcrumbs.value.push({title: decodeURI(r), disabled: false, bold: false,  href: currentItem.path, to: currentItem?.path ?? "", exact: true});
+                            } else {
+                                // the last crumb should be disabled and bolded and disabled, since we are currently on it
+                                breadcrumbs.value.push({title: decodeURI(r), disabled: true, bold: true, href: currentItem.path, to: currentItem?.path ?? "", exact: true});
+                            }
                         }
                     }
                 });

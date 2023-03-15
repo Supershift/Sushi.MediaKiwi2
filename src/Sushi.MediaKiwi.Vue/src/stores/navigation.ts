@@ -41,7 +41,7 @@ export const useNavigationStore = defineStore({
         title: "HomeHomeHomeHomeHomeHomeHomeHomeHomeHomeHomeHomeHomeHomeHomeHomeHomeHome",
         disabled: false, 
         bold: false,
-        path: "/Home",
+        href: "/Home",
       }] as Array<IBreadcrumbItem>;
 
       // set breadcrumbs
