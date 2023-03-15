@@ -17,6 +17,9 @@ module.exports = {
   parser: "vue-eslint-parser",
   parserOptions: {
     ecmaVersion: 2020,
+    ecmaFeatures: {
+      jsx: "off",
+    },
   },
   rules: {
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
