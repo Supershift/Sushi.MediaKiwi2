@@ -3,10 +3,20 @@
   import MkDrawer from "../MkDrawer/MkDrawer.vue";
   import { computed } from "vue";
   import { useNavigationStore } from "@/stores/navigation";
+  import { useMediakiwiStore } from "@/stores";
+  import { updateRoutes } from "@/router";
 
   defineEmits(["change"]);
 
-  // // populate the navigationstore when we are done fetching items and this component loads
+  const mediakiwiStore = useMediakiwiStore();
+
+  // init mediakiwi store
+  await mediakiwiStore.init();
+
+  // update routes from mk store TODO: make this reactive to changes
+  updateRoutes();
+
+  // populate the navigationstore when we are done fetching items and this component loads
   const navigationStore = useNavigationStore();
   navigationStore.getNavigation();
 

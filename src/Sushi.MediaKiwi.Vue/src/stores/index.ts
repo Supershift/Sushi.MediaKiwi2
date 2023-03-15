@@ -28,10 +28,11 @@ export const useMediakiwiStore = defineStore({
     mediakiwiNavigationItems: (state: MediaKiwiState) => state.navigationItems,
   },
   actions: {
-    init() {
-      this.getNavigationItems();
-      this.getSections();
-      this.getScreens();
+    async init() {
+      // load new data from API
+      await this.getNavigationItems();
+      await this.getSections();
+      await this.getScreens();
     },
     async getNavigationItems() {
       // get instance of INavigationConnector
