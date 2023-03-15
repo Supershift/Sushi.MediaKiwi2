@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import useMediaKiwiRouting from '@/composables/useMediaKiwiRouting';
     import { IBreadcrumbItem } from '@/models/navigation/IBreadcrumbItem';
-    import { useRoute } from '@/router';
+    import { useRoute, useRouter } from '@/router';
     import { computed, ref } from 'vue';
     import useResponsiveHelpers from "@/composables/useResponsiveHelpers";
 
@@ -9,12 +9,13 @@
     const { generateBreadCrumbs } = useMediaKiwiRouting();
     let breadcrumbs = ref<Array<IBreadcrumbItem>>([]);
     breadcrumbs = generateBreadCrumbs();
+    const router = useRouter();
 
     // Item props
     // TODO: make the component responsive with the isMedium
     const currentpath = computed(() =>  useRoute().path);
     const isMediumSized = computed(() => useResponsiveHelpers().isMedium());
-    const currentCrumb = computed(() => breadcrumbs.value.find(x => x.to === useRoute().path))
+    const currentCrumb = computed(() => breadcrumbs.value.find(x => x.to === useRoute().path));
 
     // generates classes for the breadcrumb
     function classes(item: IBreadcrumbItem, idx: number){        
@@ -29,6 +30,8 @@
         }
        return itemClasses;
     }
+
+
     // returns a boolean to know if the current iten iis active
     function isActive(item: IBreadcrumbItem): boolean {
         if (item.to === currentpath.value) {
@@ -36,11 +39,27 @@
         }
         return false
     }
+
+    // FIXME: This needs to help the user navigate back
+    // we would need to check if there is something in the list of crumbs, otherwise just back
+    function navigateBack(){
+
+        // find out the previous path 
+        const previousPath = breadcrumbs.value.at(breadcrumbs.value.length-1)?.to;
+        
+        // if we know where back is, then push it otherwise just use .back()
+        if (breadcrumbs.value.length > 1 && previousPath !== undefined && previousPath !== "") {
+            router.push(previousPath)
+        } else {
+            router.back();
+        }
+    }
+
 </script>
 <template>
     <v-card class="ma-5" v-if="breadcrumbs.length">
         <div v-if="isMediumSized" class="breadcrumb-title-container">
-            <v-btn variant="tonal" >
+            <v-btn variant="tonal" @click="navigateBack()">
                 <v-icon icon="mdi-chevron-left"></v-icon>
             </v-btn>
             <div class="ml-5 text-h3 d-inline-block">{{ currentCrumb?.title.toUpperCase()  }}</div>

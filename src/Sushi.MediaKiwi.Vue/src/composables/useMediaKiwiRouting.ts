@@ -58,8 +58,9 @@ export default function () {
         return breadcrumbs
     }
 
+
     return {
         navigateToScreen,
-        generateBreadCrumbs
+        generateBreadCrumbs,
     }
 }
