@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { reactive, computed, ref } from "vue";
-  import { MkTable } from "@supershift/mediakiwi-vue";
+  import { MkTable, TableSortingDirection } from "@supershift/mediakiwi-vue";
   import type { ITableMap, ITableFilter, ITableSortingValue } from "@supershift/mediakiwi-vue";
   import { TableFilterValueCollection } from "@supershift/mediakiwi-vue";
   import { MkTableFilterTextField } from "@supershift/mediakiwi-vue";
@@ -15,8 +15,10 @@
       return item.id;
     },
     items: [
-      { id: "name", headerTitle: "Naam", value: (dataItem) => dataItem.name, isSortable: true },
-      { id: "countryName", headerTitle: "Land", value: (dataItem) => dataItem.countryName, isSortable: true },
+      { headerTitle: "Id", value: (dataItem) => dataItem.id, sortingOptions: { id: "id", defaultSortDirection: TableSortingDirection.Desc } },
+      { headerTitle: "Naam", value: (dataItem) => dataItem.name },
+      { headerTitle: "Land", value: (dataItem) => dataItem.countryName, sortingOptions: { id: "countryName", defaultSortDirection: TableSortingDirection.Asc } },
+      { headerTitle: "Laast gezien", value: (dataItem) => dataItem.date, sortingOptions: { id: "date", defaultSortDirection: TableSortingDirection.Desc } },
     ],
   };
 
@@ -47,14 +49,18 @@
 
   // create an object which will hold selected filter values
   const selectedFilters = reactive(new TableFilterValueCollection());
-  const selectedSortOption = ref<ITableSortingValue>();
+  // create a sorting option object with a default value
+  const selectedSortOption = ref<ITableSortingValue>({
+    id: "date",
+    sortOption: TableSortingDirection.Desc,
+  });
 
   // get the data, using the selected filters
   const sampleData = computed(() => {
     // get country filter
     let country = selectedFilters.get("Country")?.value;
 
-    // get the data
+    // get the data, using the sorting option
     let result = SampleDataService.GetAll(country, selectedSortOption.value);
     return result;
   });

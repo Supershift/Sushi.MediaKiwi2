@@ -1,7 +1,7 @@
 /**
  * Table column sorting options
  */
-export enum TableSortingType {
+export enum TableSortingDirection {
   /** Ascending */
   Asc = 1,
   /** Descending */

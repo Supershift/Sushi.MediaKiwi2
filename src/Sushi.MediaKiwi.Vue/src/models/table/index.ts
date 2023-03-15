@@ -5,4 +5,5 @@ export type { ITableMap } from "./ITableMap";
 export type { ITableMapItem } from "./ITableMapItem";
 export { TableFilterValueCollection } from "./TableFilterValueCollection";
 export type { ITableSortingValue } from "./ITableSortingValue";
-export { TableSortingType } from "./TableSortingType";
+export { TableSortingDirection } from "./TableSortingDirection";
+export type { ITableMapSortingOptions } from "./ITableMapSortingOptions";

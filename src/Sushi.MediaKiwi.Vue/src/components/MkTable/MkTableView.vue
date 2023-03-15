@@ -4,8 +4,9 @@
   import type { ITableMapItem } from "@/models/table/ITableMapItem";
   import MkTableCell from "./MkTableCell.vue";
   import { store } from "@/stores/mediakiwi/mock";
-  import { TableSortingType } from "@/models";
-  import type { ITableSortingValue } from "@/models";
+  import { TableSortingDirection } from "@/models";
+  import type { ITableSortingValue, ITableMapSortingOptions } from "@/models";
+  import { useSorting } from "@/composables/useSorting";
 
   const props = defineProps<{
     tableMap: ITableMap<unknown>;
@@ -59,41 +60,12 @@
     }
   }
 
-  function onSorting(mapItem: ITableMapItem<unknown>) {
-    if (mapItem?.isSortable) {
-      let sortOption = null;
+  const { getTableSortingValue, getClasses } = useSorting();
 
-      let currentSort: TableSortingType | undefined = props.selectedSortOption?.sortOption;
-      if (mapItem.id !== props.selectedSortOption?.id) {
-        currentSort = undefined;
-      }
-
-      if (currentSort === TableSortingType.Desc) {
-        sortOption = TableSortingType.Asc;
-      } else {
-        sortOption = TableSortingType.Desc;
-      }
-
-      if (sortOption) {
-        const dataItem: ITableSortingValue = { id: mapItem.id, sortOption };
-        emit("update:selectedSortOption", dataItem);
-      } else {
-        emit("update:selectedSortOption");
-      }
-    }
-  }
-
-  function isSortable(mapItem: ITableMapItem<unknown>) {
-    if (!props.selectedSortOption?.sortOption) {
-      return false;
-    }
-
-    if (!mapItem.isSortable) {
-      return false;
-    }
-
-    if (props.selectedSortOption.id === mapItem.id) {
-      return true;
+  function onSortClick(sortingOptions?: ITableMapSortingOptions) {
+    if (sortingOptions) {
+      const dataItem = getTableSortingValue(sortingOptions, props.selectedSortOption);
+      emit("update:selectedSortOption", dataItem);
     }
   }
 </script>
@@ -103,12 +75,10 @@
     <thead>
       <tr>
         <!-- render a header cell for each mapping item -->
-        <th v-for="mapItem in props.tableMap.items" @click="onSorting(mapItem)">
+        <th v-for="mapItem in props.tableMap.items" @click="onSortClick(mapItem.sortingOptions)" :class="getClasses(mapItem.sortingOptions)">
           {{ mapItem.headerTitle }}
-          <template v-if="isSortable(mapItem)">
-            <v-icon v-if="props.selectedSortOption?.sortOption === TableSortingType.Asc">mdi-arrow-up</v-icon>
-            <v-icon v-else>mdi-arrow-down</v-icon>
-          </template>
+          <v-icon v-show="props.selectedSortOption?.sortOption === TableSortingDirection.Asc">mdi-arrow-up</v-icon>
+          <v-icon v-show="props.selectedSortOption?.sortOption === TableSortingDirection.Desc">mdi-arrow-down</v-icon>
         </th>
       </tr>
     </thead>
@@ -121,3 +91,21 @@
     </tbody>
   </v-table>
 </template>
+
+<style scoped>
+  th:not(.sortable-active) .v-icon {
+    visibility: hidden;
+  }
+
+  th.sortable {
+    font-weight: 700;
+  }
+
+  th.sortable:hover {
+    cursor: pointer;
+  }
+
+  th.sortable:hover .v-icon {
+    visibility: visible;
+  }
+</style>
