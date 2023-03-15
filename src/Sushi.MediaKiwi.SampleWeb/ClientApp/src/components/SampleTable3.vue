@@ -1,10 +1,7 @@
 <script setup lang="ts">
-  import { reactive, computed } from "vue";
-  import { MkTable } from "@supershift/mediakiwi-vue";
-  import type { ITableMap, ITableFilter, ITableFilterItem } from "@supershift/mediakiwi-vue";
-  import { TableFilterValueCollection } from "@supershift/mediakiwi-vue";
-  import { MkTableFilterTextField } from "@supershift/mediakiwi-vue";
-  import { MkTableFilterSelect } from "@supershift/mediakiwi-vue";
+  import { reactive, computed, ref } from "vue";
+  import type { ITableMap, ITableFilter, ITableSortingValue } from "@supershift/mediakiwi-vue";
+  import { TableFilterValueCollection, MkTable, MkTableFilterSelect, MkTableFilterTextField, MkTableFilterRadioGroup, MkTableFilterDatePicker, TableSortingDirection } from "@supershift/mediakiwi-vue";
   import SampleCustomTableFilterInput from "./SampleCustomTableFilterInput.vue";
   import type { ISampleData } from "./ISampleData";
   import { SampleDataService } from "./SampleDataService";
@@ -15,8 +12,10 @@
       return item.id;
     },
     items: [
+      { headerTitle: "Id", value: (dataItem) => dataItem.id, sortingOptions: { id: "id", defaultSortDirection: TableSortingDirection.Desc } },
       { headerTitle: "Naam", value: (dataItem) => dataItem.name },
-      { headerTitle: "Land", value: (dataItem) => dataItem.countryName },
+      { headerTitle: "Land", value: (dataItem) => dataItem.countryName, sortingOptions: { id: "countryName", defaultSortDirection: TableSortingDirection.Asc } },
+      { headerTitle: "Laast gezien", value: (dataItem) => dataItem.date, sortingOptions: { id: "date", defaultSortDirection: TableSortingDirection.Desc } },
     ],
   };
 
@@ -42,22 +41,43 @@
         title: "Volledige naam",
         component: SampleCustomTableFilterInput,
       },
+      {
+        id: "City",
+        title: "Stad",
+        options: [
+          { title: "Rijswijk", value: "RSWK" },
+          { title: "Delft", value: "DLFT" },
+        ],
+        component: MkTableFilterRadioGroup,
+      },
+      {
+        id: "Date",
+        title: "Dates",
+        component: MkTableFilterDatePicker,
+      },
     ],
   };
 
   // create an object which will hold selected filter values
   const selectedFilters = reactive(new TableFilterValueCollection());
+  // create a sorting option object with a default value
+  const selectedSortOption = ref<ITableSortingValue>({
+    id: "date",
+    sortDirection: TableSortingDirection.Desc,
+  });
 
   // get the data, using the selected filters
   const sampleData = computed(() => {
     // get country filter
     let country = selectedFilters.get("Country")?.value;
-    // get the data
-    let result = SampleDataService.GetAll(country);
+
+    // get the data, using the sorting option
+    let result = SampleDataService.GetAll(country, selectedSortOption.value);
     return result;
   });
 </script>
 
 <template>
-  <MkTable :filter-map="filters" v-model:selected-filters="selectedFilters" :table-map="myMap" :data="sampleData" item-screen-name="SampleDataEdit"> </MkTable>
+  <MkTable :filter-map="filters" v-model:selected-filters="selectedFilters" v-model:selected-sort-option="selectedSortOption" :table-map="myMap" :data="sampleData" item-screen-name="SampleDataEdit">
+  </MkTable>
 </template>
