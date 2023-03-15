@@ -8,14 +8,16 @@ module.exports = {
   },
   extends: [
     "plugin:vue/vue3-essential",
+    "plugin:vue/vue3-recommended",
     "eslint:recommended",
     "@vue/typescript/recommended",
-    "plugin:prettier/recommended",
+    "@vue/eslint-config-typescript",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
   ],
   parser: "vue-eslint-parser",
   parserOptions: {
+    parser: "@typescript-eslint/parser",
     ecmaVersion: 2020,
     ecmaFeatures: {
       jsx: "off",
