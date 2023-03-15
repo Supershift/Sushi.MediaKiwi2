@@ -37,6 +37,7 @@ module.exports = {
       rules: {
         "@typescript-eslint/explicit-function-return-type": "error",
         "@typescript-eslint/consistent-type-definitions": "error", // Typescript recommends using interfaces over types: https://www.typescriptlang.org/play#example/types-vs-interfaces
+        "@typescript-eslint/consistent-type-imports": "error",
       },
     },
   ],
