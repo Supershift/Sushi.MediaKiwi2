@@ -63,7 +63,7 @@
   // create a sorting option object with a default value
   const selectedSortOption = ref<ITableSortingValue>({
     id: "date",
-    sortOption: TableSortingDirection.Desc,
+    sortDirection: TableSortingDirection.Desc,
   });
 
   // get the data, using the selected filters

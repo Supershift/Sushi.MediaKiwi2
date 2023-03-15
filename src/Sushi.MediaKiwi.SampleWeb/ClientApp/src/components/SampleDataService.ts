@@ -29,7 +29,7 @@ export const SampleDataService = {
       }
 
       // Reverse sortorder
-      if (sortOrder.sortOption === TableSortingDirection.Desc) {
+      if (sortOrder.sortDirection === TableSortingDirection.Desc) {
         result = [...result.reverse()];
       }
     }

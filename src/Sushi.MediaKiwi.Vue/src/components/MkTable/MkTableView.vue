@@ -6,7 +6,7 @@
   import { store } from "@/stores/mediakiwi/mock";
   import { TableSortingDirection } from "@/models";
   import type { ITableSortingValue, ITableMapSortingOptions } from "@/models";
-  import { useSorting } from "@/composables/useSorting";
+  import { getTableSortingValue, getClasses } from "@/helpers/SortingHelper";
 
   const props = defineProps<{
     tableMap: ITableMap<unknown>;
@@ -60,8 +60,6 @@
     }
   }
 
-  const { getTableSortingValue, getClasses } = useSorting();
-
   function onSortClick(sortingOptions?: ITableMapSortingOptions) {
     if (sortingOptions) {
       const dataItem = getTableSortingValue(sortingOptions, props.selectedSortOption);
@@ -75,10 +73,10 @@
     <thead>
       <tr>
         <!-- render a header cell for each mapping item -->
-        <th v-for="mapItem in props.tableMap.items" @click="onSortClick(mapItem.sortingOptions)" :class="getClasses(mapItem.sortingOptions)">
+        <th v-for="mapItem in props.tableMap.items" @click="onSortClick(mapItem.sortingOptions)" :class="getClasses(mapItem.sortingOptions, props.selectedSortOption)">
           {{ mapItem.headerTitle }}
-          <v-icon v-show="props.selectedSortOption?.sortOption === TableSortingDirection.Asc">mdi-arrow-up</v-icon>
-          <v-icon v-show="props.selectedSortOption?.sortOption === TableSortingDirection.Desc">mdi-arrow-down</v-icon>
+          <v-icon v-show="props.selectedSortOption?.sortDirection === TableSortingDirection.Asc">mdi-arrow-up</v-icon>
+          <v-icon v-show="props.selectedSortOption?.sortDirection === TableSortingDirection.Desc">mdi-arrow-down</v-icon>
         </th>
       </tr>
     </thead>
