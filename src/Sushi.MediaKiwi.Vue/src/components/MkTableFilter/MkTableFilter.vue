@@ -93,36 +93,55 @@
 </script>
 
 <template>
-  <v-toolbar>
-    <v-menu v-model="menu" :close-on-content-click="false" location="end">
-      <!-- Button -->
-      <template v-slot:activator="{ props }">
-        <v-btn v-bind="props" color="primary" icon="mdi-filter-variant"> </v-btn>
-      </template>
+  <v-card variant="tonal">
+    <v-container>
+      <v-row class="pb-2">
+        <v-menu v-model="menu" :close-on-content-click="false" location="end">
+          <!-- Button -->
+          <template v-slot:activator="{ props }">
+            <v-btn class="mt-1 ml-1" v-bind="props" color="primary" variant="plain" icon="mdi-filter-variant"> </v-btn>
+          </template>
 
-      <!-- context menu -->
-      <v-list v-if="!state.currentFilter">
-        <v-list-item v-for="filter in filterMap.items" :value="filter" @click="changeCurrentFilter(filter)">
-          <v-list-item-title>{{ filter.title }}</v-list-item-title>
-        </v-list-item>
-      </v-list>
+          <!-- context menu -->
+          <v-list v-if="!state.currentFilter">
+            <v-list-item v-for="filter in filterMap.items" :value="filter" @click="changeCurrentFilter(filter)">
+              <v-list-item-title>{{ filter.title }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
 
-      <!-- filter compoment -->
-      <v-card v-else-if="state.currentFilter" width="400" :title="state.currentFilter.title">
-        <component :is="state.currentFilter.component" :table-filter-item="state.currentFilter" v-model="state.currentFilterValue"> </component>
-        <v-card-actions>
-          <v-btn @click="applyFilter()">Apply</v-btn>
-          <v-btn @click="closeFilter()">Close</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-menu>
+          <!-- filter compoment -->
+          <v-card v-else-if="state.currentFilter" width="300" :title="state.currentFilter.title">
+            <component :is="state.currentFilter.component" :table-filter-item="state.currentFilter" v-model="state.currentFilterValue"> </component>
+            <v-card-actions>
+              <v-btn @click="applyFilter()">Apply</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-menu>
 
-    <!-- Chips -->
-    <template v-for="filter in filterMap.items">
-      <v-chip class="ma-1" v-if="modelValue.has(filter.id)" @click="setCurrentFilter(filter)"
-        >{{ filter.title }} : {{ modelValue.get(filter.id)?.title }}
-        <v-btn class="ma-1" color="default" density="compact" size="small" icon="mdi-close-circle" @click.prevent="removeFilter(filter)"></v-btn>
-      </v-chip>
-    </template>
-  </v-toolbar>
+        <!-- Chips -->
+        <template v-for="filter in filterMap.items">
+          <v-chip class="ml-2 mt-2" v-if="modelValue.has(filter.id)" @click="setCurrentFilter(filter)"
+            >{{ filter.title }} : {{ modelValue.get(filter.id)?.title }}
+            <v-btn class="my-1 ml-1" color="default" density="compact" size="small" icon="mdi-close-circle" @click.prevent="removeFilter(filter)"></v-btn>
+          </v-chip>
+        </template>
+
+        <v-text-field placeholder="Filter" @click="openMenu" variant="plain" :hide-details="true" readonly density="compact" class="mx-2"></v-text-field>
+      </v-row>
+    </v-container>
+  </v-card>
 </template>
+
+<stlye lang="css" scoped>
+.v-input .v-field__input {
+  --v-field-padding-top: 4px;
+}
+
+.v-btn--icon.v-btn--density-default {
+  --v-btn-height: 28px;
+}
+
+.v-row {
+  padding-bottom: 6px;
+}
+</stlye>
