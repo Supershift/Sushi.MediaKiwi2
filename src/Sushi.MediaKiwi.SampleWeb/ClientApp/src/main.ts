@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import App from "./App.vue";
 import { createApp } from "vue";
 import { msalConfig } from "./authConfig";
@@ -5,6 +6,8 @@ import mediakiwi from "@supershift/mediakiwi-vue";
 
 // Import mediakiwi stylesheet AFTER vuetify to override
 import "@supershift/mediakiwi-vue/dist/mediakiwi-vue.css";
+
+import { NavigationConnector, ScreenConnector, SectionConnector } from "./fakes";
 
 const app = createApp(App);
 
@@ -24,6 +27,11 @@ const modules = import.meta.glob("./views/**/*.vue");
 const mediaKiwiOptions = {
   modules: modules,
   msalConfig: msalConfig,
+  serviceRegistrations: {
+    navigationConnector: NavigationConnector,
+    screenConnector: ScreenConnector,
+    sectionConnector: SectionConnector,
+  },
 };
 
 // install mediakiwi

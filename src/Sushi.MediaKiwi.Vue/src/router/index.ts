@@ -5,19 +5,26 @@ import type { IScreen } from "../models/screen/IScreen";
 import pinia from "../plugins/pinia";
 import { useMediakiwiStore } from "@/stores/index";
 import SignIn from "@/views/SignIn.vue";
+import { currentOptions } from "@/models";
 
-/** Creates router options based on provided modules. */
-export function createMediakiwiRouterOptions(modules: Record<string, RouteComponent>, customRoutes?: RouteRecordRaw[]): RouterOptions {
-  // Populate everything here first!
-  // since we've initialized the pinia first we can access it here now
+/** Updates the dynamic routes based on navigation items and modules */
+export function updateRoutes() {
+  // remove existing dynamic routes
+  const router = useRouter();
+  const existingRoutes = router.getRoutes();
+  existingRoutes.forEach((route) => {
+    if (route.name && route.meta?.isDynamic) {
+      router.removeRoute(route.name);
+    }
+  });
+
+  // add new routes
+  const modules = currentOptions.mediakiwiVueOptions.modules;
   const mediaKiwiStore = useMediakiwiStore(pinia);
-  mediaKiwiStore.init();
 
   const navigationItems = mediaKiwiStore.mediakiwiNavigationItems;
   const screens = mediaKiwiStore.screens;
 
-  // create routes
-  const routes = <RouteRecordRaw[]>[];
   navigationItems.forEach((navigationItem: INavigationItem) => {
     // if the navigation item points to a screen, get the screen
     if (navigationItem.screenId != null && navigationItem.screenId !== undefined) {
@@ -33,10 +40,11 @@ export function createMediakiwiRouterOptions(modules: Record<string, RouteCompon
             name: navigationItem.id.toString(),
             component: module,
             meta: {
+              isDynamic: true,
               requiresAuth: true,
             },
           };
-          routes.push(route);
+          router.addRoute(route);
         } else {
           // no module found, give a warning
           console.warn(`No module found for screenID: ${screen.id}, component key: ${screen.componentKey}`);
@@ -44,6 +52,12 @@ export function createMediakiwiRouterOptions(modules: Record<string, RouteCompon
       }
     }
   });
+}
+
+/** Creates default router options based on provided modules. */
+export function createMediakiwiRouterOptions(customRoutes?: RouteRecordRaw[]): RouterOptions {
+  // create routes
+  const routes = <RouteRecordRaw[]>[];
 
   // add custom routes
   if (customRoutes !== undefined) {

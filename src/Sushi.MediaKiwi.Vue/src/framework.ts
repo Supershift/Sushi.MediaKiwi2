@@ -3,16 +3,24 @@ import pinia from "./plugins/pinia";
 import { createMediakiwiRouterOptions } from "@/router";
 import { createRouter } from "vue-router";
 import { PublicClientApplication } from "@azure/msal-browser";
-import { IMediakiwiVueOptions } from "./models/options/IMediakiwiVueOptions";
+import { IMediakiwiVueOptions, currentOptions } from "./models/options";
 import { createVuetify, VuetifyOptions } from "vuetify";
 import { msalPlugin } from "./plugins/msalPlugin";
 import { CustomNavigationClient } from "./router/navigationClient";
 import { registerGuard } from "./router/guard";
 import defaultVuetifyOptions from "./plugins/vuetify";
 import { identity } from "./identity";
+import { container } from "tsyringe";
+import { registerServices } from "./helpers/registerServices";
 
 export default {
   install(app: App, options: IMediakiwiVueOptions) {
+    // set options
+    currentOptions.mediakiwiVueOptions = options;
+
+    // register dependencies
+    registerServices(container, options.serviceRegistrations);
+
     // create vuetify
     let vuetifyOptions: VuetifyOptions;
     if (options.vuetifyOptions !== undefined) {
@@ -27,19 +35,16 @@ export default {
     // Create an instance of Pinia
     app.use(pinia);
 
+    pinia.use(({ store }) => {});
+
     // create router options, which contains paths based on the modules
-    const routerOptions = createMediakiwiRouterOptions(options?.modules, options?.customRoutes);
+    const routerOptions = createMediakiwiRouterOptions(options?.customRoutes);
 
     // create the router
     const router = createRouter(routerOptions);
 
     // use the router instance
     app.use(router);
-
-    pinia.use(({ store }) => {
-      store.hello = "Welcome to Mediakiwi 2.0";
-      // store.router = router;
-    });
 
     // create msal instance and install plugin
     identity.msalInstance = new PublicClientApplication(options.msalConfig);
