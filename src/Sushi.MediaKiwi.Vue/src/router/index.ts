@@ -34,10 +34,6 @@ export function createMediakiwiRouterOptions(modules: Record<string, RouteCompon
             component: module,
             meta: {
               requiresAuth: true,
-              // breadcrumb: {
-              //   path: navigationItem.id.toString(),
-              //   title: navigationItem.name
-              // }
             },
           };
           routes.push(route);

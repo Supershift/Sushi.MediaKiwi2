@@ -51,6 +51,10 @@ export default {
 
     // adds a guard to all routes with the meta property 'requireAuth' set to true
     registerGuard(router);
+
+    // registers breadcrumbs before we navigate, this calls the navigation store(register as late as possible)
+    registerBreadCrumbs(router);
+    
   },
 };
 
@@ -69,3 +73,4 @@ export * from "@/router";
 export { store as MkMockStore } from "@/stores/mediakiwi/mock";
 
 import "@/assets/main.css";
+import { registerBreadCrumbs } from "./router/breadcrumbs";

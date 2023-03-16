@@ -2,12 +2,12 @@ import { defineStore } from "pinia";
 import type { INavigationItem } from "@/models/navigation";
 import { useMediakiwiStore } from ".";
 import type ISection from "@/models/section/ISection";
-import { IBreadcrumbItem } from "@/models/navigation/IBreadcrumbItem";
+import { type IBreadcrumb, Breadcrumb }  from "@/models/breadcrumb/index";
 
 type NavigationState = {
   navigationItems: Array<INavigationItem>;
   sectionItems: Array<ISection>;
-  breadcrumbItems: Array<IBreadcrumbItem>;
+  breadcrumbItems: Array<IBreadcrumb>;
   currentSection: ISection | undefined;
   drawer: boolean;
 };
@@ -37,16 +37,11 @@ export const useNavigationStore = defineStore({
       const mediaKiwiStore = useMediakiwiStore();
       const items = mediaKiwiStore.navigationItems;
       const sections = mediaKiwiStore.mediakiwiSections;
-      const breadcrumbs = [{
-        title: "HomeHomeHomeHomeHomeHomeHomeHomeHomeHomeHomeHomeHomeHomeHomeHomeHomeHome",
-        disabled: false, 
-        bold: false,
-        href: "/Home",
-      }] as Array<IBreadcrumbItem>;
+      const breadcrumbs = [new Breadcrumb("/Home", "Home", "/Home", true, false, false)] as Array<IBreadcrumb>;
 
       // set breadcrumbs
       if (breadcrumbs && breadcrumbs.length) {
-        this.breadcrumbItems = breadcrumbs;
+        this.setBreadCrumbs(breadcrumbs);
       }
       // set sections
       if (sections && sections.length) {
@@ -76,9 +71,9 @@ export const useNavigationStore = defineStore({
       // Repopulate the navigationItems with the correct section assigned items
       this.setSectionNavigationItems(this.currentSection?.id ?? 0);
     },
-    setBreadCrumbs(crumbs: Array<IBreadcrumbItem>){
-      if (crumbs.length) {
-        this.breadcrumbItems = crumbs;
+    setBreadCrumbs(payload: Array<IBreadcrumb>){
+      if (payload.length) {
+        this.breadcrumbItems = payload;
       }
     },
     toggleDrawer() {

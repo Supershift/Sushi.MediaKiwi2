@@ -1,14 +1,14 @@
 <script setup lang="ts">
-    import useMediaKiwiRouting from '@/composables/useMediaKiwiRouting';
-    import { IBreadcrumbItem } from '@/models/navigation/IBreadcrumbItem';
+    import { IBreadcrumb } from '@/models/breadcrumb';
     import { useRoute, useRouter } from '@/router';
-    import { computed, ref } from 'vue';
+    import { computed, ref, watch } from 'vue';
     import useResponsiveHelpers from "@/composables/useResponsiveHelpers";
+    import { useNavigationStore } from '@/stores/navigation';
+    import { storeToRefs } from 'pinia';
 
     // Using the composable we build the crumb using router and matching the path we are on
-    const { generateBreadCrumbs } = useMediaKiwiRouting();
-    let breadcrumbs = ref<Array<IBreadcrumbItem>>([]);
-    breadcrumbs = generateBreadCrumbs();
+    let breadcrumbs = ref<Array<IBreadcrumb>>([]);
+    const { breadcrumbItems } = storeToRefs(useNavigationStore());
     const router = useRouter();
 
     // Item props
@@ -16,9 +16,9 @@
     const currentpath = computed(() =>  useRoute().path);
     const isMediumSized = computed(() => useResponsiveHelpers().isMedium());
     const currentCrumb = computed(() => breadcrumbs.value.find(x => x.to === useRoute().path));
-
+    
     // generates classes for the breadcrumb
-    function classes(item: IBreadcrumbItem, idx: number){        
+    function classes(item: IBreadcrumb, idx: number){        
         let itemClasses = "text-h3 ";
         // if its not the current path or only item we should truncate with max of 500
         if (breadcrumbs.value.length > 1 && item && currentpath && item.to !== currentpath.value) {
@@ -33,7 +33,7 @@
 
 
     // returns a boolean to know if the current iten iis active
-    function isActive(item: IBreadcrumbItem): boolean {
+    function isActive(item: IBreadcrumb): boolean {
         if (item.to === currentpath.value) {
             return true;
         }
@@ -55,6 +55,13 @@
         }
     }
 
+    // Watchers
+    // Update breadcrumb from store( this kicks in whenever we navigate)
+    watch(breadcrumbItems, (newBreadcrumbs)=>{
+        breadcrumbs.value = newBreadcrumbs
+    })
+
+    //TODO: Sepearate the back button in a seperate component
 </script>
 <template>
     <v-card class="ma-5" v-if="breadcrumbs.length">

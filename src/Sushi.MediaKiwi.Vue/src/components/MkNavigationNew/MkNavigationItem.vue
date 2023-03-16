@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import useMediaKiwiRouting from "@/composables/useMediaKiwiRouting";
   import { getNavigationItemChildren } from "@/helpers";
   import type { INavigationItem } from "@/models/navigation/INavigationItem";
   import { useRouter } from "@/router";
@@ -11,9 +10,8 @@
     allItems: Array<INavigationItem>;
   }>();
 
-  const { navigateToScreen, generateBreadCrumbs } = useMediaKiwiRouting();
   const router = useRouter();
-
+  
   const route = useRoute();
   const routeName = route.name;
 
