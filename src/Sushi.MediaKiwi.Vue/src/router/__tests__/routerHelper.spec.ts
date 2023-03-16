@@ -70,7 +70,10 @@ describe("RouteGenerator", () => {
     // arrange
     const routeGenerator = new RouterHelper();
     const router = createRouter(<RouterOptions>{
-      routes: <RouteRecordRaw[]>[{ path: "/me", meta: { isFromServer: true }, name: "temp", component: {} }],
+      routes: <RouteRecordRaw[]>[
+        { path: "/me", meta: { isFromServer: true }, name: "temp", component: {} },
+        { path: "/home", name: "always", component: {} },
+      ],
       history: createWebHistory(),
     });
 
@@ -81,5 +84,6 @@ describe("RouteGenerator", () => {
     const routes = router.getRoutes();
 
     expect(routes.some((x) => x.name == "temp") == false);
+    expect(routes.every((x) => x.name == "always"));
   });
 });

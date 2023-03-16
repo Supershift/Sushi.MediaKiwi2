@@ -2,6 +2,7 @@ import { injectable } from "tsyringe";
 import { Router, RouteComponent, RouteRecordRaw } from "vue-router";
 import { INavigationItem, IScreen } from "@/models";
 
+/** Provides methods to work with routing */
 @injectable()
 export class RouterHelper {
   constructor() {}
