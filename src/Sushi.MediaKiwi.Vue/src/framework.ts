@@ -1,22 +1,23 @@
 import type { App, Component } from "vue";
 import pinia from "./plugins/pinia";
-import { createMediakiwiRouterOptions } from "@/router";
+import { getDefaultRouterOptions } from "@/router/getDefaultRouterOptions";
 import { createRouter } from "vue-router";
 import { PublicClientApplication } from "@azure/msal-browser";
 import { IMediakiwiVueOptions, currentOptions } from "./models/options";
 import { createVuetify, VuetifyOptions } from "vuetify";
 import { msalPlugin } from "./plugins/msalPlugin";
 import { CustomNavigationClient } from "./router/navigationClient";
-import { registerGuard } from "./router/guard";
+import { registerGuard } from "./router/registerGuard";
 import defaultVuetifyOptions from "./plugins/vuetify";
 import { identity } from "./identity";
 import { container } from "tsyringe";
 import { registerServices } from "./helpers/registerServices";
+import { registerOptions } from "./helpers/registerOptions";
 
 export default {
   install(app: App, options: IMediakiwiVueOptions) {
-    // set options
-    currentOptions.mediakiwiVueOptions = options;
+    // register options
+    registerOptions(container, options);
 
     // register dependencies
     registerServices(container, options.serviceRegistrations);
@@ -37,8 +38,8 @@ export default {
 
     pinia.use(({ store }) => {});
 
-    // create router options, which contains paths based on the modules
-    const routerOptions = createMediakiwiRouterOptions(options?.customRoutes);
+    // get default router options
+    const routerOptions = getDefaultRouterOptions(options?.customRoutes);
 
     // create the router
     const router = createRouter(routerOptions);

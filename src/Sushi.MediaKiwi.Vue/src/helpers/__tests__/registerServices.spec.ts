@@ -5,6 +5,7 @@ import { registerServices } from "../registerServices";
 import { INavigationConnector, IScreenConnector, ISectionConnector } from "../../services";
 import { NavigationConnector, ScreenConnector, SectionConnector } from "../../services";
 import { IMediakiwiServiceRegistrations } from "../../models/options";
+import { RouterHelper } from "../../router/routerHelper";
 
 class MockedNavigationConnector implements INavigationConnector {}
 class MockedScreenConnector implements IScreenConnector {}
@@ -48,5 +49,12 @@ describe("registerServices", () => {
     expect(navConnector).toBeInstanceOf(MockedNavigationConnector);
     expect(screenConnector).toBeInstanceOf(MockedScreenConnector);
     expect(sectionConnector).toBeInstanceOf(MockedSectionConnector);
+  });
+  it("Should register helpers", () => {
+    registerServices(container, undefined);
+
+    var routerHelper = container.resolve("RouterHelper");
+
+    expect(routerHelper).toBeInstanceOf(RouterHelper);
   });
 });
