@@ -14,25 +14,21 @@
     // Item props
     // TODO: make the component responsive with the isMedium
     const currentpath = computed(() =>  useRoute().path);
-    const isMediumSized = computed(() => useResponsiveHelpers().isMedium());
+    let isMediumSized = ref(false);
     const currentCrumb = computed(() => breadcrumbs.value.find(x => x.to === useRoute().path));
     
     // generates classes for the breadcrumb
-    function classes(item: IBreadcrumb, idx: number){        
-        let itemClasses = "text-h3 ";
-        // if its not the current path or only item we should truncate with max of 500
+    function classes(item: IBreadcrumb){
+        // default text is h3 and text-container uses media to collapse with responsiveness        
+        let itemClasses = "text-h3 text-container ";
+        // if its not the current path or only item we should truncate
         if (breadcrumbs.value.length > 1 && item && currentpath && item.to !== currentpath.value) {
-            itemClasses += "text-container-130 d-inline-block text-truncate ";
-        }
-        // if its the only item or the last item we should display as Title with width of 500
-        if (breadcrumbs.value.length == 1 || breadcrumbs.value.length === idx) {
-            itemClasses += "text-container-500 ";
+            itemClasses += "d-inline-block text-truncate ";
         }
        return itemClasses;
     }
 
-
-    // returns a boolean to know if the current iten iis active
+    // returns a boolean to know if the current iten is active
     function isActive(item: IBreadcrumb): boolean {
         if (item.to === currentpath.value) {
             return true;
@@ -55,11 +51,16 @@
         }
     }
 
-    // Watchers
+    // Watchers and listeners
     // Update breadcrumb from store( this kicks in whenever we navigate)
     watch(breadcrumbItems, (newBreadcrumbs)=>{
         breadcrumbs.value = newBreadcrumbs
     })
+
+    // added to manage the resizing
+    window.addEventListener("resize", (e) =>{
+        isMediumSized.value = useResponsiveHelpers().isMedium();
+    });
 
     //TODO: Sepearate the back button in a seperate component
 </script>
@@ -73,7 +74,7 @@
         </div>
         <div v-else>
             <v-breadcrumbs v-if="breadcrumbs.length" divider=">" >
-                <v-breadcrumbs-item v-for="(item, idx) in breadcrumbs" :key="item.href" :href="item.href" :active="isActive(item)" active-class="active-crumb" :class="classes(item, idx)" :to="item.to" :exact="item.exact" :bold="item.bold">
+                <v-breadcrumbs-item v-for="(item, idx) in breadcrumbs" :key="item.href" :href="item.href" :active="isActive(item)" active-class="active-crumb" :class="classes(item)" :to="item.to" :exact="item.exact" :bold="item.bold">
                     {{ item.title.toUpperCase() }}
                 </v-breadcrumbs-item>
             </v-breadcrumbs> 
@@ -85,10 +86,18 @@
     display: flex;
     align-items: center;
 }
-.text-container-500 {
-    max-width: 500px;
-}
-.text-container-130 {
+.text-container {
     max-width: 130px;
+}
+.active-crumb,
+.active-crumb:hover {
+    text-decoration: none;
+    cursor: text;
+    font-weight: bold;
+}
+@media (min-width: 960px) {
+    .text-container {
+        max-width: 500px;
+    }
 }
 </style>
