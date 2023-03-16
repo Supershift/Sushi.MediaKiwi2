@@ -12,7 +12,8 @@
      
     // Using the composable we build the crumb using router and matching the path we are on
     let breadcrumbs = ref<Array<IBreadcrumb>>([]);
-    const { breadcrumbItems } = storeToRefs(useNavigationStore());
+    const navigationStore = useNavigationStore();
+    const { breadcrumbItems } = storeToRefs(navigationStore);
 
     // Item props
     let isMediumSized = ref(false);
