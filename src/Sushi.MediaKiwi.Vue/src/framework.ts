@@ -8,6 +8,7 @@ import { createVuetify, VuetifyOptions } from "vuetify";
 import { msalPlugin } from "./plugins/msalPlugin";
 import { CustomNavigationClient } from "./router/navigationClient";
 import { registerGuard } from "./router/guard";
+import { registerBreadCrumbs } from "./router/breadcrumbs";
 import defaultVuetifyOptions from "./plugins/vuetify";
 import { identity } from "./identity";
 
@@ -73,4 +74,4 @@ export * from "@/router";
 export { store as MkMockStore } from "@/stores/mediakiwi/mock";
 
 import "@/assets/main.css";
-import { registerBreadCrumbs } from "./router/breadcrumbs";
+
