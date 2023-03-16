@@ -33,7 +33,6 @@ export default function () {
         let breadcrumbs = ref<Array<IBreadcrumbItem>>([]);
         const router = useRouter();
         router.beforeEach((to, from, next) => {
-            breadcrumbs.value = [];
             to.matched.forEach((record) => { 
                 // for each record we matched with we split this and build the current list of crumbs
                 record.path.split("/").forEach((r) => {
@@ -57,7 +56,6 @@ export default function () {
         });
         return breadcrumbs
     }
-
 
     return {
         navigateToScreen,

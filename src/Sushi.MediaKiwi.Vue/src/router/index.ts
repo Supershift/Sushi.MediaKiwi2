@@ -1,5 +1,5 @@
 import { createWebHistory, RouteLocationNormalizedLoaded, Router, RouteRecord, type RouteRecordRaw, type RouterOptions } from "vue-router";
-import { useRouter as useVueRouter, useRoute as useVueRoute, type RouteComponent, useLink as useVueLink, RouterLinkProps } from "vue-router";
+import { useRouter as useVueRouter, useRoute as useVueRoute, type RouteComponent} from "vue-router";
 import type { INavigationItem } from "../models/navigation";
 import type { IScreen } from "../models/screen/IScreen";
 import pinia from "../plugins/pinia";
@@ -77,12 +77,4 @@ export function useRouter(): Router {
  */
 export function useRoute(): RouteLocationNormalizedLoaded {
   return useVueRoute();
-}
-
-
-/**
- * Returns the router instance.
- */
-export function useLink(props: RouterLinkProps) {
-  return useVueLink(props);
 }

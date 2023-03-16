@@ -3,41 +3,37 @@
     import { IBreadcrumbItem } from '@/models/navigation/IBreadcrumbItem';
     import { useRoute, useRouter } from '@/router';
     import { computed, ref } from 'vue';
-    import useResponsiveHelpers from "@/composables/useResponsiveHelpers";
+    import { useDisplay } from 'vuetify';
 
     // Using the composable we build the crumb using router and matching the path we are on
     const { generateBreadCrumbs } = useMediaKiwiRouting();
     let breadcrumbs = ref<Array<IBreadcrumbItem>>([]);
     breadcrumbs = generateBreadCrumbs();
     const router = useRouter();
+    const { mobile } = useDisplay();
 
     // Item props
     // TODO: make the component responsive with the isMedium
     const currentpath = computed(() =>  useRoute().path);
-    const isMediumSized = computed(() => useResponsiveHelpers().isMedium());
+    const isMediumSized = computed(() => mobile.value);
     const currentCrumb = computed(() => breadcrumbs.value.find(x => x.to === useRoute().path));
 
     // generates classes for the breadcrumb
-    function classes(item: IBreadcrumbItem, idx: number){        
-        let itemClasses = "text-h3 ";
+    function classes(item: IBreadcrumbItem, idx: number){   
         // if its not the current path or only item we should truncate with max of 500
-        if (breadcrumbs.value.length > 1 && item && currentpath && item.to !== currentpath.value) {
-            itemClasses += "text-container-130 d-inline-block text-truncate ";
-        }
         // if its the only item or the last item we should display as Title with width of 500
-        if (breadcrumbs.value.length == 1 || breadcrumbs.value.length === idx) {
-            itemClasses += "text-container-500 ";
+        return {
+            "text-h3": true,
+            "text-container-130 d-inline-block text-truncate": (breadcrumbs.value.length > 1 && item && currentpath && 
+            item.to !== currentpath.value),
+            "text-container-500": (breadcrumbs.value.length == 1 || breadcrumbs.value.length === idx)
         }
-       return itemClasses;
     }
 
 
     // returns a boolean to know if the current iten iis active
     function isActive(item: IBreadcrumbItem): boolean {
-        if (item.to === currentpath.value) {
-            return true;
-        }
-        return false
+        return (item.to === currentpath.value);
     }
 
     // FIXME: This needs to help the user navigate back
@@ -48,7 +44,7 @@
         const previousPath = breadcrumbs.value.at(breadcrumbs.value.length-1)?.to;
         
         // if we know where back is, then push it otherwise just use .back()
-        if (breadcrumbs.value.length > 1 && previousPath !== undefined && previousPath !== "") {
+        if (breadcrumbs.value.length > 1 && previousPath) {
             router.push(previousPath)
         } else {
             router.back();

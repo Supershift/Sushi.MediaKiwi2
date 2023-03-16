@@ -36,14 +36,14 @@ const navigationItems = <INavigationItem[]>[
   },
   {
     id: 112,
-    name: "Truncateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee-Meeeeeeeeeee",
+    name: "Vivamus-consequat-leo-sagittis-aliquet-ante-at-scelerisque-tortor",
     screenId: 3,
     sectionId: 1,
     parentNavigationItemId: 1,
   },
   {
     id: 113,
-    name: "This-is-a-verrrrrrryyyyyyyyyyyy-long-titleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    name: "Lorem-ipsum-dolor-sit-amet-consectetur-adipiscing-elit-scelerisque-tortor-scelerisque-tortor",
     screenId: 3,
     sectionId: 1,
     parentNavigationItemId: 112,
