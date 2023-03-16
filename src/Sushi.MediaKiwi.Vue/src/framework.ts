@@ -14,7 +14,7 @@ import { container } from "tsyringe";
 import { registerServices } from "./helpers/registerServices";
 import { registerOptions } from "./helpers/registerOptions";
 import { registerRouter } from "./helpers/registerRouter";
-import { waitOnStore } from "./router/waitOnStore";
+import { addWaitOnRouterManager } from "./router/waitOnRouterManager";
 
 export default {
   install(app: App, options: IMediakiwiVueOptions) {
@@ -59,7 +59,7 @@ export default {
     identity.msalInstance.setNavigationClient(navigationClient);
 
     // adds a guard to all routes to initalize routes from API before completing routing
-    waitOnStore(router);
+    addWaitOnRouterManager(router);
 
     // adds a guard to all routes with the meta property 'requireAuth' set to true
     registerGuard(router);
