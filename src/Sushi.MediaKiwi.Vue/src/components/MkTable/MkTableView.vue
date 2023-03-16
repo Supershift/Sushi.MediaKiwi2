@@ -1,18 +1,25 @@
 <script setup lang="ts">
   import { useRouter, type RouteParamsRaw } from "vue-router";
   import type { ITableMap } from "@/models/table/ITableMap";
+  import type { ITableMapItem } from "@/models/table/ITableMapItem";
   import MkTableCell from "./MkTableCell.vue";
   import { store } from "@/stores/mediakiwi/mock";
+  import { TableSortingDirection } from "@/models";
+  import type { ITableSortingValue, ITableMapSortingOptions } from "@/models";
+  import { getTableSortingValue, getClasses } from "@/helpers/SortingHelper";
 
   const props = defineProps<{
     tableMap: ITableMap<unknown>;
     data: unknown[];
     /** Name of the IScreen instance to which the user is pushed when clicking a row */
     itemScreenName?: string;
+    /** */
+    selectedSortOption?: ITableSortingValue;
   }>();
 
   const emit = defineEmits<{
     (e: "click:row", value: unknown): void;
+    (e: "update:selectedSortOption", value?: ITableSortingValue): void;
   }>();
 
   const router = useRouter();
@@ -52,6 +59,13 @@
       router.push({ name: navigationItem.id.toString(), params: routeParams });
     }
   }
+
+  function onSortClick(sortingOptions?: ITableMapSortingOptions) {
+    if (sortingOptions) {
+      const dataItem = getTableSortingValue(sortingOptions, props.selectedSortOption);
+      emit("update:selectedSortOption", dataItem);
+    }
+  }
 </script>
 
 <template>
@@ -59,7 +73,11 @@
     <thead>
       <tr>
         <!-- render a header cell for each mapping item -->
-        <th v-for="mapItem in props.tableMap.items">{{ mapItem.headerTitle }}</th>
+        <th v-for="mapItem in props.tableMap.items" @click="onSortClick(mapItem.sortingOptions)" :class="getClasses(mapItem.sortingOptions, props.selectedSortOption)">
+          {{ mapItem.headerTitle }}
+          <v-icon v-show="props.selectedSortOption?.sortDirection === TableSortingDirection.Asc">mdi-arrow-up</v-icon>
+          <v-icon v-show="props.selectedSortOption?.sortDirection === TableSortingDirection.Desc">mdi-arrow-down</v-icon>
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -71,3 +89,21 @@
     </tbody>
   </v-table>
 </template>
+
+<style scoped>
+  th:not(.sortable-active) .v-icon {
+    visibility: hidden;
+  }
+
+  th.sortable {
+    font-weight: 700;
+  }
+
+  th.sortable:hover {
+    cursor: pointer;
+  }
+
+  th.sortable:hover .v-icon {
+    visibility: visible;
+  }
+</style>

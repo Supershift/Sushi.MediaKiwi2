@@ -3,16 +3,18 @@
   "version": "0.0.1",
   "description": "Vue 3 Library for the MediaKiwi Portal Builder",
   "scripts": {
-    "publish": "npm publish --access public",
     "build": "vite build --mode development",
     "build:watch": "vite build --mode development --watch",
-    "pack": "npm pack",
-    "link": "npm link @supershift/mediakiwi-vue",
     "test:unit": "vitest --environment jsdom --root src/",
     "test:e2e": "start-server-and-test preview :4173 'cypress run --e2e'",
     "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' :4173 'cypress open --e2e'",
     "test": "jest src",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "npm:link": "npm link @supershift/mediakiwi-vue",
+    "npm:publish": "npm publish --access public",
+    "npm:pack": "npm pack",
+    "lint:all": "eslint src",
+    "lint:error": "eslint src --quiet"
   },
   "repository": {
     "type": "git",
