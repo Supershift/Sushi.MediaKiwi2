@@ -4,7 +4,7 @@
   import { computed } from "vue";
   import { useNavigationStore } from "@/stores/navigation";
   import { useMediakiwiStore } from "@/stores";
-  import { RouterHelper } from "@/router/routerHelper";
+  import { RouterManager } from "@/router/routerManager";
   import { container } from "tsyringe";
   import { useRouter } from "@/router";
   import { IMediakiwiVueOptions } from "@/models";
@@ -13,19 +13,14 @@
   defineEmits(["change"]);
 
   // inject dependencies
-  var routerHelper = container.resolve<RouterHelper>("RouterHelper");
-  var mediakiwiOptions = container.resolve<IMediakiwiVueOptions>("MediakiwiOptions");
+  var routerManager = container.resolve<RouterManager>("RouterManager");
 
-  // use dependencies
-  var router = useRouter();
+  // initialize router manager
+  await routerManager.Initialize();
+
+  // use dependencies  
   const navigationStore = useNavigationStore();
-  const mediakiwiStore = useMediakiwiStore();
-
-  // init mediakiwi store
-  await mediakiwiStore.init();
-
-  // update routes from mk store TODO: make this reactive to changes
-  routerHelper.updateRoutes(router, mediakiwiOptions.modules, mediakiwiStore.navigationItems, mediakiwiStore.screens);
+    
 
   // populate the navigationstore when we are done fetching items and this component loads
   navigationStore.getNavigation();

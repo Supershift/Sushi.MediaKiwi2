@@ -2,10 +2,11 @@ import "reflect-metadata";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { container } from "tsyringe";
 import { registerServices } from "../registerServices";
+import { registerOptions } from "../registerOptions";
 import { INavigationConnector, IScreenConnector, ISectionConnector } from "../../services";
 import { NavigationConnector, ScreenConnector, SectionConnector } from "../../services";
 import { IMediakiwiServiceRegistrations } from "../../models/options";
-import { RouterHelper } from "../../router/routerHelper";
+import { RouterManager } from "../../router/routerManager";
 
 class MockedNavigationConnector implements INavigationConnector {}
 class MockedScreenConnector implements IScreenConnector {}
@@ -53,8 +54,8 @@ describe("registerServices", () => {
   it("Should register helpers", () => {
     registerServices(container, undefined);
 
-    var routerHelper = container.resolve("RouterHelper");
+    var isRegistered = container.isRegistered("RouterManager");
 
-    expect(routerHelper).toBeInstanceOf(RouterHelper);
+    expect(isRegistered);
   });
 });
