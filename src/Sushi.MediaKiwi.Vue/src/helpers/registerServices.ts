@@ -1,8 +1,9 @@
 import { IMediakiwiServiceRegistrations } from "@/models/options/";
 import { NavigationConnector, ScreenConnector, SectionConnector } from "@/services";
-import { DependencyContainer } from "tsyringe";
+import { DependencyContainer, type RegistrationOptions, Lifecycle } from "tsyringe";
 import mediaKiwiAxiosInstance from "@/services/interceptors/MediakiwiAxiosInstance";
-import { RouterHelper } from "@/router/routerHelper";
+
+import { RouterManager } from "@/router/routerManager";
 
 export function registerServices(container: DependencyContainer, registations?: IMediakiwiServiceRegistrations) {
   // register axios
@@ -11,7 +12,7 @@ export function registerServices(container: DependencyContainer, registations?: 
   });
 
   // register helpers
-  container.register("RouterHelper", RouterHelper);
+  container.register("RouterManager", { useClass: RouterManager }, { lifecycle: Lifecycle.Singleton });
 
   // register connectors
   container.register("INavigationConnector", registations?.navigationConnector ? registations.navigationConnector : NavigationConnector);
