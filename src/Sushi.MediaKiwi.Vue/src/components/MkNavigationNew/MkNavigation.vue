@@ -3,11 +3,31 @@
   import MkDrawer from "../MkDrawer/MkDrawer.vue";
   import { computed } from "vue";
   import { useNavigationStore } from "@/stores/navigation";
+  import { useMediakiwiStore } from "@/stores";
+  import { RouterHelper } from "@/router/routerHelper";
+  import { container } from "tsyringe";
+  import { useRouter } from "@/router";
+  import { IMediakiwiVueOptions } from "@/models";
 
+  // define events
   defineEmits(["change"]);
 
-  // // populate the navigationstore when we are done fetching items and this component loads
+  // inject dependencies
+  var routerHelper = container.resolve<RouterHelper>("RouterHelper");
+  var mediakiwiOptions = container.resolve<IMediakiwiVueOptions>("MediakiwiOptions");
+
+  // use dependencies
+  var router = useRouter();
   const navigationStore = useNavigationStore();
+  const mediakiwiStore = useMediakiwiStore();
+
+  // init mediakiwi store
+  await mediakiwiStore.init();
+
+  // update routes from mk store TODO: make this reactive to changes
+  routerHelper.updateRoutes(router, mediakiwiOptions.modules, mediakiwiStore.navigationItems, mediakiwiStore.screens);
+
+  // populate the navigationstore when we are done fetching items and this component loads
   navigationStore.getNavigation();
 
   const railItems = computed(() => navigationStore.sectionList ?? []);

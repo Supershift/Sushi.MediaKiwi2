@@ -1,18 +1,27 @@
 import type { App, Component } from "vue";
 import pinia from "./plugins/pinia";
-import { createMediakiwiRouterOptions } from "@/router";
+import { getDefaultRouterOptions } from "@/router/getDefaultRouterOptions";
 import { createRouter } from "vue-router";
 import { PublicClientApplication } from "@azure/msal-browser";
-import { IMediakiwiVueOptions } from "./models/options/IMediakiwiVueOptions";
+import { IMediakiwiVueOptions, currentOptions } from "./models/options";
 import { createVuetify, VuetifyOptions } from "vuetify";
 import { msalPlugin } from "./plugins/msalPlugin";
 import { CustomNavigationClient } from "./router/navigationClient";
-import { registerGuard } from "./router/guard";
+import { registerGuard } from "./router/registerGuard";
 import defaultVuetifyOptions from "./plugins/vuetify";
 import { identity } from "./identity";
+import { container } from "tsyringe";
+import { registerServices } from "./helpers/registerServices";
+import { registerOptions } from "./helpers/registerOptions";
 
 export default {
   install(app: App, options: IMediakiwiVueOptions) {
+    // register options
+    registerOptions(container, options);
+
+    // register dependencies
+    registerServices(container, options.serviceRegistrations);
+
     // create vuetify
     let vuetifyOptions: VuetifyOptions;
     if (options.vuetifyOptions !== undefined) {
@@ -27,19 +36,16 @@ export default {
     // Create an instance of Pinia
     app.use(pinia);
 
-    // create router options, which contains paths based on the modules
-    const routerOptions = createMediakiwiRouterOptions(options?.modules, options?.customRoutes);
+    pinia.use(({ store }) => {});
+
+    // get default router options
+    const routerOptions = getDefaultRouterOptions(options?.customRoutes);
 
     // create the router
     const router = createRouter(routerOptions);
 
     // use the router instance
     app.use(router);
-
-    pinia.use(({ store }) => {
-      store.hello = "Welcome to Mediakiwi 2.0";
-      // store.router = router;
-    });
 
     // create msal instance and install plugin
     identity.msalInstance = new PublicClientApplication(options.msalConfig);

@@ -53,21 +53,21 @@
 
 </script>
 <template>
-    <v-card class="ma-5" v-if="breadcrumbs.length">
-        <div v-if="isMediumSized" class="breadcrumb-title-container">
-            <v-btn variant="tonal" @click="navigateBack()">
-                <v-icon icon="mdi-chevron-left"></v-icon>
-            </v-btn>
-            <div class="ml-5 text-h3 d-inline-block">{{ currentCrumb?.title.toUpperCase()  }}</div>
-        </div>
-        <div v-else>
-            <v-breadcrumbs v-if="breadcrumbs.length" divider=">" >
-                <v-breadcrumbs-item v-for="(item, idx) in breadcrumbs" :key="item.href" :href="item.href" :active="isActive(item)" active-class="active-crumb" :class="classes(item, idx)" :to="item.to" :exact="item.exact" :bold="item.bold">
-                    {{ item.title.toUpperCase() }}
-                </v-breadcrumbs-item>
-            </v-breadcrumbs> 
-        </div>
-    </v-card>
+  <v-card class="ma-5" v-if="breadcrumbs.length">
+    <div v-if="isMediumSized" class="breadcrumb-title-container">
+      <v-btn variant="tonal" @click="navigateBack()">
+        <v-icon icon="mdi-chevron-left"></v-icon>
+      </v-btn>
+      <div class="ml-5 text-h3 d-inline-block">{{ currentCrumb?.title.toUpperCase()  }}</div>
+    </div>
+    <div v-else>
+      <v-breadcrumbs v-if="breadcrumbs.length" divider=">" >
+        <v-breadcrumbs-item v-for="(item, idx) in breadcrumbs" :key="item.href" :href="item.href" :active="isActive(item)" active-class="active-crumb" :class="classes(item, idx)" :to="item.to" :exact="item.exact" :bold="item.bold">
+          {{ item.title.toUpperCase() }}
+        </v-breadcrumbs-item>
+      </v-breadcrumbs> 
+    </div>
+  </v-card>
 </template>
 <style lang="css">
 .breadcrumb-title-container {

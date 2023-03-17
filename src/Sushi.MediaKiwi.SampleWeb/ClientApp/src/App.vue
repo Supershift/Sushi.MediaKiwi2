@@ -11,7 +11,12 @@
         <mk-theme-toggle></mk-theme-toggle>
         <mk-sign-out-button></mk-sign-out-button>
       </v-app-bar>
-      <mk-navigation_1></mk-navigation_1>
+      <Suspense>
+        <template #default>
+          <mk-navigation_1></mk-navigation_1>
+        </template>
+        <template #fallback> Loading... </template>
+      </Suspense>
       <mk-screen></mk-screen>
     </v-layout>
   </v-card>

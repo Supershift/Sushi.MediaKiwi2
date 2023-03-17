@@ -1,22 +1,6 @@
-import { RouteLocationNormalized, Router } from "vue-router";
 import { InteractionType, PopupRequest, PublicClientApplication, RedirectRequest } from "@azure/msal-browser";
-import { identity } from "@/identity";
 
-export function registerGuard(router: Router) {
-  router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormalized) => {
-    if (to.meta.requiresAuth) {
-      const request = {
-        scopes: identity.scopes,
-        redirectStartPage: to.fullPath,
-      };
-      const shouldProceed = await isAuthenticated(identity.msalInstance, InteractionType.Redirect, request);
-      return shouldProceed || "/failed";
-    }
-
-    return true;
-  });
-}
-
+/** Checks if a user is authenticated. If not, the user is redirected to login. */
 export async function isAuthenticated(instance: PublicClientApplication, interactionType: InteractionType, loginRequest: PopupRequest | RedirectRequest): Promise<boolean> {
   // If your application uses redirects for interaction, handleRedirectPromise must be called and awaited on each page load before determining if a user is signed in or not
   return instance
