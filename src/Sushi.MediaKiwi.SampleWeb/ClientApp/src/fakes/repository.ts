@@ -1,11 +1,6 @@
-import { reactive } from "vue";
-import type { INavigationItem } from "@models/navigation/INavigationItem";
-import type { IScreen } from "@models/screen/IScreen";
-import type ISection from "@/models/section/ISection";
+import { IScreenResponse, INavigationResponse, ISectionResponse } from "@supershift/mediakiwi-vue";
 
-// {@depricated} soon
-// get the navigation items
-const navigationItems = <INavigationItem[]>[
+export const navigationItems = <INavigationResponse[]>[
   {
     id: 0,
     name: "Home",
@@ -33,20 +28,6 @@ const navigationItems = <INavigationItem[]>[
     screenId: 3,
     sectionId: 1,
     parentNavigationItemId: 11,
-  },
-  {
-    id: 112,
-    name: "Vivamus-consequat-leo-sagittis-aliquet-ante-at-scelerisque-tortor",
-    screenId: 3,
-    sectionId: 1,
-    parentNavigationItemId: 1,
-  },
-  {
-    id: 113,
-    name: "Lorem-ipsum-dolor-sit-amet-consectetur-adipiscing-elit-scelerisque-tortor-scelerisque-tortor",
-    screenId: 3,
-    sectionId: 1,
-    parentNavigationItemId: 112,
   },
   {
     id: 2,
@@ -96,31 +77,7 @@ const navigationItems = <INavigationItem[]>[
   },
 ];
 
-// determines the path for a navigation item by recursively calling itself
-function getPath(navigationItem: INavigationItem): string {
-  // get the full path for this item by recursively going up the tree
-  let parentPath: string = "";
-  if (navigationItem.parentNavigationItemId != null) {
-    const parent = navigationItems.find((item) => item.id == navigationItem.parentNavigationItemId);
-    if (parent !== undefined) {
-      parentPath = getPath(parent);
-    }
-  }
-
-  // if it is a dynamic route to an item instance, add :id to the path
-  if (navigationItem.isDynamicRoute) {
-    return parentPath + `/${navigationItem.name}/:${navigationItem.dynamicRouteParamaterName}`;
-  } else {
-    return parentPath + `/${navigationItem.name}`;
-  }
-}
-
-// determine path for all navigation items
-navigationItems.forEach((item) => {
-  item.path = getPath(item);
-});
-
-const screens = <IScreen[]>[
+export const screens = <IScreenResponse[]>[
   { id: 0, componentKey: "./views/Home.vue", sectionId: 0, name: "Home" },
   { id: 1, componentKey: "./views/Screen1.vue", sectionId: 1, name: "Screen 1" },
   { id: 2, componentKey: "./views/Hotels.vue", sectionId: 1, name: "Screen 2" },
@@ -129,8 +86,7 @@ const screens = <IScreen[]>[
   { id: 5, componentKey: "./views/SampleDeepDataEdit.vue", sectionId: 1, name: "SampleDeepDataEdit" },
 ];
 
-// We use stubs for now
-const sections = Array<ISection>();
+const sections = Array<ISectionResponse>();
 sections.push({
   id: 0,
   name: "Home",
@@ -155,15 +111,4 @@ sections.push({
   sortOrder: 1,
   icon: "mdi-security",
 });
-class MkStore {
-  navigationItems: INavigationItem[] = [];
-  screens: IScreen[] = [];
-  sections: ISection[] = [];
-}
-
-const store = reactive<MkStore>(new MkStore());
-store.navigationItems = navigationItems;
-store.screens = screens;
-store.sections = sections;
-
-export { store };
+export { sections };

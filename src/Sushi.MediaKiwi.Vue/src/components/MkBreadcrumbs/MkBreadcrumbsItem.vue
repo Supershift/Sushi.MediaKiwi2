@@ -13,10 +13,10 @@
     // generates classes for the breadcrumb
     function classes(item: IBreadcrumb){
         // if its not the current path or only item we should truncate
-        if (props.breadcrumbs.length > 1 && item && currentpath && item.to !== currentpath.value) {
-           return  " d-inline-block text-truncate ";
-        }
-       return "";
+       return {
+        " d-inline-block text-truncate ": (props.breadcrumbs.length > 1 && item && currentpath && 
+            item.to !== currentpath.value),
+       };
     }
     
     // returns a boolean to know if the current iten is active

@@ -1,65 +1,73 @@
-import { createWebHistory, RouteLocationNormalizedLoaded, Router, RouteRecord, type RouteRecordRaw, type RouterOptions } from "vue-router";
-import { useRouter as useVueRouter, useRoute as useVueRoute, type RouteComponent, useLink as useVueLink, RouterLinkProps } from "vue-router";
-import type { INavigationItem } from "../models/navigation";
-import type { IScreen } from "../models/screen/IScreen";
-import pinia from "../plugins/pinia";
-import { useMediakiwiStore } from "@/stores/index";
-import SignIn from "@/views/SignIn.vue";
+// TODO: Remove these comments when its been collabed with the team and only use all the index.ts files for references(import/export) to other files
 
-/** Creates router options based on provided modules. */
-export function createMediakiwiRouterOptions(modules: Record<string, RouteComponent>, customRoutes?: RouteRecordRaw[]): RouterOptions {
-  // Populate everything here first!
-  // since we've initialized the pinia first we can access it here now
-  const mediaKiwiStore = useMediakiwiStore(pinia);
-  mediaKiwiStore.init();
+// import { createWebHistory, RouteLocationNormalizedLoaded, Router, RouteRecord, type RouteRecordRaw, type RouterOptions } from "vue-router";
+// import { useRouter as useVueRouter, useRoute as useVueRoute, type RouteComponent} from "vue-router";
+// import type { INavigationItem } from "../models/navigation";
+// import type { IScreen } from "../models/screen/IScreen";
+// import pinia from "../plugins/pinia";
+// import { useMediakiwiStore } from "@/stores/index";
+// import SignIn from "@/views/SignIn.vue";
 
-  const navigationItems = mediaKiwiStore.mediakiwiNavigationItems;
-  const screens = mediaKiwiStore.screens;
+// /** Creates router options based on provided modules. */
+// export function createMediakiwiRouterOptions(modules: Record<string, RouteComponent>, customRoutes?: RouteRecordRaw[]): RouterOptions {
+//   // Populate everything here first!
+//   // since we've initialized the pinia first we can access it here now
+//   const mediaKiwiStore = useMediakiwiStore(pinia);
+//   mediaKiwiStore.init();
 
-  // create routes
-  const routes = <RouteRecordRaw[]>[];
-  navigationItems.forEach((navigationItem: INavigationItem) => {
-    // if the navigation item points to a screen, get the screen
-    if (navigationItem.screenId != null && navigationItem.screenId !== undefined) {
-      const screen = screens.find((x: IScreen) => x.id == navigationItem.screenId);
+//   const navigationItems = mediaKiwiStore.mediakiwiNavigationItems;
+//   const screens = mediaKiwiStore.screens;
 
-      if (screen != null && screen !== undefined && modules) {
-        // find the module referenced by the screen
-        const module = modules[screen.componentKey];
-        if (module !== undefined) {
-          // add a route to the module
-          const route = <RouteRecordRaw>{
-            path: navigationItem.path,
-            name: navigationItem.id.toString(),
-            component: module,
-            meta: {
-              requiresAuth: true,
-            },
-          };
-          routes.push(route);
-        } else {
-          // no module found, give a warning
-          console.warn(`No module found for screenID: ${screen.id}, component key: ${screen.componentKey}`);
-        }
-      }
-    }
-  });
+//   // create routes
+//   const routes = <RouteRecordRaw[]>[];
+//   navigationItems.forEach((navigationItem: INavigationItem) => {
+//     // if the navigation item points to a screen, get the screen
+//     if (navigationItem.screenId != null && navigationItem.screenId !== undefined) {
+//       const screen = screens.find((x: IScreen) => x.id == navigationItem.screenId);
 
-  // add custom routes
-  if (customRoutes !== undefined) {
-    customRoutes.forEach((customRoute) => routes.push(customRoute));
-  }
+//       if (screen != null && screen !== undefined && modules) {
+//         // find the module referenced by the screen
+//         const module = modules[screen.componentKey];
+//         if (module !== undefined) {
+//           // add a route to the module
+//           const route = <RouteRecordRaw>{
+//             path: navigationItem.path,
+//             name: navigationItem.id.toString(),
+//             component: module,
+//             meta: {
+//               requiresAuth: true,
+//               // breadcrumb: {
+//               //   path: navigationItem.id.toString(),
+//               //   title: navigationItem.name
+//               // }
+//             },
+//           };
+//           routes.push(route);
+//         } else {
+//           // no module found, give a warning
+//           console.warn(`No module found for screenID: ${screen.id}, component key: ${screen.componentKey}`);
+//         }
+//       }
+//     }
+//   });
 
-  // add sign in screen
-  routes.push({ path: "/signIn", component: SignIn });
+//   // add custom routes
+//   if (customRoutes !== undefined) {
+//     customRoutes.forEach((customRoute) => routes.push(customRoute));
+//   }
 
-  const routerOptions = <RouterOptions>{
-    routes: routes,
-    history: createWebHistory(),
-  };
+//   // add sign in screen
+//   routes.push({ path: "/signIn", component: SignIn });
 
-  return routerOptions;
-}
+//   const routerOptions = <RouterOptions>{
+//     routes: routes,
+//     history: createWebHistory(),
+//   };
+
+//   return routerOptions;
+// }
+import { type RouteLocationNormalizedLoaded, type Router } from "vue-router";
+import { useRouter as useVueRouter, useRoute as useVueRoute } from "vue-router";
 
 /**
  * Returns the router instance.
@@ -73,12 +81,4 @@ export function useRouter(): Router {
  */
 export function useRoute(): RouteLocationNormalizedLoaded {
   return useVueRoute();
-}
-
-
-/**
- * Returns the router instance.
- */
-export function useLink(props: RouterLinkProps) {
-  return useVueLink(props);
 }

@@ -71,9 +71,9 @@ export const useNavigationStore = defineStore({
       // Repopulate the navigationItems with the correct section assigned items
       this.setSectionNavigationItems(this.currentSection?.id ?? 0);
     },
-    setBreadCrumbs(payload: Array<IBreadcrumb>){
-      if (payload.length) {
-        this.breadcrumbItems = payload;
+    setBreadCrumbs(breadcrumbs: Array<IBreadcrumb>){
+      if (breadcrumbs.length) {
+        this.breadcrumbItems = breadcrumbs;
       }
     },
     toggleDrawer() {
