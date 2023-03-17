@@ -6,9 +6,9 @@ import type { ITableSortingValue, ITableMapSortingOptions, ITableMapItem } from 
  * sorting classes and
  *
  * @export
- * @class SortingHelper
+ * @class TableSortingHelper
  */
-export default class SortingHelper {
+export default class TableSortingHelper {
   /**
    * Determine the new sort order direction based on the current direction
    * @param {ITableMapItem<unknown>} tableMapItem
