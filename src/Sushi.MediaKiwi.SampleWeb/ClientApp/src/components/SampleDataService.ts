@@ -1,4 +1,5 @@
-import { ITableSortingValue, TableSortingDirection } from "@supershift/mediakiwi-vue";
+import type { ITableSortingValue } from "@supershift/mediakiwi-vue";
+import { TableSortingDirection } from "@supershift/mediakiwi-vue";
 import type { ISampleData } from "./ISampleData";
 
 const data = <ISampleData[]>[
@@ -15,16 +16,16 @@ const data = <ISampleData[]>[
 ];
 
 export const SampleDataService = {
-  GetAll(countryCode: string | undefined, sortOrder?: ITableSortingValue | undefined): ISampleData[] {
+  GetAll(countryCode: string, sortOrder?: ITableSortingValue): ISampleData[] {
     let result = [...data];
     if (countryCode !== undefined) {
       result = result.filter((x) => x.countryCode == countryCode);
     }
 
     if (sortOrder) {
-      if (sortOrder.id === "countryName") {
+      if (sortOrder.tableMapItemId === "country") {
         result = [...result.sort((a, b) => a.countryName.localeCompare(b.countryName))];
-      } else if (sortOrder.id === "name") {
+      } else if (sortOrder.tableMapItemId === "name") {
         result = [...result.sort((a, b) => a.name.localeCompare(b.name))];
       }
 
@@ -37,14 +38,14 @@ export const SampleDataService = {
     return result;
   },
   Get(id: number): ISampleData | undefined {
-    var result = data.find((x) => x.id == id);
+    let result = data.find((x) => x.id == id);
     if (result !== undefined) {
       // make a copy to emulate this entry coming from an API
       result = { ...result };
     }
     return result;
   },
-  Save(item: ISampleData) {
+  Save(item: ISampleData): void {
     // this would be some sort of FK in reality
     if (item.countryCode == "NL") {
       item.countryName = "Nederland";
@@ -53,10 +54,10 @@ export const SampleDataService = {
     }
 
     // is this a new item or an existing?
-    var index = data.findIndex((x) => x.id == item.id);
+    const index = data.findIndex((x) => x.id == item.id);
     if (index == -1) {
       // new item, pseudo generate new id
-      var maxId = Math.max(...data.map((o) => o.id));
+      const maxId = Math.max(...data.map((o) => o.id));
       item.id == maxId + 1;
       data.push(item);
     } else {
@@ -64,8 +65,8 @@ export const SampleDataService = {
       data[index] = item;
     }
   },
-  Delete(id: number) {
-    var index = data.findIndex((x) => x.id == id);
+  Delete(id: number): void {
+    const index = data.findIndex((x) => x.id == id);
     if (index != -1) {
       data.splice(index, 1);
     }
