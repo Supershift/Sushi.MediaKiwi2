@@ -8,11 +8,11 @@
     railItems: Array<ISection>;
   }>();
 
-  const { NavigateToScreen } = useMediaKiwiRouting();
+  const { navigateToScreen } = useMediaKiwiRouting();
   const router = useRouter();
   function onItemClick(item: ISection) {
     if (item) {
-      NavigateToScreen(router, item.id, true);
+      navigateToScreen(router, item.id, true);
     }
     return false;
   }

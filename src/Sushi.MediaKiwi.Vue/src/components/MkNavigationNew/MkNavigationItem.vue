@@ -11,7 +11,7 @@
     allItems: Array<INavigationItem>;
   }>();
 
-  const { NavigateToScreen } = useMediaKiwiRouting();
+  const { navigateToScreen, generateBreadCrumbs } = useMediaKiwiRouting();
   const router = useRouter();
 
   const route = useRoute();
@@ -22,7 +22,7 @@
   const nameLabel = computed(() => props.navigationItem?.name ?? "-empty-");
 
   // called to send user to target screen
-  function onItemClick(item: INavigationItem) {
+  async function onItemClick(item: INavigationItem) {
     if (item.screenId !== undefined) {
       router.push(item.path);
     }
