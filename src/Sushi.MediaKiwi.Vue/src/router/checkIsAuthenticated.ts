@@ -4,7 +4,7 @@ import { identity } from "@/identity";
 import { isAuthenticated } from "../identity/isAuthenticated";
 
 /** Adds a guard before each route transition to check if the user is authenticated. */
-export function registerGuard(router: Router) {
+export function addCheckIsAuthenticated(router: Router) {
   router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormalized) => {
     if (to.meta.requiresAuth) {
       const request = {
