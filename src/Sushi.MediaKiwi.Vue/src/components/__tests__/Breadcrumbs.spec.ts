@@ -3,7 +3,7 @@ import MkBreadcrumbs from "../MkBreadcrumbs/MkBreadcrumbs.vue";
 import { describe, it, expect, beforeEach } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import { useNavigationStore } from "../../stores/navigation";
-import { Breadcrumb, IBreadcrumb } from "../../models/breadcrumb";
+import { Breadcrumb, type IBreadcrumb } from "../../models/breadcrumb/index";
 
 const breadcrumbsList = [new Breadcrumb("/Home", "Home", "/Home", true, false, false)] as Array<IBreadcrumb>;
 

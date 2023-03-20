@@ -1,18 +1,17 @@
-import { IBreadcrumb, Breadcrumb } from "@/models/breadcrumb";
+import { type IBreadcrumb, Breadcrumb } from "@/models/breadcrumb";
 import { useNavigationStore } from "@/stores/navigation";
-import { Router } from "vue-router";
+import { type Router } from "vue-router";
 
 /**
  * Register the breadcrumbs once, the crumbs are populated right before we navigate
  * Then we refresh this by updating the store
  */
-export function registerBreadCrumbs(router: Router){
+export function registerBreadCrumbs(router: Router): void{
     const navigationStore = useNavigationStore();
-    let breadcrumbs = Array<IBreadcrumb>();
 
     // before each router navigation we would want to update the breadcrumbs
     router.beforeEach((to, from, next) => {
-        breadcrumbs = [];
+        const breadcrumbs = Array<IBreadcrumb>();
         to.matched.forEach((record) => { 
             // for each record we matched with we split this and build the current list of crumbs
             record.path.split("/").forEach((r) => {

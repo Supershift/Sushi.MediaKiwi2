@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import MkNavigationList from "@/components/MkNavigationNew/MkNavigationList.vue";
+  import MkNavigationList from "@/components/MkNavigation/MkNavigationList.vue";
   import { computed } from "vue";
   import { useNavigationStore } from "@/stores/navigation";
   import type { INavigationItem } from "@/models/navigation";

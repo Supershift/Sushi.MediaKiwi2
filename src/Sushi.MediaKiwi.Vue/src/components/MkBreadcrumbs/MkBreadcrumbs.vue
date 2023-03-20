@@ -4,7 +4,7 @@
     import { computed, ref, watch } from 'vue';
     import { useNavigationStore } from '@/stores/navigation';
     import { storeToRefs } from 'pinia';
-    import MkBackButton from '@/components/MkNavigationNew/MkBackButton.vue';
+    import MkBackButton from '@/components/MkNavigation/MkBackButton.vue';
     import MkBreadcrumbsItem from './MkBreadcrumbsItem.vue';
     import { useDisplay } from 'vuetify';
      

@@ -1,9 +1,8 @@
 <script setup lang="ts">
   import { getNavigationItemChildren } from "@/helpers";
   import type { INavigationItem } from "@/models/navigation/INavigationItem";
-  import { useRouter } from "@/router";
+  import { useRouter, useRoute } from "@/router";
   import { computed } from "vue";
-  import { useRoute } from "@/router";
 
   const props = defineProps<{
     navigationItem: INavigationItem;
@@ -32,8 +31,8 @@
 
 <template>
   <v-list-group v-if="children.length > 0" :value="nameLabel">
-    <template #activator="{ props }" :is-active="isActive">
-      <v-list-item v-bind="props" :active="isActive" :title="nameLabel" @click.stop="navigationItem?.screenId !== undefined ? onItemClick(navigationItem) : {}"></v-list-item>
+    <template #activator="{ props }">
+      <v-list-item v-bind="props"  :is-active="isActive" :active="isActive" :title="nameLabel" @click.stop="navigationItem?.screenId !== undefined ? onItemClick(navigationItem) : {}"></v-list-item>
     </template>
     <mk-navigation-item v-for="child in children" :navigation-item="child" :key="child.id" :all-items="allItems"></mk-navigation-item>
   </v-list-group>
