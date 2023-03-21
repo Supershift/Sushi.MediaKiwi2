@@ -9,6 +9,7 @@
   import TableSortingHelper from "@/helpers/TableSortingHelper";
   import MkTableCheckbox from "./MkTableCheckbox.vue";
   import { useTableMapItemSelection } from "@/composables/useTableMapItemSelection";
+  import { watch } from "vue";
 
   // Create instance of the table sorting helper
   const tableSortingHelper = new TableSortingHelper();
@@ -25,6 +26,7 @@
   const emit = defineEmits<{
     (e: "click:row", value: unknown): void;
     (e: "update:selectedSortOption", value?: ITableSortingValue): void;
+    (e: "update:selectedTableRows", value?: number[] | string[]): void;
   }>();
 
   const router = useRouter();
@@ -73,9 +75,13 @@
   }
 
   /** Init selection composable for item selection with the table map and data  */
-  const { selectAll, selectItem, isItemSelected, isAllSelected, isIndeterminate, selected } = useTableMapItemSelection({
+  const { selectAll, selectItem, isItemSelected, isAllSelected, isIndeterminate, selectedItems } = useTableMapItemSelection({
     tableMap: props.tableMap,
     data: props.data,
+  });
+
+  watch(selectedItems, (value) => {
+    emit("update:selectedTableRows", value);
   });
 </script>
 

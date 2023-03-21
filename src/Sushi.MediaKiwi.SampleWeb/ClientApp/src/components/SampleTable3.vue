@@ -66,6 +66,8 @@
     tableMapItemId: "lastSeen",
     sortDirection: TableSortingDirection.Desc,
   });
+  // create a ref collection of selected table rows
+  const selectedTableRows = ref<number[]>([]);
 
   // get the data, using the selected filters
   const sampleData = computed(() => {
@@ -79,6 +81,14 @@
 </script>
 
 <template>
-  <MkTable v-model:selected-filters="selectedFilters" v-model:selected-sort-option="selectedSortOption" :filter-map="filters" :table-map="myMap" :data="sampleData" item-screen-name="SampleDataEdit">
+  <MkTable
+    v-model:selected-filters="selectedFilters"
+    v-model:selected-sort-option="selectedSortOption"
+    v-model:selected-table-rows="selectedTableRows"
+    :filter-map="filters"
+    :table-map="myMap"
+    :data="sampleData"
+    item-screen-name="SampleDataEdit"
+  >
   </MkTable>
 </template>

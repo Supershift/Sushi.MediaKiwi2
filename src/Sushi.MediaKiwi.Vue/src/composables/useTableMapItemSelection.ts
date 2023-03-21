@@ -1,5 +1,5 @@
 import { ref, computed } from "vue";
-import type { Ref, ComputedRef } from "vue";
+import type { ComputedRef } from "vue";
 import type { ITableMap } from "@/models/table/ITableMap";
 
 /** Proxy type for number or string to allow an array of either type */
@@ -12,7 +12,7 @@ interface useTableMapItemSelection {
   isItemSelected: (dataItem: unknown) => boolean;
   isIndeterminate: ComputedRef<boolean>;
   isAllSelected: ComputedRef<boolean>;
-  selected: Ref<tableMapIdentifierType[]>;
+  selectedItems: ComputedRef<string[] | number[]>;
 }
 
 /** Tablemap options for the composable to use */
@@ -27,7 +27,7 @@ interface tableMapItemSelectionOptions {
  * @returns {useTableMapItemSelection}
  */
 export function useTableMapItemSelection(options: tableMapItemSelectionOptions): useTableMapItemSelection {
-  /** Collection of the returned itemId() value */
+  /** Private collection of the returned itemId() value */
   const selected = ref<tableMapIdentifierType[]>([]);
   const { tableMap, data } = options;
 
@@ -100,12 +100,27 @@ export function useTableMapItemSelection(options: tableMapItemSelectionOptions):
   /** Returns if all items ids are selected */
   const isAllSelected = computed(() => isSelected(tableMapItemIds.value));
 
+  /** Return a collection of numbers or strings based on the type of first item */
+  const selectedItems = computed<string[] | number[]>(() => {
+    if (!selected.value || !selected.value.length) {
+      return [];
+    }
+
+    if (typeof selected.value[0] === "string") {
+      return <string[]>selected.value;
+    } else if (typeof selected.value[0] === "number") {
+      return <number[]>selected.value;
+    }
+
+    return [];
+  });
+
   return {
     selectAll,
     selectItem,
     isAllSelected,
     isItemSelected,
     isIndeterminate,
-    selected,
+    selectedItems,
   };
 }

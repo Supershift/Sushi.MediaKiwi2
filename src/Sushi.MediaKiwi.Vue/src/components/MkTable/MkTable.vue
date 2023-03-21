@@ -19,6 +19,7 @@
     (e: "update:selectedFilters", value: TableFilterValueCollection): void;
     (e: "click:row", value: any): void;
     (e: "update:selectedSortOption", value?: ITableSortingValue): void;
+    (e: "update:selectedTableRows", value?: number[] | string[]): void;
   }>();
 
   const hasFilter = props.filterMap !== undefined && props.selectedFilters !== undefined;
@@ -33,9 +34,10 @@
     :table-map="tableMap"
     :data="data"
     :item-screen-name="itemScreenName"
-    @click:row="(e) => emit('click:row', e)"
     :selected-sort-option="selectedSortOption"
+    @click:row="(e) => emit('click:row', e)"
     @update:selected-sort-option="(e) => emit('update:selectedSortOption', e)"
+    @update:table-row-selection="(e) => emit('update:selectedTableRows', e)"
   ></MkTableView>
   <slot name="footer"></slot>
 </template>
