@@ -1,6 +1,6 @@
 import { ListResult } from "@/models";
-import { IScreenResponse } from "@/models/responses";
+import { IScreen } from "@/models";
 
 export interface IScreenConnector {
-  GetScreens(): Promise<ListResult<IScreenResponse>>;
+  GetScreens(): Promise<ListResult<IScreen>>;
 }

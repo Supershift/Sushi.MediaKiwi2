@@ -3,13 +3,13 @@ export interface INavigationItem {
   /** Unique identifier for this item. */
   id: number;
   /** Label to display. */
-  name: string;  
+  name: string;
   /** Application section to which this item belongs. */
   sectionId: number;
   /** Parent of this item in the navigation hierarchy. */
   parentNavigationItemId?: number;
   /** Identifier of the screen to load when this navigation item is activated. If empty, the item is a folder. */
-  screenId?: number;  
+  screenId?: number;
   /** If true, this item has a dynamic route which requires an ID in the url. */
   isDynamicRoute: boolean;
   /** If this item is for a dynamic route, the route's dyanmic part is set here, e.g. :userID */
