@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed } from "vue";
+  import { ref, watch } from "vue";
   const props = defineProps<{
     isIndeterminate?: boolean;
     isSelected?: boolean;
@@ -13,7 +13,14 @@
     emit("update:isSelected", selectedValue);
   }
 
-  const value = computed(() => props.isSelected);
+  const value = ref(props.isSelected);
+
+  watch(
+    () => props.isSelected,
+    () => {
+      value.value = props.isSelected;
+    }
+  );
 </script>
 <template>
   <v-checkbox v-model="value" :indeterminate="props.isIndeterminate" :hide-details="true" density="comfortable" @update:model-value="selectChanged"></v-checkbox>

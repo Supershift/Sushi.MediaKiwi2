@@ -12,7 +12,7 @@ interface useTableMapItemSelection {
   isItemSelected: (dataItem: unknown) => boolean;
   isIndeterminate: ComputedRef<boolean>;
   isAllSelected: ComputedRef<boolean>;
-  selectedItems: ComputedRef<string[] | number[]>;
+  selectedItems: ComputedRef<unknown[]>;
 }
 
 /** Tablemap options for the composable to use */
@@ -32,17 +32,24 @@ export function useTableMapItemSelection(options: tableMapItemSelectionOptions):
   const { tableMap, data } = options;
 
   /** Select or remove one or more items from the collection */
-  function select(items: tableMapIdentifierType[], value: boolean): void {
+  function select(dataItems: unknown[], value: boolean): void {
     const newSelected = [...selected.value];
 
-    for (const item of items) {
-      if (value) {
-        if (newSelected.indexOf(item) === -1) {
-          newSelected.push(item);
-        }
-      } else {
-        if (newSelected.indexOf(item) > -1) {
-          newSelected.splice(newSelected.indexOf(item), 1);
+    for (const dataItem of dataItems) {
+      if (tableMap.itemId) {
+        const itemId = tableMap.itemId(dataItem);
+        const index = newSelected.indexOf(itemId);
+
+        if (value) {
+          // Add the item if not already present
+          if (index === -1) {
+            newSelected.push(itemId);
+          }
+        } else {
+          // Remove the item if present
+          if (index > -1) {
+            newSelected.splice(index, 1);
+          }
         }
       }
     }
@@ -51,68 +58,56 @@ export function useTableMapItemSelection(options: tableMapItemSelectionOptions):
 
   /** Select ALL items of the tablemap */
   function selectAll(value: boolean): void {
-    select(tableMapItemIds.value, value);
+    select(data, value);
   }
 
   /** Select the provided data item */
   function selectItem(dataItem: unknown, value: boolean): void {
-    if (tableMap?.itemId) {
-      const itemId = tableMap.itemId(dataItem);
-      if (itemId) {
-        select([itemId], value);
-      }
-    }
+    select([dataItem], value);
   }
 
-  /** Create a collection of the table map item id's  */
-  const tableMapItemIds = computed(() => {
-    return data
-      .map((dataItem) => {
-        if (tableMap?.itemId) {
-          return tableMap.itemId(dataItem);
-        }
-      })
-      .map((m) => m);
-  });
-
   /** Returns if the provided item ids are selected */
-  function isSelected(items: tableMapIdentifierType[]): boolean {
-    return items.every((item) => selected.value.includes(item));
+  function isSelected(dataItems: unknown[]): boolean {
+    return dataItems.every((dataItem) => {
+      if (tableMap.itemId) {
+        const itemId = tableMap.itemId(dataItem);
+        return selected.value.indexOf(itemId) > -1;
+      }
+      return false;
+    });
   }
 
   /** Returns of some of the provided item ids are selected */
-  function isSomeSelected(items: tableMapIdentifierType[]): boolean {
-    return items.some((item) => selected.value.includes(item));
+  function isSomeSelected(dataItems: unknown[]): boolean {
+    return dataItems.some((dataItem) => {
+      if (tableMap.itemId) {
+        const itemId = tableMap.itemId(dataItem);
+        return selected.value.indexOf(itemId) > -1;
+      }
+      return false;
+    });
   }
 
   /** Returns the provided dataItem is selected */
   function isItemSelected(dataItem: unknown): boolean {
-    if (tableMap?.itemId) {
-      const itemId = tableMap?.itemId(dataItem);
-      return isSelected([itemId]);
-    }
-    return false;
+    return isSelected([dataItem]);
   }
 
   /** Returns if 'some' items are selected */
-  const isIndeterminate = computed(() => !isSelected(tableMapItemIds.value) && isSomeSelected(tableMapItemIds.value));
+  const isIndeterminate = computed(() => !isSelected(data) && isSomeSelected(data));
 
   /** Returns if all items ids are selected */
-  const isAllSelected = computed(() => isSelected(tableMapItemIds.value));
+  const isAllSelected = computed(() => isSelected(data));
 
-  /** Return a collection of numbers or strings based on the type of first item */
-  const selectedItems = computed<string[] | number[]>(() => {
+  /** Return a collection of unknown objects from the data based on the the selection */
+  const selectedItems = computed<unknown[]>(() => {
     if (!selected.value || !selected.value.length) {
       return [];
     }
 
-    if (typeof selected.value[0] === "string") {
-      return <string[]>selected.value;
-    } else if (typeof selected.value[0] === "number") {
-      return <number[]>selected.value;
-    }
-
-    return [];
+    return data.filter((item) => {
+      return isItemSelected(item);
+    });
   });
 
   return {

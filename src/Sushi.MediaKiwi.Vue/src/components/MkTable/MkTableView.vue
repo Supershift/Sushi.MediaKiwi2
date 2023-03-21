@@ -21,12 +21,13 @@
     itemScreenName?: string;
     /** */
     selectedSortOption?: ITableSortingValue;
+    selectedTableRows?: unknown[];
   }>();
 
   const emit = defineEmits<{
     (e: "click:row", value: unknown): void;
     (e: "update:selectedSortOption", value?: ITableSortingValue): void;
-    (e: "update:selectedTableRows", value?: number[] | string[]): void;
+    (e: "update:selectedTableRows", value?: unknown[]): void;
   }>();
 
   const router = useRouter();
