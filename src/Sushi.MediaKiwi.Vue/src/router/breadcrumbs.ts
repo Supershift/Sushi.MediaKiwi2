@@ -6,7 +6,7 @@ import { type Router } from "vue-router";
  * Register the breadcrumbs once, the crumbs are populated right before we navigate
  * Then we refresh this by updating the store
  */
-export function registerBreadCrumbs(router: Router): void{
+export default function registerBreadcrumbs(router: Router): void{
     const navigationStore = useNavigationStore();
 
     // before each router navigation we would want to update the breadcrumbs

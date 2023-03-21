@@ -2,34 +2,23 @@ import { defineStore } from "pinia";
 import type { INavigationItem } from "@/models/navigation";
 import { useMediakiwiStore } from ".";
 import type ISection from "@/models/section/ISection";
-import { type IBreadcrumb, Breadcrumb }  from "@/models/breadcrumb/index";
+import { type IBreadcrumb }  from "@/models/breadcrumb/index";
+import  { type INavigationState, NavigationState } from "@/models/stores";
 
-type NavigationState = {
-  navigationItems: Array<INavigationItem>;
-  sectionItems: Array<ISection>;
-  breadcrumbItems: Array<IBreadcrumb>;
-  currentSection: ISection | undefined;
-  drawer: boolean;
-};
 
 export const useNavigationStore = defineStore({
   id: "navigationStore",
-  state: () =>
-    ({
-      navigationItems: [],
-      sectionItems: [],
-      breadcrumbItems: [],
-      currentSection: {
-        id: 0,
-        name: "Home",
-        sortOrder: 0,
-      },
-      drawer: true,
-    } as NavigationState),
+  state: () => ({
+    navigationItems: [],
+    sectionItems: [],
+    breadcrumbItems: [],
+    drawer: true,
+    currentSection: { id: 0, name: "Home", sortOrder: 0 } as ISection
+  } as INavigationState),
   getters: {
-    navigationList: (state: NavigationState) => state.navigationItems,
-    sectionList: (state: NavigationState) => state.sectionItems,
-    breadcrumbList: (state: NavigationState) => state.breadcrumbItems,
+    navigationList: (state: INavigationState) => state.navigationItems,
+    sectionList: (state: INavigationState) => state.sectionItems,
+    breadcrumbList: (state: INavigationState) => state.breadcrumbItems,
   },
   actions: {
     async getNavigation() {
@@ -37,7 +26,7 @@ export const useNavigationStore = defineStore({
       const mediaKiwiStore = useMediakiwiStore();
       const items = mediaKiwiStore.navigationItems;
       const sections = mediaKiwiStore.mediakiwiSections;
-      const breadcrumbs = [new Breadcrumb("/Home", "Home", "/Home", true, false, false)] as Array<IBreadcrumb>;
+      const breadcrumbs = [] as Array<IBreadcrumb>;
 
       // set breadcrumbs
       if (breadcrumbs && breadcrumbs.length) {
@@ -53,7 +42,6 @@ export const useNavigationStore = defineStore({
       }
     },
     setSectionNavigationItems(id: number) {
-
       if (id !== null) {
         const items = useMediakiwiStore().mediakiwiNavigationItems.filter((item) => item?.sectionId == id);
 

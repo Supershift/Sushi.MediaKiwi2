@@ -1,6 +1,6 @@
 import type IBreadcrumb  from "./IBreadcrumb";
 
-export default class BreadCrumb implements IBreadcrumb {
+export default class Breadcrumb implements IBreadcrumb {
     to: string;
     title: string; 
     href: string;

@@ -1,17 +1,12 @@
 <script setup lang="ts">
     import { IBreadcrumb } from '@/models/breadcrumb';
     import { useRoute } from '@/router';
-    import { computed, onMounted, ref, watch } from 'vue';
+    import { computed, ref, watch } from 'vue';
     import { useNavigationStore } from '@/stores/navigation';
     import { storeToRefs } from 'pinia';
     import MkBackButton from '@/components/MkNavigation/MkBackButton.vue';
     import MkBreadcrumbsItem from './MkBreadcrumbsItem.vue';
     import { useDisplay } from 'vuetify';
-    
-    // optional breadcrumbs to manage from the outside
-    const props = defineProps<{
-      breadcrumbs?: Array<IBreadcrumb>
-    }>();
 
     // Using the composable we build the crumb using router and matching the path we are on
     let breadcrumbs = ref<Array<IBreadcrumb>>([]);
@@ -21,28 +16,19 @@
 
     // Item props
     const isMediumSized = computed(() => mobile.value);
-    const currentCrumb = computed(() => breadcrumbs.value.find(x => x.to === useRoute().path));
     const showBackButton = computed(() => isMediumSized.value && breadcrumbs.value.length > 1);
+    const currentCrumb = computed(() => breadcrumbs.value.find(x => x.to === useRoute().path));
 
     // Watchers and listeners
     // Update breadcrumb from store (this kicks in whenever we navigate)
-    // If we have a manual breadcrumb from the components props then we use that one
     watch(breadcrumbItems, (newBreadcrumbs)=>{
-      if (props.breadcrumbs !== undefined && props.breadcrumbs.length) {
-        breadcrumbs.value = props.breadcrumbs;
-      } else {
-        breadcrumbs.value = newBreadcrumbs
-      }
+      breadcrumbs.value = newBreadcrumbs
     })
-    onMounted(() => {
-      if (props.breadcrumbs !== undefined && props.breadcrumbs.length) {
-        breadcrumbs.value = props.breadcrumbs;
-      }
-    })
+
 </script>
 <template>
   <v-card
-    v-if="breadcrumbs.length"
+    v-if="breadcrumbs && breadcrumbs.length"
     class="ma-5"
   >
     <div
@@ -56,7 +42,7 @@
     </div>
     <div v-else>
       <v-breadcrumbs
-        v-if="breadcrumbs.length"
+        v-if="breadcrumbs && breadcrumbs.length"
         divider=" "
       >
         <mk-breadcrumbs-item

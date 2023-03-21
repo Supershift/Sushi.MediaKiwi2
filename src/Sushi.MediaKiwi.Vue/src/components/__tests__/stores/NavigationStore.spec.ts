@@ -1,8 +1,9 @@
+import "reflect-metadata";
 import { describe, it, expect, beforeEach } from "vitest";
-import { setActivePinia, createPinia } from 'pinia'
-import { useNavigationStore } from '../../../stores/navigation'
+import { setActivePinia, createPinia } from 'pinia';
+import { useNavigationStore } from '../../../stores/navigation';
 import { useMediakiwiStore } from "../../../stores";
-import { Breadcrumb, IBreadcrumb} from "../../../models/breadcrumb"
+import { Breadcrumb, type IBreadcrumb} from "../../../models/breadcrumb";
 
 const navigationItemHotels = {
   id: 1,

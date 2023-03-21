@@ -7,7 +7,7 @@ import { type IMediakiwiVueOptions } from "./models/options";
 import { createVuetify, type VuetifyOptions } from "vuetify";
 import { msalPlugin } from "./plugins/msalPlugin";
 import { CustomNavigationClient } from "./router/navigationClient";
-import { registerBreadCrumbs } from "./router/breadcrumbs";
+import registerBreadcrumbs from "./router/breadcrumbs";
 import { registerGuard } from "./router/registerGuard";
 import defaultVuetifyOptions from "./plugins/vuetify";
 import { identity } from "./identity";
@@ -66,7 +66,7 @@ export default {
     registerGuard(router);
 
     // registers breadcrumbs before we navigate, this calls the navigation store(register as late as possible)
-    registerBreadCrumbs(router);
+    registerBreadcrumbs(router);
   },
 };
 

@@ -1,6 +1,8 @@
+import "reflect-metadata";
 import { describe, it, expect, beforeEach } from "vitest";
 import { setActivePinia, createPinia } from 'pinia'
 import { useMediakiwiStore } from "../../../stores";
+import { container } from "tsyringe";
 
 
 const sectionPayload = {
@@ -40,8 +42,8 @@ describe("NavigationStore", () => {
         // creates a fresh pinia and make it active so it's automatically picked
         // up by any useStore() call without having to pass it to it:
         // `useStore(pinia)`
+        container.reset();
         setActivePinia(createPinia())
-
     })
     it("Should setNavigationItems", () => {
         // define store
