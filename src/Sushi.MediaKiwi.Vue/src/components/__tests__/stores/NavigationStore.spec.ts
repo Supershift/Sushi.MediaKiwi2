@@ -1,7 +1,9 @@
+import "reflect-metadata";
 import { describe, it, expect, beforeEach } from "vitest";
-import { setActivePinia, createPinia } from 'pinia'
-import { useNavigationStore } from '../../../stores/navigation'
+import { setActivePinia, createPinia } from 'pinia';
+import { useNavigationStore } from '../../../stores/navigation';
 import { useMediakiwiStore } from "../../../stores";
+import { Breadcrumb, type IBreadcrumb} from "../../../models/breadcrumb";
 
 const navigationItemHotels = {
   id: 1,
@@ -11,6 +13,7 @@ const navigationItemHotels = {
   parentNavigationItemId: null,
   path: '/Hotels'
 }
+const breadcrumbsList = [new Breadcrumb("/Home", "Home", "/Home", true, false, false)] as Array<IBreadcrumb>;
 
 describe("NavigationStore", () => {
   beforeEach(() => {
@@ -167,6 +170,20 @@ describe("NavigationStore", () => {
     // expect empty arrays from navigationstore
     expect(store.sectionList).lengthOf.greaterThan(0);
     expect(store.navigationItems).lengthOf.greaterThanOrEqual(2);
+  });
+  it("Should set breadcrumbs", () => {
+    // define stores
+    const store = useNavigationStore();
+
+    // expect empty arrays from navigationstore
+    expect(store.breadcrumbList).lengthOf(0);
+
+    // set new section id
+    store.setBreadCrumbs(breadcrumbsList);
+
+    console.log(store.breadcrumbList);
+    // expect empty arrays from navigationstore
+    expect(store.breadcrumbList).lengthOf.greaterThan(0);
   });
 });
 

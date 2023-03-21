@@ -1,6 +1,7 @@
+import "reflect-metadata";
 import { mount, VueWrapper } from "@vue/test-utils";
-import MkNavigation from "../MkNavigationNew/MkNavigation.vue";
-import { describe, it, expect, beforeEach } from "vitest";
+import MkNavigation from "../MkNavigation/MkNavigation.vue";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import { useNavigationStore } from "../../stores/navigation";
 
