@@ -6,12 +6,12 @@
   import type { ISampleData } from "./ISampleData";
   import { SampleDataService } from "./SampleDataService";
 
-
   // define a mapping between source data and desired columns in the table
   const myMap = <ITableMap<ISampleData>>{
     itemId: (item) => {
       return item.id;
     },
+    showSelect: true,
     items: [
       { id: "id", headerTitle: "Id", value: (dataItem) => dataItem.id, sortingOptions: { defaultSortDirection: TableSortingDirection.Desc } },
       { id: "name", headerTitle: "Naam", value: (dataItem) => dataItem.name },
