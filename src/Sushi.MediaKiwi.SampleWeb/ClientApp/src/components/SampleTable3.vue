@@ -6,16 +6,17 @@
   import type { ISampleData } from "./ISampleData";
   import { SampleDataService } from "./SampleDataService";
 
+
   // define a mapping between source data and desired columns in the table
   const myMap = <ITableMap<ISampleData>>{
     itemId: (item) => {
       return item.id;
     },
     items: [
-      { headerTitle: "Id", value: (dataItem) => dataItem.id, sortingOptions: { id: "id", defaultSortDirection: TableSortingDirection.Desc } },
-      { headerTitle: "Naam", value: (dataItem) => dataItem.name },
-      { headerTitle: "Land", value: (dataItem) => dataItem.countryName, sortingOptions: { id: "countryName", defaultSortDirection: TableSortingDirection.Asc } },
-      { headerTitle: "Laast gezien", value: (dataItem) => dataItem.date, sortingOptions: { id: "date", defaultSortDirection: TableSortingDirection.Desc } },
+      { id: "id", headerTitle: "Id", value: (dataItem) => dataItem.id, sortingOptions: { defaultSortDirection: TableSortingDirection.Desc } },
+      { id: "name", headerTitle: "Naam", value: (dataItem) => dataItem.name },
+      { id: "country", headerTitle: "Land", value: (dataItem) => dataItem.countryName, sortingOptions: { defaultSortDirection: TableSortingDirection.Asc } },
+      { id: "lastSeen", headerTitle: "Laast gezien", value: (dataItem) => dataItem.date?.toISOString(), sortingOptions: { defaultSortDirection: TableSortingDirection.Desc } },
     ],
   };
 
@@ -62,7 +63,7 @@
   const selectedFilters = reactive(new TableFilterValueCollection());
   // create a sorting option object with a default value
   const selectedSortOption = ref<ITableSortingValue>({
-    id: "date",
+    tableMapItemId: "lastSeen",
     sortDirection: TableSortingDirection.Desc,
   });
 
@@ -78,6 +79,6 @@
 </script>
 
 <template>
-  <MkTable :filter-map="filters" v-model:selected-filters="selectedFilters" v-model:selected-sort-option="selectedSortOption" :table-map="myMap" :data="sampleData" item-screen-name="SampleDataEdit">
+  <MkTable v-model:selected-filters="selectedFilters" v-model:selected-sort-option="selectedSortOption" :filter-map="filters" :table-map="myMap" :data="sampleData" item-screen-name="SampleDataEdit">
   </MkTable>
 </template>
