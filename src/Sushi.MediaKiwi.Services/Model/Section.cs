@@ -30,5 +30,11 @@ namespace Sushi.MediaKiwi.Services.Model
         /// </summary>
         [SwaggerSchema(ReadOnly = true)]
         public int SortOrder { get; set; }
+
+        /// <summary>
+        /// ID of the icon to display for this section.
+        /// </summary>
+        [StringLength(128)]
+        public string? Icon { get; set; }
     }
 }
