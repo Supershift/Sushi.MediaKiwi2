@@ -7,7 +7,7 @@ import { IMediakiwiVueOptions, currentOptions } from "./models/options";
 import { createVuetify, VuetifyOptions } from "vuetify";
 import { msalPlugin } from "./plugins/msalPlugin";
 import { CustomNavigationClient } from "./router/navigationClient";
-import { registerGuard } from "./router/registerGuard";
+import { addCheckIsAuthenticated } from "./router/checkIsAuthenticated";
 import defaultVuetifyOptions from "./plugins/vuetify";
 import { identity } from "./identity";
 import { container } from "tsyringe";
@@ -62,7 +62,7 @@ export default {
     addWaitOnRouterManager(router);
 
     // adds a guard to all routes with the meta property 'requireAuth' set to true
-    registerGuard(router);
+    addCheckIsAuthenticated(router);
   },
 };
 
