@@ -30,7 +30,7 @@ namespace Sushi.MediaKiwi.Services.Model
         /// relative to the components folder, e.g. MyScreen.vue, checkout/Payment.vue
         /// </summary>
         [Required, StringLength(128)]
-        public string ComponentFileName { get; set; }
+        public string ComponentKey { get; set; }
 
         /// <summary>
         /// Section to which this screen belongs.

@@ -7,7 +7,9 @@ import mediakiwi from "@supershift/mediakiwi-vue";
 // Import mediakiwi stylesheet AFTER vuetify to override
 import "@supershift/mediakiwi-vue/dist/mediakiwi-vue.css";
 
-import { NavigationConnector, ScreenConnector, SectionConnector } from "./fakes";
+import { getFakes } from "./fakes/getFakes";
+
+const useFakes = false;
 
 const app = createApp(App);
 
@@ -23,15 +25,11 @@ webFontLoader.load({
 // import all views as models
 const modules = import.meta.glob("./views/**/*.vue");
 
-// create mediakiwi options, with modules
+// create mediakiwi options
 const mediaKiwiOptions = {
   modules: modules,
   msalConfig: msalConfig,
-  serviceRegistrations: {
-    navigationConnector: NavigationConnector,
-    screenConnector: ScreenConnector,
-    sectionConnector: SectionConnector,
-  },
+  serviceRegistrations: useFakes ? getFakes() : undefined,
 };
 
 // install mediakiwi
