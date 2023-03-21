@@ -25,7 +25,7 @@
 </script>
 
 <template>
-  <v-list>
+  <v-list open-strategy="single">
       <mk-navigation-item v-for="item in parentItems" :key="item.id" :navigation-item="item" :all-items="navigationItems"></mk-navigation-item>
   </v-list>
 </template>
