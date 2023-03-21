@@ -25,7 +25,7 @@
 
   // called to send user to target screen
   async function onItemClick(item: INavigationItem) {
-    if (item.screenId !== undefined) {
+    if (item.screenId !== undefined && item.screenId !== null) {
       router.push(item.path);
     }
     return false;
