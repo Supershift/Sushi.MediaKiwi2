@@ -15,6 +15,7 @@ namespace Sushi.MediaKiwi.DAL
                 Id(x => x.Id, "SectionID");
                 Map(x => x.Name, "Name").SqlType(System.Data.SqlDbType.NVarChar);
                 Map(x => x.SortOrder, "SortOrder");
+                Map(x => x.Icon, "Icon").SqlType(System.Data.SqlDbType.VarChar);
             }
         }
         
@@ -32,5 +33,7 @@ namespace Sushi.MediaKiwi.DAL
         /// Gets or sets a value used when sorting sections.
         /// </summary>
         public int SortOrder { get; set; }
+
+        public string? Icon { get; set; }
     }
 }

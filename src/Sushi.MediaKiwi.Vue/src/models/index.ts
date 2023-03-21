@@ -4,7 +4,6 @@ export * from "./navigation";
 export * from "./options";
 export * from "./pinia/PiniaPluginExtension";
 export * from "./requests";
-export * from "./responses";
 export * from "./screen";
 export * from "./section";
 export * from "./table";

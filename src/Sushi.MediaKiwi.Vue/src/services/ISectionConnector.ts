@@ -1,6 +1,6 @@
 import { ListResult } from "@/models";
-import { ISectionResponse } from "@/models/responses";
+import { ISection } from "@/models";
 
 export interface ISectionConnector {
-  GetSections(): Promise<ListResult<ISectionResponse>>;
+  GetSections(): Promise<ListResult<ISection>>;
 }

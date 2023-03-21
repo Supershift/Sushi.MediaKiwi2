@@ -1,8 +1,9 @@
 import { injectable, inject } from "tsyringe";
-import { useMediakiwiStore } from "@/stores";
+import { useMediakiwiStore } from "../stores/index";
 import { type IMediakiwiVueOptions } from "../models/options/IMediakiwiVueOptions";
 import { type Router, RouteComponent, RouteRecordRaw } from "vue-router";
 import { INavigationItem, IScreen } from "@/models";
+import { RouteGenerator } from "./routeGenerator";
 
 export enum RouterManagerState {
   Empty = 0,
@@ -12,7 +13,7 @@ export enum RouterManagerState {
 
 @injectable()
 export class RouterManager {
-  constructor(@inject("MediakiwiOptions") private options: IMediakiwiVueOptions, @inject("Router") private router: Router) {}
+  constructor(@inject("MediakiwiOptions") private options: IMediakiwiVueOptions, @inject("Router") private router: Router, @inject("RouteGenerator") private routeGenerator: RouteGenerator) {}
 
   private _initialize?: Promise<RouterManagerState>;
   private _isInitialized: RouterManagerState = RouterManagerState.Empty;
@@ -50,33 +51,8 @@ export class RouterManager {
     });
 
     // add new routes for navigation items
-    navigationItems.forEach((navigationItem: INavigationItem) => {
-      // if the navigation item points to a screen, get the screen
-      if (navigationItem.screenId != null && navigationItem.screenId !== undefined) {
-        const screen = screens.find((x: IScreen) => x.id == navigationItem.screenId);
-
-        if (screen != null && screen !== undefined && modules) {
-          // find the module referenced by the screen
-          const module = modules[screen.componentKey];
-          if (module !== undefined) {
-            // add a route to the module
-            const route = <RouteRecordRaw>{
-              path: navigationItem.path,
-              name: navigationItem.id.toString(),
-              component: module,
-              meta: {
-                isFromServer: true,
-                requiresAuth: true,
-              },
-            };
-            this.router.addRoute(route);
-          } else {
-            // no module found, give a warning
-            console.warn(`No module found for screenID: ${screen.id}, component key: ${screen.componentKey}`);
-          }
-        }
-      }
-    });
+    const routes = this.routeGenerator.generateRoutes(modules, navigationItems, screens);
+    routes.forEach((route) => this.router.addRoute(route));
   }
 
   /** Calls stores and updates routes based on store data */
@@ -88,10 +64,11 @@ export class RouterManager {
 
       // apply loaded data to router
       this.updateRoutes(this.options.modules, store.navigationItems, store.screens);
-      
-      this._isInitialized = RouterManagerState.Initialized;    
+
+      this._isInitialized = RouterManagerState.Initialized;
     } catch (error) {
       this._isInitialized = RouterManagerState.Failed;
+      throw error;
     }
     return this._isInitialized;
   }

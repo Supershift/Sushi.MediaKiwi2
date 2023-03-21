@@ -1,5 +1,5 @@
 import { reactive } from "vue";
-import type { INavigationItem } from "@models/navigation/INavigationItem";
+import type { INavigationItem } from "@/models";
 import type { IScreen } from "@models/screen/IScreen";
 import type ISection from "@/models/section/ISection";
 
