@@ -84,6 +84,14 @@
   watch(selectedItems, (value) => {
     emit("update:selectedTableRows", value);
   });
+
+  function clearSelectedTableRows() {
+    selectAll(false);
+  }
+
+  defineExpose({
+    clearSelectedTableRows,
+  });
 </script>
 
 <template>

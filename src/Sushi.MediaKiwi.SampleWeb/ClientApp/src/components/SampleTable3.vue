@@ -78,6 +78,18 @@
     let result = SampleDataService.GetAll(country, selectedSortOption.value);
     return result;
   });
+
+  function download() {
+    console.log("Download", selectedTableRows.value);
+  }
+
+  function remove() {
+    console.log("Remove", selectedTableRows.value);
+  }
+
+  function move() {
+    console.log("move", selectedTableRows.value);
+  }
 </script>
 
 <template>
@@ -90,5 +102,21 @@
     :data="sampleData"
     item-screen-name="SampleDataEdit"
   >
+    <template #actions>
+      <v-btn @click="download">Download</v-btn>
+      <v-btn @click="move">move</v-btn>
+
+      <v-btn icon color="primary">
+        <v-icon>mdi-dots-vertical</v-icon>
+
+        <v-menu activator="parent">
+          <v-list>
+            <v-list-item>
+              <v-list-item-title @click="remove">Delete</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </v-btn>
+    </template>
   </MkTable>
 </template>
