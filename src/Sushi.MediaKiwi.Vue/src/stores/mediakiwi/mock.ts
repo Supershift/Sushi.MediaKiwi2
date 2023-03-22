@@ -1,5 +1,5 @@
 import { reactive } from "vue";
-import type { INavigationItem } from "@models/navigation/INavigationItem";
+import type { INavigationItem } from "@/models";
 import type { IScreen } from "@models/screen/IScreen";
 import type ISection from "@/models/section/ISection";
 
@@ -33,6 +33,20 @@ const navigationItems = <INavigationItem[]>[
     screenId: 3,
     sectionId: 1,
     parentNavigationItemId: 11,
+  },
+  {
+    id: 112,
+    name: "Vivamus-consequat-leo-sagittis-aliquet-ante-at-scelerisque-tortor",
+    screenId: 3,
+    sectionId: 1,
+    parentNavigationItemId: 1,
+  },
+  {
+    id: 113,
+    name: "Lorem-ipsum-dolor-sit-amet-consectetur-adipiscing-elit-scelerisque-tortor-scelerisque-tortor",
+    screenId: 3,
+    sectionId: 1,
+    parentNavigationItemId: 112,
   },
   {
     id: 2,

@@ -1,12 +1,10 @@
 import "reflect-metadata";
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { container } from "tsyringe";
 import { registerServices } from "../registerServices";
-import { registerOptions } from "../registerOptions";
 import { INavigationConnector, IScreenConnector, ISectionConnector } from "../../services";
 import { NavigationConnector, ScreenConnector, SectionConnector } from "../../services";
 import { IMediakiwiServiceRegistrations } from "../../models/options";
-import { RouterManager } from "../../router/routerManager";
 
 class MockedNavigationConnector implements INavigationConnector {}
 class MockedScreenConnector implements IScreenConnector {}

@@ -1,15 +1,15 @@
 import { useMediakiwiStore } from "@/stores";
 import { useNavigationStore } from "@/stores/navigation";
-import { Router } from "vue-router";
+import { type Router } from "vue-router";
 
 /*
   Returns the routing functions using the store and routers of mediakiwi
 */
-export default function () {
+export default function() {
     const navigationStore = useNavigationStore();
     const mediakiwiStore = useMediakiwiStore();
 
-    const NavigateToScreen = (router: Router, screenId: number, isSection: boolean) => {        
+    const navigateToScreen = (router: Router, screenId: number, isSection: boolean): void => {        
         // Since we are injecting the router via the sotre it is already up and running when we initiate
         if (screenId && router) {
             const navigationItem = mediakiwiStore.mediakiwiNavigationItems.find((x) => x.screenId == screenId);
@@ -21,8 +21,8 @@ export default function () {
             router.push(navigationItem?.path ?? "/Home");
         }
     }
-
+    
     return {
-        NavigateToScreen
+        navigateToScreen,
     }
 }

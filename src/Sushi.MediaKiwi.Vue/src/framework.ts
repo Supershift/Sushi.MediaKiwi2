@@ -3,11 +3,12 @@ import pinia from "./plugins/pinia";
 import { getDefaultRouterOptions } from "@/router/getDefaultRouterOptions";
 import { createRouter } from "vue-router";
 import { PublicClientApplication } from "@azure/msal-browser";
-import { IMediakiwiVueOptions, currentOptions } from "./models/options";
-import { createVuetify, VuetifyOptions } from "vuetify";
+import { type IMediakiwiVueOptions } from "./models/options";
+import { createVuetify, type VuetifyOptions } from "vuetify";
 import { msalPlugin } from "./plugins/msalPlugin";
 import { CustomNavigationClient } from "./router/navigationClient";
-import { registerGuard } from "./router/registerGuard";
+import registerBreadcrumbs from "./router/breadcrumbs";
+import { addCheckIsAuthenticated } from "./router/checkIsAuthenticated";
 import defaultVuetifyOptions from "./plugins/vuetify";
 import { identity } from "./identity";
 import { container } from "tsyringe";
@@ -17,7 +18,7 @@ import { registerRouter } from "./helpers/registerRouter";
 import { addWaitOnRouterManager } from "./router/waitOnRouterManager";
 
 export default {
-  install(app: App, options: IMediakiwiVueOptions) {
+  install(app: App, options: IMediakiwiVueOptions): void {
     // register options
     registerOptions(container, options);
 
@@ -62,7 +63,10 @@ export default {
     addWaitOnRouterManager(router);
 
     // adds a guard to all routes with the meta property 'requireAuth' set to true
-    registerGuard(router);
+    addCheckIsAuthenticated(router);
+
+    // registers breadcrumbs before we navigate, this calls the navigation store(register as late as possible)
+    registerBreadcrumbs(router);
   },
 };
 

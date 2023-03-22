@@ -2,30 +2,23 @@ import { defineStore } from "pinia";
 import type { INavigationItem } from "@/models/navigation";
 import { useMediakiwiStore } from ".";
 import type ISection from "@/models/section/ISection";
+import { type IBreadcrumb }  from "@/models/breadcrumb/index";
+import  { type INavigationState, NavigationState } from "@/models/stores";
 
-type NavigationState = {
-  navigationItems: Array<INavigationItem>;
-  sectionItems: Array<ISection>;
-  currentSection: ISection | undefined;
-  drawer: boolean;
-};
 
 export const useNavigationStore = defineStore({
   id: "navigationStore",
-  state: () =>
-    ({
-      navigationItems: [],
-      sectionItems: [],
-      currentSection: {
-        id: 0,
-        name: "Home",
-        sortOrder: 0,
-      },
-      drawer: true,
-    } as NavigationState),
+  state: () => ({
+    navigationItems: [],
+    sectionItems: [],
+    breadcrumbItems: [],
+    drawer: true,
+    currentSection: { id: 0, name: "Home", sortOrder: 0 } as ISection
+  } as INavigationState),
   getters: {
-    navigationList: (state: NavigationState) => state.navigationItems,
-    sectionList: (state: NavigationState) => state.sectionItems,
+    navigationList: (state: INavigationState) => state.navigationItems,
+    sectionList: (state: INavigationState) => state.sectionItems,
+    breadcrumbList: (state: INavigationState) => state.breadcrumbItems,
   },
   actions: {
     async getNavigation() {
@@ -33,7 +26,12 @@ export const useNavigationStore = defineStore({
       const mediaKiwiStore = useMediakiwiStore();
       const items = mediaKiwiStore.navigationItems;
       const sections = mediaKiwiStore.mediakiwiSections;
+      const breadcrumbs = [] as Array<IBreadcrumb>;
 
+      // set breadcrumbs
+      if (breadcrumbs && breadcrumbs.length) {
+        this.setBreadCrumbs(breadcrumbs);
+      }
       // set sections
       if (sections && sections.length) {
         this.sectionItems = sections;
@@ -47,7 +45,7 @@ export const useNavigationStore = defineStore({
       if (id !== null) {
         const items = useMediakiwiStore().mediakiwiNavigationItems.filter((item) => item?.sectionId == id);
 
-        if (items && items.length > 0) {
+        if (items && items.length) {
           this.navigationItems = items;
         }
       }
@@ -60,6 +58,11 @@ export const useNavigationStore = defineStore({
       }
       // Repopulate the navigationItems with the correct section assigned items
       this.setSectionNavigationItems(this.currentSection?.id ?? 0);
+    },
+    setBreadCrumbs(breadcrumbs: Array<IBreadcrumb>){
+      if (breadcrumbs.length) {
+        this.breadcrumbItems = breadcrumbs;
+      }
     },
     toggleDrawer() {
       this.drawer = !this.drawer;

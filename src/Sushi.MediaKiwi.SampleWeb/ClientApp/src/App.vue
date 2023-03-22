@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { MkNavigation_1, MkScreen, MkNavigationIcon, MkSignOutButton, MkThemeToggle } from "@supershift/mediakiwi-vue";
+  import { MkNavigation, MkScreen, MkNavigationIcon, MkSignOutButton, MkThemeToggle } from "@supershift/mediakiwi-vue";
 </script>
 
 <template>
@@ -13,7 +13,7 @@
       </v-app-bar>
       <Suspense>
         <template #default>
-          <mk-navigation_1></mk-navigation_1>
+          <mk-navigation></mk-navigation>
         </template>
         <template #fallback> Loading... </template>
       </Suspense>
