@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace Sushi.MediaKiwi.WebAPI
     [ApiController]
     [ApiExplorerSettings(GroupName = "MediaKiwi")]
     [EnableCors("AllowAnyOrigin")]
+    [Authorize]
     public abstract class MediaKiwiControllerBase : ControllerBase
     {
         /// <summary>
