@@ -20,7 +20,7 @@ var services = builder.Services;
 // todo: remove completely or only add when hosted in kestrel
 services.AddCors(options =>
 {
-    options.AddPolicy("AllowAnyOrigin", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyMethod());
+    options.AddPolicy("AllowAnyOrigin", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyMethod().AllowAnyHeader());
 });
 
 // add authentication, maybe move to MK?

@@ -4,25 +4,12 @@
   import { useIsAuthenticated } from "@/composables/useIsAuthenticated";
 
   const { instance, accounts } = useMsal();
-  function loginPopup() {
-    instance.loginPopup({ scopes: identity.scopes });
-  }
 
-  function loginRedirect() {
-    instance.loginRedirect({ scopes: identity.scopes });
-  }
+  const useRedirect = true;
 
-  async function getToken() {
-    console.log(accounts);
-    if (accounts.value.length > 0) {
-      const currentAccount = accounts.value[0];
-      console.log("requesting for scopes:");
-      console.log(identity.scopes);
-      const response = await instance.acquireTokenSilent({ scopes: identity.scopes, account: currentAccount });
-      console.log(response);
-    } else {
-      console.warn("no signed in account found");
-    }
+  function login() {
+    if (useRedirect) instance.loginRedirect({ scopes: identity.scopes });
+    else instance.loginPopup({ scopes: identity.scopes });
   }
 
   const isAuthenticated = useIsAuthenticated();
@@ -30,8 +17,6 @@
 <template>
   <v-card>
     Are you authenticated? {{ isAuthenticated }}<br />
-    <v-btn @click="loginPopup">Sign in with pop-up</v-btn><br />
-    <v-btn @click="loginRedirect">Sign in with redirect</v-btn><br />
-    <v-btn @click="getToken">Get access token</v-btn>
+    <v-btn @click="login">Sign in</v-btn><br />
   </v-card>
 </template>

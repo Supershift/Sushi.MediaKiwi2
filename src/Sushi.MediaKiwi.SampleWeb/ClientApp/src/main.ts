@@ -9,7 +9,7 @@ import "@supershift/mediakiwi-vue/dist/mediakiwi-vue.css";
 
 import { getFakes } from "./fakes/getFakes";
 
-const useFakes = true;
+const useFakes = false;
 
 const app = createApp(App);
 
