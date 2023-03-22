@@ -52,6 +52,13 @@ export const msalPlugin = {
         case EventType.ACQUIRE_TOKEN_SUCCESS:
         case EventType.ACQUIRE_TOKEN_FAILURE:
           const currentAccounts = msalInstance.getAllAccounts();
+          // set active account
+          if (currentAccounts) {
+            msalInstance.setActiveAccount(currentAccounts[0]);
+          } else {
+            // no account, set active account to 'null'
+            msalInstance.setActiveAccount(null);
+          }
           if (!accountArraysAreEqual(currentAccounts, state.accounts)) {
             state.accounts = currentAccounts;
           }

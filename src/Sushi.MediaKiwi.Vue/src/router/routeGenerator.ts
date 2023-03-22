@@ -28,6 +28,7 @@ export class RouteGenerator {
               meta: {
                 isFromServer: true,
                 requiresAuth: true,
+                requiresRole: ["Admin"],
               },
             };
             result.push(route);

@@ -13,21 +13,20 @@ mediaKiwiAxiosInstance.interceptors.request.use(async (config): Promise<Internal
   // add authorization header by acquiring token
   const msalInstance = identity.msalInstance;
 
-  const accounts = msalInstance.getAllAccounts();
-  if (accounts.length) {
-    const account = accounts[0];
+  const account = msalInstance.getActiveAccount();
+  if (account) {
     try {
-      const response = await msalInstance.acquireTokenSilent({ scopes: identity.scopes, account: account });
+      const response = await msalInstance.acquireTokenSilent({ scopes: identity.scopes });
       config.headers.Authorization = `bearer ${response.accessToken}`;
     } catch (e) {
       if (e instanceof InteractionRequiredAuthError) {
         // this will redirect the user away from the browser, so code after this will not be executed
-        await msalInstance.acquireTokenRedirect({ scopes: identity.scopes, account: account });
+        await msalInstance.acquireTokenRedirect({ scopes: identity.scopes });
       }
       throw e;
     }
   } else {
-    console.warn("no account found");
+    console.warn("no active account found");
   }
 
   return config;
