@@ -14,7 +14,7 @@ mediaKiwiAxiosInstance.interceptors.request.use(async (config): Promise<Internal
   const msalInstance = identity.msalInstance;
 
   const accounts = msalInstance.getAllAccounts();
-  if (accounts.length > 0) {
+  if (accounts.length) {
     const account = accounts[0];
     try {
       const response = await msalInstance.acquireTokenSilent({ scopes: identity.scopes, account: account });
