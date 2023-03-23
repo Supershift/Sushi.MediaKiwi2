@@ -16,6 +16,7 @@ import { registerServices } from "./helpers/registerServices";
 import { registerOptions } from "./helpers/registerOptions";
 import { registerRouter } from "./helpers/registerRouter";
 import { addWaitOnRouterManager } from "./router/waitOnRouterManager";
+import { addCheckIsInRole } from "./router/checkIsInRole";
 
 export default {
   install(app: App, options: IMediakiwiVueOptions): void {
@@ -64,6 +65,9 @@ export default {
 
     // adds a guard to all routes with the meta property 'requireAuth' set to true
     addCheckIsAuthenticated(router);
+
+    // adds a guard to all routes with the meta property 'isInRole' to check role
+    addCheckIsInRole(router);
 
     // registers breadcrumbs before we navigate, this calls the navigation store(register as late as possible)
     registerBreadcrumbs(router);

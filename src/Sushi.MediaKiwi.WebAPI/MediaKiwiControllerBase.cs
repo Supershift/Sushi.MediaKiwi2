@@ -14,8 +14,8 @@ namespace Sushi.MediaKiwi.WebAPI
     /// </summary>
     [ApiController]
     [ApiExplorerSettings(GroupName = "MediaKiwi")]
-    [EnableCors("AllowAnyOrigin")]
-    [Authorize]
+    [EnableCors("AllowAnyOrigin")]    
+    [Authorize(Roles = "Admin")]
     public abstract class MediaKiwiControllerBase : ControllerBase
     {
         /// <summary>

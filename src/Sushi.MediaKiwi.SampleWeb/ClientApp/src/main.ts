@@ -9,7 +9,7 @@ import "@supershift/mediakiwi-vue/dist/mediakiwi-vue.css";
 
 import { getFakes } from "./fakes/getFakes";
 
-const useFakes = true;
+const useFakes = false;
 
 const app = createApp(App);
 
@@ -26,7 +26,9 @@ webFontLoader.load({
 const modules = import.meta.glob("./views/**/*.vue");
 
 // create mediakiwi options
-const mediaKiwiOptions = {
+const mediaKiwiOptions: mediakiwi.IMediakiwiVueOptions = {
+  apiBaseUrl: "https://mediakiwi-sample-api-dev.azurewebsites.net/mediakiwi/api",
+  // apiBaseUrl: "https://localhost:7223/mediakiwi/api",
   modules: modules,
   msalConfig: msalConfig,
   serviceRegistrations: useFakes ? getFakes() : undefined,
