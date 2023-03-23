@@ -46,7 +46,7 @@
 </script>
 <template>
     <div class="breadcrumb-item-container">
-        <v-breadcrumbs-item :href="item.href" :active="isActive(item)" active-class="active-crumb" class="text-h3 text-container" :class="classes(item)" :to="item.to" :exact="item.exact" :bold="item.bold">
+        <v-breadcrumbs-item :href="item.href" :active="isActive(item)" active-class="active-crumb" class="text-h3 text-container" :class="classes(item)" :to="item.to" :exact="item.exact" :bold="item.bold" :disabled="item.disabled">
             {{ item.title.toUpperCase() }} 
         </v-breadcrumbs-item>
         <v-icon v-if="breadcrumbs.length > 1 && currentIndex(item) != -1 && !isLastItem(item)" icon="mdi-chevron-right"></v-icon>

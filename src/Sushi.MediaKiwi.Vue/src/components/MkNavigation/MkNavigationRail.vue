@@ -2,7 +2,6 @@
   import useMediaKiwiRouting from "@/composables/useMediaKiwiRouting";
   import type ISection from "@/models/section/ISection";
   import { useRouter } from "vue-router";
-  // import { useRouter } from '@/router';
 
   defineEmits(["change"]);
   const props = defineProps<{
@@ -24,8 +23,8 @@
     <v-list density="compact" open-strategy="list" nav>
       <v-list-item v-for="item in props.railItems || []" :key="item.id" :title="item.name" :value="item.name" @click.stop="onItemClick(item)">
         <template v-slot:prepend>
-          <v-icon v-if="item?.icon" :icon="item?.icon" @click.stop></v-icon>
-          <v-icon v-else icon="mdi-puzzle"></v-icon>
+          <v-icon v-if="item?.icon" :icon="item?.icon" @click.stop="onItemClick(item)"></v-icon>
+          <v-icon v-else icon="mdi-puzzle" @click.stop="onItemClick(item)"></v-icon>
         </template>
       </v-list-item>
     </v-list>
