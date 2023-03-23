@@ -5,8 +5,14 @@
   import MkTableCell from "./MkTableCell.vue";
   import { store } from "@/stores/mediakiwi/mock";
   import { TableSortingDirection } from "@/models";
-  import type { ITableSortingValue, ITableMapSortingOptions } from "@/models";
-  import { getTableSortingValue, getClasses } from "@/helpers/SortingHelper";
+  import type { ITableSortingValue } from "@/models";
+  import TableSortingHelper from "@/helpers/TableSortingHelper";
+  import MkTableCheckbox from "./MkTableCheckbox.vue";
+  import { useTableMapItemSelection } from "@/composables/useTableMapItemSelection";
+  import { watch } from "vue";
+
+  // Create instance of the table sorting helper
+  const tableSortingHelper = new TableSortingHelper();
 
   const props = defineProps<{
     tableMap: ITableMap<unknown>;
@@ -15,11 +21,13 @@
     itemScreenName?: string;
     /** */
     selectedSortOption?: ITableSortingValue;
+    selectedTableRows?: unknown[];
   }>();
 
   const emit = defineEmits<{
     (e: "click:row", value: unknown): void;
     (e: "update:selectedSortOption", value?: ITableSortingValue): void;
+    (e: "update:selectedTableRows", value?: unknown[]): void;
   }>();
 
   const router = useRouter();
@@ -60,20 +68,41 @@
     }
   }
 
-  function onSortClick(sortingOptions?: ITableMapSortingOptions) {
-    if (sortingOptions) {
-      const dataItem = getTableSortingValue(sortingOptions, props.selectedSortOption);
+  function onSortClick(tableMapItem: ITableMapItem<unknown>) {
+    if (tableMapItem?.sortingOptions) {
+      const dataItem = tableSortingHelper.parseTableSortingValue(tableMapItem, props.selectedSortOption);
       emit("update:selectedSortOption", dataItem);
     }
   }
+
+  /** Init selection composable for item selection with the table map and data  */
+  const { selectAll, selectItem, isItemSelected, isAllSelected, isIndeterminate, selectedItems } = useTableMapItemSelection({
+    tableMap: props.tableMap,
+    data: props.data,
+  });
+
+  watch(selectedItems, (value) => {
+    emit("update:selectedTableRows", value);
+  });
+
+  function clearSelectedTableRows() {
+    selectAll(false);
+  }
+
+  defineExpose({
+    clearSelectedTableRows,
+  });
 </script>
 
 <template>
   <v-table>
     <thead>
       <tr>
+        <th v-if="tableMap.showSelect">
+          <MkTableCheckbox :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:is-selected="selectAll" />
+        </th>
         <!-- render a header cell for each mapping item -->
-        <th v-for="mapItem in props.tableMap.items" @click="onSortClick(mapItem.sortingOptions)" :class="getClasses(mapItem.sortingOptions, props.selectedSortOption)">
+        <th v-for="mapItem in props.tableMap.items" :key="mapItem.id" :class="tableSortingHelper.getSortingClasses(mapItem, props.selectedSortOption)" @click="onSortClick(mapItem)">
           {{ mapItem.headerTitle }}
           <v-icon v-show="props.selectedSortOption?.sortDirection === TableSortingDirection.Asc">mdi-arrow-up</v-icon>
           <v-icon v-show="props.selectedSortOption?.sortDirection === TableSortingDirection.Desc">mdi-arrow-down</v-icon>
@@ -82,9 +111,12 @@
     </thead>
     <tbody>
       <!-- render a row for each provided data entity -->
-      <tr v-for="dataItem in props.data" @click="(e) => onRowClick(e, dataItem)" style="cursor: pointer">
+      <tr v-for="(dataItem, index) in props.data" :key="index" style="cursor: pointer" @click.stop="(e) => onRowClick(e, dataItem)">
+        <td v-if="tableMap.showSelect" @click.stop>
+          <MkTableCheckbox :is-selected="isItemSelected(dataItem)" @update:is-selected="(e) => selectItem(dataItem, e)" />
+        </td>
         <!-- render a cell for each mapping item -->
-        <MkTableCell v-for="mapItem in props.tableMap.items" :data="dataItem" :map-item="mapItem"> </MkTableCell>
+        <MkTableCell v-for="mapItem in props.tableMap.items" :key="mapItem.id" :data="dataItem" :map-item="mapItem"></MkTableCell>
       </tr>
     </tbody>
   </v-table>

@@ -1,13 +1,10 @@
 <script setup lang="ts">
-  import MkNavigationRail from "../MkNavigation/MkNavigationRail.vue";
-  import MkDrawer from "../MkDrawer/MkDrawer.vue";
+  import MkNavigationRail from "@/components/MkNavigation/MkNavigationRail.vue";
+  import MkDrawer from "@/components/MkDrawer/MkDrawer.vue";
   import { computed } from "vue";
   import { useNavigationStore } from "@/stores/navigation";
-  import { useMediakiwiStore } from "@/stores";
   import { RouterManager } from "@/router/routerManager";
   import { container } from "tsyringe";
-  import { useRouter } from "@/router";
-  import { IMediakiwiVueOptions } from "@/models";
 
   // define events
   defineEmits(["change"]);

@@ -1,3 +1,5 @@
+// TODO: Remove these comments when its been collabed with the team and only use all the index.ts files for references(import/export) to other files
+
 // import { createWebHistory, RouteLocationNormalizedLoaded, Router, RouteRecord, type RouteRecordRaw, type RouterOptions } from "vue-router";
 // import { useRouter as useVueRouter, useRoute as useVueRoute, type RouteComponent} from "vue-router";
 // import type { INavigationItem } from "../models/navigation";
@@ -64,7 +66,7 @@
 
 //   return routerOptions;
 // }
-import { RouteLocationNormalizedLoaded, Router } from "vue-router";
+import { type RouteLocationNormalizedLoaded, type Router } from "vue-router";
 import { useRouter as useVueRouter, useRoute as useVueRoute } from "vue-router";
 
 /**

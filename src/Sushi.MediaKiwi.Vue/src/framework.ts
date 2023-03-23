@@ -3,10 +3,11 @@ import pinia from "./plugins/pinia";
 import { getDefaultRouterOptions } from "@/router/getDefaultRouterOptions";
 import { createRouter } from "vue-router";
 import { PublicClientApplication } from "@azure/msal-browser";
-import { IMediakiwiVueOptions, currentOptions } from "./models/options";
-import { createVuetify, VuetifyOptions } from "vuetify";
+import { type IMediakiwiVueOptions } from "./models/options";
+import { createVuetify, type VuetifyOptions } from "vuetify";
 import { msalPlugin } from "./plugins/msalPlugin";
 import { CustomNavigationClient } from "./router/navigationClient";
+import registerBreadcrumbs from "./router/breadcrumbs";
 import { addCheckIsAuthenticated } from "./router/checkIsAuthenticated";
 import defaultVuetifyOptions from "./plugins/vuetify";
 import { identity } from "./identity";
@@ -18,7 +19,7 @@ import { addWaitOnRouterManager } from "./router/waitOnRouterManager";
 import { addCheckIsInRole } from "./router/checkIsInRole";
 
 export default {
-  install(app: App, options: IMediakiwiVueOptions) {
+  install(app: App, options: IMediakiwiVueOptions): void {
     // register options
     registerOptions(container, options);
 
@@ -67,6 +68,9 @@ export default {
 
     // adds a guard to all routes with the meta property 'isInRole' to check role
     addCheckIsInRole(router);
+
+    // registers breadcrumbs before we navigate, this calls the navigation store(register as late as possible)
+    registerBreadcrumbs(router);
   },
 };
 

@@ -11,11 +11,12 @@
     itemId: (item) => {
       return item.id;
     },
+    showSelect: true,
     items: [
-      { headerTitle: "Id", value: (dataItem) => dataItem.id, sortingOptions: { id: "id", defaultSortDirection: TableSortingDirection.Desc } },
-      { headerTitle: "Naam", value: (dataItem) => dataItem.name },
-      { headerTitle: "Land", value: (dataItem) => dataItem.countryName, sortingOptions: { id: "countryName", defaultSortDirection: TableSortingDirection.Asc } },
-      { headerTitle: "Laast gezien", value: (dataItem) => dataItem.date, sortingOptions: { id: "date", defaultSortDirection: TableSortingDirection.Desc } },
+      { id: "id", headerTitle: "Id", value: (dataItem) => dataItem.id, sortingOptions: { defaultSortDirection: TableSortingDirection.Desc } },
+      { id: "name", headerTitle: "Naam", value: (dataItem) => dataItem.name },
+      { id: "country", headerTitle: "Land", value: (dataItem) => dataItem.countryName, sortingOptions: { defaultSortDirection: TableSortingDirection.Asc } },
+      { id: "lastSeen", headerTitle: "Laast gezien", value: (dataItem) => dataItem.date?.toISOString(), sortingOptions: { defaultSortDirection: TableSortingDirection.Desc } },
     ],
   };
 
@@ -62,9 +63,11 @@
   const selectedFilters = reactive(new TableFilterValueCollection());
   // create a sorting option object with a default value
   const selectedSortOption = ref<ITableSortingValue>({
-    id: "date",
+    tableMapItemId: "lastSeen",
     sortDirection: TableSortingDirection.Desc,
   });
+  // create a ref collection of selected table rows
+  const selectedTableRows = ref<number[]>([]);
 
   // get the data, using the selected filters
   const sampleData = computed(() => {
@@ -75,9 +78,45 @@
     let result = SampleDataService.GetAll(country, selectedSortOption.value);
     return result;
   });
+
+  function download() {
+    console.log("Download", selectedTableRows.value);
+  }
+
+  function remove() {
+    console.log("Remove", selectedTableRows.value);
+  }
+
+  function move() {
+    console.log("move", selectedTableRows.value);
+  }
 </script>
 
 <template>
-  <MkTable :filter-map="filters" v-model:selected-filters="selectedFilters" v-model:selected-sort-option="selectedSortOption" :table-map="myMap" :data="sampleData" item-screen-name="SampleDataEdit">
+  <MkTable
+    v-model:selected-filters="selectedFilters"
+    v-model:selected-sort-option="selectedSortOption"
+    v-model:selected-table-rows="selectedTableRows"
+    :filter-map="filters"
+    :table-map="myMap"
+    :data="sampleData"
+    item-screen-name="SampleDataEdit"
+  >
+    <template #actions>
+      <v-btn @click="download">Download</v-btn>
+      <v-btn @click="move">move</v-btn>
+
+      <v-btn icon color="primary">
+        <v-icon>mdi-dots-vertical</v-icon>
+
+        <v-menu activator="parent">
+          <v-list>
+            <v-list-item>
+              <v-list-item-title @click="remove">Delete</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </v-btn>
+    </template>
   </MkTable>
 </template>

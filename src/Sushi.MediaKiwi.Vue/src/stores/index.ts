@@ -38,17 +38,17 @@ export const useMediakiwiStore = defineStore({
       // get instance of INavigationConnector
       const connector = container.resolve<INavigationConnector>("INavigationConnector");
       // get nav items and store them
-      var navigationItems = await connector.GetNavigationItems();
+      const navigationItems = await connector.GetNavigationItems();
       this.setNavigationItems(navigationItems);
     },
     async getScreens() {
       const connector = container.resolve<IScreenConnector>("IScreenConnector");
-      var screens = await connector.GetScreens();
+      const screens = await connector.GetScreens();
       this.setScreens(screens);
     },
     async getSections() {
       const connector = container.resolve<ISectionConnector>("ISectionConnector");
-      var sections = await connector.GetSections();
+      const sections = await connector.GetSections();
       this.setSections(sections);
     },
     setNavigationItems(payload: ListResult<INavigationItem>) {
@@ -71,7 +71,7 @@ export const useMediakiwiStore = defineStore({
     },
     getParentPath(payload: INavigationItem): string {
       // get the full path for this item by recursively going up the tree
-      let parentPath: string = "";
+      let parentPath = "";
       if (payload.parentNavigationItemId != null) {
         const parent = this.navigationItems.find((item: INavigationItem) => item.id == payload.parentNavigationItemId);
         if (parent !== undefined) {

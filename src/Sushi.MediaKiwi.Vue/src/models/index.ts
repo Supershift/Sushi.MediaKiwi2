@@ -7,3 +7,4 @@ export * from "./requests";
 export * from "./screen";
 export * from "./section";
 export * from "./table";
+export * from "./breadcrumb";
