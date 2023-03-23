@@ -6,12 +6,12 @@
   import type { ISampleData } from "./ISampleData";
   import { SampleDataService } from "./SampleDataService";
 
-
   // define a mapping between source data and desired columns in the table
   const myMap = <ITableMap<ISampleData>>{
     itemId: (item) => {
       return item.id;
     },
+    showSelect: true,
     items: [
       { id: "id", headerTitle: "Id", value: (dataItem) => dataItem.id, sortingOptions: { defaultSortDirection: TableSortingDirection.Desc } },
       { id: "name", headerTitle: "Naam", value: (dataItem) => dataItem.name },
@@ -66,6 +66,8 @@
     tableMapItemId: "lastSeen",
     sortDirection: TableSortingDirection.Desc,
   });
+  // create a ref collection of selected table rows
+  const selectedTableRows = ref<number[]>([]);
 
   // get the data, using the selected filters
   const sampleData = computed(() => {
@@ -76,9 +78,45 @@
     let result = SampleDataService.GetAll(country, selectedSortOption.value);
     return result;
   });
+
+  function download() {
+    console.log("Download", selectedTableRows.value);
+  }
+
+  function remove() {
+    console.log("Remove", selectedTableRows.value);
+  }
+
+  function move() {
+    console.log("move", selectedTableRows.value);
+  }
 </script>
 
 <template>
-  <MkTable v-model:selected-filters="selectedFilters" v-model:selected-sort-option="selectedSortOption" :filter-map="filters" :table-map="myMap" :data="sampleData" item-screen-name="SampleDataEdit">
+  <MkTable
+    v-model:selected-filters="selectedFilters"
+    v-model:selected-sort-option="selectedSortOption"
+    v-model:selected-table-rows="selectedTableRows"
+    :filter-map="filters"
+    :table-map="myMap"
+    :data="sampleData"
+    item-screen-name="SampleDataEdit"
+  >
+    <template #actions>
+      <v-btn @click="download">Download</v-btn>
+      <v-btn @click="move">move</v-btn>
+
+      <v-btn icon color="primary">
+        <v-icon>mdi-dots-vertical</v-icon>
+
+        <v-menu activator="parent">
+          <v-list>
+            <v-list-item>
+              <v-list-item-title @click="remove">Delete</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </v-btn>
+    </template>
   </MkTable>
 </template>
