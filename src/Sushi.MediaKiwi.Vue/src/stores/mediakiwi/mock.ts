@@ -52,21 +52,21 @@ const navigationItems = <INavigationItem[]>[
     id: 2,
     name: "Customers",
     screenId: 2,
-    sectionId: 1,
+    sectionId: 2,
     parentNavigationItemId: null,
   },
   {
     id: 21,
     name: "Category",
     screenId: null,
-    sectionId: 1,
+    sectionId: 2,
     parentNavigationItemId: 2,
   },
   {
     id: 211,
     name: "Deep-level",
     screenId: 3,
-    sectionId: 1,
+    sectionId: 2,
     parentNavigationItemId: 21,
   },
   {
@@ -99,7 +99,7 @@ const navigationItems = <INavigationItem[]>[
 // determines the path for a navigation item by recursively calling itself
 function getPath(navigationItem: INavigationItem): string {
   // get the full path for this item by recursively going up the tree
-  let parentPath: string = "";
+  let parentPath = "";
   if (navigationItem.parentNavigationItemId != null) {
     const parent = navigationItems.find((item) => item.id == navigationItem.parentNavigationItemId);
     if (parent !== undefined) {

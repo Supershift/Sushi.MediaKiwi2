@@ -26,7 +26,7 @@ export default function registerBreadcrumbs(router: Router): void{
                             breadcrumbs.push(new Breadcrumb(navigationPath, decodeURI(r), currentItem.path, true, false, false));
                         } else {
                             // the last crumb should be disabled and bolded and disabled, since we are currently on it
-                            breadcrumbs.push(new Breadcrumb(navigationPath, decodeURI(r), currentItem.path, true, false, false));
+                            breadcrumbs.push(new Breadcrumb(navigationPath, decodeURI(r), currentItem.path, true, false, true));
                         }
                     }
                 }
