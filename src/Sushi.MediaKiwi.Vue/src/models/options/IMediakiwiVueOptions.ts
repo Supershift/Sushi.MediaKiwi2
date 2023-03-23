@@ -4,6 +4,8 @@ import { VuetifyOptions } from "vuetify/lib/framework.mjs";
 import { IMediakiwiServiceRegistrations } from "./IMediakiwiServiceRegistrations";
 
 export interface IMediakiwiVueOptions {
+  /** Base url for the MediaKiwi API, e.g. https://portal.mydomain.com/mediakiwi/api */
+  apiBaseUrl: string;
   modules: Record<string, RouteComponent>;
   customRoutes?: RouteRecordRaw[];
   msalConfig: Configuration;
