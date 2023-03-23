@@ -27,8 +27,8 @@ const modules = import.meta.glob("./views/**/*.vue");
 
 // create mediakiwi options
 const mediaKiwiOptions: mediakiwi.IMediakiwiVueOptions = {
-  //apiBaseUrl: "https://mediakiwi-sample-api-dev.azurewebsites.net/mediakiwi/api",
-  apiBaseUrl: "https://localhost:7223/mediakiwi/api",
+  apiBaseUrl: "https://mediakiwi-sample-api-dev.azurewebsites.net/mediakiwi/api",
+  //apiBaseUrl: "https://localhost:7223/mediakiwi/api",
   modules: modules,
   msalConfig: msalConfig,
   serviceRegistrations: useFakes ? getFakes() : undefined,
