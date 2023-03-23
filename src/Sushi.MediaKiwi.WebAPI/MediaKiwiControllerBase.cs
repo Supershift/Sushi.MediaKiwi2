@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,8 +12,7 @@ namespace Sushi.MediaKiwi.WebAPI
     /// Serves as a base class for all MediaKiwi controllers, setting shared attributes.
     /// </summary>
     [ApiController]
-    [ApiExplorerSettings(GroupName = "MediaKiwi")]
-    [EnableCors("AllowAnyOrigin")]    
+    [ApiExplorerSettings(GroupName = "MediaKiwi")]    
     [Authorize(Roles = "Admin")]
     public abstract class MediaKiwiControllerBase : ControllerBase
     {

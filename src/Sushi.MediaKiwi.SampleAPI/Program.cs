@@ -13,15 +13,19 @@ var builder = WebApplication.CreateBuilder(args);
 // get config
 var config = builder.Configuration;
 var connectionString = config.GetConnectionString("portal");
+var addCORS = config.GetValue<bool>("AddCORS");
 
 // Add services to the container.
 var services = builder.Services;
 
-// todo: remove completely or only add when hosted in kestrel
-services.AddCors(options =>
+// add CORS (only useful on servers that don't add CORS headers, like kestrel)
+if (addCORS)
 {
-    options.AddPolicy("AllowAnyOrigin", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyMethod().AllowAnyHeader());
-});
+    services.AddCors(options =>
+    {
+        options.AddDefaultPolicy(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+    });
+}
 
 // add authentication, maybe move to MK?
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -89,8 +93,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// todo: remove completely or only add when hosted in kestrel
-app.UseCors();
+// add CORS (only useful on servers that don't add CORS headers, like kestrel)
+if (addCORS)
+{
+    app.UseCors();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();
