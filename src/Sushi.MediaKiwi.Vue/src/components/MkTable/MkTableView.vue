@@ -7,6 +7,9 @@
   import { TableSortingDirection } from "@/models";
   import type { ITableSortingValue } from "@/models";
   import TableSortingHelper from "@/helpers/TableSortingHelper";
+  import MkTableCheckbox from "./MkTableCheckbox.vue";
+  import { useTableMapItemSelection } from "@/composables/useTableMapItemSelection";
+  import { watch } from "vue";
 
   // Create instance of the table sorting helper
   const tableSortingHelper = new TableSortingHelper();
@@ -18,11 +21,13 @@
     itemScreenName?: string;
     /** */
     selectedSortOption?: ITableSortingValue;
+    selectedTableRows?: unknown[];
   }>();
 
   const emit = defineEmits<{
     (e: "click:row", value: unknown): void;
     (e: "update:selectedSortOption", value?: ITableSortingValue): void;
+    (e: "update:selectedTableRows", value?: unknown[]): void;
   }>();
 
   const router = useRouter();
@@ -69,12 +74,33 @@
       emit("update:selectedSortOption", dataItem);
     }
   }
+
+  /** Init selection composable for item selection with the table map and data  */
+  const { selectAll, selectItem, isItemSelected, isAllSelected, isIndeterminate, selectedItems } = useTableMapItemSelection({
+    tableMap: props.tableMap,
+    data: props.data,
+  });
+
+  watch(selectedItems, (value) => {
+    emit("update:selectedTableRows", value);
+  });
+
+  function clearSelectedTableRows() {
+    selectAll(false);
+  }
+
+  defineExpose({
+    clearSelectedTableRows,
+  });
 </script>
 
 <template>
   <v-table>
     <thead>
       <tr>
+        <th v-if="tableMap.showSelect">
+          <MkTableCheckbox :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:is-selected="selectAll" />
+        </th>
         <!-- render a header cell for each mapping item -->
         <th v-for="mapItem in props.tableMap.items" :key="mapItem.id" :class="tableSortingHelper.getSortingClasses(mapItem, props.selectedSortOption)" @click="onSortClick(mapItem)">
           {{ mapItem.headerTitle }}
@@ -85,9 +111,12 @@
     </thead>
     <tbody>
       <!-- render a row for each provided data entity -->
-      <tr v-for="(dataItem, index) in props.data" :key="index" style="cursor: pointer" @click="(e) => onRowClick(e, dataItem)">
+      <tr v-for="(dataItem, index) in props.data" :key="index" style="cursor: pointer" @click.stop="(e) => onRowClick(e, dataItem)">
+        <td v-if="tableMap.showSelect" @click.stop>
+          <MkTableCheckbox :is-selected="isItemSelected(dataItem)" @update:is-selected="(e) => selectItem(dataItem, e)" />
+        </td>
         <!-- render a cell for each mapping item -->
-        <MkTableCell v-for="mapItem in props.tableMap.items" :key="mapItem.id" :data="dataItem" :map-item="mapItem"> </MkTableCell>
+        <MkTableCell v-for="mapItem in props.tableMap.items" :key="mapItem.id" :data="dataItem" :map-item="mapItem"></MkTableCell>
       </tr>
     </tbody>
   </v-table>
