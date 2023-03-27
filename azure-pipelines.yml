@@ -43,5 +43,5 @@ steps:
   inputs:
     command: 'custom'
     workingDir: 'src/Sushi.MediaKiwi.SampleWeb/ClientApp'
-    customCommand: 'vite build'
+    customCommand: 'build-only'
   displayName: "vite buid on ClientApp"
