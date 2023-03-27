@@ -36,9 +36,12 @@ steps:
   inputs:
     command: 'install'
     workingDir: 'src/Sushi.MediaKiwi.SampleWeb/ClientApp'
+  displayName: "npm install on ClientApp"
+
     
 - task: Npm@1
   inputs:
     command: 'custom'
     workingDir: 'src/Sushi.MediaKiwi.SampleWeb/ClientApp'
     customCommand: 'vite build'
+  displayName: "vite buid on ClientApp"
