@@ -25,3 +25,20 @@ steps:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
+
+- task: NodeTool@0
+  inputs:
+    versionSource: 'spec'
+    versionSpec: '18.x'
+    checkLatest: true
+  
+- task: Npm@1
+  inputs:
+    command: 'install'
+    workingDir: 'src/Sushi.MediaKiwi.SampleWeb/ClientApp'
+    
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    workingDir: 'src/Sushi.MediaKiwi.SampleWeb/ClientApp'
+    customCommand: 'vite build'
