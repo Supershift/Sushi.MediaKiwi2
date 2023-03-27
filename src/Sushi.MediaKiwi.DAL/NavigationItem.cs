@@ -15,8 +15,7 @@ namespace Sushi.MediaKiwi.DAL
             {
                 Table("mk_NavigationItems");
                 Id(x => x.Id, "NavigationItemID");
-                Map(x => x.Name, "Name");
-                Map(x => x.TypeID, "NavigationItemTypeID");
+                Map(x => x.Name, "Name");                
                 Map(x => x.SectionId, "SectionID");
                 Map(x => x.ParentNavigationItemId, "ParentNavigationItemID");
                 Map(x => x.ScreenId, "ScreenID");
@@ -26,8 +25,7 @@ namespace Sushi.MediaKiwi.DAL
         }
         
         public int Id { get; set; }
-        public string Name { get; set; }
-        public int TypeID { get; set; }
+        public string Name { get; set; }        
         public int SectionId { get; set; }  
         public int? ParentNavigationItemId { get; set; }
         public int? ScreenId { get; set; }

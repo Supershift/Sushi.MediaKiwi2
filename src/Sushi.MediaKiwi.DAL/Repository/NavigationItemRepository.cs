@@ -34,10 +34,12 @@ namespace Sushi.MediaKiwi.DAL.Repository
             {
                 query.Add(x => x.SectionId, sectionID.Value);
             }
-
+            
             query.AddPaging(pagingValues);
 
             var result = await _connector.GetAllAsync(query);
+
+            
 
             return result;
         }

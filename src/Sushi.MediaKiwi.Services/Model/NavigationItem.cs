@@ -18,9 +18,6 @@ namespace Sushi.MediaKiwi.Services.Model
         public string Name { get; set; }
         
         [Required]
-        public int TypeID { get; set; }
-        
-        [Required]
         public int SectionId { get; set; }
         
         public int? ParentNavigationItemId { get; set; }
