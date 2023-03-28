@@ -26,14 +26,14 @@ steps:
       ArtifactName: "drop"
       publishLocation: "Container"
 
-- task: CopyFiles@2
-  inputs:
-    SourceFolder: 'src/Sushi.MediaKiwi.SampleWeb/ClientApp/dist'
-    Contents: '**'
-    TargetFolder: '_sample-web'
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: 'src/Sushi.MediaKiwi.SampleWeb/ClientApp/dist'
+      Contents: '**'
+      TargetFolder: '_sample-web'
 
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: '_sample-web'
-    artifact: 'SampleWeb'
-    publishLocation: 'pipeline'
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: '_sample-web'
+      artifact: 'SampleWeb'
+      publishLocation: 'pipeline'
