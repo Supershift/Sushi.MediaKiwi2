@@ -15,6 +15,7 @@ namespace Sushi.MediaKiwi.DAL.UnitTests
             serviceProvider.GetRequiredService<ISectionRepository>();
             serviceProvider.GetRequiredService<IScreenRepository>();
             serviceProvider.GetRequiredService<INavigationItemRepository>();
+            serviceProvider.GetRequiredService<IScreenRoleRepository>();
         }
     }
 }
