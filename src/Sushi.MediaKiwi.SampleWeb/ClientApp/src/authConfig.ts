@@ -5,7 +5,7 @@ export const msalConfig: Configuration = {
   auth: {
     clientId: "7cd2eddb-b79e-4e04-ac24-0011821ccb8e",
     authority: "https://login.microsoftonline.com/95c90a04-5ea8-465e-ac3e-1aae3b29b0c9",
-    redirectUri: "/signIn", // Must be registered as a SPA redirectURI on your app registration
+    redirectUri: "/loginRedirect", // Must be registered as a SPA redirectURI on your app registration
     postLogoutRedirectUri: "/signIn", // Must be registered as a SPA redirectURI on your app registration,
     navigateToLoginRequestUrl: true,
   },

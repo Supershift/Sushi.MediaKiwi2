@@ -1,5 +1,6 @@
 import { App, reactive } from "vue";
-import { EventMessage, EventMessageUtils, EventType, InteractionStatus, PublicClientApplication } from "@azure/msal-browser";
+import { AccountInfo, EventMessage, EventMessageUtils, EventType, InteractionStatus, PublicClientApplication } from "@azure/msal-browser";
+import { identity } from "@/identity";
 
 export const msalPlugin = {
   install: (app: App, msalInstance: PublicClientApplication) => {
@@ -13,6 +14,7 @@ export const msalPlugin = {
     });
 
     app.config.globalProperties.$msal = state;
+    identity.state = state;
 
     msalInstance.addEventCallback((message: EventMessage) => {
       switch (message.eventType) {

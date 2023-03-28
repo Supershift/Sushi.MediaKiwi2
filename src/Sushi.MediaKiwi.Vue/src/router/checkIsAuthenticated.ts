@@ -6,7 +6,7 @@ import { isAuthenticated } from "../identity/isAuthenticated";
 /** Adds a guard before each route transition to check if the user is authenticated. */
 export function addCheckIsAuthenticated(router: Router): void {
   router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormalized) => {
-    if (to.meta.requiresAuth) {
+    if (to.meta.requiresAuth || to.matched.length == 0) {
       const request = {
         scopes: identity.scopes,
         redirectStartPage: to.fullPath,
