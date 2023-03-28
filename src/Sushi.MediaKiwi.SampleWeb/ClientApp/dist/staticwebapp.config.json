@@ -4,6 +4,6 @@
   },
   "navigationFallback": {
     "rewrite": "index.html",
-    "exclude": ["/images/*.{png,jpg,gif,ico}", "/*.{css,scss,js}"]
+    "exclude": ["/images/*.{png,jpg,gif,ico}", "/*.{css,scss,js}", "/loginRedirect", "/logoutRedirect"]
   }
 }
