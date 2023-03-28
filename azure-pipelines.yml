@@ -38,10 +38,11 @@ steps:
     workingDir: 'src/Sushi.MediaKiwi.SampleWeb/ClientApp'
   displayName: "npm install on ClientApp"
 
+
     
 - task: Npm@1
   inputs:
     command: 'custom'
     workingDir: 'src/Sushi.MediaKiwi.SampleWeb/ClientApp'
-    customCommand: 'npm run build-only'
+    customCommand: 'run build-only'
   displayName: "vite buid on ClientApp"
