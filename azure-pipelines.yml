@@ -4,45 +4,24 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
-- main
+  - main
 
 pool:
   vmImage: windows-latest
 
 variables:
-  buildConfiguration: 'Release'
+  buildConfiguration: "Release"
 
 steps:
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'publish'
-    publishWebProjects: false
-    arguments: 'src/Sushi.MediaKiwi.SampleAPI/Sushi.MediaKiwi.SampleAPI.csproj --configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    zipAfterPublish: true
-    
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: "publish"
+      publishWebProjects: false
+      arguments: "src/Sushi.MediaKiwi.SampleAPI/Sushi.MediaKiwi.SampleAPI.csproj --configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)"
+      zipAfterPublish: true
 
-- task: NodeTool@0
-  inputs:
-    versionSource: 'spec'
-    versionSpec: '18.x'
-    checkLatest: true
-  
-- task: Npm@1
-  inputs:
-    command: 'install'
-    workingDir: 'src/Sushi.MediaKiwi.SampleWeb/ClientApp'
-  displayName: "npm install on ClientApp"
-
-
-    
-- task: Npm@1
-  inputs:
-    command: 'custom'
-    workingDir: 'src/Sushi.MediaKiwi.SampleWeb/ClientApp'
-    customCommand: 'run build-only'
-  displayName: "vite buid on ClientApp"
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+      ArtifactName: "drop"
+      publishLocation: "Container"

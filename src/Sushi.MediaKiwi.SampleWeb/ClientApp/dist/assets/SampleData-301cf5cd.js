@@ -1,0 +1,1 @@
+import{_ as a}from"./SampleTable3.vue_vue_type_script_setup_true_lang-84ce5c19.js";import{d as e,o as t,l as o,w as r,a as s,V as m}from"./index-e12d22a0.js";import"./VMenu-8f8dd138.js";import"./VBtn-6357aad2.js";const d=e({__name:"SampleData",setup(_){return(c,p)=>(t(),o(m,{class:"ma-5"},{default:r(()=>[s(a)]),_:1}))}});export{d as default};
