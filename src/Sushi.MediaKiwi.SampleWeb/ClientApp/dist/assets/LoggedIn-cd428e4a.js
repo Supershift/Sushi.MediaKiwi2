@@ -1,0 +1,1 @@
+import{_ as e}from"./_plugin-vue_export-helper-c27b6911.js";import{o,l as r,w as t,V as a,b as s}from"./index-3dc64a7f.js";const c={},n=s("p",null,"If you're here, you're logged in.",-1);function _(l,d){return o(),r(a,null,{default:t(()=>[n]),_:1})}const i=e(c,[["render",_]]);export{i as default};
