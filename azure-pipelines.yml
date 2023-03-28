@@ -31,9 +31,21 @@ steps:
       SourceFolder: 'src/Sushi.MediaKiwi.SampleWeb/ClientApp/dist'
       Contents: '**'
       TargetFolder: '_sample-web'
+  
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: 'src/Sushi.MediaKiwi.SampleWeb/Api'
+      Contents: '**'
+      TargetFolder: '_sample-web-api'
 
   - task: PublishPipelineArtifact@1
     inputs:
       targetPath: '_sample-web'
       artifact: 'SampleWeb'
+      publishLocation: 'pipeline'
+  
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: '_sample-web-api'
+      artifact: 'SampleWebApi'
       publishLocation: 'pipeline'
