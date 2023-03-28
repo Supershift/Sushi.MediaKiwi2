@@ -1,6 +1,11 @@
 <script setup lang="ts">
   import { MkNavigation, MkScreen, MkNavigationIcon, MkSignOutButton, MkThemeToggle } from "@supershift/mediakiwi-vue";
-  console.log("import.meta.env.MEDIAKIWI_TESTVARIABLE", import.meta.env.MEDIAKIWI_TESTVARIABLE);
+  console.log("import.meta.env:", import.meta.env);
+  if (typeof process !== "undefined") {
+    console.log("process.env:", process.env);
+  }
+
+  //   console.log("import.meta.env.MEDIAKIWI_TESTVARIABLE", import.meta.env.MEDIAKIWI_TESTVARIABLE);
 </script>
 
 <template>
