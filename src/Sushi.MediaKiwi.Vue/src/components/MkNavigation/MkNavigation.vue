@@ -15,15 +15,15 @@
   // initialize router manager
   await routerManager.Initialize();
 
-  // use dependencies  
+  // use dependencies
   const navigationStore = useNavigationStore();
-    
 
   // populate the navigationstore when we are done fetching items and this component loads
   navigationStore.getNavigation();
 
-  const railItems = computed(() => navigationStore.sectionList ?? []);
-  const listItems = computed(() => navigationStore.navigationList ?? []);
+  // use ref from store
+  const listItems = computed(() => navigationStore.navigationList);
+  const railItems = computed(() => navigationStore.sectionList);
 </script>
 
 <template>

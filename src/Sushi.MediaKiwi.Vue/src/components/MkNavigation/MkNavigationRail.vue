@@ -13,7 +13,7 @@
 
   function onItemClick(item: ISection) {
     if (item) {
-      navigateToScreen(router, item.id, true);
+      navigateToScreen(router, item.name, true);
     }
     return false;
   }
