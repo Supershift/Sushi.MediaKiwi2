@@ -13,7 +13,6 @@ import { createTestingPinia } from "@pinia/testing";
 
 // mock libraries
 vi.mock("../routeGenerator");
-//vi.mock("../../stores/index");
 
 // default stubs
 const modules: Record<string, RouteComponent> = {
@@ -23,6 +22,7 @@ const modules: Record<string, RouteComponent> = {
 const navigationItems: INavigationItem[] = [<INavigationItem>{ id: 1, screenId: 1, path: "/orders" }, <INavigationItem>{ id: 2, screenId: 2, path: "/customers" }];
 const screens: IScreen[] = [<IScreen>{ id: 1, sectionId: 1, componentKey: "a", name: "screen a" }, <IScreen>{ id: 2, sectionId: 1, componentKey: "b", name: "screen b" }];
 const options: IMediakiwiVueOptions = {
+  apiBaseUrl: "",
   modules: modules,
   msalConfig: <Configuration>{},
 };

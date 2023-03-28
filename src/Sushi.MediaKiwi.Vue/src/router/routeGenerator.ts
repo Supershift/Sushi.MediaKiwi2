@@ -28,9 +28,10 @@ export class RouteGenerator {
               meta: {
                 isFromServer: true,
                 requiresAuth: true,
-                requiresRole: ["Admin"],
+                requiresRole: screen.roles,
               },
             };
+
             result.push(route);
           } else {
             // no module found, give a warning
