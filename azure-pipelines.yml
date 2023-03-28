@@ -43,5 +43,5 @@ steps:
   inputs:
     command: 'custom'
     workingDir: 'src/Sushi.MediaKiwi.SampleWeb/ClientApp'
-    customCommand: 'build-only'
+    customCommand: 'npm run build-only'
   displayName: "vite buid on ClientApp"
