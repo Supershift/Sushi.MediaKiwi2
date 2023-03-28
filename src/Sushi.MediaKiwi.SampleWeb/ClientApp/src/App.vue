@@ -1,7 +1,13 @@
 <script setup lang="ts">
   import { MkNavigation, MkScreen, MkNavigationIcon, MkSignOutButton, MkThemeToggle } from "@supershift/mediakiwi-vue";
-  console.log("VITE_MEDIAKIWI_TESTVARIABLE:", import.meta.env.VITE_MEDIAKIWI_TESTVARIABLE);
-  console.log("VITE_MEDIAKIWI_TESTVARIABLE_2:", import.meta.env.VITE_MEDIAKIWI_TESTVARIABLE_2);
+  import { fetchSettings } from "./services/settings";
+
+  async function getSettings() {
+    const settings = await fetchSettings();
+    console.log("settings:", settings);
+  }
+
+  getSettings();
 </script>
 
 <template>

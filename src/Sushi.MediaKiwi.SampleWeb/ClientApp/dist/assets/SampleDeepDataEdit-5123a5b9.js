@@ -1,0 +1,1 @@
+import{d as e,b6 as t,o as s,l as o,w as r,v as d,ba as n,z as p,V as c,b as i}from"./index-ff311398.js";const l=i("h1",null,"Sample deep data edit",-1),h=e({__name:"SampleDeepDataEdit",setup(_){const a=t();return(m,u)=>(s(),o(c,{class:"ma-5"},{default:r(()=>[l,d(" My id is: "+n(p(a).params.deepDataId),1)]),_:1}))}});export{h as default};
