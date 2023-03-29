@@ -30,13 +30,14 @@ steps:
     inputs:
       command: 'ci'
       workingDir: 'src/Sushi.MediaKiwi.SampleWeb/ClientApp'
-    displayName: "npm install on SampleWeb/ClientApp"
+    displayName: "npm install on SampleWeb"
 
   - task: Npm@1
     inputs:
-      command: 'ci'
-      workingDir: 'src/Sushi.MediaKiwi.SampleWeb/Function'
-    displayName: "npm install on SampleWeb/Function"
+      command: 'custom'
+      workingDir: 'src/Sushi.MediaKiwi.SampleWeb/ClientApp'
+      customCommand: 'run build'
+    displayName: "npm build on SampleWeb"
 
   - task: CopyFiles@2
     inputs:
