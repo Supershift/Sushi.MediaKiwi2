@@ -71,5 +71,5 @@ steps:
   - task: PublishPipelineArtifact@1
     inputs:
       targetPath: "SampleWeb"
-      artifact: "drop"
+      artifact: "dropSampleWeb"
       publishLocation: "pipeline"
