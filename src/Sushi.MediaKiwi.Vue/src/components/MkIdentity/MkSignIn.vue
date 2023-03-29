@@ -3,12 +3,12 @@
   import { identity } from "@/identity";
   import { useIsAuthenticated } from "@/composables/useIsAuthenticated";
 
-  const { instance, accounts } = useMsal();
+  const { instance } = useMsal();
 
   const useRedirect = true;
 
   function login() {
-    if (useRedirect) instance.loginRedirect({ scopes: identity.scopes });
+    if (useRedirect) instance.loginRedirect({ scopes: identity.scopes, redirectStartPage: "/home" });
     else instance.loginPopup({ scopes: identity.scopes });
   }
 

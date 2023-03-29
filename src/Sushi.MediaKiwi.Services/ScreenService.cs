@@ -16,6 +16,7 @@ namespace Sushi.MediaKiwi.Services
     public class ScreenService
     {
         private readonly IScreenRepository _screenRepository;
+        private readonly IScreenRoleRepository _screenRoleRepository;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -25,9 +26,11 @@ namespace Sushi.MediaKiwi.Services
         /// <param name="mapper"></param>
         public ScreenService(
             IScreenRepository screenRepository,
+            IScreenRoleRepository screenRoleRepository,
             IMapper mapper)
         {
             _screenRepository = screenRepository;
+            _screenRoleRepository = screenRoleRepository;
             _mapper = mapper;
         }
 
@@ -37,14 +40,21 @@ namespace Sushi.MediaKiwi.Services
         /// <returns></returns>
         public async Task<Result<ListResult<Screen>>> GetAllAsync(int? sectionID, PagingValues pagingValues)
         {
-            // get sections from datastore
+            // get items from datastore
             var screens = await _screenRepository.GetAllAsync(sectionID, pagingValues);
+            var screensRoles = await _screenRoleRepository.GetAllAsync();
 
             // create result object
             var result = new ListResult<Screen>(screens.TotalNumberOfRows, screens.TotalNumberOfPages);
 
             // map to result
             _mapper.Map(screens, result.Result);
+
+            // add roles
+            foreach(var screen in result.Result)
+            {
+                screen.Roles = screensRoles.Where(x => x.ScreenId == screen.Id).Select(x=>x.Role).ToList();
+            }
 
             return new Result<ListResult<Screen>>(result);
         }

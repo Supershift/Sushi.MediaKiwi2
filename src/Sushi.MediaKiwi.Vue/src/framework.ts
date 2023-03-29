@@ -60,11 +60,11 @@ export default {
     const navigationClient = new CustomNavigationClient(router);
     identity.msalInstance.setNavigationClient(navigationClient);
 
-    // adds a guard to all routes to initalize routes from API before completing routing
-    addWaitOnRouterManager(router);
-
     // adds a guard to all routes with the meta property 'requireAuth' set to true
     addCheckIsAuthenticated(router);
+
+    // adds a guard to all routes to initalize routes from API before completing routing
+    addWaitOnRouterManager(router);
 
     // adds a guard to all routes with the meta property 'isInRole' to check role
     addCheckIsInRole(router);

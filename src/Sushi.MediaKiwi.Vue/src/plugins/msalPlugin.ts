@@ -1,43 +1,20 @@
 import { App, reactive } from "vue";
-import { EventMessage, EventMessageUtils, EventType, InteractionStatus, PublicClientApplication, AccountInfo } from "@azure/msal-browser";
-
-type AccountIdentifiers = Partial<Pick<AccountInfo, "homeAccountId" | "localAccountId" | "username">>;
-
-/**
- * Helper function to determine whether 2 arrays are equal
- * Used to avoid unnecessary state updates
- * @param arrayA
- * @param arrayB
- */
-function accountArraysAreEqual(arrayA: Array<AccountIdentifiers>, arrayB: Array<AccountIdentifiers>): boolean {
-  if (arrayA.length !== arrayB.length) {
-    return false;
-  }
-
-  const comparisonArray = [...arrayB];
-
-  return arrayA.every((elementA) => {
-    const elementB = comparisonArray.shift();
-    if (!elementA || !elementB) {
-      return false;
-    }
-
-    return elementA.homeAccountId === elementB.homeAccountId && elementA.localAccountId === elementB.localAccountId && elementA.username === elementB.username;
-  });
-}
+import { AccountInfo, EventMessage, EventMessageUtils, EventType, InteractionStatus, PublicClientApplication } from "@azure/msal-browser";
+import { identity } from "@/identity";
 
 export const msalPlugin = {
   install: (app: App, msalInstance: PublicClientApplication) => {
     const inProgress = InteractionStatus.Startup;
-    const accounts = msalInstance.getAllAccounts();
+    const account = msalInstance.getActiveAccount();
 
     const state = reactive({
       instance: msalInstance,
       inProgress: inProgress,
-      accounts: accounts,
+      account: account,
     });
 
     app.config.globalProperties.$msal = state;
+    identity.state = state;
 
     msalInstance.addEventCallback((message: EventMessage) => {
       switch (message.eventType) {
@@ -55,12 +32,11 @@ export const msalPlugin = {
           // set active account
           if (currentAccounts.length) {
             msalInstance.setActiveAccount(currentAccounts[0]);
+            state.account = currentAccounts[0];
           } else {
             // no account, set active account to 'null'
             msalInstance.setActiveAccount(null);
-          }
-          if (!accountArraysAreEqual(currentAccounts, state.accounts)) {
-            state.accounts = currentAccounts;
+            state.account = null;
           }
           break;
       }

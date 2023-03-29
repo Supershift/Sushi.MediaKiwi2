@@ -3,7 +3,7 @@ import { getCurrentInstance, Ref, toRefs } from "vue";
 
 export type MsalContext = {
   instance: PublicClientApplication;
-  accounts: Ref<AccountInfo[]>;
+  account: Ref<AccountInfo>;
   inProgress: Ref<InteractionStatus>;
 };
 
@@ -12,9 +12,9 @@ export function useMsal(): MsalContext {
   if (!internalInstance) {
     throw "useMsal() cannot be called outside the setup() function of a component";
   }
-  const { instance, accounts, inProgress } = toRefs(internalInstance.appContext.config.globalProperties.$msal);
+  const { instance, account, inProgress } = toRefs(internalInstance.appContext.config.globalProperties.$msal);
 
-  if (!instance || !accounts || !inProgress) {
+  if (!instance || !inProgress) {
     throw "Please install the msalPlugin";
   }
 
@@ -27,7 +27,7 @@ export function useMsal(): MsalContext {
 
   return {
     instance: instance.value,
-    accounts,
+    account,
     inProgress,
   };
 }

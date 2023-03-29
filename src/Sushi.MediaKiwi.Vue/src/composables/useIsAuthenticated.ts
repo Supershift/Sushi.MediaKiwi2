@@ -2,11 +2,11 @@ import { Ref, ref, watch } from "vue";
 import { useMsal } from "./useMsal";
 
 export function useIsAuthenticated(): Ref<boolean> {
-  const { accounts } = useMsal();
-  const isAuthenticated = ref(accounts.value.length > 0);
+  const { account } = useMsal();
+  const isAuthenticated = ref(account.value !== null);
 
-  watch(accounts, () => {
-    isAuthenticated.value = accounts.value.length > 0;
+  watch(account, () => {
+    isAuthenticated.value = account.value !== null;
   });
 
   return isAuthenticated;

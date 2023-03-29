@@ -37,5 +37,11 @@ namespace Sushi.MediaKiwi.Services.Model
         /// </summary>
         [SwaggerSchema(ReadOnly = true)]
         public int SectionId { get; set; }
+
+        /// <summary>
+        /// If not empty, access to this screen is restricted to these roles.
+        /// </summary>
+        [SwaggerSchema(ReadOnly = true)]
+        public List<string> Roles { get; set; } = new List<string>();
     }
 }
