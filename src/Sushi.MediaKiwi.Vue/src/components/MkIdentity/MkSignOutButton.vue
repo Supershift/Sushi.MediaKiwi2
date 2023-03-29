@@ -2,11 +2,6 @@
   import { identity } from "@/identity";
   import { useIsAuthenticated } from "@/composables/useIsAuthenticated";
 
-  const logoutPopup = () => {
-    identity.msalInstance.logoutPopup({
-      mainWindowRedirectUri: "/SignIn",
-    });
-  };
   const logoutRedirect = () => {
     identity.msalInstance.logoutRedirect();
   };

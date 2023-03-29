@@ -24,7 +24,8 @@ namespace Sushi.MediaKiwi.DAL.Repository
         /// <inheritdoc/>
         public async Task<QueryListResult<Section>> GetAllAsync()
         {
-            var query = _connector.CreateQuery();            
+            var query = _connector.CreateQuery();
+            query.AddOrder(x => x.SortOrder);
             var result = await _connector.GetAllAsync(query);
             return result;
         }
