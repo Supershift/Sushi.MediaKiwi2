@@ -29,6 +29,20 @@ steps:
   - task: Npm@1
     inputs:
       command: 'ci'
+      workingDir: 'src/Sushi.MediaKiwi.Vue'
+    displayName: "npm install on MediaKiwi.Vue"
+
+  - task: Npm@1
+    inputs:
+      command: 'custom'
+      workingDir: 'src/Sushi.MediaKiwi.Vue'
+      customCommand: 'run build:prd'
+    displayName: "npm build on SampleWeb"
+    continueOnError: true
+
+  - task: Npm@1
+    inputs:
+      command: 'ci'
       workingDir: 'src/Sushi.MediaKiwi.SampleWeb/ClientApp'
     displayName: "npm install on SampleWeb"
 
