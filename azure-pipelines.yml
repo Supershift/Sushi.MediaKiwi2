@@ -22,44 +22,44 @@ steps:
 
   - task: NodeTool@0
     inputs:
-      versionSource: 'spec'
-      versionSpec: '18.x'
+      versionSource: "spec"
+      versionSpec: "18.x"
       checkLatest: true
 
   - task: Npm@1
     inputs:
-      command: 'ci'
-      workingDir: 'src/Sushi.MediaKiwi.Vue'
+      command: "ci"
+      workingDir: "src/Sushi.MediaKiwi.Vue"
     displayName: "npm install on MediaKiwi.Vue"
 
   - task: Npm@1
     inputs:
-      command: 'custom'
-      workingDir: 'src/Sushi.MediaKiwi.Vue'
-      customCommand: 'run build:prd'
-    displayName: "npm build on SampleWeb"
+      command: "custom"
+      workingDir: "src/Sushi.MediaKiwi.Vue"
+      customCommand: "run build:prd"
+    displayName: "npm build on MediaKiwi.Vue"
     continueOnError: true
 
   - task: Npm@1
     inputs:
-      command: 'ci'
-      workingDir: 'src/Sushi.MediaKiwi.SampleWeb/ClientApp'
+      command: "ci"
+      workingDir: "src/Sushi.MediaKiwi.SampleWeb/ClientApp"
     displayName: "npm install on SampleWeb"
 
   - task: Npm@1
     inputs:
-      command: 'custom'
-      workingDir: 'src/Sushi.MediaKiwi.SampleWeb/ClientApp'
-      customCommand: 'run build'
+      command: "custom"
+      workingDir: "src/Sushi.MediaKiwi.SampleWeb/ClientApp"
+      customCommand: "run build"
     displayName: "npm build on SampleWeb"
 
   - task: CopyFiles@2
     inputs:
-      SourceFolder: 'src/Sushi.MediaKiwi.SampleWeb'
+      SourceFolder: "src/Sushi.MediaKiwi.SampleWeb"
       Contents: |
         ClientApp/dist/**
         Function/**
-      TargetFolder: 'SampleWeb'
+      TargetFolder: "SampleWeb"
     displayName: "Copy ClientApp/dist and Function to SampleWeb"
 
   - task: PublishBuildArtifacts@1
@@ -67,9 +67,9 @@ steps:
       PathtoPublish: "$(Build.ArtifactStagingDirectory)"
       ArtifactName: "drop"
       publishLocation: "Container"
-  
+
   - task: PublishPipelineArtifact@1
     inputs:
-      targetPath: 'SampleWeb'
-      artifact: 'drop'
-      publishLocation: 'pipeline' 
+      targetPath: "SampleWeb"
+      artifact: "drop"
+      publishLocation: "pipeline"
