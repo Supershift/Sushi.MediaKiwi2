@@ -1,20 +1,20 @@
 import { injectable } from "tsyringe";
 import { RouteComponent, RouteRecordRaw } from "vue-router";
-import { INavigationItem, IScreen } from "@/models";
+import { NavigationItem, View } from "@/models";
 
 @injectable()
 export class RouteGenerator {
   constructor() {}
 
   /** Generates routes based on navigation items and modules */
-  public generateRoutes(modules: Record<string, RouteComponent>, navigationItems: INavigationItem[], screens: IScreen[]): RouteRecordRaw[] {
+  public generateRoutes(modules: Record<string, RouteComponent>, navigationItems: NavigationItem[], screens: View[]): RouteRecordRaw[] {
     const result: RouteRecordRaw[] = [];
 
     // add new routes for navigation items
-    navigationItems.forEach((navigationItem: INavigationItem) => {
+    navigationItems.forEach((navigationItem: NavigationItem) => {
       // if the navigation item points to a screen, get the screen
-      if (navigationItem.screenId != null && navigationItem.screenId !== undefined) {
-        const screen = screens.find((x: IScreen) => x.id == navigationItem.screenId);
+      if (navigationItem.viewId != null && navigationItem.viewId !== undefined) {
+        const screen = screens.find((x: View) => x.id == navigationItem.viewId);
 
         if (screen != null && screen !== undefined && modules) {
           // find the module referenced by the screen

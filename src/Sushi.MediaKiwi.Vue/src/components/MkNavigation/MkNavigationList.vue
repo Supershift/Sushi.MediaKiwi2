@@ -1,13 +1,13 @@
 <script setup lang="ts">
   import { getNavigationItemChildren, getNavigationItemForRoute } from "@/helpers";
-  import type { INavigationItem } from "@/models/navigation/INavigationItem";
+  import type { NavigationItem } from "@/models/api/NavigationItem";
   import { computed } from "vue";
   import { useRoute } from "@/router/index";
   import MkNavigationItem from "@/components/MkNavigation/MkNavigationItem.vue";
   import { useNavigationStore } from "@/stores/navigation";
 
   const props = defineProps<{
-    navigationItems: Array<INavigationItem>;
+    navigationItems: Array<NavigationItem>;
   }>();
 
   const currentNavigationItem = computed(() => getNavigationItemForRoute(useRoute(), props.navigationItems));

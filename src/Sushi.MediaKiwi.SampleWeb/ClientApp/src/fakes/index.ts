@@ -1,3 +1,3 @@
 export { NavigationConnector } from "./NavigationConnector";
-export { ScreenConnector } from "./ScreenConnector";
+export { ViewConnector } from "./ViewConnector";
 export { SectionConnector } from "./SectionConnector";

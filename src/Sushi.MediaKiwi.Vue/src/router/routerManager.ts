@@ -3,7 +3,7 @@ import { useMediakiwiStore } from "../stores/index";
 import { type IMediakiwiVueOptions } from "../models/options/IMediakiwiVueOptions";
 import type { RouteComponent } from "vue-router";
 import { type Router } from "vue-router";
-import { type INavigationItem, type IScreen } from "@/models";
+import { type NavigationItem, type View } from "@/models";
 import type { RouteGenerator } from "./routeGenerator";
 
 export enum RouterManagerState {
@@ -42,7 +42,7 @@ export class RouterManager {
   }
 
   /** Updates the dynamic routes based on navigation items and modules */
-  public updateRoutes(modules: Record<string, RouteComponent>, navigationItems: INavigationItem[], screens: IScreen[]): void {
+  public updateRoutes(modules: Record<string, RouteComponent>, navigationItems: NavigationItem[], screens: View[]): void {
     // remove existing dynamic routes
     const existingRoutes = this.router.getRoutes();
     existingRoutes.forEach((route) => {
@@ -64,7 +64,7 @@ export class RouterManager {
       await store.init();
 
       // apply loaded data to router
-      this.updateRoutes(this.options.modules, store.navigationItems, store.screens);
+      this.updateRoutes(this.options.modules, store.navigationItems, store.views);
 
       this._isInitialized = RouterManagerState.Initialized;
     } catch (error) {

@@ -1,4 +1,4 @@
-import type { ISection } from "@/models";
+import type { Section } from "@/models";
 import { injectable, inject } from "tsyringe";
 import type { IMediakiwiAxiosInstance } from "@/services/interceptors/MediakiwiAxiosInstance";
 import type ListResult from "@/models/api/ListResult";
@@ -9,7 +9,7 @@ export class SectionConnector implements ISectionConnector {
   constructor(@inject("IMediakiwiAxiosInstance") private axios: IMediakiwiAxiosInstance) {}
 
   async GetSections() {
-    const response = await this.axios.get<ListResult<ISection>>("/sections");
+    const response = await this.axios.get<ListResult<Section>>("/sections");
     return response.data;
   }
 }

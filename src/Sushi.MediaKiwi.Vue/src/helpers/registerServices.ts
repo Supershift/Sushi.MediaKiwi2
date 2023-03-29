@@ -1,5 +1,5 @@
 import { IMediakiwiServiceRegistrations } from "@/models/options/";
-import { NavigationConnector, ScreenConnector, SectionConnector } from "@/services";
+import { NavigationConnector, ViewConnector, SectionConnector } from "@/services";
 import { DependencyContainer, Lifecycle } from "tsyringe";
 import mediaKiwiAxiosInstance from "@/services/interceptors/MediakiwiAxiosInstance";
 
@@ -18,6 +18,6 @@ export function registerServices(container: DependencyContainer, registations?: 
 
   // register connectors
   container.register("INavigationConnector", registations?.navigationConnector ? registations.navigationConnector : NavigationConnector);
-  container.register("IScreenConnector", registations?.screenConnector ? registations.screenConnector : ScreenConnector);
+  container.register("IViewConnector", registations?.viewConnector ? registations.viewConnector : ViewConnector);
   container.register("ISectionConnector", registations?.sectionConnector ? registations.sectionConnector : SectionConnector);
 }

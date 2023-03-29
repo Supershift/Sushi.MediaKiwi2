@@ -41,11 +41,9 @@ export const useNavigationStore = defineStore({
     },
     setSectionNavigationItems(name: string) {
       const currentSectionId = useMediakiwiStore().mediakiwiSections.find((x) => x.name === name)?.id;
-      console.log(name, currentSectionId);
       if (name) {
         if (currentSectionId !== undefined) {
           const items = useMediakiwiStore().mediakiwiNavigationItems.filter((x) => x.sectionId === currentSectionId);
-          console.log(items);
 
           if (items && items.length) {
             this.navigationItems = items;

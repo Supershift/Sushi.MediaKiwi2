@@ -17,8 +17,8 @@
   const props = defineProps<{
     tableMap: ITableMap<unknown>;
     data: unknown[];
-    /** ExternalId of the screen instance to which the user is pushed when clicking a row. */
-    itemScreenId?: string;
+    /** ExternalId of the view instance to which the user is pushed when clicking a row. */
+    itemViewId?: string;
     /** */
     selectedSortOption?: ITableSortingValue;
     selectedTableRows?: unknown[];
@@ -35,18 +35,18 @@
   function onRowClick(event: Event, dataItem: unknown) {
     // emit event
     emit("click:row", dataItem);
-
+    console.log("row click");
     // navigate user to target page if defined
-    if (props.itemScreenId !== undefined) {
-      // find navigation item for the screen
-      let screen = store.screens.find((x) => x.externalId == props.itemScreenId);
-      
-      if (screen === undefined) {
-        throw new Error(`No screen found for external id ${props.itemScreenId}`);
+    if (props.itemViewId) {
+      // find navigation item for the view
+      let view = store.views.find((x) => x.externalId == props.itemViewId);
+
+      if (view === undefined) {
+        throw new Error(`No view found for external id ${props.itemViewId}`);
       }
-      let navigationItem = store.navigationItems.find((x) => x.screenId == screen?.id);
+      let navigationItem = store.navigationItems.find((x) => x.viewId == view?.id);
       if (navigationItem === undefined) {
-        throw new Error(`No navigationItem found for screen ${props.itemScreenId}`);
+        throw new Error(`No navigationItem found for view ${props.itemViewId}`);
       }
 
       // try to resolve route parameter
@@ -66,6 +66,8 @@
 
       // push user to target page
       router.push({ name: navigationItem.id.toString(), params: routeParams });
+    } else {
+      console.warn("no target view id defined on table");
     }
   }
 

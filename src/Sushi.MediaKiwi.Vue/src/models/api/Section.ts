@@ -1,4 +1,4 @@
-export default interface ISection {
+export interface Section {
   id: number;
   name: string;
   sortOrder: number;
