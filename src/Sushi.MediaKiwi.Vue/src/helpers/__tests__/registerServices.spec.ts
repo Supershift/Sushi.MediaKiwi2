@@ -2,12 +2,12 @@ import "reflect-metadata";
 import { describe, it, expect, beforeEach } from "vitest";
 import { container } from "tsyringe";
 import { registerServices } from "../registerServices";
-import { INavigationConnector, IScreenConnector, ISectionConnector } from "../../services";
-import { NavigationConnector, ScreenConnector, SectionConnector } from "../../services";
+import { INavigationConnector, IViewConnector, ISectionConnector } from "../../services";
+import { NavigationConnector, ViewConnector, SectionConnector } from "../../services";
 import { IMediakiwiServiceRegistrations } from "../../models/options";
 
 class MockedNavigationConnector implements INavigationConnector {}
-class MockedScreenConnector implements IScreenConnector {}
+class MockedViewConnector implements IViewConnector {}
 class MockedSectionConnector implements ISectionConnector {}
 
 describe("registerServices", () => {
@@ -18,11 +18,11 @@ describe("registerServices", () => {
     registerServices(container, undefined);
 
     var navConnector = container.resolve("INavigationConnector");
-    var screenConnector = container.resolve("IScreenConnector");
+    var viewConnector = container.resolve("IViewConnector");
     var sectionConnector = container.resolve("ISectionConnector");
 
     expect(navConnector).toBeInstanceOf(NavigationConnector);
-    expect(screenConnector).toBeInstanceOf(ScreenConnector);
+    expect(viewConnector).toBeInstanceOf(ViewConnector);
     expect(sectionConnector).toBeInstanceOf(SectionConnector);
   });
   it("Should register default from undefined registration", () => {
@@ -37,16 +37,16 @@ describe("registerServices", () => {
     const registrations = <IMediakiwiServiceRegistrations>{
       navigationConnector: MockedNavigationConnector,
       sectionConnector: MockedSectionConnector,
-      screenConnector: MockedScreenConnector,
+      viewConnector: MockedViewConnector,
     };
     registerServices(container, registrations);
 
     var navConnector = container.resolve("INavigationConnector");
-    var screenConnector = container.resolve("IScreenConnector");
+    var viewConnector = container.resolve("IViewConnector");
     var sectionConnector = container.resolve("ISectionConnector");
 
     expect(navConnector).toBeInstanceOf(MockedNavigationConnector);
-    expect(screenConnector).toBeInstanceOf(MockedScreenConnector);
+    expect(viewConnector).toBeInstanceOf(MockedViewConnector);
     expect(sectionConnector).toBeInstanceOf(MockedSectionConnector);
   });
   it("Should register helpers", () => {

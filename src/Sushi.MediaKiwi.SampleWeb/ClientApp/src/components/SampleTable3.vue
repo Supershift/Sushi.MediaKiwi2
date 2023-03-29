@@ -100,7 +100,7 @@
     :filter-map="filters"
     :table-map="myMap"
     :data="sampleData"
-    item-screen-id="SampleEdit"
+    item-view-id="SampleEdit"
   >
     <template #actions>
       <v-btn @click="download">Download</v-btn>

@@ -1,13 +1,13 @@
 <script setup lang="ts">
   import useMediaKiwiRouting from "@/composables/useMediaKiwiRouting";
   import { getNavigationItemChildren } from "@/helpers";
-  import type { INavigationItem } from "@/models/navigation/INavigationItem";
+  import type { NavigationItem } from "@/models/api/NavigationItem";
   import { useRouter, useRoute } from "@/router";
   import { computed, ref } from "vue";
 
   const props = defineProps<{
-    navigationItem: INavigationItem;
-    allItems: Array<INavigationItem>;
+    navigationItem: NavigationItem;
+    allItems: Array<NavigationItem>;
   }>();
 
   const router = useRouter();
@@ -18,16 +18,16 @@
   const isActive = computed(() => route.path == props.navigationItem.path);
   const { navigateTo } = useMediaKiwiRouting();
 
-  function hasScreen(item: INavigationItem): boolean {
-    if (item && item.screenId !== undefined) {
+  function hasScreen(item: NavigationItem): boolean {
+    if (item && item.viewId !== undefined) {
       return true;
     }
     return false;
   }
 
   // called to send user to target screen
-  async function onItemClick(item: INavigationItem) {
-    if (item.screenId) {
+  async function onItemClick(item: NavigationItem) {
+    if (item.viewId) {
       navigateTo(router, item);
     }
     return false;

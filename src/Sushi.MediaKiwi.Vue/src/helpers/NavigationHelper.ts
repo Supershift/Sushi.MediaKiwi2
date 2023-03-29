@@ -1,5 +1,4 @@
-import type { ISection } from "@/models";
-import type { INavigationItem } from "@/models/navigation";
+import type { NavigationItem } from "@/models/";
 import type { RouteLocationNormalizedLoaded } from "vue-router";
 
 /**
@@ -9,7 +8,7 @@ import type { RouteLocationNormalizedLoaded } from "vue-router";
  * @param excludeDataItems If true, no children will be returned which require an object instance, i.e. an order details screen which requires an order.
  * @returns
  */
-export function getNavigationItemChildren(navigationItem: INavigationItem | undefined, navigationItems: INavigationItem[], excludeDataItems: boolean): Array<INavigationItem> {
+export function getNavigationItemChildren(navigationItem: NavigationItem | undefined, navigationItems: NavigationItem[], excludeDataItems: boolean): Array<NavigationItem> {
   let result = navigationItems.filter((item) => item.parentNavigationItemId == navigationItem?.id);
   if (excludeDataItems) {
     result = result.filter((item) => !item.isDynamicRoute);
@@ -18,7 +17,7 @@ export function getNavigationItemChildren(navigationItem: INavigationItem | unde
   return result;
 }
 
-export function getNavigationItemForRoute(route: RouteLocationNormalizedLoaded, navigationItems: INavigationItem[]): INavigationItem | undefined {
+export function getNavigationItemForRoute(route: RouteLocationNormalizedLoaded, navigationItems: NavigationItem[]): NavigationItem | undefined {
   // check from route, otherwise check from store
   const result = navigationItems.find((item) => item.id.toString() == route?.name);
   // if (route !== undefined && route.name === undefined && section !== undefined && section.id) {

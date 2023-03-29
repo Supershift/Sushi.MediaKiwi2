@@ -1,4 +1,4 @@
-import { INavigationItem } from "@/models";
+import { NavigationItem } from "@/models";
 import ListResult from "@/models/api/ListResult";
 import { INavigationConnector } from "./INavigationConnector";
 import { injectable, inject } from "tsyringe";
@@ -9,7 +9,7 @@ export class NavigationConnector implements INavigationConnector {
   constructor(@inject("IMediakiwiAxiosInstance") private axios: IMediakiwiAxiosInstance) {}
 
   async GetNavigationItems() {
-    const response = await this.axios.get<ListResult<INavigationItem>>("/navigationitems");
+    const response = await this.axios.get<ListResult<NavigationItem>>("/navigationitems");
     return response.data;
   }
 }

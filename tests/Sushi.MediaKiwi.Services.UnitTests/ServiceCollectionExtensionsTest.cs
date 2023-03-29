@@ -13,7 +13,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
             serviceProvider.GetRequiredService<SectionService>();
-            serviceProvider.GetRequiredService<ScreenService>();
+            serviceProvider.GetRequiredService<ViewService>();
             serviceProvider.GetRequiredService<NavigationItemService>();
         }
     }

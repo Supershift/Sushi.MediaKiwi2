@@ -9,15 +9,15 @@ using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.DAL.ManualTests
 {
-    public class ScreenRepositoryTest : IClassFixture<ConfigFixture>
+    public class ViewRepositoryTest : IClassFixture<ConfigFixture>
     {
         private readonly ConfigFixture _configFixture;
-        private readonly IScreenRepository _repository;
+        private readonly IViewRepository _repository;
 
-        public ScreenRepositoryTest(ConfigFixture configFixture)
+        public ViewRepositoryTest(ConfigFixture configFixture)
         {
             _configFixture = configFixture;
-            _repository = configFixture.Services.GetRequiredService<IScreenRepository>();
+            _repository = configFixture.Services.GetRequiredService<IViewRepository>();
         }
 
         [Fact]
