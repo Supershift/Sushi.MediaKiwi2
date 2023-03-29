@@ -31,7 +31,7 @@ namespace Sushi.MediaKiwi.Services
 
             // add services
             collection.TryAddTransient<SectionService>();
-            collection.TryAddTransient<ScreenService>();
+            collection.TryAddTransient<ViewService>();
             collection.TryAddTransient<NavigationItemService>();
 
             return collection;

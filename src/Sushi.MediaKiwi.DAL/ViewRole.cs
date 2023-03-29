@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 namespace Sushi.MediaKiwi.DAL
 {
     /// <summary>
-    /// Represents the relation between a screen and a role. 
+    /// Represents the relation between a view and a role. 
     /// </summary>
-    public class ScreenRole
+    public class ViewRole
     {
-        public class ScreenRoleMap : DataMap<ScreenRole>
+        public class ViewRoleMap : DataMap<ViewRole>
         {
-            public ScreenRoleMap()
+            public ViewRoleMap()
             {
-                Table("mk_ScreensRoles");
-                Id(x => x.ScreenId, "ScreenID").Assigned();
+                Table("mk_ViewsRoles");
+                Id(x => x.ViewId, "ViewID").Assigned();
                 Id(x => x.Role, "RoleID").Assigned().SqlType(System.Data.SqlDbType.VarChar);
             }
         }
         
-        public int ScreenId { get; set; }
+        public int ViewId { get; set; }
         public string Role { get; set; }
     }
 }

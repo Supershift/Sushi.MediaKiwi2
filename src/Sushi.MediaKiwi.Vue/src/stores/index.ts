@@ -1,15 +1,13 @@
 import { defineStore } from "pinia";
-import type { INavigationItem } from "@/models/navigation";
-import type { INavigationConnector, IScreenConnector, ISectionConnector } from "@/services";
+import type { NavigationItem, Section, View } from "@/models/api";
+import type { INavigationConnector, IViewConnector, ISectionConnector } from "@/services";
 import type ListResult from "@/models/api/ListResult";
-import type { IScreen } from "@/models/screen/IScreen";
-import type ISection from "@/models/section/ISection";
 import { container } from "tsyringe";
 
 export interface MediaKiwiState {
-  navigationItems: Array<INavigationItem>;
-  screens: Array<IScreen>;
-  sections: Array<ISection>;
+  navigationItems: Array<NavigationItem>;
+  views: Array<View>;
+  sections: Array<Section>;
   isLocal: boolean;
 }
 
@@ -18,12 +16,12 @@ export const useMediakiwiStore = defineStore({
   state: () =>
     ({
       navigationItems: [],
-      screens: [],
+      views: [],
       sections: [],
       isLocal: true,
     } as MediaKiwiState),
   getters: {
-    mediakiwiScreens: (state: MediaKiwiState) => state.screens,
+    mediakiwiViews: (state: MediaKiwiState) => state.views,
     mediakiwiSections: (state: MediaKiwiState) => state.sections,
     mediakiwiNavigationItems: (state: MediaKiwiState) => state.navigationItems,
   },
@@ -31,7 +29,7 @@ export const useMediakiwiStore = defineStore({
     async init() {
       // load new data from API (positioning matters => section, screens, navigationItems)
       await this.getSections();
-      await this.getScreens();
+      await this.getViews();
       await this.getNavigationItems();
     },
     async getNavigationItems() {
@@ -41,17 +39,17 @@ export const useMediakiwiStore = defineStore({
       const navigationItems = await connector.GetNavigationItems();
       this.setNavigationItems(navigationItems);
     },
-    async getScreens() {
-      const connector = container.resolve<IScreenConnector>("IScreenConnector");
-      const screens = await connector.GetScreens();
-      this.setScreens(screens);
+    async getViews() {
+      const connector = container.resolve<IViewConnector>("IViewConnector");
+      const views = await connector.GetViews();
+      this.setViews(views);
     },
     async getSections() {
       const connector = container.resolve<ISectionConnector>("ISectionConnector");
       const sections = await connector.GetSections();
       this.setSections(sections);
     },
-    setNavigationItems(payload: ListResult<INavigationItem>) {
+    setNavigationItems(payload: ListResult<NavigationItem>) {
       if (payload) {
         this.navigationItems = payload.result;
         this.navigationItems.forEach((item) => {
@@ -61,21 +59,21 @@ export const useMediakiwiStore = defineStore({
         });
       }
     },
-    setScreens(payload: ListResult<IScreen>) {      
+    setViews(payload: ListResult<View>) {
       if (payload) {
-        this.screens = payload.result;        
+        this.views = payload.result;
       }
     },
-    setSections(payload: ListResult<ISection>) {
+    setSections(payload: ListResult<Section>) {
       if (payload) {
         this.sections = payload.result;
       }
     },
-    getParentPath(payload: INavigationItem): string {
+    getParentPath(payload: NavigationItem): string {
       // get the full path for this item by recursively going up the tree
       let parentPath = "";
       if (payload.parentNavigationItemId != null) {
-        const parent = this.navigationItems.find((item: INavigationItem) => item.id == payload.parentNavigationItemId);
+        const parent = this.navigationItems.find((item: NavigationItem) => item.id == payload.parentNavigationItemId);
         if (parent !== undefined) {
           parentPath = this.getParentPath(parent);
         }

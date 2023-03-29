@@ -1,4 +1,4 @@
-export interface IScreen {
+export interface View {
   id: number;
   /** Human-readable unique ID. */
   externalId: string;

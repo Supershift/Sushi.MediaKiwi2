@@ -1,8 +1,8 @@
 import "reflect-metadata";
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { ScreenConnector } from "../ScreenConnector";
+import { ViewConnector } from "../ViewConnector";
 import axiosMock from "axios";
-import IScreenResponse from "../../models/responses/IScreenResponse";
+import { View } from "../../models/api";
 import ListResult from "../../models/api/ListResult";
 
 // mock axios
@@ -14,17 +14,17 @@ describe("ScreenConnector", () => {
     vi.clearAllMocks();
   });
   it("Should call get for screens", async () => {
-    const expectedResult = { data: new ListResult<IScreenResponse>() };
+    const expectedResult = { data: new ListResult<View>() };
     // mock axios getter to return expected result
     axiosMock.get = vi.fn().mockResolvedValue(expectedResult);
 
     // create connector and call
-    const connector = new ScreenConnector(axiosMock);
+    const connector = new ViewConnector(axiosMock);
     const result = await connector.GetScreens();
 
     // assert
     expect(axiosMock.get).toHaveBeenCalledOnce();
-    expect(axiosMock.get).toHaveBeenCalledWith("/screens");
+    expect(axiosMock.get).toHaveBeenCalledWith("/views");
     expect(result).toBe(expectedResult.data);
   });
 });

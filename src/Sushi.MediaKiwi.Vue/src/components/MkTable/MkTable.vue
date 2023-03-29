@@ -10,8 +10,8 @@
     selectedFilters?: TableFilterValueCollection;
     tableMap: ITableMap<any>;
     data: any[];
-    /** ExternalId of the screen instance to which the user is pushed when clicking a row. */
-    itemScreenId?: string;
+    /** ExternalId of the view instance to which the user is pushed when clicking a row. */
+    itemViewId?: string;
     /** */
     selectedSortOption?: ITableSortingValue;
     /** */
@@ -50,7 +50,7 @@
     ref="mkTableViewComponent"
     :table-map="tableMap"
     :data="data"
-    :item-screen-id="itemScreenId"
+    :item-view-id="itemViewId"
     :selected-sort-option="selectedSortOption"
     :selected-table-rows="selectedTableRows"
     @click:row="(e) => emit('click:row', e)"

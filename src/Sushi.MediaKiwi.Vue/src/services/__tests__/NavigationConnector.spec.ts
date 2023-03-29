@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { NavigationConnector } from "../NavigationConnector";
 import axiosMock from "axios";
-import { INavigationResponse } from "@/models/responses";
+import { NavigationItem } from "@/models/api";
 import ListResult from "@/models/api/ListResult";
 
 // mock axios
@@ -14,7 +14,7 @@ describe("NavigationConnector", () => {
     vi.clearAllMocks();
   });
   it("Should call get for navigationItems", async () => {
-    const expectedResult = { data: new ListResult<INavigationResponse>() };
+    const expectedResult = { data: new ListResult<NavigationItem>() };
     // mock axios getter to return expected result
     axiosMock.get = vi.fn().mockResolvedValue(expectedResult);
 

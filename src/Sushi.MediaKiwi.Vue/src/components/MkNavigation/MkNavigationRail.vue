@@ -1,17 +1,17 @@
 <script setup lang="ts">
   import useMediaKiwiRouting from "@/composables/useMediaKiwiRouting";
-  import type ISection from "@/models/section/ISection";
+  import type { Section } from "@/models/api";
   import { useRouter } from "vue-router";
 
   defineEmits(["change"]);
   const props = defineProps<{
-    railItems: Array<ISection>;
+    railItems: Array<Section>;
   }>();
 
   const { navigateTo } = useMediaKiwiRouting();
   const router = useRouter();
 
-  function onItemClick(item: ISection) {
+  function onItemClick(item: Section) {
     if (item) {
       navigateTo(router, item);
     }

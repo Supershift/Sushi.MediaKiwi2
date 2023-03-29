@@ -3,23 +3,24 @@ using Sushi.MediaKiwi.DAL.Repository;
 
 namespace Sushi.MediaKiwi.DAL.ManualTests
 {
-    public class ScreenRoleRepositoryTest : IClassFixture<ConfigFixture>
+    public class SectionRepositoryTest : IClassFixture<ConfigFixture>
     {
         private readonly ConfigFixture _configFixture;
-        private readonly IScreenRoleRepository _repository;
+        private readonly ISectionRepository _repository;
 
-        public ScreenRoleRepositoryTest(ConfigFixture configFixture)
+        public SectionRepositoryTest(ConfigFixture configFixture)
         {
             _configFixture = configFixture;
-            _repository = _configFixture.Services.GetRequiredService<IScreenRoleRepository>();
+            _repository = _configFixture.Services.GetRequiredService<ISectionRepository>();
         }
-        
+
         [Fact]
         public async Task GetAllTest()
         {
-            var items = await _repository.GetAllAsync();
+            var sections = await _repository.GetAllAsync();
 
-            Assert.Equal(1, items.Count);
+            Assert.Equal(2, sections.Count);
         }
     }
+    
 }

@@ -1,4 +1,4 @@
-import type { INavigationItem, ISection } from "@/models";
+import type { NavigationItem, Section } from "@/models";
 import { useMediakiwiStore } from "@/stores";
 import type { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
 import { type Router } from "vue-router";
@@ -9,7 +9,7 @@ import { type Router } from "vue-router";
 export default function () {
   //const navigationStore = useNavigationStore();
   const mediakiwiStore = useMediakiwiStore();
-  type NavigationTypeGuard = INavigationItem | ISection;
+  type NavigationTypeGuard = NavigationItem | Section;
 
   const navigateTo = (router: Router, item: NavigationTypeGuard): void => {
     // Since we are injecting the router via the store it is already up and running when we initiate
@@ -19,17 +19,17 @@ export default function () {
       // called to send user to target screen
       router.push(sectionName);
     } else {
-      // if its navigationItem then we search in the Items
-      const navigationItemId = mediakiwiStore.mediakiwiNavigationItems.find((x) => x.name === item.name)?.id;
-      if (navigationItemId) {
+      // if its navigationItem then we push to nav item's path
+      const navigationItem = item as NavigationItem;
+      if (navigationItem) {
         // called to send user to target screen
-        router.push({ name: navigationItemId?.toString() });
+        router.push({ path: navigationItem.path });
       }
     }
   };
   // checks Type of ISection
   const checkTypeGuardIsSection = (toBeDetermined: NavigationTypeGuard): boolean => {
-    if ((toBeDetermined as INavigationItem).path) {
+    if ((toBeDetermined as NavigationItem).path) {
       return false;
     }
     return true;

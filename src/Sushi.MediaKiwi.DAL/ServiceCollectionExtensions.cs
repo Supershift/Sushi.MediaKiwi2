@@ -17,9 +17,9 @@ namespace Sushi.MediaKiwi.DAL
             services.AddMicroORM(defaultConnectionString, config);
 
             services.TryAddTransient<ISectionRepository, SectionRepository>();
-            services.TryAddTransient<IScreenRepository, ScreenRepository>();
+            services.TryAddTransient<IViewRepository, ViewRepository>();
             services.TryAddTransient<INavigationItemRepository, NavigationItemRepository>();
-            services.TryAddTransient<IScreenRoleRepository, ScreenRoleRepository>();
+            services.TryAddTransient<IViewRoleRepository, ViewRoleRepository>();
 
             return services;
         }
