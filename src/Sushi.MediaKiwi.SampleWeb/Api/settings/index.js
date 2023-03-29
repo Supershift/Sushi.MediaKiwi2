@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-
 module.exports = async function (context, req) {
   context.log("JavaScript HTTP trigger function processed a request.");
 
+  // Add your appsettings here
   const MEDIAKIWI_TESTVARIABLE = process.env.MEDIAKIWI_TESTVARIABLE;
 
   console.log("MEDIAKIWI_TESTVARIABLE::::::" + MEDIAKIWI_TESTVARIABLE);
