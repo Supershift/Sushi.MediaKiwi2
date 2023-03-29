@@ -1,9 +1,10 @@
 import { injectable, inject } from "tsyringe";
 import { useMediakiwiStore } from "../stores/index";
 import { type IMediakiwiVueOptions } from "../models/options/IMediakiwiVueOptions";
-import { type Router, RouteComponent, RouteRecordRaw } from "vue-router";
-import { INavigationItem, IScreen } from "@/models";
-import { RouteGenerator } from "./routeGenerator";
+import type { RouteComponent } from "vue-router";
+import { type Router } from "vue-router";
+import { type INavigationItem, type IScreen } from "@/models";
+import type { RouteGenerator } from "./routeGenerator";
 
 export enum RouterManagerState {
   Empty = 0,
@@ -56,7 +57,7 @@ export class RouterManager {
   }
 
   /** Calls stores and updates routes based on store data */
-  private async initializeManager() {
+  private async initializeManager(): Promise<RouterManagerState> {
     try {
       // tell store to load data from sources
       const store = useMediakiwiStore();
