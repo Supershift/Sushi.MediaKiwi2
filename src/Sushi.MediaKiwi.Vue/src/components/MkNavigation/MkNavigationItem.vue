@@ -16,7 +16,7 @@
   const nameLabel = computed(() => props.navigationItem?.name ?? "-empty-");
   const children = computed(() => getNavigationItemChildren(props.navigationItem, props.allItems, true));
   const isActive = computed(() => route.path == props.navigationItem.path);
-  const { navigateToScreen, navigateTo } = useMediaKiwiRouting();
+  const { navigateToScreen } = useMediaKiwiRouting();
 
   function hasScreen(item: INavigationItem): boolean {
     if (item && item.screenId !== undefined) {
@@ -30,9 +30,6 @@
     if (item.screenId) {
       navigateToScreen(router, item.name, false);
       // TODO: Revisit this, maybe refactor navigation
-      // navigateTo(router, item.id, () => {
-      //   console.log("Navigation to about page complete!");
-      // });
     }
     return false;
   }

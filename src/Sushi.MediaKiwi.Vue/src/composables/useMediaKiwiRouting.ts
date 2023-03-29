@@ -31,26 +31,9 @@ export default function () {
     }
   };
 
-  const navigateTo = (router: Router, id: number, next: NavigationGuardNext): void => {
-    const route = router.getRoutes().find((x) => x.name === id.toString());
-    if (route) {
-      router
-        .push(route)
-        .then(() => {
-          next();
-        })
-        .catch((error: Error) => {
-          const routeName = route.name ?? "noName";
-          console.error(`Error navigating to ${routeName.toString()}:`, error);
-          next(false);
-        });
-    } else {
-      console.error(`Error missing route`);
-    }
-  };
+
 
   return {
     navigateToScreen,
-    navigateTo,
   };
 }
