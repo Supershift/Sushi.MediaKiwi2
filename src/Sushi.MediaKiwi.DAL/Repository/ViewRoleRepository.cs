@@ -8,20 +8,20 @@ using System.Threading.Tasks;
 namespace Sushi.MediaKiwi.DAL.Repository
 {
     /// <inheritdoc/>    
-    public class ScreenRoleRepository : IScreenRoleRepository
+    public class ViewRoleRepository : IViewRoleRepository
     {
-        private readonly IConnector<ScreenRole> _connector;
+        private readonly IConnector<ViewRole> _connector;
 
         /// <summary>
-        /// Creates a new instance of <see cref="ScreenRoleRepository"/>.
+        /// Creates a new instance of <see cref="ViewRoleRepository"/>.
         /// </summary>
-        public ScreenRoleRepository(IConnector<ScreenRole> connector)
+        public ViewRoleRepository(IConnector<ViewRole> connector)
         {
             _connector = connector;
         }
 
         /// <inheritdoc/>    
-        public Task<QueryListResult<ScreenRole>> GetAllAsync()
+        public Task<QueryListResult<ViewRole>> GetAllAsync()
         {
             var query = _connector.CreateQuery();
             var result = _connector.GetAllAsync(query);

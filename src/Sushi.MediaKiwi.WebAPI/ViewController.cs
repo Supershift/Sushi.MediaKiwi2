@@ -5,24 +5,24 @@ using Sushi.MediaKiwi.WebAPI.Paging;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
-    [Route($"{BaseRoute}/screens")]
-    public class ScreenController : MediaKiwiControllerBase
+    [Route($"{BaseRoute}/views")]
+    public class ViewController : MediaKiwiControllerBase
     {
-        private readonly ScreenService _screenService;
+        private readonly ViewService _viewService;
         private readonly PagingRetriever _pagingRetriever;
 
-        public ScreenController(ScreenService screenService, PagingRetriever pagingRetriever)
+        public ViewController(ViewService viewService, PagingRetriever pagingRetriever)
         {
-            _screenService = screenService;
+            _viewService = viewService;
             _pagingRetriever = pagingRetriever;
         }
 
         [HttpGet]
         [QueryStringPaging]
-        public async Task<ActionResult<ListResult<Screen>>> GetScreens([FromQuery] int? sectionID)
+        public async Task<ActionResult<ListResult<View>>> GetViews([FromQuery] int? sectionID)
         {
             var pagingValues = _pagingRetriever.GetPaging();
-            var result = await _screenService.GetAllAsync(sectionID, pagingValues);
+            var result = await _viewService.GetAllAsync(sectionID, pagingValues);
             return this.CreateResponse(result);
         }
     }

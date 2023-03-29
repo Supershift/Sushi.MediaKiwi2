@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 namespace Sushi.MediaKiwi.DAL.Repository
 {
     /// <summary>
-    /// Provides methods to read and write <see cref="ScreenRole"/> objects.
+    /// Provides methods to read and write <see cref="ViewRole"/> objects.
     /// </summary>
-    public interface IScreenRoleRepository
+    public interface IViewRoleRepository
     {
         /// <summary>
-        /// Gets all <see cref="ScreenRole"/> objects for the given filters.
+        /// Gets all <see cref="ViewRole"/> objects for the given filters.
         /// </summary>
         /// <returns></returns>
-        Task<QueryListResult<ScreenRole>> GetAllAsync();
+        Task<QueryListResult<ViewRole>> GetAllAsync();
     }
 }

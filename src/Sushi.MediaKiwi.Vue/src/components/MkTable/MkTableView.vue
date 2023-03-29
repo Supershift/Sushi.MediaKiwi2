@@ -3,7 +3,7 @@
   import type { ITableMap } from "@/models/table/ITableMap";
   import type { ITableMapItem } from "@/models/table/ITableMapItem";
   import MkTableCell from "./MkTableCell.vue";
-  import { store } from "@/stores/mediakiwi/mock";
+  import { useMediakiwiStore } from "@/stores/";
   import { TableSortingDirection } from "@/models";
   import type { ITableSortingValue } from "@/models";
   import TableSortingHelper from "@/helpers/TableSortingHelper";
@@ -17,8 +17,8 @@
   const props = defineProps<{
     tableMap: ITableMap<unknown>;
     data: unknown[];
-    /** Name of the IScreen instance to which the user is pushed when clicking a row */
-    itemScreenName?: string;
+    /** ExternalId of the view instance to which the user is pushed when clicking a row. */
+    itemViewId?: string;
     /** */
     selectedSortOption?: ITableSortingValue;
     selectedTableRows?: unknown[];
@@ -31,40 +31,43 @@
   }>();
 
   const router = useRouter();
-
+  const store = useMediakiwiStore();
   function onRowClick(event: Event, dataItem: unknown) {
     // emit event
     emit("click:row", dataItem);
 
     // navigate user to target page if defined
-    if (props.itemScreenName !== undefined) {
-      // find navigation item for the screen
-      let screen = store.screens.find((x) => x.name == props.itemScreenName);
-      if (screen === undefined) {
-        throw new Error(`No screen found for name ${props.itemScreenName}`);
+    if (props.itemViewId) {
+      // find navigation item for the view
+      const view = store.views.find((x) => x.externalId == props.itemViewId);
+
+      if (!view) {
+        throw new Error(`No view found for external id ${props.itemViewId}`);
       }
-      let navigationItem = store.navigationItems.find((x) => x.screenId == screen?.id);
-      if (navigationItem === undefined) {
-        throw new Error(`No navigationItem found for screen ${props.itemScreenName}`);
+      const navigationItem = store.navigationItems.find((x) => x.viewId == view?.id);
+      if (!navigationItem) {
+        throw new Error(`No navigationItem found for view ${props.itemViewId}`);
       }
 
       // try to resolve route parameter
-      let routeParams: RouteParamsRaw = {};
-      if (navigationItem.isDynamicRoute !== undefined) {
-        if (props.tableMap.itemId === undefined) {
+      const routeParams: RouteParamsRaw = {};
+      if (navigationItem.isDynamicRoute) {
+        if (!props.tableMap.itemId) {
           throw new Error(`No itemId function found to resolve ${navigationItem.dynamicRouteParamaterName}`);
         }
-        let itemId = props.tableMap.itemId(dataItem);
-        if (itemId === undefined) {
+        const itemId = props.tableMap.itemId(dataItem);
+        if (!itemId) {
           throw new Error(`No value returned by itemId function`);
         }
-        if (navigationItem.dynamicRouteParamaterName !== undefined) {
+        if (navigationItem.dynamicRouteParamaterName) {
           routeParams[navigationItem.dynamicRouteParamaterName] = itemId;
         }
       }
 
       // push user to target page
       router.push({ name: navigationItem.id.toString(), params: routeParams });
+    } else {
+      console.warn("no target view id defined on table");
     }
   }
 

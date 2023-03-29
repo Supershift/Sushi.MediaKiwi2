@@ -22,7 +22,7 @@ namespace Sushi.MediaKiwi.Services.Model
         
         public int? ParentNavigationItemId { get; set; }
         
-        public int? ScreenId { get; set; }
+        public int? ViewId { get; set; }
 
         public bool IsDynamicRoute { get; set; }
 

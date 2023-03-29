@@ -1,66 +1,66 @@
-import { IScreenResponse, INavigationResponse, ISectionResponse } from "@supershift/mediakiwi-vue";
+import { View, ISection, INavigationItem } from "@supershift/mediakiwi-vue";
 
-export const navigationItems = <INavigationResponse[]>[
+export const navigationItems = <INavigationItem[]>[
   {
     id: 0,
     name: "Home",
-    screenId: 0,
+    viewId: 0,
     sectionId: 0,
     parentNavigationItemId: null,
   },
   {
     id: 1,
     name: "Hotels",
-    screenId: 1,
+    viewId: 1,
     sectionId: 1,
     parentNavigationItemId: null,
   },
   {
     id: 11,
     name: "Hotel-sub-1",
-    screenId: 3,
+    viewId: 3,
     sectionId: 1,
     parentNavigationItemId: 1,
   },
   {
     id: 111,
     name: "Hotel-deeper-sub-1",
-    screenId: 3,
+    viewId: 3,
     sectionId: 1,
     parentNavigationItemId: 11,
   },
   {
     id: 2,
     name: "Customers",
-    screenId: 2,
+    viewId: 2,
     sectionId: 1,
     parentNavigationItemId: null,
   },
   {
     id: 21,
     name: "Category",
-    screenId: null,
+    viewId: null,
     sectionId: 1,
     parentNavigationItemId: 2,
   },
   {
     id: 211,
     name: "Deep-level",
-    screenId: 3,
+    viewId: 3,
     sectionId: 1,
     parentNavigationItemId: 21,
   },
   {
     id: 3,
     name: "Sample-data-overview",
-    screenId: 3,
+    viewId: 3,
     sectionId: 1,
     parentNavigationItemId: null,
   },
   {
     id: 31,
     name: "Sample-data-edit",
-    screenId: 4,
+    viewId: 4,
     sectionId: 1,
     parentNavigationItemId: 3,
     isDynamicRoute: true,
@@ -69,7 +69,7 @@ export const navigationItems = <INavigationResponse[]>[
   {
     id: 311,
     name: "Sample-deep-data-edit",
-    screenId: 5,
+    viewId: 5,
     sectionId: 1,
     parentNavigationItemId: 31,
     isDynamicRoute: true,
@@ -77,16 +77,16 @@ export const navigationItems = <INavigationResponse[]>[
   },
 ];
 
-export const screens = <IScreenResponse[]>[
-  { id: 0, componentKey: "./views/Home.vue", sectionId: 0, name: "Home" },
-  { id: 1, componentKey: "./views/Screen1.vue", sectionId: 1, name: "Screen 1" },
-  { id: 2, componentKey: "./views/Hotels.vue", sectionId: 1, name: "Screen 2" },
-  { id: 3, componentKey: "./views/SampleData.vue", sectionId: 1, name: "Sample data overview" },
-  { id: 4, componentKey: "./views/SampleDataEdit.vue", sectionId: 1, name: "SampleDataEdit" },
-  { id: 5, componentKey: "./views/SampleDeepDataEdit.vue", sectionId: 1, name: "SampleDeepDataEdit" },
+export const views = <View[]>[
+  { id: 0, componentKey: "./views/Home.vue", sectionId: 0, name: "Home", externalId: "Home" },
+  { id: 1, componentKey: "./views/Screen1.vue", sectionId: 1, name: "Screen 1", externalId: "Screen 1" },
+  { id: 2, componentKey: "./views/Hotels.vue", sectionId: 1, name: "Screen 2", externalId: "Screen 2" },
+  { id: 3, componentKey: "./views/SampleData.vue", sectionId: 1, name: "Sample data overview", externalId: "Sample data overview" },
+  { id: 4, componentKey: "./views/SampleDataEdit.vue", sectionId: 1, name: "SampleDataEdit", externalId: "SampleDataEdit" },
+  { id: 5, componentKey: "./views/SampleDeepDataEdit.vue", sectionId: 1, name: "SampleDeepDataEdit", externalId: "SampleDeepDataEdit" },
 ];
 
-const sections = Array<ISectionResponse>();
+const sections = Array<ISection>();
 sections.push({
   id: 0,
   name: "Home",

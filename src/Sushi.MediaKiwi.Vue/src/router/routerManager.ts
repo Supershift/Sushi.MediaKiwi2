@@ -1,9 +1,10 @@
 import { injectable, inject } from "tsyringe";
 import { useMediakiwiStore } from "../stores/index";
 import { type IMediakiwiVueOptions } from "../models/options/IMediakiwiVueOptions";
-import { type Router, RouteComponent, RouteRecordRaw } from "vue-router";
-import { INavigationItem, IScreen } from "@/models";
-import { RouteGenerator } from "./routeGenerator";
+import type { RouteComponent } from "vue-router";
+import { type Router } from "vue-router";
+import { type NavigationItem, type View } from "@/models";
+import type { RouteGenerator } from "./routeGenerator";
 
 export enum RouterManagerState {
   Empty = 0,
@@ -41,7 +42,7 @@ export class RouterManager {
   }
 
   /** Updates the dynamic routes based on navigation items and modules */
-  public updateRoutes(modules: Record<string, RouteComponent>, navigationItems: INavigationItem[], screens: IScreen[]): void {
+  public updateRoutes(modules: Record<string, RouteComponent>, navigationItems: NavigationItem[], screens: View[]): void {
     // remove existing dynamic routes
     const existingRoutes = this.router.getRoutes();
     existingRoutes.forEach((route) => {
@@ -56,14 +57,14 @@ export class RouterManager {
   }
 
   /** Calls stores and updates routes based on store data */
-  private async initializeManager() {
+  private async initializeManager(): Promise<RouterManagerState> {
     try {
       // tell store to load data from sources
       const store = useMediakiwiStore();
       await store.init();
 
       // apply loaded data to router
-      this.updateRoutes(this.options.modules, store.navigationItems, store.screens);
+      this.updateRoutes(this.options.modules, store.navigationItems, store.views);
 
       this._isInitialized = RouterManagerState.Initialized;
     } catch (error) {

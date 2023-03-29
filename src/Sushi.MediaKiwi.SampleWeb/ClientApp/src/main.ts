@@ -10,6 +10,7 @@ import "@supershift/mediakiwi-vue/dist/mediakiwi-vue.css";
 import { getFakes } from "./fakes/getFakes";
 
 const useFakes = false;
+const useLocalApi = true;
 
 const app = createApp(App);
 
@@ -27,8 +28,7 @@ const modules = import.meta.glob("./views/**/*.vue");
 
 // create mediakiwi options
 const mediaKiwiOptions: mediakiwi.IMediakiwiVueOptions = {
-  apiBaseUrl: "https://mediakiwi-sample-api-dev.azurewebsites.net/mediakiwi/api",
-  //apiBaseUrl: "https://localhost:7223/mediakiwi/api",
+  apiBaseUrl: useLocalApi ? "https://localhost:7223/mediakiwi/api" : "https://mediakiwi-sample-api-dev.azurewebsites.net/mediakiwi/api",
   modules: modules,
   msalConfig: msalConfig,
   serviceRegistrations: useFakes ? getFakes() : undefined,

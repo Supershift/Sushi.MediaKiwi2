@@ -18,7 +18,7 @@ namespace Sushi.MediaKiwi.Services.Model
         public AutoMapperProfile()
         {
             CreateMap<DAL.Section, Section>();
-            CreateMap<DAL.Screen, Screen>();
+            CreateMap<DAL.View, View>();
             CreateMap<DAL.NavigationItem, NavigationItem>();
         }
     }

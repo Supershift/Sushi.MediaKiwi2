@@ -4,14 +4,14 @@ using Sushi.MicroORM;
 namespace Sushi.MediaKiwi.DAL.Repository
 {
     /// <summary>
-    /// Provides methods to read and write <see cref="Screen"/> objects.
+    /// Provides methods to read and write <see cref="View"/> objects.
     /// </summary>
-    public interface IScreenRepository
+    public interface IViewRepository
     {
         /// <summary>
         /// Gets all screens for the given filter parameters.
         /// </summary>        
         /// <returns></returns>
-        Task<QueryListResult<Screen>> GetAllAsync(int? sectionID, PagingValues pagingValues);
+        Task<QueryListResult<View>> GetAllAsync(int? sectionID, PagingValues pagingValues);
     }
 }

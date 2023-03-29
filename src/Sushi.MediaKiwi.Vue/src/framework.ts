@@ -7,7 +7,7 @@ import { type IMediakiwiVueOptions } from "./models/options";
 import { createVuetify, type VuetifyOptions } from "vuetify";
 import { msalPlugin } from "./plugins/msalPlugin";
 import { CustomNavigationClient } from "./router/navigationClient";
-import registerBreadcrumbs from "./router/breadcrumbs";
+import registerNavigation from "./router/navigationRegistrations";
 import { addCheckIsAuthenticated } from "./router/checkIsAuthenticated";
 import defaultVuetifyOptions from "./plugins/vuetify";
 import { identity } from "./identity";
@@ -69,8 +69,8 @@ export default {
     // adds a guard to all routes with the meta property 'isInRole' to check role
     addCheckIsInRole(router);
 
-    // registers breadcrumbs before we navigate, this calls the navigation store(register as late as possible)
-    registerBreadcrumbs(router);
+    // registers breadcrumbs, update NavigationItems and more before we navigate, this calls the navigation store(register as late as possible)
+    registerNavigation(router);
   },
 };
 
@@ -85,7 +85,5 @@ export * from "@/services";
 export * from "@/stores";
 
 export * from "@/router";
-
-export { store as MkMockStore } from "@/stores/mediakiwi/mock";
 
 import "@/assets/main.css";

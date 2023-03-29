@@ -8,14 +8,15 @@ using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.DAL
 {
-    public class Screen
+    public class View
     {
-        public class ScreenMap : DataMap<Screen>
+        public class ViewMap : DataMap<View>
         {
-            public ScreenMap()
+            public ViewMap()
             {
-                Table("mk_Screens");
-                Id(x => x.Id, "ScreenID");
+                Table("mk_Views");
+                Id(x => x.Id, "ViewID");
+                Map(x => x.ExternalId, "ExternalID").SqlType(SqlDbType.VarChar);
                 Map(x => x.ComponentKey, "ComponentKey").SqlType(SqlDbType.VarChar);
                 Map(x => x.Name, "Name").SqlType(SqlDbType.NVarChar);                
                 Map(x => x.SectionId, "SectionID");                                
@@ -24,8 +25,11 @@ namespace Sushi.MediaKiwi.DAL
         
         public int Id { get; set; }
         /// <summary>
-        /// Gets or sets the filename of the Vue the component implementing this screen, 
-        /// relative to the components folder, e.g. MyScreen.vue, checkout/Payment.vue
+        /// Gets or sets a human-readable unique ID.
+        /// </summary>
+        public string ExternalId { get; set; }
+        /// <summary>
+        /// Gets or sets the key of the Vue component implementing this view, e.g. ./views/myView.vue, MyKey
         /// </summary>
         public string ComponentKey { get; set; }
         public string Name { get; set; }

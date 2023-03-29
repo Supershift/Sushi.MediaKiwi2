@@ -9,21 +9,21 @@ using System.Threading.Tasks;
 namespace Sushi.MediaKiwi.DAL.Repository
 {
     /// <inheritdoc/>    
-    public class ScreenRepository : IScreenRepository
+    public class ViewRepository : IViewRepository
     {
-        private readonly IConnector<Screen> _connector;
+        private readonly IConnector<View> _connector;
 
         /// <summary>
-        /// Creates a new instance of <see cref="ScreenRepository"/>.
+        /// Creates a new instance of <see cref="ViewRepository"/>.
         /// </summary>
         /// <param name="connector"></param>
-        public ScreenRepository(IConnector<Screen> connector)
+        public ViewRepository(IConnector<View> connector)
         {
             _connector = connector;
         }
 
         /// <inheritdoc/>    
-        public async Task<QueryListResult<Screen>> GetAllAsync(int? sectionID, PagingValues pagingValues)
+        public async Task<QueryListResult<View>> GetAllAsync(int? sectionID, PagingValues pagingValues)
         {
             var query = _connector.CreateQuery();
             if (sectionID.HasValue)
