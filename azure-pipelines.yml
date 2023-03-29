@@ -20,32 +20,41 @@ steps:
       arguments: "src/Sushi.MediaKiwi.SampleAPI/Sushi.MediaKiwi.SampleAPI.csproj --configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)"
       zipAfterPublish: true
 
+  - task: NodeTool@0
+    inputs:
+      versionSource: 'spec'
+      versionSpec: '18.x'
+      checkLatest: true
+
+  - task: Npm@1
+    inputs:
+      command: 'ci'
+      workingDir: 'src/Sushi.MediaKiwi.SampleWeb/ClientApp'
+    displayName: "npm install on SampleWeb/ClientApp"
+
+  - task: Npm@1
+    inputs:
+      command: 'ci'
+      workingDir: 'src/Sushi.MediaKiwi.SampleWeb/Function'
+    displayName: "npm install on SampleWeb/Function"
+
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: 'src/Sushi.MediaKiwi.SampleWeb'
+      Contents: |
+        ClientApp/dist/**
+        Function/**
+      TargetFolder: 'SampleWeb'
+    displayName: "Copy ClientApp/dist and Function to SampleWeb"
+
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: "$(Build.ArtifactStagingDirectory)"
       ArtifactName: "drop"
       publishLocation: "Container"
-
-  - task: CopyFiles@2
-    inputs:
-      SourceFolder: 'src/Sushi.MediaKiwi.SampleWeb/ClientApp/dist'
-      Contents: '**'
-      TargetFolder: '_sample-web'
-  
-  - task: CopyFiles@2
-    inputs:
-      SourceFolder: 'src/Sushi.MediaKiwi.SampleWeb/Api'
-      Contents: '**'
-      TargetFolder: '_sample-web-api'
-
-  - task: PublishPipelineArtifact@1
-    inputs:
-      targetPath: '_sample-web'
-      artifact: 'SampleWeb'
-      publishLocation: 'pipeline'
   
   - task: PublishPipelineArtifact@1
     inputs:
-      targetPath: '_sample-web-api'
-      artifact: 'SampleWebApi'
-      publishLocation: 'pipeline'
+      targetPath: 'SampleWeb'
+      artifact: 'drop'
+      publishLocation: 'pipeline' 
