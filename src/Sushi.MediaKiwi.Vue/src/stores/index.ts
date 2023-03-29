@@ -1,17 +1,17 @@
-import { defineStore, DefineStoreOptions } from "pinia";
+import { defineStore } from "pinia";
 import type { INavigationItem } from "@/models/navigation";
-import { INavigationConnector, IScreenConnector, ISectionConnector } from "@/services";
+import type { INavigationConnector, IScreenConnector, ISectionConnector } from "@/services";
 import type ListResult from "@/models/api/ListResult";
 import type { IScreen } from "@/models/screen/IScreen";
 import type ISection from "@/models/section/ISection";
 import { container } from "tsyringe";
 
-export type MediaKiwiState = {
+export interface MediaKiwiState {
   navigationItems: Array<INavigationItem>;
   screens: Array<IScreen>;
   sections: Array<ISection>;
   isLocal: boolean;
-};
+}
 
 export const useMediakiwiStore = defineStore({
   id: "mediaKiwiStore",
@@ -29,10 +29,10 @@ export const useMediakiwiStore = defineStore({
   },
   actions: {
     async init() {
-      // load new data from API
-      await this.getNavigationItems();
+      // load new data from API (positioning matters => section, screens, navigationItems)
       await this.getSections();
       await this.getScreens();
+      await this.getNavigationItems();
     },
     async getNavigationItems() {
       // get instance of INavigationConnector
@@ -55,7 +55,9 @@ export const useMediakiwiStore = defineStore({
       if (payload) {
         this.navigationItems = payload.result;
         this.navigationItems.forEach((item) => {
-          item.path = this.getParentPath(item);
+          // since the sections doesnt have a path we use a "/"
+          const sectionName = this.sections.find((x) => x.id === item.sectionId)?.name;
+          item.path = "/" + sectionName + this.getParentPath(item);
         });
       }
     },
