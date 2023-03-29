@@ -86,6 +86,4 @@ export * from "@/stores";
 
 export * from "@/router";
 
-export { store as MkMockStore } from "@/stores/mediakiwi/mock";
-
 import "@/assets/main.css";
