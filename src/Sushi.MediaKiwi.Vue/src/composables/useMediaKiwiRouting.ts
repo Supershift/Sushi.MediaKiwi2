@@ -1,3 +1,4 @@
+import type { INavigationItem, ISection } from "@/models";
 import { useMediakiwiStore } from "@/stores";
 import type { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
 import { type Router } from "vue-router";
@@ -8,32 +9,33 @@ import { type Router } from "vue-router";
 export default function () {
   //const navigationStore = useNavigationStore();
   const mediakiwiStore = useMediakiwiStore();
+  type NavigationTypeGuard = INavigationItem | ISection;
 
-  const navigateToScreen = (router: Router, name: string, isSection: boolean): void => {
-    // Since we are injecting the router via the sotre it is already up and running when we initiate
-    if (name && router) {
-      // if it's the section, then we reset the navigation
-      if (isSection) {
-        const sectionName = "/" + mediakiwiStore.mediakiwiSections.find((x) => x.name === name)?.name;
+  const navigateTo = (router: Router, item: NavigationTypeGuard): void => {
+    // Since we are injecting the router via the store it is already up and running when we initiate
+    if (checkTypeGuardIsSection(item)) {
+      // if it's the section, then we seach the sections
+      const sectionName = "/" + mediakiwiStore.mediakiwiSections.find((x) => x.name === item.name)?.name;
+      // called to send user to target screen
+      router.push(sectionName);
+    } else {
+      // if its navigationItem then we search in the Items
+      const navigationItemId = mediakiwiStore.mediakiwiNavigationItems.find((x) => x.name === item.name)?.id;
+      if (navigationItemId) {
         // called to send user to target screen
-        router.push(sectionName);
-      } else {
-        // FIXME: Fix the dynamic route with the click trough
-        // called to send user to target screen
-        const navigationItemId = mediakiwiStore.mediakiwiNavigationItems.find((x) => x.name === name)?.id;
-        console.log("here! " + navigationItemId);
-        if (navigationItemId) {
-          router.push({ name: navigationItemId?.toString() });
-        } else {
-          router.push("/Error");
-        }
+        router.push({ name: navigationItemId?.toString() });
       }
     }
   };
-
-
+  // checks Type of ISection
+  const checkTypeGuardIsSection = (toBeDetermined: NavigationTypeGuard): boolean => {
+    if ((toBeDetermined as INavigationItem).path) {
+      return false;
+    }
+    return true;
+  };
 
   return {
-    navigateToScreen,
+    navigateTo,
   };
 }

@@ -16,7 +16,7 @@
   const nameLabel = computed(() => props.navigationItem?.name ?? "-empty-");
   const children = computed(() => getNavigationItemChildren(props.navigationItem, props.allItems, true));
   const isActive = computed(() => route.path == props.navigationItem.path);
-  const { navigateToScreen } = useMediaKiwiRouting();
+  const { navigateTo } = useMediaKiwiRouting();
 
   function hasScreen(item: INavigationItem): boolean {
     if (item && item.screenId !== undefined) {
@@ -28,8 +28,7 @@
   // called to send user to target screen
   async function onItemClick(item: INavigationItem) {
     if (item.screenId) {
-      navigateToScreen(router, item.name, false);
-      // TODO: Revisit this, maybe refactor navigation
+      navigateTo(router, item);
     }
     return false;
   }

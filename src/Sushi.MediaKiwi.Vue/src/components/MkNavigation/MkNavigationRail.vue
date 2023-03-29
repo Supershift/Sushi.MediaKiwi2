@@ -8,12 +8,12 @@
     railItems: Array<ISection>;
   }>();
 
-  const { navigateToScreen } = useMediaKiwiRouting();
+  const { navigateTo } = useMediaKiwiRouting();
   const router = useRouter();
 
   function onItemClick(item: ISection) {
     if (item) {
-      navigateToScreen(router, item.name, true);
+      navigateTo(router, item);
     }
     return false;
   }
