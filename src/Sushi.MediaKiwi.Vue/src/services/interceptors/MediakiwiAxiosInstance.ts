@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from "axios";
 import { identity } from "@/identity";
-import { InteractionRequiredAuthError } from "@azure/msal-browser";
+import { InteractionRequiredAuthError, InteractionStatus } from "@azure/msal-browser";
 import { container } from "tsyringe";
 import { IMediakiwiVueOptions } from "@models/options";
 
@@ -16,6 +16,7 @@ export async function configureMediakiwiAxios(config: InternalAxiosRequestConfig
   const msalInstance = identity.msalInstance;
 
   const account = msalInstance.getActiveAccount();
+
   if (account) {
     try {
       const response = await msalInstance.acquireTokenSilent({ scopes: identity.scopes });
