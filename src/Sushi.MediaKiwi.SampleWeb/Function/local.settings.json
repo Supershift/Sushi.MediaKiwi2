@@ -3,7 +3,9 @@
   "Values": {
     "AzureWebJobsStorage": "",
     "FUNCTIONS_WORKER_RUNTIME": "node",
-    "MEDIAKIWI_TESTVARIABLE": "Setting from the local settings"
+    "MediaKiwi_TestVariable": "Setting from the local settings",
+    "MediaKiwi_UseFakes": false,
+    "MediaKiwi_UseLocalApi": false
   },
   "Host": {
     "LocalHttpPort": 7071,
