@@ -61,9 +61,9 @@ export const useMediakiwiStore = defineStore({
         });
       }
     },
-    setScreens(payload: ListResult<IScreen>) {
+    setScreens(payload: ListResult<IScreen>) {      
       if (payload) {
-        this.screens = payload.result;
+        this.screens = payload.result;        
       }
     },
     setSections(payload: ListResult<ISection>) {

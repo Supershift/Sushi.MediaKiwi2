@@ -20,6 +20,12 @@ namespace Sushi.MediaKiwi.Services.Model
         public int Id { get; set; }
 
         /// <summary>
+        /// Human-readable unique ID.
+        /// </summary>
+        [Required, StringLength(64)]
+        public string ExternalId { get; set; }
+
+        /// <summary>
         /// Name for this screen.
         /// </summary>
         [Required, StringLength(128)]
