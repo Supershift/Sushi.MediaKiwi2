@@ -35,31 +35,31 @@
   function onRowClick(event: Event, dataItem: unknown) {
     // emit event
     emit("click:row", dataItem);
-    console.log("row click");
+
     // navigate user to target page if defined
     if (props.itemViewId) {
       // find navigation item for the view
-      let view = store.views.find((x) => x.externalId == props.itemViewId);
+      const view = store.views.find((x) => x.externalId == props.itemViewId);
 
-      if (view === undefined) {
+      if (!view) {
         throw new Error(`No view found for external id ${props.itemViewId}`);
       }
-      let navigationItem = store.navigationItems.find((x) => x.viewId == view?.id);
-      if (navigationItem === undefined) {
+      const navigationItem = store.navigationItems.find((x) => x.viewId == view?.id);
+      if (!navigationItem) {
         throw new Error(`No navigationItem found for view ${props.itemViewId}`);
       }
 
       // try to resolve route parameter
-      let routeParams: RouteParamsRaw = {};
-      if (navigationItem.isDynamicRoute !== undefined) {
-        if (props.tableMap.itemId === undefined) {
+      const routeParams: RouteParamsRaw = {};
+      if (navigationItem.isDynamicRoute) {
+        if (!props.tableMap.itemId) {
           throw new Error(`No itemId function found to resolve ${navigationItem.dynamicRouteParamaterName}`);
         }
-        let itemId = props.tableMap.itemId(dataItem);
-        if (itemId === undefined) {
+        const itemId = props.tableMap.itemId(dataItem);
+        if (!itemId) {
           throw new Error(`No value returned by itemId function`);
         }
-        if (navigationItem.dynamicRouteParamaterName !== undefined) {
+        if (navigationItem.dynamicRouteParamaterName) {
           routeParams[navigationItem.dynamicRouteParamaterName] = itemId;
         }
       }
