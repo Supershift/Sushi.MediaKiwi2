@@ -274,7 +274,7 @@ FakesAssemblies/
 # Node.js Tools for Visual Studio
 .ntvs_analysis.dat
 node_modules/
-dist/
+**/dist/*
 !**/Sushi.MediaKiwi.SampleWeb/ClientApp/dist
 
 # Visual Studio 6 build log
