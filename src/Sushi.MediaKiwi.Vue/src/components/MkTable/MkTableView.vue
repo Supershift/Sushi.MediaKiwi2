@@ -3,7 +3,7 @@
   import type { ITableMap } from "@/models/table/ITableMap";
   import type { ITableMapItem } from "@/models/table/ITableMapItem";
   import MkTableCell from "./MkTableCell.vue";
-  import { store } from "@/stores/mediakiwi/mock";
+  import { useMediakiwiStore } from "@/stores/";
   import { TableSortingDirection } from "@/models";
   import type { ITableSortingValue } from "@/models";
   import TableSortingHelper from "@/helpers/TableSortingHelper";
@@ -17,8 +17,8 @@
   const props = defineProps<{
     tableMap: ITableMap<unknown>;
     data: unknown[];
-    /** Name of the IScreen instance to which the user is pushed when clicking a row */
-    itemScreenName?: string;
+    /** ExternalId of the screen instance to which the user is pushed when clicking a row. */
+    itemScreenId?: string;
     /** */
     selectedSortOption?: ITableSortingValue;
     selectedTableRows?: unknown[];
@@ -31,21 +31,22 @@
   }>();
 
   const router = useRouter();
-
+  const store = useMediakiwiStore();
   function onRowClick(event: Event, dataItem: unknown) {
     // emit event
     emit("click:row", dataItem);
 
     // navigate user to target page if defined
-    if (props.itemScreenName !== undefined) {
+    if (props.itemScreenId !== undefined) {
       // find navigation item for the screen
-      let screen = store.screens.find((x) => x.name == props.itemScreenName);
+      let screen = store.screens.find((x) => x.externalId == props.itemScreenId);
+      
       if (screen === undefined) {
-        throw new Error(`No screen found for name ${props.itemScreenName}`);
+        throw new Error(`No screen found for external id ${props.itemScreenId}`);
       }
       let navigationItem = store.navigationItems.find((x) => x.screenId == screen?.id);
       if (navigationItem === undefined) {
-        throw new Error(`No navigationItem found for screen ${props.itemScreenName}`);
+        throw new Error(`No navigationItem found for screen ${props.itemScreenId}`);
       }
 
       // try to resolve route parameter

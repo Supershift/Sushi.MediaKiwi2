@@ -55,7 +55,6 @@ describe("RouteGenerator", () => {
     const account: AccountInfo = generateAccountInfo();
     account.idTokenClaims = { roles: ["Admin"] };
     identity.msalInstance.getActiveAccount = vi.fn(() => account);
-    console.log(identity.msalInstance);
 
     // act
     const result = checkIsInRole(to, from);
