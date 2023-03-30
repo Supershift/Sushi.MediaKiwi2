@@ -28,7 +28,7 @@ const modules = import.meta.glob("./views/**/*.vue");
 
 // create mediakiwi options
 const mediaKiwiOptions: mediakiwi.IMediakiwiVueOptions = {
-  apiBaseUrl: useLocalApi ? "https://localhost:7223/mediakiwi/api" : "https://mediakiwi-sample-api-dev.azurewebsites.net/mediakiwi/api",
+  apiBaseUrl: useLocalApi ? "https://localhost:5092/mediakiwi/api" : "https://mediakiwi-sample-api-dev.azurewebsites.net/mediakiwi/api",
   modules: modules,
   msalConfig: msalConfig,
   serviceRegistrations: useFakes ? getFakes() : undefined,

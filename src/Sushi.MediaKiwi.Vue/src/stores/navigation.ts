@@ -3,6 +3,7 @@ import { useMediakiwiStore } from ".";
 import { type IBreadcrumb } from "@/models/breadcrumb/index";
 import { type INavigationState } from "@/models/stores";
 import { getNavigationItemChildren } from "@/helpers";
+import { useRouter } from "@/router";
 
 export const useNavigationStore = defineStore({
   id: "navigationStore",
@@ -60,7 +61,9 @@ export const useNavigationStore = defineStore({
         // there is no section selected so lets just place navigation items to empty for now
         const defaultSection = useMediakiwiStore().mediakiwiSections.at(0);
         this.navigationItems = [];
-        this.router.push({ name: defaultSection?.name });
+        //FIXME: This needs to navigate to a Default screen instead
+        // const router = useRouter();
+        // router.push({ name: defaultSection?.name });
       }
     },
     setBreadCrumbs(breadcrumbs: Array<IBreadcrumb>) {
