@@ -41,9 +41,9 @@ export const useNavigationStore = defineStore({
       }
     },
     setSectionNavigationItems(name: string) {
-      // check if this is a valid Section and assign the right sub-items to that section
-      const currentSectionId = useMediakiwiStore().mediakiwiSections.find((x) => x.name === name)?.id;
       if (name) {
+        // check if this is a valid Section and assign the right sub-items to that section
+        const currentSectionId = useMediakiwiStore().mediakiwiSections.find((x) => x.name === name)?.id;
         if (currentSectionId) {
           //assign the right navigation items to the section
           const items = useMediakiwiStore().mediakiwiNavigationItems.filter((x) => x.sectionId === currentSectionId);

@@ -46,7 +46,8 @@ export default function registerNavigation(router: Router): void {
   // after each navigation we check the path to assign the correct navigation items
   router.afterEach((to, from) => {
     const name = to.path.split("/")[1];
-    navigationStore.setSectionNavigationItems(name);
+    const decodedName = decodeURI(name);
+    navigationStore.setSectionNavigationItems(decodedName);
     // since we don't have a name("/") and we dont have itemsfor this section, redirect to a default section (index 0)
     if (!name && !navigationStore.navigationList.length) {
       const defaultSection = mediakiwiStore.mediakiwiSections.at(0);
