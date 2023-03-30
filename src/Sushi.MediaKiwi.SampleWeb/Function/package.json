@@ -1,0 +1,10 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "func start --javascript"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

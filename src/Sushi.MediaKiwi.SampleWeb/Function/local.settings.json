@@ -1,0 +1,14 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "",
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "MediaKiwi_TestVariable": "Setting from the local settings",
+    "MediaKiwi_UseFakes": false,
+    "MediaKiwi_UseLocalApi": false
+  },
+  "Host": {
+    "LocalHttpPort": 7071,
+    "CORS": "*"
+  }
+}
