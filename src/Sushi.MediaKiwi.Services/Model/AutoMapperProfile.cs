@@ -17,10 +17,16 @@ namespace Sushi.MediaKiwi.Services.Model
         /// </summary>
         public AutoMapperProfile()
         {
+            // from DAL to Model
             CreateMap<DAL.Section, Section>();
             CreateMap<DAL.View, View>();
             CreateMap<DAL.NavigationItem, NavigationItem>();
             CreateMap<DAL.Role, Role>();
+
+            // from model to DAL
+            CreateMap<Section, DAL.Section>();
+            CreateMap<View, DAL.View>();
+            CreateMap<NavigationItem, DAL.NavigationItem>();
         }
     }
 }

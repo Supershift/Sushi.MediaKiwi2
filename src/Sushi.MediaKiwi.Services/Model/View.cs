@@ -47,7 +47,7 @@ namespace Sushi.MediaKiwi.Services.Model
         /// <summary>
         /// If not empty, access to this view is restricted to these roles.
         /// </summary>
-        [SwaggerSchema(ReadOnly = true)]
+        [Required]
         public List<string> Roles { get; set; } = new List<string>();
     }
 }

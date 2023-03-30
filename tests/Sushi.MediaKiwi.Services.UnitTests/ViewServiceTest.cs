@@ -29,7 +29,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var viewRepositoryMock = new Mock<IViewRepository>();
             viewRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<int?>(), It.IsAny<PagingValues>())).ReturnsAsync(viewStubs);
             var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();
-            viewRoleRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new QueryListResult<DAL.ViewRole>());
+            viewRoleRepositoryMock.Setup(x => x.GetAllAsync(null)).ReturnsAsync(new QueryListResult<DAL.ViewRole>());
 
             var service = new ViewService(viewRepositoryMock.Object, viewRoleRepositoryMock.Object, mapper);
 
@@ -97,7 +97,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var viewRepositoryMock = new Mock<IViewRepository>();
             viewRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<int?>(), It.IsAny<PagingValues>())).ReturnsAsync(viewStubs);
             var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();
-            viewRoleRepositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(roleStubs);
+            viewRoleRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<int?>())).ReturnsAsync(roleStubs);
 
             var service = new ViewService(viewRepositoryMock.Object, viewRoleRepositoryMock.Object, mapper);
 
