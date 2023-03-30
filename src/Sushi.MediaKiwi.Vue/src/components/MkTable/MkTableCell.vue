@@ -1,5 +1,7 @@
 <script setup lang="ts">
+  import { IconPosition } from "@/models";
   import type { ITableMapItem } from "@/models/table/ITableMapItem";
+  import MkTableCellIcon from "./MkTableCellIcon.vue";
 
   const props = defineProps<{
     data: any;
@@ -29,7 +31,15 @@
         <v-icon v-else icon="mdi-close-circle-outline" />
       </template>
       <!-- render any other value -->
-      <template v-else>{{ invokeMapItemValue(mapItem) }}</template>
+      <template v-else>
+        <!-- render icon in front -->
+        <MkTableCellIcon v-if="mapItem.iconOptions && !mapItem.iconOptions.position" :data="data" :icon-options="mapItem.iconOptions" />
+
+        <label>{{ invokeMapItemValue(mapItem) }}</label>
+
+        <!-- render icon behind -->
+        <MkTableCellIcon v-if="mapItem.iconOptions && mapItem.iconOptions.position === IconPosition.behind" :data="data" :icon-options="mapItem.iconOptions" />
+      </template>
     </template>
   </td>
 </template>

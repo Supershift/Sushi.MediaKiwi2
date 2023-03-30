@@ -7,3 +7,4 @@ export { TableFilterValueCollection } from "./TableFilterValueCollection";
 export type { ITableSortingValue } from "./ITableSortingValue";
 export { TableSortingDirection } from "./TableSortingDirection";
 export type { ITableMapSortingOptions } from "./ITableMapSortingOptions";
+export type { ITableMapItemIconOptions } from "./ITableMapItemIconOptions";

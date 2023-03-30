@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { reactive, computed, ref } from "vue";
   import type { ITableMap, ITableFilter, ITableSortingValue } from "@supershift/mediakiwi-vue";
+  import { IconPosition } from "@supershift/mediakiwi-vue";
   import { TableFilterValueCollection, MkTable, MkTableFilterSelect, MkTableFilterTextField, MkTableFilterRadioGroup, MkTableFilterDatePicker, TableSortingDirection } from "@supershift/mediakiwi-vue";
   import SampleCustomTableFilterInput from "./SampleCustomTableFilterInput.vue";
   import type { ISampleData } from "./ISampleData";
@@ -17,6 +18,16 @@
       { id: "name", headerTitle: "Naam", value: (dataItem) => dataItem.name },
       { id: "country", headerTitle: "Land", value: (dataItem) => dataItem.countryName, sortingOptions: { defaultSortDirection: TableSortingDirection.Asc } },
       { id: "lastSeen", headerTitle: "Laast gezien", value: (dataItem) => dataItem.date?.toISOString(), sortingOptions: { defaultSortDirection: TableSortingDirection.Desc } },
+      {
+        id: "help",
+        headerTitle: "Hulp",
+        value: (dataItem) => dataItem.countryName,
+        iconOptions: {
+          position: IconPosition.inFront,
+          value: (dataItem) => (dataItem.countryCode === "NL" ? "mdi-help-box" : "mdi-help-circle"),
+          tooltip: (dataItem) => `Hulp met ${dataItem.countryName}`,
+        },
+      },
     ],
   };
 
