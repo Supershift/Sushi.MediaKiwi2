@@ -15,7 +15,7 @@
   const groupOpened = ref(false);
   const nameLabel = computed(() => props.navigationItem?.name ?? "-empty-");
   const children = computed(() => getNavigationItemChildren(props.navigationItem, props.allItems, true));
-  const isActive = computed(() => route.path == props.navigationItem.path);
+  const isActive = computed(() => route.name == props.navigationItem.id.toString());
   const { navigateTo } = useMediaKiwiRouting();
 
   function hasScreen(item: NavigationItem): boolean {

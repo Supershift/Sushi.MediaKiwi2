@@ -23,7 +23,7 @@ export default function () {
       const navigationItem = item as NavigationItem;
       if (navigationItem) {
         // called to send user to target screen
-        router.push({ path: navigationItem.path });
+        router.push({ name: navigationItem.id.toString() });
       }
     }
   };

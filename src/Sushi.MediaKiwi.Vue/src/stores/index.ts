@@ -78,7 +78,7 @@ export const useMediakiwiStore = defineStore({
           parentPath = this.getParentPath(parent);
         }
       }
-      return parentPath + `/${payload.name}`;
+      return parentPath + `/${encodeURI(payload.name)}`;
     },
   },
 });
