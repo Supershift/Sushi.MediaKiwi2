@@ -25,5 +25,13 @@ namespace Sushi.MediaKiwi.WebAPI
             var result = await _viewService.GetAllAsync(sectionID, pagingValues);
             return this.CreateResponse(result);
         }
+
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<ActionResult<View>> GetView(int id)
+        {
+            var result = await _viewService.GetAsync(id);
+            return this.CreateResponse(result);
+        }
     }
 }

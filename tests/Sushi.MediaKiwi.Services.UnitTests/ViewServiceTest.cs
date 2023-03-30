@@ -112,5 +112,36 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             Assert.Empty(view2.Roles);
             Assert.Equal("Admin", view1.Roles[0]);
         }
+
+        [Fact]
+        public async Task GetViewTest()
+        {
+            // arrange
+            var viewStub = new DAL.View()
+            {
+                Id = 11
+            };                
+
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<AutoMapperProfile>();
+            });
+            var mapper = config.CreateMapper();
+
+            var viewRepositoryMock = new Mock<IViewRepository>();
+            viewRepositoryMock.Setup(x => x.GetAsync(It.Is<int>(x=>x == viewStub.Id))).ReturnsAsync(viewStub);
+            var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();            
+
+            var service = new ViewService(viewRepositoryMock.Object, viewRoleRepositoryMock.Object, mapper);
+
+            // act
+            var result = await service.GetAsync(11);
+
+            // assert
+            Assert.NotNull(result);
+            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.NotNull(result.Value);
+            Assert.Equal(viewStub.Id, result.Value.Id);
+        }
     }
 }

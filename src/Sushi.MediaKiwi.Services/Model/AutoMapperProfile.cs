@@ -20,6 +20,7 @@ namespace Sushi.MediaKiwi.Services.Model
             CreateMap<DAL.Section, Section>();
             CreateMap<DAL.View, View>();
             CreateMap<DAL.NavigationItem, NavigationItem>();
+            CreateMap<DAL.Role, Role>();
         }
     }
 }

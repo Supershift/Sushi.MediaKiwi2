@@ -2,10 +2,10 @@ import "reflect-metadata";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { container } from "tsyringe";
 import { RouteGenerator } from "../routeGenerator";
-import { IMediakiwiVueOptions } from "../../models/options";
+import { MediakiwiVueOptions } from "../../models/options";
 import { createRouter, RouteComponent, RouterOptions, type RouteRecordRaw, createWebHistory } from "vue-router";
 import { Component } from "vue";
-import { type INavigationItem, type IScreen } from "../../models";
+import { type NavigationItem, type View } from "../../models";
 import { Configuration } from "@azure/msal-browser";
 
 // mock libraries
@@ -16,9 +16,10 @@ const modules: Record<string, RouteComponent> = {
   a: <Component>{},
   b: <Component>{},
 };
-const navigationItems: INavigationItem[] = [<INavigationItem>{ id: 1, screenId: 1, path: "/orders" }, <INavigationItem>{ id: 2, screenId: 2, path: "/customers" }];
-const screens: IScreen[] = [<IScreen>{ id: 1, sectionId: 1, componentKey: "a", name: "screen a" }, <IScreen>{ id: 2, sectionId: 1, componentKey: "b", name: "screen b" }];
-const options: IMediakiwiVueOptions = {
+const navigationItems: NavigationItem[] = [<NavigationItem>{ id: 1, viewId: 1, path: "/orders" }, <NavigationItem>{ id: 2, viewId: 2, path: "/customers" }];
+const screens: View[] = [<View>{ id: 1, sectionId: 1, componentKey: "a", name: "screen a" }, <View>{ id: 2, sectionId: 1, componentKey: "b", name: "screen b" }];
+const options: MediakiwiVueOptions = {
+  apiBaseUrl: "",
   modules: modules,
   msalConfig: <Configuration>{},
 };

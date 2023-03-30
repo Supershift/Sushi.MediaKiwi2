@@ -5,6 +5,7 @@ import mediaKiwiAxiosInstance from "@/services/interceptors/MediakiwiAxiosInstan
 
 import { RouterManager } from "@/router/routerManager";
 import { RouteGenerator } from "@/router/routeGenerator";
+import { RoleConnector } from "@/services/RoleConnector";
 
 export function registerServices(container: DependencyContainer, registations?: IMediakiwiServiceRegistrations) {
   // register axios
@@ -20,4 +21,5 @@ export function registerServices(container: DependencyContainer, registations?: 
   container.register("INavigationConnector", registations?.navigationConnector ? registations.navigationConnector : NavigationConnector);
   container.register("IViewConnector", registations?.viewConnector ? registations.viewConnector : ViewConnector);
   container.register("ISectionConnector", registations?.sectionConnector ? registations.sectionConnector : SectionConnector);
+  container.register("IRoleConnector", registations?.roleConnector ? registations.roleConnector : RoleConnector);
 }

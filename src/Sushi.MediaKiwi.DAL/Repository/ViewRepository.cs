@@ -23,6 +23,14 @@ namespace Sushi.MediaKiwi.DAL.Repository
         }
 
         /// <inheritdoc/>    
+        public async Task DeleteAsync(int id)
+        {
+            var query = _connector.CreateQuery();
+            query.Add(x => x.Id, id);
+            await _connector.DeleteAsync(query);
+        }
+
+        /// <inheritdoc/>    
         public async Task<QueryListResult<View>> GetAllAsync(int? sectionID, PagingValues pagingValues)
         {
             var query = _connector.CreateQuery();
@@ -35,6 +43,21 @@ namespace Sushi.MediaKiwi.DAL.Repository
 
             var result = await _connector.GetAllAsync(query);
             return result;
+        }
+
+        /// <inheritdoc/>    
+        public async Task<View> GetAsync(int id)
+        {
+            var query = _connector.CreateQuery();
+            query.Add(x => x.Id, id);
+            var result = await _connector.GetFirstAsync(query); 
+            return result;
+        }
+
+        /// <inheritdoc/>    
+        public async Task SaveAsync(View view)
+        {
+            await _connector.SaveAsync(view);            
         }
     }
 }

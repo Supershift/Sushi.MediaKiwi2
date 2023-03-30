@@ -3,7 +3,7 @@ import { Configuration } from "@azure/msal-browser";
 import { VuetifyOptions } from "vuetify/lib/framework.mjs";
 import { IMediakiwiServiceRegistrations } from "./IMediakiwiServiceRegistrations";
 
-export interface IMediakiwiVueOptions {
+export interface MediakiwiVueOptions {
   /** Base url for the MediaKiwi API, e.g. https://portal.mydomain.com/mediakiwi/api */
   apiBaseUrl: string;
   modules: Record<string, RouteComponent>;

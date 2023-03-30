@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ITableMapItem, MkForm, MkTableView } from "@supershift/mediakiwi-vue";
+  import { MkForm, MkTableView } from "@supershift/mediakiwi-vue";
   import { useRoute, useRouter } from "@supershift/mediakiwi-vue";
   import type { ITableMap } from "@supershift/mediakiwi-vue";
   import { SampleDataService } from "../components/SampleDataService";

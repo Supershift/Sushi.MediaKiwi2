@@ -3,7 +3,7 @@ import pinia from "./plugins/pinia";
 import { getDefaultRouterOptions } from "@/router/getDefaultRouterOptions";
 import { createRouter } from "vue-router";
 import { PublicClientApplication } from "@azure/msal-browser";
-import { type IMediakiwiVueOptions } from "./models/options";
+import { type MediakiwiVueOptions } from "./models/options";
 import { createVuetify, type VuetifyOptions } from "vuetify";
 import { msalPlugin } from "./plugins/msalPlugin";
 import { CustomNavigationClient } from "./router/navigationClient";
@@ -19,7 +19,7 @@ import { addWaitOnRouterManager } from "./router/waitOnRouterManager";
 import { addCheckIsInRole } from "./router/checkIsInRole";
 
 export default {
-  install(app: App, options: IMediakiwiVueOptions): void {
+  install(app: App, options: MediakiwiVueOptions): void {
     // register options
     registerOptions(container, options);
 

@@ -13,7 +13,7 @@ export interface NavigationItem {
   /** If true, this item has a dynamic route which requires an ID in the url. */
   isDynamicRoute: boolean;
   /** If this item is for a dynamic route, the route's dyanmic part is set here, e.g. :userID */
-  dynamicRouteParamaterName?: string;
+  dynamicRouteParameterName?: string;
   /** Path, relative to the application's root. Not provided by API, but needs to be calculated based on item's hierarchy. */
   path: string;
 }

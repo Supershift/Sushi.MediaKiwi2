@@ -2,13 +2,13 @@ import axios, { AxiosInstance, InternalAxiosRequestConfig } from "axios";
 import { identity } from "@/identity";
 import { InteractionRequiredAuthError, InteractionStatus } from "@azure/msal-browser";
 import { container } from "tsyringe";
-import { IMediakiwiVueOptions } from "@models/options";
+import { MediakiwiVueOptions } from "@models/options";
 
 export interface IMediakiwiAxiosInstance extends AxiosInstance {}
 
 /** Configures Axios to call the Mediakiwi API */
 export async function configureMediakiwiAxios(config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> {
-  const options = container.resolve<IMediakiwiVueOptions>("MediakiwiOptions");
+  const options = container.resolve<MediakiwiVueOptions>("MediakiwiOptions");
   config.baseURL = options.apiBaseUrl;
   config.headers["Content-Type"] = "application/json";
 

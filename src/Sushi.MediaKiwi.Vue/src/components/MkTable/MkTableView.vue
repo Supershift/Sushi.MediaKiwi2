@@ -53,14 +53,14 @@
       const routeParams: RouteParamsRaw = {};
       if (navigationItem.isDynamicRoute) {
         if (!props.tableMap.itemId) {
-          throw new Error(`No itemId function found to resolve ${navigationItem.dynamicRouteParamaterName}`);
+          throw new Error(`No itemId function found to resolve ${navigationItem.dynamicRouteParameterName}`);
         }
         const itemId = props.tableMap.itemId(dataItem);
         if (!itemId) {
           throw new Error(`No value returned by itemId function`);
         }
-        if (navigationItem.dynamicRouteParamaterName) {
-          routeParams[navigationItem.dynamicRouteParamaterName] = itemId;
+        if (navigationItem.dynamicRouteParameterName) {
+          routeParams[navigationItem.dynamicRouteParameterName] = itemId;
         }
       }
 

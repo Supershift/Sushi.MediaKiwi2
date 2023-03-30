@@ -1,11 +1,11 @@
 import { injectable, inject } from "tsyringe";
 import { useMediakiwiStore } from "../stores/index";
-import { type IMediakiwiVueOptions } from "../models/options/IMediakiwiVueOptions";
+import { type MediakiwiVueOptions } from "../models/options/MediakiwiVueOptions";
 import type { RouteComponent } from "vue-router";
 import { type Router } from "vue-router";
 import { type NavigationItem, type View } from "@/models";
 import type { RouteGenerator } from "./routeGenerator";
-
+import { modules } from "@/views/modules";
 export enum RouterManagerState {
   Empty = 0,
   Initialized = 1,
@@ -14,7 +14,7 @@ export enum RouterManagerState {
 
 @injectable()
 export class RouterManager {
-  constructor(@inject("MediakiwiOptions") private options: IMediakiwiVueOptions, @inject("Router") private router: Router, @inject("RouteGenerator") private routeGenerator: RouteGenerator) {}
+  constructor(@inject("MediakiwiOptions") private options: MediakiwiVueOptions, @inject("Router") private router: Router, @inject("RouteGenerator") private routeGenerator: RouteGenerator) {}
 
   private _initialize?: Promise<RouterManagerState>;
   private _isInitialized: RouterManagerState = RouterManagerState.Empty;
@@ -64,7 +64,8 @@ export class RouterManager {
       await store.init();
 
       // apply loaded data to router
-      this.updateRoutes(this.options.modules, store.navigationItems, store.views);
+      const allModules = this.getModules();
+      this.updateRoutes(allModules, store.navigationItems, store.views);
 
       this._isInitialized = RouterManagerState.Initialized;
     } catch (error) {
@@ -72,5 +73,11 @@ export class RouterManager {
       throw error;
     }
     return this._isInitialized;
+  }
+
+  /** Gets all modules by merging default mk modules with modules provided through mediakiwi options */
+  private getModules(): Record<string, RouteComponent> {
+    let result = { ...modules, ...this.options.modules };
+    return result;
   }
 }

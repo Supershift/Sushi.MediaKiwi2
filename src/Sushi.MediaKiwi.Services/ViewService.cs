@@ -56,5 +56,28 @@ namespace Sushi.MediaKiwi.Services
 
             return new Result<ListResult<View>>(result);
         }
+
+        public async Task<Result<View>> GetAsync(int id)
+        {
+            // get item from datastore
+            var view = await _viewRepository.GetAsync(id);
+            var viewsRoles = await _viewRoleRepository.GetAllAsync();
+
+
+            if (view != null)
+            {
+                // map to result
+                var result = new View();
+                _mapper.Map(view, result);
+                // add roles                
+                result.Roles = viewsRoles.Where(x => x.ViewId == view.Id).Select(x => x.Role).ToList();
+                
+                return new Result<View>(result);
+            }
+            else
+            {
+                return new Result<View>(ResultCode.NotFound);
+            }
+        }        
     }
 }
