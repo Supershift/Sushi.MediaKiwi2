@@ -28,6 +28,11 @@
           tooltip: (dataItem) => `Hulp met ${dataItem.countryName}`,
         },
       },
+      {
+        id: "check",
+        headerTitle: "Checked",
+        value: () => true,
+      },
     ],
   };
 
