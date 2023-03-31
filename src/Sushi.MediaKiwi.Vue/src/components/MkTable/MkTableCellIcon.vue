@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref, computed } from "vue";
+  import { ref } from "vue";
   import { ITableMapItemIconOptions } from "@/models/table/ITableMapItemIconOptions";
   import { IconPosition } from "@/models";
 
