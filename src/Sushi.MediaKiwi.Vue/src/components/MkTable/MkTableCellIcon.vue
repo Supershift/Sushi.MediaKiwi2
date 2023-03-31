@@ -27,14 +27,10 @@
 </script>
 
 <template>
-  <slot name="in-front-icon"></slot>
-
   <v-tooltip v-model="showTooltip" location="top" :disabled="!props.iconOptions?.tooltip">
     <template #activator="{ props }">
       <v-icon v-bind="props" :icon="invokeIconValue()" :class="iconClasses()"></v-icon>
     </template>
     <span>{{ invokeToolTopValue() }}</span>
   </v-tooltip>
-
-  <slot name="behind-icon"></slot>
 </template>

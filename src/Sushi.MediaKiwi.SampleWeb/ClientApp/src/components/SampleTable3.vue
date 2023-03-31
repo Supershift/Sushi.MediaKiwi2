@@ -23,7 +23,6 @@
         headerTitle: "Hulp",
         value: (dataItem) => dataItem.countryName,
         iconOptions: {
-          position: IconPosition.inFront,
           value: (dataItem) => (dataItem.countryCode === "NL" ? "mdi-help-box" : "mdi-help-circle"),
           tooltip: (dataItem) => `Hulp met ${dataItem.countryName}`,
         },

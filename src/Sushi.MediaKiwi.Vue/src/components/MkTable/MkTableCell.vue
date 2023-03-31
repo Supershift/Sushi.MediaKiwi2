@@ -2,8 +2,7 @@
   import { ref, computed } from "vue";
   import { IconPosition, ITableMapItemIconOptions } from "@/models";
   import type { ITableMapItem } from "@/models/table/ITableMapItem";
-  import MkTableCellValue from "./MkTableCellValue.vue";
-  import { IconOptions } from "vuetify/lib/framework.mjs";
+  import MkTableCellIcon from "./MkTableCellIcon.vue";
 
   const props = defineProps<{
     data: any;
@@ -19,6 +18,11 @@
   }
 
   const isBooleanValue = computed(() => typeof invokeMapItemValue(props.mapItem) === "boolean");
+  const rowClasses = computed(() => {
+    return {
+      reverse: props.mapItem.iconOptions?.position === IconPosition.behind,
+    };
+  });
 </script>
 
 <template>
@@ -31,26 +35,30 @@
     <template v-else>
       <!-- render a boolean -->
       <template v-if="isBooleanValue">
-        <MkTableCellValue :icon-options="{ value: () => (invokeMapItemValue(props.mapItem) ? 'mdi-check-circle-outline' : 'mdi-close-circle-outline') }" />
+        <MkTableCellIcon :icon-options="{ value: () => (invokeMapItemValue(props.mapItem) ? 'mdi-check-circle-outline' : 'mdi-close-circle-outline') }" />
       </template>
 
       <!-- render any other value -->
       <template v-else>
-        <!-- optionally render icon -->
-        <MkTableCellValue :data="data" :icon-options="mapItem.iconOptions">
-          <template v-if="mapItem.iconOptions?.position === IconPosition.behind" #in-front-icon>
-            {{ invokeMapItemValue(mapItem) }}
-          </template>
-          <template v-else #behind-icon>
-            {{ invokeMapItemValue(mapItem) }}
-          </template>
-        </MkTableCellValue>
-
-        <!-- <label></label> -->
-
-        <!-- render icon behind -->
-        <!-- <MkTableCellValue v-if="mapItem.iconOptions && mapItem.iconOptions.position === IconPosition.behind" :data="data" :icon-options="mapItem.iconOptions" /> -->
+        <span class="row" :class="rowClasses">
+          <!-- render icon if icon options are sest -->
+          <MkTableCellIcon v-if="mapItem.iconOptions" :icon-options="mapItem.iconOptions" :data="data"></MkTableCellIcon>
+          <!-- render value -->
+          <label>{{ invokeMapItemValue(mapItem) }}</label>
+        </span>
       </template>
     </template>
   </td>
 </template>
+
+<style scoped lang="scss">
+  .row {
+    display: inline-flex;
+    flex-flow: row nowrap;
+
+    &.reverse {
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+    }
+  }
+</style>
