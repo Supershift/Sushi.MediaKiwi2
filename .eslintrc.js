@@ -40,6 +40,7 @@ module.exports = {
       rules: {
         "@typescript-eslint/explicit-function-return-type": "error",
         "@typescript-eslint/consistent-type-imports": "error",
+        "@typescript-eslint/no-explicit-any": "off",
       },
     },
   ],
