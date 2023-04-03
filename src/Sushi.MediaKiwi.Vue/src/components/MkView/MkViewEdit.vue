@@ -38,6 +38,8 @@
 
   async function onSave() {
     if (viewId > 0) {
+      await new Promise((r) => setTimeout(r, 3000));
+
       // update existing
       // call Api to update view
       await viewConnector.UpdateView(viewId, state.view);
@@ -56,7 +58,7 @@
 </script>
 
 <template>
-  <MkForm title="View" @save="onSave" @undo="loadView" @delete="onDelete">
+  <MkForm :on-submit="onSave" title="View" @save="onSave" @undo="loadView" @delete="onDelete">
     <v-text-field label="Name" v-model="state.view.name"></v-text-field>
     <v-text-field label="External Id" v-model="state.view.externalId"></v-text-field>
     <v-text-field label="Component key" v-model="state.view.componentKey"></v-text-field>
