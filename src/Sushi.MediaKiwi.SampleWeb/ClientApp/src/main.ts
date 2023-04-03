@@ -8,9 +8,13 @@ import mediakiwi from "@supershift/mediakiwi-vue";
 import "@supershift/mediakiwi-vue/dist/mediakiwi-vue.css";
 
 import { getFakes } from "./fakes/getFakes";
+import { fetchSettings } from "./services/settings";
 
-const useFakes = false;
-const useLocalApi = true;
+// TODO; Push to store?
+const settings = await fetchSettings();
+
+const useFakes = settings?.mediaKiwi?.useFakes;
+const useLocalApi = settings?.mediaKiwi?.useLocalApi;
 
 const app = createApp(App);
 
@@ -28,7 +32,7 @@ const modules = import.meta.glob("./views/**/*.vue");
 
 // create mediakiwi options
 const mediaKiwiOptions: mediakiwi.IMediakiwiVueOptions = {
-  apiBaseUrl: useLocalApi ? "https://localhost:7223/mediakiwi/api" : "https://mediakiwi-sample-api-dev.azurewebsites.net/mediakiwi/api",
+  apiBaseUrl: useLocalApi ? "https://localhost:5092/mediakiwi/api" : "https://mediakiwi-sample-api-dev.azurewebsites.net/mediakiwi/api",
   modules: modules,
   msalConfig: msalConfig,
   serviceRegistrations: useFakes ? getFakes() : undefined,

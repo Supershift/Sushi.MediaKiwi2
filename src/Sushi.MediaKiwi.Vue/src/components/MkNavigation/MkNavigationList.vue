@@ -4,7 +4,6 @@
   import { computed } from "vue";
   import { useRoute } from "@/router/index";
   import MkNavigationItem from "@/components/MkNavigation/MkNavigationItem.vue";
-  import { useNavigationStore } from "@/stores/navigation";
 
   const props = defineProps<{
     navigationItems: Array<NavigationItem>;
