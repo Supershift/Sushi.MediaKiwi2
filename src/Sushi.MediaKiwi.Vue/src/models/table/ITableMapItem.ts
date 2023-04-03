@@ -1,4 +1,5 @@
 import type { Component, DefineComponent } from "vue";
+import type { ITableMapItemIconOptions } from "./ITableMapItemIconOptions";
 import type { ITableMapSortingOptions } from "./ITableMapSortingOptions";
 
 /** Represents a column in a table, mapping bound entities to table cells.  */
@@ -14,4 +15,6 @@ export interface ITableMapItem<Type> {
   component?: Component | DefineComponent;
   /** Mark the column sortable */
   sortingOptions?: ITableMapSortingOptions;
+  /** Icon settings */
+  iconOptions?: ITableMapItemIconOptions<Type>;
 }
