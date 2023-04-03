@@ -125,20 +125,31 @@
   </v-table>
 </template>
 
-<style scoped>
-  th:not(.sortable-active) .v-icon {
-    visibility: hidden;
+<style scoped lang="scss">
+  thead {
+    th {
+      &:not(.sortable-active) .v-icon {
+        visibility: hidden;
+      }
+
+      &.sortable {
+        font-weight: 700;
+        &:hover {
+          cursor: pointer;
+          .v-icon {
+            visibility: visible;
+          }
+        }
+      }
+    }
   }
 
-  th.sortable {
-    font-weight: 700;
-  }
-
-  th.sortable:hover {
-    cursor: pointer;
-  }
-
-  th.sortable:hover .v-icon {
-    visibility: visible;
+  tbody {
+    tr {
+      transition: 0.2s background-color;
+      &:hover {
+        background: rgba(var(--v-theme-surface-variant), var(--v-hover-opacity));
+      }
+    }
   }
 </style>
