@@ -104,27 +104,28 @@ namespace Sushi.MediaKiwi.Services
             _mapper.Map(request, view);
 
             // start transaction
-            using var ts = DAL.Utility.CreateTransactionScope();
-
-            // save view
-            // todo: handle uq constraint fail
-            await _viewRepository.SaveAsync(view);
-
-            // todo: only do this if roles have changed
-            // delete existing roles for view
-            if(id.HasValue)
-                await _viewRoleRepository.DeleteForViewAsync(view.Id);
-
-            // insert roles for view
-            foreach (var role in request.Roles)
+            using (var ts = DAL.Utility.CreateTransactionScope())
             {
-                var viewRole = new DAL.ViewRole() { Role = role, ViewId = view.Id };
-                await _viewRoleRepository.InsertAsync(viewRole);
-            }
 
-            // commit transaction
-            ts.Complete();
-            
+                // save view
+                // todo: handle uq constraint fail
+                await _viewRepository.SaveAsync(view);
+
+                // todo: only do this if roles have changed
+                // delete existing roles for view
+                if (id.HasValue)
+                    await _viewRoleRepository.DeleteForViewAsync(view.Id);
+
+                // insert roles for view
+                foreach (var role in request.Roles)
+                {
+                    var viewRole = new DAL.ViewRole() { Role = role, ViewId = view.Id };
+                    await _viewRoleRepository.InsertAsync(viewRole);
+                }
+
+                // commit transaction
+                ts.Complete();
+            }
             // return view
             var viewsRoles = await _viewRoleRepository.GetAllAsync(view.Id);
             var result = new View();

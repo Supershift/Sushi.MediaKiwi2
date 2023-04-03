@@ -10,7 +10,7 @@
         <router-view />
       </template>
       <template #fallback>
-        <span>Loading...</span>
+        <v-progress-circular indeterminate></v-progress-circular>
       </template>
     </suspense>
   </v-main>

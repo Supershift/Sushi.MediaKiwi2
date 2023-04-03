@@ -19,7 +19,7 @@
           <mk-navigation></mk-navigation>
         </template>
         <template #fallback>
-          <span>Loading...</span>
+          <v-progress-circular indeterminate></v-progress-circular>
         </template>
       </Suspense>
       <mk-screen></mk-screen>

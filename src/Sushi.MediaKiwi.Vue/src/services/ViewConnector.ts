@@ -17,4 +17,9 @@ export class ViewConnector implements IViewConnector {
     const response = await this.axios.get<View>(`/views/${id}`);
     return response.data;
   }
+
+  async UpdateView(id: number, request: View): Promise<View> {
+    const response = await this.axios.put<View>(`/views/${id}`, request);
+    return response.data;
+  }
 }

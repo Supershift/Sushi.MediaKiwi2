@@ -6,8 +6,11 @@
   import { IViewConnector } from "@/services";
   import { View } from "@/models";
   import { useMediakiwiStore } from "@/stores";
+  import { RouterManager } from "@/router/routerManager";
   // inject dependencies
   const viewConnector = container.resolve<IViewConnector>("IViewConnector");
+  const routerManager = container.resolve<RouterManager>("RouterManager");
+
   const route = useRoute();
   const store = useMediakiwiStore();
 
@@ -33,9 +36,23 @@
 
   await loadView();
 
-  function onSave() {}
+  async function onSave() {
+    if (viewId > 0) {
+      // update existing
+      // call Api to update view
+      await viewConnector.UpdateView(viewId, state.view);
 
-  function onDelete() {}
+      // refresh navigation
+      await routerManager.ForceInitialize();
+    } else {
+      // create new
+      alert("Not implemented");
+    }
+  }
+
+  function onDelete() {
+    alert("Not implemented");
+  }
 </script>
 
 <template>
