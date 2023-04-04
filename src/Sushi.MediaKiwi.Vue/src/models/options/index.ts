@@ -1,10 +1,10 @@
-import { IMediakiwiVueOptions } from "./IMediakiwiVueOptions";
+import { MediakiwiVueOptions } from "./MediakiwiVueOptions";
 
-export type { IMediakiwiVueOptions } from "./IMediakiwiVueOptions";
+export type { MediakiwiVueOptions } from "./MediakiwiVueOptions";
 export type { IMediakiwiServiceRegistrations } from "./IMediakiwiServiceRegistrations";
 
 export const currentOptions = <
   {
-    mediakiwiVueOptions: IMediakiwiVueOptions;
+    mediakiwiVueOptions: MediakiwiVueOptions;
   }
 >{};

@@ -20,6 +20,7 @@ namespace Sushi.MediaKiwi.DAL
             services.TryAddTransient<IViewRepository, ViewRepository>();
             services.TryAddTransient<INavigationItemRepository, NavigationItemRepository>();
             services.TryAddTransient<IViewRoleRepository, ViewRoleRepository>();
+            services.TryAddTransient<IRoleRepository, RoleRepository>();
 
             return services;
         }

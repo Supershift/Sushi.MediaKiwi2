@@ -37,7 +37,7 @@ export default class TableSortingHelper {
    * @return {ITableSortingValue}
    */
   parseTableSortingValue(tableMapItem?: ITableMapItem<unknown>, selectedSortingValue?: ITableSortingValue): ITableSortingValue | undefined {
-    if (tableMapItem?.sortingOptions) {
+    if (tableMapItem?.sortingOptions && tableMapItem?.id) {
       const sortDirection = this.getSortingDirection(tableMapItem, selectedSortingValue);
       const dataItem: ITableSortingValue = { tableMapItemId: tableMapItem?.id, sortDirection };
       return dataItem;

@@ -8,8 +8,18 @@ import { IViewConnector } from "./IViewConnector";
 export class ViewConnector implements IViewConnector {
   constructor(@inject("IMediakiwiAxiosInstance") private axios: IMediakiwiAxiosInstance) {}
 
-  async GetViews() {
+  async GetViews(): Promise<ListResult<View>> {
     const response = await this.axios.get<ListResult<View>>("/views");
+    return response.data;
+  }
+
+  async GetView(id: number): Promise<View | undefined> {
+    const response = await this.axios.get<View>(`/views/${id}`);
+    return response.data;
+  }
+
+  async UpdateView(id: number, request: View): Promise<View> {
+    const response = await this.axios.put<View>(`/views/${id}`, request);
     return response.data;
   }
 }

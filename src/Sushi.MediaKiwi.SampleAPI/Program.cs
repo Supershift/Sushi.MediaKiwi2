@@ -38,6 +38,9 @@ services.AddEndpointsApiExplorer();
 services.AddSwaggerGen(options =>
 {
     // add documentation
+    var apiFilename = $"{Assembly.GetAssembly(typeof(SectionController))?.GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, apiFilename));
+
     var webModelFilename = $"{Assembly.GetAssembly(typeof(SectionService))?.GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, webModelFilename));
 
@@ -50,7 +53,7 @@ services.AddSwaggerGen(options =>
     options.EnableAnnotations();
 
     // add JWT bearer
-    //add bearer token
+    // add bearer token
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
     {
         Name = "Authorization",

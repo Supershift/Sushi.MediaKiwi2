@@ -35,5 +35,14 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
 
             Assert.All(screens, screen => Assert.Equal(1, screen.SectionId));
         }
+
+        [Fact]
+        public async Task GetOneTest()
+        {
+            var view = await _repository.GetAsync(1);
+
+            Assert.NotNull(view);
+            Assert.Equal(1, view.Id);
+        }
     }
 }
