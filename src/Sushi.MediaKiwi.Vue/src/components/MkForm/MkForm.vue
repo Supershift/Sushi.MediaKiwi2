@@ -2,9 +2,9 @@
   import { ref } from "vue";
   import MkFormToolbar from "./MkFormToolbar.vue";
 
-  const emit = defineEmits(["save", "undo", "delete"]);
+  const emit = defineEmits(["undo", "delete"]);
   const props = defineProps<{
-    onSubmit: () => Promise<void>;
+    onSave: (event: Event) => Promise<void>;
   }>();
 
   const inProgress = ref(false);
@@ -14,7 +14,7 @@
   async function onSave(event: Event) {
     inProgress.value = true;
     try {
-      await props.onSubmit();
+      await props.onSave(event);
       successSnackbar.value = true;
     } catch (error) {
       failedSnackbar.value = true;
