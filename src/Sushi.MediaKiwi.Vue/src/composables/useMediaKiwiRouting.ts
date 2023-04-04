@@ -14,10 +14,11 @@ export default function () {
   const navigateTo = (router: Router, item: NavigationTypeGuard): void => {
     // Since we are injecting the router via the store it is already up and running when we initiate
     if (checkTypeGuardIsSection(item)) {
-      // if it's the section, then we seach the sections
-      const sectionName = "/" + mediakiwiStore.mediakiwiSections.find((x) => x.name === item.name)?.name;
-      // called to send user to target screen
-      router.push(sectionName);
+      // if it's the section, push to the first navigation item in the section
+      const section = item as Section;
+      const navigationItem = mediakiwiStore.navigationItems.find((x) => x.sectionId == item.id && !x.parentNavigationItemId);
+      if (navigationItem) router.push({ name: navigationItem.id.toString() });
+      else console.warn("No default navigation item found for section");
     } else {
       // if its navigationItem then we push to nav item's path
       const navigationItem = item as NavigationItem;

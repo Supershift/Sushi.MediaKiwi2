@@ -1,5 +1,4 @@
 import type { NavigationItem } from "@/models/";
-import type { RouteLocationNormalizedLoaded } from "vue-router";
 
 /**
  * Get all direct children for an INavigationItem.
@@ -13,16 +12,6 @@ export function getNavigationItemChildren(navigationItem: NavigationItem | undef
   if (excludeDataItems) {
     result = result.filter((item) => !item.isDynamicRoute);
   }
-
-  return result;
-}
-
-export function getNavigationItemForRoute(route: RouteLocationNormalizedLoaded, navigationItems: NavigationItem[]): NavigationItem | undefined {
-  // check from route, otherwise check from store
-  const result = navigationItems.find((item) => item.id.toString() == route?.name);
-  // if (route !== undefined && route.name === undefined && section !== undefined && section.id) {
-  //   result = navigationItems.find((item) => item.id.toString() == section?.id.toString());
-  // }
 
   return result;
 }
