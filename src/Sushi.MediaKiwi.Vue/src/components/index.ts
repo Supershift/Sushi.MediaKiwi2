@@ -9,3 +9,4 @@ export * from "./MkThemeToggle";
 export * from "./MkBreadcrumbs";
 export * from "./MkApplication";
 export * from "./MkIdentity";
+export * from "./MkSuspense";

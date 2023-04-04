@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { MkNavigation, MkScreen, MkNavigationIcon, MkSignOutButton, MkThemeToggle, MkAvatar } from "@/components";
+  import { MkNavigation, MkScreen, MkNavigationIcon, MkSignOutButton, MkThemeToggle, MkAvatar, MkSuspense } from "@/components";
   import { useIsAuthenticated } from "@/composables/useIsAuthenticated";
 
   const isAuthenticated = useIsAuthenticated();
@@ -14,14 +14,9 @@
         <mk-avatar></mk-avatar>
         <mk-sign-out-button></mk-sign-out-button>
       </v-app-bar>
-      <Suspense v-if="isAuthenticated">
-        <template #default>
-          <mk-navigation></mk-navigation>
-        </template>
-        <template #fallback>
-          <v-progress-circular indeterminate></v-progress-circular>
-        </template>
-      </Suspense>
+      <mk-suspense v-if="isAuthenticated">
+        <mk-navigation></mk-navigation>
+      </mk-suspense>
       <mk-screen></mk-screen>
     </v-layout>
   </v-card>

@@ -38,8 +38,6 @@
 
   async function onSave() {
     if (viewId > 0) {
-      await new Promise((r) => setTimeout(r, 3000));
-
       // update existing
       // call Api to update view
       await viewConnector.UpdateView(viewId, state.view);
