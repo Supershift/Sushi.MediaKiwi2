@@ -16,4 +16,9 @@ export interface NavigationItem {
   dynamicRouteParameterName?: string;
   /** Path, relative to the application's root. Not provided by API, but needs to be calculated based on item's hierarchy. */
   path: string;
+
+  parent?: NavigationItem;
+  kids?: NavigationItem[];
+
+  leaf?: NavigationItem;
 }

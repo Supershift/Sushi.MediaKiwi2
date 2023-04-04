@@ -6,6 +6,7 @@
   import { container } from "tsyringe";
   import { storeToRefs } from "pinia";
   import { useMediakiwiStore } from "@/stores";
+  import { ref } from "vue";
 
   // define events
   defineEmits(["change"]);
@@ -17,13 +18,15 @@
   await routerManager.Initialize();
 
   // use dependencies
+  const store = useMediakiwiStore();
   const navigationStore = useNavigationStore();
 
   // populate the navigationstore when we are done fetching items and this component loads
   navigationStore.getNavigation();
 
   // use ref from store
-  const { navigationList, sectionList } = storeToRefs(navigationStore);
+  const { navigationList } = storeToRefs(navigationStore);
+  const sectionList = ref(store.sections);
 </script>
 
 <template>

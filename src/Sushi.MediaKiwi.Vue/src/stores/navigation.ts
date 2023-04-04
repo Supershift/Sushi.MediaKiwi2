@@ -2,7 +2,6 @@ import { defineStore } from "pinia";
 import { useMediakiwiStore } from ".";
 import { type IBreadcrumb } from "@/models/breadcrumb/index";
 import { type INavigationState } from "@/models/stores";
-import { getNavigationItemChildren } from "@/helpers";
 
 export const useNavigationStore = defineStore({
   id: "navigationStore",

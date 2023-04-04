@@ -4,6 +4,7 @@
   import type { NavigationItem } from "@/models/api/NavigationItem";
   import { useRouter, useRoute } from "@/router";
   import { computed, ref } from "vue";
+  import { useNavigation } from "@/composables/useNavigation";
 
   const props = defineProps<{
     navigationItem: NavigationItem;
@@ -11,12 +12,10 @@
   }>();
 
   const router = useRouter();
-  const route = useRoute();
 
   const groupOpened = ref(false);
   const nameLabel = computed(() => props.navigationItem?.name ?? "-empty-");
   const children = computed(() => getNavigationItemChildren(props.navigationItem, props.allItems, true));
-  const isActive = computed(() => (route.meta.navigationItem as NavigationItem)?.id == props.navigationItem.id);
   const { navigateTo } = useMediaKiwiRouting();
 
   function hasScreen(item: NavigationItem): boolean {
@@ -42,15 +41,7 @@
     </template>
     <mk-navigation-item v-for="child in children" :key="child.id" :navigation-item="child" :all-items="allItems" />
   </v-list-group>
-  <v-list-item
-    v-else
-    v-bind="navigationItem"
-    :title="nameLabel"
-    :exact="true"
-    :active="isActive"
-    :active-class="'active-list-item'"
-    @click.stop="hasScreen(navigationItem) ? onItemClick(navigationItem) : {}"
-  />
+  <v-list-item v-else v-bind="navigationItem" :title="nameLabel" :exact="true" :active-class="'active-list-item'" @click.stop="hasScreen(navigationItem) ? onItemClick(navigationItem) : {}" />
 </template>
 
 <style lang="css">
