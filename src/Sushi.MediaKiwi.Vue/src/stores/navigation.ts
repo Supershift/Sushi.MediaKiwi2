@@ -22,7 +22,7 @@ export const useNavigationStore = defineStore({
       // grab the items from the main store/services or mock
       const mediaKiwiStore = useMediakiwiStore();
       const items = mediaKiwiStore.navigationItems;
-      const sections = mediaKiwiStore.mediakiwiSections;
+      const sections = mediaKiwiStore.sections;
       const breadcrumbs = [] as Array<IBreadcrumb>;
 
       // set breadcrumbs

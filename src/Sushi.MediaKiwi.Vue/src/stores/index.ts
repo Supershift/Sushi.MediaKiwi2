@@ -24,10 +24,7 @@ export const useMediakiwiStore = defineStore({
       isLocal: true,
     } as MediaKiwiState),
   getters: {
-    mediakiwiViews: (state: MediaKiwiState) => state.views,
-    mediakiwiSections: (state: MediaKiwiState) => state.sections,
-    mediakiwiNavigationItems: (state: MediaKiwiState) => state.navigationItems,
-    mediakiwiRoles: (state: MediaKiwiState) => state.roles,
+    rootNavigationItems: (state: MediaKiwiState) => state.navigationItems.filter((x) => x.parentNavigationItemId == null),
   },
   actions: {
     async init() {
@@ -67,26 +64,14 @@ export const useMediakiwiStore = defineStore({
           // add parent
           item.parent = this.navigationItems.find((x) => x.id == item.parentNavigationItemId);
           // add children
-          item.kids = this.navigationItems.filter((x) => x.parentNavigationItemId == item.id);
+          item.children = this.navigationItems.filter((x) => x.parentNavigationItemId == item.id);
         });
         // add path to all items
         this.navigationItems.forEach((item) => {
           item.path = this.getParentPath(item);
         });
         // add leaf node (dynamic items without children have a different leaf node)
-        this.navigationItems.forEach((item) => {
-          if (item.isDynamicRoute && item.kids?.filter((x) => !x.isDynamicRoute)) {
-            let candidate: NavigationItem | undefined = item.parent;
-            while (candidate && !item.leaf) {
-              if (!candidate.isDynamicRoute || candidate.kids?.some((x) => !x.isDynamicRoute)) {
-                item.leaf = candidate;
-              }
-              candidate = candidate.parent;
-            }
-          } else {
-            item.leaf = item;
-          }
-        });
+        this.setLeafNodes(this.navigationItems);
       }
     },
     setRoles(payload: ListResult<Role>) {
@@ -120,6 +105,22 @@ export const useMediakiwiStore = defineStore({
         result += `/:${navigationItem.dynamicRouteParameterName}`;
       }
       return result;
+    },
+    setLeafNodes(navigationItems: Array<NavigationItem>) {
+      // add leaf node (dynamic items without children have a different leaf node)
+      navigationItems.forEach((item) => {
+        if (item.isDynamicRoute && item.children?.filter((x) => !x.isDynamicRoute)) {
+          let candidate: NavigationItem | undefined = item.parent;
+          while (candidate && !item.leaf) {
+            if (!candidate.isDynamicRoute || candidate.children?.some((x) => !x.isDynamicRoute)) {
+              item.leaf = candidate;
+            }
+            candidate = candidate.parent;
+          }
+        } else {
+          item.leaf = item;
+        }
+      });
     },
   },
 });

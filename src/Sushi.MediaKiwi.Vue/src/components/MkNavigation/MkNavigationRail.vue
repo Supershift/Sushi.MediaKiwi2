@@ -1,7 +1,5 @@
 <script setup lang="ts">
-  import useMediaKiwiRouting from "@/composables/useMediaKiwiRouting";
   import type { Section } from "@/models/api";
-  import { useRouter } from "@/router";
   import { useNavigation } from "@/composables/useNavigation";
 
   defineEmits(["change"]);
@@ -9,12 +7,10 @@
     railItems: Array<Section>;
   }>();
 
-  const { navigateTo } = useMediaKiwiRouting();
-  const router = useRouter();
   const navigation = useNavigation();
   function onItemClick(item: Section) {
     if (item) {
-      navigateTo(router, item);
+      navigation.navigateTo(item);
     }
     return false;
   }
