@@ -29,6 +29,7 @@ export class RouteGenerator {
                 isFromServer: true,
                 requiresAuth: true,
                 requiresRole: view.roles,
+                navigationItem: navigationItem,
               },
             };
 

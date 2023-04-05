@@ -1,10 +1,11 @@
 <script setup lang="ts">
   import MkNavigationRail from "@/components/MkNavigation/MkNavigationRail.vue";
-  import MkDrawer from "@/components/MkDrawer/MkDrawer.vue";
+  import { MkNavigationDrawer } from "@/components/MkNavigation/";
   import { useNavigationStore } from "@/stores/navigation";
   import { RouterManager } from "@/router/routerManager";
   import { container } from "tsyringe";
   import { storeToRefs } from "pinia";
+  import { useMediakiwiStore } from "@/stores";
 
   // define events
   defineEmits(["change"]);
@@ -27,5 +28,5 @@
 
 <template>
   <mk-navigation-rail :rail-items="sectionList"></mk-navigation-rail>
-  <mk-drawer v-model="navigationStore.drawer" :list-items="navigationList"></mk-drawer>
+  <mk-navigation-drawer v-model="navigationStore.drawer" :list-items="navigationList"></mk-navigation-drawer>
 </template>

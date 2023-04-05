@@ -12,10 +12,11 @@
 
   const router = useRouter();
   const route = useRoute();
+
   const groupOpened = ref(false);
   const nameLabel = computed(() => props.navigationItem?.name ?? "-empty-");
   const children = computed(() => getNavigationItemChildren(props.navigationItem, props.allItems, true));
-  const isActive = computed(() => route.name == props.navigationItem.id.toString());
+  const isActive = computed(() => (route.meta.navigationItem as NavigationItem)?.id == props.navigationItem.id);
   const { navigateTo } = useMediaKiwiRouting();
 
   function hasScreen(item: NavigationItem): boolean {
@@ -26,7 +27,7 @@
   }
 
   // called to send user to target screen
-  async function onItemClick(item: NavigationItem) {
+  function onItemClick(item: NavigationItem) {
     if (item.viewId) {
       navigateTo(router, item);
     }
