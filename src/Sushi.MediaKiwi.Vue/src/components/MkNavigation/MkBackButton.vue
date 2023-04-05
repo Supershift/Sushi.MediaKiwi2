@@ -1,39 +1,32 @@
-<script setup lang="ts">import { IBreadcrumb } from '@/models/breadcrumb';
-    import { useRouter } from '@/router';
-    import { useNavigationStore } from '@/stores/navigation';
-    import { storeToRefs } from 'pinia';
-    import { ref, watch } from 'vue';
+<script setup lang="ts">
+  import { useRouter } from "@/router";
+  import { useNavigation } from "@/composables/useNavigation";
 
-    const emit = defineEmits(["navigateBack"]);
+  const emit = defineEmits(["navigateBack"]);
 
-    // Using the composable we build the crumb using router and matching the path we are on
-    let breadcrumbs = ref<Array<IBreadcrumb>>([]);
-    const { breadcrumbItems } = storeToRefs(useNavigationStore());
-    const router = useRouter();
+  // inject dependencies
+  const navigation = useNavigation();
+  const router = useRouter();
 
-    // We would need to check if there is something in the list of crumbs, otherwise just back
-    function navigateBack(){
-        // find out the previous path 
-        const previousPath = breadcrumbs.value.at(breadcrumbs.value.length-1)?.to;
+  // We would need to check if there is something in the list of crumbs, otherwise just back
+  function navigateBack() {
+    // get current navigation item
+    const currentItem = navigation.currentNavigationItem.value;
 
-        // if we know where back is, then push it otherwise just use .back()
-        if (breadcrumbs.value.length > 1 && previousPath !== undefined && previousPath !== "") {
-            router.push(previousPath)
-        } else {
-            router.back();
-        }
-        emit("navigateBack")
+    // does it have a parent?
+    if (currentItem?.parent) {
+      // if so, then we can use the parent to navigate back
+      router.push({ name: currentItem.parent.id.toString() });
+    } else {
+      // otherwise, just use the router back
+      router.back();
     }
 
-    // Watchers
-    // Update breadcrumb from store( this kicks in whenever we navigate)
-    watch(breadcrumbItems, (newBreadcrumbs)=>{
-        breadcrumbs.value = newBreadcrumbs
-    })
-
+    emit("navigateBack");
+  }
 </script>
 <template>
-    <v-btn variant="tonal" @click="navigateBack()">
-        <v-icon icon="mdi-chevron-left"></v-icon>
-    </v-btn>
+  <v-btn variant="tonal" @click="navigateBack()">
+    <v-icon icon="mdi-chevron-left"></v-icon>
+  </v-btn>
 </template>

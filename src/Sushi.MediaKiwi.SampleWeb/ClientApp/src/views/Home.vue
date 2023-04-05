@@ -6,21 +6,16 @@
   export default defineComponent({
     name: "Home",
     components: {
-      MkBreadcrumbs
+      MkBreadcrumbs,
     },
     setup() {
       return {};
-    }
+    },
   });
 </script>
 
 <template>
-  <mk-breadcrumbs />
-
-  <v-lazy
-    :options="{ threshold: 0.5 }"
-    transition="fade-transition"
-  >
+  <v-lazy :options="{ threshold: 0.5 }" transition="fade-transition">
     <v-card class="ma-5">
       <h1>Home Page</h1>
       <p>Welcome to the home page!</p>

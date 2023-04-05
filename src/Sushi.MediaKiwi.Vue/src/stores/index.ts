@@ -11,6 +11,7 @@ export interface MediaKiwiState {
   sections: Array<Section>;
   roles: Role[];
   isLocal: boolean;
+  drawer: boolean;
 }
 
 export const useMediakiwiStore = defineStore({
@@ -22,6 +23,7 @@ export const useMediakiwiStore = defineStore({
       sections: [],
       roles: [],
       isLocal: true,
+      drawer: true,
     } as MediaKiwiState),
   getters: {
     rootNavigationItems: (state: MediaKiwiState) => state.navigationItems.filter((x) => x.parentNavigationItemId == null),
@@ -55,6 +57,9 @@ export const useMediakiwiStore = defineStore({
       const connector = container.resolve<ISectionConnector>("ISectionConnector");
       const sections = await connector.GetSections();
       this.setSections(sections);
+    },
+    toggleDrawer() {
+      this.drawer = !this.drawer;
     },
     setNavigationItems(payload: ListResult<NavigationItem>) {
       if (payload) {
