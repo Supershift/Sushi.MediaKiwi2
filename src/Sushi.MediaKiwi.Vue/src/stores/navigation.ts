@@ -2,7 +2,6 @@ import { defineStore } from "pinia";
 import { useMediakiwiStore } from ".";
 import { type IBreadcrumb } from "@/models/breadcrumb/index";
 import { type INavigationState } from "@/models/stores";
-import { getNavigationItemChildren } from "@/helpers";
 
 export const useNavigationStore = defineStore({
   id: "navigationStore",
@@ -23,7 +22,7 @@ export const useNavigationStore = defineStore({
       // grab the items from the main store/services or mock
       const mediaKiwiStore = useMediakiwiStore();
       const items = mediaKiwiStore.navigationItems;
-      const sections = mediaKiwiStore.mediakiwiSections;
+      const sections = mediaKiwiStore.sections;
       const breadcrumbs = [] as Array<IBreadcrumb>;
 
       // set breadcrumbs

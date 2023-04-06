@@ -24,10 +24,7 @@ export const useMediakiwiStore = defineStore({
       isLocal: true,
     } as MediaKiwiState),
   getters: {
-    mediakiwiViews: (state: MediaKiwiState) => state.views,
-    mediakiwiSections: (state: MediaKiwiState) => state.sections,
-    mediakiwiNavigationItems: (state: MediaKiwiState) => state.navigationItems,
-    mediakiwiRoles: (state: MediaKiwiState) => state.roles,
+    rootNavigationItems: (state: MediaKiwiState) => state.navigationItems.filter((x) => x.parentNavigationItemId == null),
   },
   actions: {
     async init() {
@@ -62,11 +59,19 @@ export const useMediakiwiStore = defineStore({
     setNavigationItems(payload: ListResult<NavigationItem>) {
       if (payload) {
         this.navigationItems = payload.result;
+        // add parent/child relations
         this.navigationItems.forEach((item) => {
-          // since the sections doesnt have a path we use a "/"
-          const sectionName = this.sections.find((x) => x.id === item.sectionId)?.name;
-          item.path = "/" + sectionName + this.getParentPath(item);
+          // add parent
+          item.parent = this.navigationItems.find((x) => x.id == item.parentNavigationItemId);
+          // add children
+          item.children = this.navigationItems.filter((x) => x.parentNavigationItemId == item.id);
         });
+        // add path to all items
+        this.navigationItems.forEach((item) => {
+          item.path = this.getParentPath(item);
+        });
+        // add leaf node (dynamic items without children have a different leaf node)
+        this.setLeafNodes(this.navigationItems);
       }
     },
     setRoles(payload: ListResult<Role>) {
@@ -87,18 +92,35 @@ export const useMediakiwiStore = defineStore({
     getParentPath(navigationItem: NavigationItem): string {
       // get the full path for this item by recursively going up the tree
       let parentPath = "";
-      if (navigationItem.parentNavigationItemId != null) {
-        const parent = this.navigationItems.find((item: NavigationItem) => item.id == navigationItem.parentNavigationItemId);
-        if (parent !== undefined) {
-          parentPath = this.getParentPath(parent);
-        }
+      if (navigationItem.parent) {
+        parentPath = this.getParentPath(navigationItem.parent);
+      } else {
+        // no more parent items, use the section as root parent
+        const sectionName = this.sections.find((x) => x.id === navigationItem.sectionId)?.name;
+        parentPath = `/${sectionName}`;
       }
-        let result = parentPath + `/${encodeURI(navigationItem.name)}`;
+      let result = parentPath + `/${encodeURI(navigationItem.name)}`;
       // if dynamic, add parameter
       if (navigationItem.isDynamicRoute && navigationItem.dynamicRouteParameterName) {
         result += `/:${navigationItem.dynamicRouteParameterName}`;
       }
       return result;
+    },
+    setLeafNodes(navigationItems: Array<NavigationItem>) {
+      // add leaf node (dynamic items without children have a different leaf node)
+      navigationItems.forEach((item) => {
+        if (item.isDynamicRoute && item.children?.filter((x) => !x.isDynamicRoute)) {
+          let candidate: NavigationItem | undefined = item.parent;
+          while (candidate && !item.leaf) {
+            if (!candidate.isDynamicRoute || candidate.children?.some((x) => !x.isDynamicRoute)) {
+              item.leaf = candidate;
+            }
+            candidate = candidate.parent;
+          }
+        } else {
+          item.leaf = item;
+        }
+      });
     },
   },
 });

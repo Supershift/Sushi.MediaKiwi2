@@ -1,4 +1,3 @@
-import useMediaKiwiRouting from "@/composables/useMediaKiwiRouting";
 import { type IBreadcrumb, Breadcrumb } from "@/models/breadcrumb";
 import pinia from "@/plugins/pinia";
 import { useMediakiwiStore } from "@/stores";
@@ -10,12 +9,11 @@ import { type Router } from "vue-router";
  * Then we refresh this by updating the store
  */
 export default function registerNavigation(router: Router): void {
-  const navigationStore = useNavigationStore(pinia);
-  const mediakiwiStore = useMediakiwiStore(pinia);
-  const { navigateTo } = useMediaKiwiRouting();
-
   // before each router navigation we would want to update the breadcrumbs
   router.beforeEach((to, from, next) => {
+    const navigationStore = useNavigationStore(pinia);
+    const store = useMediakiwiStore();
+
     const breadcrumbs = Array<IBreadcrumb>();
     to.matched.forEach((record) => {
       // for each record we matched with we split this and build the current list of crumbs
@@ -23,7 +21,7 @@ export default function registerNavigation(router: Router): void {
         // ignore empty, null and undefined strings and push this to the list
         if (r !== undefined && r !== null && r !== "") {
           // we also need to match the current navigation Items to use its path to build the navigation routing when we click the breadcrumb item
-          const currentItem = navigationStore.navigationList.find((x) => x.name.toString() === r.toString());
+          const currentItem = store.navigationItems.find((x) => x.name.toString() === r.toString());
           if (currentItem) {
             const navigationPath = currentItem?.path ?? "";
             if (currentItem.path !== to.path) {
