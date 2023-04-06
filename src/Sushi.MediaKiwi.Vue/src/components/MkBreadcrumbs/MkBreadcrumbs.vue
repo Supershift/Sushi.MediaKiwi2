@@ -1,42 +1,42 @@
 <script setup lang="ts">
-  import { IBreadcrumb } from "@/models/breadcrumb";
-  import { useRoute } from "@/router";
-  import { computed, ref, watch } from "vue";
-  import { useNavigationStore } from "@/stores/navigation";
-  import { storeToRefs } from "pinia";
+  import { computed } from "vue";
   import MkBackButton from "@/components/MkNavigation/MkBackButton.vue";
   import MkBreadcrumbsItem from "./MkBreadcrumbsItem.vue";
   import { useDisplay } from "vuetify";
+  import { useNavigation } from "@/composables/useNavigation";
+  import { NavigationItem } from "@/models";
 
-  // Using the composable we build the crumb using router and matching the path we are on
-  let breadcrumbs = ref<Array<IBreadcrumb>>([]);
-  const navigationStore = useNavigationStore();
-  navigationStore.getNavigation();
-  const { breadcrumbItems } = storeToRefs(navigationStore);
+  // inject dependencies
   const { mobile } = useDisplay();
+  const navigation = useNavigation();
 
-  // Item props
-  const isMediumSized = computed(() => mobile.value);
-  const showBackButton = computed(() => isMediumSized.value && breadcrumbs.value.length > 1);
-  const currentCrumb = computed(() => breadcrumbs.value.find((x) => x.to === useRoute().path));
+  // determine if we show the whole breadcrumb or only a back button
+  const showBackButton = computed(() => mobile.value && breadcrumbs.value.length > 1);
 
-  // Watchers and listeners
-  // Update breadcrumb from store (this kicks in whenever we navigate)
-  watch(breadcrumbItems, (newBreadcrumbs) => {
-    breadcrumbs.value = newBreadcrumbs;
+  // go up the navigation tree starting from the current item
+  const breadcrumbs = computed(() => {
+    const currentItem = navigation.currentNavigationItem.value;
+    const result: Array<NavigationItem> = [];
+    let candidate: NavigationItem | undefined = currentItem;
+    while (candidate) {
+      result.unshift(candidate);
+      candidate = candidate.parent;
+    }
+    console.log(result);
+    return result;
   });
 </script>
 <template>
-  <v-card v-if="breadcrumbs && breadcrumbs.length" class="ma-5">
+  <v-card v-if="breadcrumbs?.length" class="ma-5">
     <div v-if="showBackButton" class="breadcrumb-title-container">
       <mk-back-button class="mr-5" />
       <div class="text-h3 d-inline-block">
-        {{ currentCrumb?.title.toUpperCase() }}
+        {{ navigation.currentNavigationItem.value?.name }}
       </div>
     </div>
     <div v-else>
-      <v-breadcrumbs v-if="breadcrumbs && breadcrumbs.length" divider=" ">
-        <mk-breadcrumbs-item v-for="item in breadcrumbs" :key="item.href" :item="item" :breadcrumbs="breadcrumbs" />
+      <v-breadcrumbs divider=" ">
+        <mk-breadcrumbs-item v-for="item in breadcrumbs" :key="item.id" :item="item" :breadcrumbs="breadcrumbs" />
       </v-breadcrumbs>
     </div>
   </v-card>

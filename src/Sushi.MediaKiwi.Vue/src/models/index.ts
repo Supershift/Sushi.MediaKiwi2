@@ -4,4 +4,3 @@ export * from "./options";
 export * from "./pinia/PiniaPluginExtension";
 export * from "./requests";
 export * from "./table";
-export * from "./breadcrumb";

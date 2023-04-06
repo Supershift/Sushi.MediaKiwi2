@@ -25,5 +25,5 @@
 
 <template>
   <mk-navigation-rail :rail-items="sections"></mk-navigation-rail>
-  <mk-navigation-drawer :list-items="navigationItems"></mk-navigation-drawer>
+  <mk-navigation-drawer v-model="store.drawer" :list-items="navigationItems"></mk-navigation-drawer>
 </template>
