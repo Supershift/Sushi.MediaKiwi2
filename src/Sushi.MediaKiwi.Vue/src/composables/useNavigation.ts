@@ -2,25 +2,25 @@ import { computed, watch } from "vue";
 import type { NavigationItem, Section } from "@/models/api";
 import { useRoute, useRouter } from "@/router";
 import { useMediakiwiStore } from "@/stores";
+import { RouteParamValueRaw, RouteParamsRaw } from "vue-router";
 
 export function useNavigation() {
   const route = useRoute();
-  const router = useRouter();
-  const store = useMediakiwiStore();
-
   const currentNavigationItem = computed(() => {
     const result = route.meta.navigationItem as NavigationItem;
     return result;
   });
 
+  const store = useMediakiwiStore();
+  const router = useRouter();
+
   type NavigationTypeGuard = NavigationItem | Section;
 
-  function navigateTo(item: NavigationTypeGuard): void {
-    // Since we are injecting the router via the store it is already up and running when we initiate
+  function navigateTo(item: NavigationTypeGuard, itemId?: RouteParamValueRaw): void {
     if (checkTypeGuardIsSection(item)) {
       // if it's the section, push to the first navigation item in the section
       const section = item as Section;
-      const navigationItem = store.rootNavigationItems.find((x) => x.sectionId == item.id);
+      const navigationItem = store.rootNavigationItems.find((x) => x.sectionId == section.id);
       if (navigationItem) {
         router.push({ name: navigationItem.id.toString() });
       } else {
@@ -29,10 +29,22 @@ export function useNavigation() {
     } else {
       // if its navigationItem then we push to nav item's path
       const navigationItem = item as NavigationItem;
-      if (navigationItem) {
-        // called to send user to target screen
-        router.push({ name: navigationItem.id.toString() });
+      let routeParams: RouteParamsRaw | undefined = undefined;
+      if (navigationItem.isDynamicRoute) {
+        // if this is a dynamic route, try to resolve route parameter
+        routeParams = {};
+        if (navigationItem.isDynamicRoute) {
+          if (!itemId) {
+            throw new Error(`Navigating to dynamic route but no itemId provided`);
+          }
+          if (navigationItem.dynamicRouteParameterName) {
+            routeParams[navigationItem.dynamicRouteParameterName] = itemId;
+          }
+        }
       }
+
+      // called to send user to target screen
+      router.push({ name: navigationItem.id.toString(), params: routeParams });
     }
   }
 

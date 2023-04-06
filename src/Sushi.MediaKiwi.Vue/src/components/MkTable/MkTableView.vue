@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { useRouter, type RouteParamsRaw } from "vue-router";
+  import { useRouter, type RouteParamsRaw, RouteParamValueRaw } from "vue-router";
   import type { ITableMap } from "@/models/table/ITableMap";
   import type { ITableMapItem } from "@/models/table/ITableMapItem";
   import MkTableCell from "./MkTableCell.vue";
@@ -10,9 +10,7 @@
   import MkTableCheckbox from "./MkTableCheckbox.vue";
   import { useTableMapItemSelection } from "@/composables/useTableMapItemSelection";
   import { watch } from "vue";
-
-  // Create instance of the table sorting helper
-  const tableSortingHelper = new TableSortingHelper();
+  import { useNavigation } from "@/composables/useNavigation";
 
   const props = defineProps<{
     tableMap: ITableMap<unknown>;
@@ -30,8 +28,12 @@
     (e: "update:selectedTableRows", value?: unknown[]): void;
   }>();
 
+  // inject dependencies
   const router = useRouter();
   const store = useMediakiwiStore();
+  const tableSortingHelper = new TableSortingHelper();
+  const navigation = useNavigation();
+
   function onRowClick(event: Event, dataItem: unknown) {
     // emit event
     emit("click:row", dataItem);
@@ -50,22 +52,19 @@
       }
 
       // try to resolve route parameter
-      const routeParams: RouteParamsRaw = {};
+      let itemId: RouteParamValueRaw = undefined;
       if (navigationItem.isDynamicRoute) {
         if (!props.tableMap.itemId) {
           throw new Error(`No itemId function found to resolve ${navigationItem.dynamicRouteParameterName}`);
         }
-        const itemId = props.tableMap.itemId(dataItem);
+        itemId = props.tableMap.itemId(dataItem);
         if (!itemId) {
           throw new Error(`No value returned by itemId function`);
-        }
-        if (navigationItem.dynamicRouteParameterName) {
-          routeParams[navigationItem.dynamicRouteParameterName] = itemId;
         }
       }
 
       // push user to target page
-      router.push({ name: navigationItem.id.toString(), params: routeParams });
+      navigation.navigateTo(navigationItem, itemId);
     } else {
       console.warn("no target view id defined on table");
     }
