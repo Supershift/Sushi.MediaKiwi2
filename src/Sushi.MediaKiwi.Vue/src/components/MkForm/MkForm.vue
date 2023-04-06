@@ -65,7 +65,16 @@
   }
 </script>
 <template>
-  <MkFormToolbar :disabled="inProgress" v-bind="$attrs" @save="onSave" @undo="onUndo" @delete="onDelete">
+  <MkFormToolbar
+    :disabled="inProgress"
+    v-bind="$attrs"
+    @save="onSave"
+    @undo="onUndo"
+    @delete="onDelete"
+    :delete="$props.onDelete ? true : false"
+    :save="$props.onSave ? true : false"
+    :undo="$props.onUndo ? true : false"
+  >
     <v-progress-linear indeterminate absolute v-if="inProgress"></v-progress-linear>
   </MkFormToolbar>
   <v-form :disabled="inProgress">
