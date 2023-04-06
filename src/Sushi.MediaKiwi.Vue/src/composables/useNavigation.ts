@@ -16,6 +16,14 @@ export function useNavigation() {
 
   type NavigationTypeGuard = NavigationItem | Section;
 
+  function navigateToParent(): void {
+    if (currentNavigationItem.value.parent) {
+      navigateTo(currentNavigationItem.value.parent);
+    } else {
+      console.warn("Cannot navigate to parent, no parent found");
+    }
+  }
+
   function navigateTo(item: NavigationTypeGuard, itemId?: RouteParamValueRaw): void {
     if (checkTypeGuardIsSection(item)) {
       // if it's the section, push to the first navigation item in the section
@@ -85,5 +93,5 @@ export function useNavigation() {
 
     return result ? result : [];
   }
-  return { currentNavigationItem, currentRootItem, navigateTo, getChildren };
+  return { currentNavigationItem, currentRootItem, navigateTo, getChildren, navigateToParent };
 }

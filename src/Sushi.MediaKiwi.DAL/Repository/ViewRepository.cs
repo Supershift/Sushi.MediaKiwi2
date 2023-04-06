@@ -46,7 +46,7 @@ namespace Sushi.MediaKiwi.DAL.Repository
         }
 
         /// <inheritdoc/>    
-        public async Task<View> GetAsync(int id)
+        public async Task<View?> GetAsync(int id)
         {
             var query = _connector.CreateQuery();
             query.Add(x => x.Id, id);

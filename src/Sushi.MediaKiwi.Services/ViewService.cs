@@ -33,6 +33,30 @@ namespace Sushi.MediaKiwi.Services
         }
 
         /// <summary>
+        /// Deletes a view.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<Result> DeleteAsync(int id)
+        {
+            // get item from datastore
+            var view = await _viewRepository.GetAsync(id);
+
+            // todo: check if view is used by any navigation items?
+
+            if (view != null)
+            {   
+                // delete item
+                await _viewRepository.DeleteAsync(view.Id);
+                return new Result(ResultCode.Success);
+            }
+            else
+            {
+                return new Result(ResultCode.NotFound);
+            }
+        }
+
+        /// <summary>
         /// Gets all views matching the provided filter parameters.
         /// </summary>        
         /// <returns></returns>
