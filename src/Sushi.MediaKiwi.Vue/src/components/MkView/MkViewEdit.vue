@@ -57,13 +57,21 @@
     }
   }
 
-  function onDelete() {
-    alert("Not implemented");
+  let onDelete: ((event: Event) => Promise<void>) | undefined = undefined;
+  if (viewId > 0) {
+    onDelete = async () => {
+      if (viewId > 0) {
+        await viewConnector.DeleteView(viewId);
+
+        // refresh store (to update the view in the navigation)
+        await routerManager.ForceInitialize();
+      }
+    };
   }
 </script>
 
 <template>
-  <MkForm :on-save="onSave" title="View" @save="onSave" @undo="loadView" @delete="onDelete">
+  <MkForm title="View">
     <v-text-field label="Name" v-model="state.view.name"></v-text-field>
     <v-text-field label="External Id" v-model="state.view.externalId"></v-text-field>
     <v-text-field label="Component key" v-model="state.view.componentKey"></v-text-field>

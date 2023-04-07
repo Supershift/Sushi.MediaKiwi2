@@ -18,6 +18,19 @@ namespace Sushi.MediaKiwi.WebAPI
         }
 
         /// <summary>
+        /// Deletes a view.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<ActionResult<View>> DeleteView(int id)
+        {
+            var result = await _viewService.DeleteAsync(id);
+            return this.CreateResponse(result);
+        }
+
+        /// <summary>
         /// Gets all views.
         /// </summary>
         /// <param name="sectionID"></param>

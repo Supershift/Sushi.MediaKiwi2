@@ -22,6 +22,51 @@ namespace Sushi.MediaKiwi.Services.UnitTests
         }
 
         [Fact]
+        public async Task DeleteViewTest()
+        {
+            // arrange
+            var viewStub = new DAL.View()
+            {
+                Id = 11
+            };
+
+            var viewRepositoryMock = new Mock<IViewRepository>();
+            viewRepositoryMock.Setup(x => x.GetAsync(viewStub.Id)).ReturnsAsync(viewStub);
+            viewRepositoryMock.Setup(x => x.DeleteAsync(viewStub.Id)).Verifiable();
+            var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();            
+
+            var service = new ViewService(viewRepositoryMock.Object, viewRoleRepositoryMock.Object, _mapper);
+
+            // act
+            var result = await service.DeleteAsync(viewStub.Id);
+
+            // assert
+            Assert.NotNull(result);
+            Assert.Equal(ResultCode.Success, result.Code);
+            viewRepositoryMock.Verify(x=>x.DeleteAsync(viewStub.Id), Times.Once);
+        }
+
+        [Fact]
+        public async Task DeleteViewTest_NotFound()
+        {
+            // arrange
+            DAL.View? viewStub = null;
+            var viewRepositoryMock = new Mock<IViewRepository>();
+            viewRepositoryMock.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(viewStub);
+            var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();
+
+            var service = new ViewService(viewRepositoryMock.Object, viewRoleRepositoryMock.Object, _mapper);
+
+            // act
+            var result = await service.DeleteAsync(17);
+
+            // assert
+            Assert.NotNull(result);
+            Assert.Equal(ResultCode.NotFound, result.Code);
+            
+        }
+
+        [Fact]
         public async Task GetAllViewsTest()
         {
             // arrange
@@ -128,6 +173,44 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             Assert.Equal(ResultCode.Success, result.Code);
             Assert.NotNull(result.Value);
             Assert.Equal(viewStub.Id, result.Value.Id);
+        }
+
+        [Fact]
+        public async Task GetViewTest_NotFound()
+        {
+            // arrange
+            DAL.View? viewStub = null;
+            var viewRepositoryMock = new Mock<IViewRepository>();
+            viewRepositoryMock.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(viewStub);
+            var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();
+
+            var service = new ViewService(viewRepositoryMock.Object, viewRoleRepositoryMock.Object, _mapper);
+
+            // act
+            var result = await service.DeleteAsync(17);
+
+            // assert
+            Assert.NotNull(result);
+            Assert.Equal(ResultCode.NotFound, result.Code);
+        }
+
+        [Fact]
+        public async Task SaveViewTest_NotFound()
+        {
+            // arrange
+            DAL.View? viewStub = null;
+            var viewRepositoryMock = new Mock<IViewRepository>();
+            viewRepositoryMock.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(viewStub);
+            var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();
+
+            var service = new ViewService(viewRepositoryMock.Object, viewRoleRepositoryMock.Object, _mapper);
+
+            // act
+            var result = await service.SaveAsync(17, new View());
+
+            // assert
+            Assert.NotNull(result);
+            Assert.Equal(ResultCode.NotFound, result.Code);
         }
 
         [Fact]

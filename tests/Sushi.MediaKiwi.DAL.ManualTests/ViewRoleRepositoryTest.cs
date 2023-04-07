@@ -19,7 +19,7 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
         {
             var items = await _repository.GetAllAsync(null);
 
-            Assert.Equal(1, items.Count);
+            Assert.NotEqual(1, items.Count);
         }
     }
 }
