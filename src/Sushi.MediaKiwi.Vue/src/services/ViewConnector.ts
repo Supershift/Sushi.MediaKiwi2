@@ -22,4 +22,9 @@ export class ViewConnector implements IViewConnector {
     const response = await this.axios.put<View>(`/views/${id}`, request);
     return response.data;
   }
+
+  async CreateView(request: View): Promise<View> {
+    const response = await this.axios.post<View>(`/views`, request);
+    return response.data;
+  }
 }
