@@ -17,6 +17,7 @@
     /** */
     selectedSortOption?: ITableSortingValue;
     /** */
+    selectedTableRows?: unknown[];
     /** Displays new item button if set to true and itemViewId has a value */
     new?: boolean;
   }>();
