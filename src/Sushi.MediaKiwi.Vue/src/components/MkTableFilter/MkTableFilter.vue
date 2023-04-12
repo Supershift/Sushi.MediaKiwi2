@@ -1,8 +1,11 @@
 <script setup lang="ts">
-  import { shallowReactive, ref, watch } from "vue";
+  import { shallowReactive, ref, watch, type Component } from "vue";
   import { TableFilter } from "@/models/table/TableFilter.js";
   import { TableFilterItem } from "@/models/table/TableFilterItem.js";
   import { TableFilterValue } from "@/models/table/TableFilterValue.js";
+  import { MkTableFilterDatePicker, MkTableFilterRadioGroup, MkTableFilterSelect, MkTableFilterTextField } from ".";
+  import { DefineComponent } from "vue";
+  import { TableFilterType } from "./TableFilterType";
 
   const props = defineProps<{
     modelValue: TableFilter;
@@ -79,6 +82,24 @@
     state.currentFilter = undefined;
   }
 
+  function GetComponentForFilterType(item: TableFilterItem): Component | DefineComponent {
+    switch (item.type) {
+      case TableFilterType.DatePicker:
+        return MkTableFilterDatePicker;
+      case TableFilterType.RadioGroup:
+        return MkTableFilterRadioGroup;
+      case TableFilterType.Select:
+        return MkTableFilterSelect;
+      case TableFilterType.TextField:
+        return MkTableFilterTextField;
+      case TableFilterType.Custom:
+        if (item.component) return item.component;
+        else throw new Error(`No component found for filter type ${item.type}, add a component to the filter item.`);
+      default:
+        throw new Error(`No component found for filter type ${item.type}`);
+    }
+  }
+
   /**
    * Watch for the menu ref
    * Closes the filter when updated to false in any way (ie. click next to it)
@@ -109,7 +130,7 @@
 
           <!-- filter compoment -->
           <v-card v-else-if="state.currentFilter" width="300" :title="state.currentFilter.title">
-            <component :is="state.currentFilter.component" :table-filter-item="state.currentFilter" v-model="state.currentFilterValue"> </component>
+            <component :is="GetComponentForFilterType(state.currentFilter)" :table-filter-item="state.currentFilter" v-model="state.currentFilterValue"> </component>
             <v-card-actions>
               <v-btn @click="applyFilter()">Apply</v-btn>
             </v-card-actions>

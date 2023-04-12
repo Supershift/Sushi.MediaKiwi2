@@ -7,7 +7,6 @@ export const useSnackbarStore = defineStore("snackbar", () => {
   function showMessage(content: string) {
     show.value = true;
     message.value = content;
-    console.log("showMessage called");
   }
 
   return { show, message, showMessage };

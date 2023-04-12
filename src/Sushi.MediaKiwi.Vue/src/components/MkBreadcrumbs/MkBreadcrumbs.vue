@@ -22,7 +22,6 @@
       result.unshift(candidate);
       candidate = candidate.parent;
     }
-    console.log(result);
     return result;
   });
 </script>

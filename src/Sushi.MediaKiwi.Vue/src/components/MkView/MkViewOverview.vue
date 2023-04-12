@@ -1,21 +1,20 @@
 <script setup lang="ts">
   import { MkTable } from "../MkTable";
-  import { ITableMap, ListResult, TableFilterValueCollection } from "@/models";
+  import { ITableMap, ListResult } from "@/models";
   import { View } from "@/models";
   import { useMediakiwiStore } from "@/stores";
   import { ref } from "vue";
-  import { storeToRefs } from "pinia";
   import { container } from "tsyringe";
   import { IViewConnector } from "@/services";
-  import { MkTableFilterSelect } from "../MkTableFilter";
   import { TableFilter } from "@/models/table/TableFilter";
+  import { TableFilterType } from "../MkTableFilter/TableFilterType";
 
   // inject dependencies
   const viewConnector = container.resolve<IViewConnector>("IViewConnector");
   const store = useMediakiwiStore();
 
   // define reactive variables
-  const { sections } = storeToRefs(store);
+  const sections = ref(store.sections);
   const data = ref<ListResult<View>>();
   const currentPage = ref(1);
 
@@ -31,11 +30,12 @@
     ],
   };
 
+  // define filters
   const filters = ref<TableFilter>({
     section: {
       title: "Section",
       options: sections.value.map((x) => ({ title: x.name, value: x.id })),
-      component: MkTableFilterSelect,
+      type: TableFilterType.Select,
     },
   });
 

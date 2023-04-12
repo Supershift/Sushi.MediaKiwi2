@@ -19,13 +19,11 @@ export class ViewConnector implements IViewConnector {
   }
 
   async GetViews(sectionId?: number, paging?: Paging): Promise<ListResult<View>> {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
     // build querystring params
     const query = {
       sectionId: sectionId,
       ...paging,
     };
-    console.log(query);
     const response = await this.axios.get<ListResult<View>>("/views", { params: query });
     return response.data;
   }
