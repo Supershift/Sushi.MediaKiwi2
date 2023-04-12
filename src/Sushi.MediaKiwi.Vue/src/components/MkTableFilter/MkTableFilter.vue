@@ -1,9 +1,12 @@
 <script setup lang="ts">
   import { shallowReactive, ref, watch } from "vue";
-  import type { ITableFilter, ITableFilterItem, TableFilterValueCollection, ITableFilterValue } from "@/models/table/";
+  import type { TableFilterValueCollection } from "@/models/table/";
+  import { TableFilter } from "@/models/table/ITableFilter";
+  import { TableFilterItem } from "@/models/table/ITableFilterItem";
+  import { TableFilterValue } from "@/models/table/ITableFilterValue";
 
   const props = defineProps<{
-    filterMap: ITableFilter;
+    filterMap: TableFilter;
     modelValue: TableFilterValueCollection;
   }>();
 
@@ -15,25 +18,25 @@
 
   // holds the current filter being edited and its value
   interface IState {
-    currentFilter: ITableFilterItem | undefined;
-    currentFilterValue: ITableFilterValue | undefined;
+    currentFilterKey?: string;
+    currentFilter?: TableFilterItem;
+    currentFilterValue?: TableFilterValue;
   }
 
-  const state = shallowReactive<IState>({
-    currentFilter: undefined,
-    currentFilterValue: undefined,
-  });
+  const state = shallowReactive<IState>({});
 
   /* Sets the provided filter as currently selected filter */
-  function changeCurrentFilter(selectedFilter: ITableFilterItem) {
+  function changeCurrentFilter(key: string, selectedFilter: TableFilterItem) {
+    state.currentFilterKey = key;
     state.currentFilter = selectedFilter;
     state.currentFilterValue = undefined;
   }
 
   /** Sets the current filter, current filter value and opens the menu */
-  function setCurrentFilter(selectedFilter: ITableFilterItem) {
+  function setCurrentFilter(key: string, selectedFilter: TableFilterItem) {
     openMenu();
-    state.currentFilterValue = props.modelValue.get(selectedFilter.id);
+    state.currentFilterKey = key;
+    state.currentFilterValue = props.modelValue[key];
     state.currentFilter = selectedFilter;
   }
 
@@ -42,13 +45,12 @@
     // get value and set it to selected filter values
     if (state.currentFilter !== undefined) {
       if (state.currentFilterValue !== undefined) {
-        props.modelValue.set(state.currentFilter.id, state.currentFilterValue);
-      } else if (props.modelValue.has(state.currentFilter.id)) {
+        props.modelValue[state.currentFilterKey!] = state.currentFilterValue;
+      } else if (props.modelValue[state.currentFilterKey!]) {
         // delete the filter value if we had a value, but it is now undefined
-        props.modelValue.delete(state.currentFilter.id);
+        props.modelValue[state.currentFilterKey!] = undefined;
       }
     }
-
     // emit an event telling the selected filters have changed
     emit("update:modelValue", props.modelValue);
 
@@ -57,11 +59,9 @@
   }
 
   /* Removed the filterItem id from the modelValue collection. */
-  function removeFilter(filterItem: ITableFilterItem) {
+  function removeFilter(key: string) {
     // delete the filter value if we had a value, but it is now undefined
-    if (filterItem) {
-      props.modelValue.delete(filterItem.id);
-    }
+    props.modelValue[key] = undefined;
 
     // emit an event telling the selected filters have changed
     emit("update:modelValue", props.modelValue);
@@ -104,8 +104,8 @@
 
           <!-- context menu -->
           <v-list v-if="!state.currentFilter">
-            <v-list-item v-for="filter in filterMap.items" :value="filter" @click="changeCurrentFilter(filter)">
-              <v-list-item-title>{{ filter.title }}</v-list-item-title>
+            <v-list-item v-for="key in Object.keys(filterMap)" :value="filterMap[key]" @click="changeCurrentFilter(key, filterMap[key])">
+              <v-list-item-title>{{ filterMap[key].title }}</v-list-item-title>
             </v-list-item>
           </v-list>
 
@@ -119,10 +119,10 @@
         </v-menu>
 
         <!-- Chips -->
-        <template v-for="filter in filterMap.items">
-          <v-chip class="ml-2 mt-2" v-if="modelValue.has(filter.id)" @click="setCurrentFilter(filter)"
-            >{{ filter.title }} : {{ modelValue.get(filter.id)?.title }}
-            <v-btn class="my-1 ml-1" color="default" density="compact" size="small" icon="mdi-close-circle" @click.prevent="removeFilter(filter)"></v-btn>
+        <template v-for="key in Object.keys(filterMap)">
+          <v-chip class="ml-2 mt-2" v-if="modelValue[key]" @click="setCurrentFilter(key, filterMap[key])"
+            >{{ filterMap[key].title }} : {{ modelValue[key]?.title }}
+            <v-btn class="my-1 ml-1" color="default" density="compact" size="small" icon="mdi-close-circle" @click.prevent="removeFilter(key)"></v-btn>
           </v-chip>
         </template>
 

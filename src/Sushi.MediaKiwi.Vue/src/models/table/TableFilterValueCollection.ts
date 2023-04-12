@@ -1,4 +1,4 @@
-import type { ITableFilterValue } from "./ITableFilterValue";
+import type { TableFilterValue } from "./ITableFilterValue";
 
 /** Represents a collection of ITableFilterValue instances, each with a unique key */
-export class TableFilterValueCollection extends Map<string, ITableFilterValue> { }
+export type TableFilterValueCollection = Record<string, TableFilterValue | undefined>;

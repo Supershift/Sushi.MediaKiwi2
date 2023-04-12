@@ -1,20 +1,30 @@
 <script setup lang="ts">
   import { MkTable } from "../MkTable";
-  import { ITableMap } from "@/models";
+  import { ITableMap, ListResult, TableFilterValueCollection } from "@/models";
   import { View } from "@/models";
   import { useMediakiwiStore } from "@/stores";
-  import { reactive } from "vue";
+  import { ref } from "vue";
   import { storeToRefs } from "pinia";
   import { container } from "tsyringe";
   import { IViewConnector } from "@/services";
+  import { MkTableFilterSelect } from "../MkTableFilter";
+  import { TableFilter } from "@/models/table/ITableFilter";
+
   // inject dependencies
   const viewConnector = container.resolve<IViewConnector>("IViewConnector");
   const store = useMediakiwiStore();
 
+  // define reactive variables
+  const data = ref<ListResult<View>>();
+  const currentPage = ref(1);
+  const selectedFilters = ref({} as TableFilterValueCollection);
+
   // get data
   const { sections } = storeToRefs(store);
-  const viewsResult = await viewConnector.GetViews();
-  const views = reactive(viewsResult.result);
+
+  async function loadData() {
+    data.value = await viewConnector.GetViews(selectedFilters.value.section?.value, { pageIndex: currentPage.value - 1, pageSize: 10 });
+  }
 
   // define mapping
   const tableMap: ITableMap<View> = {
@@ -27,7 +37,24 @@
       { headerTitle: "Roles", value: (x) => x.roles?.join() },
     ],
   };
+
+  const filters: TableFilter = {
+    section: {
+      title: "Section",
+      options: sections.value.map((x) => ({ title: x.name, value: x.id })),
+      component: MkTableFilterSelect,
+    },
+  };
 </script>
 <template>
-  <mk-table new :data="views" :table-map="tableMap" item-view-id="ViewEdit"></mk-table>
+  <mk-table
+    new
+    :api-result="data"
+    :on-need-data="loadData"
+    :table-map="tableMap"
+    :filter-map="filters"
+    v-model:selected-filters="selectedFilters"
+    v-model:current-page="currentPage"
+    item-view-id="ViewEdit"
+  ></mk-table>
 </template>

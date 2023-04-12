@@ -1,7 +1,4 @@
-import type { ITableFilterItem } from "./ITableFilterItem";
+import type { TableFilterItem } from "./ITableFilterItem";
 
 /** Represents a collection of filters for table data  */
-export interface ITableFilter{
-    /** Collection of filter items */
-    items: ITableFilterItem[]
-}
+export type TableFilter = Record<string, TableFilterItem>;
