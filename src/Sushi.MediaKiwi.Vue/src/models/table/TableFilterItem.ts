@@ -1,5 +1,5 @@
 import type { Component, DefineComponent } from "vue";
-import { TableFilterValue } from "./ITableFilterValue";
+import { TableFilterValue } from "./TableFilterValue";
 
 export type TableFilterItem = {
   /** Title for the filter to be displayed to the user */

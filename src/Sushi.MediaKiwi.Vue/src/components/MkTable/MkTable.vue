@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import type { ITableMap, ITableSortingValue, TableFilterValueCollection } from "@/models/table";
+  import type { ITableMap, ITableSortingValue, TableFilter } from "@/models/table";
   import { ref } from "vue";
   import MkTableFilter from "@/components/MkTableFilter/MkTableFilter.vue";
   import MkTableView from "./MkTableView.vue";
@@ -7,11 +7,8 @@
   import { useMediakiwiStore } from "@/stores";
   import { useNavigation } from "@/composables/useNavigation";
   import { IListResult, IPagingResult } from "@/models";
-  import { computed } from "@vue/reactivity";
   import { useSnackbarStore } from "@/stores/snackbar";
-  import { watch } from "vue";
   import { onMounted } from "vue";
-  import { TableFilter } from "@/models/table/ITableFilter";
 
   // define properties
   const props = defineProps<{

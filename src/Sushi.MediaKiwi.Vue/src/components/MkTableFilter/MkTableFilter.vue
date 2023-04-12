@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import { shallowReactive, ref, watch } from "vue";
-  import { TableFilter } from "@/models/table/ITableFilter";
-  import { TableFilterItem } from "@/models/table/ITableFilterItem";
-  import { TableFilterValue } from "@/models/table/ITableFilterValue";
+  import { TableFilter } from "@/models/table/TableFilter.js";
+  import { TableFilterItem } from "@/models/table/TableFilterItem.js";
+  import { TableFilterValue } from "@/models/table/TableFilterValue.js";
 
   const props = defineProps<{
     modelValue: TableFilter;

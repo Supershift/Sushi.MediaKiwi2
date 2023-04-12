@@ -8,7 +8,7 @@
   import { container } from "tsyringe";
   import { IViewConnector } from "@/services";
   import { MkTableFilterSelect } from "../MkTableFilter";
-  import { TableFilter } from "@/models/table/ITableFilter";
+  import { TableFilter } from "@/models/table/TableFilter";
 
   // inject dependencies
   const viewConnector = container.resolve<IViewConnector>("IViewConnector");
