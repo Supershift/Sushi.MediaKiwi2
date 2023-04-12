@@ -15,16 +15,9 @@
   const store = useMediakiwiStore();
 
   // define reactive variables
+  const { sections } = storeToRefs(store);
   const data = ref<ListResult<View>>();
   const currentPage = ref(1);
-  const selectedFilters = ref({} as TableFilterValueCollection);
-
-  // get data
-  const { sections } = storeToRefs(store);
-
-  async function loadData() {
-    data.value = await viewConnector.GetViews(selectedFilters.value.section?.value, { pageIndex: currentPage.value - 1, pageSize: 10 });
-  }
 
   // define mapping
   const tableMap: ITableMap<View> = {
@@ -38,23 +31,19 @@
     ],
   };
 
-  const filters: TableFilter = {
+  const filters = ref<TableFilter>({
     section: {
       title: "Section",
       options: sections.value.map((x) => ({ title: x.name, value: x.id })),
       component: MkTableFilterSelect,
     },
-  };
+  });
+
+  // get data
+  async function loadData() {
+    data.value = await viewConnector.GetViews(filters.value.section?.selectedValue?.value, { pageIndex: currentPage.value - 1, pageSize: 10 });
+  }
 </script>
 <template>
-  <mk-table
-    new
-    :api-result="data"
-    :on-need-data="loadData"
-    :table-map="tableMap"
-    :filter-map="filters"
-    v-model:selected-filters="selectedFilters"
-    v-model:current-page="currentPage"
-    item-view-id="ViewEdit"
-  ></mk-table>
+  <mk-table new :api-result="data" :on-need-data="loadData" :table-map="tableMap" v-model:filters="filters" v-model:current-page="currentPage" item-view-id="ViewEdit"></mk-table>
 </template>

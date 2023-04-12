@@ -15,8 +15,7 @@
 
   // define properties
   const props = defineProps<{
-    filterMap?: TableFilter;
-    selectedFilters?: TableFilterValueCollection;
+    filters?: TableFilter;
     tableMap: ITableMap<any>;
     apiResult?: IListResult<any>;
     data?: any[];
@@ -38,7 +37,7 @@
 
   // define events
   const emit = defineEmits<{
-    (e: "update:selectedFilters", value: TableFilterValueCollection): void;
+    (e: "update:filters", value: TableFilter): void;
     (e: "click:row", value: unknown): void;
     (e: "update:selectedSortOption", value?: ITableSortingValue): void;
     (e: "update:selectedTableRows", value?: unknown[]): void;
@@ -48,7 +47,6 @@
   // define reactive variables
   const inProgress = ref(true);
   const mkTableViewComponent = ref();
-  const hasFilter = computed(() => props.filterMap !== undefined && props.selectedFilters !== undefined);
 
   // inject dependencies
   const store = useMediakiwiStore();
@@ -65,8 +63,12 @@
     await needData();
   }
 
-  async function filterChanged(value: TableFilterValueCollection) {
-    emit("update:selectedFilters", value);
+  async function filterChanged(value: TableFilter) {
+    // reset paging
+    emit("update:currentPage", 1);
+    // update filters
+    emit("update:filters", value);
+    // fetch data
     await needData();
   }
 
@@ -112,8 +114,8 @@
   <v-card>
     <v-progress-linear indeterminate absolute v-if="inProgress"></v-progress-linear>
     <slot name="header"></slot>
-    <template v-if="hasFilter">
-      <MkTableFilter :filter-map="filterMap!" :model-value="selectedFilters!" @update:model-value="filterChanged"> </MkTableFilter>
+    <template v-if="filters">
+      <MkTableFilter :model-value="filters" @update:model-value="filterChanged"> </MkTableFilter>
     </template>
 
     <v-btn v-if="props.new && props.itemViewId" @click="onNewClick">New</v-btn>

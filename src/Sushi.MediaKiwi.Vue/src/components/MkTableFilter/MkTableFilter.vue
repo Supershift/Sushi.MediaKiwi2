@@ -1,17 +1,15 @@
 <script setup lang="ts">
   import { shallowReactive, ref, watch } from "vue";
-  import type { TableFilterValueCollection } from "@/models/table/";
   import { TableFilter } from "@/models/table/ITableFilter";
   import { TableFilterItem } from "@/models/table/ITableFilterItem";
   import { TableFilterValue } from "@/models/table/ITableFilterValue";
 
   const props = defineProps<{
-    filterMap: TableFilter;
-    modelValue: TableFilterValueCollection;
+    modelValue: TableFilter;
   }>();
 
   const emit = defineEmits<{
-    (e: "update:modelValue", value: TableFilterValueCollection): void;
+    (e: "update:modelValue", value: TableFilter): void;
   }>();
 
   const menu = ref(false);
@@ -36,7 +34,7 @@
   function setCurrentFilter(key: string, selectedFilter: TableFilterItem) {
     openMenu();
     state.currentFilterKey = key;
-    state.currentFilterValue = props.modelValue[key];
+    state.currentFilterValue = selectedFilter.selectedValue;
     state.currentFilter = selectedFilter;
   }
 
@@ -45,10 +43,10 @@
     // get value and set it to selected filter values
     if (state.currentFilter !== undefined) {
       if (state.currentFilterValue !== undefined) {
-        props.modelValue[state.currentFilterKey!] = state.currentFilterValue;
+        props.modelValue[state.currentFilterKey!].selectedValue = state.currentFilterValue;
       } else if (props.modelValue[state.currentFilterKey!]) {
         // delete the filter value if we had a value, but it is now undefined
-        props.modelValue[state.currentFilterKey!] = undefined;
+        props.modelValue[state.currentFilterKey!].selectedValue = undefined;
       }
     }
     // emit an event telling the selected filters have changed
@@ -61,7 +59,7 @@
   /* Removed the filterItem id from the modelValue collection. */
   function removeFilter(key: string) {
     // delete the filter value if we had a value, but it is now undefined
-    props.modelValue[key] = undefined;
+    props.modelValue[key].selectedValue = undefined;
 
     // emit an event telling the selected filters have changed
     emit("update:modelValue", props.modelValue);
@@ -104,8 +102,8 @@
 
           <!-- context menu -->
           <v-list v-if="!state.currentFilter">
-            <v-list-item v-for="key in Object.keys(filterMap)" :value="filterMap[key]" @click="changeCurrentFilter(key, filterMap[key])">
-              <v-list-item-title>{{ filterMap[key].title }}</v-list-item-title>
+            <v-list-item v-for="key in Object.keys(modelValue)" :value="modelValue[key]" @click="changeCurrentFilter(key, modelValue[key])">
+              <v-list-item-title>{{ modelValue[key].title }}</v-list-item-title>
             </v-list-item>
           </v-list>
 
@@ -119,9 +117,9 @@
         </v-menu>
 
         <!-- Chips -->
-        <template v-for="key in Object.keys(filterMap)">
-          <v-chip class="ml-2 mt-2" v-if="modelValue[key]" @click="setCurrentFilter(key, filterMap[key])"
-            >{{ filterMap[key].title }} : {{ modelValue[key]?.title }}
+        <template v-for="key in Object.keys(modelValue)">
+          <v-chip class="ml-2 mt-2" v-if="modelValue[key].selectedValue" @click="setCurrentFilter(key, modelValue[key])"
+            >{{ modelValue[key].title }} : {{ modelValue[key].selectedValue?.title }}
             <v-btn class="my-1 ml-1" color="default" density="compact" size="small" icon="mdi-close-circle" @click.prevent="removeFilter(key)"></v-btn>
           </v-chip>
         </template>
