@@ -10,6 +10,8 @@ export type MsalConfig = {
 };
 
 export type Auth = {
-  tennantId: string;
-  cookie: string;
+  clientId: string;
+  authority: string;
+  redirectUri: string;
+  postLogoutRedirectUri: string;
 };
