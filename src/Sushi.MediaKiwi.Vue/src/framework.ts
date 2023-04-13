@@ -38,6 +38,7 @@ export default {
 
     // Create an instance of Pinia
     app.use(pinia);
+    console.log("pinia created");
 
     // get default router options
     const routerOptions = getDefaultRouterOptions(options?.customRoutes);

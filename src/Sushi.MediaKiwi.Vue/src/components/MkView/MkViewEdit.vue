@@ -7,12 +7,14 @@
   import { View } from "@/models";
   import { useMediakiwiStore } from "@/stores";
   import { RouterManager } from "@/router/routerManager";
+  import { useNavigation } from "@/composables/useNavigation";
   // inject dependencies
   const viewConnector = container.resolve<IViewConnector>("IViewConnector");
   const routerManager = container.resolve<RouterManager>("RouterManager");
 
   const route = useRoute();
   const store = useMediakiwiStore();
+  const navigation = useNavigation();
 
   // get id of the view from the route
   const viewId = Number(route.params.viewId);
@@ -38,25 +40,38 @@
 
   async function onSave() {
     if (viewId > 0) {
-      // update existing
-      // call Api to update view
+      // update existing view
       await viewConnector.UpdateView(viewId, state.view);
 
-      // refresh navigation
+      // refresh store (to update the view in the navigation)
       await routerManager.ForceInitialize();
     } else {
-      // create new
-      alert("Not implemented");
+      // create new view
+      const newView = await viewConnector.CreateView(state.view);
+
+      // refresh store (to update the view in the navigation)
+      await routerManager.ForceInitialize();
+
+      // push user to the new view
+      navigation.navigateTo(navigation.currentNavigationItem.value, newView.id);
     }
   }
 
-  function onDelete() {
-    alert("Not implemented");
+  let onDelete: ((event: Event) => Promise<void>) | undefined = undefined;
+  if (viewId > 0) {
+    onDelete = async () => {
+      if (viewId > 0) {
+        await viewConnector.DeleteView(viewId);
+
+        // refresh store (to update the view in the navigation)
+        await routerManager.ForceInitialize();
+      }
+    };
   }
 </script>
 
 <template>
-  <MkForm :on-save="onSave" title="View" @save="onSave" @undo="loadView" @delete="onDelete">
+  <MkForm title="View">
     <v-text-field label="Name" v-model="state.view.name"></v-text-field>
     <v-text-field label="External Id" v-model="state.view.externalId"></v-text-field>
     <v-text-field label="Component key" v-model="state.view.componentKey"></v-text-field>
