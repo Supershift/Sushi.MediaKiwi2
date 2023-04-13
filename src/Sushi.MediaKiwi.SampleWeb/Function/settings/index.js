@@ -1,13 +1,13 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+const { getValues } = require("./logic");
+
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 module.exports = async function (context, req) {
   context.log("JavaScript HTTP trigger function processed a request.");
 
-  // Add your appsettings here
-  const mediaKiwi = {
-    testVariable: process.env.MediaKiwi_TestVariable,
-    useFakes: process.env.MediaKiwi_UseFakes === "true",
-    useLocalApi: process.env.MediaKiwi_UseLocalApi === "true",
-  };
+  // Get Values from process.env with the prefix
+  const prefix = "MediaKiwi:";
+  const mediaKiwi = getValues(prefix);
 
   context.res = {
     status: 200,
