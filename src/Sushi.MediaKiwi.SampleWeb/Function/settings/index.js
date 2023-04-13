@@ -5,14 +5,11 @@ const { getValues } = require("./logic");
 module.exports = async function (context, req) {
   context.log("JavaScript HTTP trigger function processed a request.");
 
-  // Get Values from process.env with the prefix
-  const prefix = "MediaKiwi:";
-  const mediaKiwi = getValues(prefix);
+  // Get Values from process.env with the MediaKiwi prefix
+  const mediaKiwi = getValues("MediaKiwi");
 
   context.res = {
     status: 200,
-    body: {
-      mediaKiwi,
-    },
+    body: { ...mediaKiwi },
   };
 };

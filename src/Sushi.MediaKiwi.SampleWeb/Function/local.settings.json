@@ -6,8 +6,8 @@
     "MediaKiwi:TestVariable": "Setting from the local settings",
     "MediaKiwi:UseFakes": false,
     "MediaKiwi:UseLocalApi": true,
-    "MediaKiwi:NunberValue": 1,
-    "MediaKiwi:msalConfig:auth:tenantId": "some-value"
+    "MediaKiwi:msalConfig:auth:tenantId": "some-value",
+    "MediaKiwi:msalConfig:auth:cookie": "auth"
   },
   "Host": {
     "LocalHttpPort": 7071,
