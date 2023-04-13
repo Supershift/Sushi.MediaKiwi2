@@ -1,6 +1,5 @@
 /**
- * Creates a new filtered Object with values from the process.env with the provided prefix.
- * process.env is an object build from a Dictionay<string, string>
+ * Filters for the process.env properties with the provided prefix.
  * @param {string} prefix
  * @returns {object} Object of filtered values
  */
@@ -29,14 +28,14 @@ function getValues(prefix) {
  * Parses a colon separated key to an object with the deepest level containing the value
  * @param {string} key MediaKiwi:msalConfig:auth:tenantId
  * @param {string} value some-value
- * @returns {any} { "mediaKiwi": { "msalConfig": { "auth": { "tenantId": "some-value" } } } }
+ * @returns {*} { "mediaKiwi": { "msalConfig": { "auth": { "tenantId": "some-value" } } } }
  */
 function parseToNestedObject(key, value) {
   if (!key) {
-    return null;
+    return {};
   }
 
-  // Split the key
+  // Split the key by colon
   const keyParts = key.split(":");
   let index = 0;
   let result = {};
