@@ -1,13 +1,9 @@
 <script lang="ts">
   import { defineComponent } from "vue";
-  import { MkBreadcrumbs } from "@supershift/mediakiwi-vue";
 
   // import SampleTable2 from './samples/SampleTable2.vue';
   export default defineComponent({
     name: "Home",
-    components: {
-      MkBreadcrumbs,
-    },
     setup() {
       return {};
     },

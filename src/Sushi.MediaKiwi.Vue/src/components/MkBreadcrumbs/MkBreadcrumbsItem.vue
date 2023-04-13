@@ -1,11 +1,11 @@
 <script setup lang="ts">
   import { NavigationItem } from "@/models/";
   import { useRoute } from "@/router";
-  import { computed } from "vue";
 
   const props = defineProps<{
     item: NavigationItem;
     breadcrumbs: Array<NavigationItem>;
+    customDivider: boolean;
   }>();
 
   const route = useRoute();
@@ -45,15 +45,16 @@
       :active="isCurrentItem(item)"
       :disabled="isCurrentItem(item)"
       active-class="active-crumb"
-      class="text-h3 text-container"
+      class="text-h4 text-container"
       :class="classes(item)"
+      :key="item.id"
     >
-      {{ item.name.toUpperCase() }}
+      {{ item.name }}
     </v-breadcrumbs-item>
-    <v-icon v-if="breadcrumbs.length > 1 && currentIndex(item) != -1 && !isLastItem(item)" icon="mdi-chevron-right"></v-icon>
+    <v-icon v-if="!customDivider && breadcrumbs.length > 1 && currentIndex(item) != -1 && !isLastItem(item)" icon="mdi-chevron-right"></v-icon>
   </div>
 </template>
-<style scoped lang="css">
+<style scoped lang="scss">
   .v-icon {
     font-size: 2em;
   }
@@ -67,15 +68,29 @@
   .active-crumb:hover {
     text-decoration: none;
     cursor: text;
-    font-weight: bold;
     max-width: unset !important;
+    color: rgba(var(--v-theme-on-background), var(--v-theme-surface-overlay-multiplier));
+    opacity: 1;
   }
   .text-container {
     max-width: 500px;
   }
-  @media (min-width: 960px) {
-    .text-container {
-      max-width: 120px;
+  @media (min-width: 600px) {
+    .breadcrumb-item-container {
+      &:not(:first-of-type) {
+        .text-container {
+          max-width: 25vw;
+        }
+      }
+      &:first-of-type {
+        .text-container {
+          max-width: 20vw;
+        }
+      }
+      &:last-of-type {
+        max-width: 100%;
+        white-space: nowrap;
+      }
     }
   }
 </style>
