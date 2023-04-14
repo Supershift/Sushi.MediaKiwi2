@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { MkForm } from "@/components";
+  import { MkForm, MkInputChip } from "@/components";
   import { reactive } from "vue";
   import { useRoute } from "@/router";
   import { container } from "tsyringe";
@@ -68,14 +68,28 @@
       }
     };
   }
+
+  function removeRole(roleId: string) {
+    if (roleId && state.view.roles && state.view.roles.indexOf(roleId) > -1) {
+      state.view.roles.splice(state.view.roles?.indexOf(roleId), 1);
+    }
+  }
+
+  function clickRole() {
+    alert("click on the role");
+  }
 </script>
 
 <template>
   <MkForm title="View">
-    <v-text-field label="Name" v-model="state.view.name"></v-text-field>
-    <v-text-field label="External Id" v-model="state.view.externalId"></v-text-field>
-    <v-text-field label="Component key" v-model="state.view.componentKey"></v-text-field>
-    <v-select label="Section" v-model="state.view.sectionId" :items="store.sections" item-title="name" item-value="id"></v-select>
-    <v-select label="Roles" v-model="state.view.roles" chips multiple :items="store.roles" item-title="id" item-value="id"></v-select>
+    <v-text-field v-model="state.view.name" label="Name"></v-text-field>
+    <v-text-field v-model="state.view.externalId" label="External Id"></v-text-field>
+    <v-text-field v-model="state.view.componentKey" label="Component key"></v-text-field>
+    <v-select v-model="state.view.sectionId" label="Section" :items="store.sections" item-title="name" item-value="id"></v-select>
+    <v-select v-model="state.view.roles" label="Roles" multiple :items="store.roles" item-title="id" item-value="id">
+      <template #selection="{ item }">
+        <MkInputChip :item="item" @click="clickRole" @click:remove="removeRole" />
+      </template>
+    </v-select>
   </MkForm>
 </template>
