@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { MkTable } from "../MkTable";
-  import { ITableMap, ITableMapItem } from "@/models";
+  import { ITableMap } from "@/models";
   import { View } from "@/models";
   import { useMediakiwiStore } from "@/stores";
   import { reactive } from "vue";
@@ -29,5 +29,5 @@
   };
 </script>
 <template>
-  <mk-table :data="views" :table-map="tableMap" item-view-id="ViewEdit"></mk-table>
+  <mk-table new :data="views" :table-map="tableMap" item-view-id="ViewEdit"></mk-table>
 </template>

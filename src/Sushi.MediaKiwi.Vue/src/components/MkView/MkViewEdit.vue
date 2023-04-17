@@ -67,11 +67,11 @@
         await routerManager.ForceInitialize();
       }
     };
-  }
+  }  
 </script>
 
 <template>
-  <MkForm title="View">
+  <MkForm title="View" :on-save="onSave" :on-undo="loadView" :on-delete="onDelete">
     <v-text-field label="Name" v-model="state.view.name"></v-text-field>
     <v-text-field label="External Id" v-model="state.view.externalId"></v-text-field>
     <v-text-field label="Component key" v-model="state.view.componentKey"></v-text-field>

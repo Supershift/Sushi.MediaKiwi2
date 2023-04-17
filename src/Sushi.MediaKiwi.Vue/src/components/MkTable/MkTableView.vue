@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { useRouter, type RouteParamsRaw, RouteParamValueRaw } from "vue-router";
+  import { RouteParamValueRaw } from "vue-router";
   import type { ITableMap } from "@/models/table/ITableMap";
   import type { ITableMapItem } from "@/models/table/ITableMapItem";
   import MkTableCell from "./MkTableCell.vue";
@@ -29,7 +29,6 @@
   }>();
 
   // inject dependencies
-  const router = useRouter();
   const store = useMediakiwiStore();
   const tableSortingHelper = new TableSortingHelper();
   const navigation = useNavigation();
