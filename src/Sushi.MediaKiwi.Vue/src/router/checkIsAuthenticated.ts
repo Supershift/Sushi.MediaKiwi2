@@ -11,7 +11,7 @@ export function addCheckIsAuthenticated(router: Router): void {
         scopes: identity.scopes,
         redirectStartPage: to.fullPath,
       };
-      const shouldProceed = await isAuthenticated(identity.msalInstance, InteractionType.None, request);
+      const shouldProceed = await isAuthenticated(identity.msalInstance, InteractionType.Redirect, request);
       return shouldProceed || "/signIn";
     }
 
