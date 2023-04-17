@@ -1,19 +1,17 @@
 <script lang="ts" setup>
   const props = defineProps<{
-    item: any;
     appendIcon?: string;
     prependIcon?: string;
   }>();
 
   const emit = defineEmits<{
-    (e: "click", item: any): void;
-    (e: "click:remove", value: any): void;
+    (e: "click"): void;
+    (e: "click:remove"): void;
   }>();
 </script>
 
 <template>
-  <v-chip v-bind="props.item" :append-icon="appendIcon" :prepend-icon="prependIcon" closable @click:close.stop="(e) => emit('click:remove', item.value)" @click.stop="() => emit('click', item)">
+  <v-chip :append-icon="props.appendIcon" :prepend-icon="props.prependIcon" closable @click:close.stop="(e) => emit('click:remove')" @click.stop="() => emit('click')">
     <slot></slot>
-    {{ props.item.title }}
   </v-chip>
 </template>

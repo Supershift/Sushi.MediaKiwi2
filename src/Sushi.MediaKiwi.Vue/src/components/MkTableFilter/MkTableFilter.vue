@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { shallowReactive, ref, watch } from "vue";
-  import type { ITableFilter, ITableFilterItem, TableFilterValueCollection, ITableFilterValue } from "@/models/table/";
+  import type { ITableFilter, ITableFilterItem, TableFilterValueCollection, ITableFilterValue } from "@/models/table";
+  import { MkInputChip } from "@/components";
 
   const props = defineProps<{
     filterMap: ITableFilter;
@@ -98,20 +99,20 @@
       <v-row class="pb-2">
         <v-menu v-model="menu" :close-on-content-click="false" location="end">
           <!-- Button -->
-          <template v-slot:activator="{ props }">
+          <template #activator="{ props }">
             <v-btn class="mt-1 ml-1" v-bind="props" color="primary" variant="plain" icon="mdi-filter-variant"> </v-btn>
           </template>
 
           <!-- context menu -->
           <v-list v-if="!state.currentFilter">
-            <v-list-item v-for="filter in filterMap.items" :value="filter" @click="changeCurrentFilter(filter)">
+            <v-list-item v-for="filter in filterMap.items" :key="filter.id" :value="filter" @click="changeCurrentFilter(filter)">
               <v-list-item-title>{{ filter.title }}</v-list-item-title>
             </v-list-item>
           </v-list>
 
           <!-- filter compoment -->
           <v-card v-else-if="state.currentFilter" width="300" :title="state.currentFilter.title">
-            <component :is="state.currentFilter.component" :table-filter-item="state.currentFilter" v-model="state.currentFilterValue"> </component>
+            <component :is="state.currentFilter.component" v-model="state.currentFilterValue" :table-filter-item="state.currentFilter"> </component>
             <v-card-actions>
               <v-btn @click="applyFilter()">Apply</v-btn>
             </v-card-actions>
@@ -120,13 +121,12 @@
 
         <!-- Chips -->
         <template v-for="filter in filterMap.items">
-          <v-chip class="ml-2 mt-2" v-if="modelValue.has(filter.id)" @click="setCurrentFilter(filter)"
-            >{{ filter.title }} : {{ modelValue.get(filter.id)?.title }}
-            <v-btn class="my-1 ml-1" color="default" density="compact" size="small" icon="mdi-close-circle" @click.prevent="removeFilter(filter)"></v-btn>
-          </v-chip>
+          <MkInputChip v-if="modelValue.has(filter.id)" :key="filter.id" class="ml-2 mt-2" @click="setCurrentFilter(filter)" @click:remove="removeFilter(filter)">
+            {{ filter.title }} : {{ modelValue.get(filter.id)?.title }}
+          </MkInputChip>
         </template>
 
-        <v-text-field placeholder="Filter" @click="openMenu" variant="plain" :hide-details="true" readonly density="compact" class="mx-2"></v-text-field>
+        <v-text-field placeholder="Filter" variant="plain" :hide-details="true" readonly density="compact" class="mx-2" @click="openMenu"></v-text-field>
       </v-row>
     </v-container>
   </v-card>
