@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { useRouter, type RouteParamsRaw, RouteParamValueRaw } from "vue-router";
+  import { RouteParamValueRaw } from "vue-router";
   import type { ITableMap } from "@/models/table/ITableMap";
   import type { ITableMapItem } from "@/models/table/ITableMapItem";
   import MkTableCell from "./MkTableCell.vue";
@@ -12,24 +12,27 @@
   import { watch } from "vue";
   import { useNavigation } from "@/composables/useNavigation";
 
+  // define properties
   const props = defineProps<{
-    tableMap: ITableMap<unknown>;
-    data: unknown[];
+    tableMap: ITableMap<any>;
+    data?: any[];
     /** ExternalId of the view instance to which the user is pushed when clicking a row. */
     itemViewId?: string;
     /** */
     selectedSortOption?: ITableSortingValue;
     selectedTableRows?: unknown[];
+    /** Make each row in the table selectable. */
+    showSelect?: boolean;
   }>();
 
+  // define event
   const emit = defineEmits<{
-    (e: "click:row", value: unknown): void;
+    (e: "click:row", value: any): void;
     (e: "update:selectedSortOption", value?: ITableSortingValue): void;
     (e: "update:selectedTableRows", value?: unknown[]): void;
   }>();
 
   // inject dependencies
-  const router = useRouter();
   const store = useMediakiwiStore();
   const tableSortingHelper = new TableSortingHelper();
   const navigation = useNavigation();
@@ -100,7 +103,7 @@
   <v-table>
     <thead>
       <tr>
-        <th v-if="tableMap.showSelect">
+        <th v-if="showSelect">
           <MkTableCheckbox :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:is-selected="selectAll" />
         </th>
         <!-- render a header cell for each mapping item -->
@@ -114,13 +117,16 @@
     <tbody>
       <!-- render a row for each provided data entity -->
       <tr v-for="(dataItem, index) in props.data" :key="index" style="cursor: pointer" @click.stop="(e) => onRowClick(e, dataItem)">
-        <td v-if="tableMap.showSelect" @click.stop>
+        <td v-if="showSelect" @click.stop>
           <MkTableCheckbox :is-selected="isItemSelected(dataItem)" @update:is-selected="(e) => selectItem(dataItem, e)" />
         </td>
         <!-- render a cell for each mapping item -->
         <MkTableCell v-for="mapItem in props.tableMap.items" :key="mapItem.id" :data="dataItem" :map-item="mapItem"></MkTableCell>
       </tr>
     </tbody>
+    <tfoot>
+      <slot name="footer"></slot>
+    </tfoot>
   </v-table>
 </template>
 
