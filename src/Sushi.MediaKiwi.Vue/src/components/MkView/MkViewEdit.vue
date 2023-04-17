@@ -67,8 +67,7 @@
         await routerManager.ForceInitialize();
       }
     };
-  }
-  console.log(viewId);
+  }  
 </script>
 
 <template>
