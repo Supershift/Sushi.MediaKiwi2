@@ -67,15 +67,15 @@
         await routerManager.ForceInitialize();
       }
     };
-  }  
+  }
 </script>
 
 <template>
   <MkForm title="View" :on-save="onSave" :on-undo="loadView" :on-delete="onDelete">
-    <v-text-field label="Name" v-model="state.view.name"></v-text-field>
-    <v-text-field label="External Id" v-model="state.view.externalId"></v-text-field>
-    <v-text-field label="Component key" v-model="state.view.componentKey"></v-text-field>
-    <v-select label="Section" v-model="state.view.sectionId" :items="store.sections" item-title="name" item-value="id"></v-select>
-    <v-select label="Roles" v-model="state.view.roles" chips multiple :items="store.roles" item-title="id" item-value="id"></v-select>
+    <v-text-field v-model="state.view.name" label="Name"></v-text-field>
+    <v-text-field v-model="state.view.externalId" label="External Id"></v-text-field>
+    <v-text-field v-model="state.view.componentKey" label="Component key"></v-text-field>
+    <v-select v-model="state.view.sectionId" label="Section" :items="store.sections" item-title="name" item-value="id"></v-select>
+    <v-select v-model="state.view.roles" label="Roles" chips multiple :items="store.roles" item-title="id" item-value="id"></v-select>
   </MkForm>
 </template>
