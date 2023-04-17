@@ -42,7 +42,7 @@
   }>();
 
   // define reactive variables
-  const inProgress = ref(true);
+  const inProgress = ref(false);
   const mkTableViewComponent = ref();
 
   // inject dependencies

@@ -1,9 +1,7 @@
 <script setup lang="ts">
-  import { reactive, computed, ref } from "vue";
-  import type { ITableMap, ITableFilter, ITableSortingValue } from "@supershift/mediakiwi-vue";
-  import { IconPosition } from "@supershift/mediakiwi-vue";
-  import { TableFilterValueCollection, MkTable, MkTableFilterSelect, MkTableFilterTextField, MkTableFilterRadioGroup, MkTableFilterDatePicker, TableSortingDirection } from "@supershift/mediakiwi-vue";
-  import SampleCustomTableFilterInput from "./SampleCustomTableFilterInput.vue";
+  import { computed, defineAsyncComponent, ref } from "vue";
+  import { ITableMap, TableFilter, ITableSortingValue, TableFilterType } from "@supershift/mediakiwi-vue";
+  import { MkTable, TableSortingDirection } from "@supershift/mediakiwi-vue";
   import type { ISampleData } from "./ISampleData";
   import { SampleDataService } from "./SampleDataService";
 
@@ -36,46 +34,38 @@
   };
 
   // define filters for the data
-  const filters = <ITableFilter>{
-    items: [
-      {
-        id: "Name",
-        title: "Naam",
-        component: MkTableFilterTextField,
-      },
-      {
-        id: "Country",
-        title: "Land",
-        options: [
-          { title: "Nederland", value: "NL" },
-          { title: "België", value: "BE" },
-        ],
-        component: MkTableFilterSelect,
-      },
-      {
-        id: "FullName",
-        title: "Volledige naam",
-        component: SampleCustomTableFilterInput,
-      },
-      {
-        id: "City",
-        title: "Stad",
-        options: [
-          { title: "Rijswijk", value: "RSWK" },
-          { title: "Delft", value: "DLFT" },
-        ],
-        component: MkTableFilterRadioGroup,
-      },
-      {
-        id: "Date",
-        title: "Dates",
-        component: MkTableFilterDatePicker,
-      },
-    ],
-  };
+  const filters = ref<TableFilter>({
+    Name: {
+      title: "Naam",
+      type: TableFilterType.TextField,
+    },
+    Country: {
+      title: "Land",
+      options: [
+        { title: "Nederland", value: "NL" },
+        { title: "België", value: "BE" },
+      ],
+      type: TableFilterType.Select,
+    },
+    FullName: {
+      title: "Volledige naam",
+      type: TableFilterType.Custom,
+      component: () => import("./SampleCustomTableFilterInput.vue"),
+    },
+    City: {
+      title: "Stad",
+      options: [
+        { title: "Rijswijk", value: "RSWK" },
+        { title: "Delft", value: "DLFT" },
+      ],
+      type: TableFilterType.RadioGroup,
+    },
+    Date: {
+      title: "Dates",
+      type: TableFilterType.DatePicker,
+    },
+  });
 
-  // create an object which will hold selected filter values
-  const selectedFilters = reactive(new TableFilterValueCollection());
   // create a sorting option object with a default value
   const selectedSortOption = ref<ITableSortingValue>({
     tableMapItemId: "lastSeen",
@@ -87,7 +77,7 @@
   // get the data, using the selected filters
   const sampleData = computed(() => {
     // get country filter
-    let country = selectedFilters.get("Country")?.value;
+    let country = filters.value.Country.selectedValue?.value;
 
     // get the data, using the sorting option
     let result = SampleDataService.GetAll(country, selectedSortOption.value);
@@ -108,15 +98,7 @@
 </script>
 
 <template>
-  <MkTable
-    v-model:selected-filters="selectedFilters"
-    v-model:selected-sort-option="selectedSortOption"
-    v-model:selected-table-rows="selectedTableRows"
-    :filter-map="filters"
-    :table-map="myMap"
-    :data="sampleData"
-    item-view-id="SampleEdit"
-  >
+  <MkTable v-model:filters="filters" v-model:selected-sort-option="selectedSortOption" v-model:selected-table-rows="selectedTableRows" :table-map="myMap" :data="sampleData" item-view-id="SampleEdit">
     <template #actions>
       <v-btn @click="download">Download</v-btn>
       <v-btn @click="move">move</v-btn>

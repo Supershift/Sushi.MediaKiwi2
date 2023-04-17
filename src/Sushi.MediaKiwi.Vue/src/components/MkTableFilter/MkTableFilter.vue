@@ -6,6 +6,7 @@
   import { MkTableFilterDatePicker, MkTableFilterRadioGroup, MkTableFilterSelect, MkTableFilterTextField } from ".";
   import { DefineComponent } from "vue";
   import { TableFilterType } from "./TableFilterType";
+import { defineAsyncComponent } from "vue";
 
   const props = defineProps<{
     modelValue: TableFilter;
@@ -93,7 +94,7 @@
       case TableFilterType.TextField:
         return MkTableFilterTextField;
       case TableFilterType.Custom:
-        if (item.component) return item.component;
+        if (item.component) return defineAsyncComponent(item.component);
         else throw new Error(`No component found for filter type ${item.type}, add a component to the filter item.`);
       default:
         throw new Error(`No component found for filter type ${item.type}`);
