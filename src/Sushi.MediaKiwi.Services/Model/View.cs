@@ -32,8 +32,7 @@ namespace Sushi.MediaKiwi.Services.Model
         public string Name { get; set; }
 
         /// <summary>
-        /// The filename of the Vue the component implementing this view, 
-        /// relative to the components folder, e.g. MyScreen.vue, checkout/Payment.vue
+        /// The key of the Vue component implementing this view, e.g. ./views/myView.vue, MyKey
         /// </summary>
         [Required, StringLength(128)]
         public string ComponentKey { get; set; }
@@ -43,6 +42,11 @@ namespace Sushi.MediaKiwi.Services.Model
         /// </summary>
         [SwaggerSchema(ReadOnly = true)]
         public int SectionId { get; set; }
+
+        /// <summary>
+        /// Name of the URL parameter required by this view.
+        /// </summary>
+        public string? ParameterName { get; set; }
 
         /// <summary>
         /// If not empty, access to this view is restricted to these roles.

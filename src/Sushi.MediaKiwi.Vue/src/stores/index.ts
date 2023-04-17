@@ -64,6 +64,8 @@ export const useMediakiwiStore = defineStore({
     setNavigationItems(payload: ListResult<NavigationItem>) {
       if (payload) {
         this.navigationItems = payload.result;
+        // add view to items
+        this.setNavigaiontItemsView(this.navigationItems);
         // add parent/child relations
         this.navigationItems.forEach((item) => {
           // add parent
@@ -106,18 +108,18 @@ export const useMediakiwiStore = defineStore({
       }
       let result = parentPath + `/${encodeURI(navigationItem.name)}`;
       // if dynamic, add parameter
-      if (navigationItem.isDynamicRoute && navigationItem.dynamicRouteParameterName) {
-        result += `/:${navigationItem.dynamicRouteParameterName}`;
+      if (navigationItem.view?.parameterName) {
+        result += `/:${navigationItem.view.parameterName}`;
       }
       return result;
     },
     setLeafNodes(navigationItems: Array<NavigationItem>) {
       // add leaf node (dynamic items without children have a different leaf node)
       navigationItems.forEach((item) => {
-        if (item.isDynamicRoute && item.children?.filter((x) => !x.isDynamicRoute)) {
+        if (item?.view?.parameterName && item.children?.filter((x) => !x.view?.parameterName)) {
           let candidate: NavigationItem | undefined = item.parent;
           while (candidate && !item.leaf) {
-            if (!candidate.isDynamicRoute || candidate.children?.some((x) => !x.isDynamicRoute)) {
+            if (!candidate.view?.parameterName || candidate.children?.some((x) => !x.view?.parameterName)) {
               item.leaf = candidate;
             }
             candidate = candidate.parent;
@@ -125,6 +127,11 @@ export const useMediakiwiStore = defineStore({
         } else {
           item.leaf = item;
         }
+      });
+    },
+    setNavigaiontItemsView(navigationItems: Array<NavigationItem>) {
+      navigationItems.forEach((item) => {
+        item.view = this.views.find((x) => x.id === item.viewId);
       });
     },
   },
