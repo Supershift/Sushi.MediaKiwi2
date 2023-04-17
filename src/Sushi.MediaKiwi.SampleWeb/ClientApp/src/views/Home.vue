@@ -1,13 +1,14 @@
-<script lang="ts">
-  import { defineComponent } from "vue";
+<script setup lang="ts">
+  import { MkSidePanel } from "@supershift/mediakiwi-vue";
+  import { ref } from "vue";
 
-  // import SampleTable2 from './samples/SampleTable2.vue';
-  export default defineComponent({
-    name: "Home",
-    setup() {
-      return {};
-    },
-  });
+  const toggle = ref(true);
+  function handleClose() {
+    toggle.value = false;
+  }
+  function handleToggle() {
+    toggle.value = true;
+  }
 </script>
 
 <template>
@@ -17,4 +18,16 @@
       <p>Welcome to the home page!</p>
     </v-card>
   </v-lazy>
+  <v-btn v-if="!toggle" class="ma-5 d-inline-block" variant="text" @click="handleToggle">Open Side Panel</v-btn>
+  <mk-side-panel :model-value="toggle" :id-name="'mk-layout'" @closed="handleClose">
+    <template #header> Home Page Panel </template>
+    <template #default>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ac turpis mollis, finibus dolor ut, blandit magna. Sed et nibh mollis, porta lorem at, placerat nibh. Sed faucibus ac justo
+      quis suscipit. Quisque id ipsum ligula. Sed eros nibh, dapibus a imperdiet sit amet, condi
+    </template>
+    <template #footer>
+      <v-btn class="d-inline-block" variant="text">action 1</v-btn>
+      <v-btn class="d-inline-block" variant="text">action 2</v-btn>
+    </template>
+  </mk-side-panel>
 </template>
