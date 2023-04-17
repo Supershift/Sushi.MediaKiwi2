@@ -5,6 +5,6 @@
 <template>
   <v-main style="min-height: 300px">
     <mk-breadcrumbs />
-    <RouterView></RouterView>
+    <RouterView :key="$route.path"></RouterView>
   </v-main>
 </template>

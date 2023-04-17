@@ -3,6 +3,7 @@ import { injectable, inject } from "tsyringe";
 import type { IMediakiwiAxiosInstance } from "@/services/interceptors/MediakiwiAxiosInstance";
 import type ListResult from "@/models/api/ListResult";
 import { IViewConnector } from "./IViewConnector";
+import { Paging } from "@/models/api/Paging";
 
 @injectable()
 export class ViewConnector implements IViewConnector {
@@ -14,11 +15,16 @@ export class ViewConnector implements IViewConnector {
   }
 
   async DeleteView(id: number): Promise<void> {
-    const response = await this.axios.delete(`/views/${id}`);
+    await this.axios.delete(`/views/${id}`);
   }
 
-  async GetViews(): Promise<ListResult<View>> {
-    const response = await this.axios.get<ListResult<View>>("/views");
+  async GetViews(sectionId?: number, paging?: Paging): Promise<ListResult<View>> {
+    // build querystring params
+    const query = {
+      sectionId: sectionId,
+      ...paging,
+    };
+    const response = await this.axios.get<ListResult<View>>("/views", { params: query });
     return response.data;
   }
 

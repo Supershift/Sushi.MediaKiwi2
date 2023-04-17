@@ -1,5 +1,5 @@
-export default interface IListResult<T> {
+import { IPagingResult } from "./IPagingResult";
+
+export default interface IListResult<T> extends IPagingResult {
   result: Array<T>;
-  totalCount?: number | null;
-  pageCount?: number | null;
 }

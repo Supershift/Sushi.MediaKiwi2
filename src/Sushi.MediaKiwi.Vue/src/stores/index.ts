@@ -50,7 +50,7 @@ export const useMediakiwiStore = defineStore({
     },
     async getViews() {
       const connector = container.resolve<IViewConnector>("IViewConnector");
-      const views = await connector.GetViews();
+      const views = await connector.GetViews(undefined, { pageSize: 9999 });
       this.setViews(views);
     },
     async getSections() {

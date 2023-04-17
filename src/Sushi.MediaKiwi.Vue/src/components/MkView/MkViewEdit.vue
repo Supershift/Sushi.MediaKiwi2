@@ -71,7 +71,7 @@
 </script>
 
 <template>
-  <MkForm title="View">
+  <MkForm title="View" :on-save="onSave" :on-undo="loadView" :on-delete="onDelete">
     <v-text-field v-model="state.view.name" label="Name"></v-text-field>
     <v-text-field v-model="state.view.externalId" label="External Id"></v-text-field>
     <v-text-field v-model="state.view.componentKey" label="Component key"></v-text-field>

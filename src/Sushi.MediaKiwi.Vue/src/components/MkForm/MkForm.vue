@@ -2,6 +2,7 @@
   import { ref } from "vue";
   import MkFormToolbar from "./MkFormToolbar.vue";
   import { useNavigation } from "@/composables/useNavigation";
+  import { useSnackbarStore } from "@/stores/snackbar";
 
   const props = defineProps<{
     onSave?: (event: Event) => Promise<void>;
@@ -10,9 +11,10 @@
   }>();
 
   const inProgress = ref(false);
-  const successSnackbar = ref(false);
-  const failedSnackbar = ref(false);
+
+  // inject dependencies
   const navigation = useNavigation();
+  const snackbar = useSnackbarStore();
 
   async function onSave(event: Event) {
     if (!props.onSave) {
@@ -21,9 +23,9 @@
     inProgress.value = true;
     try {
       await props.onSave(event);
-      successSnackbar.value = true;
+      snackbar.showMessage("Saved successfully");
     } catch (error) {
-      failedSnackbar.value = true;
+      snackbar.showMessage("Failed to save");
       throw error;
     } finally {
       inProgress.value = false;
@@ -37,11 +39,11 @@
     inProgress.value = true;
     try {
       await props.onDelete(event);
-      successSnackbar.value = true;
+      snackbar.showMessage("Deleted successfully");
       // send back to parent
       navigation.navigateToParent();
     } catch (error) {
-      failedSnackbar.value = true;
+      snackbar.showMessage("Failed to delete");
       throw error;
     } finally {
       inProgress.value = false;
@@ -55,9 +57,9 @@
     inProgress.value = true;
     try {
       await props.onUndo(event);
-      successSnackbar.value = true;
+      snackbar.showMessage("Changes reverted");
     } catch (error) {
-      failedSnackbar.value = true;
+      snackbar.showMessage("Failed to revert changes");
       throw error;
     } finally {
       inProgress.value = false;
@@ -80,6 +82,4 @@
   <v-form :disabled="inProgress">
     <slot></slot>
   </v-form>
-  <v-snackbar v-model="successSnackbar"><slot name="success">Action completed</slot></v-snackbar>
-  <v-snackbar v-model="failedSnackbar"><slot name="failed">Action failed</slot></v-snackbar>
 </template>
