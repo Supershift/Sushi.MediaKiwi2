@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import { NavigationItem } from "@/models/";
   import { useRoute } from "@/router";
-  import { computed } from "vue";
 
   const props = defineProps<{
     item: NavigationItem;
@@ -20,23 +19,6 @@
   function isCurrentItem(item: NavigationItem): boolean {
     return item === (route.meta.navigationItem as NavigationItem);
   }
-  // NOTE: the 'divider'  is not showing up despite using the correct slots in breadcrumbs component, might be a vuetify bug. We resolve this here with an v-icon.
-  function currentIndex(item: NavigationItem): number {
-    const index = props.breadcrumbs.findIndex((x) => x === item);
-    if (index != -1) {
-      return index;
-    }
-    return -1;
-  }
-
-  function isLastItem(item: NavigationItem): boolean {
-    if (item) {
-      if (currentIndex(item) + 1 === props.breadcrumbs.length) {
-        return true;
-      }
-    }
-    return false;
-  }
 </script>
 <template>
   <div class="breadcrumb-item-container">
@@ -45,18 +27,15 @@
       :active="isCurrentItem(item)"
       :disabled="isCurrentItem(item)"
       active-class="active-crumb"
-      class="text-h3 text-container"
+      class="text-h4 text-container"
       :class="classes(item)"
+      :key="item.id"
     >
-      {{ item.name.toUpperCase() }}
+      {{ item.name }}
     </v-breadcrumbs-item>
-    <v-icon v-if="breadcrumbs.length > 1 && currentIndex(item) != -1 && !isLastItem(item)" icon="mdi-chevron-right"></v-icon>
   </div>
 </template>
-<style scoped lang="css">
-  .v-icon {
-    font-size: 2em;
-  }
+<style scoped lang="scss">
   .breadcrumb-item-container {
     display: flex;
     flex-direction: row;
@@ -67,15 +46,29 @@
   .active-crumb:hover {
     text-decoration: none;
     cursor: text;
-    font-weight: bold;
     max-width: unset !important;
+    color: rgba(var(--v-theme-on-background), var(--v-theme-surface-overlay-multiplier));
+    opacity: 1;
   }
   .text-container {
     max-width: 500px;
   }
-  @media (min-width: 960px) {
-    .text-container {
-      max-width: 120px;
+  @media (min-width: 600px) {
+    .breadcrumb-item-container {
+      &:not(:first-of-type) {
+        .text-container {
+          max-width: 25vw;
+        }
+      }
+      &:first-of-type {
+        .text-container {
+          max-width: 20vw;
+        }
+      }
+      &:last-of-type {
+        max-width: 100%;
+        white-space: nowrap;
+      }
     }
   }
 </style>

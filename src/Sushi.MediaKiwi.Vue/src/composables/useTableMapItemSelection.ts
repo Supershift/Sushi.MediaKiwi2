@@ -18,7 +18,7 @@ interface useTableMapItemSelection {
 /** Tablemap options for the composable to use */
 interface tableMapItemSelectionOptions {
   tableMap: ITableMap<unknown>;
-  data: unknown[];
+  data?: unknown[];
 }
 
 /**
@@ -58,7 +58,7 @@ export function useTableMapItemSelection(options: tableMapItemSelectionOptions):
 
   /** Select ALL items of the tablemap */
   function selectAll(value: boolean): void {
-    select(data, value);
+    select(data!, value);
   }
 
   /** Select the provided data item */

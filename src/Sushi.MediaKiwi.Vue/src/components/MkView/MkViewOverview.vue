@@ -1,20 +1,22 @@
 <script setup lang="ts">
   import { MkTable } from "../MkTable";
-  import { ITableMap, ITableMapItem } from "@/models";
+  import { ITableMap, ListResult } from "@/models";
   import { View } from "@/models";
   import { useMediakiwiStore } from "@/stores";
-  import { reactive } from "vue";
-  import { storeToRefs } from "pinia";
+  import { ref } from "vue";
   import { container } from "tsyringe";
   import { IViewConnector } from "@/services";
+  import { TableFilter } from "@/models/table/TableFilter";
+  import { TableFilterType } from "../MkTableFilter/TableFilterType";
+
   // inject dependencies
   const viewConnector = container.resolve<IViewConnector>("IViewConnector");
   const store = useMediakiwiStore();
 
-  // get data
-  const { sections } = storeToRefs(store);
-  const viewsResult = await viewConnector.GetViews();
-  const views = reactive(viewsResult.result);
+  // define reactive variables
+  const sections = ref(store.sections);
+  const data = ref<ListResult<View>>();
+  const currentPage = ref(1);
 
   // define mapping
   const tableMap: ITableMap<View> = {
@@ -27,7 +29,21 @@
       { headerTitle: "Roles", value: (x) => x.roles?.join() },
     ],
   };
+
+  // define filters
+  const filters = ref<TableFilter>({
+    section: {
+      title: "Section",
+      options: sections.value.map((x) => ({ title: x.name, value: x.id })),
+      type: TableFilterType.Select,
+    },
+  });
+
+  // get data
+  async function loadData() {
+    data.value = await viewConnector.GetViews(filters.value.section?.selectedValue?.value, { pageIndex: currentPage.value - 1, pageSize: 10 });
+  }
 </script>
 <template>
-  <mk-table :data="views" :table-map="tableMap" item-view-id="ViewEdit"></mk-table>
+  <mk-table new :api-result="data" :on-need-data="loadData" :table-map="tableMap" v-model:filters="filters" v-model:current-page="currentPage" item-view-id="ViewEdit"></mk-table>
 </template>

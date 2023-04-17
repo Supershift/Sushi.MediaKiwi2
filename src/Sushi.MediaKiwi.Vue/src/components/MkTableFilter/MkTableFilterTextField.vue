@@ -1,14 +1,14 @@
 <script setup lang="ts">
-  import type { ITableFilterItem, ITableFilterValue } from "@/models/table";
+  import type { TableFilterItem, TableFilterValue } from "@/models/table";
   import { ref } from "vue";
 
   const props = defineProps<{
-    tableFilterItem: ITableFilterItem;
-    modelValue: ITableFilterValue;
+    tableFilterItem: TableFilterItem;
+    modelValue: TableFilterValue;
   }>();
 
   const emit = defineEmits<{
-    (e: "update:modelValue", value: ITableFilterValue): void;
+    (e: "update:modelValue", value: TableFilterValue): void;
   }>();
 
   function textFieldChanged(selectedValue: string) {

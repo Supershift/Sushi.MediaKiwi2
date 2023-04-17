@@ -10,3 +10,4 @@ export * from "./MkApplication";
 export * from "./MkIdentity";
 export * from "./MkSuspense";
 export * from "./MkSidePanel";
+export * from "./MkChip";
