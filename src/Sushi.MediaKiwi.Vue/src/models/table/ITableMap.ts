@@ -6,6 +6,4 @@ export interface ITableMap<Type> {
   items: ITableMapItem<Type>[];
   /** This function will be called for a bound entity to get its unique id */
   itemId?: (entity: Type) => string | number;
-  /** Enables table row selection by adding an extra column with checkboxes. Requires {@link itemId} to work*/
-  showSelect?: boolean;
 }

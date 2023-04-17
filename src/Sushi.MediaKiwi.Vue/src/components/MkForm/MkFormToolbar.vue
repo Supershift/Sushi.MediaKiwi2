@@ -20,7 +20,7 @@
       <v-menu activator="parent">
         <v-list :disabled="props.disabled">
           <v-list-item>
-            <v-list-item-title @click="$emit('delete', $event)">
+            <v-list-item-title>
               <v-btn v-if="delete" @click="$emit('delete', $event)">Delete</v-btn>
             </v-list-item-title>
           </v-list-item>
