@@ -1,9 +1,12 @@
 {
   "private": true,
   "scripts": {
-    "start:all": "concurrently \"npm run dev\" \"npm run function:start\"",
+    "start:all": "concurrently \"npm run function:start\" \"npm run dev\" \"npm run mediakiwi:test:ui\" \"npm run test:ui\"",
+    "start:web": "concurrently \"npm run function:start\" \"npm run dev\"",
+    "test:ui:all": "concurrently \"npm run mediakiwi:test:ui\" \"npm run test:ui\"",
     "dev": "vite",
     "function:start": "cd ../Function && npm run start",
+    "mediakiwi:test:ui": "cd ../../Sushi.MediaKiwi.Vue && npm run test:ui",
     "build": "vite build",
     "preview": "vite preview",
     "test:unit": "vitest --environment jsdom --root src/",

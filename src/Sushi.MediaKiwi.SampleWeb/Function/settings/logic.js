@@ -1,15 +1,15 @@
 /**
- * Filters for the process.env properties with the provided prefix.
+ * Filters for the source properties with the provided prefix.
  * @param {string} prefix
- * @returns {object} Object of filtered values
+ * @returns {object} source of filtered values
  */
-function getValues(prefix) {
-  // Filter and build new object based on process.env
-  const values = Object.keys(process.env)
+function getValues(prefix, source) {
+  // Filter and build new object based on source
+  const values = Object.keys(source)
     .filter((key) => key.toLowerCase().includes(prefix.toLowerCase()))
     .reduce((cur, key) => {
       // get the appsetting value
-      const value = process.env[key];
+      const value = source[key];
 
       // parse the key to an object
       const result = parseToNestedObject(key, value);
@@ -43,11 +43,16 @@ function parseToNestedObject(key, value) {
   // Loop though the part in reverse order
   for (const keyPart of keyParts.reverse()) {
     // parse the keyPart to a json valid property name
-    const propertyName = parseKey(keyPart);
+    const propertyName = formatKey(keyPart);
+
+    if (!propertyName) {
+      continue;
+    }
+
     if (!index) {
       // Set the value for the deepest level
       // E.g. "tenantId": "some-value"
-      Object.assign(result, { [propertyName]: parseValue(value) });
+      Object.assign(result, { [propertyName]: getTypedValue(value) });
     } else {
       // Set the current result object as a property on the new object
       // E.g. { "tenantId": "some-value" } to { auth: { "tenantId": "some-value"} }
@@ -110,7 +115,7 @@ function mergeDeep(target, source) {
  * @param {string} input
  * @returns {number|boolean|string}
  */
-function parseValue(input) {
+function getTypedValue(input) {
   if (!input) {
     return;
   }
@@ -128,11 +133,11 @@ function parseValue(input) {
 }
 
 /**
- * Parse the key to match the desired output
- * @param {string} key Property name of the process.env object
- * @returns
+ * Format the key to match the desired output
+ * @param {string} key Property name of the object
+ * @returns {string} Formatted key
  */
-function parseKey(key) {
+function formatKey(key) {
   if (!key) {
     return;
   }
@@ -145,4 +150,9 @@ function parseKey(key) {
 
 module.exports = {
   getValues,
+  parseToNestedObject,
+  isObject,
+  mergeDeep,
+  getTypedValue,
+  formatKey,
 };
