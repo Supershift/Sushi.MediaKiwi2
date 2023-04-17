@@ -15,6 +15,11 @@
     with the custom divider, but this also means that the truncate code cannot be added.
   </p>
   <v-breadcrumbs :items="items" class="ml-5">
+    <template #title="item">
+      <v-breadcrumbs-item :href="item.item.href">
+        {{ item.item.title.toUpperCase() }}
+      </v-breadcrumbs-item>
+    </template>
     <template #divider>
       <v-icon icon="mdi-chevron-right"></v-icon>
     </template>
