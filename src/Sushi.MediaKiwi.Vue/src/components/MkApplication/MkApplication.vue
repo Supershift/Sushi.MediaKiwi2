@@ -6,7 +6,7 @@
 </script>
 <template>
   <v-card>
-    <v-layout :full-height="true" class="mk-layout">
+    <v-layout id="mk-layout" :full-height="true" class="mk-layout">
       <v-app-bar>
         <mk-navigation-icon />
         <v-toolbar-title>MediaKiwi 2.0</v-toolbar-title>

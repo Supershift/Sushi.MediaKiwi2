@@ -1,1 +1,1 @@
-export { default as MKSidePanel } from "./MKSidePanel.vue";
+export { default as MkSidePanel } from "./MkSidePanel.vue";

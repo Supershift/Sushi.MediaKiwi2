@@ -9,4 +9,4 @@ export * from "./MkBreadcrumbs";
 export * from "./MkApplication";
 export * from "./MkIdentity";
 export * from "./MkSuspense";
-export * from "./MKSidePanel";
+export * from "./MkSidePanel";

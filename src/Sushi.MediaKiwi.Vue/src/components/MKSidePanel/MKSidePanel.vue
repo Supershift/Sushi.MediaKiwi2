@@ -34,9 +34,14 @@
       type: String,
       default: "",
     },
+    transitionName: {
+      type: String,
+      default: undefined,
+    },
   });
-  const emits = defineEmits(["closed", "opened"]);
+  const emits = defineEmits(["closed", "opened", "update:modelValue"]);
   // Local variables
+  let teleportContainer = undefined as HTMLDivElement | undefined;
   const footerHeight = ref(0);
   const bodyScrollHeight = ref(0);
   const headerHeight = ref(0);
@@ -74,14 +79,22 @@
     // TODO: fix the width when we close
   }
 
+  const getMaxZIndex = () => Math.max(...Array.from(document.querySelectorAll("body *"), (el) => parseFloat(window.getComputedStyle(el).zIndex)).filter((zIndex) => !Number.isNaN(zIndex)), 0);
+
   // hooks
   onBeforeMount(() => {
+    const alreadyCreatedTarget = document.getElementById(props.idName);
+    if (alreadyCreatedTarget) return;
+    teleportContainer = document.createElement("div");
+    teleportContainer.setAttribute("id", props.idName);
+    document.body.appendChild(teleportContainer);
     window.addEventListener("resize", calculateRightSize);
   });
   onBeforeUnmount(() => {
     window.removeEventListener("resize", calculateRightSize);
   });
   onMounted(() => {
+    //zIndex.value = props.zIndex === "auto" ? getMaxZIndex() : props.zIndex;
     if (props.modelValue) {
       // TODO: fix the width to be opened
     }
@@ -96,38 +109,42 @@
 </script>
 <template>
   <teleport :to="`#${idName}`">
-    <div class="mk-sp-wrapper">
+    <div v-if="modelValue" class="mk-sp-wrapper" :class="[modelValue && 'mk-sp-wrapper--active']">
       <Transition name="overlay">
         <div v-show="modelValue" ref="overlay" class="mk-sp-overlay" :style="overlayStyles"></div>
       </Transition>
-      <v-sheet class="mk-sp-sheet">
-        <div ref="mk-sp-header" :class="[headerClass, 'mk-sp__header']">
-          <slot name="header"></slot>
-          <v-btn icon="mdi-close" variant="text" @click="handleClose"> Close </v-btn>
-        </div>
-        <div ref="mk-sp-body" :class="[bodyClass, 'mk-sp__body']">
-          <slot name="default"></slot>
-        </div>
-        <div ref="mk-sp-footer" :class="[footerClass, 'mk-sp__footer']">
-          <slot name="footer"></slot>
-        </div>
-      </v-sheet>
+      <Transition :name="transitionName || `slide-right`">
+        <v-sheet ref="mk-sp-panel" class="mk-sp-sheet" :class="[modelValue && 'mk-sp-sheet--active']">
+          <v-card-item ref="mk-sp-header" :class="[headerClass, 'mk-sp__header']">
+            <slot name="header"></slot>
+            <template v-slot:append>
+              <v-btn icon="mdi-close" variant="text" @click="handleClose"> close </v-btn>
+            </template>
+          </v-card-item>
+          <v-card-text ref="mk-sp-body" :class="[bodyClass, 'mk-sp__body']">
+            <slot name="default"></slot>
+          </v-card-text>
+          <v-card-actions ref="mk-sp-footer" :class="[footerClass, 'mk-sp__footer']">
+            <slot name="footer"></slot>
+          </v-card-actions>
+        </v-sheet>
+      </Transition>
     </div>
   </teleport>
 </template>
 <style scoped lang="scss">
   .mk-sp-wrapper {
+    position: relative;
+    margin-top: 64px;
     .mk-sp {
       &-overlay {
         position: fixed;
         top: 0;
-        left: 0;
-        width: 100%;
+        right: 0;
         height: 100%;
       }
       &-sheet {
         position: fixed;
-        top: 0;
         height: 100%;
         right: 0;
       }
@@ -139,6 +156,50 @@
       &__body {
         position: relative;
       }
+    }
+  }
+
+  .mk-sp {
+    &-wrapper--active,
+    &-sheet--active {
+      width: 20vw;
+    }
+  }
+
+  // Transitions
+  .overlay-enter-active,
+  .overlay-leave-active {
+    animation: overlay-transition;
+  }
+  .overlay-leave-active {
+    animation-direction: reverse;
+  }
+
+  .slide-right-enter-active,
+  .slide-right-leave-active {
+    animation: slide-right;
+  }
+  .slide-right-leave-active {
+    animation-direction: reverse;
+  }
+
+  //animations
+  @keyframes slide-right {
+    0% {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  @keyframes overlay-transition {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: var(--overlay-opacity);
     }
   }
 </style>
