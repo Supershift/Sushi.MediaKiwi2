@@ -12,7 +12,7 @@ export function addCheckIsAuthenticated(router: Router): void {
         redirectStartPage: to.fullPath,
       };
       const shouldProceed = await isAuthenticated(identity.msalInstance, InteractionType.Redirect, request);
-      return shouldProceed || "/failed";
+      return shouldProceed || "/signIn";
     }
 
     return true;
