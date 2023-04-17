@@ -140,8 +140,8 @@
 
         <!-- Chips -->
         <template v-for="key in Object.keys(modelValue)">
-          <MkInputChip v-if="modelValue[key].selectedValue" :key="key" class="ml-2 mt-2" @click="setCurrentFilter(key, modelValue[key])" @click:remove="removeFilter(filter)">
-            >{{ modelValue[key].title }} : {{ modelValue[key].selectedValue?.title }}
+          <MkInputChip v-if="modelValue[key].selectedValue" :key="key" class="ml-2 mt-2" @click="setCurrentFilter(key, modelValue[key])" @click:remove="removeFilter(key)">
+            {{ modelValue[key].title }} : {{ modelValue[key].selectedValue?.title }}
           </MkInputChip>
         </template>
 
