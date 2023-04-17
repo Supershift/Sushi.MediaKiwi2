@@ -5,7 +5,6 @@
   const props = defineProps<{
     item: NavigationItem;
     breadcrumbs: Array<NavigationItem>;
-    customDivider: boolean;
   }>();
 
   const route = useRoute();
@@ -19,23 +18,6 @@
 
   function isCurrentItem(item: NavigationItem): boolean {
     return item === (route.meta.navigationItem as NavigationItem);
-  }
-  // NOTE: the 'divider'  is not showing up despite using the correct slots in breadcrumbs component, might be a vuetify bug. We resolve this here with an v-icon.
-  function currentIndex(item: NavigationItem): number {
-    const index = props.breadcrumbs.findIndex((x) => x === item);
-    if (index != -1) {
-      return index;
-    }
-    return -1;
-  }
-
-  function isLastItem(item: NavigationItem): boolean {
-    if (item) {
-      if (currentIndex(item) + 1 === props.breadcrumbs.length) {
-        return true;
-      }
-    }
-    return false;
   }
 </script>
 <template>
@@ -51,13 +33,9 @@
     >
       {{ item.name }}
     </v-breadcrumbs-item>
-    <v-icon v-if="!customDivider && breadcrumbs.length > 1 && currentIndex(item) != -1 && !isLastItem(item)" icon="mdi-chevron-right"></v-icon>
   </div>
 </template>
 <style scoped lang="scss">
-  .v-icon {
-    font-size: 2em;
-  }
   .breadcrumb-item-container {
     display: flex;
     flex-direction: row;

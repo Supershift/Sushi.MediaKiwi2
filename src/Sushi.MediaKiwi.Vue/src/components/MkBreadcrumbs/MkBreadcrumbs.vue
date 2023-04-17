@@ -26,8 +26,7 @@
     console.log(result);
     return result;
   });
-  const hasCustomDivider = computed(() => slots["divider"] !== undefined);
-  console.log(slots);
+  console.log("here:", slots);
 </script>
 <template>
   <v-card v-if="breadcrumbs?.length" class="ma-5 ml-0">
@@ -38,20 +37,25 @@
       </div>
     </div>
     <div v-else>
-      <v-breadcrumbs class="breadcrumbs-list-container">
-        <template #default>
-          <mk-breadcrumbs-item v-for="item in breadcrumbs" :key="item.id" :item="item" :breadcrumbs="breadcrumbs" :custom-divider="hasCustomDivider" />
+      <v-breadcrumbs class="breadcrumbs-list-container" :items="breadcrumbs">
+        <template #title="item">
+          <mk-breadcrumbs-item :item="item.item" :breadcrumbs="breadcrumbs" />
         </template>
-        <template v-if="hasCustomDivider" #divider>
-          <slot name="divider"></slot>
+        <template #divider>
+          <v-icon icon="mdi-chevron-right"></v-icon>
         </template>
       </v-breadcrumbs>
     </div>
   </v-card>
 </template>
-<style lang="css">
+<style lang="scss">
   .breadcrumb-title-container {
     display: flex;
     align-items: center;
+  }
+  .breadcrumbs-list-container {
+    .v-icon {
+      font-size: 2.5em;
+    }
   }
 </style>
