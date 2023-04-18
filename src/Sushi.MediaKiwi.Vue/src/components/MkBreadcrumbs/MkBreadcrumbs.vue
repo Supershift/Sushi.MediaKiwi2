@@ -5,13 +5,14 @@
   import { useDisplay } from "vuetify";
   import { useNavigation } from "@/composables/useNavigation";
   import { NavigationItem } from "@/models";
+  import { useSlots } from "vue";
 
   // inject dependencies
-  const { mobile } = useDisplay();
+  const { mobile, xs } = useDisplay();
   const navigation = useNavigation();
-
+  const slots = useSlots();
   // determine if we show the whole breadcrumb or only a back button
-  const showBackButton = computed(() => mobile.value && breadcrumbs.value.length > 1);
+  const showBackButton = computed(() => xs.value && breadcrumbs.value.length > 1);
 
   // go up the navigation tree starting from the current item
   const breadcrumbs = computed(() => {
@@ -24,25 +25,36 @@
     }
     return result;
   });
+  console.log("here:", slots);
 </script>
 <template>
-  <v-card v-if="breadcrumbs?.length" class="ma-5">
+  <v-card v-if="breadcrumbs?.length" class="ma-5 ml-0">
     <div v-if="showBackButton" class="breadcrumb-title-container">
       <mk-back-button class="mr-5" />
-      <div class="text-h3 d-inline-block">
+      <div class="text-h4 d-inline-block">
         {{ navigation.currentNavigationItem.value?.name }}
       </div>
     </div>
     <div v-else>
-      <v-breadcrumbs divider=" ">
-        <mk-breadcrumbs-item v-for="item in breadcrumbs" :key="item.id" :item="item" :breadcrumbs="breadcrumbs" />
+      <v-breadcrumbs class="breadcrumbs-list-container" :items="breadcrumbs">
+        <template #title="item">
+          <mk-breadcrumbs-item :item="item.item" :breadcrumbs="breadcrumbs" />
+        </template>
+        <template #divider>
+          <v-icon icon="mdi-chevron-right"></v-icon>
+        </template>
       </v-breadcrumbs>
     </div>
   </v-card>
 </template>
-<style lang="css">
+<style lang="scss">
   .breadcrumb-title-container {
     display: flex;
     align-items: center;
+  }
+  .breadcrumbs-list-container {
+    .v-icon {
+      font-size: 2.5em;
+    }
   }
 </style>

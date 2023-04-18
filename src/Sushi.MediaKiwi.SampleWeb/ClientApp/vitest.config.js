@@ -10,6 +10,7 @@ export default mergeConfig(
     test: {
       globals: true,
       environment: "jsdom",
+      include: ["../**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"], // Includes Function folder
     },
   })
 );
