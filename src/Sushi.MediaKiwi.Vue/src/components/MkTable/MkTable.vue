@@ -12,11 +12,17 @@
 
   // define properties
   const props = defineProps<{
+    /** Collection of filters to filter data. */
     filters?: TableFilter;
+    /** Defines mapping between data and the table. */
     tableMap: TableMap<any>;
+    /** Sets data and paging properties based on the API's result. */
     apiResult?: IListResult<any>;
+    /** An array of objects used for automatically generating rows. */
     data?: any[];
+    /** When set, enables paging based on provided values. */
     paging?: IPagingResult;
+    /** Currently selected page index. */
     currentPage?: number;
     /** ExternalId of the view instance to which the user is pushed when clicking a row. */
     itemViewId?: string;
@@ -29,7 +35,9 @@
 
     /** Make each row in the table selectable. */
     checkbox?: boolean;
-    onNeedData?: () => Promise<void>;
+
+    /** Callback invoked when the component needs new data, i.e. a filter changes, the current page changes, etc. */
+    onLoad?: () => Promise<void>;
   }>();
 
   // define events
@@ -52,12 +60,12 @@
 
   // event listeners
   onMounted(async () => {
-    await needData();
+    await loadData();
   });
 
   async function pageChanged(value: number) {
     emit("update:currentPage", value);
-    await needData();
+    await loadData();
   }
 
   async function filterChanged(value: TableFilter) {
@@ -66,7 +74,7 @@
     // update filters
     emit("update:filters", value);
     // fetch data
-    await needData();
+    await loadData();
   }
 
   function onNewClick() {
@@ -89,13 +97,13 @@
   }
 
   // local functions
-  async function needData() {
+  async function loadData() {
     // if a data callback is defined, call it so the parent can fetch data
-    if (props.onNeedData) {
+    if (props.onLoad) {
       // start progress indicator
       inProgress.value = true;
       try {
-        await props.onNeedData();
+        await props.onLoad();
       } catch (error) {
         snackbar.showMessage("Failed to fetch data");
         throw error;

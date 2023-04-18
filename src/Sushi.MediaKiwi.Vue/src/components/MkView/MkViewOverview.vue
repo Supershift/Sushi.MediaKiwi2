@@ -41,10 +41,10 @@
   });
 
   // get data
-  async function loadData() {
+  async function onLoad() {
     data.value = await viewConnector.GetViews(filters.value.section?.selectedValue?.value, { pageIndex: currentPage.value - 1, pageSize: 10 });
   }
 </script>
 <template>
-  <mk-table new :api-result="data" :on-need-data="loadData" :table-map="tableMap" v-model:filters="filters" v-model:current-page="currentPage" item-view-id="ViewEdit"></mk-table>
+  <mk-table new :api-result="data" :on-load="onLoad" :table-map="tableMap" v-model:filters="filters" v-model:current-page="currentPage" item-view-id="ViewEdit"></mk-table>
 </template>
