@@ -1,13 +1,12 @@
 <script setup lang="ts">
   import { computed, ref } from "vue";
-  import type { ITableMap, TableFilter, ITableSortingValue } from "@supershift/mediakiwi-vue";
-  import { MkTable, TableFilterType, TableSortingDirection } from "@supershift/mediakiwi-vue";
+  import type { TableMap, TableFilter, TableSortingValue } from "@supershift/mediakiwi-vue";
+  import { MkTable, TableFilterType, TableSortingDirection, IconPosition } from "@supershift/mediakiwi-vue";
   import type { ISampleData } from "./ISampleData";
   import { SampleDataService } from "./SampleDataService";
-  import { IconPosition } from "@supershift/mediakiwi-vue";
 
   // define a mapping between source data and desired columns in the table
-  const myMap = <ITableMap<ISampleData>>{
+  const myMap = <TableMap<ISampleData>>{
     itemId: (item) => {
       return item.id;
     },
@@ -70,7 +69,7 @@
   });
 
   // create a sorting option object with a default value
-  const selectedSortOption = ref<ITableSortingValue>({
+  const selectedSortOption = ref<TableSortingValue>({
     tableMapItemId: "lastSeen",
     sortDirection: TableSortingDirection.Desc,
   });

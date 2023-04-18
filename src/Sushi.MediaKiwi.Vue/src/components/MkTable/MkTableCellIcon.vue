@@ -1,12 +1,12 @@
 <script setup lang="ts">
   import { ref } from "vue";
-  import { ITableMapItemIconOptions } from "@/models/table/ITableMapItemIconOptions";
+  import { TableMapItemIconOptions } from "@/models/table/TableMapItemIconOptions";
   import { IconPosition } from "@/models";
   import { computed } from "@vue/reactivity";
 
   const props = defineProps<{
     data?: any;
-    icon?: string | ((entity: any) => ITableMapItemIconOptions);
+    icon?: string | ((entity: any) => TableMapItemIconOptions);
   }>();
 
   const iconOptions = computed(() => {

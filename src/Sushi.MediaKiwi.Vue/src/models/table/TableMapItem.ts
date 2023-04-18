@@ -1,9 +1,9 @@
 import type { Component, DefineComponent } from "vue";
-import type { ITableMapItemIconOptions } from "./ITableMapItemIconOptions";
-import type { ITableMapSortingOptions } from "./ITableMapSortingOptions";
+import type { TableMapItemIconOptions } from "./TableMapItemIconOptions";
+import type { TableMapSortingOptions } from "./TableMapSortingOptions";
 
 /** Represents a column in a table, mapping bound entities to table cells.  */
-export interface ITableMapItem<Type> {
+export interface TableMapItem<Type> {
   /** Unique id of this column */
   id?: string;
   /** The value to display in the table header for this column. */
@@ -14,7 +14,7 @@ export interface ITableMapItem<Type> {
    * Use the property 'data' to pass the entity to the component. */
   component?: Component | DefineComponent;
   /** Mark the column sortable */
-  sortingOptions?: ITableMapSortingOptions;
+  sortingOptions?: TableMapSortingOptions;
   /** Icon settings */
-  icon?: ((entity: Type) => ITableMapItemIconOptions) | undefined;
+  icon?: ((entity: Type) => TableMapItemIconOptions) | undefined;
 }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { reactive } from "vue";
   import { MkTable } from "@supershift/mediakiwi-vue";
-  import type { ITableMap } from "@supershift/mediakiwi-vue";
+  import type { TableMap } from "@supershift/mediakiwi-vue";
 
   interface Customer {
     address: string;
@@ -20,7 +20,7 @@
     { id: 15, orderNumber: "20230002", total: 235.95, customer: { name: "Pino", address: "Sesamstraat" } },
   ]);
 
-  const myMap = <ITableMap<Order>>{
+  const myMap = <TableMap<Order>>{
     items: [
       { headerTitle: "Nummer", value: (order) => order.orderNumber },
       { headerTitle: "Totaal", value: (order) => order.total },
