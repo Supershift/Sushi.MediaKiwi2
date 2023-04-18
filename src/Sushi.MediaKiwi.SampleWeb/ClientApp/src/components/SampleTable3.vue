@@ -13,30 +13,30 @@
     },
     items: [
       { id: "id", headerTitle: "Id", value: (dataItem) => dataItem.id, sortingOptions: { defaultSortDirection: TableSortingDirection.Desc } },
-      { id: "name", headerTitle: "Naam", value: (dataItem) => dataItem.name },
+      { headerTitle: "Naam", value: (dataItem) => dataItem.name },
       { id: "country", headerTitle: "Land", value: (dataItem) => dataItem.countryName, sortingOptions: { defaultSortDirection: TableSortingDirection.Asc } },
       { id: "lastSeen", headerTitle: "Laast gezien", value: (dataItem) => dataItem.date?.toISOString(), sortingOptions: { defaultSortDirection: TableSortingDirection.Desc } },
       {
-        id: "help",
         headerTitle: "Hulp",
         value: (dataItem) => dataItem.countryName,
-        // icon: "mdi-help-box",
-        // icon: (dataItem) => (dataItem.countryCode === "NL" ? "mdi-help-box" : "mdi-help-circle"),
+        // icon: "mdi-help-box", // Option 1
+        // icon: (dataItem) => (dataItem.countryCode === "NL" ? "mdi-help-box" : "mdi-help-circle"),  // Option 2
         // icon: {
+        //   // Option 3
         //   value: "mdi-help-box",
         //   tooltip: `Dit is een fixed tooltip`,
         //   position: IconPosition.behind,
         // },
         icon: {
+          // Option 4
           value: (dataItem) => (dataItem.countryCode === "NL" ? "mdi-help-box" : "mdi-help-circle"),
           tooltip: (dataItem) => `Dynamische tooltip voor regel: ${dataItem.id} - ${dataItem.name} `,
           position: IconPosition.behind,
         },
       },
       {
-        id: "check",
         headerTitle: "Checked",
-        value: () => true,
+        value: () => true, // MediaKiwi will render a mdi check icon if the value returns a boolean
       },
     ],
   };
