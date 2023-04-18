@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { MkTable } from "../MkTable";
-  import { ITableMap, ListResult } from "@/models";
+  import { TableMap, ListResult } from "@/models";
   import { View } from "@/models";
   import { useMediakiwiStore } from "@/stores";
   import { ref } from "vue";
@@ -19,7 +19,7 @@
   const currentPage = ref(1);
 
   // define mapping
-  const tableMap: ITableMap<View> = {
+  const tableMap: TableMap<View> = {
     itemId: (x) => x.id,
     items: [
       { headerTitle: "Name", value: (x) => x.name },
@@ -41,10 +41,10 @@
   });
 
   // get data
-  async function loadData() {
+  async function onLoad() {
     data.value = await viewConnector.GetViews(filters.value.section?.selectedValue?.value, { pageIndex: currentPage.value - 1, pageSize: 10 });
   }
 </script>
 <template>
-  <mk-table new :api-result="data" :on-need-data="loadData" :table-map="tableMap" v-model:filters="filters" v-model:current-page="currentPage" item-view-id="ViewEdit"></mk-table>
+  <mk-table new :api-result="data" :on-load="onLoad" :table-map="tableMap" v-model:filters="filters" v-model:current-page="currentPage" item-view-id="ViewEdit"></mk-table>
 </template>

@@ -1,15 +1,15 @@
 <script setup lang="ts">
   import { computed } from "vue";
   import { IconPosition } from "@/models";
-  import type { ITableMapItem } from "@/models/table/ITableMapItem";
+  import type { TableMapItem } from "@/models/table/TableMapItem";
   import MkTableCellIcon from "./MkTableCellIcon.vue";
 
   const props = defineProps<{
     data: any;
-    mapItem: ITableMapItem<any>;
+    mapItem: TableMapItem<any>;
   }>();
 
-  function invokeMapItemValue(mapItem: ITableMapItem<any>) {
+  function invokeMapItemValue(mapItem: TableMapItem<any>) {
     if (mapItem?.value !== undefined) {
       return mapItem.value(props.data);
     } else {
