@@ -19,19 +19,12 @@
       {
         headerTitle: "Hulp",
         value: (dataItem) => dataItem.countryName,
-        // icon: "mdi-help-box", // Option 1
-        // icon: (dataItem) => (dataItem.countryCode === "NL" ? "mdi-help-box" : "mdi-help-circle"),  // Option 2
-        // icon: {
-        //   // Option 3
-        //   value: "mdi-help-box",
-        //   tooltip: `Dit is een fixed tooltip`,
-        //   position: IconPosition.behind,
-        // },
-        icon: {
-          // Option 4
-          value: (dataItem) => (dataItem.countryCode === "NL" ? "mdi-help-box" : "mdi-help-circle"),
-          tooltip: (dataItem) => `Dynamische tooltip voor regel: ${dataItem.id} - ${dataItem.name} `,
-          position: IconPosition.behind,
+        icon: (dataItem) => {
+          return {
+            value: dataItem.countryCode === "NL" ? "mdi-help-box" : "mdi-help-circle",
+            tooltip: `Dynamische tooltip voor regel: ${dataItem.id} - ${dataItem.name} `,
+            position: IconPosition.behind,
+          };
         },
       },
       {
@@ -114,7 +107,7 @@
     v-model:filters="filters"
     :table-map="myMap"
     :data="sampleData"
-    :show-select="true"
+    :select="true"
     item-view-id="SampleEdit"
   >
     <template #actions>

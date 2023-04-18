@@ -18,9 +18,14 @@
   }
 
   const isBooleanValue = computed(() => typeof invokeMapItemValue(props.mapItem) === "boolean");
+
+  const iconOptions = computed(() => {
+    return props.mapItem.icon && typeof props.mapItem.icon === "function" ? props.mapItem.icon(props.data) : null;
+  });
+
   const rowClasses = computed(() => {
     return {
-      reverse: typeof props.mapItem.icon === "object" && props.mapItem.icon?.position === IconPosition.behind,
+      reverse: iconOptions.value?.position === IconPosition.behind,
     };
   });
 </script>

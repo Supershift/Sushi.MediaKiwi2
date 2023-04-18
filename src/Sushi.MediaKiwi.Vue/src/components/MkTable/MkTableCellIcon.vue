@@ -6,37 +6,41 @@
 
   const props = defineProps<{
     data?: any;
-    icon?: string | ITableMapItemIconOptions<any> | ((entity: any) => string);
+    icon?: string | ((entity: any) => ITableMapItemIconOptions);
   }>();
 
+  const iconOptions = computed(() => {
+    return props.icon && typeof props.icon === "function" ? props.icon(props.data) : null;
+  });
+
   const value = computed(() => {
-    if (props.icon && typeof props.icon === "object") {
-      if (typeof props.icon.value === "function") {
-        return props.icon.value(props.data);
-      } else {
-        return props.icon.value;
-      }
-    } else if (props.icon && typeof props.icon === "function") {
-      return props.icon(props.data) || "";
+    if (iconOptions.value) {
+      return iconOptions.value.value || "";
     } else {
       return props.icon;
     }
   });
 
   const toolTip = computed(() => {
-    if (props.icon && typeof props.icon === "object" && props.icon.tooltip) {
-      if (typeof props.icon.value === "function") {
-        return props.icon.tooltip(props.data);
-      } else {
-        return props.icon.tooltip;
-      }
+    if (iconOptions.value) {
+      return iconOptions.value.tooltip;
     }
     return "";
   });
 
-  function iconClasses() {
-    return props.icon && typeof props.icon === "object" && props.icon?.position === IconPosition.behind ? "ml-2" : "mr-2";
-  }
+  const position = computed(() => {
+    if (iconOptions.value) {
+      return iconOptions.value.position;
+    }
+    return IconPosition.inFront;
+  });
+
+  const iconClasses = computed(() => {
+    return {
+      "ml-2": position.value === IconPosition.behind,
+      "mr-2": position.value !== IconPosition.inFront,
+    };
+  });
 
   const showTooltip = ref(false);
 </script>
@@ -44,7 +48,7 @@
 <template>
   <v-tooltip v-model="showTooltip" location="top" :disabled="!toolTip">
     <template #activator="{ props }">
-      <v-icon v-bind="props" :icon="value" :class="iconClasses()"></v-icon>
+      <v-icon v-bind="props" :icon="value" :class="iconClasses"></v-icon>
     </template>
     <span>{{ toolTip }}</span>
   </v-tooltip>
