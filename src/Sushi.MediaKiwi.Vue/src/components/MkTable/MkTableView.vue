@@ -56,9 +56,9 @@
 
       // try to resolve route parameter
       let itemId: RouteParamValueRaw = undefined;
-      if (navigationItem.isDynamicRoute) {
+      if (navigationItem.view?.parameterName) {
         if (!props.tableMap.itemId) {
-          throw new Error(`No itemId function found to resolve ${navigationItem.dynamicRouteParameterName}`);
+          throw new Error(`No itemId function found to resolve ${navigationItem.view?.parameterName}`);
         }
         itemId = props.tableMap.itemId(dataItem);
         if (!itemId) {

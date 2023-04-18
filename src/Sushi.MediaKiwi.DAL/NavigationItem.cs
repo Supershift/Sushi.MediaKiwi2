@@ -18,9 +18,7 @@ namespace Sushi.MediaKiwi.DAL
                 Map(x => x.Name, "Name");                
                 Map(x => x.SectionId, "SectionID");
                 Map(x => x.ParentNavigationItemId, "ParentNavigationItemID");
-                Map(x => x.ViewId, "ViewID");
-                Map(x => x.IsDynamicRoute, "IsDynamicRoute");
-                Map(x => x.DynamicRouteParameterName, "DynamicRouteParameterName").SqlType(System.Data.SqlDbType.VarChar);
+                Map(x => x.ViewId, "ViewID");                
             }
         }
         
@@ -28,8 +26,6 @@ namespace Sushi.MediaKiwi.DAL
         public string Name { get; set; }        
         public int SectionId { get; set; }  
         public int? ParentNavigationItemId { get; set; }
-        public int? ViewId { get; set; }
-        public bool IsDynamicRoute { get; set; }
-        public string? DynamicRouteParameterName { get; set; }
+        public int? ViewId { get; set; }        
     }
 }

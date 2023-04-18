@@ -9,4 +9,6 @@ export interface View {
   sectionId?: number;
   /** If not empty, access to this screen is restricted to these roles. */
   roles?: string[];
+  /** Name of the URL parameter required by this view, e.g. userId, itemId */
+  parameterName?: string;
 }

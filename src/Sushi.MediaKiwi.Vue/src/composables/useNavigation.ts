@@ -46,16 +46,15 @@ export function useNavigation() {
       // if it's navigationItem then we push to nav item's path
       const navigationItem = item as NavigationItem;
       let routeParams: RouteParamsRaw | undefined = undefined;
-      if (navigationItem.isDynamicRoute) {
+      if (navigationItem.view?.parameterName) {
         // if this is a dynamic route, try to resolve route parameter
         routeParams = {};
 
         if (itemId === undefined) {
           throw new Error(`Navigating to dynamic route but no itemId provided`);
         }
-        if (navigationItem.dynamicRouteParameterName) {
-          routeParams[navigationItem.dynamicRouteParameterName] = itemId;
-        }
+
+        routeParams[navigationItem.view.parameterName] = itemId;
       }
 
       // called to send user to target screen
@@ -80,7 +79,7 @@ export function useNavigation() {
     let result: NavigationItem | undefined = undefined;
     let candidate: NavigationItem | undefined = currentNavigationItem.value;
     while (candidate && !result) {
-      if (candidate.isDynamicRoute && candidate.leaf?.id == candidate.id) {
+      if (candidate.view?.parameterName && candidate.leaf?.id == candidate.id) {
         // we have found a dynamic route which is a leaf node
         result = candidate;
       } else {
@@ -101,14 +100,14 @@ export function useNavigation() {
 
   const currentRouteParamId = computed(() => {
     const navigationItem = currentNavigationItem.value;
-    if (navigationItem.isDynamicRoute && navigationItem.dynamicRouteParameterName) {
+    if (navigationItem.view?.parameterName) {
       // if this is a dynamic route, try to resolve route parameter
-      return route.params[navigationItem.dynamicRouteParameterName];
+      return route.params[navigationItem.view.parameterName];
     }
   });
 
   function getChildren(navigationItem: NavigationItem): Array<NavigationItem> {
-    let result = navigationItem.children?.filter((item) => !item.isDynamicRoute);
+    let result = navigationItem.children?.filter((item) => !item.view?.parameterName);
 
     return result ? result : [];
   }
