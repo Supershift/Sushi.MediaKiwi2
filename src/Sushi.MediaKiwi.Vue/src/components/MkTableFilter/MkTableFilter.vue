@@ -5,7 +5,7 @@
   import { TableFilterValue } from "@/models/table/TableFilterValue.js";
   import { MkTableFilterDatePicker, MkTableFilterRadioGroup, MkTableFilterSelect, MkTableFilterTextField } from ".";
   import { DefineComponent } from "vue";
-  import { TableFilterType } from "./TableFilterType";
+  import { TableFilterType } from "@/models/enum/TableFilterType";
   import { MkInputChip } from "@/components/MkChip";
 
   const props = defineProps<{
