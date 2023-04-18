@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { onBeforeMount, onBeforeUnmount, StyleValue, nextTick, watch, computed, onMounted, ref } from "vue";
+import { useDisplay } from "vuetify/lib/framework.mjs";
 
   const props = defineProps({
     idName: {
@@ -22,6 +23,10 @@
       type: [String, Number],
       default: "auto",
     },
+    panelColor: {
+      type: String,
+      default: "",
+    },
     headerClass: {
       type: String,
       default: "",
@@ -33,10 +38,6 @@
     footerClass: {
       type: String,
       default: "",
-    },
-    transitionName: {
-      type: String,
-      default: undefined,
     },
   });
   const emits = defineEmits(["closed", "opened", "update:modelValue"]);
@@ -51,20 +52,33 @@
   const footer = ref<HTMLElement | null>(null);
   const header = ref<HTMLElement | null>(null);
   const body = ref<HTMLElement | null>(null);
-  const zIndex = ref<number>();
-
-  const overlayStyles = computed(
+  const zIndex = ref<number | string>();
+  const { mobile } = useDisplay();
+  //computed
+  const bodyHeight = computed<number | undefined>(() => {
+    if (!panelHeight.value) return;
+    const panelMaxHeight = bodyScrollHeight.value + headerHeight.value + footerHeight.value;
+    let height = panelHeight.value - headerHeight.value - footerHeight.value;
+    if (props.height === "auto") {
+      height = windowHeight.value >= panelMaxHeight ? bodyScrollHeight.value : windowHeight.value - headerHeight.value - footerHeight.value;
+    }
+    return height;
+  });
+  const panelStyles = computed(
     () =>
       ({
+        width: !mobile.value ? props.width : "100vw", // ensures the full width overlay
+        maxWidth: "100%",
         zIndex: zIndex.value,
-        // animationDuration: `${props.overlayDuration}ms`,
-        // "--overlay-opacity": props.overlayOpacity,
-        // opacity: props.modelValue ? props.overlayOpacity : 0,
-        // backgroundColor: props.overlayColor,
-        pointerEvents: !props.modelValue ? "none" : "all",
+        backgroundColor: props.panelColor,
       } as StyleValue)
   );
-
+  const wrapperStyles = computed(
+    () =>
+      ({
+        width: props.modelValue ? props.width : "unset",
+      } as StyleValue)
+  );
   // functions
   const calculateRightSize = async () => {
     if (window?.innerHeight > 0) windowHeight.value = window.innerHeight;
@@ -76,7 +90,6 @@
 
   function handleClose() {
     emits("closed");
-    // TODO: fix the width when we close
   }
 
   const getMaxZIndex = () => Math.max(...Array.from(document.querySelectorAll("body *"), (el) => parseFloat(window.getComputedStyle(el).zIndex)).filter((zIndex) => !Number.isNaN(zIndex)), 0);
@@ -94,10 +107,7 @@
     window.removeEventListener("resize", calculateRightSize);
   });
   onMounted(() => {
-    //zIndex.value = props.zIndex === "auto" ? getMaxZIndex() : props.zIndex;
-    if (props.modelValue) {
-      // TODO: fix the width to be opened
-    }
+    zIndex.value = props.zIndex === "auto" ? getMaxZIndex() : props.zIndex;
   });
   //watchers
   watch(
@@ -109,26 +119,23 @@
 </script>
 <template>
   <teleport :to="`#${idName}`">
-    <div v-if="modelValue" class="mk-sp-wrapper" :class="[modelValue && 'mk-sp-wrapper--active']">
-      <Transition name="overlay">
-        <div v-show="modelValue" ref="overlay" class="mk-sp-overlay" :style="overlayStyles"></div>
-      </Transition>
-      <Transition :name="transitionName || `slide-right`">
-        <v-sheet ref="mk-sp-panel" class="mk-sp-sheet" :class="[modelValue && 'mk-sp-sheet--active']">
+    <div class="mk-sp-wrapper" :class="[modelValue && 'mk-sp-wrapper--active']" :style="wrapperStyles">
+      <v-expand-x-transition>
+        <v-sheet v-show="modelValue" ref="mk-sp-panel" class="mk-sp-sheet" :class="[modelValue && 'mk-sp-sheet--active']" :style="panelStyles">
           <v-card-item ref="mk-sp-header" :class="[headerClass, 'mk-sp__header']">
             <slot name="header"></slot>
-            <template v-slot:append>
+            <template #append>
               <v-btn icon="mdi-close" variant="text" @click="handleClose"> close </v-btn>
             </template>
           </v-card-item>
-          <v-card-text ref="mk-sp-body" :class="[bodyClass, 'mk-sp__body']">
+          <v-card-text ref="mk-sp-body" :class="[bodyClass, 'mk-sp__body']" :style="{ height: `${bodyHeight}px` }">
             <slot name="default"></slot>
           </v-card-text>
           <v-card-actions ref="mk-sp-footer" :class="[footerClass, 'mk-sp__footer']">
             <slot name="footer"></slot>
           </v-card-actions>
         </v-sheet>
-      </Transition>
+      </v-expand-x-transition>
     </div>
   </teleport>
 </template>
@@ -136,17 +143,13 @@
   .mk-sp-wrapper {
     position: relative;
     margin-top: 64px;
+    z-index: 1007;
     .mk-sp {
-      &-overlay {
-        position: fixed;
-        top: 0;
-        right: 0;
-        height: 100%;
-      }
       &-sheet {
         position: fixed;
         height: 100%;
         right: 0;
+        background-color: rgba(var(--v-theme-surface), 1);
       }
       &__header,
       &__body,
@@ -154,52 +157,23 @@
         overflow: auto;
       }
       &__body {
+        height: 75vh;
+      }
+      &__footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background: var(rgba(28, 27, 31, var(--overlay-opacity)));
+      }
+      &__body {
         position: relative;
       }
     }
   }
 
-  .mk-sp {
-    &-wrapper--active,
-    &-sheet--active {
-      width: 20vw;
-    }
-  }
-
-  // Transitions
-  .overlay-enter-active,
-  .overlay-leave-active {
-    animation: overlay-transition;
-  }
-  .overlay-leave-active {
-    animation-direction: reverse;
-  }
-
-  .slide-right-enter-active,
-  .slide-right-leave-active {
-    animation: slide-right;
-  }
-  .slide-right-leave-active {
-    animation-direction: reverse;
-  }
-
-  //animations
-  @keyframes slide-right {
-    0% {
-      transform: translateX(100%);
-      opacity: 0;
-    }
-    100% {
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
-  @keyframes overlay-transition {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: var(--overlay-opacity);
+  @media (min-width: 960px) {
+    .mk-sp-wrapper {
+      z-index: unset;
     }
   }
 </style>

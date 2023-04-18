@@ -5,10 +5,15 @@
   import { SampleDataService } from "../components/SampleDataService";
   import type { ISampleData } from "../components/ISampleData";
   import { reactive, ref } from "vue";
+  import { MkSidePanel } from "@supershift/mediakiwi-vue";
 
   const route = useRoute();
   const router = useRouter();
 
+  const toggle = ref(false);
+  function handleToggle() {
+    toggle.value = !toggle.value;
+  }
   const countries = [
     { title: "Nederland", value: "NL" },
     { title: "België", value: "BE" },
@@ -65,8 +70,8 @@
 <template>
   <v-card class="ma-5">
     <MkForm title="Sample data edit" @save="onSave" @undo="onUndo" @delete="onDelete">
-      <v-text-field label="Name" v-model="state.data.name"></v-text-field>
-      <v-select label="Country Code" v-model="state.data.countryCode" :items="countries"></v-select>
+      <v-text-field v-model="state.data.name" label="Name"></v-text-field>
+      <v-select v-model="state.data.countryCode" label="Country Code" :items="countries"></v-select>
     </MkForm>
     <v-btn @click="showMore = !showMore">Show more</v-btn>
     <div v-show="showMore">
@@ -77,4 +82,52 @@
       <MkTableView :data="deepDataItems" :table-map="myMap" item-view-id="SampleDeepEdit"></MkTableView>
     </div>
   </v-card>
+
+  <!-- Side panel demo  -->
+  <v-btn v-if="!toggle" class="ma-5 d-inline-block" variant="text" @click="handleToggle">Open Side Panel</v-btn>
+  <mk-side-panel :model-value="toggle" :id-name="'mk-layout'" :width="'20vw'" @closed="handleToggle">
+    <template #header> Home Page Panel </template>
+    <template #default>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ac turpis mollis, finibus dolor ut, blandit magna. Sed et nibh mollis, porta lorem at, placerat nibh. Sed faucibus ac justo
+        quis suscipit. Quisque id ipsum ligula. Sed eros nibh, dapibus a imperdiet sit amet, condi
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ac turpis mollis, finibus dolor ut, blandit magna. Sed et nibh mollis, porta lorem at, placerat nibh. Sed faucibus ac justo
+        quis suscipit. Quisque id ipsum ligula. Sed eros nibh, dapibus a imperdiet sit amet, condi
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ac turpis mollis, finibus dolor ut, blandit magna. Sed et nibh mollis, porta lorem at, placerat nibh. Sed faucibus ac justo
+        quis suscipit. Quisque id ipsum ligula. Sed eros nibh, dapibus a imperdiet sit amet, condi
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ac turpis mollis, finibus dolor ut, blandit magna. Sed et nibh mollis, porta lorem at, placerat nibh. Sed faucibus ac justo
+        quis suscipit. Quisque id ipsum ligula. Sed eros nibh, dapibus a imperdiet sit amet, condi
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ac turpis mollis, finibus dolor ut, blandit magna. Sed et nibh mollis, porta lorem at, placerat nibh. Sed faucibus ac justo
+        quis suscipit. Quisque id ipsum ligula. Sed eros nibh, dapibus a imperdiet sit amet, condi
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ac turpis mollis, finibus dolor ut, blandit magna. Sed et nibh mollis, porta lorem at, placerat nibh. Sed faucibus ac justo
+        quis suscipit. Quisque id ipsum ligula. Sed eros nibh, dapibus a imperdiet sit amet, condi
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ac turpis mollis, finibus dolor ut, blandit magna. Sed et nibh mollis, porta lorem at, placerat nibh. Sed faucibus ac justo
+        quis suscipit. Quisque id ipsum ligula. Sed eros nibh, dapibus a imperdiet sit amet, condi
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ac turpis mollis, finibus dolor ut, blandit magna. Sed et nibh mollis, porta lorem at, placerat nibh. Sed faucibus ac justo
+        quis suscipit. Quisque id ipsum ligula. Sed eros nibh, dapibus a imperdiet sit amet, condi
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ac turpis mollis, finibus dolor ut, blandit magna. Sed et nibh mollis, porta lorem at, placerat nibh. Sed faucibus ac justo
+        quis suscipit. Quisque id ipsum ligula. Sed eros nibh, dapibus a imperdiet sit amet, condi
+      </p>
+    </template>
+    <template #footer>
+      <v-btn class="d-inline-block" variant="text">action 1</v-btn>
+      <v-btn class="d-inline-block" variant="text">action 2</v-btn>
+    </template>
+  </mk-side-panel>
 </template>
