@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { onBeforeMount, onBeforeUnmount, StyleValue, nextTick, watch, computed, onMounted, ref } from "vue";
-import { useDisplay } from "vuetify/lib/framework.mjs";
+  import { useDisplay } from "vuetify";
 
   const props = defineProps({
     idName: {
