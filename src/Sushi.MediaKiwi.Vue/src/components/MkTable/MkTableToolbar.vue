@@ -1,6 +1,6 @@
 <script setup lang="ts">
   defineProps<{
-    selectedTableRows: unknown[];
+    selection: unknown[];
   }>();
 
   const emit = defineEmits<{
@@ -10,7 +10,7 @@
 
 <template>
   <v-toolbar>
-    <v-label class="ms-5 me-4"> {{ selectedTableRows.length }} selected </v-label>
+    <v-label class="ms-5 me-4"> {{ selection.length }} selected </v-label>
     <v-divider class="mx-2" inset vertical></v-divider>
 
     <slot name="actions"></slot>

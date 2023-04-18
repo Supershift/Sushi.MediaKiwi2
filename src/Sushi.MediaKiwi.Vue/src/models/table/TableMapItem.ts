@@ -16,5 +16,5 @@ export interface TableMapItem<Type> {
   /** Mark the column sortable */
   sortingOptions?: TableMapSortingOptions;
   /** Icon settings */
-  iconOptions?: TableMapItemIconOptions<Type>;
+  icon?: ((entity: Type) => TableMapItemIconOptions) | undefined;
 }

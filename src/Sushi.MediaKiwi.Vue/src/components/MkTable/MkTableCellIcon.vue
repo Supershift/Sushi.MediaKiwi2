@@ -2,35 +2,54 @@
   import { ref } from "vue";
   import { TableMapItemIconOptions } from "@/models/table/TableMapItemIconOptions.js";
   import { IconPosition } from "@/models";
+  import { computed } from "@vue/reactivity";
 
   const props = defineProps<{
     data?: any;
-    iconOptions?: TableMapItemIconOptions<any>;
+    icon?: string | ((entity: any) => TableMapItemIconOptions);
   }>();
 
-  function invokeIconValue() {
-    return props.iconOptions?.value ? props.iconOptions.value(props.data) : "";
-  }
+  const iconOptions = computed(() => {
+    return props.icon && typeof props.icon === "function" ? props.icon(props.data) : null;
+  });
 
-  function invokeToolTopValue() {
-    return props.iconOptions?.tooltip ? props.iconOptions.tooltip(props.data) : "";
-  }
+  const value = computed(() => {
+    if (iconOptions.value) {
+      return iconOptions.value.value || "";
+    } else {
+      return props.icon;
+    }
+  });
 
-  function iconClasses() {
+  const toolTip = computed(() => {
+    if (iconOptions.value) {
+      return iconOptions.value.tooltip;
+    }
+    return "";
+  });
+
+  const position = computed(() => {
+    if (iconOptions.value) {
+      return iconOptions.value.position;
+    }
+    return IconPosition.inFront;
+  });
+
+  const iconClasses = computed(() => {
     return {
-      "ml-2": props.iconOptions?.position === IconPosition.behind,
-      "mr-2": props.iconOptions?.position !== IconPosition.behind,
+      "ml-2": position.value === IconPosition.behind,
+      "mr-2": position.value !== IconPosition.behind,
     };
-  }
+  });
 
   const showTooltip = ref(false);
 </script>
 
 <template>
-  <v-tooltip v-model="showTooltip" location="top" :disabled="!props.iconOptions?.tooltip">
+  <v-tooltip v-model="showTooltip" location="top" :disabled="!toolTip">
     <template #activator="{ props }">
-      <v-icon v-bind="props" :icon="invokeIconValue()" :class="iconClasses()"></v-icon>
+      <v-icon v-bind="props" :icon="value" :class="iconClasses"></v-icon>
     </template>
-    <span>{{ invokeToolTopValue() }}</span>
+    <span>{{ toolTip }}</span>
   </v-tooltip>
 </template>

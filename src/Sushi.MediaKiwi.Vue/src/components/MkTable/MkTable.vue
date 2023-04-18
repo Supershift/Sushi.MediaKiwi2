@@ -23,12 +23,12 @@
     /** */
     selectedSortOption?: TableSortingValue;
     /** */
-    selectedTableRows?: unknown[];
+    selection?: unknown[];
     /** Displays new item button if set to true and itemViewId has a value */
     new?: boolean;
 
     /** Make each row in the table selectable. */
-    showSelect?: boolean;
+    checkbox?: boolean;
     onNeedData?: () => Promise<void>;
   }>();
 
@@ -37,12 +37,12 @@
     (e: "update:filters", value: TableFilter): void;
     (e: "click:row", value: unknown): void;
     (e: "update:selectedSortOption", value?: TableSortingValue): void;
-    (e: "update:selectedTableRows", value?: unknown[]): void;
+    (e: "update:selection", value?: unknown[]): void;
     (e: "update:currentPage", value: number): void;
   }>();
 
   // define reactive variables
-  const inProgress = ref(true);
+  const inProgress = ref(false);
   const mkTableViewComponent = ref();
 
   // inject dependencies
@@ -109,7 +109,7 @@
 
 <template>
   <v-card>
-    <v-progress-linear indeterminate absolute v-if="inProgress"></v-progress-linear>
+    <v-progress-linear v-if="inProgress" indeterminate absolute></v-progress-linear>
     <slot name="header"></slot>
     <template v-if="filters">
       <MkTableFilter :model-value="filters" @update:model-value="filterChanged"> </MkTableFilter>
@@ -117,9 +117,9 @@
 
     <v-btn v-if="props.new && props.itemViewId" @click="onNewClick">New</v-btn>
 
-    <template v-if="showSelect">
+    <template v-if="checkbox">
       <v-expand-transition>
-        <MkTableToolbarVue v-if="selectedTableRows?.length" :selected-table-rows="selectedTableRows" @click:close="mkTableViewComponent.clearSelectedTableRows">
+        <MkTableToolbarVue v-if="selection?.length" :selection="selection" @click:close="mkTableViewComponent.clearSelection">
           <template #actions>
             <slot name="actions"></slot>
           </template>
@@ -133,14 +133,14 @@
       :data="apiResult ? apiResult.result : data"
       :item-view-id="itemViewId"
       :selected-sort-option="selectedSortOption"
-      :selected-table-rows="selectedTableRows"
-      :show-select="showSelect"
+      :selection="selection"
+      :checkbox="checkbox"
       @click:row="(e) => emit('click:row', e)"
       @update:selected-sort-option="(e) => emit('update:selectedSortOption', e)"
-      @update:selected-table-rows="(e) => emit('update:selectedTableRows', e)"
+      @update:selection="(e) => emit('update:selection', e)"
     >
       <template #footer>
-        <v-pagination v-if="currentPage" v-bind:model-value="currentPage" @update:model-value="pageChanged" :length="apiResult ? apiResult.pageCount : paging?.pageCount"></v-pagination>
+        <v-pagination v-if="currentPage" :model-value="currentPage" :length="apiResult ? apiResult.pageCount : paging?.pageCount" @update:model-value="pageChanged"></v-pagination>
       </template>
     </MkTableView>
     <slot name="footer"></slot>
