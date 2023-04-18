@@ -3,19 +3,23 @@
   import MkFormToolbar from "./MkFormToolbar.vue";
   import { useNavigation } from "@/composables/useNavigation";
   import { useSnackbarStore } from "@/stores/snackbar";
+  import { onMounted } from "vue";
 
+  // define properties
   const props = defineProps<{
     onSave?: (event: Event) => Promise<void>;
     onDelete?: (event: Event) => Promise<void>;
-    onUndo?: (event: Event) => Promise<void>;
+    onLoad?: (event?: Event) => Promise<void>;
   }>();
 
+  // define reactive variables
   const inProgress = ref(false);
 
   // inject dependencies
   const navigation = useNavigation();
   const snackbar = useSnackbarStore();
 
+  // event listeners
   async function onSave(event: Event) {
     if (!props.onSave) {
       throw new Error("No onSave handler provided");
@@ -50,13 +54,28 @@
     }
   }
 
-  async function onUndo(event: Event) {
-    if (!props.onUndo) {
-      throw new Error("No onUndo handler provided");
+  async function onLoad(event?: Event) {
+    if (!props.onLoad) {
+      throw new Error("No onLoad handler provided");
     }
     inProgress.value = true;
     try {
-      await props.onUndo(event);
+      await props.onLoad(event);
+    } catch (error) {
+      snackbar.showMessage("Failed to load data");
+      throw error;
+    } finally {
+      inProgress.value = false;
+    }
+  }
+
+  async function onUndo(event?: Event) {
+    if (!props.onLoad) {
+      throw new Error("No onLoad handler provided");
+    }
+    inProgress.value = true;
+    try {
+      await props.onLoad(event);
       snackbar.showMessage("Changes reverted");
     } catch (error) {
       snackbar.showMessage("Failed to revert changes");
@@ -65,6 +84,9 @@
       inProgress.value = false;
     }
   }
+
+  // load data async on created
+  await onLoad();
 </script>
 <template>
   <MkFormToolbar
@@ -75,7 +97,7 @@
     @delete="onDelete"
     :delete="$props.onDelete ? true : false"
     :save="$props.onSave ? true : false"
-    :undo="$props.onUndo ? true : false"
+    :undo="$props.onLoad ? true : false"
   >
     <v-progress-linear indeterminate absolute v-if="inProgress"></v-progress-linear>
   </MkFormToolbar>

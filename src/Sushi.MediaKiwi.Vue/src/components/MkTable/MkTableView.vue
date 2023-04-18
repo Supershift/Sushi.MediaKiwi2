@@ -1,11 +1,11 @@
 <script setup lang="ts">
   import { RouteParamValueRaw } from "vue-router";
-  import type { ITableMap } from "@/models/table/ITableMap";
-  import type { ITableMapItem } from "@/models/table/ITableMapItem";
+  import type { TableMap } from "@/models/table/TableMap";
+  import type { TableMapItem } from "@/models/table/TableMapItem";
   import MkTableCell from "./MkTableCell.vue";
   import { useMediakiwiStore } from "@/stores/";
   import { TableSortingDirection } from "@/models";
-  import type { ITableSortingValue } from "@/models";
+  import type { TableSortingValue } from "@/models";
   import TableSortingHelper from "@/helpers/TableSortingHelper";
   import MkTableCheckbox from "./MkTableCheckbox.vue";
   import { useTableMapItemSelection } from "@/composables/useTableMapItemSelection";
@@ -14,22 +14,22 @@
 
   // define properties
   const props = defineProps<{
-    tableMap: ITableMap<any>;
+    tableMap: TableMap<any>;
     data?: any[];
     /** ExternalId of the view instance to which the user is pushed when clicking a row. */
     itemViewId?: string;
     /** */
-    selectedSortOption?: ITableSortingValue;
-    selectedTableRows?: unknown[];
+    selectedSortOption?: TableSortingValue;
+    selection?: unknown[];
     /** Make each row in the table selectable. */
-    showSelect?: boolean;
+    checkbox?: boolean;
   }>();
 
   // define event
   const emit = defineEmits<{
     (e: "click:row", value: any): void;
-    (e: "update:selectedSortOption", value?: ITableSortingValue): void;
-    (e: "update:selectedTableRows", value?: unknown[]): void;
+    (e: "update:selectedSortOption", value?: TableSortingValue): void;
+    (e: "update:selection", value?: unknown[]): void;
   }>();
 
   // inject dependencies
@@ -56,9 +56,9 @@
 
       // try to resolve route parameter
       let itemId: RouteParamValueRaw = undefined;
-      if (navigationItem.isDynamicRoute) {
+      if (navigationItem.view?.parameterName) {
         if (!props.tableMap.itemId) {
-          throw new Error(`No itemId function found to resolve ${navigationItem.dynamicRouteParameterName}`);
+          throw new Error(`No itemId function found to resolve ${navigationItem.view?.parameterName}`);
         }
         itemId = props.tableMap.itemId(dataItem);
         if (!itemId) {
@@ -73,7 +73,7 @@
     }
   }
 
-  function onSortClick(tableMapItem: ITableMapItem<unknown>) {
+  function onSortClick(tableMapItem: TableMapItem<unknown>) {
     if (tableMapItem?.sortingOptions) {
       const dataItem = tableSortingHelper.parseTableSortingValue(tableMapItem, props.selectedSortOption);
       emit("update:selectedSortOption", dataItem);
@@ -87,15 +87,15 @@
   });
 
   watch(selectedItems, (value) => {
-    emit("update:selectedTableRows", value);
+    emit("update:selection", value);
   });
 
-  function clearSelectedTableRows() {
+  function clearSelection() {
     selectAll(false);
   }
 
   defineExpose({
-    clearSelectedTableRows,
+    clearSelection,
   });
 </script>
 
@@ -103,7 +103,7 @@
   <v-table>
     <thead>
       <tr>
-        <th v-if="showSelect">
+        <th v-if="checkbox">
           <MkTableCheckbox :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:is-selected="selectAll" />
         </th>
         <!-- render a header cell for each mapping item -->
@@ -117,7 +117,7 @@
     <tbody>
       <!-- render a row for each provided data entity -->
       <tr v-for="(dataItem, index) in props.data" :key="index" style="cursor: pointer" @click.stop="(e) => onRowClick(e, dataItem)">
-        <td v-if="showSelect" @click.stop>
+        <td v-if="checkbox" @click.stop>
           <MkTableCheckbox :is-selected="isItemSelected(dataItem)" @update:is-selected="(e) => selectItem(dataItem, e)" />
         </td>
         <!-- render a cell for each mapping item -->

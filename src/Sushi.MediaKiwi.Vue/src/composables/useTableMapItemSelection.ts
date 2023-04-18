@@ -1,6 +1,6 @@
 import { ref, computed } from "vue";
 import type { ComputedRef } from "vue";
-import type { ITableMap } from "@/models/table/ITableMap";
+import type { TableMap } from "@/models/table/TableMap";
 
 /** Proxy type for number or string to allow an array of either type */
 type tableMapIdentifierType = number | string | undefined;
@@ -17,7 +17,7 @@ interface useTableMapItemSelection {
 
 /** Tablemap options for the composable to use */
 interface tableMapItemSelectionOptions {
-  tableMap: ITableMap<unknown>;
+  tableMap: TableMap<unknown>;
   data?: unknown[];
 }
 

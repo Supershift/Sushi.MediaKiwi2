@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import type { ITableMap, ITableSortingValue, TableFilter } from "@/models/table";
+  import type { TableMap, TableSortingValue, TableFilter } from "@/models/table";
   import { ref } from "vue";
   import MkTableFilter from "@/components/MkTableFilter/MkTableFilter.vue";
   import MkTableView from "./MkTableView.vue";
@@ -12,37 +12,45 @@
 
   // define properties
   const props = defineProps<{
+    /** Collection of filters to filter data. */
     filters?: TableFilter;
-    tableMap: ITableMap<any>;
+    /** Defines mapping between data and the table. */
+    tableMap: TableMap<any>;
+    /** Sets data and paging properties based on the API's result. */
     apiResult?: IListResult<any>;
+    /** An array of objects used for automatically generating rows. */
     data?: any[];
+    /** When set, enables paging based on provided values. */
     paging?: IPagingResult;
+    /** Currently selected page index. */
     currentPage?: number;
     /** ExternalId of the view instance to which the user is pushed when clicking a row. */
     itemViewId?: string;
     /** */
-    selectedSortOption?: ITableSortingValue;
+    selectedSortOption?: TableSortingValue;
     /** */
-    selectedTableRows?: unknown[];
+    selection?: unknown[];
     /** Displays new item button if set to true and itemViewId has a value */
     new?: boolean;
 
     /** Make each row in the table selectable. */
-    showSelect?: boolean;
-    onNeedData?: () => Promise<void>;
+    checkbox?: boolean;
+
+    /** Callback invoked when the component needs new data, i.e. a filter changes, the current page changes, etc. */
+    onLoad?: () => Promise<void>;
   }>();
 
   // define events
   const emit = defineEmits<{
     (e: "update:filters", value: TableFilter): void;
     (e: "click:row", value: unknown): void;
-    (e: "update:selectedSortOption", value?: ITableSortingValue): void;
-    (e: "update:selectedTableRows", value?: unknown[]): void;
+    (e: "update:selectedSortOption", value?: TableSortingValue): void;
+    (e: "update:selection", value?: unknown[]): void;
     (e: "update:currentPage", value: number): void;
   }>();
 
   // define reactive variables
-  const inProgress = ref(true);
+  const inProgress = ref(false);
   const mkTableViewComponent = ref();
 
   // inject dependencies
@@ -52,12 +60,12 @@
 
   // event listeners
   onMounted(async () => {
-    await needData();
+    await loadData();
   });
 
   async function pageChanged(value: number) {
     emit("update:currentPage", value);
-    await needData();
+    await loadData();
   }
 
   async function filterChanged(value: TableFilter) {
@@ -66,7 +74,7 @@
     // update filters
     emit("update:filters", value);
     // fetch data
-    await needData();
+    await loadData();
   }
 
   function onNewClick() {
@@ -89,13 +97,13 @@
   }
 
   // local functions
-  async function needData() {
+  async function loadData() {
     // if a data callback is defined, call it so the parent can fetch data
-    if (props.onNeedData) {
+    if (props.onLoad) {
       // start progress indicator
       inProgress.value = true;
       try {
-        await props.onNeedData();
+        await props.onLoad();
       } catch (error) {
         snackbar.showMessage("Failed to fetch data");
         throw error;
@@ -109,7 +117,7 @@
 
 <template>
   <v-card>
-    <v-progress-linear indeterminate absolute v-if="inProgress"></v-progress-linear>
+    <v-progress-linear v-if="inProgress" indeterminate absolute></v-progress-linear>
     <slot name="header"></slot>
     <template v-if="filters">
       <MkTableFilter :model-value="filters" @update:model-value="filterChanged"> </MkTableFilter>
@@ -117,9 +125,9 @@
 
     <v-btn v-if="props.new && props.itemViewId" @click="onNewClick">New</v-btn>
 
-    <template v-if="showSelect">
+    <template v-if="checkbox">
       <v-expand-transition>
-        <MkTableToolbarVue v-if="selectedTableRows?.length" :selected-table-rows="selectedTableRows" @click:close="mkTableViewComponent.clearSelectedTableRows">
+        <MkTableToolbarVue v-if="selection?.length" :selection="selection" @click:close="mkTableViewComponent.clearSelection">
           <template #actions>
             <slot name="actions"></slot>
           </template>
@@ -133,14 +141,14 @@
       :data="apiResult ? apiResult.result : data"
       :item-view-id="itemViewId"
       :selected-sort-option="selectedSortOption"
-      :selected-table-rows="selectedTableRows"
-      :show-select="showSelect"
+      :selection="selection"
+      :checkbox="checkbox"
       @click:row="(e) => emit('click:row', e)"
       @update:selected-sort-option="(e) => emit('update:selectedSortOption', e)"
-      @update:selected-table-rows="(e) => emit('update:selectedTableRows', e)"
+      @update:selection="(e) => emit('update:selection', e)"
     >
       <template #footer>
-        <v-pagination v-if="currentPage" v-bind:model-value="currentPage" @update:model-value="pageChanged" :length="apiResult ? apiResult.pageCount : paging?.pageCount"></v-pagination>
+        <v-pagination v-if="currentPage" :model-value="currentPage" :length="apiResult ? apiResult.pageCount : paging?.pageCount" @update:model-value="pageChanged"></v-pagination>
       </template>
     </MkTableView>
     <slot name="footer"></slot>

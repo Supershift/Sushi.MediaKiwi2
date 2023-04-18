@@ -36,7 +36,7 @@ module.exports = {
       },
     },
     {
-      files: ["*.{j,t}s?(x)"],
+      files: ["*.{t}s?(x)"],
       rules: {
         "@typescript-eslint/explicit-function-return-type": "error",
         "@typescript-eslint/consistent-type-imports": "error",

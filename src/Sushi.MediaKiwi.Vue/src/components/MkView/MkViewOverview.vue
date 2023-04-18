@@ -1,13 +1,13 @@
 <script setup lang="ts">
   import { MkTable } from "../MkTable";
-  import { ITableMap, ListResult } from "@/models";
+  import { TableMap, ListResult } from "@/models";
   import { View } from "@/models";
   import { useMediakiwiStore } from "@/stores";
   import { ref } from "vue";
   import { container } from "tsyringe";
   import { IViewConnector } from "@/services";
   import { TableFilter } from "@/models/table/TableFilter";
-  import { TableFilterType } from "../MkTableFilter/TableFilterType";
+  import { TableFilterType } from "../../models/enum/TableFilterType";
 
   // inject dependencies
   const viewConnector = container.resolve<IViewConnector>("IViewConnector");
@@ -19,13 +19,14 @@
   const currentPage = ref(1);
 
   // define mapping
-  const tableMap: ITableMap<View> = {
+  const tableMap: TableMap<View> = {
     itemId: (x) => x.id,
     items: [
       { headerTitle: "Name", value: (x) => x.name },
       { headerTitle: "ExternalId", value: (x) => x.externalId },
-      { headerTitle: "Component Key", value: (x) => x.componentKey },
       { headerTitle: "Section", value: (x) => sections.value.find((section) => section.id == x.sectionId)?.name },
+      { headerTitle: "Component Key", value: (x) => x.componentKey },
+      { headerTitle: "Parameter", value: (x) => x.parameterName },
       { headerTitle: "Roles", value: (x) => x.roles?.join() },
     ],
   };
@@ -40,10 +41,10 @@
   });
 
   // get data
-  async function loadData() {
+  async function onLoad() {
     data.value = await viewConnector.GetViews(filters.value.section?.selectedValue?.value, { pageIndex: currentPage.value - 1, pageSize: 10 });
   }
 </script>
 <template>
-  <mk-table new :api-result="data" :on-need-data="loadData" :table-map="tableMap" v-model:filters="filters" v-model:current-page="currentPage" item-view-id="ViewEdit"></mk-table>
+  <mk-table new :api-result="data" :on-load="onLoad" :table-map="tableMap" v-model:filters="filters" v-model:current-page="currentPage" item-view-id="ViewEdit"></mk-table>
 </template>

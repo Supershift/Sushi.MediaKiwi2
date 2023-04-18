@@ -6,5 +6,7 @@
     "start": "func start --javascript"
   },
   "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "vitest": "^0.25.6"
+  }
 }
