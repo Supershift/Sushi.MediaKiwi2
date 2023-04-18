@@ -74,8 +74,9 @@
   <MkForm title="View" :on-save="onSave" :on-undo="loadView" :on-delete="onDelete">
     <v-text-field v-model="state.view.name" label="Name"></v-text-field>
     <v-text-field v-model="state.view.externalId" label="External Id"></v-text-field>
-    <v-text-field v-model="state.view.componentKey" label="Component key"></v-text-field>
+    <v-text-field v-model="state.view.componentKey" label="Component key" hint="The key of the component as set in the modules property of the mediakiwi options."></v-text-field>
     <v-select v-model="state.view.sectionId" label="Section" :items="store.sections" item-title="name" item-value="id"></v-select>
+    <v-text-field v-model="state.view.parameterName" label="Parameter" hint="Name of the URL parameter required by this view, e.g. itemId, viewId, etc."></v-text-field>
     <v-select v-model="state.view.roles" label="Roles" chips multiple :items="store.roles" item-title="id" item-value="id"></v-select>
   </MkForm>
 </template>

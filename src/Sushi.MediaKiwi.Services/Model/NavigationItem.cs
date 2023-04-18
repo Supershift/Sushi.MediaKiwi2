@@ -22,11 +22,6 @@ namespace Sushi.MediaKiwi.Services.Model
         
         public int? ParentNavigationItemId { get; set; }
         
-        public int? ViewId { get; set; }
-
-        public bool IsDynamicRoute { get; set; }
-
-        [StringLength(64)]
-        public string? DynamicRouteParameterName { get; set; }
+        public int? ViewId { get; set; }        
     }
 }

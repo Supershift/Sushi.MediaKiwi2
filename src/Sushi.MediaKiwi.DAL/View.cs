@@ -19,7 +19,8 @@ namespace Sushi.MediaKiwi.DAL
                 Map(x => x.ExternalId, "ExternalID").SqlType(SqlDbType.VarChar);
                 Map(x => x.ComponentKey, "ComponentKey").SqlType(SqlDbType.VarChar);
                 Map(x => x.Name, "Name").SqlType(SqlDbType.NVarChar);                
-                Map(x => x.SectionId, "SectionID");                                
+                Map(x => x.SectionId, "SectionID");
+                Map(x => x.ParameterName, "ParameterName").SqlType(SqlDbType.VarChar);
             }
         }
         
@@ -34,6 +35,7 @@ namespace Sushi.MediaKiwi.DAL
         public string ComponentKey { get; set; }
         public string Name { get; set; }
         public string FilePath { get; set; }
-        public int SectionId { get; set; }
+        public int SectionId { get; set; }        
+        public string? ParameterName { get; set; }
     }
 }
