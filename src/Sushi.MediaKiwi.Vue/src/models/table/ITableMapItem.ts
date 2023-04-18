@@ -16,5 +16,5 @@ export interface ITableMapItem<Type> {
   /** Mark the column sortable */
   sortingOptions?: ITableMapSortingOptions;
   /** Icon settings */
-  iconOptions?: ITableMapItemIconOptions<Type>;
+  icon?: string | ITableMapItemIconOptions<Type> | ((entity: Type) => string);
 }

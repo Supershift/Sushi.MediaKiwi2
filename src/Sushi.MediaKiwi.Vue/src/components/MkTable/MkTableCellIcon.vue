@@ -2,35 +2,50 @@
   import { ref } from "vue";
   import { ITableMapItemIconOptions } from "@/models/table/ITableMapItemIconOptions";
   import { IconPosition } from "@/models";
+  import { computed } from "@vue/reactivity";
 
   const props = defineProps<{
     data?: any;
-    iconOptions?: ITableMapItemIconOptions<any>;
+    icon?: string | ITableMapItemIconOptions<any> | ((entity: any) => string);
   }>();
 
-  function invokeIconValue() {
-    return props.iconOptions?.value ? props.iconOptions.value(props.data) : "";
-  }
+  const value = computed(() => {
+    if (props.icon && typeof props.icon === "object") {
+      if (typeof props.icon.value === "function") {
+        return props.icon.value(props.data);
+      } else {
+        return props.icon.value;
+      }
+    } else if (props.icon && typeof props.icon === "function") {
+      return props.icon(props.data) || "";
+    } else {
+      return props.icon;
+    }
+  });
 
-  function invokeToolTopValue() {
-    return props.iconOptions?.tooltip ? props.iconOptions.tooltip(props.data) : "";
-  }
+  const toolTip = computed(() => {
+    if (props.icon && typeof props.icon === "object" && props.icon.tooltip) {
+      if (typeof props.icon.value === "function") {
+        return props.icon.tooltip(props.data);
+      } else {
+        return props.icon.tooltip;
+      }
+    }
+    return "";
+  });
 
   function iconClasses() {
-    return {
-      "ml-2": props.iconOptions?.position === IconPosition.behind,
-      "mr-2": props.iconOptions?.position !== IconPosition.behind,
-    };
+    return props.icon && typeof props.icon === "object" && props.icon?.position === IconPosition.behind ? "ml-2" : "mr-2";
   }
 
   const showTooltip = ref(false);
 </script>
 
 <template>
-  <v-tooltip v-model="showTooltip" location="top" :disabled="!props.iconOptions?.tooltip">
+  <v-tooltip v-model="showTooltip" location="top" :disabled="!toolTip">
     <template #activator="{ props }">
-      <v-icon v-bind="props" :icon="invokeIconValue()" :class="iconClasses()"></v-icon>
+      <v-icon v-bind="props" :icon="value" :class="iconClasses()"></v-icon>
     </template>
-    <span>{{ invokeToolTopValue() }}</span>
+    <span>{{ toolTip }}</span>
   </v-tooltip>
 </template>

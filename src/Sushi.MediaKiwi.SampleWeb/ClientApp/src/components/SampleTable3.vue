@@ -4,6 +4,7 @@
   import { MkTable, TableFilterType, TableSortingDirection } from "@supershift/mediakiwi-vue";
   import type { ISampleData } from "./ISampleData";
   import { SampleDataService } from "./SampleDataService";
+  import { IconPosition } from "@supershift/mediakiwi-vue";
 
   // define a mapping between source data and desired columns in the table
   const myMap = <ITableMap<ISampleData>>{
@@ -19,9 +20,17 @@
         id: "help",
         headerTitle: "Hulp",
         value: (dataItem) => dataItem.countryName,
-        iconOptions: {
+        // icon: "mdi-help-box",
+        // icon: (dataItem) => (dataItem.countryCode === "NL" ? "mdi-help-box" : "mdi-help-circle"),
+        // icon: {
+        //   value: "mdi-help-box",
+        //   tooltip: `Dit is een fixed tooltip`,
+        //   position: IconPosition.behind,
+        // },
+        icon: {
           value: (dataItem) => (dataItem.countryCode === "NL" ? "mdi-help-box" : "mdi-help-circle"),
-          tooltip: (dataItem) => `Hulp met ${dataItem.countryName}`,
+          tooltip: (dataItem) => `Dynamische tooltip voor regel: ${dataItem.id} - ${dataItem.name} `,
+          position: IconPosition.behind,
         },
       },
       {

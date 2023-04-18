@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import { ref, computed } from "vue";
-  import { IconPosition, ITableMapItemIconOptions } from "@/models";
+  import { computed } from "vue";
+  import { IconPosition } from "@/models";
   import type { ITableMapItem } from "@/models/table/ITableMapItem";
   import MkTableCellIcon from "./MkTableCellIcon.vue";
 
@@ -20,7 +20,7 @@
   const isBooleanValue = computed(() => typeof invokeMapItemValue(props.mapItem) === "boolean");
   const rowClasses = computed(() => {
     return {
-      reverse: props.mapItem.iconOptions?.position === IconPosition.behind,
+      reverse: typeof props.mapItem.icon === "object" && props.mapItem.icon?.position === IconPosition.behind,
     };
   });
 </script>
@@ -35,14 +35,14 @@
     <template v-else>
       <!-- render a boolean -->
       <template v-if="isBooleanValue">
-        <MkTableCellIcon :icon-options="{ value: () => (invokeMapItemValue(props.mapItem) ? 'mdi-check-circle-outline' : 'mdi-close-circle-outline') }" />
+        <MkTableCellIcon :icon="invokeMapItemValue(props.mapItem) ? 'mdi-check-circle-outline' : 'mdi-close-circle-outline'" />
       </template>
 
       <!-- render any other value -->
       <template v-else>
         <span class="row" :class="rowClasses">
           <!-- render icon if icon options are sest -->
-          <MkTableCellIcon v-if="mapItem.iconOptions" :icon-options="mapItem.iconOptions" :data="data"></MkTableCellIcon>
+          <MkTableCellIcon v-if="mapItem.icon" :icon="mapItem.icon" :data="data"></MkTableCellIcon>
           <!-- render value -->
           <label>{{ invokeMapItemValue(mapItem) }}</label>
         </span>
