@@ -1,4 +1,4 @@
-import { DefineComponent } from "vue";
+import { AsyncComponentLoader, Component, DefineComponent } from "vue";
 import { TableFilterValue } from "./TableFilterValue";
 import { TableFilterType } from "@/models/enum/TableFilterType";
 export type TableFilterItem = {
@@ -15,5 +15,5 @@ export type TableFilterItem = {
    * - this TableFilterItem will be passed as 'table-filter-item' to the component.
    * - implement v-model and bind it to an object of type TableFilterValue.
    */
-  component?: DefineComponent;
+  component?: AsyncComponentLoader;
 };
