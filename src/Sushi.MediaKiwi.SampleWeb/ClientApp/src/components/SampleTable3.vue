@@ -101,15 +101,7 @@
 </script>
 
 <template>
-  <MkTable
-    v-model:selected-sort-option="selectedSortOption"
-    v-model:selection="selectedTableRows"
-    v-model:filters="filters"
-    :table-map="myMap"
-    :data="sampleData"
-    :select="true"
-    item-view-id="SampleEdit"
-  >
+  <MkTable v-model:selected-sort-option="selectedSortOption" v-model:selection="selectedTableRows" v-model:filters="filters" :table-map="myMap" :data="sampleData" checkbox item-view-id="SampleEdit">
     <template #actions>
       <v-btn @click="download">Download</v-btn>
       <v-btn @click="move">move</v-btn>

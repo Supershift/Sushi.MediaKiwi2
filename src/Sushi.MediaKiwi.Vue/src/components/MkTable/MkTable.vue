@@ -28,7 +28,7 @@
     new?: boolean;
 
     /** Make each row in the table selectable. */
-    showSelect?: boolean;
+    checkbox?: boolean;
     onNeedData?: () => Promise<void>;
   }>();
 
@@ -117,7 +117,7 @@
 
     <v-btn v-if="props.new && props.itemViewId" @click="onNewClick">New</v-btn>
 
-    <template v-if="showSelect">
+    <template v-if="checkbox">
       <v-expand-transition>
         <MkTableToolbarVue v-if="selection?.length" :selection="selection" @click:close="mkTableViewComponent.clearSelection">
           <template #actions>
@@ -134,7 +134,7 @@
       :item-view-id="itemViewId"
       :selected-sort-option="selectedSortOption"
       :selection="selection"
-      :show-select="showSelect"
+      :checkbox="checkbox"
       @click:row="(e) => emit('click:row', e)"
       @update:selected-sort-option="(e) => emit('update:selectedSortOption', e)"
       @update:selection="(e) => emit('update:selection', e)"
