@@ -1,11 +1,11 @@
 <script setup lang="ts">
   import { RouteParamValueRaw } from "vue-router";
-  import type { ITableMap } from "@/models/table/ITableMap";
-  import type { ITableMapItem } from "@/models/table/ITableMapItem";
+  import type { TableMap } from "@/models/table/TableMap";
+  import type { TableMapItem } from "@/models/table/TableMapItem";
   import MkTableCell from "./MkTableCell.vue";
   import { useMediakiwiStore } from "@/stores/";
   import { TableSortingDirection } from "@/models";
-  import type { ITableSortingValue } from "@/models";
+  import type { TableSortingValue } from "@/models";
   import TableSortingHelper from "@/helpers/TableSortingHelper";
   import MkTableCheckbox from "./MkTableCheckbox.vue";
   import { useTableMapItemSelection } from "@/composables/useTableMapItemSelection";
@@ -14,12 +14,12 @@
 
   // define properties
   const props = defineProps<{
-    tableMap: ITableMap<any>;
+    tableMap: TableMap<any>;
     data?: any[];
     /** ExternalId of the view instance to which the user is pushed when clicking a row. */
     itemViewId?: string;
     /** */
-    selectedSortOption?: ITableSortingValue;
+    selectedSortOption?: TableSortingValue;
     selectedTableRows?: unknown[];
     /** Make each row in the table selectable. */
     showSelect?: boolean;
@@ -28,7 +28,7 @@
   // define event
   const emit = defineEmits<{
     (e: "click:row", value: any): void;
-    (e: "update:selectedSortOption", value?: ITableSortingValue): void;
+    (e: "update:selectedSortOption", value?: TableSortingValue): void;
     (e: "update:selectedTableRows", value?: unknown[]): void;
   }>();
 
@@ -73,7 +73,7 @@
     }
   }
 
-  function onSortClick(tableMapItem: ITableMapItem<unknown>) {
+  function onSortClick(tableMapItem: TableMapItem<unknown>) {
     if (tableMapItem?.sortingOptions) {
       const dataItem = tableSortingHelper.parseTableSortingValue(tableMapItem, props.selectedSortOption);
       emit("update:selectedSortOption", dataItem);

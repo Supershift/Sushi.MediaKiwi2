@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { MkTable } from "../MkTable";
-  import { ITableMap, ListResult } from "@/models";
+  import { TableMap, ListResult } from "@/models";
   import { View } from "@/models";
   import { useMediakiwiStore } from "@/stores";
   import { ref } from "vue";
@@ -19,7 +19,7 @@
   const currentPage = ref(1);
 
   // define mapping
-  const tableMap: ITableMap<View> = {
+  const tableMap: TableMap<View> = {
     itemId: (x) => x.id,
     items: [
       { headerTitle: "Name", value: (x) => x.name },

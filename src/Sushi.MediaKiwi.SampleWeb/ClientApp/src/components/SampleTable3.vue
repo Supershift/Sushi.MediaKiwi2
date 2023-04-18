@@ -1,14 +1,14 @@
 <script setup lang="ts">
   import { reactive, computed, ref } from "vue";
-  import type { ITableMap, ITableFilter, ITableSortingValue } from "@supershift/mediakiwi-vue";
+  import type { TableMap, TableFilter, TableSortingValue } from "@supershift/mediakiwi-vue";
   import { IconPosition } from "@supershift/mediakiwi-vue";
-  import { TableFilterValueCollection, MkTable, MkTableFilterSelect, MkTableFilterTextField, MkTableFilterRadioGroup, MkTableFilterDatePicker, TableSortingDirection } from "@supershift/mediakiwi-vue";
+  import { MkTable, MkTableFilterSelect, MkTableFilterTextField, MkTableFilterRadioGroup, MkTableFilterDatePicker, TableSortingDirection } from "@supershift/mediakiwi-vue";
   import SampleCustomTableFilterInput from "./SampleCustomTableFilterInput.vue";
   import type { ISampleData } from "./ISampleData";
   import { SampleDataService } from "./SampleDataService";
 
   // define a mapping between source data and desired columns in the table
-  const myMap = <ITableMap<ISampleData>>{
+  const myMap = <TableMap<ISampleData>>{
     itemId: (item) => {
       return item.id;
     },
@@ -36,7 +36,7 @@
   };
 
   // define filters for the data
-  const filters = <ITableFilter>{
+  const filters = <TableFilter>{
     items: [
       {
         id: "Name",
@@ -77,7 +77,7 @@
   // create an object which will hold selected filter values
   const selectedFilters = reactive(new TableFilterValueCollection());
   // create a sorting option object with a default value
-  const selectedSortOption = ref<ITableSortingValue>({
+  const selectedSortOption = ref<TableSortingValue>({
     tableMapItemId: "lastSeen",
     sortDirection: TableSortingDirection.Desc,
   });

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import type { ITableMap, ITableSortingValue, TableFilter } from "@/models/table";
+  import type { TableMap, TableSortingValue, TableFilter } from "@/models/table";
   import { ref } from "vue";
   import MkTableFilter from "@/components/MkTableFilter/MkTableFilter.vue";
   import MkTableView from "./MkTableView.vue";
@@ -13,7 +13,7 @@
   // define properties
   const props = defineProps<{
     filters?: TableFilter;
-    tableMap: ITableMap<any>;
+    tableMap: TableMap<any>;
     apiResult?: IListResult<any>;
     data?: any[];
     paging?: IPagingResult;
@@ -21,7 +21,7 @@
     /** ExternalId of the view instance to which the user is pushed when clicking a row. */
     itemViewId?: string;
     /** */
-    selectedSortOption?: ITableSortingValue;
+    selectedSortOption?: TableSortingValue;
     /** */
     selectedTableRows?: unknown[];
     /** Displays new item button if set to true and itemViewId has a value */
@@ -36,7 +36,7 @@
   const emit = defineEmits<{
     (e: "update:filters", value: TableFilter): void;
     (e: "click:row", value: unknown): void;
-    (e: "update:selectedSortOption", value?: ITableSortingValue): void;
+    (e: "update:selectedSortOption", value?: TableSortingValue): void;
     (e: "update:selectedTableRows", value?: unknown[]): void;
     (e: "update:currentPage", value: number): void;
   }>();

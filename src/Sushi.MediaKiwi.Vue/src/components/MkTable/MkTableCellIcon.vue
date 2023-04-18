@@ -1,11 +1,11 @@
 <script setup lang="ts">
   import { ref } from "vue";
-  import { ITableMapItemIconOptions } from "@/models/table/ITableMapItemIconOptions";
+  import { TableMapItemIconOptions } from "@/models/table/TableMapItemIconOptions.js";
   import { IconPosition } from "@/models";
 
   const props = defineProps<{
     data?: any;
-    iconOptions?: ITableMapItemIconOptions<any>;
+    iconOptions?: TableMapItemIconOptions<any>;
   }>();
 
   function invokeIconValue() {
