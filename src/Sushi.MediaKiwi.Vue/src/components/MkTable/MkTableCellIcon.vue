@@ -38,7 +38,7 @@
   const iconClasses = computed(() => {
     return {
       "ml-2": position.value === IconPosition.behind,
-      "mr-2": position.value !== IconPosition.inFront,
+      "mr-2": position.value !== IconPosition.behind,
     };
   });
 
