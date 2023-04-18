@@ -20,16 +20,16 @@
     itemViewId?: string;
     /** */
     selectedSortOption?: ITableSortingValue;
-    selectedTableRows?: unknown[];
+    selection?: unknown[];
     /** Make each row in the table selectable. */
-    showSelect?: boolean;
+    checkbox?: boolean;
   }>();
 
   // define event
   const emit = defineEmits<{
     (e: "click:row", value: any): void;
     (e: "update:selectedSortOption", value?: ITableSortingValue): void;
-    (e: "update:selectedTableRows", value?: unknown[]): void;
+    (e: "update:selection", value?: unknown[]): void;
   }>();
 
   // inject dependencies
@@ -87,15 +87,15 @@
   });
 
   watch(selectedItems, (value) => {
-    emit("update:selectedTableRows", value);
+    emit("update:selection", value);
   });
 
-  function clearSelectedTableRows() {
+  function clearSelection() {
     selectAll(false);
   }
 
   defineExpose({
-    clearSelectedTableRows,
+    clearSelection,
   });
 </script>
 
@@ -103,7 +103,7 @@
   <v-table>
     <thead>
       <tr>
-        <th v-if="showSelect">
+        <th v-if="checkbox">
           <MkTableCheckbox :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:is-selected="selectAll" />
         </th>
         <!-- render a header cell for each mapping item -->
@@ -117,7 +117,7 @@
     <tbody>
       <!-- render a row for each provided data entity -->
       <tr v-for="(dataItem, index) in props.data" :key="index" style="cursor: pointer" @click.stop="(e) => onRowClick(e, dataItem)">
-        <td v-if="showSelect" @click.stop>
+        <td v-if="checkbox" @click.stop>
           <MkTableCheckbox :is-selected="isItemSelected(dataItem)" @update:is-selected="(e) => selectItem(dataItem, e)" />
         </td>
         <!-- render a cell for each mapping item -->
