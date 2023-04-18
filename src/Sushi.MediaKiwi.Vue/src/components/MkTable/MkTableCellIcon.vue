@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { ref } from "vue";
-  import { TableMapItemIconOptions } from "@/models/table/TableMapItemIconOptions.js";
+  import { TableMapItemIconOptions } from "@/models/table/TableMapItemIconOptions";
   import { IconPosition } from "@/models";
   import { computed } from "@vue/reactivity";
 
