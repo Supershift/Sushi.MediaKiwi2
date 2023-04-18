@@ -7,7 +7,7 @@
   import { container } from "tsyringe";
   import { IViewConnector } from "@/services";
   import { TableFilter } from "@/models/table/TableFilter";
-  import { TableFilterType } from "../MkTableFilter/TableFilterType";
+  import { TableFilterType } from "../../models/enum/TableFilterType";
 
   // inject dependencies
   const viewConnector = container.resolve<IViewConnector>("IViewConnector");
@@ -24,8 +24,9 @@
     items: [
       { headerTitle: "Name", value: (x) => x.name },
       { headerTitle: "ExternalId", value: (x) => x.externalId },
-      { headerTitle: "Component Key", value: (x) => x.componentKey },
       { headerTitle: "Section", value: (x) => sections.value.find((section) => section.id == x.sectionId)?.name },
+      { headerTitle: "Component Key", value: (x) => x.componentKey },
+      { headerTitle: "Parameter", value: (x) => x.parameterName },
       { headerTitle: "Roles", value: (x) => x.roles?.join() },
     ],
   };

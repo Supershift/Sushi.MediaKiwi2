@@ -1,45 +1,47 @@
 <script setup lang="ts">
   import { computed, defineAsyncComponent, ref } from "vue";
-  import { ITableMap, TableFilter, ITableSortingValue, TableFilterType } from "@supershift/mediakiwi-vue";
-  import { MkTable, TableSortingDirection } from "@supershift/mediakiwi-vue";
+  import type { ITableMap, TableFilter, ITableSortingValue } from "@supershift/mediakiwi-vue";
+  import { MkTable, TableFilterType, TableSortingDirection } from "@supershift/mediakiwi-vue";
   import type { ISampleData } from "./ISampleData";
   import { SampleDataService } from "./SampleDataService";
+  import { IconPosition } from "@supershift/mediakiwi-vue";
 
   // define a mapping between source data and desired columns in the table
   const myMap = <ITableMap<ISampleData>>{
     itemId: (item) => {
       return item.id;
     },
-    showSelect: true,
     items: [
       { id: "id", headerTitle: "Id", value: (dataItem) => dataItem.id, sortingOptions: { defaultSortDirection: TableSortingDirection.Desc } },
-      { id: "name", headerTitle: "Naam", value: (dataItem) => dataItem.name },
+      { headerTitle: "Naam", value: (dataItem) => dataItem.name },
       { id: "country", headerTitle: "Land", value: (dataItem) => dataItem.countryName, sortingOptions: { defaultSortDirection: TableSortingDirection.Asc } },
       { id: "lastSeen", headerTitle: "Laast gezien", value: (dataItem) => dataItem.date?.toISOString(), sortingOptions: { defaultSortDirection: TableSortingDirection.Desc } },
       {
-        id: "help",
         headerTitle: "Hulp",
         value: (dataItem) => dataItem.countryName,
-        iconOptions: {
-          value: (dataItem) => (dataItem.countryCode === "NL" ? "mdi-help-box" : "mdi-help-circle"),
-          tooltip: (dataItem) => `Hulp met ${dataItem.countryName}`,
+        icon: (dataItem) => {
+          return {
+            value: dataItem.countryCode === "NL" ? "mdi-help-box" : "mdi-help-circle",
+            tooltip: `Dynamische tooltip voor regel: ${dataItem.id} - ${dataItem.name} `,
+            position: IconPosition.behind,
+          };
         },
       },
       {
-        id: "check",
         headerTitle: "Checked",
-        value: () => true,
+        value: () => true, // MediaKiwi will render a mdi check icon if the value returns a boolean
       },
     ],
   };
 
-  // define filters for the data
+  // define filters
   const filters = ref<TableFilter>({
-    Name: {
-      title: "Naam",
+    name: {
+      title: "Name",
+      options: [],
       type: TableFilterType.TextField,
     },
-    Country: {
+    country: {
       title: "Land",
       options: [
         { title: "Nederland", value: "NL" },
@@ -47,12 +49,12 @@
       ],
       type: TableFilterType.Select,
     },
-    FullName: {
+    fullName: {
       title: "Volledige naam",
-      type: TableFilterType.Custom,
-      component: () => import("./SampleCustomTableFilterInput.vue"),
+      options: [],
+      type: TableFilterType.TextField,
     },
-    City: {
+    city: {
       title: "Stad",
       options: [
         { title: "Rijswijk", value: "RSWK" },
@@ -60,8 +62,9 @@
       ],
       type: TableFilterType.RadioGroup,
     },
-    Date: {
+    date: {
       title: "Dates",
+      options: [],
       type: TableFilterType.DatePicker,
     },
   });
@@ -72,12 +75,12 @@
     sortDirection: TableSortingDirection.Desc,
   });
   // create a ref collection of selected table rows
-  const selectedTableRows = ref<number[]>([]);
+  const selectedTableRows = ref([]);
 
   // get the data, using the selected filters
   const sampleData = computed(() => {
     // get country filter
-    let country = filters.value.Country.selectedValue?.value;
+    let country = filters.value.country.selectedValue?.value;
 
     // get the data, using the sorting option
     let result = SampleDataService.GetAll(country, selectedSortOption.value);
@@ -98,7 +101,7 @@
 </script>
 
 <template>
-  <MkTable v-model:filters="filters" v-model:selected-sort-option="selectedSortOption" v-model:selected-table-rows="selectedTableRows" :table-map="myMap" :data="sampleData" item-view-id="SampleEdit">
+  <MkTable v-model:selected-sort-option="selectedSortOption" v-model:selection="selectedTableRows" v-model:filters="filters" :table-map="myMap" :data="sampleData" checkbox item-view-id="SampleEdit">
     <template #actions>
       <v-btn @click="download">Download</v-btn>
       <v-btn @click="move">move</v-btn>

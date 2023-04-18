@@ -1,6 +1,6 @@
 import { AsyncComponentLoader, Component, DefineComponent } from "vue";
 import { TableFilterValue } from "./TableFilterValue";
-import { TableFilterType } from "@/components/MkTableFilter/TableFilterType";
+import { TableFilterType } from "@/models/enum/TableFilterType";
 export type TableFilterItem = {
   /** Title for the filter to be displayed to the user */
   title: string;

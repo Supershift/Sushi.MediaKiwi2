@@ -1,5 +1,10 @@
 <script setup lang="ts">
   import SampleTable3 from "../components/SampleTable3.vue";
+  import SampleBreadcrumbs from "@/components/SampleBreadcrumbs.vue";
+  const items = [
+    { title: "test", href: "test" },
+    { title: "test", href: "test" },
+  ];
 </script>
 
 <template>

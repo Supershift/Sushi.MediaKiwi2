@@ -24,7 +24,7 @@
     view: {} as View,
   });
 
-  async function loadView() {
+  async function onLoad() {
     if (viewId > 0) {
       const candidate = await viewConnector.GetView(viewId);
       if (!candidate) {
@@ -35,8 +35,6 @@
       state.view = { id: 0 };
     }
   }
-
-  await loadView();
 
   async function onSave() {
     if (viewId > 0) {
@@ -67,15 +65,16 @@
         await routerManager.ForceInitialize();
       }
     };
-  }  
+  }
 </script>
 
 <template>
-  <MkForm title="View" :on-save="onSave" :on-undo="loadView" :on-delete="onDelete">
-    <v-text-field label="Name" v-model="state.view.name"></v-text-field>
-    <v-text-field label="External Id" v-model="state.view.externalId"></v-text-field>
-    <v-text-field label="Component key" v-model="state.view.componentKey"></v-text-field>
-    <v-select label="Section" v-model="state.view.sectionId" :items="store.sections" item-title="name" item-value="id"></v-select>
-    <v-select label="Roles" v-model="state.view.roles" chips multiple :items="store.roles" item-title="id" item-value="id"></v-select>
+  <MkForm title="View" :on-save="onSave" :on-load="onLoad" :on-delete="onDelete">
+    <v-text-field v-model="state.view.name" label="Name"></v-text-field>
+    <v-text-field v-model="state.view.externalId" label="External Id"></v-text-field>
+    <v-text-field v-model="state.view.componentKey" label="Component key" hint="The key of the component as set in the modules property of the mediakiwi options."></v-text-field>
+    <v-select v-model="state.view.sectionId" label="Section" :items="store.sections" item-title="name" item-value="id"></v-select>
+    <v-text-field v-model="state.view.parameterName" label="Parameter" hint="Name of the URL parameter required by this view, e.g. itemId, viewId, etc."></v-text-field>
+    <v-select v-model="state.view.roles" label="Roles" chips multiple :items="store.roles" item-title="id" item-value="id"></v-select>
   </MkForm>
 </template>
