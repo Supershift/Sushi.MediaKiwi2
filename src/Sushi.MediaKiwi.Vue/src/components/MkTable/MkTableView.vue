@@ -20,7 +20,7 @@
     itemViewId?: string;
     /** */
     selectedSortOption?: ITableSortingValue;
-    selectedTableRows?: unknown[];
+    selection?: unknown[];
     /** Make each row in the table selectable. */
     showSelect?: boolean;
   }>();
@@ -29,7 +29,7 @@
   const emit = defineEmits<{
     (e: "click:row", value: any): void;
     (e: "update:selectedSortOption", value?: ITableSortingValue): void;
-    (e: "update:selectedTableRows", value?: unknown[]): void;
+    (e: "update:selection", value?: unknown[]): void;
   }>();
 
   // inject dependencies
@@ -87,15 +87,15 @@
   });
 
   watch(selectedItems, (value) => {
-    emit("update:selectedTableRows", value);
+    emit("update:selection", value);
   });
 
-  function clearSelectedTableRows() {
+  function clearSelection() {
     selectAll(false);
   }
 
   defineExpose({
-    clearSelectedTableRows,
+    clearSelection,
   });
 </script>
 

@@ -1,9 +1,7 @@
 <script setup lang="ts">
-  import { reactive, computed, ref } from "vue";
-  import type { ITableMap, ITableFilter, ITableSortingValue } from "@supershift/mediakiwi-vue";
-  import { IconPosition } from "@supershift/mediakiwi-vue";
-  import { TableFilterValueCollection, MkTable, MkTableFilterSelect, MkTableFilterTextField, MkTableFilterRadioGroup, MkTableFilterDatePicker, TableSortingDirection } from "@supershift/mediakiwi-vue";
-  import SampleCustomTableFilterInput from "./SampleCustomTableFilterInput.vue";
+  import { computed, ref } from "vue";
+  import type { ITableMap, TableFilter, ITableSortingValue } from "@supershift/mediakiwi-vue";
+  import { MkTable, TableFilterType, TableSortingDirection } from "@supershift/mediakiwi-vue";
   import type { ISampleData } from "./ISampleData";
   import { SampleDataService } from "./SampleDataService";
 
@@ -12,7 +10,6 @@
     itemId: (item) => {
       return item.id;
     },
-    showSelect: true,
     items: [
       { id: "id", headerTitle: "Id", value: (dataItem) => dataItem.id, sortingOptions: { defaultSortDirection: TableSortingDirection.Desc } },
       { id: "name", headerTitle: "Naam", value: (dataItem) => dataItem.name },
@@ -35,59 +32,53 @@
     ],
   };
 
-  // define filters for the data
-  const filters = <ITableFilter>{
-    items: [
-      {
-        id: "Name",
-        title: "Naam",
-        component: MkTableFilterTextField,
-      },
-      {
-        id: "Country",
-        title: "Land",
-        options: [
-          { title: "Nederland", value: "NL" },
-          { title: "België", value: "BE" },
-        ],
-        component: MkTableFilterSelect,
-      },
-      {
-        id: "FullName",
-        title: "Volledige naam",
-        component: SampleCustomTableFilterInput,
-      },
-      {
-        id: "City",
-        title: "Stad",
-        options: [
-          { title: "Rijswijk", value: "RSWK" },
-          { title: "Delft", value: "DLFT" },
-        ],
-        component: MkTableFilterRadioGroup,
-      },
-      {
-        id: "Date",
-        title: "Dates",
-        component: MkTableFilterDatePicker,
-      },
-    ],
-  };
+  // define filters
+  const filters = ref<TableFilter>({
+    name: {
+      title: "Name",
+      options: [],
+      type: TableFilterType.TextField,
+    },
+    country: {
+      title: "Land",
+      options: [
+        { title: "Nederland", value: "NL" },
+        { title: "België", value: "BE" },
+      ],
+      type: TableFilterType.Select,
+    },
+    fullName: {
+      title: "Volledige naam",
+      options: [],
+      type: TableFilterType.TextField,
+    },
+    city: {
+      title: "Stad",
+      options: [
+        { title: "Rijswijk", value: "RSWK" },
+        { title: "Delft", value: "DLFT" },
+      ],
+      type: TableFilterType.RadioGroup,
+    },
+    date: {
+      title: "Dates",
+      options: [],
+      type: TableFilterType.DatePicker,
+    },
+  });
 
-  // create an object which will hold selected filter values
-  const selectedFilters = reactive(new TableFilterValueCollection());
   // create a sorting option object with a default value
   const selectedSortOption = ref<ITableSortingValue>({
     tableMapItemId: "lastSeen",
     sortDirection: TableSortingDirection.Desc,
   });
   // create a ref collection of selected table rows
-  const selectedTableRows = ref<number[]>([]);
+  const selectedTableRows = ref([]);
 
   // get the data, using the selected filters
   const sampleData = computed(() => {
     // get country filter
-    let country = selectedFilters.get("Country")?.value;
+    let country = filters.value.country.selectedValue?.value;
 
     // get the data, using the sorting option
     let result = SampleDataService.GetAll(country, selectedSortOption.value);
@@ -109,12 +100,12 @@
 
 <template>
   <MkTable
-    v-model:selected-filters="selectedFilters"
     v-model:selected-sort-option="selectedSortOption"
-    v-model:selected-table-rows="selectedTableRows"
-    :filter-map="filters"
+    v-model:selection="selectedTableRows"
+    v-model:filters="filters"
     :table-map="myMap"
     :data="sampleData"
+    :show-select="true"
     item-view-id="SampleEdit"
   >
     <template #actions>
