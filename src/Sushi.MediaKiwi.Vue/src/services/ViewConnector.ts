@@ -29,6 +29,7 @@ export class ViewConnector implements IViewConnector {
   }
 
   async GetView(id: number): Promise<View | undefined> {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     const response = await this.axios.get<View>(`/views/${id}`);
     return response.data;
   }

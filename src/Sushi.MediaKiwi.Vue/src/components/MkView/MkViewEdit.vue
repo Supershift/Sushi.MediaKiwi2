@@ -24,7 +24,7 @@
     view: {} as View,
   });
 
-  async function loadView() {
+  async function onLoad() {
     if (viewId > 0) {
       const candidate = await viewConnector.GetView(viewId);
       if (!candidate) {
@@ -35,8 +35,6 @@
       state.view = { id: 0 };
     }
   }
-
-  await loadView();
 
   async function onSave() {
     if (viewId > 0) {
@@ -71,7 +69,7 @@
 </script>
 
 <template>
-  <MkForm title="View" :on-save="onSave" :on-undo="loadView" :on-delete="onDelete">
+  <MkForm title="View" :on-save="onSave" :on-load="onLoad" :on-delete="onDelete">
     <v-text-field v-model="state.view.name" label="Name"></v-text-field>
     <v-text-field v-model="state.view.externalId" label="External Id"></v-text-field>
     <v-text-field v-model="state.view.componentKey" label="Component key" hint="The key of the component as set in the modules property of the mediakiwi options."></v-text-field>
