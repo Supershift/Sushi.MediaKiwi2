@@ -1,20 +1,18 @@
 <script setup lang="ts">
   import { computed, ref } from "vue";
-  import type { TableMap, TableFilter, TableSortingValue } from "@supershift/mediakiwi-vue";
+  import type { TableMap, TableFilter, TableSortingValue, TableFilterItem } from "@supershift/mediakiwi-vue";
   import { MkTable, TableFilterType, TableSortingDirection, IconPosition } from "@supershift/mediakiwi-vue";
   import type { ISampleData } from "./ISampleData";
   import { SampleDataService } from "./SampleDataService";
 
   // define a mapping between source data and desired columns in the table
-  const myMap = <TableMap<ISampleData>>{
-    itemId: (item) => {
-      return item.id;
-    },
+  const myMap: TableMap<ISampleData> = {
+    itemId: (item) => item.id,
     items: [
-      { id: "id", headerTitle: "Id", value: (dataItem) => dataItem.id, sortingOptions: { defaultSortDirection: TableSortingDirection.Desc } },
+      { headerTitle: "Id", value: (dataItem) => dataItem.id, sortingOptions: { defaultSortDirection: TableSortingDirection.Desc } },
       { headerTitle: "Naam", value: (dataItem) => dataItem.name },
-      { id: "country", headerTitle: "Land", value: (dataItem) => dataItem.countryName, sortingOptions: { defaultSortDirection: TableSortingDirection.Asc } },
-      { id: "lastSeen", headerTitle: "Laast gezien", value: (dataItem) => dataItem.date?.toISOString(), sortingOptions: { defaultSortDirection: TableSortingDirection.Desc } },
+      { headerTitle: "Land", value: (dataItem) => dataItem.countryName, sortingOptions: { defaultSortDirection: TableSortingDirection.Asc } },
+      { headerTitle: "Laast gezien", value: (dataItem) => dataItem.date?.toISOString(), sortingOptions: { defaultSortDirection: TableSortingDirection.Desc } },
       {
         headerTitle: "Hulp",
         value: (dataItem) => dataItem.countryName,
@@ -37,7 +35,6 @@
   const filters = ref<TableFilter>({
     name: {
       title: "Name",
-      options: [],
       type: TableFilterType.TextField,
     },
     country: {
@@ -50,8 +47,8 @@
     },
     fullName: {
       title: "Volledige naam",
-      options: [],
-      type: TableFilterType.TextField,
+      type: TableFilterType.Custom,
+      component: () => import("./SampleCustomTableFilterInput.vue"),
     },
     city: {
       title: "Stad",
@@ -63,7 +60,6 @@
     },
     date: {
       title: "Dates",
-      options: [],
       type: TableFilterType.DatePicker,
     },
   });

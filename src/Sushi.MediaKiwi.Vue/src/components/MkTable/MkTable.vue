@@ -64,7 +64,7 @@
   });
 
   async function pageChanged(value: number) {
-    emit("update:currentPage", value);
+    emit("update:currentPage", value - 1);
     await loadData();
   }
 
@@ -148,7 +148,7 @@
       @update:selection="(e) => emit('update:selection', e)"
     >
       <template #footer>
-        <v-pagination v-if="currentPage" :model-value="currentPage" :length="apiResult ? apiResult.pageCount : paging?.pageCount" @update:model-value="pageChanged"></v-pagination>
+        <v-pagination v-if="currentPage !== undefined" :model-value="currentPage + 1" :length="apiResult ? apiResult.pageCount : paging?.pageCount" @update:model-value="pageChanged"></v-pagination>
       </template>
     </MkTableView>
     <slot name="footer"></slot>

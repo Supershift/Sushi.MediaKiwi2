@@ -12,12 +12,11 @@
   const viewConnector = container.resolve<IViewConnector>("IViewConnector");
   const routerManager = container.resolve<RouterManager>("RouterManager");
 
-  const route = useRoute();
   const store = useMediakiwiStore();
   const navigation = useNavigation();
 
   // get id of the view from the route
-  const viewId = Number(route.params.viewId);
+  const viewId = navigation.currentViewParameterNumber;
 
   // get data object from API
   const state = reactive({
@@ -25,8 +24,8 @@
   });
 
   async function onLoad() {
-    if (viewId > 0) {
-      const candidate = await viewConnector.GetView(viewId);
+    if (viewId.value > 0) {
+      const candidate = await viewConnector.GetView(viewId.value);
       if (!candidate) {
         alert("No view found!");
       }
@@ -37,9 +36,9 @@
   }
 
   async function onSave() {
-    if (viewId > 0) {
+    if (viewId.value > 0) {
       // update existing view
-      await viewConnector.UpdateView(viewId, state.view);
+      await viewConnector.UpdateView(viewId.value, state.view);
 
       // refresh store (to update the view in the navigation)
       await routerManager.ForceInitialize();
@@ -56,10 +55,10 @@
   }
 
   let onDelete: ((event: Event) => Promise<void>) | undefined = undefined;
-  if (viewId > 0) {
+  if (viewId.value > 0) {
     onDelete = async () => {
-      if (viewId > 0) {
-        await viewConnector.DeleteView(viewId);
+      if (viewId.value > 0) {
+        await viewConnector.DeleteView(viewId.value);
 
         // refresh store (to update the view in the navigation)
         await routerManager.ForceInitialize();
