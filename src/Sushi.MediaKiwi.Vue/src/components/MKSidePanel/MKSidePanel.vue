@@ -2,45 +2,58 @@
   import { onBeforeMount, onBeforeUnmount, StyleValue, nextTick, watch, computed, onMounted, ref } from "vue";
   import { useDisplay } from "vuetify";
 
+  // props that are used to customize the component
   const props = defineProps({
+    /** name of the element the panel teleports on */
     idName: {
       type: String,
       default: "mk-sp-container",
     },
+    /** determines if the side panel is open or not */
     modelValue: {
       type: Boolean,
       default: false,
     },
+    /** positioning on the z-index (drawer is 1006) */
     zIndex: {
       type: [String, Number],
       default: "auto",
     },
+    /** width of the panel, ex. 20px, 100vw */
     width: {
       type: [String, Number],
       default: "auto",
     },
+    /** height of the panel, ex. 20px, 100vh */
     height: {
       type: [String, Number],
       default: "auto",
     },
+    /** color for the panel, ex. #ffffff, white, rgb(100, 100, 100) */
     panelColor: {
       type: String,
       default: "",
     },
+    /** class to be assigned on the header */
     headerClass: {
       type: String,
       default: "",
     },
+    /** class to be assigned on the body */
     bodyClass: {
       type: String,
       default: "",
     },
+    /** class to be assigned on the footer */
     footerClass: {
       type: String,
       default: "",
     },
   });
-  const emits = defineEmits(["closed", "opened", "update:modelValue"]);
+
+  // emits
+  const emits = defineEmits(["closed", "opened"]);
+
   // Local variables
   let teleportContainer = undefined as HTMLDivElement | undefined;
   const footerHeight = ref(0);
@@ -54,7 +67,8 @@
   const body = ref<HTMLElement | null>(null);
   const zIndex = ref<number | string>();
   const { mobile } = useDisplay();
-  //computed
+
+  // computed
   const bodyHeight = computed<number | undefined>(() => {
     if (!panelHeight.value) return;
     const panelMaxHeight = bodyScrollHeight.value + headerHeight.value + footerHeight.value;
@@ -67,18 +81,19 @@
   const panelStyles = computed(
     () =>
       ({
-        width: !mobile.value ? props.width : "100vw", // ensures the full width overlay
+        width: !mobile.value ? props.width : "100vw", // ensures the full width overlay based on the display size
         maxWidth: "100%",
-        zIndex: zIndex.value,
-        backgroundColor: props.panelColor,
+        zIndex: zIndex.value, // (default: 1007, since drawer is 1006) layer positioning on the z-axis
+        backgroundColor: props.panelColor, // custom color for the panel
       } as StyleValue)
   );
   const wrapperStyles = computed(
     () =>
       ({
-        width: props.modelValue ? props.width : "unset",
+        width: props.modelValue ? props.width : "unset", // this determines if the content gets pushed or not
       } as StyleValue)
   );
+
   // functions
   const calculateRightSize = async () => {
     if (window?.innerHeight > 0) windowHeight.value = window.innerHeight;
@@ -96,19 +111,24 @@
 
   // hooks
   onBeforeMount(() => {
+    // determines where the panel is teleported on
     const alreadyCreatedTarget = document.getElementById(props.idName);
     if (alreadyCreatedTarget) return;
     teleportContainer = document.createElement("div");
     teleportContainer.setAttribute("id", props.idName);
     document.body.appendChild(teleportContainer);
+    // register listener for resizing
     window.addEventListener("resize", calculateRightSize);
   });
   onBeforeUnmount(() => {
+    // unregister listener for resizing
     window.removeEventListener("resize", calculateRightSize);
   });
   onMounted(() => {
     zIndex.value = props.zIndex === "auto" ? getMaxZIndex() : props.zIndex;
+    emits("opened");
   });
+
   //watchers
   watch(
     () => [header.value, footer.value, props.height, props.width, props.modelValue],
