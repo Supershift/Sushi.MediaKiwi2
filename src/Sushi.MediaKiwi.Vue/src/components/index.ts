@@ -9,5 +9,5 @@ export * from "./MkBreadcrumbs";
 export * from "./MkApplication";
 export * from "./MkIdentity";
 export * from "./MkSuspense";
-export * from "./MkSidePanel";
+export * from "./MkSideSheet";
 export * from "./MkChip";

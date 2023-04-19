@@ -4,12 +4,12 @@
 
   // props that are used to customize the component
   const props = defineProps({
-    /** name of the element the panel teleports on */
+    /** name of the element the sheet teleports on */
     idName: {
       type: String,
       default: "mk-sp-container",
     },
-    /** determines if the side panel is open or not */
+    /** determines if the side sheet is open or not */
     modelValue: {
       type: Boolean,
       default: false,
@@ -19,18 +19,18 @@
       type: [String, Number],
       default: "auto",
     },
-    /** width of the panel, ex. 20px, 100vw */
+    /** width of the sheet, ex. 20px, 100vw */
     width: {
       type: [String, Number],
       default: "auto",
     },
-    /** height of the panel, ex. 20px, 100vh */
+    /** height of the sheet, ex. 20px, 100vh */
     height: {
       type: [String, Number],
       default: "auto",
     },
-    /** color for the panel, ex. #ffffff, white, rgb(100, 100, 100) */
-    panelColor: {
+    /** color for the sheet, ex. #ffffff, white, rgb(100, 100, 100) */
+    sheetColor: {
       type: String,
       default: "",
     },
@@ -59,32 +59,33 @@
   const footerHeight = ref(0);
   const bodyScrollHeight = ref(0);
   const headerHeight = ref(0);
-  const panelHeight = ref(0);
+  const sheetHeight = ref(0);
   const windowHeight = ref(0);
-  const panel = ref<HTMLElement | null>(null);
+  const sheet = ref<HTMLElement | null>(null);
   const footer = ref<HTMLElement | null>(null);
   const header = ref<HTMLElement | null>(null);
   const body = ref<HTMLElement | null>(null);
   const zIndex = ref<number | string>();
   const { mobile } = useDisplay();
+  const overlay = ref(props.modelValue);
 
   // computed
   const bodyHeight = computed<number | undefined>(() => {
-    if (!panelHeight.value) return;
-    const panelMaxHeight = bodyScrollHeight.value + headerHeight.value + footerHeight.value;
-    let height = panelHeight.value - headerHeight.value - footerHeight.value;
+    if (!sheetHeight.value) return;
+    const sheetMaxHeight = bodyScrollHeight.value + headerHeight.value + footerHeight.value;
+    let height = sheetHeight.value - headerHeight.value - footerHeight.value;
     if (props.height === "auto") {
-      height = windowHeight.value >= panelMaxHeight ? bodyScrollHeight.value : windowHeight.value - headerHeight.value - footerHeight.value;
+      height = windowHeight.value >= sheetMaxHeight ? bodyScrollHeight.value : windowHeight.value - headerHeight.value - footerHeight.value;
     }
     return height;
   });
-  const panelStyles = computed(
+  const sheetStyles = computed(
     () =>
       ({
-        width: !mobile.value ? props.width : "100vw", // ensures the full width overlay based on the display size
+        width: !mobile.value ? props.width : "85vw", // ensures the full width overlay based on the display size
         maxWidth: "100%",
         zIndex: zIndex.value, // (default: 1007, since drawer is 1006) layer positioning on the z-axis
-        backgroundColor: props.panelColor, // custom color for the panel
+        backgroundColor: props.sheetColor, // custom color for the sheet
       } as StyleValue)
   );
   const wrapperStyles = computed(
@@ -100,7 +101,7 @@
     footerHeight.value = footer.value ? footer.value.clientHeight : 0;
     headerHeight.value = header.value ? header.value.clientHeight : 0;
     bodyScrollHeight.value = body.value ? body.value.scrollHeight : 0;
-    panelHeight.value = panel.value ? panel.value.clientHeight : 0;
+    sheetHeight.value = sheet.value ? sheet.value.clientHeight : 0;
   };
 
   function handleClose() {
@@ -111,7 +112,7 @@
 
   // hooks
   onBeforeMount(() => {
-    // determines where the panel is teleported on
+    // determines where the sheet is teleported on
     const alreadyCreatedTarget = document.getElementById(props.idName);
     if (alreadyCreatedTarget) return;
     teleportContainer = document.createElement("div");
@@ -129,6 +130,8 @@
     emits("opened");
   });
 
+  // TODO: finish the overlay, back button and footer
+
   //watchers
   watch(
     () => [header.value, footer.value, props.height, props.width, props.modelValue],
@@ -139,24 +142,27 @@
 </script>
 <template>
   <teleport :to="`#${idName}`">
-    <div class="mk-sp-wrapper" :class="[modelValue && 'mk-sp-wrapper--active']" :style="wrapperStyles">
+    <div class="mk-sp-wrapper" :class="[modelValue && 'mk-sp-wrapper-active']" :style="wrapperStyles">
       <v-expand-x-transition>
-        <v-sheet v-show="modelValue" ref="mk-sp-panel" class="mk-sp-sheet" :class="[modelValue && 'mk-sp-sheet--active']" :style="panelStyles">
-          <v-card-item ref="mk-sp-header" :class="[headerClass, 'mk-sp__header']">
+        <v-sheet v-show="modelValue" ref="mk-sp-sheet" class="mk-sp-sheet" :class="[modelValue && 'mk-sp-sheet-active']" :style="sheetStyles">
+          <v-card-item ref="mk-sp-header" :class="[headerClass, 'mk-sp-header']">
             <slot name="header"></slot>
             <template #append>
               <v-btn icon="mdi-close" variant="text" @click="handleClose"> close </v-btn>
             </template>
           </v-card-item>
-          <v-card-text ref="mk-sp-body" :class="[bodyClass, 'mk-sp__body']" :style="{ height: `${bodyHeight}px` }">
+          <v-card-text ref="mk-sp-body" :class="[bodyClass, 'mk-sp-body']" :style="{ height: `${bodyHeight}px` }">
             <slot name="default"></slot>
           </v-card-text>
-          <v-card-actions ref="mk-sp-footer" :class="[footerClass, 'mk-sp__footer']">
+          <v-card-actions ref="mk-sp-footer" :class="[footerClass, 'mk-sp-footer']">
             <slot name="footer"></slot>
           </v-card-actions>
         </v-sheet>
       </v-expand-x-transition>
     </div>
+    <v-slide-x-transition>
+      <v-overlay v-show="overlay" v-model="overlay" :activator="`#${idName}`" location-strategy="static" scroll-strategy="block" class="mk-sp-overlay"></v-overlay>
+    </v-slide-x-transition>
   </teleport>
 </template>
 <style scoped lang="scss">
@@ -171,21 +177,24 @@
         right: 0;
         background-color: rgba(var(--v-theme-surface), 1);
       }
-      &__header,
-      &__body,
-      &__footer {
+      &-overlay {
+        z-index: 1006;
+      }
+      &-header,
+      &-body,
+      &-footer {
         overflow: auto;
       }
-      &__body {
+      &-body {
         height: 75vh;
       }
-      &__footer {
+      &-footer {
         position: fixed;
         bottom: 0;
         width: 100%;
         background: var(rgba(28, 27, 31, var(--overlay-opacity)));
       }
-      &__body {
+      &-body {
         position: relative;
       }
     }

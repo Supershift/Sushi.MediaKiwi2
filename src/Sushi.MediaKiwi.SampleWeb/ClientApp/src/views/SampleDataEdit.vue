@@ -3,17 +3,13 @@
   import { useRoute, useRouter } from "@supershift/mediakiwi-vue";
   import type { ITableMap } from "@supershift/mediakiwi-vue";
   import { SampleDataService } from "../components/SampleDataService";
+  import SampleSideSheet from "@/components/SampleSideSheet.vue";
   import type { ISampleData } from "../components/ISampleData";
   import { reactive, ref } from "vue";
-  import { MkSidePanel } from "@supershift/mediakiwi-vue";
 
   const route = useRoute();
   const router = useRouter();
 
-  const toggle = ref(false);
-  function handleToggle() {
-    toggle.value = !toggle.value;
-  }
   const countries = [
     { title: "Nederland", value: "NL" },
     { title: "België", value: "BE" },
@@ -83,51 +79,6 @@
     </div>
   </v-card>
 
-  <!-- Side panel demo  -->
-  <v-btn v-if="!toggle" class="ma-5 d-inline-block" variant="text" @click="handleToggle">Open Side Panel</v-btn>
-  <mk-side-panel :model-value="toggle" :id-name="'mk-layout'" :width="'20vw'" @closed="handleToggle">
-    <template #header> Home Page Panel </template>
-    <template #default>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ac turpis mollis, finibus dolor ut, blandit magna. Sed et nibh mollis, porta lorem at, placerat nibh. Sed faucibus ac justo
-        quis suscipit. Quisque id ipsum ligula. Sed eros nibh, dapibus a imperdiet sit amet, condi
-      </p>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ac turpis mollis, finibus dolor ut, blandit magna. Sed et nibh mollis, porta lorem at, placerat nibh. Sed faucibus ac justo
-        quis suscipit. Quisque id ipsum ligula. Sed eros nibh, dapibus a imperdiet sit amet, condi
-      </p>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ac turpis mollis, finibus dolor ut, blandit magna. Sed et nibh mollis, porta lorem at, placerat nibh. Sed faucibus ac justo
-        quis suscipit. Quisque id ipsum ligula. Sed eros nibh, dapibus a imperdiet sit amet, condi
-      </p>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ac turpis mollis, finibus dolor ut, blandit magna. Sed et nibh mollis, porta lorem at, placerat nibh. Sed faucibus ac justo
-        quis suscipit. Quisque id ipsum ligula. Sed eros nibh, dapibus a imperdiet sit amet, condi
-      </p>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ac turpis mollis, finibus dolor ut, blandit magna. Sed et nibh mollis, porta lorem at, placerat nibh. Sed faucibus ac justo
-        quis suscipit. Quisque id ipsum ligula. Sed eros nibh, dapibus a imperdiet sit amet, condi
-      </p>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ac turpis mollis, finibus dolor ut, blandit magna. Sed et nibh mollis, porta lorem at, placerat nibh. Sed faucibus ac justo
-        quis suscipit. Quisque id ipsum ligula. Sed eros nibh, dapibus a imperdiet sit amet, condi
-      </p>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ac turpis mollis, finibus dolor ut, blandit magna. Sed et nibh mollis, porta lorem at, placerat nibh. Sed faucibus ac justo
-        quis suscipit. Quisque id ipsum ligula. Sed eros nibh, dapibus a imperdiet sit amet, condi
-      </p>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ac turpis mollis, finibus dolor ut, blandit magna. Sed et nibh mollis, porta lorem at, placerat nibh. Sed faucibus ac justo
-        quis suscipit. Quisque id ipsum ligula. Sed eros nibh, dapibus a imperdiet sit amet, condi
-      </p>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ac turpis mollis, finibus dolor ut, blandit magna. Sed et nibh mollis, porta lorem at, placerat nibh. Sed faucibus ac justo
-        quis suscipit. Quisque id ipsum ligula. Sed eros nibh, dapibus a imperdiet sit amet, condi
-      </p>
-    </template>
-    <template #footer>
-      <v-btn class="d-inline-block" variant="text">action 1</v-btn>
-      <v-btn class="d-inline-block" variant="text">action 2</v-btn>
-    </template>
-  </mk-side-panel>
+  <!-- Side sheet demo  -->
+  <sample-side-sheet></sample-side-sheet>
 </template>
