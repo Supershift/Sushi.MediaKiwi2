@@ -17,10 +17,10 @@
         <mk-avatar></mk-avatar>
         <mk-sign-out-button></mk-sign-out-button>
       </v-app-bar>
-      <mk-suspense v-if="isAuthenticated">
-        <mk-navigation></mk-navigation>
+      <mk-suspense>
+        <mk-navigation v-if="isAuthenticated"></mk-navigation>
+        <mk-screen></mk-screen>
       </mk-suspense>
-      <mk-screen></mk-screen>
       <v-snackbar v-model="snackbar.show">{{ snackbar.message }}</v-snackbar>
     </v-layout>
   </v-card>
