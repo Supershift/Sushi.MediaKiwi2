@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { MkTable } from "../MkTable";
-  import { TableMap, ListResult } from "@/models";
+  import { TableMap, ListResult, TableFilterItem } from "@/models";
   import { View } from "@/models";
   import { useMediakiwiStore } from "@/stores";
   import { ref } from "vue";
@@ -16,7 +16,7 @@
   // define reactive variables
   const sections = ref(store.sections);
   const data = ref<ListResult<View>>();
-  const currentPage = ref(1);
+  const currentPage = ref(0);
 
   // define mapping
   const tableMap: TableMap<View> = {
@@ -32,7 +32,10 @@
   };
 
   // define filters
-  const filters = ref<TableFilter>({
+  interface SectionFilter {
+    section: TableFilterItem;
+  }
+  const filters = ref<SectionFilter>({
     section: {
       title: "Section",
       options: sections.value.map((x) => ({ title: x.name, value: x.id })),
@@ -42,7 +45,7 @@
 
   // get data
   async function onLoad() {
-    data.value = await viewConnector.GetViews(filters.value.section?.selectedValue?.value, { pageIndex: currentPage.value - 1, pageSize: 10 });
+    data.value = await viewConnector.GetViews(filters.value.section?.selectedValue?.value, { pageIndex: currentPage.value, pageSize: 10 });
   }
 </script>
 <template>
