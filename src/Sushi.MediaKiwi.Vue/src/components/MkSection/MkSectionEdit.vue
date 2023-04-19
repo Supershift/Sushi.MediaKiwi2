@@ -17,7 +17,7 @@
   const navigation = useNavigation();
 
   // get id of the section from the route
-  const sectionId = Number(route.params.sectionId);
+  const sectionId = navigation.currentViewParameterNumber;
 
   // Section Id should always have the same Id.
   const isAdminSection = computed(() => state.section.id === adminSectionId);
@@ -28,8 +28,8 @@
   });
 
   async function onLoad() {
-    if (sectionId > 0) {
-      const candidate = await SectionConnector.GetSection(sectionId);
+    if (sectionId.value > 0) {
+      const candidate = await SectionConnector.GetSection(sectionId.value);
       if (!candidate) {
         alert("No section found!");
       }
@@ -40,11 +40,11 @@
   }
 
   let onSave: ((event: Event) => Promise<void>) | undefined = undefined;
-  if (sectionId !== adminSectionId) {
+  if (sectionId.value !== adminSectionId) {
     onSave = async () => {
-      if (sectionId > 0) {
+      if (sectionId.value > 0) {
         // update existing section
-        await SectionConnector.UpdateSection(sectionId, state.section);
+        await SectionConnector.UpdateSection(sectionId.value, state.section);
 
         // refresh store (to update the section in the navigation)
         await routerManager.ForceInitialize();
@@ -62,10 +62,10 @@
   }
 
   let onDelete: ((event: Event) => Promise<void>) | undefined = undefined;
-  if (sectionId > adminSectionId) {
+  if (sectionId.value > adminSectionId) {
     onDelete = async () => {
-      if (sectionId > 0) {
-        await SectionConnector.DeleteSection(sectionId);
+      if (sectionId.value > 0) {
+        await SectionConnector.DeleteSection(sectionId.value);
 
         // refresh store (to update the section in the navigation)
         await routerManager.ForceInitialize();
@@ -79,7 +79,7 @@
 
   <MkForm title="Section" :on-save="onSave" :on-load="onLoad" :on-delete="onDelete">
     <v-text-field v-model="state.section.name" label="Name" :disabled="isAdminSection"></v-text-field>
-    <v-text-field v-model="state.section.icon" label="Icon" :disabled="isAdminSection"></v-text-field>
+    <v-text-field v-model="state.section.icon" label="Icon" :disabled="isAdminSection" placeholder="mdi-home"></v-text-field>
     <v-text-field v-model="state.section.sortOrder" label="Sort order" type="number" :disabled="isAdminSection"></v-text-field>
   </MkForm>
 </template>
