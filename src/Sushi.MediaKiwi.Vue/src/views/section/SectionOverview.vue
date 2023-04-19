@@ -3,7 +3,5 @@
   import { MkSuspense } from "@/components";
 </script>
 <template>
-  <mk-suspense>
-    <MkSectionOverview />
-  </mk-suspense>
+  <MkSectionOverview />
 </template>
