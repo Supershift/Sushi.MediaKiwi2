@@ -4,7 +4,7 @@
 
 <template>
   <v-lazy :options="{ threshold: 0.5 }" transition="fade-transition">
-    <v-card class="ma-5">
+    <v-card>
       <h1>Customers</h1>
 
       <SampleTable3></SampleTable3>

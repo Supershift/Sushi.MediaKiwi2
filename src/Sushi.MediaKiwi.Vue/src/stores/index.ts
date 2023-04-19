@@ -55,7 +55,7 @@ export const useMediakiwiStore = defineStore({
     },
     async getSections() {
       const connector = container.resolve<ISectionConnector>("ISectionConnector");
-      const sections = await connector.GetSections();
+      const sections = await connector.GetSections({ pageSize: 9999 });
       this.setSections(sections);
     },
     toggleDrawer() {

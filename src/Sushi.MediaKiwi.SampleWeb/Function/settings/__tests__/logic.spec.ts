@@ -108,7 +108,6 @@ describe("Logic", () => {
       "SampleWeb:Test:SettingA": "value-a",
       "SampleWeb:Test:SettingB": "value-b",
       "MediaKiwi:UseFakes": "false",
-      "MediaKiwi:UseLocalApi": "true",
       "MediaKiwi:ApiBaseUrl": "https://mediakiwi-sample-api-dev.azurewebsites.net/mediakiwi/api",
       "MediaKiwi:MsalConfig:auth:clientId": "0aa0aaaa-a00a-0a00-aa00-0000000aaa0a",
       "MediaKiwi:MsalConfig:auth:authority": "https://login.microsoftonline.com/00a00a00-0aa0-000a-aa0a-0aaa0a00a0a0",
@@ -123,7 +122,6 @@ describe("Logic", () => {
     expect(result).toEqual({
       mediaKiwi: {
         useFakes: false,
-        useLocalApi: true,
         apiBaseUrl: "https://mediakiwi-sample-api-dev.azurewebsites.net/mediakiwi/api",
         msalConfig: {
           auth: {

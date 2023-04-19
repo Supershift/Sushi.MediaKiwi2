@@ -5,7 +5,7 @@
 </script>
 
 <template>
-  <v-card class="ma-5">
+  <v-card>
     <h1>Sample deep data edit</h1>
     My id is: {{ route.params.deepDataId }}
   </v-card>
