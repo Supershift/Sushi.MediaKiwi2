@@ -10,12 +10,6 @@ import "@supershift/mediakiwi-vue/dist/mediakiwi-vue.css";
 import { getFakes } from "./fakes/getFakes";
 import { fetchSettings } from "./services/settings";
 
-// TODO; Push to store?
-const settings = await fetchSettings();
-
-const useFakes = settings?.mediaKiwi?.useFakes;
-const useLocalApi = settings?.mediaKiwi?.useLocalApi;
-
 const app = createApp(App);
 
 // load fonts
@@ -30,9 +24,14 @@ webFontLoader.load({
 // import all views as models
 const modules = import.meta.glob("./views/**/*.vue");
 
+// Fetch the settings from the function api
+const settings = await fetchSettings();
+const useFakes = settings?.mediaKiwi?.useFakes;
+const apiBaseUrl = settings?.mediaKiwi?.apiBaseUrl;
+
 // create mediakiwi options
 const mediaKiwiOptions: mediakiwi.IMediakiwiVueOptions = {
-  apiBaseUrl: useLocalApi ? "https://localhost:7223/mediakiwi/api" : "https://mediakiwi-sample-api-dev.azurewebsites.net/mediakiwi/api",
+  apiBaseUrl,
   modules: modules,
   msalConfig: msalConfig,
   serviceRegistrations: useFakes ? getFakes() : undefined,
