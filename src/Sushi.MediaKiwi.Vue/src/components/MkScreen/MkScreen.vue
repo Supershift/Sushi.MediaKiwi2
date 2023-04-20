@@ -1,6 +1,5 @@
 <script setup lang="ts">
-  import { MkBreadcrumbs } from "@/components/MkBreadcrumbs/";
-  import { MkSuspense } from "../MkSuspense";
+  import { MkBreadcrumbs } from "@/components/MkBreadcrumbs/";  
 </script>
 
 <template>
