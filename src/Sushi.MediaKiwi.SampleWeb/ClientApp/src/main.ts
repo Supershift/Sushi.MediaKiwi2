@@ -3,6 +3,7 @@ import App from "./App.vue";
 import { createApp } from "vue";
 import { msalConfig } from "./authConfig";
 import mediakiwi from "@supershift/mediakiwi-vue";
+import * as mk from "@supershift/mediakiwi-vue";
 
 // Import mediakiwi stylesheet AFTER vuetify to override
 import "@supershift/mediakiwi-vue/dist/mediakiwi-vue.css";
@@ -30,8 +31,8 @@ const useFakes = settings?.mediaKiwi?.useFakes;
 const apiBaseUrl = settings?.mediaKiwi?.apiBaseUrl;
 
 // create mediakiwi options
-const mediaKiwiOptions: mediakiwi.IMediakiwiVueOptions = {
-  apiBaseUrl,
+const mediaKiwiOptions: mk.MediakiwiVueOptions = {
+  apiBaseUrl: apiBaseUrl!,
   modules: modules,
   msalConfig: msalConfig,
   serviceRegistrations: useFakes ? getFakes() : undefined,
