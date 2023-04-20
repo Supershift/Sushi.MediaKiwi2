@@ -27,7 +27,6 @@ export class SectionConnector implements ISectionConnector {
   }
 
   async GetSection(id: number): Promise<Section | undefined> {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
     const response = await this.axios.get<Section>(`/sections/${id}`);
     return response.data;
   }
