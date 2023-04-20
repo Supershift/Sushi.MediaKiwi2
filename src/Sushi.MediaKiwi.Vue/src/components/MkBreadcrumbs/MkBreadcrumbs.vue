@@ -8,9 +8,8 @@
   import { useSlots } from "vue";
 
   // inject dependencies
-  const { mobile, xs } = useDisplay();
+  const { xs } = useDisplay();
   const navigation = useNavigation();
-  const slots = useSlots();
   // determine if we show the whole breadcrumb or only a back button
   const showBackButton = computed(() => xs.value && breadcrumbs.value.length > 1);
 
@@ -25,7 +24,6 @@
     }
     return result;
   });
-  console.log("here:", slots);
 </script>
 <template>
   <v-card v-if="breadcrumbs?.length" class="ml-0">
