@@ -81,4 +81,6 @@ export * from "@/stores";
 
 export * from "@/router";
 
+export { container };
+
 import "@/assets/main.css";
