@@ -1,6 +1,7 @@
 using AutoMapper;
 using Moq;
 using NuGet.Frameworks;
+using Sushi.MediaKiwi.DAL.Paging;
 using Sushi.MediaKiwi.DAL.Repository;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MicroORM;
@@ -8,7 +9,61 @@ using Sushi.MicroORM;
 namespace Sushi.MediaKiwi.Services.UnitTests
 {
     public class SectionServiceTest
-    {        
+    {
+        private readonly IMapper _mapper;
+
+        public SectionServiceTest()
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<AutoMapperProfile>();
+            });
+            _mapper = config.CreateMapper();
+        }
+
+        [Fact]
+        public async Task DeleteSectionTest()
+        {
+            // arrange
+            var sectionStub = new DAL.Section()
+            {
+                Id = 11
+            };
+
+            var sectionRepositoryMock = new Mock<ISectionRepository>();
+            sectionRepositoryMock.Setup(x => x.GetAsync(sectionStub.Id)).ReturnsAsync(sectionStub);
+            sectionRepositoryMock.Setup(x => x.DeleteAsync(sectionStub.Id)).Verifiable();
+
+            var service = new SectionService(sectionRepositoryMock.Object, _mapper);
+
+            // act
+            var result = await service.DeleteAsync(sectionStub.Id);
+
+            // assert
+            Assert.NotNull(result);
+            Assert.Equal(ResultCode.Success, result.Code);
+            sectionRepositoryMock.Verify(x => x.DeleteAsync(sectionStub.Id), Times.Once);
+        }
+
+        [Fact]
+        public async Task DeleteSectionTest_NotFound()
+        {
+            // arrange
+            DAL.Section? sectionStub = null;
+            var sectionRepositoryMock = new Mock<ISectionRepository>();
+            sectionRepositoryMock.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(sectionStub);
+
+            var service = new SectionService(sectionRepositoryMock.Object, _mapper);
+
+            // act
+            var result = await service.DeleteAsync(17);
+
+            // assert
+            Assert.NotNull(result);
+            Assert.Equal(ResultCode.NotFound, result.Code);
+
+        }
+
         [Fact]
         public async Task GetAllSectionsTest()
         {
@@ -19,26 +74,140 @@ namespace Sushi.MediaKiwi.Services.UnitTests
                 new DAL.Section()
             };
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile<AutoMapperProfile>();
-            });
-            var mapper = config.CreateMapper();
+            var sectionRepositoryMock = new Mock<ISectionRepository>();
+            sectionRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<PagingValues>())).ReturnsAsync(sectionStubs);
 
-            var repositoryMock = new Mock<ISectionRepository>();
-            repositoryMock.Setup(x => x.GetAllAsync()).ReturnsAsync(sectionStubs);
-
-            var service = new SectionService(repositoryMock.Object, mapper);
+            var service = new SectionService(sectionRepositoryMock.Object, _mapper);
 
             // act
-            var result = await service.GetAllAsync();
+            var result = await service.GetAllAsync(PagingValues.Default);
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);            
+            Assert.Equal(ResultCode.Success, result.Code);
             Assert.NotNull(result.Value);
             Assert.NotNull(result.Value.Result);
             Assert.Equal(2, result.Value.Result.Count);
+        }
+
+
+        [Fact]
+        public async Task GetSectionTest()
+        {
+            // arrange
+            var sectionStub = new DAL.Section()
+            {
+                Id = 11
+            };
+
+            var sectionRepositoryMock = new Mock<ISectionRepository>();
+            sectionRepositoryMock.Setup(x => x.GetAsync(It.Is<int>(x => x == sectionStub.Id))).ReturnsAsync(sectionStub);
+            var service = new SectionService(sectionRepositoryMock.Object, _mapper);
+
+            // act
+            var result = await service.GetAsync(11);
+
+            // assert
+            Assert.NotNull(result);
+            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.NotNull(result.Value);
+            Assert.Equal(sectionStub.Id, result.Value.Id);
+        }
+
+        [Fact]
+        public async Task GetSectionTest_NotFound()
+        {
+            // arrange
+            DAL.Section? sectionStub = null;
+            var sectionRepositoryMock = new Mock<ISectionRepository>();
+            sectionRepositoryMock.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(sectionStub);
+
+            var service = new SectionService(sectionRepositoryMock.Object, _mapper);
+
+            // act
+            var result = await service.DeleteAsync(17);
+
+            // assert
+            Assert.NotNull(result);
+            Assert.Equal(ResultCode.NotFound, result.Code);
+        }
+
+        [Fact]
+        public async Task SaveSectionTest_NotFound()
+        {
+            // arrange
+            DAL.Section? sectionStub = null;
+            var sectionRepositoryMock = new Mock<ISectionRepository>();
+            sectionRepositoryMock.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(sectionStub);
+
+            var service = new SectionService(sectionRepositoryMock.Object, _mapper);
+
+            // act
+            var result = await service.SaveAsync(17, new Section());
+
+            // assert
+            Assert.NotNull(result);
+            Assert.Equal(ResultCode.NotFound, result.Code);
+        }
+
+        [Fact]
+        public async Task SaveSectionTest_Create()
+        {
+            // arrange
+            var section = new Section()
+            {
+                Name = "name",
+                Icon = "mdi-icon",
+                SortOrder = 0
+            };
+
+            int newId = 12;
+            var dalResult = new DAL.Section() { Id = newId };
+
+            var sectionRepositoryMock = new Mock<ISectionRepository>();
+            sectionRepositoryMock.Setup(x => x.SaveAsync(It.IsAny<DAL.Section>())).Callback<DAL.Section>(x => x.Id = newId);
+
+            var service = new SectionService(sectionRepositoryMock.Object, _mapper);
+
+            // act
+            var result = await service.SaveAsync(null, section);
+
+            Assert.NotNull(result);
+            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.NotNull(result.Value);
+            Assert.Equal(newId, result.Value.Id);
+        }
+
+        [Fact]
+        public async Task SaveSectionTest_Update()
+        {
+            // arrange
+            var section = new Section()
+            {
+                Name = "name",
+                Icon = "mdi-icon",
+                SortOrder = 0
+            };
+
+            int existingId = 17;
+            var dalResult = new DAL.Section() { Id = existingId };
+
+
+            var sectionRepositoryMock = new Mock<ISectionRepository>();
+            sectionRepositoryMock.Setup(x => x.GetAsync(existingId)).ReturnsAsync(dalResult).Verifiable();
+            sectionRepositoryMock.Setup(x => x.SaveAsync(dalResult)).Verifiable();
+
+            var service = new SectionService(sectionRepositoryMock.Object, _mapper);
+
+            // act
+            var result = await service.SaveAsync(existingId, section);
+
+            Assert.NotNull(result);
+            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.NotNull(result.Value);
+            Assert.Equal(existingId, result.Value.Id);
+            sectionRepositoryMock.Verify(x => x.GetAsync(existingId), Times.Once);
+            sectionRepositoryMock.Verify(x => x.SaveAsync(dalResult), Times.Once);
         }
     }
 }
