@@ -3,7 +3,6 @@
   import { useRoute, useRouter } from "@supershift/mediakiwi-vue";
   import type { ITableMap } from "@supershift/mediakiwi-vue";
   import { SampleDataService } from "../components/SampleDataService";
-  import SampleSideSheet from "@/components/SampleSideSheet.vue";
   import type { ISampleData } from "../components/ISampleData";
   import { reactive, ref } from "vue";
 
@@ -78,7 +77,4 @@
       <MkTableView :data="deepDataItems" :table-map="myMap" item-view-id="SampleDeepEdit"></MkTableView>
     </div>
   </v-card>
-
-  <!-- Side sheet demo  -->
-  <sample-side-sheet></sample-side-sheet>
 </template>

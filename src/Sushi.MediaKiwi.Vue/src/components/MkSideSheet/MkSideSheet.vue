@@ -68,6 +68,7 @@
   const zIndex = ref<number | string>();
   const { mobile } = useDisplay();
   const overlay = ref(props.modelValue);
+  const sheetValue = ref(false);
 
   // computed
   const bodyHeight = computed<number | undefined>(() => {
@@ -91,7 +92,8 @@
   const wrapperStyles = computed(
     () =>
       ({
-        width: props.modelValue ? props.width : "unset", // this determines if the content gets pushed or not
+        width: props.modelValue && mobile.value ? props.width : "20vw", // this determines if the content gets pushed or not, minimal 20vw
+        marginTop: props.modelValue && !mobile.value ? "64px" : "0",
       } as StyleValue)
   );
 
@@ -106,6 +108,13 @@
 
   function handleClose() {
     emits("closed");
+
+    if (mobile.value) {
+      sheetValue.value = false;
+      setTimeout(() => {
+        overlay.value = false;
+      }, 500);
+    }
   }
 
   const getMaxZIndex = () => Math.max(...Array.from(document.querySelectorAll("body *"), (el) => parseFloat(window.getComputedStyle(el).zIndex)).filter((zIndex) => !Number.isNaN(zIndex)), 0);
@@ -127,10 +136,11 @@
   });
   onMounted(() => {
     zIndex.value = props.zIndex === "auto" ? getMaxZIndex() : props.zIndex;
-    emits("opened");
+    setTimeout(() => {
+      sheetValue.value = true;
+      emits("opened");
+    }, 1500);
   });
-
-  // TODO: finish the overlay, back button and footer
 
   //watchers
   watch(
@@ -142,9 +152,29 @@
 </script>
 <template>
   <teleport :to="`#${idName}`">
-    <div class="mk-sp-wrapper" :class="[modelValue && 'mk-sp-wrapper-active']" :style="wrapperStyles">
+    <v-overlay v-if="mobile" v-show="overlay && mobile" v-model="overlay" :activator="`#${idName}`" class="mk-sp-overlay d-flex justify-end">
       <v-expand-x-transition>
-        <v-sheet v-show="modelValue" ref="mk-sp-sheet" class="mk-sp-sheet" :class="[modelValue && 'mk-sp-sheet-active']" :style="sheetStyles">
+        <div class="mk-sp-wrapper" :class="[sheetValue && 'mk-sp-wrapper-active']" :style="wrapperStyles">
+          <v-sheet v-show="sheetValue" ref="mk-sp-sheet" class="mk-sp-sheet" :class="[sheetValue && 'mk-sp-sheet-active']" :style="sheetStyles">
+            <v-card-item ref="mk-sp-header" :class="[headerClass, 'mk-sp-header']">
+              <slot name="header"></slot>
+              <template #append>
+                <v-btn icon="mdi-close" variant="text" @click="handleClose"> close </v-btn>
+              </template>
+            </v-card-item>
+            <v-card-text ref="mk-sp-body" :class="[bodyClass, 'mk-sp-body']" :style="{ height: `${bodyHeight}px` }">
+              <slot name="default"></slot>
+            </v-card-text>
+            <v-card-actions ref="mk-sp-footer" :class="[footerClass, 'mk-sp-footer']">
+              <slot name="footer"></slot>
+            </v-card-actions>
+          </v-sheet>
+        </div>
+      </v-expand-x-transition>
+    </v-overlay>
+    <v-slide-x-transition v-else>
+      <div v-show="modelValue && !mobile" class="mk-sp-wrapper" :class="[modelValue && 'mk-sp-wrapper-active']" :style="wrapperStyles">
+        <v-sheet ref="mk-sp-sheet" class="mk-sp-sheet" :class="[modelValue && 'mk-sp-sheet-active']" :style="sheetStyles">
           <v-card-item ref="mk-sp-header" :class="[headerClass, 'mk-sp-header']">
             <slot name="header"></slot>
             <template #append>
@@ -158,27 +188,19 @@
             <slot name="footer"></slot>
           </v-card-actions>
         </v-sheet>
-      </v-expand-x-transition>
-    </div>
-    <v-slide-x-transition>
-      <v-overlay v-show="overlay" v-model="overlay" :activator="`#${idName}`" location-strategy="static" scroll-strategy="block" class="mk-sp-overlay"></v-overlay>
+      </div>
     </v-slide-x-transition>
   </teleport>
 </template>
 <style scoped lang="scss">
   .mk-sp-wrapper {
     position: relative;
-    margin-top: 64px;
-    z-index: 1007;
+    height: 100vh;
+
     .mk-sp {
       &-sheet {
-        position: fixed;
         height: 100%;
-        right: 0;
         background-color: rgba(var(--v-theme-surface), 1);
-      }
-      &-overlay {
-        z-index: 1006;
       }
       &-header,
       &-body,
@@ -186,23 +208,23 @@
         overflow: auto;
       }
       &-body {
-        height: 75vh;
+        height: calc(100% - 192px); // so the content is scrollable ( accounting for margins top and bottom)
+      }
+      @media (min-width: 900px) {
+        &-body {
+          height: calc(100% - 128px); // so the content is scrollable ( accounting for margins top and bottom)
+        }
       }
       &-footer {
         position: fixed;
         bottom: 0;
         width: 100%;
-        background: var(rgba(28, 27, 31, var(--overlay-opacity)));
+        height: 64px;
+        background: rgba(var(--v-theme-surface), 1);
       }
       &-body {
         position: relative;
       }
-    }
-  }
-
-  @media (min-width: 960px) {
-    .mk-sp-wrapper {
-      z-index: unset;
     }
   }
 </style>
