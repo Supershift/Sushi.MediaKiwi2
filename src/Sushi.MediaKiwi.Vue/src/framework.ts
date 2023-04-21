@@ -40,6 +40,10 @@ export default {
     app.use(pinia);
     console.log("pinia created");
 
+    // create msal instance and install plugin
+    identity.msalInstance = new PublicClientApplication(options.msalConfig);
+    app.use(msalPlugin, identity.msalInstance);
+
     // get default router options
     const routerOptions = getDefaultRouterOptions(options?.customRoutes);
 
@@ -51,10 +55,6 @@ export default {
 
     // use the router instance
     app.use(router);
-
-    // create msal instance and install plugin
-    identity.msalInstance = new PublicClientApplication(options.msalConfig);
-    app.use(msalPlugin, identity.msalInstance);
 
     // create navigation client for msal
     const navigationClient = new CustomNavigationClient(router);
@@ -80,5 +80,7 @@ export * from "@/services";
 export * from "@/stores";
 
 export * from "@/router";
+
+export { container };
 
 import "@/assets/main.css";

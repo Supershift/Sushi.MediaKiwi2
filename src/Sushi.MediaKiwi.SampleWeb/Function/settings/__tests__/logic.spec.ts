@@ -31,7 +31,7 @@ describe("Logic", () => {
 
   it("Should parse nested object", () => {
     // set the keys
-    const key = "MediaKiwi:msalConfig:auth:redirectUri";
+    const key = "MediaKiwi.msalConfig.auth.redirectUri";
     const value = "/loginRedirect";
 
     const result = parseToNestedObject(key, value);
@@ -50,7 +50,7 @@ describe("Logic", () => {
 
   it("Should handle wrong nested object", () => {
     // set the keys
-    const key = "MediaKiwi::msalConfig:auth:redirectUri";
+    const key = "MediaKiwi..msalConfig.auth.redirectUri";
     const value = "/loginRedirect";
 
     const result = parseToNestedObject(key, value);
@@ -68,8 +68,8 @@ describe("Logic", () => {
   });
 
   it("Should merge two nested objects", () => {
-    const objectA = parseToNestedObject("MediaKiwi:msalConfig:auth:redirectUri", "/loginRedirect");
-    const objectB = parseToNestedObject("MediaKiwi:msalConfig:clientId", "testId");
+    const objectA = parseToNestedObject("MediaKiwi.msalConfig.auth.redirectUri", "/loginRedirect");
+    const objectB = parseToNestedObject("MediaKiwi.msalConfig.clientId", "testId");
 
     const result = mergeDeep(objectA, objectB);
 
@@ -87,7 +87,7 @@ describe("Logic", () => {
   });
 
   it("Should merge two nested objects when one is undefined", () => {
-    const object = parseToNestedObject("MediaKiwi:msalConfig:auth:redirectUri", "/loginRedirect");
+    const object = parseToNestedObject("MediaKiwi.msalConfig.auth.redirectUri", "/loginRedirect");
 
     const result = mergeDeep(object, undefined);
 
@@ -105,15 +105,14 @@ describe("Logic", () => {
 
   it("Should get MediaKiwi values", () => {
     const appSettings = {
-      "SampleWeb:Test:SettingA": "value-a",
-      "SampleWeb:Test:SettingB": "value-b",
-      "MediaKiwi:UseFakes": "false",
-      "MediaKiwi:UseLocalApi": "true",
-      "MediaKiwi:ApiBaseUrl": "https://mediakiwi-sample-api-dev.azurewebsites.net/mediakiwi/api",
-      "MediaKiwi:MsalConfig:auth:clientId": "0aa0aaaa-a00a-0a00-aa00-0000000aaa0a",
-      "MediaKiwi:MsalConfig:auth:authority": "https://login.microsoftonline.com/00a00a00-0aa0-000a-aa0a-0aaa0a00a0a0",
-      "MediaKiwi:MsalConfig:auth:redirectUri": "/loginRedirect",
-      "MediaKiwi:MsalConfig:auth:postLogoutRedirectUri": "/signIn",
+      "SampleWeb.Test:SettingA": "value-a",
+      "SampleWeb.Test:SettingB": "value-b",
+      "MediaKiwi.UseFakes": "false",
+      "MediaKiwi.ApiBaseUrl": "https://mediakiwi-sample-api-dev.azurewebsites.net/mediakiwi/api",
+      "MediaKiwi.MsalConfig.auth.clientId": "0aa0aaaa-a00a-0a00-aa00-0000000aaa0a",
+      "MediaKiwi.MsalConfig.auth.authority": "https://login.microsoftonline.com/00a00a00-0aa0-000a-aa0a-0aaa0a00a0a0",
+      "MediaKiwi.MsalConfig.auth.redirectUri": "/loginRedirect",
+      "MediaKiwi.MsalConfig.auth.postLogoutRedirectUri": "/signIn",
     };
 
     const result = getValues("MediaKiwi", appSettings);
@@ -123,7 +122,6 @@ describe("Logic", () => {
     expect(result).toEqual({
       mediaKiwi: {
         useFakes: false,
-        useLocalApi: true,
         apiBaseUrl: "https://mediakiwi-sample-api-dev.azurewebsites.net/mediakiwi/api",
         msalConfig: {
           auth: {

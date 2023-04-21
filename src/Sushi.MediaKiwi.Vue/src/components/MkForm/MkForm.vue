@@ -92,14 +92,14 @@
   <MkFormToolbar
     :disabled="inProgress"
     v-bind="$attrs"
+    :delete="$props.onDelete ? true : false"
+    :save="$props.onSave ? true : false"
+    :undo="$props.onLoad && $props.onSave ? true : false"
     @save="onSave"
     @undo="onUndo"
     @delete="onDelete"
-    :delete="$props.onDelete ? true : false"
-    :save="$props.onSave ? true : false"
-    :undo="$props.onLoad ? true : false"
   >
-    <v-progress-linear indeterminate absolute v-if="inProgress"></v-progress-linear>
+    <v-progress-linear v-if="inProgress" indeterminate absolute></v-progress-linear>
   </MkFormToolbar>
   <v-form :disabled="inProgress">
     <slot></slot>

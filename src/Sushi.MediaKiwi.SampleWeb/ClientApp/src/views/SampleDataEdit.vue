@@ -63,7 +63,7 @@
 </script>
 
 <template>
-  <v-card class="ma-5">
+  <v-card>
     <MkForm title="Sample data edit" @save="onSave" @undo="onUndo" @delete="onDelete">
       <v-text-field v-model="state.data.name" label="Name"></v-text-field>
       <v-select v-model="state.data.countryCode" label="Country Code" :items="countries"></v-select>

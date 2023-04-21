@@ -25,8 +25,8 @@ function getValues(prefix, source) {
 }
 
 /**
- * Parses a colon separated key to an object with the deepest level containing the value
- * @param {string} key MediaKiwi:msalConfig:auth:tenantId
+ * Parses a dot separated key to an object with the deepest level containing the value
+ * @param {string} key MediaKiwi.msalConfig.auth.tenantId
  * @param {string} value some-value
  * @returns {*} { "mediaKiwi": { "msalConfig": { "auth": { "tenantId": "some-value" } } } }
  */
@@ -35,8 +35,8 @@ function parseToNestedObject(key, value) {
     return {};
   }
 
-  // Split the key by colon
-  const keyParts = key.split(":");
+  // Split the key by dot
+  const keyParts = key.split(".");
   let index = 0;
   let result = {};
 

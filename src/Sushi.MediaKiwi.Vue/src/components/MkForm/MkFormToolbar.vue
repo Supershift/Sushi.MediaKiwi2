@@ -11,17 +11,17 @@
 <template>
   <v-toolbar>
     <slot></slot>
-    <v-btn v-if="undo" @click="$emit('undo', $event)" :disabled="props.disabled">Undo changes</v-btn>
-    <v-btn v-if="save" @click="$emit('save', $event)" :disabled="props.disabled">Save</v-btn>
+    <v-btn v-if="undo" :disabled="props.disabled" @click="$emit('undo', $event)">Undo changes</v-btn>
+    <v-btn v-if="save" :disabled="props.disabled" @click="$emit('save', $event)">Save</v-btn>
 
-    <v-btn icon color="primary">
+    <v-btn v-if="props.delete" icon color="primary">
       <v-icon>mdi-dots-vertical</v-icon>
 
       <v-menu activator="parent">
         <v-list :disabled="props.disabled">
           <v-list-item>
             <v-list-item-title>
-              <v-btn v-if="delete" @click="$emit('delete', $event)">Delete</v-btn>
+              <v-btn v-if="props.delete" @click="$emit('delete', $event)">Delete</v-btn>
             </v-list-item-title>
           </v-list-item>
         </v-list>

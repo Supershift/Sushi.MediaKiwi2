@@ -4,10 +4,10 @@
 </script>
 
 <template>
-  <v-card class="ma-5">
+  <v-card>
     <SampleTable1></SampleTable1>
   </v-card>
-  <v-card class="ma-5">
+  <v-card>
     <SampleTable2></SampleTable2>
   </v-card>
 </template>

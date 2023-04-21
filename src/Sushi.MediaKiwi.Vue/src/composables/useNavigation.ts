@@ -111,5 +111,28 @@ export function useNavigation() {
 
     return result ? result : [];
   }
-  return { currentNavigationItem, currentRootItem, navigateTo, getChildren, navigateToParent, currentRouteParamId };
+
+  /** Gets the id from the url for the current view, if the current view has a parameter. */
+  const currentViewParameter = computed(() => {
+    const navigationItem = currentNavigationItem.value;
+    if (navigationItem.view?.parameterName) {
+      // if this is a dynamic route, try to resolve route parameter
+      return route.params[navigationItem.view.parameterName];
+    }
+  });
+
+  const currentViewParameterNumber = computed(() => Number(currentViewParameter.value));
+
+  return {
+    currentNavigationItem,
+    currentRootItem,
+    navigateTo,
+    getChildren,
+    navigateToParent,
+    currentRouteParamId,
+    /** Gets the id from the url for the current view, if the current view has a parameter. */
+    currentViewParameter,
+    /** Gets the id from the url for the current view, if the current view has a parameter, and converts it to a number. */
+    currentViewParameterNumber,
+  };
 }

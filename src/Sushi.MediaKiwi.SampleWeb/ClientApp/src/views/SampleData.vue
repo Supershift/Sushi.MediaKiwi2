@@ -4,7 +4,7 @@
 </script>
 
 <template>
-  <v-card class="ma-5">
+  <v-card>
     <SampleTable3></SampleTable3>
   </v-card>
   <!-- Side sheet demo  -->

@@ -1,14 +1,14 @@
 {
-    "singleQuote": false,
-    "semi": true,
-    "vueIndentScriptAndStyle": true,
-    "prettier/prettier": [
-        "error",
-        {
-          "endOfLine": "auto"
-        }
-    ],
-    "printWidth": 200,
-    "trailingComma": "es5",
-    "endOfLine":"auto"
+  "singleQuote": false,
+  "semi": true,
+  "vueIndentScriptAndStyle": true,
+  "prettier/prettier": [
+    "error",
+    {
+      "endOfLine": "auto"
+    }
+  ],
+  "printWidth": 160,
+  "trailingComma": "es5",
+  "endOfLine": "auto"
 }
