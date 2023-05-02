@@ -1,15 +1,14 @@
 import "reflect-metadata";
 import App from "./App.vue";
 import { createApp } from "vue";
-import { msalConfig } from "./authConfig";
-import mediakiwi from "@supershift/mediakiwi-vue";
-import * as mk from "@supershift/mediakiwi-vue";
+import mediakiwi, { createAxiosClient } from "@supershift/mediakiwi-vue";
 
 // Import mediakiwi stylesheet AFTER vuetify to override
 import "@supershift/mediakiwi-vue/dist/mediakiwi-vue.css";
 
-import { getFakes } from "./fakes/getFakes";
-import { fetchSettings } from "./services/settings";
+import { getSettings } from "./services/settings";
+import { container } from "tsyringe";
+import { CountryConnector } from "./services/countryConnector";
 
 const app = createApp(App);
 
@@ -22,23 +21,20 @@ webFontLoader.load({
   },
 });
 
-// import all views as models
-const modules = import.meta.glob("./views/**/*.vue");
-
 // Fetch the settings from the function api
-const settings = await fetchSettings();
-const useFakes = settings?.mediaKiwi?.useFakes;
-const apiBaseUrl = settings?.mediaKiwi?.apiBaseUrl;
+const settings = await getSettings();
 
-// create mediakiwi options
-const mediaKiwiOptions: mk.MediakiwiVueOptions = {
-  apiBaseUrl: apiBaseUrl!,
-  modules: modules,
-  msalConfig: msalConfig,
-  serviceRegistrations: useFakes ? getFakes() : undefined,
-};
+if (!settings) {
+  throw new Error("Failed to retrieve settings");
+}
+
+// import all views as models
+settings.mediaKiwi.modules = import.meta.glob("./views/**/*.vue");
 
 // install mediakiwi
-app.use(mediakiwi, mediaKiwiOptions);
+app.use(mediakiwi, settings.mediaKiwi);
 
+// register dependencies
+const sampleApiAxiosInstance = createAxiosClient(settings.sampleApi.apiBaseUrl);
+container.register("SampleApiAxiosInstance", { useValue: sampleApiAxiosInstance });
 app.mount("#app");

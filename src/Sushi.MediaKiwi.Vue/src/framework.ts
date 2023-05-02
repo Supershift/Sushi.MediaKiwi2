@@ -16,6 +16,7 @@ import { registerOptions } from "./helpers/registerOptions";
 import { registerRouter } from "./helpers/registerRouter";
 import { addWaitOnRouterManager } from "./router/waitOnRouterManager";
 import { addCheckIsInRole } from "./router/checkIsInRole";
+import { registerAxios } from "./helpers/registerAxios";
 
 export default {
   install(app: App, options: MediakiwiVueOptions): void {
@@ -24,6 +25,9 @@ export default {
 
     // register dependencies
     registerServices(container, options.serviceRegistrations);
+
+    // register axios
+    registerAxios(container, options);
 
     // create vuetify
     let vuetifyOptions: VuetifyOptions;
@@ -80,7 +84,5 @@ export * from "@/services";
 export * from "@/stores";
 
 export * from "@/router";
-
-export { container };
 
 import "@/assets/main.css";

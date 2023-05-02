@@ -7,9 +7,9 @@ module.exports = async function (context, req) {
 
   // Get Values from process.env with the MediaKiwi prefix
   const mediaKiwi = getValues("MediaKiwi", process.env);
-
+  const sampleApi = getValues("SampleApi", process.env);
   context.res = {
     status: 200,
-    body: { ...mediaKiwi },
+    body: { ...mediaKiwi, ...sampleApi },
   };
 };
