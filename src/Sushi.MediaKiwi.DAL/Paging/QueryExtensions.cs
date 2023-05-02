@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sushi.MediaKiwi.DAL
+namespace Sushi.MediaKiwi.DAL.Paging
 {
     /// <summary>
     /// Provides extension methods for <see cref="DataQuery{T}"/>.
