@@ -1,13 +1,13 @@
 import type { View } from "@/models";
 import { injectable, inject } from "tsyringe";
-import type { IMediakiwiAxiosInstance } from "@/services/interceptors/MediakiwiAxiosInstance";
 import type ListResult from "@/models/api/ListResult";
 import { IViewConnector } from "./IViewConnector";
 import { Paging } from "@/models/api/Paging";
+import type { AxiosInstance } from "axios";
 
 @injectable()
 export class ViewConnector implements IViewConnector {
-  constructor(@inject("IMediakiwiAxiosInstance") private axios: IMediakiwiAxiosInstance) {}
+  constructor(@inject("MediakiwiAxiosInstance") private axios: AxiosInstance) {}
 
   async CreateView(request: View): Promise<View> {
     const response = await this.axios.post<View>(`/views`, request);

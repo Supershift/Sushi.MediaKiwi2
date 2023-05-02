@@ -25,6 +25,9 @@ export default {
     // register dependencies
     registerServices(container, options.serviceRegistrations);
 
+    // register axios
+    registerAxios(container, options);
+
     // create vuetify
     let vuetifyOptions: VuetifyOptions;
     if (options.vuetifyOptions !== undefined) {
@@ -81,6 +84,5 @@ export * from "@/stores";
 
 export * from "@/router";
 
-export { container };
+import "@/assets/main.css";import { registerAxios } from "./helpers/registerAxios";
 
-import "@/assets/main.css";

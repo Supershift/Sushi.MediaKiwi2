@@ -1,5 +1,8 @@
-import type { MediaKiwiSection } from "./MediaKiwiSection";
+import { MediakiwiVueOptions } from "@supershift/mediakiwi-vue";
 
 export type AppSettings = {
-  mediaKiwi: MediaKiwiSection;
+  mediaKiwi: MediakiwiVueOptions;
+  sampleApi: {
+    apiBaseUrl: string;
+  };
 };
