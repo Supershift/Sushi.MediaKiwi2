@@ -16,6 +16,7 @@ import { registerOptions } from "./helpers/registerOptions";
 import { registerRouter } from "./helpers/registerRouter";
 import { addWaitOnRouterManager } from "./router/waitOnRouterManager";
 import { addCheckIsInRole } from "./router/checkIsInRole";
+import { registerAxios } from "./helpers/registerAxios";
 
 export default {
   install(app: App, options: MediakiwiVueOptions): void {
@@ -84,5 +85,4 @@ export * from "@/stores";
 
 export * from "@/router";
 
-import "@/assets/main.css";import { registerAxios } from "./helpers/registerAxios";
-
+import "@/assets/main.css";
