@@ -53,9 +53,6 @@ export default {
     // register the router as dependency
     registerRouter(container, router);
 
-    // use the router instance
-    app.use(router);
-
     // create navigation client for msal
     const navigationClient = new CustomNavigationClient(router);
     identity.msalInstance.setNavigationClient(navigationClient);
@@ -68,6 +65,9 @@ export default {
 
     // adds a guard to all routes with the meta property 'isInRole' to check role
     addCheckIsInRole(router);
+
+    // use the router instance
+    app.use(router);
   },
 };
 

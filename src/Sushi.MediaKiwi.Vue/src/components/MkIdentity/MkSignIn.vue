@@ -8,7 +8,7 @@
   const useRedirect = true;
 
   function login() {
-    if (useRedirect) instance.loginRedirect({ scopes: identity.scopes, redirectStartPage: "/home" });
+    if (useRedirect) instance.loginRedirect({ scopes: identity.scopes });
     else instance.loginPopup({ scopes: identity.scopes });
   }
 
