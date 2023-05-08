@@ -33,7 +33,8 @@ namespace Sushi.MediaKiwi.WebAPI
             collection.AddHttpContextAccessor();
             
             // add mk dependencies
-            collection.AddTransient<Paging.PagingRetriever>();
+            collection.TryAddTransient<Paging.PagingRetriever>();
+            collection.TryAddTransient<Sorting.SortingRetriever>();
 
             return collection;
         }

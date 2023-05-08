@@ -31,11 +31,12 @@ namespace Sushi.MediaKiwi.DAL.Repository
         }
 
         /// <inheritdoc/>
-        public async Task<QueryListResult<Section>> GetAllAsync(PagingValues pagingValues)
+        public async Task<QueryListResult<Section>> GetAllAsync(PagingValues? pagingValues = null)
         {
             var query = _connector.CreateQuery();
             query.AddOrder(x => x.SortOrder);
-            query.AddPaging(pagingValues);
+            if(pagingValues != null)
+                query.AddPaging(pagingValues);
             var result = await _connector.GetAllAsync(query);
             return result;
         }

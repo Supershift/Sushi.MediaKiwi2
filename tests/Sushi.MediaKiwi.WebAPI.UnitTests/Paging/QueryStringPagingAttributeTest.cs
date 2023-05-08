@@ -11,29 +11,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
+using Sushi.MediaKiwi.WebAPI.Paging;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.DAL.Paging;
-using Sushi.MediaKiwi.WebAPI.Paging;
 
-namespace Sushi.MediaKiwi.WebAPI.UnitTests
+namespace Sushi.MediaKiwi.WebAPI.UnitTests.Paging
 {
-    public class QueryStringContinuationAttributeTest
+    public class QueryStringPagingAttributeTest
     {
         [Fact]
-        public void AddContinuationTest()
+        public void AddPagingTest()
         {
             // arrange
-            int maxItems = 20;
-            string continuationToken = "mytoken";
+            int pageSize = 20;
+            int pageIndex = 3;
 
-            var attribute = new QueryStringContinuationAttribute();
+            var attribute = new QueryStringPagingAttribute();
 
             var contextItems = new Dictionary<object, object?>();
             var queryStore = new Dictionary<string, StringValues>();
             var query = new QueryCollection(queryStore);
 
             var requestMock = new Mock<HttpRequest>();
-            requestMock.Setup(x=>x.Query).Returns(query);
+            requestMock.Setup(x => x.Query).Returns(query);
 
             var httpContextMock = new Mock<HttpContext>();
             httpContextMock.Setup(x => x.Request).Returns(requestMock.Object);
@@ -51,31 +51,28 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests
                 Mock.Of<IList<IFilterMetadata>>(),
                 Mock.Of<IDictionary<string, object>>(),
                 new object());
-            
 
-            queryStore["maxItems"] = maxItems.ToString();
-            queryStore["continuationToken"] = continuationToken;
+
+            queryStore["pageSize"] = pageSize.ToString();
+            queryStore["pageIndex"] = pageIndex.ToString();
 
             // act
             attribute.OnActionExecuting(actionExecutingContextMock);
-
+            var result = contextItems["paging"];
 
             // assert
-            Assert.Contains(contextItems.Keys, x=> x.ToString() == "continuation");
-            
-            var result = contextItems["continuation"];
             Assert.NotNull(result);
-            Assert.IsType<ContinuationValues>(result);
-            Assert.Equal(maxItems, ((ContinuationValues)result).MaxItems);
-            Assert.Equal(continuationToken, ((ContinuationValues)result).Token);
+            Assert.IsType<PagingValues>(result);
+            Assert.Equal(pageSize, ((PagingValues)result).PageSize);
+            Assert.Equal(pageIndex, ((PagingValues)result).PageIndex);
         }
 
         [Fact]
-        public void AddContinuationTest_Default()
+        public void AddPagingTest_Default()
         {
             // arrange
-            int maxItems = 555;
-            var attribute = new QueryStringContinuationAttribute(maxItems);
+            int pageSize = 33;
+            var attribute = new QueryStringPagingAttribute(pageSize);
 
             var contextItems = new Dictionary<object, object?>();
             var queryStore = new Dictionary<string, StringValues>();
@@ -105,10 +102,10 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests
             attribute.OnActionExecuting(actionExecutingContextMock);
 
             // assert
-            var result = contextItems["continuation"] as ContinuationValues;
+            var result = contextItems["paging"] as PagingValues;
             Assert.NotNull(result);
-            Assert.Equal(maxItems, result.MaxItems);
-            Assert.Null(result.Token);
+            Assert.Equal(pageSize, result.PageSize);
+            Assert.Equal(0, result.PageIndex);
         }
     }
 }

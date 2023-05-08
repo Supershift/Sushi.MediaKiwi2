@@ -15,7 +15,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
         public ViewServiceTest()
         {
             var config = new MapperConfiguration(cfg =>
-            {
+            {   
                 cfg.AddProfile<AutoMapperProfile>();
             });
             _mapper = config.CreateMapper();
@@ -77,7 +77,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             };
 
             var viewRepositoryMock = new Mock<IViewRepository>();
-            viewRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<int?>(), It.IsAny<PagingValues>())).ReturnsAsync(viewStubs);
+            viewRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<int?>(), It.IsAny<PagingValues>(), null)).ReturnsAsync(viewStubs);
             var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();
             viewRoleRepositoryMock.Setup(x => x.GetAllAsync(null)).ReturnsAsync(new QueryListResult<DAL.ViewRole>());
 
@@ -103,7 +103,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             
             var repositoryMock = new Mock<IViewRepository>();
             repositoryMock
-                .Setup(x => x.GetAllAsync(It.IsAny<int?>(), It.IsAny<PagingValues>()))
+                .Setup(x => x.GetAllAsync(It.IsAny<int?>(), It.IsAny<PagingValues>(), null))
                 .Callback( (int? viewID, PagingValues pagingValues) => actualFilterID = viewID)
                 .ReturnsAsync(new QueryListResult<DAL.View>());
             var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();
@@ -132,7 +132,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             };
 
             var viewRepositoryMock = new Mock<IViewRepository>();
-            viewRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<int?>(), It.IsAny<PagingValues>())).ReturnsAsync(viewStubs);
+            viewRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<int?>(), It.IsAny<PagingValues>(), null)).ReturnsAsync(viewStubs);
             var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();
             viewRoleRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<int?>())).ReturnsAsync(roleStubs);
 

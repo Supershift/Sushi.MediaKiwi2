@@ -6,7 +6,7 @@ using Moq;
 using Sushi.MediaKiwi.Services;
 using System.Net;
 
-namespace Sushi.MediaKiwi.WebAPI.UnitTests
+namespace Sushi.MediaKiwi.WebAPI.UnitTests.Paging
 {
     public class ControllerExtensionsTest
     {
@@ -25,8 +25,8 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests
             var mockController = new MockController();
 
             // act            
-            var result = ControllerExtensions.CreateResponse(mockController, response);
-            
+            var result = mockController.CreateResponse(response);
+
             // assert
             Assert.IsAssignableFrom<IStatusCodeActionResult>(result);
             var statusResult = (IStatusCodeActionResult)result;

@@ -11,24 +11,24 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sushi.MediaKiwi.WebAPI.UnitTests
+namespace Sushi.MediaKiwi.WebAPI.UnitTests.Paging
 {
-    public class ContinuationSwaggerFilterTest
+    public class PagingSwaggerFilterTest
     {
         [Fact]
         public void AddPagingToSwaggerTest()
         {
             // arrange
-            var filter = new ContinuationSwaggerFilter();
+            var filter = new PagingSwaggerFilter();
 
-            var method = typeof(ContinuationSwaggerFilterTest).GetMethod(nameof(SamplePagingMethod) ,BindingFlags.NonPublic | BindingFlags.Instance);
+            var method = typeof(PagingSwaggerFilterTest).GetMethod(nameof(SamplePagingMethod), BindingFlags.NonPublic | BindingFlags.Instance);
 
             var actionDescriptor = new ControllerActionDescriptor();
             actionDescriptor.MethodInfo = method;
 
             var apiDescription = new ApiDescription();
-            apiDescription.ActionDescriptor = actionDescriptor;            
-            
+            apiDescription.ActionDescriptor = actionDescriptor;
+
             var context = new OperationFilterContext(
                 apiDescription,
                 Mock.Of<ISchemaGenerator>(),
@@ -41,8 +41,8 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests
             filter.Apply(operation, context);
 
             // assert
-            Assert.Contains(operation.Parameters, x => x.Name == "continuationToken");
-            Assert.Contains(operation.Parameters, x => x.Name == "maxItems");
+            Assert.Contains(operation.Parameters, x => x.Name == "pageIndex");
+            Assert.Contains(operation.Parameters, x => x.Name == "pageSize");
         }
 
         [Fact]
@@ -71,14 +71,14 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests
             filter.Apply(operation, context);
 
             // assert
-            Assert.DoesNotContain(operation.Parameters, x => x.Name == "continuationToken");
-            Assert.DoesNotContain(operation.Parameters, x => x.Name == "maxItems");
+            Assert.DoesNotContain(operation.Parameters, x => x.Name == "pageIndex");
+            Assert.DoesNotContain(operation.Parameters, x => x.Name == "pageSize");
         }
 
-        [QueryStringContinuation]
+        [QueryStringPaging]
         private void SamplePagingMethod() { }
 
-        
+
         private void SampleNonPagingMethod() { }
     }
 }

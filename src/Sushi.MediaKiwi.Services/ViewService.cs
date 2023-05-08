@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Sushi.MediaKiwi.DAL.Paging;
 using Sushi.MediaKiwi.DAL.Repository;
+using Sushi.MediaKiwi.DAL.Sorting;
 using Sushi.MediaKiwi.Services.Model;
+using Sushi.MicroORM.Supporting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,10 +62,13 @@ namespace Sushi.MediaKiwi.Services
         /// Gets all views matching the provided filter parameters.
         /// </summary>        
         /// <returns></returns>
-        public async Task<Result<ListResult<View>>> GetAllAsync(int? sectionID, PagingValues pagingValues)
-        {
+        public async Task<Result<ListResult<View>>> GetAllAsync(int? sectionID, PagingValues pagingValues, SortValues<View>? sortValues = null)
+        {   
+            // map sort values to dal
+            var sortValuesDal = _mapper.MapSortValues<DAL.View>(sortValues);
+            
             // get items from datastore
-            var views = await _viewRepository.GetAllAsync(sectionID, pagingValues);
+            var views = await _viewRepository.GetAllAsync(sectionID, pagingValues, sortValuesDal);
             var viewsRoles = await _viewRoleRepository.GetAllAsync(null);
 
             // create result object
