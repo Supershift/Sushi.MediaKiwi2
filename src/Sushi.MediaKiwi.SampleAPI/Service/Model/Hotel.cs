@@ -20,4 +20,9 @@ public class Hotel
     /// Is the hotel active
     /// </summary>
     public bool IsActive { get; set; }
+
+    /// <summary>
+    /// The hotel identifier
+    /// </summary>
+    public int ID { get; set; } 
 }

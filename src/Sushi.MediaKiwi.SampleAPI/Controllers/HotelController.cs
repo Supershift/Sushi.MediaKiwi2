@@ -40,7 +40,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult<Hotel>> GetSection(int id)
+        public async Task<ActionResult<Hotel>> GetHotel(int id)
         {
             var result = await _hotelService.GetAsync(id);
             return this.CreateResponse(result);
@@ -66,7 +66,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
         /// <param name="request">The request containing all Hotel information</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<Hotel>> CreateSection(Hotel request)
+        public async Task<ActionResult<Hotel>> CreateHotel(Hotel request)
         {
             var result = await _hotelService.SaveAsync(null, request);
             return this.CreateResponse(result);
