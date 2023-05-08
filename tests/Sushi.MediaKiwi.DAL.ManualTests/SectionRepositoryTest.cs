@@ -17,10 +17,9 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
         [Fact]
         public async Task GetAllTest()
         {
-            var sections = await _repository.GetAllAsync();
+            var sections = await _repository.GetAllAsync(new Paging.PagingValues(0, 50));
 
             Assert.Equal(2, sections.Count);
         }
     }
-    
 }
