@@ -11,9 +11,6 @@
     "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' :4173 'cypress open --e2e'",
     "test": "jest src",
     "test:ui": "vitest --ui",
-    "npm:link": "npm link @supershift/mediakiwi-vue",
-    "npm:publish": "npm publish --access public",
-    "npm:pack": "npm pack",
     "lint:all": "eslint src",
     "lint:error": "eslint src --quiet"
   },
