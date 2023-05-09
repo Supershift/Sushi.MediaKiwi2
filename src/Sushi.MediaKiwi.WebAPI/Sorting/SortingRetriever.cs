@@ -58,7 +58,10 @@ namespace Sushi.MediaKiwi.WebAPI.Sorting
             // get sort value
             var candidate = GetSorting();
 
-            if(candidate == null) { return null; }
+            if(candidate == null) 
+            { 
+                return null; 
+            }
 
             // try to convert to generic instance
             if(candidate.SortField is Expression<Func<T, object>> sortField)

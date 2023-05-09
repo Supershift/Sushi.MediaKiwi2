@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.OpenApi.Models;
 using Moq;
-using Sushi.MediaKiwi.WebAPI.Paging;
+using Sushi.MediaKiwi.WebAPI.Sorting;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
@@ -11,17 +11,17 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sushi.MediaKiwi.WebAPI.UnitTests.Paging
+namespace Sushi.MediaKiwi.WebAPI.UnitTests.Sorting
 {
     public class SortingSwaggerFilterTest
     {
         [Fact]
-        public void AddPagingToSwaggerTest()
+        public void AddSortingToSwaggerTest()
         {
             // arrange
-            var filter = new PagingSwaggerFilter();
+            var filter = new SortingSwaggerFilter();
 
-            var method = typeof(SortingSwaggerFilterTest).GetMethod(nameof(SamplePagingMethod), BindingFlags.NonPublic | BindingFlags.Instance);
+            var method = typeof(SortingSwaggerFilterTest).GetMethod(nameof(SampleSortingMethod), BindingFlags.NonPublic | BindingFlags.Instance);
 
             var actionDescriptor = new ControllerActionDescriptor();
             actionDescriptor.MethodInfo = method;
@@ -41,17 +41,17 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests.Paging
             filter.Apply(operation, context);
 
             // assert
-            Assert.Contains(operation.Parameters, x => x.Name == "pageIndex");
-            Assert.Contains(operation.Parameters, x => x.Name == "pageSize");
+            Assert.Contains(operation.Parameters, x => x.Name == "sortBy");
+            Assert.Contains(operation.Parameters, x => x.Name == "sortDirection");
         }
 
         [Fact]
-        public void AddPagingToSwaggerTest_NoAttribute()
+        public void AddSortingToSwaggerTest_NoAttribute()
         {
             // arrange
-            var filter = new PagingSwaggerFilter();
+            var filter = new SortingSwaggerFilter();
 
-            var method = typeof(SortingSwaggerFilterTest).GetMethod(nameof(SampleNonPagingMethod), BindingFlags.NonPublic | BindingFlags.Instance);
+            var method = typeof(SortingSwaggerFilterTest).GetMethod(nameof(SampleNonSortingMethod), BindingFlags.NonPublic | BindingFlags.Instance);
 
             var actionDescriptor = new ControllerActionDescriptor();
             actionDescriptor.MethodInfo = method;
@@ -71,14 +71,14 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests.Paging
             filter.Apply(operation, context);
 
             // assert
-            Assert.DoesNotContain(operation.Parameters, x => x.Name == "pageIndex");
-            Assert.DoesNotContain(operation.Parameters, x => x.Name == "pageSize");
+            Assert.DoesNotContain(operation.Parameters, x => x.Name == "sortBy");
+            Assert.DoesNotContain(operation.Parameters, x => x.Name == "sortDirection");
         }
 
-        [QueryStringPaging]
-        private void SamplePagingMethod() { }
+        [QueryStringSorting<TestFake.TestFakeSortMap>]
+        private void SampleSortingMethod() { }
 
 
-        private void SampleNonPagingMethod() { }
+        private void SampleNonSortingMethod() { }
     }
 }

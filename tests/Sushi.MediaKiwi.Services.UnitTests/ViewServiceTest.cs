@@ -1,8 +1,10 @@
 using AutoMapper;
+using AutoMapper.Extensions.ExpressionMapping;
 using Moq;
 using NuGet.Frameworks;
 using Sushi.MediaKiwi.DAL.Paging;
 using Sushi.MediaKiwi.DAL.Repository;
+using Sushi.MediaKiwi.DAL.Sorting;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MicroORM;
 
@@ -17,6 +19,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var config = new MapperConfiguration(cfg =>
             {   
                 cfg.AddProfile<AutoMapperProfile>();
+                cfg.AddExpressionMapping();
             });
             _mapper = config.CreateMapper();
         }
@@ -104,7 +107,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var repositoryMock = new Mock<IViewRepository>();
             repositoryMock
                 .Setup(x => x.GetAllAsync(It.IsAny<int?>(), It.IsAny<PagingValues>(), null))
-                .Callback( (int? viewID, PagingValues pagingValues) => actualFilterID = viewID)
+                .Callback( (int? viewID, PagingValues pagingValues, DAL.Sorting.SortValues<DAL.View>? sort) => actualFilterID = viewID)
                 .ReturnsAsync(new QueryListResult<DAL.View>());
             var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();
 

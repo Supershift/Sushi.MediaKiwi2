@@ -51,7 +51,7 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests.Paging
             // arrange
             var filter = new PagingSwaggerFilter();
 
-            var method = typeof(PagingSwaggerFilterTest).GetMethod(nameof(SampleNonPagingMethod), BindingFlags.NonPublic | BindingFlags.Instance);
+            var method = typeof(SortingSwaggerFilterTest).GetMethod(nameof(SampleNonPagingMethod), BindingFlags.NonPublic | BindingFlags.Instance);
 
             var actionDescriptor = new ControllerActionDescriptor();
             actionDescriptor.MethodInfo = method;
