@@ -45,7 +45,7 @@ export const useMediakiwiStore = defineStore({
       // get instance of INavigationConnector
       const connector = container.resolve<INavigationConnector>("INavigationConnector");
       // get nav items and store them
-      const navigationItems = await connector.GetNavigationItems();
+      const navigationItems = await connector.GetNavigationItems({ pageSize: 9999 });
       this.setNavigationItems(navigationItems);
     },
     async getViews() {
