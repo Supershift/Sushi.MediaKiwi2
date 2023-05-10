@@ -1,20 +1,18 @@
 <script setup lang="ts">
-  import { useRoute, MkForm } from "@supershift/mediakiwi-vue";
+  import { MkForm } from "@supershift/mediakiwi-vue";
   import { HotelConnector } from "@/services/HotelConnector";
   import { CountryConnector } from "@/services/CountryConnector";
   import { reactive, ref } from "vue";
   import { Hotel } from "@/models/Hotel";
   import { container } from "tsyringe";
   import { Country } from "@/models/Country";
+  import { useNavigation } from "@supershift/mediakiwi-vue";
 
   // inject dependencies
   const hotelConnector = container.resolve(HotelConnector);
   const countriesConnector = container.resolve(CountryConnector);
 
-  const navigation = useRoute();
-
-  // get id of the hotel from the route
-  const hotelId = Number(navigation.params.hotelId);
+  const navigation = useNavigation();
 
   // declare reactive variables
   var state = reactive({
@@ -38,9 +36,9 @@
   async function onLoad() {
     await LoadCountries();
 
-    if (hotelId > 0) {
+    if (navigation.currentViewParameterNumber.value > 0) {
       // get existing hotel from api
-      const candidate = await hotelConnector.GetAsync(hotelId);
+      const candidate = await hotelConnector.GetAsync(navigation.currentViewParameterNumber.value);
       if (!candidate) {
         alert("No hotel found!");
       }
@@ -52,11 +50,11 @@
   }
 
   async function onUndo() {
-    state.hotel = await hotelConnector.GetAsync(hotelId);
+    state.hotel = await hotelConnector.GetAsync(navigation.currentViewParameterNumber.value);
   }
 
   async function onSave() {
-    if (hotelId > 0) {
+    if (navigation.currentViewParameterNumber.value > 0) {
       // update existing hotel
       await hotelConnector.SaveAsync(state.hotel);
     } else {
@@ -64,15 +62,15 @@
       const newHotel = await hotelConnector.SaveAsync(state.hotel);
 
       // push user to the new hotel
-      //navigation.navigateTo(navigation.currentNavigationItem.value, newHotel.id);
+      navigation.navigateTo(navigation.currentNavigationItem.value, newHotel.id);
     }
   }
 
   let onDelete: ((event: Event) => Promise<void>) | undefined = undefined;
   
   onDelete = async () => {
-    if (hotelId > 0) {
-      await hotelConnector.DeleteAsync(hotelId);
+    if (navigation.currentViewParameterNumber.value > 0) {
+      await hotelConnector.DeleteAsync(navigation.currentViewParameterNumber.value);
     }
   };
 

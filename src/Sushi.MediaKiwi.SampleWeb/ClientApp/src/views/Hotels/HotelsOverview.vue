@@ -45,10 +45,15 @@
 
   // load data
   async function LoadData() {
-    countries.value = (await countriesConnector.GetAll({pageIndex: 0, pageSize: 9999 })).result;
     hotels.value = await connector.GetAllAsync({ pageIndex: currentPage.value }, filters.value.countryCode.selectedValue?.value, filters.value.isActive.selectedValue?.value);
-    filters.value.countryCode.options = countries.value?.map(({ code, name }) => <TableFilterValue>{title:name, value:code});
   }
+
+  // Load countries
+  countries.value = (await countriesConnector.GetAll({pageIndex: 0, pageSize: 9999 })).result; 
+  
+  // Set filter options
+  filters.value.countryCode.options = countries.value?.map(({ code, name }) => <TableFilterValue>{title:name, value:code});
+
 </script>
 
 <template>

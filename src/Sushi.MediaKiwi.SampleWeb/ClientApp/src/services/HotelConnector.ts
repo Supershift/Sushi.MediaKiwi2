@@ -7,7 +7,7 @@ import { ListResult, Paging } from "@supershift/mediakiwi-vue";
 export class HotelConnector {
   constructor(@inject("SampleApiAxiosInstance") private axios: AxiosInstance) {}
 
-  async GetAllAsync(paging?: Paging, countryCode?:string,isActive?:boolean ) : Promise<ListResult<Hotel>> {
+  async GetAllAsync(paging?: Paging, countryCode?: string, isActive?: boolean) : Promise<ListResult<Hotel>> {
     // build querystring params
     const query = {
       ...paging,
