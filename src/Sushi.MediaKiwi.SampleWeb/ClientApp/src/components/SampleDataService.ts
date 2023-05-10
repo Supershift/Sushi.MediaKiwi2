@@ -1,4 +1,4 @@
-import type { ITableSortingValue } from "@supershift/mediakiwi-vue";
+import type { TableSortingValue } from "@supershift/mediakiwi-vue";
 import { TableSortingDirection } from "@supershift/mediakiwi-vue";
 import type { ISampleData } from "./ISampleData";
 
@@ -16,7 +16,7 @@ const data = <ISampleData[]>[
 ];
 
 export const SampleDataService = {
-  GetAll(countryCode: string, sortOrder?: ITableSortingValue): ISampleData[] {
+  GetAll(countryCode: string, sortOrder?: TableSortingValue): ISampleData[] {
     let result = [...data];
     if (countryCode !== undefined) {
       result = result.filter((x) => x.countryCode == countryCode);
@@ -45,7 +45,7 @@ export const SampleDataService = {
     }
     return result;
   },
-  Save(item: ISampleData): void {
+  async SaveAsync(item: ISampleData): Promise<void> {
     // this would be some sort of FK in reality
     if (item.countryCode == "NL") {
       item.countryName = "Nederland";
@@ -65,7 +65,7 @@ export const SampleDataService = {
       data[index] = item;
     }
   },
-  Delete(id: number): void {
+  async DeleteAsync(id: number): Promise<void> {
     const index = data.findIndex((x) => x.id == id);
     if (index != -1) {
       data.splice(index, 1);
