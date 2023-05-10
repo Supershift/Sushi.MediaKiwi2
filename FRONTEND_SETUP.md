@@ -18,7 +18,7 @@ There are two front-end projects that you'll need to get up and running.
 - [Prettier (VS Code Extension)](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 - [ESList (VS Code Extension)](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 
-##### Usefull tools
+##### Useful tools
 
 - [Npm Intellisense (VS Code Extension)](https://marketplace.visualstudio.com/items?itemName=christian-kohler.npm-intellisense)
 - [Document This (VS Code Extension)](https://marketplace.visualstudio.com/items?itemName=oouo-diogo-perdigao.docthis)
