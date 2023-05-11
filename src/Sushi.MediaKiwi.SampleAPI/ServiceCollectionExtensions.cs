@@ -1,15 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Sushi.MediaKiwi.DAL;
-using Sushi.MediaKiwi.DAL.Repository;
-using Sushi.MediaKiwi.Services.Model;
-using Sushi.MicroORM;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Sushi.MediaKiwi.SampleAPI
 {
@@ -23,9 +12,11 @@ namespace Sushi.MediaKiwi.SampleAPI
         {
             // add repositories
             collection.TryAddTransient<DAL.Repository.CountryRepository>();
+            collection.TryAddTransient<DAL.Repository.HotelRepository>();
 
             // add services
-            collection.TryAddTransient<Service.CountryService>();            
+            collection.TryAddTransient<Service.CountryService>();
+            collection.TryAddTransient<Service.HotelService>();
 
             return collection;
         }
