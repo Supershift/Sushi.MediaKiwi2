@@ -8,17 +8,16 @@
   // inject dependencies
   const { xs } = useDisplay();
   const navigation = useNavigation();
-
   // determine if we show the whole breadcrumb or only a back button
   const showBackButton = computed(() => xs.value && breadcrumbs.value.length > 1);
 
   // go up the navigation tree starting from the current item
   const breadcrumbs = computed(() => {
     const currentItem = navigation.currentNavigationItem.value;
-    let candidate: NavigationItem | undefined = currentItem;
     const result: Array<BreadcrumbItem> = [];
+    let candidate: NavigationItem | undefined = currentItem;
     while (candidate) {
-      // Convert to breadcrumbItem and add to the result
+      // Create new BreadcrumbItem and unshift to the result
       result.unshift({
         id: candidate.id,
         href: candidate.path,
@@ -48,7 +47,7 @@
     <div v-else>
       <v-breadcrumbs class="breadcrumbs-list-container px-0">
         <template v-for="(item, index) in breadcrumbs" :key="item.id">
-          <li v-if="index" class="breadcrumbs-divider">
+          <li v-if="index" class="v-breadcrumbs-divider">
             <v-icon icon="mdi-chevron-right" />
           </li>
 
@@ -75,8 +74,7 @@
     align-items: center;
   }
 
-  .breadcrumbs-divider {
-    list-style: none;
+  .v-breadcrumbs-divider {
     .v-icon {
       font-size: 2.5em;
     }
@@ -84,6 +82,10 @@
 
   .v-breadcrumbs-item {
     white-space: nowrap;
+
+    label {
+      cursor: inherit;
+    }
 
     &:only-child {
       opacity: 1;
