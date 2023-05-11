@@ -1,58 +1,94 @@
 <script setup lang="ts">
   import { computed } from "vue";
   import MkBackButton from "@/components/MkNavigation/MkBackButton.vue";
-  import MkBreadcrumbsItem from "./MkBreadcrumbsItem.vue";
   import { useDisplay } from "vuetify";
   import { useNavigation } from "@/composables/useNavigation";
-  import { NavigationItem } from "@/models";
-  import { useSlots } from "vue";
+  import type { NavigationItem, BreadcrumbItem } from "@/models";
 
   // inject dependencies
   const { xs } = useDisplay();
   const navigation = useNavigation();
+
   // determine if we show the whole breadcrumb or only a back button
-  const showBackButton = computed(() => xs.value && breadcrumbs.value.length > 1);
+
+  const hasBreacbrumbTrail = computed(() => breadcrumbs.value.length > 1);
+  const showBackButton = computed(() => xs.value && hasBreacbrumbTrail.value);
 
   // go up the navigation tree starting from the current item
   const breadcrumbs = computed(() => {
     const currentItem = navigation.currentNavigationItem.value;
-    const result: Array<NavigationItem> = [];
     let candidate: NavigationItem | undefined = currentItem;
+    const result: Array<BreadcrumbItem> = [];
     while (candidate) {
-      result.unshift(candidate);
+      // Convert to breadcrumbItem and add to the result
+      result.unshift({
+        id: candidate.id,
+        href: candidate.path,
+        to: { name: candidate.id.toString() },
+        exact: false,
+        replace: false,
+        text: candidate.name,
+      });
       candidate = candidate.parent;
     }
     return result;
   });
+
+  /** Return tue if the items is the last in the collection */
+  function isCurrentItem(index: number): boolean {
+    return index === breadcrumbs.value.length - 1;
+  }
 </script>
 <template>
   <v-card v-if="breadcrumbs?.length" class="ml-0">
     <div v-if="showBackButton" class="breadcrumb-title-container">
       <mk-back-button class="mr-5" />
-      <div class="text-h4 d-inline-block">
+      <div class="v-breadcrumbs-item text-h4 d-inline-block text-truncate">
         {{ navigation.currentNavigationItem.value?.name }}
       </div>
     </div>
     <div v-else>
-      <v-breadcrumbs class="breadcrumbs-list-container px-0" :items="breadcrumbs">
-        <template #title="item">
-          <mk-breadcrumbs-item :item="item.item" :breadcrumbs="breadcrumbs" />
-        </template>
-        <template #divider>
-          <v-icon icon="mdi-chevron-right"></v-icon>
+      <v-breadcrumbs class="breadcrumbs-list-container px-0">
+        <template v-for="(item, index) in breadcrumbs" :key="item.id">
+          <li v-if="index" class="breadcrumbs-divider">
+            <v-icon icon="mdi-chevron-right" />
+          </li>
+
+          <v-breadcrumbs-item
+            :to="item.to"
+            :active="isCurrentItem(index)"
+            :disabled="isCurrentItem(index)"
+            class="text-h4 text-container"
+            :class="{ 'text-truncate d-inline-block': !isCurrentItem(index) }"
+            :title="item.text"
+          >
+            <label :title="item.text">
+              {{ item.text }}
+            </label>
+          </v-breadcrumbs-item>
         </template>
       </v-breadcrumbs>
     </div>
   </v-card>
 </template>
-<style lang="scss">
+<style lang="scss" scoped>
   .breadcrumb-title-container {
     display: flex;
     align-items: center;
   }
-  .breadcrumbs-list-container {
+
+  .breadcrumbs-divider {
+    list-style: none;
     .v-icon {
       font-size: 2.5em;
+    }
+  }
+
+  .v-breadcrumbs-item {
+    white-space: nowrap;
+
+    &:only-child {
+      opacity: 1;
     }
   }
 </style>
