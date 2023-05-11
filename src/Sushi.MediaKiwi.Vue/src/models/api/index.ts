@@ -9,3 +9,4 @@ export type { NavigationItem as NavigationItem } from "./NavigationItem";
 export type { Role } from "./Role";
 export type { Paging } from "./Paging";
 export type { IPagingResult } from "./IPagingResult";
+export type { Sorting } from "./Sorting";
