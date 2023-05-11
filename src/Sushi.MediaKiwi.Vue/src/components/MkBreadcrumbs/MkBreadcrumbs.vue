@@ -10,9 +10,7 @@
   const navigation = useNavigation();
 
   // determine if we show the whole breadcrumb or only a back button
-
-  const hasBreacbrumbTrail = computed(() => breadcrumbs.value.length > 1);
-  const showBackButton = computed(() => xs.value && hasBreacbrumbTrail.value);
+  const showBackButton = computed(() => xs.value && breadcrumbs.value.length > 1);
 
   // go up the navigation tree starting from the current item
   const breadcrumbs = computed(() => {
@@ -34,7 +32,7 @@
     return result;
   });
 
-  /** Return tue if the items is the last in the collection */
+  /** Return if the item is the last in the collection */
   function isCurrentItem(index: number): boolean {
     return index === breadcrumbs.value.length - 1;
   }
