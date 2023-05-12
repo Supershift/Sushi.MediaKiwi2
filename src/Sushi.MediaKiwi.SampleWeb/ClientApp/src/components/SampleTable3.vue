@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { computed, ref } from "vue";
-  import type { TableMap, TableFilter, Sorting, TableFilterItem } from "@supershift/mediakiwi-vue";
+  import type { TableMap, TableFilter, Sorting } from "@supershift/mediakiwi-vue";
   import { MkTable, TableFilterType, SortDirection, IconPosition } from "@supershift/mediakiwi-vue";
   import type { ISampleData } from "./ISampleData";
   import { SampleDataService } from "./SampleDataService";
@@ -9,10 +9,10 @@
   const myMap: TableMap<ISampleData> = {
     itemId: (item) => item.id,
     items: [
-      { headerTitle: "Id", value: (dataItem) => dataItem.id, sortingOptions: { defaultSortDirection: SortDirection.Desc } },
+      { headerTitle: "Id", value: (dataItem) => dataItem.id, sortingOptions: { id: (x) => x.id } },
       { headerTitle: "Naam", value: (dataItem) => dataItem.name },
-      { headerTitle: "Land", value: (dataItem) => dataItem.countryName, sortingOptions: { defaultSortDirection: SortDirection.Asc } },
-      { headerTitle: "Laast gezien", value: (dataItem) => dataItem.date?.toISOString(), sortingOptions: { defaultSortDirection: SortDirection.Desc } },
+      { headerTitle: "Land", value: (dataItem) => dataItem.countryName, sortingOptions: { id: (x) => x.countryName } },
+      { headerTitle: "Laast gezien", value: (dataItem) => dataItem.date?.toISOString() },
       {
         headerTitle: "Hulp",
         value: (dataItem) => dataItem.countryName,
@@ -66,7 +66,7 @@
 
   // create a sorting option object with a default value
   const selectedSortOption = ref<Sorting>({
-    tableMapItemId: "lastSeen",
+    sortBy: "id",
     sortDirection: SortDirection.Desc,
   });
   // create a ref collection of selected table rows

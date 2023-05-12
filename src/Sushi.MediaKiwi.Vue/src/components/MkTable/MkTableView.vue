@@ -4,14 +4,12 @@
   import type { TableMapItem } from "@/models/table/TableMapItem";
   import MkTableCell from "./MkTableCell.vue";
   import { useMediakiwiStore } from "@/stores/";
-  import { SortDirection } from "@/models";
-  import type { Sorting } from "@/models";
-  import TableSortingHelper from "@/helpers/TableSortingHelper";
+  import type { Sorting, TableMapSortingOptions } from "@/models";
   import MkTableCheckbox from "./MkTableCheckbox.vue";
   import { useTableMapItemSelection } from "@/composables/useTableMapItemSelection";
+  import { useTableMapItemSorting } from "@/composables/useTableMapItemSorting";
   import { watch } from "vue";
   import { useNavigation } from "@/composables/useNavigation";
-  import { computed } from "vue";
 
   // define properties
   const props = defineProps<{
@@ -35,7 +33,6 @@
 
   // inject dependencies
   const store = useMediakiwiStore();
-  const tableSortingHelper = new TableSortingHelper();
   const navigation = useNavigation();
 
   function onRowClick(event: Event, dataItem: unknown) {
@@ -74,37 +71,27 @@
     }
   }
 
+  /** Init sorting composable */
+  const { setSorting, getSortingClasses, selectedSorting, sortIcon } = useTableMapItemSorting({
+    selectedSortOption: props.selectedSortOption,
+  });
+
   function onClick(tableMapItem: TableMapItem<unknown>) {
     if (tableMapItem?.sortingOptions) {
-      const dataItem = tableSortingHelper.parseSorting(tableMapItem.sortingOptions, props.selectedSortOption);
-      emit("update:selectedSortOption", dataItem);
+      setSorting(tableMapItem.sortingOptions);
+      emit("update:selectedSortOption", selectedSorting.value);
     }
   }
 
   function getHeaderClasses(tableMapItem: TableMapItem<unknown>) {
     if (tableMapItem?.sortingOptions) {
-      return tableSortingHelper.getSortingClasses(tableMapItem.sortingOptions, props.selectedSortOption);
+      return getSortingClasses(tableMapItem.sortingOptions);
     }
   }
-
-  function isActiveSort(tableMapItem: TableMapItem<unknown>) {
-    if (tableMapItem?.sortingOptions) {
-      return tableSortingHelper.isActiveSort(tableMapItem.sortingOptions, props.selectedSortOption);
-    }
-    return false;
-  }
-
-  const sortIcon = computed(() => {
-    if (props.selectedSortOption?.sortDirection === SortDirection.Asc) {
-      return "mdi-arrow-up";
-    } else {
-      return "mdi-arrow-down";
-    }
-  });
 
   function sortingClasses() {
     return {
-      hidden: !props.selectedSortOption,
+      hidden: !selectedSorting.value,
     };
   }
 
@@ -163,14 +150,21 @@
       table {
         thead {
           th {
-            .v-icon.hidden {
-              visibility: hidden;
-            }
-
             &.sortable {
               font-weight: 700 !important;
+
+              .v-icon {
+                visibility: hidden;
+              }
+
               &:hover {
                 cursor: pointer;
+                .v-icon {
+                  visibility: visible;
+                }
+              }
+
+              &.sortable-active {
                 .v-icon {
                   visibility: visible;
                 }

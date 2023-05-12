@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { SortDirection } from "./../../models";
-import type { ITableMap } from "./../../models/table/ITableMap";
+import type { TableMap } from "./../../models/table/TableMap";
 import { useTableMapItemSelection } from "./../useTableMapItemSelection";
 
 interface ISampleData {
@@ -12,12 +12,12 @@ interface ISampleData {
 }
 
 // define a mapping between source data and desired columns in the table
-const myMap = <ITableMap<ISampleData>>{
+const myMap = <TableMap<ISampleData>>{
   itemId: (item) => {
     return item.id;
   },
   showSelect: true,
-  items: [{ id: "id", headerTitle: "Id", value: (dataItem): number => dataItem.id, sortingOptions: { defaultSortDirection: SortDirection.Desc } }],
+  items: [{ headerTitle: "Id", value: (dataItem): number => dataItem.id }],
 };
 
 const testData = <ISampleData[]>[

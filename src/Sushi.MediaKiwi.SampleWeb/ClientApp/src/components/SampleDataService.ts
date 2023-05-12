@@ -23,10 +23,10 @@ export const SampleDataService = {
     }
 
     if (sortOrder) {
-      if (sortOrder.tableMapItemId === "country") {
+      if (sortOrder.sortBy === "countryName") {
         result = [...result.sort((a, b) => a.countryName.localeCompare(b.countryName))];
-      } else if (sortOrder.tableMapItemId === "name") {
-        result = [...result.sort((a, b) => a.name.localeCompare(b.name))];
+      } else if (sortOrder.sortBy === "id") {
+        result = [...result.sort((a, b) => a.id - b.id)];
       }
 
       // Reverse sortorder
