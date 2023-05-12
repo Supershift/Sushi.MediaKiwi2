@@ -7,8 +7,6 @@
   import { container } from "tsyringe";
   import { IViewConnector } from "@/services";
   import { TableFilterType } from "../../models/enum/TableFilterType";
-  import { SortDirection } from "@/models/enum/SortDirection";
-  import { nameof } from "@/helpers/UtilsHelper";
   import { watch } from "vue";
 
   // inject dependencies
@@ -69,7 +67,6 @@
   );
 </script>
 <template>
-  {{ selectedSortOption }}
   <mk-table
     v-model:filters="filters"
     v-model:current-page="currentPage"
