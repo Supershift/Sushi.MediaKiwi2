@@ -1,69 +1,69 @@
-import { TableSortingDirection } from "@/models";
-import type { TableSortingValue, TableMapSortingOptions, TableMapItem } from "@/models";
+import { SortDirection } from "@/models";
+import type { Sorting, TableMapSortingOptions } from "@/models";
+import { nameof } from "./UtilsHelper";
 
 /**
- * Helper class to help determine new sorting order,
- * sorting classes and
- *
- * @export
+ * Helper class to help determine sorting
  * @class TableSortingHelper
  */
 export default class TableSortingHelper {
   /**
-   * Determine the new sort order direction based on the current direction
-   * @param {TableMapItem<unknown>} tableMapItem
-   * @param {TableSortingValue} selectedSortingValue
-   * @return {TableSortingDirection}
+   * Creates an ISorting result with a direction for the new tableMapItem
+   * @param {TableMapSortingOptions<unknown>} sortingOptions
+   * @param {Sorting} selectedSortingValue
+   * @return {Sorting}
    */
-  getSortingDirection(tableMapItem?: TableMapItem<unknown>, selectedSortingValue?: TableSortingValue): TableSortingDirection {
-    // Return a default sort option when current sort order is present
-    if (!selectedSortingValue) {
-      return TableSortingDirection.Desc;
-    }
-
-    // Keep the same sorting direction when changing the column
-    if (tableMapItem?.id !== selectedSortingValue?.tableMapItemId) {
-      return selectedSortingValue?.sortDirection;
-    }
-
-    // Toggle the sort
-    return selectedSortingValue?.sortDirection === TableSortingDirection.Desc ? TableSortingDirection.Asc : TableSortingDirection.Desc;
-  }
-
-  /**
-   * Creates an ITableSortingValue result with a direction for the new tableMapItem
-   * @param {TableMapItem<unknown>} tableMapItem
-   * @param {TableSortingValue} selectedSortingValue
-   * @return {TableSortingValue}
-   */
-  parseTableSortingValue(tableMapItem?: TableMapItem<unknown>, selectedSortingValue?: TableSortingValue): TableSortingValue | undefined {
-    if (tableMapItem?.sortingOptions && tableMapItem?.id) {
-      const sortDirection = this.getSortingDirection(tableMapItem, selectedSortingValue);
-      const dataItem: TableSortingValue = { tableMapItemId: tableMapItem?.id, sortDirection };
-      return dataItem;
-    }
-  }
-
-  /**
-   * Returns whether or not the provided tableMapItem is the same as the selectedSortingValue
-   * @param {TableMapItem<unknown>} tableMapItem
-   * @param {TableSortingValue} selectedSortingValue
-   * @return {boolean}
-   */
-  isActiveSort(tableMapItem?: TableMapItem<unknown>, selectedSortingValue?: TableSortingValue): boolean | undefined {
-    return selectedSortingValue?.tableMapItemId === tableMapItem?.id;
+  parseSorting(sortingOptions: TableMapSortingOptions<unknown>, selectedSortingValue?: Sorting): Sorting | undefined {
+    const sortingId = this.invokeId(sortingOptions);
+    const sortDirection = this.getSortingDirection(sortingId, selectedSortingValue);
+    const dataItem: Sorting = { sortBy: sortingId, sortDirection };
+    return dataItem;
   }
 
   /**
    * Returns classes based on the sortingOptions and selectedSortingValue
-   * @param {TableMapItem<unknown>} [tableMapItem]
-   * @param {TableSortingValue} [selectedSortingValue]
+   * @param {TableMapSortingOptions<unknown>} sortingOptions
+   * @param {Sorting} selectedSortingValue
    * @return {Object}
    */
-  getSortingClasses(tableMapItem?: TableMapItem<unknown>, selectedSortingValue?: TableSortingValue): { sortable: TableMapSortingOptions | undefined; "sortable-active": boolean | undefined } {
+  getSortingClasses(sortingOptions: TableMapSortingOptions<unknown>, selectedSortingValue?: Sorting) {
     return {
-      sortable: tableMapItem?.sortingOptions,
-      "sortable-active": this.isActiveSort(tableMapItem, selectedSortingValue),
+      sortable: true,
+      "sortable-active": this.isActiveSort(sortingOptions, selectedSortingValue),
     };
+  }
+
+  /**
+   * Get the Id set in the sortingOptions
+   * @param {TableMapSortingOptions<unknown>} sortingOptions
+   * @return {string}
+   */
+  private invokeId(sortingOptions: TableMapSortingOptions<unknown>): string {
+    const id = nameof(sortingOptions.id);
+    return id;
+  }
+
+  /**
+   * Determine the new sort order direction based on the current direction
+   * @param {string} sortingId
+   * @param {Sorting} selectedSortingValue
+   * @return {SortDirection}
+   */
+  private getSortingDirection(sortingId: string, selectedSortingValue?: Sorting): SortDirection {
+    // Return a default sort option when current sort order is present
+    if (!selectedSortingValue) {
+      return SortDirection.Desc;
+    }
+
+    // Keep the same sorting direction when changing the column
+    if (sortingId !== selectedSortingValue?.sortBy) {
+      return selectedSortingValue?.sortDirection;
+    }
+
+    // Toggle the sort
+    return selectedSortingValue?.sortDirection === SortDirection.Desc ? SortDirection.Asc : SortDirection.Desc;
+  }
+  isActiveSort(sortingOptions: TableMapSortingOptions<unknown>, selectedSortingValue?: Sorting): boolean {
+    return selectedSortingValue?.sortBy === this.invokeId(sortingOptions);
   }
 }

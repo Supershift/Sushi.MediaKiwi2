@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { computed, ref } from "vue";
-  import type { TableMap, TableFilter, TableSortingValue, TableFilterItem } from "@supershift/mediakiwi-vue";
-  import { MkTable, TableFilterType, TableSortingDirection, IconPosition } from "@supershift/mediakiwi-vue";
+  import type { TableMap, TableFilter, Sorting, TableFilterItem } from "@supershift/mediakiwi-vue";
+  import { MkTable, TableFilterType, SortDirection, IconPosition } from "@supershift/mediakiwi-vue";
   import type { ISampleData } from "./ISampleData";
   import { SampleDataService } from "./SampleDataService";
 
@@ -9,10 +9,10 @@
   const myMap: TableMap<ISampleData> = {
     itemId: (item) => item.id,
     items: [
-      { headerTitle: "Id", value: (dataItem) => dataItem.id, sortingOptions: { defaultSortDirection: TableSortingDirection.Desc } },
+      { headerTitle: "Id", value: (dataItem) => dataItem.id, sortingOptions: { defaultSortDirection: SortDirection.Desc } },
       { headerTitle: "Naam", value: (dataItem) => dataItem.name },
-      { headerTitle: "Land", value: (dataItem) => dataItem.countryName, sortingOptions: { defaultSortDirection: TableSortingDirection.Asc } },
-      { headerTitle: "Laast gezien", value: (dataItem) => dataItem.date?.toISOString(), sortingOptions: { defaultSortDirection: TableSortingDirection.Desc } },
+      { headerTitle: "Land", value: (dataItem) => dataItem.countryName, sortingOptions: { defaultSortDirection: SortDirection.Asc } },
+      { headerTitle: "Laast gezien", value: (dataItem) => dataItem.date?.toISOString(), sortingOptions: { defaultSortDirection: SortDirection.Desc } },
       {
         headerTitle: "Hulp",
         value: (dataItem) => dataItem.countryName,
@@ -65,9 +65,9 @@
   });
 
   // create a sorting option object with a default value
-  const selectedSortOption = ref<TableSortingValue>({
+  const selectedSortOption = ref<Sorting>({
     tableMapItemId: "lastSeen",
-    sortDirection: TableSortingDirection.Desc,
+    sortDirection: SortDirection.Desc,
   });
   // create a ref collection of selected table rows
   const selectedTableRows = ref([]);
@@ -96,7 +96,15 @@
 </script>
 
 <template>
-  <MkTable v-model:selected-sort-option="selectedSortOption" v-model:selection="selectedTableRows" v-model:filters="filters" :table-map="myMap" :data="sampleData" checkbox item-view-id="SampleEdit">
+  <MkTable
+    v-model:selected-sort-option="selectedSortOption"
+    v-model:selection="selectedTableRows"
+    v-model:filters="filters"
+    :table-map="myMap"
+    :data="sampleData"
+    checkbox
+    item-view-id="SampleEdit"
+  >
     <template #actions>
       <v-btn @click="download">Download</v-btn>
       <v-btn @click="move">move</v-btn>

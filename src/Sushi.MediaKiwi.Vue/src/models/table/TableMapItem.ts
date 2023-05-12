@@ -12,7 +12,7 @@ export interface TableMapItem<Type> {
    * Use the property 'data' to pass the entity to the component. */
   component?: Component | DefineComponent;
   /** Mark the column sortable */
-  sortingOptions?: TableMapSortingOptions;
+  sortingOptions?: TableMapSortingOptions<Type>;
   /** Icon settings */
   icon?: ((entity: Type) => TableMapItemIconOptions) | undefined;
 }

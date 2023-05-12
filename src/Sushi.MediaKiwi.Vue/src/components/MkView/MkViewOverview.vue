@@ -1,13 +1,15 @@
 <script setup lang="ts">
   import { MkTable } from "../MkTable";
-  import { TableMap, ListResult, TableFilterItem } from "@/models";
+  import { TableMap, ListResult, TableFilterItem, Sorting } from "@/models";
   import { View } from "@/models";
   import { useMediakiwiStore } from "@/stores";
   import { ref } from "vue";
   import { container } from "tsyringe";
   import { IViewConnector } from "@/services";
-  import { TableFilter } from "@/models/table/TableFilter";
   import { TableFilterType } from "../../models/enum/TableFilterType";
+  import { SortDirection } from "@/models/enum/SortDirection";
+  import { nameof } from "@/helpers/UtilsHelper";
+  import { watch } from "vue";
 
   // inject dependencies
   const viewConnector = container.resolve<IViewConnector>("IViewConnector");
@@ -22,7 +24,7 @@
   const tableMap: TableMap<View> = {
     itemId: (x) => x.id,
     items: [
-      { headerTitle: "Name", value: (x) => x.name },
+      { headerTitle: "Name", value: (x) => x.name, sortingOptions: { id: (x) => x.name } },
       { headerTitle: "ExternalId", value: (x) => x.externalId },
       { headerTitle: "Section", value: (x) => sections.value.find((section) => section.id == x.sectionId)?.name },
       { headerTitle: "Component Key", value: (x) => x.componentKey },
@@ -43,11 +45,39 @@
     },
   });
 
+  // create a sorting option object with a default value
+  const selectedSortOption = ref<Sorting>();
+
+  async function getData() {
+    data.value = await viewConnector.GetViews(
+      filters.value.section?.selectedValue?.value,
+      { pageIndex: currentPage.value, pageSize: 10 },
+      selectedSortOption.value
+    );
+  }
+
   // get data
   async function onLoad() {
-    data.value = await viewConnector.GetViews(filters.value.section?.selectedValue?.value, { pageIndex: currentPage.value, pageSize: 10 });
+    await getData();
   }
+
+  watch(
+    () => selectedSortOption.value,
+    () => {
+      onLoad();
+    }
+  );
 </script>
 <template>
-  <mk-table new :api-result="data" :on-load="onLoad" :table-map="tableMap" v-model:filters="filters" v-model:current-page="currentPage" item-view-id="ViewEdit"></mk-table>
+  {{ selectedSortOption }}
+  <mk-table
+    v-model:filters="filters"
+    v-model:current-page="currentPage"
+    v-model:selected-sort-option="selectedSortOption"
+    new
+    :api-result="data"
+    :on-load="onLoad"
+    :table-map="tableMap"
+    item-view-id="ViewEdit"
+  ></mk-table>
 </template>

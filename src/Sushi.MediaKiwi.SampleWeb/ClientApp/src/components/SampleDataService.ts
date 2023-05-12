@@ -1,5 +1,5 @@
-import type { TableSortingValue } from "@supershift/mediakiwi-vue";
-import { TableSortingDirection } from "@supershift/mediakiwi-vue";
+import type { Sorting } from "@supershift/mediakiwi-vue";
+import { SortDirection } from "@supershift/mediakiwi-vue";
 import type { ISampleData } from "./ISampleData";
 
 const data = <ISampleData[]>[
@@ -16,7 +16,7 @@ const data = <ISampleData[]>[
 ];
 
 export const SampleDataService = {
-  GetAll(countryCode: string, sortOrder?: TableSortingValue): ISampleData[] {
+  GetAll(countryCode: string, sortOrder?: Sorting): ISampleData[] {
     let result = [...data];
     if (countryCode !== undefined) {
       result = result.filter((x) => x.countryCode == countryCode);
@@ -30,7 +30,7 @@ export const SampleDataService = {
       }
 
       // Reverse sortorder
-      if (sortOrder.sortDirection === TableSortingDirection.Desc) {
+      if (sortOrder.sortDirection === SortDirection.Desc) {
         result = [...result.reverse()];
       }
     }

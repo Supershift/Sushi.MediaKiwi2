@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { TableSortingDirection } from "./../../models/table/TableSortingDirection";
+import { SortDirection } from "./../../models";
 import type { ITableMap } from "./../../models/table/ITableMap";
 import { useTableMapItemSelection } from "./../useTableMapItemSelection";
 
@@ -17,7 +17,7 @@ const myMap = <ITableMap<ISampleData>>{
     return item.id;
   },
   showSelect: true,
-  items: [{ id: "id", headerTitle: "Id", value: (dataItem): number => dataItem.id, sortingOptions: { defaultSortDirection: TableSortingDirection.Desc } }],
+  items: [{ id: "id", headerTitle: "Id", value: (dataItem): number => dataItem.id, sortingOptions: { defaultSortDirection: SortDirection.Desc } }],
 };
 
 const testData = <ISampleData[]>[
