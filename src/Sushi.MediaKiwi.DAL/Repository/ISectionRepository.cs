@@ -12,7 +12,7 @@ namespace Sushi.MediaKiwi.DAL.Repository
         /// Gets all sections from the database.
         /// </summary>
         /// <returns></returns>
-        Task<QueryListResult<Section>> GetAllAsync(PagingValues pagingValues);
+        Task<QueryListResult<Section>> GetAllAsync(PagingValues? pagingValues = null);
 
         /// <summary>
         /// Gets a <see cref="Section"/> by id.

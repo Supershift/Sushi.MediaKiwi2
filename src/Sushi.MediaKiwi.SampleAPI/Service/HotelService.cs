@@ -24,11 +24,13 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
         /// Retrieves all Hotels from the database
         /// </summary>
         /// <param name="pagingValues">Paging values containing page limitations</param>
+        /// <param name="countryCode">Limit results to supplied country codes</param>
+        /// <param name="isActive">Limit results to supplied isactive state</param>
         /// <returns></returns>
-        public async Task<Result<ListResult<Hotel>>> GetAllAsync(PagingValues pagingValues)
+        public async Task<Result<ListResult<Hotel>>> GetAllAsync(PagingValues pagingValues, string? countryCode, bool? isActive)
         {
             // get hotels from datastore
-            var items = await _hotelRepository.GetAllAsync(pagingValues);
+            var items = await _hotelRepository.GetAllAsync(pagingValues, countryCode, isActive);
 
             // create result object
             var result = new ListResult<Hotel>(items.TotalNumberOfRows, items.TotalNumberOfPages);

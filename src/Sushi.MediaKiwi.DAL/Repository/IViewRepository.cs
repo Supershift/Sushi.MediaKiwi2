@@ -1,4 +1,5 @@
 ﻿using Sushi.MediaKiwi.DAL.Paging;
+using Sushi.MediaKiwi.DAL.Sorting;
 using Sushi.MicroORM;
 
 namespace Sushi.MediaKiwi.DAL.Repository
@@ -12,7 +13,7 @@ namespace Sushi.MediaKiwi.DAL.Repository
         /// Gets all <see cref="View"/> objects for the given filter parameters.
         /// </summary>        
         /// <returns></returns>
-        Task<QueryListResult<View>> GetAllAsync(int? sectionID, PagingValues pagingValues);
+        Task<QueryListResult<View>> GetAllAsync(int? sectionID, PagingValues pagingValues, SortValues<View>? sortValues = null);
 
         /// <summary>
         /// Gets a <see cref="View"/> by id.

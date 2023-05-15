@@ -70,7 +70,7 @@
 
   async function filterChanged(value: TableFilter) {
     // reset paging
-    emit("update:currentPage", 1);
+    emit("update:currentPage", 0);
     // update filters
     emit("update:filters", value);
     // fetch data
@@ -135,7 +135,7 @@
       </v-expand-transition>
     </template>
 
-    <MkTableView
+    <MkTableView 
       ref="mkTableViewComponent"
       :table-map="tableMap"
       :data="apiResult ? apiResult.result : data"

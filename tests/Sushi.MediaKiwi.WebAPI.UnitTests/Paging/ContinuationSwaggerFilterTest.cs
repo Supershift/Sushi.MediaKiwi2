@@ -11,7 +11,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sushi.MediaKiwi.WebAPI.UnitTests
+namespace Sushi.MediaKiwi.WebAPI.UnitTests.Paging
 {
     public class ContinuationSwaggerFilterTest
     {
@@ -21,14 +21,14 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests
             // arrange
             var filter = new ContinuationSwaggerFilter();
 
-            var method = typeof(ContinuationSwaggerFilterTest).GetMethod(nameof(SamplePagingMethod) ,BindingFlags.NonPublic | BindingFlags.Instance);
+            var method = typeof(ContinuationSwaggerFilterTest).GetMethod(nameof(SamplePagingMethod), BindingFlags.NonPublic | BindingFlags.Instance);
 
             var actionDescriptor = new ControllerActionDescriptor();
             actionDescriptor.MethodInfo = method;
 
             var apiDescription = new ApiDescription();
-            apiDescription.ActionDescriptor = actionDescriptor;            
-            
+            apiDescription.ActionDescriptor = actionDescriptor;
+
             var context = new OperationFilterContext(
                 apiDescription,
                 Mock.Of<ISchemaGenerator>(),
@@ -51,7 +51,7 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests
             // arrange
             var filter = new PagingSwaggerFilter();
 
-            var method = typeof(PagingSwaggerFilterTest).GetMethod(nameof(SampleNonPagingMethod), BindingFlags.NonPublic | BindingFlags.Instance);
+            var method = typeof(SortingSwaggerFilterTest).GetMethod(nameof(SampleNonPagingMethod), BindingFlags.NonPublic | BindingFlags.Instance);
 
             var actionDescriptor = new ControllerActionDescriptor();
             actionDescriptor.MethodInfo = method;
@@ -78,7 +78,7 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests
         [QueryStringContinuation]
         private void SamplePagingMethod() { }
 
-        
+
         private void SampleNonPagingMethod() { }
     }
 }

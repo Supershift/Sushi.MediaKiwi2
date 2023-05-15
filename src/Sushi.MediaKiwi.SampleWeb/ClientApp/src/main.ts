@@ -8,7 +8,7 @@ import "@supershift/mediakiwi-vue/dist/mediakiwi-vue.css";
 
 import { getSettings } from "./services/settings";
 import { container } from "tsyringe";
-import { CountryConnector } from "./services/countryConnector";
+import { CountryConnector } from "./services/CountryConnector";
 
 const app = createApp(App);
 

@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using AutoMapper.Extensions.ExpressionMapping;
+using AutoMapper.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Sushi.MediaKiwi.DAL;
@@ -34,7 +36,8 @@ namespace Sushi.MediaKiwi.Services
                 
                 // add our own config
                 c.AddProfile<AutoMapperProfile>();
-                });
+                c.AddExpressionMapping();                
+            });
 
             // add services
             collection.TryAddTransient<SectionService>();
