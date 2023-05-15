@@ -4,7 +4,7 @@
   import type { TableMapItem } from "@/models/table/TableMapItem";
   import MkTableCell from "./MkTableCell.vue";
   import { useMediakiwiStore } from "@/stores/";
-  import type { Sorting, TableMapSortingOptions } from "@/models";
+  import type { Sorting } from "@/models";
   import MkTableCheckbox from "./MkTableCheckbox.vue";
   import { useTableMapItemSelection } from "@/composables/useTableMapItemSelection";
   import { useTableMapItemSorting } from "@/composables/useTableMapItemSorting";
@@ -18,7 +18,7 @@
     /** ExternalId of the view instance to which the user is pushed when clicking a row. */
     itemViewId?: string;
     /** */
-    selectedSortOption?: Sorting;
+    sorting?: Sorting;
     selection?: unknown[];
     /** Make each row in the table selectable. */
     checkbox?: boolean;
@@ -27,7 +27,7 @@
   // define event
   const emit = defineEmits<{
     (e: "click:row", value: any): void;
-    (e: "update:selectedSortOption", value?: Sorting): void;
+    (e: "update:sorting", value?: Sorting): void;
     (e: "update:selection", value?: unknown[]): void;
   }>();
 
@@ -73,13 +73,13 @@
 
   /** Init sorting composable */
   const { setSorting, getSortingClasses, selectedSorting, sortIcon } = useTableMapItemSorting({
-    selectedSortOption: props.selectedSortOption,
+    selectedSortOption: props.sorting,
   });
 
   function onClick(tableMapItem: TableMapItem<unknown>) {
     if (tableMapItem?.sortingOptions) {
       setSorting(tableMapItem.sortingOptions);
-      emit("update:selectedSortOption", selectedSorting.value);
+      emit("update:sorting", selectedSorting.value);
     }
   }
 

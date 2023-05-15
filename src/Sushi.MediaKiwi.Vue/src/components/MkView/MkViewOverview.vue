@@ -7,7 +7,6 @@
   import { container } from "tsyringe";
   import { IViewConnector } from "@/services";
   import { TableFilterType } from "../../models/enum/TableFilterType";
-  import { watch } from "vue";
 
   // inject dependencies
   const viewConnector = container.resolve<IViewConnector>("IViewConnector");
@@ -17,6 +16,7 @@
   const sections = ref(store.sections);
   const data = ref<ListResult<View>>();
   const currentPage = ref(0);
+  const sorting = ref<Sorting | undefined>();
 
   // define mapping
   const tableMap: TableMap<View> = {
@@ -43,34 +43,16 @@
     },
   });
 
-  // create a sorting option object with a default value
-  const selectedSortOption = ref<Sorting>();
-
-  async function getData() {
-    data.value = await viewConnector.GetViews(
-      filters.value.section?.selectedValue?.value,
-      { pageIndex: currentPage.value, pageSize: 10 },
-      selectedSortOption.value
-    );
-  }
-
   // get data
   async function onLoad() {
-    await getData();
+    data.value = await viewConnector.GetViews(filters.value.section?.selectedValue?.value, { pageIndex: currentPage.value, pageSize: 10 }, sorting.value);
   }
-
-  watch(
-    () => selectedSortOption.value,
-    () => {
-      onLoad();
-    }
-  );
 </script>
 <template>
   <mk-table
     v-model:filters="filters"
     v-model:current-page="currentPage"
-    v-model:selected-sort-option="selectedSortOption"
+    v-model:sorting="sorting"
     new
     :api-result="data"
     :on-load="onLoad"

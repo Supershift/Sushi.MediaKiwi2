@@ -17,7 +17,7 @@
     "install:mediakiwi.vue": "cd src/Sushi.MediaKiwi.Vue && npm install --ignore-scripts",
     "install:mediakiwi.sampleWeb.clientapp": "cd src/Sushi.MediaKiwi.SampleWeb/ClientApp && npm install --ignore-scripts",
     "install:mediakiwi.sampleWeb.function": "cd src/Sushi.MediaKiwi.SampleWeb/Function && npm install --ignore-scripts",
-    "start:api": "cd src/Sushi.MediaKiwi.SampleAPI && dotnet build && dotnet watch run"
+    "start:api": "cd src/Sushi.MediaKiwi.SampleAPI && dotnet build && dotnet watch run --launch-profile https"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.4.0",

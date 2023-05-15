@@ -7,7 +7,7 @@ import type { ComputedRef } from "vue";
 /** Return type of the composable */
 interface useTableMapItemSorting {
   setSorting: (sortingOptions: TableMapSortingOptions<unknown>) => void;
-  getSortingClasses: (sortingOptions: TableMapSortingOptions<unknown>) => any;
+  getSortingClasses: (sortingOptions: TableMapSortingOptions<unknown>) => unknown;
   sortIcon: ComputedRef<string>;
   selectedSorting: ComputedRef<Sorting | undefined>;
 }

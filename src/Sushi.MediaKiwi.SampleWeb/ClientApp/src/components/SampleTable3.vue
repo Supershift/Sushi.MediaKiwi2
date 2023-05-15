@@ -97,7 +97,7 @@
 
 <template>
   <MkTable
-    v-model:selected-sort-option="selectedSortOption"
+    v-model:sorting="selectedSortOption"
     v-model:selection="selectedTableRows"
     v-model:filters="filters"
     :table-map="myMap"
