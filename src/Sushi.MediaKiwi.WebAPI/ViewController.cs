@@ -1,20 +1,32 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Sushi.MediaKiwi.DAL.Sorting;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MediaKiwi.WebAPI.Paging;
+using Sushi.MediaKiwi.WebAPI.Sorting;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
     [Route($"{BaseRoute}/views")]
     public class ViewController : MediaKiwiControllerBase
     {
+        public class ViewSortMap : SortMap<View>
+        {
+            public ViewSortMap()
+            {
+                Add(x => x.Name);                
+            }
+        }
+
         private readonly ViewService _viewService;
         private readonly PagingRetriever _pagingRetriever;
+        private readonly SortingRetriever _sortingRetriever;
 
-        public ViewController(ViewService viewService, PagingRetriever pagingRetriever)
+        public ViewController(ViewService viewService, PagingRetriever pagingRetriever, SortingRetriever sortingRetriever)
         {
             _viewService = viewService;
             _pagingRetriever = pagingRetriever;
+            _sortingRetriever = sortingRetriever;
         }
 
         /// <summary>
@@ -30,17 +42,20 @@ namespace Sushi.MediaKiwi.WebAPI
             return this.CreateResponse(result);
         }
 
+        
+
         /// <summary>
         /// Gets all views.
-        /// </summary>
-        /// <param name="sectionID"></param>
+        /// </summary>        
         /// <returns></returns>
         [HttpGet]
         [QueryStringPaging]
+        [QueryStringSorting<ViewSortMap>()]
         public async Task<ActionResult<ListResult<View>>> GetViews([FromQuery] int? sectionID)
         {
             var pagingValues = _pagingRetriever.GetPaging();
-            var result = await _viewService.GetAllAsync(sectionID, pagingValues);
+            var sortValues = _sortingRetriever.GetSorting<View>();
+            var result = await _viewService.GetAllAsync(sectionID, pagingValues, sortValues);
             return this.CreateResponse(result);
         }
 

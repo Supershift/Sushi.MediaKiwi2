@@ -7,6 +7,7 @@ using Sushi.MediaKiwi.SampleAPI;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.WebAPI;
 using Sushi.MediaKiwi.WebAPI.Paging;
+using Sushi.MediaKiwi.WebAPI.Sorting;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -48,6 +49,9 @@ services.AddSwaggerGen(options =>
     // add paging parameters
     options.OperationFilter<PagingSwaggerFilter>();
     options.OperationFilter<ContinuationSwaggerFilter>();
+
+    // add sorting parameters
+    options.OperationFilter<SortingSwaggerFilter>();
 
     // add docs for mediakiw
     options.SwaggerDoc("MediaKiwi", new OpenApiInfo { Title = "MediaKiwi" });

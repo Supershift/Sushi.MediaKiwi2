@@ -1,4 +1,5 @@
 ﻿using Sushi.MediaKiwi.DAL.Paging;
+using Sushi.MediaKiwi.DAL.Sorting;
 using Sushi.MicroORM;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ namespace Sushi.MediaKiwi.DAL.Repository
         }
 
         /// <inheritdoc/>    
-        public async Task<QueryListResult<View>> GetAllAsync(int? sectionID, PagingValues pagingValues)
+        public async Task<QueryListResult<View>> GetAllAsync(int? sectionID, PagingValues pagingValues, SortValues<View>? sortValues = null)
         {
             var query = _connector.CreateQuery();
             if (sectionID.HasValue)
@@ -39,7 +40,15 @@ namespace Sushi.MediaKiwi.DAL.Repository
                 query.Add(x => x.SectionId, sectionID.Value);
             }
 
-            query.AddOrder(x => x.Name);
+            if(sortValues != null)
+            {
+                query.AddOrder(sortValues);
+            }
+            else
+            {
+                query.AddOrder(x => x.Name);
+            }
+            
             query.AddPaging(pagingValues);
 
             var result = await _connector.GetAllAsync(query);
