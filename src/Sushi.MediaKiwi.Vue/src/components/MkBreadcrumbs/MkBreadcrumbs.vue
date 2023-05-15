@@ -3,7 +3,7 @@
   import MkBackButton from "@/components/MkNavigation/MkBackButton.vue";
   import { useDisplay } from "vuetify";
   import { useNavigation } from "@/composables/useNavigation";
-  import type { NavigationItem, BreadcrumbItem } from "@/models";
+  import type { NavigationItem } from "@/models";
 
   // inject dependencies
   const { xs } = useDisplay();
@@ -14,18 +14,10 @@
   // go up the navigation tree starting from the current item
   const breadcrumbs = computed(() => {
     const currentItem = navigation.currentNavigationItem.value;
-    const result: Array<BreadcrumbItem> = [];
+    const result: Array<NavigationItem> = [];
     let candidate: NavigationItem | undefined = currentItem;
     while (candidate) {
-      // Create new BreadcrumbItem and unshift to the result
-      result.unshift({
-        id: candidate.id,
-        href: candidate.path,
-        to: { name: candidate.id.toString() },
-        exact: false,
-        replace: false,
-        text: candidate.name,
-      });
+      result.unshift(candidate);
       candidate = candidate.parent;
     }
     return result;
@@ -52,15 +44,15 @@
           </li>
 
           <v-breadcrumbs-item
-            :to="item.to"
+            :to="{ name: item.id.toString() }"
             :active="isCurrentItem(index)"
             :disabled="isCurrentItem(index)"
             class="text-h4 text-container"
             :class="{ 'text-truncate d-inline-block': !isCurrentItem(index) }"
-            :title="item.text"
+            :title="item.name"
           >
-            <label :title="item.text">
-              {{ item.text }}
+            <label :title="item.name">
+              {{ item.name }}
             </label>
           </v-breadcrumbs-item>
         </template>
