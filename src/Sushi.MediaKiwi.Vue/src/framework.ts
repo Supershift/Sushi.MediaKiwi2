@@ -1,4 +1,4 @@
-import type { App, Component } from "vue";
+import { type App, ref, reactive } from "vue";
 import pinia from "./plugins/pinia";
 import { getDefaultRouterOptions } from "@/router/getDefaultRouterOptions";
 import { createRouter } from "vue-router";
@@ -17,6 +17,14 @@ import { registerRouter } from "./helpers/registerRouter";
 import { addWaitOnRouterManager } from "./router/waitOnRouterManager";
 import { addCheckIsInRole } from "./router/checkIsInRole";
 import { registerAxios } from "./helpers/registerAxios";
+import i18next from "i18next";
+
+const something = {
+  myProperty: "test",
+  changeMyProperty() {
+    this.myProperty = "changed";
+  },
+};
 
 export default {
   install(app: App, options: MediakiwiVueOptions): void {
@@ -28,6 +36,31 @@ export default {
 
     // register axios
     registerAxios(container, options);
+
+    // create i18next
+    i18next.init({
+      lng: "en", // if you're using a language detector, do not define the lng option
+      debug: true,
+      resources: {
+        en: {
+          translation: {
+            save: "save",
+            undo: "undo",
+            delete: "delete",
+          },
+        },
+        nl: {
+          translation: {
+            save: "opslaan",
+            undo: "ongedaan maken",
+            delete: "verwijderen",
+          },
+        },
+      },
+    });
+
+    app.provide("i18next", reactive(i18next));
+    app.provide("somethingReactive", reactive(something));
 
     // create vuetify
     let vuetifyOptions: VuetifyOptions;
