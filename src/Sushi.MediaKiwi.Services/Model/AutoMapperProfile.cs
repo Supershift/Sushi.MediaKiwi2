@@ -26,7 +26,8 @@ namespace Sushi.MediaKiwi.Services.Model
             // from model to DAL
             CreateMap<Section, DAL.Section>().ForMember(x => x.Id, o => o.Ignore());
             CreateMap<View, DAL.View>().ForMember(x => x.Id, o => o.Ignore());
-            CreateMap<NavigationItem, DAL.NavigationItem>().ForMember(x => x.Id, o => o.Ignore());
+            CreateMap<NavigationItem, DAL.NavigationItem>().ForMember(x => x.Id, o => o.Ignore());            
+            
         }
     }
 }

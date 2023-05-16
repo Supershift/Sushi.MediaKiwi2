@@ -1,11 +1,9 @@
 <script setup lang="ts">
   import { computed } from "vue";
   import MkBackButton from "@/components/MkNavigation/MkBackButton.vue";
-  import MkBreadcrumbsItem from "./MkBreadcrumbsItem.vue";
   import { useDisplay } from "vuetify";
   import { useNavigation } from "@/composables/useNavigation";
-  import { NavigationItem } from "@/models";
-  import { useSlots } from "vue";
+  import type { NavigationItem } from "@/models";
 
   // inject dependencies
   const { xs } = useDisplay();
@@ -24,35 +22,65 @@
     }
     return result;
   });
+
+  /** Return if the item is the last in the collection */
+  function isCurrentItem(index: number): boolean {
+    return index === breadcrumbs.value.length - 1;
+  }
 </script>
 <template>
   <v-card v-if="breadcrumbs?.length" class="ml-0">
     <div v-if="showBackButton" class="breadcrumb-title-container">
       <mk-back-button class="mr-5" />
-      <div class="text-h4 d-inline-block">
+      <div class="v-breadcrumbs-item text-h4 d-inline-block text-truncate">
         {{ navigation.currentNavigationItem.value?.name }}
       </div>
     </div>
     <div v-else>
-      <v-breadcrumbs class="breadcrumbs-list-container px-0" :items="breadcrumbs">
-        <template #title="item">
-          <mk-breadcrumbs-item :item="item.item" :breadcrumbs="breadcrumbs" />
-        </template>
-        <template #divider>
-          <v-icon icon="mdi-chevron-right"></v-icon>
+      <v-breadcrumbs class="breadcrumbs-list-container px-0">
+        <template v-for="(item, index) in breadcrumbs" :key="item.id">
+          <li v-if="index" class="v-breadcrumbs-divider">
+            <v-icon icon="mdi-chevron-right" />
+          </li>
+
+          <v-breadcrumbs-item
+            :to="{ name: item.id.toString() }"
+            :active="isCurrentItem(index)"
+            :disabled="isCurrentItem(index)"
+            class="text-h4 text-container"
+            :class="{ 'text-truncate d-inline-block': !isCurrentItem(index) }"
+            :title="item.name"
+          >
+            <label :title="item.name">
+              {{ item.name }}
+            </label>
+          </v-breadcrumbs-item>
         </template>
       </v-breadcrumbs>
     </div>
   </v-card>
 </template>
-<style lang="scss">
+<style lang="scss" scoped>
   .breadcrumb-title-container {
     display: flex;
     align-items: center;
   }
-  .breadcrumbs-list-container {
+
+  .v-breadcrumbs-divider {
     .v-icon {
       font-size: 2.5em;
+    }
+  }
+
+  .v-breadcrumbs-item {
+    white-space: nowrap;
+
+    label {
+      cursor: inherit;
+    }
+
+    &:only-child {
+      opacity: 1;
     }
   }
 </style>
