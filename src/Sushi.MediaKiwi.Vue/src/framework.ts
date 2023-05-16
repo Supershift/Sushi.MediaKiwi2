@@ -1,4 +1,4 @@
-import { type App, ref, reactive } from "vue";
+import { type App } from "vue";
 import pinia from "./plugins/pinia";
 import { getDefaultRouterOptions } from "@/router/getDefaultRouterOptions";
 import { createRouter } from "vue-router";
