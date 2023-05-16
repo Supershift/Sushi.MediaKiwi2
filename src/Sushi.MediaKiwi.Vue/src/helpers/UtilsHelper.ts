@@ -10,7 +10,7 @@ export function nameof<Type>(func: (entity: Type) => string | number | boolean |
     const fnStr = func.toString();
     // "x => x.prop"
     if (fnStr.includes("=>")) {
-      return fnStr.substring(fnStr.indexOf(".") + 1);
+      return fnStr.substring(fnStr.lastIndexOf(".") + 1);
     }
   } catch (err) {
     console.error("Invalid nameof operation", err);
