@@ -18,6 +18,8 @@ import { addWaitOnRouterManager } from "./router/waitOnRouterManager";
 import { addCheckIsInRole } from "./router/checkIsInRole";
 import { registerAxios } from "./helpers/registerAxios";
 import i18next from "./plugins/i18next";
+import en from "./locales/en/common.json";
+import nl from "./locales/nl/common.json";
 
 export default {
   install(app: App, options: MediakiwiVueOptions): void {
@@ -38,18 +40,10 @@ export default {
       debug: true,
       resources: {
         en: {
-          common: {
-            save: "save",
-            undo: "undo",
-            delete: "delete",
-          },
+          common: en,
         },
         nl: {
-          common: {
-            save: "opslaan",
-            undo: "ongedaan maken",
-            delete: "verwijderen",
-          },
+          common: nl,
         },
       },
     });
