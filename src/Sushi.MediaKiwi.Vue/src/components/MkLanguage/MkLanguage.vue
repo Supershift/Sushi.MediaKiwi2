@@ -1,28 +1,19 @@
 <script setup lang="ts">
-  import { Ref, ref, watch } from "vue";
-  import { inject } from "vue";
-  import { type i18n } from "i18next";
+  import { useI18next } from "@/composables/useI18next";
+  import { ref } from "vue";
 
   // inject dependencies
-  const i18next = inject<i18n>("i18next")!;
+  const { i18next } = useI18next();
 
+  // define values
   const languages = ref(["en", "nl"]);
-  //const currentLanguage = ref(i18next.resolvedLanguage);
-  //   watch(currentLanguage, async (newValue) => {
-  //     //await i18next.changeLanguage(newValue);
-  //     //console.log(i18next.resolvedLanguage);
-  //   });
 
-  const something = inject<any>("somethingReactive")!;
-
-  async function changeLang() {
-    await i18next.changeLanguage("nl");
-    console.log(i18next.resolvedLanguage);
+  // define events
+  async function changeLanguage(value: string) {
+    await i18next.value.changeLanguage(value);
   }
 </script>
 
 <template>
-  <v-btn @click="changeLang">Change</v-btn>
-  {{ i18next.resolvedLanguage }}
-  {{ something.myProperty }}
+  <v-select :model-value="i18next.resolvedLanguage" :items="languages" @update:model-value="changeLanguage"></v-select>
 </template>

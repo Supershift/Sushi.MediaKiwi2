@@ -1,6 +1,5 @@
 <script setup lang="ts">
-  import { Ref, inject } from "vue";
-  import { type i18n } from "i18next";
+  import { useI18next } from "@/composables/useI18next";
 
   // define properties and events
   const props = defineProps<{
@@ -12,9 +11,7 @@
   defineEmits(["save", "undo", "delete"]);
 
   // inject dependencies
-  const i18next = inject<i18n>("i18next")!;
-
-  const t = i18next.t;
+  const { i18next, t } = useI18next();
 </script>
 
 <template>

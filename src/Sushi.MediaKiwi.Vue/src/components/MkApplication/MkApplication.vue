@@ -3,27 +3,22 @@
   import { useIsAuthenticated } from "@/composables/useIsAuthenticated";
   import { useSnackbarStore } from "@/stores/snackbar";
   import MkLanguage from "../MkLanguage/MkLanguage.vue";
+  import { Ref, inject } from "vue";
+  import { useI18next } from "@/composables/useI18next";
+
+  // inject dependencies
   const isAuthenticated = useIsAuthenticated();
 
   const snackbar = useSnackbarStore();
 
-  import { Ref, ref, watch } from "vue";
-  import { inject } from "vue";
-  import { type i18n } from "i18next";
-
-  // inject dependencies
-  const i18next = inject<i18n>("i18next")!;
-
-  const something = inject<any>("somethingReactive")!;
+  const { i18next } = useI18next();
 </script>
 <template>
-  <v-card :key="i18next.resolvedLanguage">
+  <v-card>
     <v-layout :full-height="true" class="mk-layout">
       <v-app-bar v-if="isAuthenticated">
         <mk-navigation-icon />
         <v-toolbar-title>MediaKiwi 2.0</v-toolbar-title>
-        {{ i18next.resolvedLanguage }}
-        {{ something.myProperty }}
         <mk-language></mk-language>
         <mk-theme-toggle></mk-theme-toggle>
         <mk-avatar></mk-avatar>

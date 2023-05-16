@@ -17,14 +17,7 @@ import { registerRouter } from "./helpers/registerRouter";
 import { addWaitOnRouterManager } from "./router/waitOnRouterManager";
 import { addCheckIsInRole } from "./router/checkIsInRole";
 import { registerAxios } from "./helpers/registerAxios";
-import i18next from "i18next";
-
-const something = {
-  myProperty: "test",
-  changeMyProperty() {
-    this.myProperty = "changed";
-  },
-};
+import i18next from "./plugins/i18next";
 
 export default {
   install(app: App, options: MediakiwiVueOptions): void {
@@ -37,20 +30,22 @@ export default {
     // register axios
     registerAxios(container, options);
 
-    // create i18next
-    i18next.init({
+    // add i18n
+    app.use(i18next, {
       lng: "en", // if you're using a language detector, do not define the lng option
+      ns: ["common"],
+      defaultNS: "common",
       debug: true,
       resources: {
         en: {
-          translation: {
+          common: {
             save: "save",
             undo: "undo",
             delete: "delete",
           },
         },
         nl: {
-          translation: {
+          common: {
             save: "opslaan",
             undo: "ongedaan maken",
             delete: "verwijderen",
@@ -58,9 +53,6 @@ export default {
         },
       },
     });
-
-    app.provide("i18next", reactive(i18next));
-    app.provide("somethingReactive", reactive(something));
 
     // create vuetify
     let vuetifyOptions: VuetifyOptions;
