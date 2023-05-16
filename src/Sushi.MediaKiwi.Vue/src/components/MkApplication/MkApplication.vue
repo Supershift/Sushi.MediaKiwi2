@@ -1,17 +1,12 @@
 <script setup lang="ts">
-  import { MkNavigation, MkScreen, MkNavigationIcon, MkSignOutButton, MkThemeToggle, MkAvatar, MkSuspense } from "@/components";
+  import { MkNavigation, MkScreen, MkNavigationIcon, MkSignOutButton, MkThemeToggle, MkAvatar, MkSuspense, MkLanguageSwitch } from "@/components";
   import { useIsAuthenticated } from "@/composables/useIsAuthenticated";
   import { useSnackbarStore } from "@/stores/snackbar";
-  import MkLanguage from "../MkLanguage/MkLanguage.vue";
-  import { Ref, inject } from "vue";
   import { useI18next } from "@/composables/useI18next";
 
   // inject dependencies
   const isAuthenticated = useIsAuthenticated();
-
   const snackbar = useSnackbarStore();
-
-  const { i18next } = useI18next();
 </script>
 <template>
   <v-card>
@@ -19,7 +14,7 @@
       <v-app-bar v-if="isAuthenticated">
         <mk-navigation-icon />
         <v-toolbar-title>MediaKiwi 2.0</v-toolbar-title>
-        <mk-language></mk-language>
+        <mk-language-switch></mk-language-switch>
         <mk-theme-toggle></mk-theme-toggle>
         <mk-avatar></mk-avatar>
         <mk-sign-out-button></mk-sign-out-button>
