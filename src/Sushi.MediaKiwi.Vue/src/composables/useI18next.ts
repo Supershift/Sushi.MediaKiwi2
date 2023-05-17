@@ -1,4 +1,3 @@
-import i18next from "@/plugins/i18next";
 import { InitOptions, i18n } from "i18next";
 import { ref, Ref, computed, inject, triggerRef, onUnmounted } from "vue";
 

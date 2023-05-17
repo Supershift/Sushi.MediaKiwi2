@@ -10,6 +10,7 @@
   import { IListResult, IPagingResult } from "@/models";
   import { useSnackbarStore } from "@/stores/snackbar";
   import { onMounted } from "vue";
+  import { useI18next } from "@/composables/useI18next";
 
   // define properties
   const props = defineProps<{
@@ -50,14 +51,15 @@
     (e: "update:currentPage", value: number): void;
   }>();
 
-  // define reactive variables
-  const inProgress = ref(false);
-  const mkTableViewComponent = ref();
-
   // inject dependencies
   const store = useMediakiwiStore();
   const navigation = useNavigation();
   const snackbar = useSnackbarStore();
+  const { t } = useI18next();
+
+  // define reactive variables
+  const inProgress = ref(false);
+  const mkTableViewComponent = ref();
 
   // event listeners
   onMounted(async () => {
@@ -131,7 +133,7 @@
       <MkTableFilter :model-value="filters" @update:model-value="filterChanged"> </MkTableFilter>
     </template>
 
-    <v-btn v-if="props.new && props.itemViewId" @click="onNewClick">New</v-btn>
+    <v-btn v-if="props.new && props.itemViewId" @click="onNewClick">{{ t("New item") }}</v-btn>
 
     <template v-if="checkbox">
       <v-expand-transition>

@@ -17,8 +17,8 @@
 <template>
   <v-toolbar>
     <slot></slot>
-    <v-btn v-if="undo" :disabled="props.disabled" @click="$emit('undo', $event)">{{ t("undo") }}</v-btn>
-    <v-btn v-if="save" :disabled="props.disabled" @click="$emit('save', $event)">{{ t("save") }}</v-btn>
+    <v-btn v-if="undo" :disabled="props.disabled" @click="$emit('undo', $event)">{{ t("Undo") }}</v-btn>
+    <v-btn v-if="save" :disabled="props.disabled" @click="$emit('save', $event)">{{ t("Save") }}</v-btn>
 
     <v-btn v-if="props.delete" icon color="primary">
       <v-icon>mdi-dots-vertical</v-icon>
@@ -27,7 +27,7 @@
         <v-list :disabled="props.disabled">
           <v-list-item>
             <v-list-item-title>
-              <v-btn v-if="props.delete" @click="$emit('delete', $event)">{{ t("delete") }}</v-btn>
+              <v-btn v-if="props.delete" @click="$emit('delete', $event)">{{ t("Delete") }}</v-btn>
             </v-list-item-title>
           </v-list-item>
         </v-list>
