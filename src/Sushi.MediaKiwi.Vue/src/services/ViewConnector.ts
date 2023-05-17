@@ -1,4 +1,4 @@
-import type { View } from "@/models";
+import type { Sorting, View } from "@/models";
 import { injectable, inject } from "tsyringe";
 import type ListResult from "@/models/api/ListResult";
 import { IViewConnector } from "./IViewConnector";
@@ -18,11 +18,12 @@ export class ViewConnector implements IViewConnector {
     await this.axios.delete(`/views/${id}`);
   }
 
-  async GetViews(sectionId?: number, paging?: Paging): Promise<ListResult<View>> {
+  async GetViews(sectionId?: number, paging?: Paging, sorting?: Sorting): Promise<ListResult<View>> {
     // build querystring params
     const query = {
       sectionId: sectionId,
       ...paging,
+      ...sorting,
     };
     const response = await this.axios.get<ListResult<View>>("/views", { params: query });
     return response.data;
