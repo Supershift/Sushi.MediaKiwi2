@@ -129,11 +129,13 @@
   <v-card>
     <v-progress-linear v-if="inProgress" indeterminate absolute></v-progress-linear>
     <slot name="header"></slot>
-    <template v-if="filters">
-      <MkTableFilter :model-value="filters" @update:model-value="filterChanged"> </MkTableFilter>
+    <template v-if="filters || (props.new && props.itemViewId)">
+      <MkTableFilter :model-value="filters" @update:model-value="filterChanged">
+        <template #actions>
+          <v-btn v-if="props.new && props.itemViewId" prepend-icon="mdi-plus" @click="onNewClick">{{ t("New item") }}</v-btn>
+        </template>
+      </MkTableFilter>
     </template>
-
-    <v-btn v-if="props.new && props.itemViewId" @click="onNewClick">{{ t("New item") }}</v-btn>
 
     <template v-if="checkbox">
       <v-expand-transition>

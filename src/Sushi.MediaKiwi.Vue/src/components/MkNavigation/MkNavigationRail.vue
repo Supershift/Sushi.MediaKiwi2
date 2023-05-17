@@ -16,7 +16,7 @@
   }
 </script>
 <template>
-  <v-navigation-drawer rail :rail-width="72" permanent>
+  <v-navigation-drawer rail :rail-width="80" permanent>
     <v-list density="compact" open-strategy="list" nav>
       <v-list-item
         :active="item.id == navigation.currentNavigationItem.value?.sectionId"
