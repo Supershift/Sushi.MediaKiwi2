@@ -20,7 +20,6 @@
           return {
             value: dataItem.countryCode === "NL" ? "mdi-help-box" : "mdi-help-circle",
             tooltip: `Dynamische tooltip voor regel: ${dataItem.id} - ${dataItem.name} `,
-            position: IconPosition.behind,
           };
         },
       },
