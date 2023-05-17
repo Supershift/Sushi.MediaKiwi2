@@ -1,35 +1,35 @@
-import { InitOptions, i18n } from "i18next";
-import { ref, Ref, computed, inject, triggerRef, onUnmounted } from "vue";
+import { i18n } from "i18next";
+import { Ref, computed, inject } from "vue";
 
-export function useI18next(options?: InitOptions, sync?: boolean) {
+/**
+ * Adds i18next to the component.
+ * @param namespace If provided, the t function will be scoped to this namespace.
+ * @returns
+ */
+export function useI18next(namespace?: string) {
   // get global i18next from app
-  const globalI18next = inject<Ref<i18n>>("i18next");
+  const i18next = inject<Ref<i18n>>("i18next");
 
-  if (!globalI18next) {
+  if (!i18next) {
     throw new Error("i18next is not provided, install the plugin first");
   }
 
-  // create local i18next instance if options are provided
-  let localI18next = globalI18next;
-  if (options) {
-    localI18next = ref(globalI18next.value.cloneInstance({ lng: globalI18next.value.resolvedLanguage, ...options }));
-    if (sync) {
-      // sync local i18next instance with global instance
-      const syncLanguage = (lng: string) => {
-        localI18next.value.changeLanguage(lng);
-        triggerRef(localI18next);
-      };
-      globalI18next.value.on("languageChanged", syncLanguage);
-
-      // unsubscribe language sync on unmount
-      onUnmounted(() => {
-        globalI18next.value.off("languageChanged", syncLanguage);
-      });
+  // provide reactive t function for provided namespace
+  const t = computed(() => {
+    if (namespace) {
+      return i18next.value.getFixedT(null, namespace);
+    } else {
+      return i18next.value.t;
     }
-  }
+  });
 
-  // provide reactive t function
-  const t = computed(() => localI18next!.value.t);
+  const defaultT = computed(() => i18next.value.t);
 
-  return { i18next: localI18next, t };
+  return {
+    i18next,
+    /** T function scoped to the namespace provided when adding composable. If non provided, scoped to default. */
+    t,
+    /** T function scoped to the default namespace */
+    defaultT,
+  };
 }

@@ -1,17 +1,17 @@
 <script setup lang="ts">
-  import MkSignIn from "@/components/MkIdentity/MkSignIn.vue";
+  import { MkSignIn, MkLanguageSwitch } from "@/components";
   import { useIsAuthenticated } from "@/composables/useIsAuthenticated";
   import { useNavigation } from "@/composables/useNavigation";
-  import { watch } from "vue";
   import { useMsal } from "@/composables/useMsal";
   import { container } from "tsyringe";
   import { RouterManager } from "@/router/routerManager";
+  import { useI18next } from "@/composables/useI18next";
 
   // inject dependencies
   const isAuthenticated = useIsAuthenticated();
   const { instance } = useMsal();
   const routerManager = container.resolve<RouterManager>("RouterManager");
-
+  const { t } = useI18next("MkSignIn");
   // we could be coming back from an authentication redirect, so wait for authentication to complete
   await instance.handleRedirectPromise();
 
@@ -24,6 +24,14 @@
     navigation.navigateToHome();
   }
 </script>
-<template>
-  <MkSignIn v-if="!isAuthenticated"></MkSignIn>
+<template v-if="!isAuthenticated">
+  <MkLanguageSwitch></MkLanguageSwitch>
+  <MkSignIn>
+    <template #main>
+      {{ t("Main") }}
+    </template>
+    <template #footer>
+      {{ t("Footer") }}
+    </template>
+  </MkSignIn>
 </template>

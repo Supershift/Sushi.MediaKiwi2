@@ -41,9 +41,17 @@ export default {
       resources: {
         en: {
           common: en,
+          MkSignIn: {
+            Main: "Log in to continue:",
+            Footer: "Can't login? Contact your administrator.",
+          },
         },
         nl: {
           common: nl,
+          MkSignIn: {
+            Main: "Log in om door te gaan:",
+            Footer: "Problemen met inloggen? Neem contact op met uw beheerder.",
+          },
         },
       },
     });
