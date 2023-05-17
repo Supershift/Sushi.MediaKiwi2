@@ -34,3 +34,19 @@
     </v-list>
   </v-navigation-drawer>
 </template>
+
+<!-- Vuetify rail does not support text beneath the icon, therefore custom css is required -->
+<style scoped lang="scss">
+  .v-list-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    &__prepend {
+      > .v-icon {
+        margin-inline-end: unset;
+      }
+    }
+  }
+</style>
