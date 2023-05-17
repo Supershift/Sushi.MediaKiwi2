@@ -153,19 +153,38 @@
       :sorting="sorting"
       :selection="selection"
       :checkbox="checkbox"
+      class="mk-table"
       @click:row="(e) => emit('click:row', e)"
       @update:sorting="sortingChanged"
       @update:selection="(e) => emit('update:selection', e)"
     >
       <template #footer>
-        <v-pagination
-          v-if="currentPage !== undefined"
-          :model-value="currentPage + 1"
-          :length="apiResult ? apiResult.pageCount : paging?.pageCount"
-          @update:model-value="pageChanged"
-        ></v-pagination>
+        <tr>
+          <td :colspan="tableMap.items.length" justify="end">
+            <v-pagination
+              v-if="currentPage !== undefined"
+              :model-value="currentPage + 1"
+              :length="apiResult ? apiResult.pageCount : paging?.pageCount"
+              @update:model-value="pageChanged"
+            ></v-pagination>
+          </td>
+        </tr>
       </template>
     </MkTableView>
     <slot name="footer"></slot>
   </v-card>
 </template>
+
+<!-- Can't set any positioning on pagination element, so added custom css -->
+<style lang="scss">
+  .mk-table {
+    .v-pagination {
+      .v-pagination__list {
+        display: flex;
+        flex-flow: row;
+        justify-content: flex-end;
+        width: auto;
+      }
+    }
+  }
+</style>
