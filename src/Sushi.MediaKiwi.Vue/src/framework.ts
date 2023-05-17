@@ -1,4 +1,4 @@
-import type { App, Component } from "vue";
+import { type App } from "vue";
 import pinia from "./plugins/pinia";
 import { getDefaultRouterOptions } from "@/router/getDefaultRouterOptions";
 import { createRouter } from "vue-router";
@@ -17,6 +17,7 @@ import { registerRouter } from "./helpers/registerRouter";
 import { addWaitOnRouterManager } from "./router/waitOnRouterManager";
 import { addCheckIsInRole } from "./router/checkIsInRole";
 import { registerAxios } from "./helpers/registerAxios";
+import i18next from "./plugins/i18next";
 
 export default {
   install(app: App, options: MediakiwiVueOptions): void {
@@ -28,6 +29,30 @@ export default {
 
     // register axios
     registerAxios(container, options);
+
+    // add i18n
+    app.use(i18next, {
+      lng: "en", // if you're using a language detector, do not define the lng option
+      ns: ["common"],
+      defaultNS: "common",
+      debug: true,
+      resources: {
+        en: {
+          common: {
+            save: "save",
+            undo: "undo",
+            delete: "delete",
+          },
+        },
+        nl: {
+          common: {
+            save: "opslaan",
+            undo: "ongedaan maken",
+            delete: "verwijderen",
+          },
+        },
+      },
+    });
 
     // create vuetify
     let vuetifyOptions: VuetifyOptions;
