@@ -1,5 +1,6 @@
 <script setup lang="ts">
-  import type { TableMap, TableSortingValue, TableFilter } from "@/models/table";
+  import type { TableMap, TableFilter } from "@/models/table";
+  import type { Sorting } from "@/models/api";
   import { ref } from "vue";
   import MkTableFilter from "@/components/MkTableFilter/MkTableFilter.vue";
   import MkTableView from "./MkTableView.vue";
@@ -27,7 +28,7 @@
     /** ExternalId of the view instance to which the user is pushed when clicking a row. */
     itemViewId?: string;
     /** */
-    selectedSortOption?: TableSortingValue;
+    sorting?: Sorting;
     /** */
     selection?: unknown[];
     /** Displays new item button if set to true and itemViewId has a value */
@@ -44,7 +45,7 @@
   const emit = defineEmits<{
     (e: "update:filters", value: TableFilter): void;
     (e: "click:row", value: unknown): void;
-    (e: "update:selectedSortOption", value?: TableSortingValue): void;
+    (e: "update:sorting", value?: Sorting): void;
     (e: "update:selection", value?: unknown[]): void;
     (e: "update:currentPage", value: number): void;
   }>();
@@ -73,6 +74,13 @@
     emit("update:currentPage", 0);
     // update filters
     emit("update:filters", value);
+    // fetch data
+    await loadData();
+  }
+
+  async function sortingChanged(value?: Sorting) {
+    // update sorting
+    emit("update:sorting", value);
     // fetch data
     await loadData();
   }
@@ -135,20 +143,25 @@
       </v-expand-transition>
     </template>
 
-    <MkTableView 
+    <MkTableView
       ref="mkTableViewComponent"
       :table-map="tableMap"
       :data="apiResult ? apiResult.result : data"
       :item-view-id="itemViewId"
-      :selected-sort-option="selectedSortOption"
+      :sorting="sorting"
       :selection="selection"
       :checkbox="checkbox"
       @click:row="(e) => emit('click:row', e)"
-      @update:selected-sort-option="(e) => emit('update:selectedSortOption', e)"
+      @update:sorting="sortingChanged"
       @update:selection="(e) => emit('update:selection', e)"
     >
       <template #footer>
-        <v-pagination v-if="currentPage !== undefined" :model-value="currentPage + 1" :length="apiResult ? apiResult.pageCount : paging?.pageCount" @update:model-value="pageChanged"></v-pagination>
+        <v-pagination
+          v-if="currentPage !== undefined"
+          :model-value="currentPage + 1"
+          :length="apiResult ? apiResult.pageCount : paging?.pageCount"
+          @update:model-value="pageChanged"
+        ></v-pagination>
       </template>
     </MkTableView>
     <slot name="footer"></slot>
