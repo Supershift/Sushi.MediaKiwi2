@@ -3,7 +3,5 @@ export type { TableFilterItem } from "./TableFilterItem";
 export type { TableFilterValue } from "./TableFilterValue";
 export type { TableMap } from "./TableMap";
 export type { TableMapItem } from "./TableMapItem";
-export type { TableSortingValue } from "./TableSortingValue";
-export { TableSortingDirection } from "./TableSortingDirection";
 export type { TableMapSortingOptions } from "./TableMapSortingOptions";
 export type { TableMapItemIconOptions } from "./TableMapItemIconOptions";

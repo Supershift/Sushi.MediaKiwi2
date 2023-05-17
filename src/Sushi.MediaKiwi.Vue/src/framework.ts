@@ -20,6 +20,7 @@ import { registerAxios } from "./helpers/registerAxios";
 import i18next from "./plugins/i18next";
 import en from "./locales/en/common.json";
 import nl from "./locales/nl/common.json";
+import LanguageDetector from "i18next-browser-languagedetector";
 
 export default {
   install(app: App, options: MediakiwiVueOptions): void {
@@ -33,28 +34,32 @@ export default {
     registerAxios(container, options);
 
     // add i18n
-    app.use(i18next, {
-      lng: "en", // if you're using a language detector, do not define the lng option
-      ns: ["common"],
-      defaultNS: "common",
-      debug: true,
-      resources: {
-        en: {
-          common: en,
-          MkSignIn: {
-            Main: "Log in to continue:",
-            Footer: "Can't login? Contact your administrator.",
+    app.use(
+      i18next,
+      {
+        fallbackLng: "en",
+        ns: ["common"],
+        defaultNS: "common",
+        debug: true,
+        resources: {
+          en: {
+            common: en,
+            MkSignIn: {
+              Main: "Log in to continue:",
+              Footer: "Can't login? Contact your administrator.",
+            },
           },
-        },
-        nl: {
-          common: nl,
-          MkSignIn: {
-            Main: "Log in om door te gaan:",
-            Footer: "Problemen met inloggen? Neem contact op met uw beheerder.",
+          nl: {
+            common: nl,
+            MkSignIn: {
+              Main: "Log in om door te gaan:",
+              Footer: "Problemen met inloggen? Neem contact op met uw beheerder.",
+            },
           },
         },
       },
-    });
+      (instance) => instance.use(LanguageDetector)
+    );
 
     // create vuetify
     let vuetifyOptions: VuetifyOptions;

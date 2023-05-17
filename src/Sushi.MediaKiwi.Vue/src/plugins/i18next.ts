@@ -1,10 +1,13 @@
-import { InitOptions, createInstance } from "i18next";
+import { InitOptions, createInstance, type i18n } from "i18next";
 import { App, ref, triggerRef } from "vue";
 
 export default {
-  install: (app: App, options?: InitOptions) => {
+  install: (app: App, options?: InitOptions, callback?: (instance: i18n) => void) => {
     // create i18next
     const i18n = createInstance(options);
+
+    // call callback if provided
+    if (callback) callback(i18n);
 
     // init instance and make a ref to it
     i18n.init();
