@@ -1,18 +1,13 @@
 <script setup lang="ts">
   import { useMsal } from "@/composables/useMsal";
   import { identity } from "@/identity";
-  import { useIsAuthenticated } from "@/composables/useIsAuthenticated";
 
+  // inject dependencies
   const { instance } = useMsal();
 
-  const useRedirect = true;
-
   function login() {
-    if (useRedirect) instance.loginRedirect({ scopes: identity.scopes });
-    else instance.loginPopup({ scopes: identity.scopes });
+    instance.loginRedirect({ scopes: identity.scopes });
   }
-
-  const isAuthenticated = useIsAuthenticated();
 </script>
 <template>
   <v-container>
@@ -21,11 +16,15 @@
         <v-card variant="tonal" class="pa-5 text-center">
           <v-card-title tag="h1">MediaKiwi 2.0</v-card-title>
           <v-divider class="mt-5 mb-5 mx-5" />
-          <v-card-text>Log in to continue:</v-card-text>
+          <v-card-text>
+            <slot name="main"></slot>
+          </v-card-text>
           <v-card-actions>
             <v-btn size="x-large" prepend-icon="mdi-microsoft-azure" variant="flat" width="100%" @click="login">Azure Active Directory</v-btn>
           </v-card-actions>
-          <v-card-text>Can't login? Contact your External Authenticator Provider administrator.</v-card-text>
+          <v-card-text>
+            <slot name="footer"></slot>
+          </v-card-text>
         </v-card>
       </v-col>
     </v-row>
