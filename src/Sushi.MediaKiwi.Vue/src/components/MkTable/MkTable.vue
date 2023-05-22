@@ -129,11 +129,13 @@
   <v-card>
     <v-progress-linear v-if="inProgress" indeterminate absolute></v-progress-linear>
     <slot name="header"></slot>
-    <template v-if="filters">
-      <MkTableFilter :model-value="filters" @update:model-value="filterChanged"> </MkTableFilter>
+    <template v-if="filters || (props.new && props.itemViewId)">
+      <MkTableFilter :model-value="filters" @update:model-value="filterChanged">
+        <template #actions>
+          <v-btn v-if="props.new && props.itemViewId" prepend-icon="mdi-plus" @click="onNewClick">{{ t("New item") }}</v-btn>
+        </template>
+      </MkTableFilter>
     </template>
-
-    <v-btn v-if="props.new && props.itemViewId" @click="onNewClick">{{ t("New item") }}</v-btn>
 
     <template v-if="checkbox">
       <v-expand-transition>
@@ -153,19 +155,38 @@
       :sorting="sorting"
       :selection="selection"
       :checkbox="checkbox"
+      class="mk-table"
       @click:row="(e) => emit('click:row', e)"
       @update:sorting="sortingChanged"
       @update:selection="(e) => emit('update:selection', e)"
     >
       <template #footer>
-        <v-pagination
-          v-if="currentPage !== undefined"
-          :model-value="currentPage + 1"
-          :length="apiResult ? apiResult.pageCount : paging?.pageCount"
-          @update:model-value="pageChanged"
-        ></v-pagination>
+        <tr>
+          <td :colspan="tableMap.items.length" justify="end">
+            <v-pagination
+              v-if="currentPage !== undefined"
+              :model-value="currentPage + 1"
+              :length="apiResult ? apiResult.pageCount : paging?.pageCount"
+              @update:model-value="pageChanged"
+            ></v-pagination>
+          </td>
+        </tr>
       </template>
     </MkTableView>
     <slot name="footer"></slot>
   </v-card>
 </template>
+
+<!-- Can't set any positioning on pagination element, so added custom css -->
+<style lang="scss">
+  .mk-table {
+    .v-pagination {
+      .v-pagination__list {
+        display: flex;
+        flex-flow: row;
+        justify-content: flex-end;
+        width: auto;
+      }
+    }
+  }
+</style>

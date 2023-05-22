@@ -4,7 +4,7 @@
 
 <template>
   <v-main style="min-height: 300px">
-    <v-container>
+    <div class="pa-10">
       <mk-breadcrumbs />
       <router-view v-slot="{ Component }">
         <suspense timeout="0">
@@ -18,6 +18,6 @@
           </template>
         </suspense>
       </router-view>
-    </v-container>
+    </div>
   </v-main>
 </template>

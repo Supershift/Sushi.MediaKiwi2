@@ -15,5 +15,5 @@
 </script>
 
 <template>
-  <v-select :model-value="i18next.resolvedLanguage" :items="languages" @update:model-value="changeLanguage"></v-select>
+  <v-select label="Language" :model-value="i18next.resolvedLanguage" :items="languages" @update:model-value="changeLanguage"></v-select>
 </template>
