@@ -9,6 +9,7 @@ import "@supershift/mediakiwi-vue/dist/mediakiwi-vue.css";
 import { getSettings } from "./services/settings";
 import { container } from "tsyringe";
 import { CountryConnector } from "./services/CountryConnector";
+import { i18n } from "i18next";
 
 const app = createApp(App);
 
@@ -30,6 +31,24 @@ if (!settings) {
 
 // import all views as models
 settings.mediaKiwi.modules = import.meta.glob("./views/**/*.vue");
+
+// i18next options
+settings.mediaKiwi.i18nextOptions = {
+  debug: true,
+};
+settings.mediaKiwi.i18nextCallback = (instance: i18n) => {
+  // below will be replaced with a method to load translations from a backend
+  if (instance.options.resources) {
+    instance.options.resources.en.Home = {
+      Header: "Home page",
+      Main: "Welcome to MediaKiwi 2.0!",
+    };
+    instance.options.resources.nl.Home = {
+      Header: "Landings pagina",
+      Main: "Welkom bij MediaKiwi 2.0!",
+    };
+  }
+};
 
 // install mediakiwi
 app.use(mediakiwi, settings.mediaKiwi);

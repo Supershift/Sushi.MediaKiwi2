@@ -1,20 +1,15 @@
-<script lang="ts">
-  import { defineComponent } from "vue";
+<script setup lang="ts">
+  import { useI18next } from "@supershift/mediakiwi-vue";
 
-  // import SampleTable2 from './samples/SampleTable2.vue';
-  export default defineComponent({
-    name: "Home",
-    setup() {
-      return {};
-    },
-  });
+  // inject dependecies
+  const { t } = useI18next("Home");
 </script>
 
 <template>
   <v-lazy :options="{ threshold: 0.5 }" transition="fade-transition">
     <v-card>
-      <h1>Home Page</h1>
-      <p>Welcome to the home page!</p>
+      <h1>{{ t("Header") }}</h1>
+      <p>{{ t("Main") }}</p>
     </v-card>
   </v-lazy>
 </template>

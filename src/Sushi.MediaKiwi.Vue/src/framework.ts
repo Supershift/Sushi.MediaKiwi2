@@ -40,10 +40,11 @@ export default {
         fallbackLng: "en",
         ns: ["common"],
         defaultNS: "common",
-        debug: true,
         resources: {
           en: {
+            // add common translations
             common: en,
+            // add mk's own component's translations
             MkSignIn: {
               Main: "Log in to continue:",
               Footer: "Can't login? Contact your administrator.",
@@ -57,8 +58,16 @@ export default {
             },
           },
         },
+        ...options.i18nextOptions,
       },
-      (instance) => instance.use(LanguageDetector)
+      (instance) => {
+        // add language detector
+        instance.use(LanguageDetector);
+        if (options.i18nextCallback) {
+          // call client's callback if provided
+          options.i18nextCallback(instance);
+        }
+      }
     );
 
     // create vuetify

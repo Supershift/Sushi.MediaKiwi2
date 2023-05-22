@@ -1,4 +1,4 @@
-import { InitOptions, createInstance, type i18n } from "i18next";
+import { InitOptions, createInstance, i18n } from "i18next";
 import { App, ref, triggerRef } from "vue";
 
 export default {
