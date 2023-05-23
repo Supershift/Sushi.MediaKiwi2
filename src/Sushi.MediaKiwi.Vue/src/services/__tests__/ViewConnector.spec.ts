@@ -24,7 +24,7 @@ describe("ScreenConnector", () => {
 
     // assert
     expect(axiosMock.get).toHaveBeenCalledOnce();
-    expect(axiosMock.get).toHaveBeenCalledWith("/views");
+    expect(axiosMock.get).toHaveBeenCalledWith("/views", { params: {} });
     expect(result).toBe(expectedResult.data);
   });
 });

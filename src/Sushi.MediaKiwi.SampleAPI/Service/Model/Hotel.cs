@@ -1,9 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Swashbuckle.AspNetCore.Annotations;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sushi.MediaKiwi.SampleAPI.Service.Model;
 
 public class Hotel
-{     
+{
+    /// <summary>
+    /// The hotel identifier
+    /// </summary>
+    [SwaggerSchema(ReadOnly = true)]
+    public int Id { get; set; }
+
     /// <summary>
     /// ISO country code
     /// </summary>
@@ -22,7 +30,7 @@ public class Hotel
     public bool IsActive { get; set; }
 
     /// <summary>
-    /// The hotel identifier
+    /// When the hotel record was created.
     /// </summary>
-    public int ID { get; set; } 
+    public DateTime Created { get; set; }
 }
