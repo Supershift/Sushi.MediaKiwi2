@@ -10,3 +10,4 @@ export type { Role } from "./Role";
 export type { Paging } from "./Paging";
 export type { IPagingResult } from "./IPagingResult";
 export type { Sorting } from "./Sorting";
+export type { MoneyValue } from "./MoneyValue";

@@ -22,5 +22,5 @@
 </script>
 
 <template>
-  <v-select v-model="value" :items="tableFilterItem.options" :label="t('Choose')" return-object @update:model-value="selectChanged"> </v-select>
+  <v-autocomplete v-model="value" :items="tableFilterItem.options" :label="t('Choose')" return-object @update:model-value="selectChanged"> </v-autocomplete>
 </template>

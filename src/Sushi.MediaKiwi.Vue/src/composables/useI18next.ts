@@ -1,5 +1,6 @@
+import { MoneyValue } from "@/models";
 import { i18n } from "i18next";
-import { Ref, computed, inject } from "vue";
+import { Ref, computed, inject, ref } from "vue";
 
 /**
  * Adds i18next to the component.
@@ -25,20 +26,20 @@ export function useI18next(namespace?: string) {
 
   const defaultT = computed(() => i18next.value.t);
 
-  // provide reactive date time formatters for current language
-  const parseDateTime = (date: string | Date): string => {
-    return formatDate(date, { dateStyle: "short", timeStyle: "short" });
+  // format datetime
+  const formatDateTimeInternal = (date: string | Date): string => {
+    return formatDateTimeGeneric(date, { dateStyle: "short", timeStyle: "short" });
   };
 
-  const parseDate = (date: string | Date): string => {
-    return formatDate(date, { dateStyle: "short" });
+  const formatDateInternal = (date: string | Date): string => {
+    return formatDateTimeGeneric(date, { dateStyle: "short" });
   };
 
-  const parseTime = (date: string | Date): string => {
-    return formatDate(date, { timeStyle: "short" });
+  const formatTimeInternal = (date: string | Date): string => {
+    return formatDateTimeGeneric(date, { timeStyle: "short" });
   };
 
-  const formatDate = (date: string | Date, options: Intl.DateTimeFormatOptions): string => {
+  const formatDateTimeGeneric = (date: string | Date, options: Intl.DateTimeFormatOptions): string => {
     // parse or cast to date, depending on parameter type
     let dateValue: Date;
     if (typeof date === "string") {
@@ -50,9 +51,23 @@ export function useI18next(namespace?: string) {
     return result;
   };
 
-  const dateTime = computed(() => parseDateTime);
-  const date = computed(() => parseDate);
-  const time = computed(() => parseTime);
+  const formatDateTime = computed(() => formatDateTimeInternal);
+  const formatDate = computed(() => formatDateInternal);
+  const formatTime = computed(() => formatTimeInternal);
+
+  // number formatting
+  const formatNumberInternal = (value: number): string => {
+    return Intl.NumberFormat(i18next.value.resolvedLanguage).format(value);
+  };
+
+  const formatNumber = computed(() => formatNumberInternal);
+
+  // currency formatting
+  const formatMoneyValueInternal = (value?: MoneyValue): string => {
+    if (value) return Intl.NumberFormat(i18next.value.resolvedLanguage, { style: "currency", currency: value.currency }).format(value.amount);
+    else return "";
+  };
+  const formatMoneyValue = computed(() => formatMoneyValueInternal);
 
   return {
     i18next,
@@ -61,10 +76,12 @@ export function useI18next(namespace?: string) {
     /** T function scoped to the default namespace */
     defaultT,
     /** Formats a Date object or iso8601 string to a localized string with date and time */
-    dateTime,
+    formatDateTime,
     /** Formats a Date object or iso8601 string to a localized date string, e.g. 22-05-2021, 05/22/2023 */
-    date,
+    formatDate,
     /** Formats a Date object or iso8601 string to a localized time string, e.g. 22:24, 10:24PM */
-    time,
+    formatTime,
+    formatNumber,
+    formatMoneyValue,
   };
 }

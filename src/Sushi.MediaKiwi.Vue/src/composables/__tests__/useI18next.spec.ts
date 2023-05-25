@@ -73,7 +73,7 @@ describe("useI18next", () => {
       const composable = getComposable("myNamespace");
 
       // act
-      const result = composable.dateTime.value(new Date(2021, 1, 1, 12, 0, 0));
+      const result = composable.formatDateTime.value(new Date(2021, 1, 1, 12, 0, 0));
 
       // assert
       expect(spy).toHaveBeenCalledWith(language, { dateStyle: "short", timeStyle: "short" });
@@ -87,7 +87,7 @@ describe("useI18next", () => {
       const composable = getComposable("myNamespace");
 
       // act
-      const result = composable.dateTime.value("2021-01-01T13:56:43Z");
+      const result = composable.formatDateTime.value("2021-01-01T13:56:43Z");
 
       // assert
       expect(spy).toHaveBeenCalledWith(language, { dateStyle: "short", timeStyle: "short" });
@@ -103,7 +103,7 @@ describe("useI18next", () => {
       const composable = getComposable("myNamespace");
 
       // act
-      const result = composable.date.value(new Date(2021, 1, 1, 12, 0, 0));
+      const result = composable.formatDate.value(new Date(2021, 1, 1, 12, 0, 0));
 
       // assert
       expect(spy).toHaveBeenCalledWith(language, { dateStyle: "short" });
@@ -117,7 +117,7 @@ describe("useI18next", () => {
       const composable = getComposable("myNamespace");
 
       // act
-      const result = composable.date.value("2021-01-01T13:56:43Z");
+      const result = composable.formatDate.value("2021-01-01T13:56:43Z");
 
       // assert
       expect(spy).toHaveBeenCalledWith(language, { dateStyle: "short" });
@@ -132,7 +132,7 @@ describe("useI18next", () => {
         const composable = getComposable("myNamespace");
 
         // act
-        const result = composable.time.value(new Date(2021, 1, 1, 12, 0, 0));
+        const result = composable.formatTime.value(new Date(2021, 1, 1, 12, 0, 0));
 
         // assert
         expect(spy).toHaveBeenCalledWith(language, { timeStyle: "short" });
@@ -146,12 +146,28 @@ describe("useI18next", () => {
         const composable = getComposable("myNamespace");
 
         // act
-        const result = composable.time.value("2021-01-01T13:56:43Z");
+        const result = composable.formatTime.value("2021-01-01T13:56:43Z");
 
         // assert
         expect(spy).toHaveBeenCalledWith(language, { timeStyle: "short" });
         expect(result).not.toBeUndefined();
       });
+    });
+    describe("formatMoneyValue", () => {
+      it("Should format money value", () => {
+        // arrange
+        const language = "en";
+        i18next.resolvedLanguage = language;
+        const spy = vi.spyOn(Intl, "NumberFormat");
+        const composable = getComposable("myNamespace");
+
+        // act
+        const result = composable.formatMoneyValue.value({ currency: "EUR", amount: 123.45 });
+
+        // assert
+        expect(spy).toHaveBeenCalledWith(language, { style: "currency", currency: "EUR" });
+        expect(result).not.toBeUndefined();
+      })
     });
   });
 });

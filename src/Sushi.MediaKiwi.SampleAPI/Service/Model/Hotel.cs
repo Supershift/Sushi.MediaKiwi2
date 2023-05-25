@@ -1,4 +1,5 @@
-﻿using Swashbuckle.AspNetCore.Annotations;
+﻿using Sushi.MediaKiwi.DAL;
+using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -33,4 +34,6 @@ public class Hotel
     /// When the hotel record was created.
     /// </summary>
     public DateTime Created { get; set; }
+
+    public MoneyValue? SRP { get; set; } 
 }

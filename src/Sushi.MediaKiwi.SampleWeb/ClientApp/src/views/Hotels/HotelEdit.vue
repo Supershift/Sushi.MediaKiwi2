@@ -1,12 +1,11 @@
 <script setup lang="ts">
-  import { MkForm } from "@supershift/mediakiwi-vue";
+  import { MkForm, MkMoneyValue, useNavigation } from "@supershift/mediakiwi-vue";
   import { HotelConnector } from "@/services/HotelConnector";
   import { CountryConnector } from "@/services/CountryConnector";
   import { reactive, ref } from "vue";
   import { Hotel } from "@/models/Hotel";
   import { container } from "tsyringe";
   import { Country } from "@/models/Country";
-  import { useNavigation } from "@supershift/mediakiwi-vue";
 
   // inject dependencies
   const hotelConnector = container.resolve(HotelConnector);
@@ -17,17 +16,15 @@
   // declare reactive variables
   var state = reactive({
     hotel: <Hotel>{},
-    countries: <Country[]>{}
+    countries: <Country[]>{},
   });
 
-  
   // Load countries for selection at dropdown
   async function LoadCountries() {
     const countries = await countriesConnector.GetAll({ pageIndex: 0, pageSize: 9999 });
     if (!countries) {
-      console.log('No countries could be loaded.');
-    }
-    else {
+      console.log("No countries could be loaded.");
+    } else {
       console.log(countries);
       state.countries = countries.result!;
     }
@@ -45,7 +42,7 @@
       state.hotel = candidate!;
     } else {
       // create a new hotel
-      state.hotel = <Hotel> { id: 0 };
+      state.hotel = <Hotel>{ id: 0 };
     }
   }
 
@@ -67,27 +64,28 @@
   }
 
   let onDelete: ((event: Event) => Promise<void>) | undefined = undefined;
-  
+
   onDelete = async () => {
     if (navigation.currentViewParameterNumber.value > 0) {
       await hotelConnector.DeleteAsync(navigation.currentViewParameterNumber.value);
     }
   };
-
 </script>
 
 <template>
   <v-card>
     <MkForm title="Hotel edit" @save="onSave" @undo="onUndo" @delete="onDelete" @load="onLoad">
       <v-text-field label="Name" v-model="state.hotel.name" :rules="[() => !!state.hotel.name || 'This field is required']"></v-text-field>
-      <v-select 
-      label="Country" 
-      v-model="state.hotel.countryCode" 
-      :items="state.countries" 
-      item-title="name"
-      item-text="name"
-      item-value="code"></v-select>
+      <v-autocomplete
+        label="Country"
+        v-model="state.hotel.countryCode"
+        :items="state.countries"
+        item-title="name"
+        item-text="name"
+        item-value="code"
+      ></v-autocomplete>
       <v-checkbox label="Is Active" v-model="state.hotel.isActive"></v-checkbox>
+      <mk-money-value label="SRP" v-model="state.hotel.srp"></mk-money-value>
     </MkForm>
   </v-card>
 </template>
