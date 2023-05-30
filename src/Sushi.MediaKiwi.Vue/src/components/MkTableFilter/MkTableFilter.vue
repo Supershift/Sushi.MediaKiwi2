@@ -173,9 +173,9 @@
 
         <v-spacer></v-spacer>
 
-        <v-cell class="mt-2 mr-2">
+        <v-sheet class="mt-2 mr-2">
           <slot name="actions"></slot>
-        </v-cell>
+        </v-sheet>
       </v-row>
     </v-container>
   </v-card>

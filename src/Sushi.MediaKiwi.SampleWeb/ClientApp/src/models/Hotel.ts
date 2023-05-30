@@ -1,7 +1,7 @@
 export interface Hotel {
-    countryCode: string;
-    name: string;
-    isActive: boolean;
-    id: number;
-  }
-  
+  countryCode: string;
+  created: string;
+  name: string;
+  isActive: boolean;
+  id: number;
+}

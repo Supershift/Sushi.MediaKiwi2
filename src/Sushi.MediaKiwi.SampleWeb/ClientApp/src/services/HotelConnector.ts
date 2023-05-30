@@ -7,12 +7,12 @@ import { ListResult, Paging } from "@supershift/mediakiwi-vue";
 export class HotelConnector {
   constructor(@inject("SampleApiAxiosInstance") private axios: AxiosInstance) {}
 
-  async GetAllAsync(paging?: Paging, countryCode?: string, isActive?: boolean) : Promise<ListResult<Hotel>> {
+  async GetAllAsync(paging?: Paging, countryCode?: string, isActive?: boolean): Promise<ListResult<Hotel>> {
     // build querystring params
     const query = {
       ...paging,
-      countryCode:countryCode,
-      isActive:isActive
+      countryCode: countryCode,
+      isActive: isActive,
     };
     const response = await this.axios.get<ListResult<Hotel>>("/hotels", { params: query });
     return response.data;
@@ -26,8 +26,7 @@ export class HotelConnector {
   async SaveAsync(request: Hotel): Promise<Hotel> {
     if (request?.id > 0) {
       return (await this.axios.put<Hotel>(`/hotels/${request.id}`, request)).data;
-    }
-    else {
+    } else {
       return (await this.axios.post<Hotel>("/hotels", request)).data;
     }
   }
