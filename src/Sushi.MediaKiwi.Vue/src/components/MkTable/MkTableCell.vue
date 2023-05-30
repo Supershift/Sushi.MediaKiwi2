@@ -1,9 +1,10 @@
 <script setup lang="ts">
-  import { computed, ref } from "vue";
-  import { IconPosition, MoneyValue } from "@/models";
+  import { computed } from "vue";
+  import { MoneyValue } from "@/models";
   import type { TableMapItem } from "@/models/table/TableMapItem";
   import MkTableCellIcon from "./MkTableCellIcon.vue";
   import { useI18next } from "@/composables";
+  import { TableCellIcon } from "@/models/table/TableCellIcon";
 
   // define properties
   const props = defineProps<{
@@ -17,6 +18,7 @@
   // reactive variables
   const mapItemValue = computed(() => (props.mapItem.value ? props.mapItem.value(props.data) : undefined));
 
+  // type detection
   const isBooleanValue = computed(() => typeof mapItemValue.value === "boolean");
   const isNumber = computed(() => typeof mapItemValue.value === "number");
 
@@ -25,14 +27,9 @@
     return value?.currency && value?.amount;
   });
 
-  const iconOptions = computed(() => {
-    return props.mapItem.icon && typeof props.mapItem.icon === "function" ? props.mapItem.icon(props.data) : null;
-  });
-
-  const rowClasses = computed(() => {
-    return {
-      reverse: iconOptions.value?.position === IconPosition.behind,
-    };
+  const isIcon = computed(() => {
+    const value = mapItemValue.value as TableCellIcon;
+    return value?.iconName;
   });
 </script>
 
@@ -46,20 +43,19 @@
     <template v-else>
       <!-- render a boolean -->
       <template v-if="isBooleanValue">
-        <MkTableCellIcon :icon="mapItemValue ? 'mdi-check-circle-outline' : 'mdi-close-circle-outline'" />
+        <v-icon :icon="mapItemValue ? 'mdi-check-circle-outline' : 'mdi-close-circle-outline'"></v-icon>
       </template>
       <!-- render a number -->
       <template v-else-if="isNumber"> {{ formatNumber(mapItemValue as number) }} </template>
       <!-- render a money value -->
       <template v-else-if="isMoneyValue"> {{ formatMoneyValue(mapItemValue as MoneyValue) }}</template>
+      <!-- reander an icon -->
+      <template v-else-if="isIcon">
+        <MkTableCellIcon :data="(mapItemValue as TableCellIcon)"></MkTableCellIcon>
+      </template>
       <!-- render any other value -->
       <template v-else>
-        <span class="row" :class="rowClasses">
-          <!-- render icon if icon options are sest -->
-          <MkTableCellIcon v-if="mapItem.icon" :icon="mapItem.icon" :data="data"></MkTableCellIcon>
-          <!-- render value -->
-          <label>{{ mapItemValue }}</label>
-        </span>
+        <label>{{ mapItemValue }}</label>
       </template>
     </template>
   </td>

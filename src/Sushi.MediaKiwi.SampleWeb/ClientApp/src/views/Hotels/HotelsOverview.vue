@@ -3,7 +3,18 @@
   import { Hotel } from "@/models/Hotel";
   import { CountryConnector } from "@/services/CountryConnector";
   import { HotelConnector } from "@/services/HotelConnector";
-  import { ListResult, MkTable, TableFilter, TableFilterType, TableFilterValue, TableMap, useI18next } from "@supershift/mediakiwi-vue";
+  import {
+    ListResult,
+    MkTable,
+    TableCellIcon,
+    TableIconPosition,
+    TableFilter,
+    TableFilterType,
+    TableFilterValue,
+    TableMap,
+    useI18next,
+  } from "@supershift/mediakiwi-vue";
+
   import { container } from "tsyringe";
   import { ref } from "vue";
 
@@ -18,6 +29,14 @@
   const countries = ref<Country[]>();
 
   // define mapping
+  function srpIcon(item: Hotel): TableCellIcon {
+    return {
+      position: item.srp ? TableIconPosition.Append : TableIconPosition.Prepend,
+      iconName: item.srp ? "mdi-alert-circle" : "mdi-account-check",
+      tooltip: item.srp ? "SRP" : "NoSRP",
+      label: item.srp ? "Define SRP" : "SRP correct",
+    };
+  }
   const tableMap: TableMap<Hotel> = {
     itemId: (item) => item.id,
     items: [
@@ -26,6 +45,7 @@
       { headerTitle: t.value("Country"), value: (item) => countries.value!.find((x) => x.code == item.countryCode)?.name },
       { headerTitle: t.value("Active"), value: (item) => item.isActive },
       { headerTitle: t.value("SRP"), value: (item) => item.srp },
+      { headerTitle: "", value: (item) => srpIcon(item) },
     ],
   };
 
