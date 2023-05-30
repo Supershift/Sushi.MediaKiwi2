@@ -1,4 +1,5 @@
-﻿using Sushi.MicroORM.Mapping;
+﻿using Sushi.MediaKiwi.DAL;
+using Sushi.MicroORM.Mapping;
 
 namespace Sushi.MediaKiwi.SampleAPI.DAL
 {
@@ -14,6 +15,8 @@ namespace Sushi.MediaKiwi.SampleAPI.DAL
                 Map(x => x.Name, "Name").SqlType(System.Data.SqlDbType.NVarChar).Length(256);
                 Map(x => x.CountryCode, "CountryCode").SqlType(System.Data.SqlDbType.Char).Length(2);
                 Map(x => x.Created, "Created");
+                Map(x => x.SRP.Currency, "SRP_Currency").SqlType(System.Data.SqlDbType.Char).Length(3);
+                Map(x => x.SRP.Amount, "SRP_Amount");
             }
         }
 
@@ -22,5 +25,6 @@ namespace Sushi.MediaKiwi.SampleAPI.DAL
         public string Name { get; set; }
         public string CountryCode { get; set; }
         public DateTime Created { get; set; }
+        public MoneyValue? SRP { get; set; }
     }
 }

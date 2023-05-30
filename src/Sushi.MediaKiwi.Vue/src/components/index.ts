@@ -11,3 +11,4 @@ export * from "./MkIdentity";
 export * from "./MkSuspense";
 export * from "./MkChip";
 export * from "./MkLanguageSwitch";
+export * from "./MkMoneyValue";

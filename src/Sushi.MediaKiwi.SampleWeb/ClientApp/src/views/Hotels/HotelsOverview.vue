@@ -10,7 +10,7 @@
   // inject dependencies
   const connector = container.resolve(HotelConnector);
   const countriesConnector = container.resolve(CountryConnector);
-  const { dateTime, t } = useI18next("HotelsOverview");
+  const { formatDateTime, t } = useI18next("HotelsOverview");
 
   // define reactive variables
   const currentPage = ref(0);
@@ -22,9 +22,10 @@
     itemId: (item) => item.id,
     items: [
       { headerTitle: t.value("Name"), value: (item) => item.name },
-      { headerTitle: t.value("Created"), value: (item) => dateTime.value(item.created) },
+      { headerTitle: t.value("Created"), value: (item) => formatDateTime.value(item.created) },
       { headerTitle: t.value("Country"), value: (item) => countries.value!.find((x) => x.code == item.countryCode)?.name },
       { headerTitle: t.value("Active"), value: (item) => item.isActive },
+      { headerTitle: t.value("SRP"), value: (item) => item.srp },
     ],
   };
 
