@@ -65,7 +65,7 @@ describe("useI18next", () => {
     });
   });
   describe("dateTime", () => {
-    it("Should parse Date", () => {
+    it("Should parse Date object", () => {
       // arrange
       const language = "en";
       i18next.resolvedLanguage = language;
@@ -95,7 +95,7 @@ describe("useI18next", () => {
     });
   });
   describe("date", () => {
-    it("Should parse Date", () => {
+    it("Should parse Date object", () => {
       // arrange
       const language = "en";
       i18next.resolvedLanguage = language;
@@ -124,7 +124,7 @@ describe("useI18next", () => {
       expect(result).not.toBeUndefined();
     });
     describe("time", () => {
-      it("Should parse Date", () => {
+      it("Should parse Date object", () => {
         // arrange
         const language = "en";
         i18next.resolvedLanguage = language;
