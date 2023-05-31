@@ -22,12 +22,13 @@ namespace Sushi.MediaKiwi.Services.Model
             CreateMap<DAL.View, View>().ForMember(x=>x.Roles, o => o.Ignore());
             CreateMap<DAL.NavigationItem, NavigationItem>();
             CreateMap<DAL.Role, Role>();
+            CreateMap<DAL.Locale, Locale>();
 
             // from model to DAL
             CreateMap<Section, DAL.Section>().ForMember(x => x.Id, o => o.Ignore());
             CreateMap<View, DAL.View>().ForMember(x => x.Id, o => o.Ignore());
             CreateMap<NavigationItem, DAL.NavigationItem>().ForMember(x => x.Id, o => o.Ignore());            
-            
+            CreateMap<Locale, DAL.Locale>().ForMember(x=>x.Id, o => o.Ignore());
         }
     }
 }
