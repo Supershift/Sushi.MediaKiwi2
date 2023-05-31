@@ -18,6 +18,7 @@ namespace Sushi.MediaKiwi.DAL.UnitTests
             serviceProvider.GetRequiredService<IRoleRepository>();
             serviceProvider.GetRequiredService<IViewRoleRepository>();
             serviceProvider.GetRequiredService<ILocaleRepository>();
+            serviceProvider.GetRequiredService<ITranslationRepository>();
         }
     }
 }

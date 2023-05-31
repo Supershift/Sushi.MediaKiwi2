@@ -44,6 +44,8 @@ namespace Sushi.MediaKiwi.Services
             collection.TryAddTransient<ViewService>();
             collection.TryAddTransient<NavigationItemService>();
             collection.TryAddTransient<RoleService>();
+            collection.TryAddTransient<LocaleService>();
+            collection.TryAddTransient<TranslationService>();
 
             return collection;
         }
