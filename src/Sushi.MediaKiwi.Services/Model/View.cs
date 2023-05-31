@@ -14,16 +14,10 @@ namespace Sushi.MediaKiwi.Services.Model
     public class View
     {
         /// <summary>
-        /// Unique identifier for this view.
-        /// </summary>
-        [SwaggerSchema(ReadOnly = true)]
-        public int Id { get; set; }
-
-        /// <summary>
         /// Human-readable unique ID.
         /// </summary>
-        [Required, StringLength(64)]
-        public string ExternalId { get; set; }
+        [SwaggerSchema(ReadOnly = true)]
+        public string? Id { get; set; }
 
         /// <summary>
         /// Name for this view.

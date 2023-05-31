@@ -11,7 +11,7 @@ export interface NavigationItem {
   /** Id of the parent of this item in the navigation hierarchy. */
   parentNavigationItemId?: number;
   /** Identifier of the view to load when this navigation item is activated. If empty, the item is a folder. */
-  viewId?: number;
+  viewId?: string;
   /** Path, relative to the application's root. Not provided by API, but needs to be calculated based on item's hierarchy. */
   path: string;
   /** Parent item of this item in the navigation hierarchy. */

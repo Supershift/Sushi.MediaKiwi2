@@ -20,20 +20,27 @@ namespace Sushi.MediaKiwi.DAL.Repository
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<View?> GetAsync(int id);
+        Task<View?> GetAsync(string id);
 
         /// <summary>
-        /// Insert or updates a <see cref="View"/>.
+        /// Inserts a <see cref="View"/>.
         /// </summary>
         /// <param name="view"></param>
         /// <returns></returns>
-        Task SaveAsync(View view);
+        Task InsertAsync(View view);
+
+        /// <summary>
+        /// Updates a <see cref="View"/>.
+        /// </summary>
+        /// <param name="view"></param>
+        /// <returns></returns>
+        Task UpdateAsync(View view);
 
         /// <summary>
         /// Deletes a <see cref="View"/> by id.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task DeleteAsync(int id);
+        Task DeleteAsync(string id);
     }
 }

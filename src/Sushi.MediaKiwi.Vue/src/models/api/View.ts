@@ -1,7 +1,6 @@
 export interface View {
-  id: number;
   /** Human-readable unique ID. */
-  externalId?: string;
+  id: string;
   /** Name for this screen, can be used for display purposes. */
   name?: string;
   /** Unique key for the screen's component. Will be used to find a match in the modules provided when installing MediaKiwi */

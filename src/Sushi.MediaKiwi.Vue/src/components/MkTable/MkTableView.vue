@@ -42,7 +42,7 @@
     // navigate user to target page if defined
     if (props.itemViewId) {
       // find navigation item for the view
-      const view = store.views.find((x) => x.externalId == props.itemViewId);
+      const view = store.views.find((x) => x.id == props.itemViewId);
 
       if (!view) {
         throw new Error(`No view found for external id ${props.itemViewId}`);

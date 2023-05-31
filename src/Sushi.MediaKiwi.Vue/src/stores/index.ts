@@ -111,7 +111,7 @@ export const useMediakiwiStore = defineStore({
       let result = parentPath + `/${encodeURI(navigationItem.name)}`;
       // if dynamic, add parameter
       if (navigationItem.view?.parameterName) {
-        result += `/:${navigationItem.view.parameterName}`;
+        result += `/:${navigationItem.view.parameterName}?`;
       }
       return result;
     },

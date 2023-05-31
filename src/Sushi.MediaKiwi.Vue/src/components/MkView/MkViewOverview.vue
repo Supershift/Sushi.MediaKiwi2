@@ -22,8 +22,8 @@
   const tableMap: TableMap<View> = {
     itemId: (x) => x.id,
     items: [
+      { headerTitle: "Id", value: (x) => x.id },
       { headerTitle: "Name", value: (x) => x.name, sortingOptions: { id: (x) => x.name } },
-      { headerTitle: "ExternalId", value: (x) => x.externalId },
       { headerTitle: "Section", value: (x) => sections.value.find((section) => section.id == x.sectionId)?.name },
       { headerTitle: "Component Key", value: (x) => x.componentKey },
       { headerTitle: "Parameter", value: (x) => x.parameterName },

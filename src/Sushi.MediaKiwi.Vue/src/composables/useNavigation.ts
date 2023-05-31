@@ -62,11 +62,6 @@ export function useNavigation() {
       if (navigationItem.view?.parameterName) {
         // if this is a dynamic route, try to resolve route parameter
         routeParams = {};
-
-        if (itemId === undefined) {
-          throw new Error(`Navigating to dynamic route but no itemId provided`);
-        }
-
         routeParams[navigationItem.view.parameterName] = itemId;
       }
 
@@ -130,7 +125,7 @@ export function useNavigation() {
     const navigationItem = currentNavigationItem.value;
     if (navigationItem.view?.parameterName) {
       // if this is a dynamic route, try to resolve route parameter
-      return route.params[navigationItem.view.parameterName];
+      return typeof route.params[navigationItem.view.parameterName] === "string" ? (route.params[navigationItem.view.parameterName] as string) : undefined;
     }
   });
 

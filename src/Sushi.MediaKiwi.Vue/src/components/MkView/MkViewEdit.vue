@@ -16,27 +16,24 @@
   const navigation = useNavigation();
 
   // get id of the view from the route
-  const viewId = navigation.currentViewParameterNumber;
+  const viewId = navigation.currentViewParameter;
 
   // declare reactive variables
-  const view = ref<View>({ id: 0 });
+  const view = ref<View>({ id: viewId.value ?? "" });
 
   async function onLoad() {
-    if (viewId.value > 0) {
+    if (viewId.value) {
       // get existing view from api
       const candidate = await viewConnector.GetView(viewId.value);
       if (!candidate) {
         alert("No view found!");
       }
       view.value = candidate!;
-    } else {
-      // create a new view
-      view.value = { id: 0 };
     }
   }
 
   async function onSave() {
-    if (viewId.value > 0) {
+    if (viewId.value) {
       // update existing view
       await viewConnector.UpdateView(viewId.value, view.value);
 
@@ -44,7 +41,7 @@
       await routerManager.ForceInitialize();
     } else {
       // create new view
-      const newView = await viewConnector.CreateView(view.value);
+      const newView = await viewConnector.CreateView(view.value.id, view.value);
 
       // refresh store (to update the view in the navigation)
       await routerManager.ForceInitialize();
@@ -55,9 +52,9 @@
   }
 
   let onDelete: ((event: Event) => Promise<void>) | undefined = undefined;
-  if (viewId.value > 0) {
+  if (viewId.value) {
     onDelete = async () => {
-      if (viewId.value > 0) {
+      if (viewId.value) {
         await viewConnector.DeleteView(viewId.value);
 
         // refresh store (to update the view in the navigation)
@@ -69,12 +66,8 @@
 
 <template>
   <MkForm title="View" :on-save="onSave" :on-load="onLoad" :on-delete="onDelete">
+    <v-text-field v-model="view.id" label="Id" hint="Unique human-readable id for the view." :disabled="viewId ? true : false"></v-text-field>
     <v-text-field v-model="view.name" label="Name"></v-text-field>
-    <v-text-field
-      v-model="view.externalId"
-      label="External Id"
-      hint="Unique human-readable id for the view. Can be used to reference this view from other components."
-    ></v-text-field>
     <v-text-field
       v-model="view.componentKey"
       label="Component key"
