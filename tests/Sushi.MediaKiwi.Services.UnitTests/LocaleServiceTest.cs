@@ -29,14 +29,14 @@ namespace Sushi.MediaKiwi.Services.UnitTests
         public async Task GetAllLocales()
         {
             // arrange
-            var sectionStubs = new QueryListResult<DAL.Locale>
+            var stubs = new QueryListResult<DAL.Locale>
             {
                 new DAL.Locale(),
                 new DAL.Locale()
             };
 
             var localeRepositoryMock = new Mock<ILocaleRepository>();
-            localeRepositoryMock.Setup(x => x.GetAllAsync(It.Is<bool>(x => x == true), It.IsAny<PagingValues>())).ReturnsAsync(sectionStubs);
+            localeRepositoryMock.Setup(x => x.GetAllAsync(It.Is<bool>(x => x == true), It.IsAny<PagingValues>())).ReturnsAsync(stubs);
 
             var service = new LocaleService(localeRepositoryMock.Object, _mapper);
 
