@@ -36,7 +36,7 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpDelete]
         [Route("{id}")]
-        public async Task<ActionResult<View>> DeleteView(int id)
+        public async Task<ActionResult<View>> DeleteView(string id)
         {
             var result = await _viewService.DeleteAsync(id);
             return this.CreateResponse(result);
@@ -66,7 +66,7 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult<View>> GetView(int id)
+        public async Task<ActionResult<View>> GetView(string id)
         {
             var result = await _viewService.GetAsync(id);
             return this.CreateResponse(result);
@@ -74,13 +74,13 @@ namespace Sushi.MediaKiwi.WebAPI
 
         /// <summary>
         /// Creates a new view.
-        /// </summary>
-        /// <param name="request"></param>
+        /// </summary>        
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<View>> CreateView(View request)
+        [Route("{id}")]
+        public async Task<ActionResult<View>> CreateView(string id, View request)
         {
-            var result = await _viewService.SaveAsync(null, request);
+            var result = await _viewService.CreateAsync(id, request);
             return this.CreateResponse(result);
         }
 
@@ -90,9 +90,9 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpPut]
         [Route("{id}")]
-        public async Task<ActionResult<View>> UpdateView(int id, View request)
+        public async Task<ActionResult<View>> UpdateView(string id, View request)
         {
-            var result = await _viewService.SaveAsync(id, request);
+            var result = await _viewService.UpdateAsync(id, request);
             return this.CreateResponse(result);
         }
     }

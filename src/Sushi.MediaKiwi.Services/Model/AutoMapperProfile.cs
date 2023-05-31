@@ -19,7 +19,7 @@ namespace Sushi.MediaKiwi.Services.Model
         {
             // from DAL to Model
             CreateMap<DAL.Section, Section>();
-            CreateMap<DAL.View, View>();
+            CreateMap<DAL.View, View>().ForMember(x=>x.Roles, o => o.Ignore());
             CreateMap<DAL.NavigationItem, NavigationItem>();
             CreateMap<DAL.Role, Role>();
 

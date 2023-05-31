@@ -30,7 +30,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             // arrange
             var viewStub = new DAL.View()
             {
-                Id = 11
+                Id = "abc"
             };
 
             var viewRepositoryMock = new Mock<IViewRepository>();
@@ -55,13 +55,13 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             // arrange
             DAL.View? viewStub = null;
             var viewRepositoryMock = new Mock<IViewRepository>();
-            viewRepositoryMock.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(viewStub);
+            viewRepositoryMock.Setup(x => x.GetAsync(It.IsAny<string>())).ReturnsAsync(viewStub);
             var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();
 
             var service = new ViewService(viewRepositoryMock.Object, viewRoleRepositoryMock.Object, _mapper);
 
             // act
-            var result = await service.DeleteAsync(17);
+            var result = await service.DeleteAsync("abc");
 
             // assert
             Assert.NotNull(result);
@@ -126,18 +126,18 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             // arrange
             var viewStubs = new QueryListResult<DAL.View>
             {
-                new DAL.View() { Id = 1 },
-                new DAL.View() { Id = 2 }
+                new DAL.View() { Id = "abc" },
+                new DAL.View() { Id = "def" }
             };
             var roleStubs = new QueryListResult<DAL.ViewRole>
             {
-                new DAL.ViewRole() { ViewId = 1, Role = "Admin" }
+                new DAL.ViewRole() { ViewId = "abc", Role = "Admin" }
             };
 
             var viewRepositoryMock = new Mock<IViewRepository>();
             viewRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<int?>(), It.IsAny<PagingValues>(), null)).ReturnsAsync(viewStubs);
             var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();
-            viewRoleRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<int?>())).ReturnsAsync(roleStubs);
+            viewRoleRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<string?>())).ReturnsAsync(roleStubs);
 
             var service = new ViewService(viewRepositoryMock.Object, viewRoleRepositoryMock.Object, _mapper);
 
@@ -145,8 +145,8 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var result = await service.GetAllAsync(null, PagingValues.Default);
 
             // assert            
-            var view1 = result.Value.Result.First(x => x.Id == 1);
-            var view2 = result.Value.Result.First(x => x.Id == 2);
+            var view1 = result.Value.Result.First(x => x.Id == "abc");
+            var view2 = result.Value.Result.First(x => x.Id == "def");
             Assert.Equal(ResultCode.Success, result.Code);
             Assert.Single(view1.Roles);
             Assert.Empty(view2.Roles);
@@ -159,17 +159,17 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             // arrange
             var viewStub = new DAL.View()
             {
-                Id = 11
+                Id = "abc"
             };                
 
             var viewRepositoryMock = new Mock<IViewRepository>();
-            viewRepositoryMock.Setup(x => x.GetAsync(It.Is<int>(x=>x == viewStub.Id))).ReturnsAsync(viewStub);
+            viewRepositoryMock.Setup(x => x.GetAsync(It.Is<string>(x=>x == viewStub.Id))).ReturnsAsync(viewStub);
             var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();
-            viewRoleRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<int>())).ReturnsAsync(new QueryListResult<DAL.ViewRole>());
+            viewRoleRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<string>())).ReturnsAsync(new QueryListResult<DAL.ViewRole>());
             var service = new ViewService(viewRepositoryMock.Object, viewRoleRepositoryMock.Object, _mapper);
 
             // act
-            var result = await service.GetAsync(11);
+            var result = await service.GetAsync("abc");
 
             // assert
             Assert.NotNull(result);
@@ -184,13 +184,13 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             // arrange
             DAL.View? viewStub = null;
             var viewRepositoryMock = new Mock<IViewRepository>();
-            viewRepositoryMock.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(viewStub);
+            viewRepositoryMock.Setup(x => x.GetAsync(It.IsAny<string>())).ReturnsAsync(viewStub);
             var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();
 
             var service = new ViewService(viewRepositoryMock.Object, viewRoleRepositoryMock.Object, _mapper);
 
             // act
-            var result = await service.DeleteAsync(17);
+            var result = await service.DeleteAsync("def");
 
             // assert
             Assert.NotNull(result);
@@ -198,39 +198,19 @@ namespace Sushi.MediaKiwi.Services.UnitTests
         }
 
         [Fact]
-        public async Task SaveViewTest_NotFound()
-        {
-            // arrange
-            DAL.View? viewStub = null;
-            var viewRepositoryMock = new Mock<IViewRepository>();
-            viewRepositoryMock.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(viewStub);
-            var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();
-
-            var service = new ViewService(viewRepositoryMock.Object, viewRoleRepositoryMock.Object, _mapper);
-
-            // act
-            var result = await service.SaveAsync(17, new View());
-
-            // assert
-            Assert.NotNull(result);
-            Assert.Equal(ResultCode.NotFound, result.Code);
-        }
-
-        [Fact]
-        public async Task SaveViewTest_Create()
+        public async Task CreateViewTest()
         {
             // arrange
             var view = new View()
             {
-                ComponentKey = "comp",
-                ExternalId = "123",
+                Id = "value to be ignored",
+                ComponentKey = "comp",                
                 Name = "name",
                 Roles = new List<string>() { "Admin", "User" },
                 SectionId = 2
             };
 
-
-            int newId = 12;
+            string newId = "abc";
             var dalResult = new DAL.View() { Id = newId };
 
             var roleStubs = new QueryListResult<DAL.ViewRole>
@@ -240,40 +220,42 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             };
 
             var viewRepositoryMock = new Mock<IViewRepository>();
-            viewRepositoryMock.Setup(x => x.SaveAsync(It.IsAny<DAL.View>())).Callback<DAL.View>(x => x.Id = newId);
+            viewRepositoryMock.Setup(x => x.InsertAsync(It.Is<DAL.View>(x=>x.Id == newId))).Callback<DAL.View>(x => x.Id = newId);
             var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();
-            viewRoleRepositoryMock.Setup(x => x.DeleteForViewAsync(It.IsAny<int>())).Verifiable();
+            viewRoleRepositoryMock.Setup(x => x.DeleteForViewAsync(It.IsAny<string>())).Verifiable();
             viewRoleRepositoryMock.Setup(x => x.InsertAsync(It.IsAny<DAL.ViewRole>())).Verifiable();
-            viewRoleRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<int?>())).ReturnsAsync(roleStubs);
+            viewRoleRepositoryMock.Setup(x => x.GetAllAsync(It.Is<string?>(x => x == newId))).ReturnsAsync(roleStubs);
 
             var service = new ViewService(viewRepositoryMock.Object, viewRoleRepositoryMock.Object, _mapper);
 
             // act
-            var result = await service.SaveAsync(null, view);
+            var result = await service.CreateAsync(newId, view);
 
             Assert.NotNull(result);
             Assert.Equal(ResultCode.Success, result.Code);
             Assert.NotNull(result.Value);
             Assert.Equal(newId, result.Value.Id);
-            viewRoleRepositoryMock.Verify(x => x.DeleteForViewAsync(It.IsAny<int>()), Times.Never);
+            viewRoleRepositoryMock.Verify(x => x.DeleteForViewAsync(It.IsAny<string>()), Times.Never);
             viewRoleRepositoryMock.Verify(x => x.InsertAsync(It.IsAny<DAL.ViewRole>()), Times.Exactly(2));
         }
 
+        
+
         [Fact]
-        public async Task SaveViewTest_Update()
+        public async Task UpdateViewTest()
         {
             // arrange
             var view = new View()
             {
-                ComponentKey = "comp",
-                ExternalId = "123",
+                Id = "value to be ignored",
+                ComponentKey = "comp",                
                 Name = "name",
                 Roles = new List<string>() { "Admin", "User" },
                 SectionId = 2
             };
 
 
-            int existingId = 17;
+            string existingId = "xyz";
             var dalResult = new DAL.View() { Id = existingId };
 
             var roleStubs = new QueryListResult<DAL.ViewRole>
@@ -284,27 +266,44 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             var viewRepositoryMock = new Mock<IViewRepository>();
             viewRepositoryMock.Setup(x => x.GetAsync(existingId)).ReturnsAsync(dalResult).Verifiable();
-            viewRepositoryMock.Setup(x => x.SaveAsync(dalResult)).Verifiable();
+            viewRepositoryMock.Setup(x => x.UpdateAsync(dalResult)).Verifiable();
             var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();
-            viewRoleRepositoryMock.Setup(x => x.DeleteForViewAsync(It.IsAny<int>())).Verifiable();
+            viewRoleRepositoryMock.Setup(x => x.DeleteForViewAsync(It.IsAny<string>())).Verifiable();
             viewRoleRepositoryMock.Setup(x => x.InsertAsync(It.IsAny<DAL.ViewRole>())).Verifiable();
-            viewRoleRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<int?>())).ReturnsAsync(roleStubs);
+            viewRoleRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<string?>())).ReturnsAsync(roleStubs);
 
             var service = new ViewService(viewRepositoryMock.Object, viewRoleRepositoryMock.Object, _mapper);
 
             // act
-            var result = await service.SaveAsync(existingId, view);
+            var result = await service.UpdateAsync(existingId, view);
 
             Assert.NotNull(result);
             Assert.Equal(ResultCode.Success, result.Code);
             Assert.NotNull(result.Value);
             Assert.Equal(existingId, result.Value.Id);
             viewRepositoryMock.Verify(x=>x.GetAsync(existingId), Times.Once);
-            viewRepositoryMock.Verify(x=>x.SaveAsync(dalResult), Times.Once);
-            viewRoleRepositoryMock.Verify(x => x.DeleteForViewAsync(It.IsAny<int>()), Times.Once);
+            viewRepositoryMock.Verify(x=>x.UpdateAsync(dalResult), Times.Once);
+            viewRoleRepositoryMock.Verify(x => x.DeleteForViewAsync(It.IsAny<string>()), Times.Once);
             viewRoleRepositoryMock.Verify(x => x.InsertAsync(It.IsAny<DAL.ViewRole>()), Times.Exactly(2));
         }
 
+        [Fact]
+        public async Task UpdateViewTest_NotFound()
+        {
+            // arrange
+            DAL.View? viewStub = null;
+            var viewRepositoryMock = new Mock<IViewRepository>();
+            viewRepositoryMock.Setup(x => x.GetAsync(It.IsAny<string>())).ReturnsAsync(viewStub);
+            var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();
 
+            var service = new ViewService(viewRepositoryMock.Object, viewRoleRepositoryMock.Object, _mapper);
+
+            // act
+            var result = await service.UpdateAsync("jkl", new View());
+
+            // assert
+            Assert.NotNull(result);
+            Assert.Equal(ResultCode.NotFound, result.Code);
+        }
     }
 }

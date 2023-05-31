@@ -39,7 +39,7 @@ namespace Sushi.MediaKiwi.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<Result> DeleteAsync(int id)
+        public async Task<Result> DeleteAsync(string id)
         {
             // get item from datastore
             var view = await _viewRepository.GetAsync(id);
@@ -86,7 +86,7 @@ namespace Sushi.MediaKiwi.Services
             return new Result<ListResult<View>>(result);
         }
 
-        public async Task<Result<View>> GetAsync(int id)
+        public async Task<Result<View>> GetAsync(string id)
         {
             // get item from datastore
             var view = await _viewRepository.GetAsync(id);
@@ -110,24 +110,9 @@ namespace Sushi.MediaKiwi.Services
             }
         }
 
-        public async Task<Result<View>> SaveAsync(int? id, View request)
+        public async Task<Result<View>> CreateAsync(string id, View request)
         {
-            // get existing or create new view, based on id
-            DAL.View view;
-            if (id.HasValue)
-            {
-                var candidate = await _viewRepository.GetAsync(id.Value);
-                if (candidate == null)
-                {
-                    return new Result<View>(ResultCode.NotFound);
-                }
-                view = candidate;
-
-            }
-            else
-            {
-                view = new DAL.View();
-            }
+            var view = new DAL.View() { Id = id };
 
             // map from model to database
             _mapper.Map(request, view);
@@ -135,15 +120,9 @@ namespace Sushi.MediaKiwi.Services
             // start transaction
             using (var ts = DAL.Utility.CreateTransactionScope())
             {
-
                 // save view
-                // todo: handle uq constraint fail
-                await _viewRepository.SaveAsync(view);
-
-                // todo: only do this if roles have changed
-                // delete existing roles for view
-                if (id.HasValue)
-                    await _viewRoleRepository.DeleteForViewAsync(view.Id);
+                // todo: handle pk constraint fail
+                await _viewRepository.InsertAsync(view);
 
                 // insert roles for view
                 foreach (var role in request.Roles)
@@ -155,6 +134,49 @@ namespace Sushi.MediaKiwi.Services
                 // commit transaction
                 ts.Complete();
             }
+            // return view
+            var viewsRoles = await _viewRoleRepository.GetAllAsync(view.Id);
+            var result = new View();
+            _mapper.Map(view, result);
+            // add roles                
+            result.Roles = viewsRoles.Select(x => x.Role).ToList();
+
+            return new Result<View>(result);            
+        }
+
+        public async Task<Result<View>> UpdateAsync(string id, View request)
+        {
+            // get existing view, based on id
+            DAL.View view = await _viewRepository.GetAsync(id);
+            if (view == null)
+            {
+                return new Result<View>(ResultCode.NotFound);
+            }
+
+            // map from model to database
+            _mapper.Map(request, view);
+
+            // start transaction
+            using (var ts = DAL.Utility.CreateTransactionScope())
+            {
+                // update view                
+                await _viewRepository.UpdateAsync(view);
+
+                // todo: only do this if roles have changed
+                // delete existing roles for view                
+                await _viewRoleRepository.DeleteForViewAsync(view.Id);
+
+                // insert roles for view
+                foreach (var role in request.Roles)
+                {
+                    var viewRole = new DAL.ViewRole() { Role = role, ViewId = view.Id };
+                    await _viewRoleRepository.InsertAsync(viewRole);
+                }
+
+                // commit transaction
+                ts.Complete();
+            }
+            
             // return view
             var viewsRoles = await _viewRoleRepository.GetAllAsync(view.Id);
             var result = new View();

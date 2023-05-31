@@ -24,7 +24,7 @@ namespace Sushi.MediaKiwi.DAL.Repository
         }
 
         /// <inheritdoc/>    
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(string id)
         {
             var query = _connector.CreateQuery();
             query.Add(x => x.Id, id);
@@ -56,7 +56,7 @@ namespace Sushi.MediaKiwi.DAL.Repository
         }
 
         /// <inheritdoc/>    
-        public async Task<View?> GetAsync(int id)
+        public async Task<View?> GetAsync(string id)
         {
             var query = _connector.CreateQuery();
             query.Add(x => x.Id, id);
@@ -65,9 +65,15 @@ namespace Sushi.MediaKiwi.DAL.Repository
         }
 
         /// <inheritdoc/>    
-        public async Task SaveAsync(View view)
+        public async Task InsertAsync(View view)
         {
-            await _connector.SaveAsync(view);            
+            await _connector.InsertAsync(view);            
+        }
+
+        /// <inheritdoc/>    
+        public async Task UpdateAsync(View view)
+        {
+            await _connector.UpdateAsync(view);
         }
     }
 }

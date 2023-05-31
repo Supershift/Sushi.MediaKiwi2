@@ -16,14 +16,14 @@ namespace Sushi.MediaKiwi.DAL.Repository
         /// Gets all <see cref="ViewRole"/> objects for the given filters.
         /// </summary>
         /// <returns></returns>
-        Task<QueryListResult<ViewRole>> GetAllAsync(int? viewId);
+        Task<QueryListResult<ViewRole>> GetAllAsync(string? viewId);
 
         /// <summary>
         /// Deletes all role assignments for a view.
         /// </summary>
         /// <param name="viewId"></param>
         /// <returns></returns>
-        Task DeleteForViewAsync(int viewId);
+        Task DeleteForViewAsync(string viewId);
 
         /// <summary>
         /// Inserts a role assignment.

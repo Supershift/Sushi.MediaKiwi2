@@ -14,9 +14,8 @@ namespace Sushi.MediaKiwi.DAL
         {
             public ViewMap()
             {
-                Table("mk_Views");
-                Id(x => x.Id, "ViewID");
-                Map(x => x.ExternalId, "ExternalID").SqlType(SqlDbType.VarChar);
+                Table("mk_Views");                
+                Id(x => x.Id, "ViewID").Assigned().SqlType(SqlDbType.VarChar);
                 Map(x => x.ComponentKey, "ComponentKey").SqlType(SqlDbType.VarChar);
                 Map(x => x.Name, "Name").SqlType(SqlDbType.NVarChar);                
                 Map(x => x.SectionId, "SectionID");
@@ -24,17 +23,15 @@ namespace Sushi.MediaKiwi.DAL
             }
         }
         
-        public int Id { get; set; }
         /// <summary>
         /// Gets or sets a human-readable unique ID.
         /// </summary>
-        public string ExternalId { get; set; }
+        public string Id { get; set; }                
         /// <summary>
         /// Gets or sets the key of the Vue component implementing this view, e.g. ./views/myView.vue, MyKey
         /// </summary>
         public string ComponentKey { get; set; }
-        public string Name { get; set; }
-        public string FilePath { get; set; }
+        public string Name { get; set; }        
         public int SectionId { get; set; }        
         public string? ParameterName { get; set; }
     }
