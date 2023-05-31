@@ -14,16 +14,6 @@
       { headerTitle: "Land", value: (dataItem) => dataItem.countryName, sortingOptions: { id: (x) => x.countryName } },
       { headerTitle: "Laast gezien", value: (dataItem) => dataItem.date?.toISOString() },
       {
-        headerTitle: "Hulp",
-        value: (dataItem) => dataItem.countryName,
-        icon: (dataItem) => {
-          return {
-            value: dataItem.countryCode === "NL" ? "mdi-help-box" : "mdi-help-circle",
-            tooltip: `Dynamische tooltip voor regel: ${dataItem.id} - ${dataItem.name} `,
-          };
-        },
-      },
-      {
         headerTitle: "Checked",
         value: () => true, // MediaKiwi will render a mdi check icon if the value returns a boolean
       },

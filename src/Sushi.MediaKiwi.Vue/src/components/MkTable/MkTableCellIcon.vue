@@ -1,55 +1,21 @@
 <script setup lang="ts">
   import { ref } from "vue";
-  import { TableMapItemIconOptions } from "@/models/table/TableMapItemIconOptions";
-  import { IconPosition } from "@/models";
-  import { computed } from "@vue/reactivity";
+  import { TableCellIcon, TableIconPosition } from "@/models/table/TableCellIcon";
 
   const props = defineProps<{
-    data?: any;
-    icon?: string | ((entity: any) => TableMapItemIconOptions);
+    data: TableCellIcon;
   }>();
-
-  const iconOptions = computed(() => {
-    return props.icon && typeof props.icon === "function" ? props.icon(props.data) : null;
-  });
-
-  const value = computed(() => {
-    if (iconOptions.value) {
-      return iconOptions.value.value || "";
-    } else {
-      return props.icon;
-    }
-  });
-
-  const toolTip = computed(() => {
-    if (iconOptions.value) {
-      return iconOptions.value.tooltip;
-    }
-    return "";
-  });
-
-  const position = computed(() => {
-    if (iconOptions.value) {
-      return iconOptions.value.position;
-    }
-    return IconPosition.inFront;
-  });
-
-  const iconClasses = computed(() => {
-    return {
-      "ml-2": position.value === IconPosition.behind,
-      "mr-2": position.value !== IconPosition.behind,
-    };
-  });
 
   const showTooltip = ref(false);
 </script>
 
 <template>
-  <v-tooltip v-model="showTooltip" location="top" :disabled="!toolTip">
+  <label v-if="data.label && data.position === TableIconPosition.Prepend">{{ data.label }}</label>
+  <v-tooltip v-model="showTooltip" location="top" :disabled="!data.tooltip">
     <template #activator="{ props }">
-      <v-icon v-bind="props" :icon="value" :class="iconClasses"></v-icon>
+      <v-icon v-bind="props" :icon="data.iconName"></v-icon>
     </template>
-    <span>{{ toolTip }}</span>
+    <span v-if="data.tooltip">{{ data.tooltip }}</span>
   </v-tooltip>
+  <label v-if="data.label && data.position === TableIconPosition.Append">{{ data.label }}</label>
 </template>
