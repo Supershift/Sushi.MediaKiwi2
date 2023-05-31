@@ -33,7 +33,7 @@
     return {
       position: item.srp ? TableIconPosition.Append : TableIconPosition.Prepend,
       iconName: item.srp ? "mdi-account-check" : "mdi-alert-circle",
-      tooltip: item.srp ? "NoSRP" : "SRP",
+      tooltip: item.srp ? "SRP" : "NoSRP",
       label: item.srp ? "SRP correct" : "Define SRP",
     };
   }
