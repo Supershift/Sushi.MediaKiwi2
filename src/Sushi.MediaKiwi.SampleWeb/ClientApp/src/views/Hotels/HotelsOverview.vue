@@ -32,9 +32,9 @@
   function srpIcon(item: Hotel): TableCellIcon {
     return {
       position: item.srp ? TableIconPosition.Append : TableIconPosition.Prepend,
-      iconName: item.srp ? "mdi-alert-circle" : "mdi-account-check",
-      tooltip: item.srp ? "SRP" : "NoSRP",
-      label: item.srp ? "Define SRP" : "SRP correct",
+      iconName: item.srp ? "mdi-account-check" : "mdi-alert-circle",
+      tooltip: item.srp ? "NoSRP" : "SRP",
+      label: item.srp ? "SRP correct" : "Define SRP",
     };
   }
   const tableMap: TableMap<Hotel> = {
