@@ -13,6 +13,9 @@ class MockedSectionConnector implements ISectionConnector {}
 describe("registerServices", () => {
   beforeEach(() => {
     container.reset();
+
+    // register axios instance
+    container.register("MediakiwiAxiosInstance", { useValue: {} });
   });
   it("Should register all defaults from undefined registrations holder", () => {
     registerServices(container, undefined);

@@ -1,5 +1,5 @@
 import { constructor } from "tsyringe/dist/typings/types";
-import type { INavigationConnector, IViewConnector, ISectionConnector } from "@/services";
+import type { INavigationConnector, IViewConnector, ISectionConnector, ILocaleConnector } from "@/services";
 import { IRoleConnector } from "@/services/IRoleConnector";
 
 export interface IMediakiwiServiceRegistrations {
@@ -7,4 +7,5 @@ export interface IMediakiwiServiceRegistrations {
   viewConnector?: constructor<IViewConnector>;
   sectionConnector?: constructor<ISectionConnector>;
   roleConnector?: constructor<IRoleConnector>;
+  localeConnector?: constructor<ILocaleConnector>;
 }

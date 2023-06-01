@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MediaKiwi.WebAPI.Paging;
@@ -20,6 +21,19 @@ namespace Sushi.MediaKiwi.WebAPI
         {
             _localeService = localeService;
             _pagingRetriever = pagingRetriever;
+        }
+
+        /// <summary>
+        /// Gets all enabled locales.
+        /// </summary>        
+        /// <returns></returns>
+        [HttpGet]
+        [Route("enabled")]
+        [AllowAnonymous]
+        public async Task<ActionResult<ListResult<Locale>>> GetEnabledLocales()
+        {   
+            var result = await _localeService.GetAllAsync(true, new DAL.Paging.PagingValues(0, 1000));
+            return this.CreateResponse(result);
         }
 
         /// <summary>
