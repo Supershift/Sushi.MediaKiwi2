@@ -13,7 +13,7 @@
   }>();
 
   // inject dependencies
-  const { formatNumber, formatMoneyValue } = useI18next();
+  const { formatNumber, formatMoneyValue } = await useI18next();
 
   // reactive variables
   const mapItemValue = computed(() => (props.mapItem.value ? props.mapItem.value(props.data) : undefined));

@@ -11,7 +11,7 @@
   const isAuthenticated = useIsAuthenticated();
   const { instance } = useMsal();
   const routerManager = container.resolve<RouterManager>("RouterManager");
-  const { t } = useI18next("MkSignIn");
+  const { t } = await useI18next("MkSignIn");
   // we could be coming back from an authentication redirect, so wait for authentication to complete
   await instance.handleRedirectPromise();
 

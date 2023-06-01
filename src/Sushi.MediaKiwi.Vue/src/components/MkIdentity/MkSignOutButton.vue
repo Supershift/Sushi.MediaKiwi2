@@ -4,7 +4,7 @@
   import { useI18next } from "@/composables/useI18next";
 
   // inject dependencies
-  const { t } = useI18next();
+  const { t } = await useI18next();
   const isAuthenticated = useIsAuthenticated();
 
   const logoutRedirect = () => {

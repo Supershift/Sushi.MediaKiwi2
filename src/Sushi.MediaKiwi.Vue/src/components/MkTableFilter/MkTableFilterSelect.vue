@@ -13,7 +13,7 @@
   }>();
 
   // inject dependencies
-  const { t } = useI18next();
+  const { t } = await useI18next();
   function selectChanged(selectedValue: TableFilterValue) {
     emit("update:modelValue", selectedValue);
   }

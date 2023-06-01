@@ -20,7 +20,7 @@
   }>();
 
   // inject dependencies
-  const { i18next, t } = useI18next();
+  const { i18next, t } = await useI18next();
 
   // define reactive variables
   const menu = ref(false);

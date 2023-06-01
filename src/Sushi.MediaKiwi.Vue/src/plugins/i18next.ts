@@ -10,7 +10,7 @@ export default {
     if (callback) callback(i18n);
 
     // init instance and make a ref to it
-    i18n.init();
+    const i18initPromise = i18n.init();
     const instance = ref(i18n);
 
     // subscribe to events, so we can manually trigger a ref update
@@ -24,5 +24,6 @@ export default {
 
     // add i18next to the app
     app.provide("i18next", instance);
+    app.provide("i18initPromise", i18initPromise);
   },
 };

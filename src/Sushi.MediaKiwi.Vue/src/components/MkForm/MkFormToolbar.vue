@@ -11,7 +11,7 @@
   defineEmits(["save", "undo", "delete"]);
 
   // inject dependencies
-  const { i18next, t } = useI18next();
+  const { i18next, t } = await useI18next();
 </script>
 
 <template>
