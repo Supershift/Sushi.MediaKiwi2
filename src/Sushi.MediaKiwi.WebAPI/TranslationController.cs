@@ -42,13 +42,11 @@ namespace Sushi.MediaKiwi.WebAPI
         /// Gets all translations.
         /// </summary>        
         /// <returns></returns>
-        [HttpPost]
-        [AllowAnonymous]
+        [HttpPost]        
         [Route("{localeId}/{namespace}")]
         public async Task<ActionResult> AddMissingTranslations(string localeId, string @namespace, [FromBody]Dictionary<string, string> data)
         {
-            // to do: store missing translation
-            // to do: add authentication
+            // to do: store missing translation            
             return this.CreateResponse(new Result(ResultCode.Success));
         }
     }

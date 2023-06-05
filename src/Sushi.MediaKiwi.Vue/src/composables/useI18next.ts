@@ -1,4 +1,6 @@
+import { identity } from "@/identity";
 import { MoneyValue } from "@/models";
+import { tokenStore } from "@/plugins/i18next";
 import { i18n } from "i18next";
 import { Ref, computed, inject, ref } from "vue";
 
@@ -22,7 +24,11 @@ export async function useI18next(namespace?: string) {
 
   // if a namespace is provided, check if it already exists on i18next and if not, add it
   if (namespace && !i18next.value.hasLoadedNamespace(namespace)) {
-    //await i18next.value.loadNamespaces(namespace);
+    // this involves an api call, which requires authentication
+    // as a temporary fix, we acquire the token here
+    const accessToken = await identity.getAccessToken();
+    tokenStore.token = accessToken;
+
     await i18next.value.loadNamespaces(namespace);
   }
 

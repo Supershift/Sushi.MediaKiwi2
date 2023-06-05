@@ -1,6 +1,12 @@
 import { InitOptions, createInstance, i18n } from "i18next";
 import { App, ref, triggerRef } from "vue";
 
+export const tokenStore = <
+  {
+    token: string | undefined;
+  }
+>{};
+
 export default {
   install: (app: App, options?: InitOptions, callback?: (instance: i18n) => void) => {
     // create i18next

@@ -17,7 +17,7 @@ import { registerRouter } from "./helpers/registerRouter";
 import { addWaitOnRouterManager } from "./router/waitOnRouterManager";
 import { addCheckIsInRole } from "./router/checkIsInRole";
 import { registerAxios } from "./helpers/registerAxios";
-import i18next from "./plugins/i18next";
+import i18next, { tokenStore } from "./plugins/i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import HttpApi from "i18next-http-backend";
 
@@ -52,11 +52,27 @@ export default {
         }
 
         // add http backend
-        const httpApi = new HttpApi();
+        const httpApi = new HttpApi();        
         httpApi.init(null, {
           crossDomain: true,
           loadPath: `${options.apiBaseUrl}/translations/{{lng}}/{{ns}}`,
           addPath: `${options.apiBaseUrl}/translations/{{lng}}/{{ns}}`,
+          customHeaders: () => {
+            let result = {};
+            // custom headers does not support promises
+            // how to fix?
+            // - get access token when calling useI18next() and store it in a variable
+            //   which isn't too bad but mixes concerns in i18next
+            // - write our own http backend
+            //   which is a lot of work and we'll have to maintain it
+            //   but on the other hand we can use axios
+            const accessToken = tokenStore.token;
+            
+            if (accessToken) {
+              result = { Authorization: `Bearer ${accessToken}` };
+            }
+            return result;
+          },
         });
         i18n.use(httpApi);
       }
