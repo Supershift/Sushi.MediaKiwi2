@@ -2,7 +2,8 @@
   import { MkNavigation, MkScreen, MkNavigationIcon, MkThemeToggle, MkAvatar, MkSuspense } from "@/components";
   import { useIsAuthenticated } from "@/composables/useIsAuthenticated";
   import { useSnackbarStore } from "@/stores/snackbar";
-
+  import { onMounted, ref } from "vue";
+  import { inject } from "vue";
   // inject dependencies
   const isAuthenticated = useIsAuthenticated();
   const snackbar = useSnackbarStore();

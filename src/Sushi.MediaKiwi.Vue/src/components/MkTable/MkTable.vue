@@ -55,7 +55,7 @@
   const store = useMediakiwiStore();
   const navigation = useNavigation();
   const snackbar = useSnackbarStore();
-  const { t } = useI18next();
+  const { t } = await useI18next();
 
   // define reactive variables
   const inProgress = ref(false);

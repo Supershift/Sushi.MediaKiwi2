@@ -7,7 +7,7 @@
   import { ILocaleConnector } from "@/services";
 
   // inject dependencies
-  const { i18next } = useI18next();
+  const { i18next } = await useI18next();
   const localeConnector = container.resolve<ILocaleConnector>("ILocaleConnector");
 
   // define reactive variables

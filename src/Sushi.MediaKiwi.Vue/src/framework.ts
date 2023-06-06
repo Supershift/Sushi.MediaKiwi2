@@ -39,6 +39,8 @@ export default {
         fallbackLng: "en",
         ns: ["common"],
         defaultNS: "common",
+        saveMissing: true,
+        partialBundledLanguages: true,
         ...options.i18nextOptions,
       },
       (i18n) => {
@@ -54,6 +56,7 @@ export default {
         httpApi.init(null, {
           crossDomain: true,
           loadPath: `${options.apiBaseUrl}/translations/{{lng}}/{{ns}}`,
+          addPath: `${options.apiBaseUrl}/translations/{{lng}}/{{ns}}`,
         });
         i18n.use(httpApi);
       }

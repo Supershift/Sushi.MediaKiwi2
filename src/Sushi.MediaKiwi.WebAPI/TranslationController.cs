@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Mvc;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
@@ -33,7 +34,22 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<Dictionary<string, string>>> GetTranslations(string localeId, string @namespace)
         {   
             var result = await _translationService.GetAllAsync(localeId, @namespace);
+            
             return this.CreateResponse(result);
+        }
+
+        /// <summary>
+        /// Gets all translations.
+        /// </summary>        
+        /// <returns></returns>
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("{localeId}/{namespace}")]
+        public async Task<ActionResult> AddMissingTranslations(string localeId, string @namespace, [FromBody]Dictionary<string, string> data)
+        {
+            // to do: store missing translation
+            // to do: add authentication
+            return this.CreateResponse(new Result(ResultCode.Success));
         }
     }
 }

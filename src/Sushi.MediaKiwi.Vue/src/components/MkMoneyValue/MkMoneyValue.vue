@@ -16,7 +16,7 @@
   }>();
 
   // inject dependencies
-  const { t } = useI18next();
+  const { t } = await useI18next();
 
   // define reactive variables
   const currencies = computed<string[]>(() => props.currencies || Intl.supportedValuesOf("currency"));

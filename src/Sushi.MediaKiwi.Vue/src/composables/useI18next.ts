@@ -7,12 +7,23 @@ import { Ref, computed, inject, ref } from "vue";
  * @param namespace If provided, the t function will be scoped to this namespace.
  * @returns
  */
-export function useI18next(namespace?: string) {
-  // get global i18next from app
+export async function useI18next(namespace?: string) {
+  // inject dependencies
   const i18next = inject<Ref<i18n>>("i18next");
 
   if (!i18next) {
     throw new Error("i18next is not provided, install the plugin first");
+  }
+
+  const i18nInitPromise = inject<Promise<any>>("i18initPromise");
+
+  // check if i18next is initialized
+  await i18nInitPromise;
+
+  // if a namespace is provided, check if it already exists on i18next and if not, add it
+  if (namespace && !i18next.value.hasLoadedNamespace(namespace)) {
+    //await i18next.value.loadNamespaces(namespace);
+    await i18next.value.loadNamespaces(namespace);
   }
 
   // provide reactive t functions for provided namespace
