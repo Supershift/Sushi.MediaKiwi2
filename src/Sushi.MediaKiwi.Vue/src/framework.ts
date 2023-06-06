@@ -18,8 +18,6 @@ import { addWaitOnRouterManager } from "./router/waitOnRouterManager";
 import { addCheckIsInRole } from "./router/checkIsInRole";
 import { registerAxios } from "./helpers/registerAxios";
 import i18next, { tokenStore } from "./plugins/i18next";
-import LanguageDetector from "i18next-browser-languagedetector";
-import HttpApi from "i18next-http-backend";
 
 export default {
   install(app: App, options: MediakiwiVueOptions): void {
@@ -35,6 +33,7 @@ export default {
     // add i18n
     app.use(
       i18next,
+      options,
       {
         fallbackLng: "en",
         ns: ["common"],
@@ -43,35 +42,7 @@ export default {
         partialBundledLanguages: true,
         ...options.i18nextOptions,
       },
-      (i18n) => {
-        // add language detector
-        i18n.use(LanguageDetector);
-
-        // add http backend
-        const httpApi = new HttpApi();
-        httpApi.init(null, {
-          crossDomain: true,
-          loadPath: `${options.apiBaseUrl}/translations/{{lng}}/{{ns}}`,
-          addPath: `${options.apiBaseUrl}/translations/{{lng}}/{{ns}}`,
-          customHeaders: () => {
-            let result = {};
-            // custom headers does not support promises
-            // the below is a temp fix, we will need an http backend which does support promises or ideally axios
-            const accessToken = tokenStore.token;
-
-            if (accessToken) {
-              result = { Authorization: `Bearer ${accessToken}` };
-            }
-            return result;
-          },
-        });
-        i18n.use(httpApi);
-
-        // call client's callback if provided
-        if (options.i18nextCallback) {
-          options.i18nextCallback(i18n);
-        }
-      }
+      options.i18nextCallback
     );
 
     // create vuetify

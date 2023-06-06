@@ -1,5 +1,8 @@
 import { InitOptions, createInstance, i18n } from "i18next";
 import { App, ref, triggerRef } from "vue";
+import LanguageDetector from "i18next-browser-languagedetector";
+import HttpApi from "i18next-http-backend";
+import { MediakiwiVueOptions } from "@/models";
 
 export const tokenStore = <
   {
@@ -8,9 +11,32 @@ export const tokenStore = <
 >{};
 
 export default {
-  install: (app: App, options?: InitOptions, callback?: (instance: i18n) => void) => {
+  install: (app: App, mediakiwiOptions: MediakiwiVueOptions, options?: InitOptions, callback?: (instance: i18n) => void) => {
     // create i18next
     const i18n = createInstance(options);
+
+    // add language detector
+    i18n.use(LanguageDetector);
+
+    // add http backend
+    const httpApi = new HttpApi();
+    httpApi.init(null, {
+      crossDomain: true,
+      loadPath: `${mediakiwiOptions.apiBaseUrl}/translations/{{lng}}/{{ns}}`,
+      addPath: `${mediakiwiOptions.apiBaseUrl}/translations/{{lng}}/{{ns}}`,
+      customHeaders: () => {
+        let result = {};
+        // custom headers does not support promises
+        // the below is a temp fix, we will need an http backend which does support promises or ideally axios
+        const accessToken = tokenStore.token;
+
+        if (accessToken) {
+          result = { Authorization: `Bearer ${accessToken}` };
+        }
+        return result;
+      },
+    });
+    i18n.use(httpApi);
 
     // call callback if provided
     if (callback) callback(i18n);
