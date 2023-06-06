@@ -40,6 +40,7 @@ export default {
         fallbackLng: "en",
         ns: ["common"],
         defaultNS: "common",
+        partialBundledLanguages: true,
         resources: {
           en: {
             // add common translations

@@ -5,6 +5,7 @@ import { DependencyContainer, Lifecycle } from "tsyringe";
 import { RouterManager } from "@/router/routerManager";
 import { RouteGenerator } from "@/router/routeGenerator";
 import { RoleConnector } from "@/services/RoleConnector";
+import { LocaleConnector } from "@/services/LocaleConnector";
 
 export function registerServices(container: DependencyContainer, registations?: IMediakiwiServiceRegistrations) {
   // register helpers
@@ -16,4 +17,5 @@ export function registerServices(container: DependencyContainer, registations?: 
   container.register("IViewConnector", registations?.viewConnector ? registations.viewConnector : ViewConnector);
   container.register("ISectionConnector", registations?.sectionConnector ? registations.sectionConnector : SectionConnector);
   container.register("IRoleConnector", registations?.roleConnector ? registations.roleConnector : RoleConnector);
+  container.register("ILocaleConnector", registations?.localeConnector ? registations.localeConnector : LocaleConnector);
 }
