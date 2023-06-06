@@ -46,13 +46,9 @@ export default {
       (i18n) => {
         // add language detector
         i18n.use(LanguageDetector);
-        if (options.i18nextCallback) {
-          // call client's callback if provided
-          options.i18nextCallback(i18n);
-        }
 
         // add http backend
-        const httpApi = new HttpApi();        
+        const httpApi = new HttpApi();
         httpApi.init(null, {
           crossDomain: true,
           loadPath: `${options.apiBaseUrl}/translations/{{lng}}/{{ns}}`,
@@ -60,14 +56,9 @@ export default {
           customHeaders: () => {
             let result = {};
             // custom headers does not support promises
-            // how to fix?
-            // - get access token when calling useI18next() and store it in a variable
-            //   which isn't too bad but mixes concerns in i18next
-            // - write our own http backend
-            //   which is a lot of work and we'll have to maintain it
-            //   but on the other hand we can use axios
+            // the below is a temp fix, we will need an http backend which does support promises or ideally axios
             const accessToken = tokenStore.token;
-            
+
             if (accessToken) {
               result = { Authorization: `Bearer ${accessToken}` };
             }
@@ -75,6 +66,11 @@ export default {
           },
         });
         i18n.use(httpApi);
+
+        // call client's callback if provided
+        if (options.i18nextCallback) {
+          options.i18nextCallback(i18n);
+        }
       }
     );
 

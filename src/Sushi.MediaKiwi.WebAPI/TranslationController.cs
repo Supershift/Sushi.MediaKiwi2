@@ -46,8 +46,11 @@ namespace Sushi.MediaKiwi.WebAPI
         [Route("{localeId}/{namespace}")]
         public async Task<ActionResult> AddMissingTranslations(string localeId, string @namespace, [FromBody]Dictionary<string, string> data)
         {
-            // to do: store missing translation            
-            return this.CreateResponse(new Result(ResultCode.Success));
+            if (data.Any() == false) {
+                return this.CreateResponse(new Result(ResultCode.ValidationFailed));
+            }
+            var result = await _translationService.AddAsync(localeId, @namespace, data.First().Key, data.First().Value);
+            return this.CreateResponse(result);
         }
     }
 }

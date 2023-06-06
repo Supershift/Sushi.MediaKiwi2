@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Primitives;
 using Sushi.MediaKiwi.DAL.Paging;
 using Sushi.MediaKiwi.DAL.Repository;
 using Sushi.MediaKiwi.Services.Model;
@@ -44,6 +45,26 @@ namespace Sushi.MediaKiwi.Services
             }
 
             return new Result<Dictionary<string, string>>(result);
+        }
+
+        /// <summary>
+        /// Gets all <see cref="Translation"/> instances.
+        /// </summary>        
+        /// <returns></returns>
+        public async Task<Result> AddAsync(string localeId, string @namespace, string key, string value)
+        {
+            // map input to dal
+            var translation = new DAL.Translation()
+            {
+                Key = key,
+                LocaleId = localeId,
+                Namespace = @namespace,
+                Value = value
+            };
+
+            await _translationRepository.InsertAsync(translation);
+
+            return new Result(ResultCode.Success);
         }
     }
 }
