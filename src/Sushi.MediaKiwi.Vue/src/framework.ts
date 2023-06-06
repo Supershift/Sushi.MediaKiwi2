@@ -18,9 +18,8 @@ import { addWaitOnRouterManager } from "./router/waitOnRouterManager";
 import { addCheckIsInRole } from "./router/checkIsInRole";
 import { registerAxios } from "./helpers/registerAxios";
 import i18next from "./plugins/i18next";
-import en from "./locales/en/common.json";
-import nl from "./locales/nl/common.json";
 import LanguageDetector from "i18next-browser-languagedetector";
+import HttpApi from "i18next-http-backend";
 
 export default {
   install(app: App, options: MediakiwiVueOptions): void {
@@ -40,34 +39,23 @@ export default {
         fallbackLng: "en",
         ns: ["common"],
         defaultNS: "common",
-        partialBundledLanguages: true,
-        resources: {
-          en: {
-            // add common translations
-            common: en,
-            // add mk's own component's translations
-            MkSignIn: {
-              Main: "Log in to continue:",
-              Footer: "Can't login? Contact your administrator.",
-            },
-          },
-          nl: {
-            common: nl,
-            MkSignIn: {
-              Main: "Log in om door te gaan:",
-              Footer: "Problemen met inloggen? Neem contact op met uw beheerder.",
-            },
-          },
-        },
         ...options.i18nextOptions,
       },
-      (instance) => {
+      (i18n) => {
         // add language detector
-        instance.use(LanguageDetector);
+        i18n.use(LanguageDetector);
         if (options.i18nextCallback) {
           // call client's callback if provided
-          options.i18nextCallback(instance);
+          options.i18nextCallback(i18n);
         }
+
+        // add http backend
+        const httpApi = new HttpApi();
+        httpApi.init(null, {
+          crossDomain: true,
+          loadPath: `${options.apiBaseUrl}/translations/{{lng}}/{{ns}}`,
+        });
+        i18n.use(httpApi);
       }
     );
 

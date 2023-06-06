@@ -36,19 +36,7 @@ settings.mediaKiwi.modules = import.meta.glob("./views/**/*.vue");
 settings.mediaKiwi.i18nextOptions = {
   debug: true,
 };
-settings.mediaKiwi.i18nextCallback = (instance: i18n) => {
-  // below will be replaced with a method to load translations from a backend
-  if (instance.options.resources) {
-    instance.options.resources.en.Home = {
-      Header: "Home page",
-      Main: "Welcome to MediaKiwi 2.0!",
-    };
-    instance.options.resources.nl.Home = {
-      Header: "Landings pagina",
-      Main: "Welkom bij MediaKiwi 2.0!",
-    };
-  }
-};
+settings.mediaKiwi.i18nextCallback = (instance: i18n) => {};
 
 // install mediakiwi
 app.use(mediakiwi, settings.mediaKiwi);
