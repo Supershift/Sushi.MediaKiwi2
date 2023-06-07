@@ -10,6 +10,11 @@
     /** Title specificly for the current table */
     title?: string;
   }>();
+
+  // define slots
+  const slots = defineSlots<{
+    actions?: (props: unknown) => any;
+  }>();
 </script>
 
 <template>
@@ -26,12 +31,12 @@
             <MkTableActionNewItemButton :item-view-id="props.itemViewId" />
           </template>
 
-          <!-- Default location to render all other child elements -->
-          <v-btn icon color="primary">
+          <!-- Render the actions slot -->
+          <v-btn v-if="slots.actions" icon color="primary">
             <v-icon>mdi-dots-vertical</v-icon>
 
             <v-menu activator="parent">
-              <slot></slot>
+              <slot name="actions"></slot>
             </v-menu>
           </v-btn>
         </v-card-actions>

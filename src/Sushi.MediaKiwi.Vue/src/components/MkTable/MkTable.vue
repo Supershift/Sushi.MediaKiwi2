@@ -51,6 +51,14 @@
     (e: "update:currentPage", value: number): void;
   }>();
 
+  // define slots
+  const slots = defineSlots<{
+    header?: (props: unknown) => any;
+    actions?: (props: unknown) => any;
+    "selection-actions"?: (props: unknown) => any;
+    footer?: (props: unknown) => any;
+  }>();
+
   // inject dependencies
   const snackbar = useSnackbarStore();
 
@@ -111,7 +119,9 @@
     <template v-if="(props.actions || props.new) && props.itemViewId">
       <v-divider />
       <MkTableAction :item-view-id="props.itemViewId" :new="props.new" :title="props.title">
-        <slot name="actions"></slot>
+        <template v-if="slots.actions" #actions>
+          <slot name="actions"></slot>
+        </template>
       </MkTableAction>
     </template>
 
