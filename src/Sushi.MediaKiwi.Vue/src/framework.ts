@@ -17,9 +17,7 @@ import { registerRouter } from "./helpers/registerRouter";
 import { addWaitOnRouterManager } from "./router/waitOnRouterManager";
 import { addCheckIsInRole } from "./router/checkIsInRole";
 import { registerAxios } from "./helpers/registerAxios";
-import i18next from "./plugins/i18next";
-import LanguageDetector from "i18next-browser-languagedetector";
-import HttpApi from "i18next-http-backend";
+import i18next, { tokenStore } from "./plugins/i18next";
 
 export default {
   install(app: App, options: MediakiwiVueOptions): void {
@@ -35,6 +33,7 @@ export default {
     // add i18n
     app.use(
       i18next,
+      options,
       {
         fallbackLng: "en",
         ns: ["common"],
@@ -43,23 +42,7 @@ export default {
         partialBundledLanguages: true,
         ...options.i18nextOptions,
       },
-      (i18n) => {
-        // add language detector
-        i18n.use(LanguageDetector);
-        if (options.i18nextCallback) {
-          // call client's callback if provided
-          options.i18nextCallback(i18n);
-        }
-
-        // add http backend
-        const httpApi = new HttpApi();
-        httpApi.init(null, {
-          crossDomain: true,
-          loadPath: `${options.apiBaseUrl}/translations/{{lng}}/{{ns}}`,
-          addPath: `${options.apiBaseUrl}/translations/{{lng}}/{{ns}}`,
-        });
-        i18n.use(httpApi);
-      }
+      options.i18nextCallback
     );
 
     // create vuetify

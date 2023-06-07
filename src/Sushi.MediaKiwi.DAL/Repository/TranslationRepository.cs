@@ -31,5 +31,11 @@ namespace Sushi.MediaKiwi.DAL.Repository
             var result = _connector.GetAllAsync(query);
             return result;
         }
+
+        /// <inheritdoc/>
+        public async Task InsertAsync(Translation translation)
+        {
+            await _connector.InsertAsync(translation);
+        }
     }
 }

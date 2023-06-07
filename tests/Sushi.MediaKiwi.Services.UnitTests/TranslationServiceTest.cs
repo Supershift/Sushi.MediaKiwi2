@@ -15,7 +15,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
     public class TranslationServiceTest
     {
         [Fact]
-        public async Task GetAllTranslations()
+        public async Task GetAllTranslationsTest()
         {
             // arrange
             var stubs = new QueryListResult<DAL.Translation>
@@ -27,10 +27,10 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             string localeId = "en-US";
             string ns = "someNamespace";
 
-            var localeRepositoryMock = new Mock<ITranslationRepository>();
-            localeRepositoryMock.Setup(x => x.GetAllAsync(It.Is<string>(x=>x == localeId), It.Is<string>(x=>x == ns))).ReturnsAsync(stubs);
+            var translationRepositoryMock = new Mock<ITranslationRepository>();
+            translationRepositoryMock.Setup(x => x.GetAllAsync(It.Is<string>(x=>x == localeId), It.Is<string>(x=>x == ns))).ReturnsAsync(stubs);
 
-            var service = new TranslationService(localeRepositoryMock.Object);
+            var service = new TranslationService(translationRepositoryMock.Object);
 
             // act
             var result = await service.GetAllAsync(localeId, ns);
@@ -42,6 +42,28 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             Assert.Equal(2, result.Value.Count);
             Assert.Equal(stubs[0].Key, result.Value.Keys.ToArray()[0]);
             Assert.Equal(stubs[0].Value, result.Value.Values.ToArray()[0]);
+        }
+
+        [Fact]
+        public async Task AddTranslationTest()
+        {
+            // arrange
+            string localeId = "nl";
+            string ns = "someNamespace";
+            string key = "delete";
+            string value = "verwijderen";
+
+            var translationRepositoryMock = new Mock<ITranslationRepository>();
+            translationRepositoryMock.Setup(x => x.InsertAsync(It.IsAny<DAL.Translation>())).Verifiable();
+
+            // act
+            var service = new TranslationService(translationRepositoryMock.Object);
+            var result = await service.AddAsync(localeId, ns, key, value);
+
+            // assert
+            Assert.NotNull(result);
+            Assert.Equal(ResultCode.Success, result.Code);
+            translationRepositoryMock.Verify(x=>x.InsertAsync(It.IsAny<DAL.Translation>()), Times.Once);
         }
     }
 }
