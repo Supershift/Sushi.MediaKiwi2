@@ -90,7 +90,6 @@
   <mk-table
     v-model:current-page="currentPage"
     v-model:filters="filters"
-    actions
     new
     :api-result="hotels"
     :table-map="tableMap"
@@ -100,6 +99,10 @@
     title="Subtitle for the hotel list"
   >
     <template #actions>
+      <v-btn>Knop 1</v-btn>
+      <v-btn>Knop 2</v-btn>
+    </template>
+    <template #menuActions>
       <v-list>
         <v-list-item title="Action 1" @click="action" />
         <v-list-item title="Action 2" @click="action" />

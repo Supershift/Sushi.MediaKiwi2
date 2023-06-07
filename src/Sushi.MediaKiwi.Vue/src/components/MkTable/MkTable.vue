@@ -38,8 +38,6 @@
     onLoad?: () => Promise<void>;
     /** Title specificly for the current table */
     title?: string;
-    /** Displays the action bar if set to true and itemViewId has a value */
-    actions?: boolean;
   }>();
 
   // define events
@@ -54,8 +52,12 @@
   // define slots
   const slots = defineSlots<{
     header?: (props: unknown) => any;
+    /** Visible action slot for the MkTableAction bar */
     actions?: (props: unknown) => any;
-    "selection-actions"?: (props: unknown) => any;
+    /** Action slot for the MkTableAction bar */
+    menuActions?: (props: unknown) => any;
+    /** Action slot for the MkTableToolbar */
+    selectionActions?: (props: unknown) => any;
     footer?: (props: unknown) => any;
   }>();
 
@@ -116,11 +118,14 @@
     <v-progress-linear v-if="inProgress" indeterminate absolute></v-progress-linear>
     <slot name="header"></slot>
 
-    <template v-if="(props.actions || props.new) && props.itemViewId">
+    <template v-if="(slots.actions || slots.menuActions || props.new || props.title) && props.itemViewId">
       <v-divider />
       <MkTableAction :item-view-id="props.itemViewId" :new="props.new" :title="props.title">
         <template v-if="slots.actions" #actions>
           <slot name="actions"></slot>
+        </template>
+        <template v-if="slots.menuActions" #menuActions>
+          <slot name="menuActions"></slot>
         </template>
       </MkTableAction>
     </template>
@@ -132,8 +137,8 @@
     <template v-if="checkbox">
       <v-expand-transition>
         <MkTableToolbarVue v-if="selection?.length" :selection="selection" @click:close="mkTableViewComponent.clearSelection">
-          <template #selection-actions>
-            <slot name="selection-actions"></slot>
+          <template #selectionActions>
+            <slot name="selectionActions"></slot>
           </template>
         </MkTableToolbarVue>
       </v-expand-transition>

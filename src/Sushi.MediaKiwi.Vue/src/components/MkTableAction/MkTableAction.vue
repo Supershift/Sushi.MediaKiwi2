@@ -13,7 +13,10 @@
 
   // define slots
   const slots = defineSlots<{
+    /** Slot for the visible buttons in the action obar */
     actions?: (props: unknown) => any;
+    /** Slot designed for the buttons (or whatever the user wants) that are available behind the 3 dots menu */
+    menuActions?: (props: unknown) => any;
   }>();
 </script>
 
@@ -26,17 +29,21 @@
         <v-spacer></v-spacer>
 
         <v-card-actions>
+          <template v-if="slots.actions">
+            <slot name="actions"></slot>
+          </template>
+
           <!-- Render the new button when the prop is set -->
           <template v-if="props.itemViewId && props.new">
             <MkTableActionNewItemButton :item-view-id="props.itemViewId" />
           </template>
 
           <!-- Render the actions slot -->
-          <v-btn v-if="slots.actions" icon color="primary">
+          <v-btn v-if="slots.menuActions" icon color="primary">
             <v-icon>mdi-dots-vertical</v-icon>
 
             <v-menu activator="parent">
-              <slot name="actions"></slot>
+              <slot name="menuActions"></slot>
             </v-menu>
           </v-btn>
         </v-card-actions>
