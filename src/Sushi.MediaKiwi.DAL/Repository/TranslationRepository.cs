@@ -22,13 +22,53 @@ namespace Sushi.MediaKiwi.DAL.Repository
         }
 
         /// <inheritdoc/>
-        public Task<QueryListResult<Translation>> GetAllAsync(string localeId, string @namespace)
+        public async Task DuplicateAsync(string baseLocaleId, string targetLocaleId)
+        {
+            var query = _connector.CreateQuery();
+            query.AddParameter("@baseLocaleID", baseLocaleId);
+            query.AddParameter("@targetLocaleID", targetLocaleId);
+            query.SqlQuery = @"
+INSERT INTO dbo.mk_Translations
+(LocaleID
+,Namespace
+,TranslationKey
+,Value
+,IsNew)
+SELECT @targetLocaleID, Namespace, TranslationKey, Value, 1
+FROM mk_Translations AS base
+WHERE LocaleID = @baseLocaleID
+AND NOT EXISTS
+(
+	SELECT *
+	FROM mk_Translations AS target
+	WHERE target.LocaleID = @targetLocaleID
+	AND target.Namespace = base.Namespace
+	AND target.TranslationKey = base.TranslationKey
+)";
+            await _connector.ExecuteNonQueryAsync(query);
+        }
+
+        /// <inheritdoc/>
+        public async Task<QueryListResult<Translation>> GetAllAsync(string localeId, string? @namespace)
         {
             var query = _connector.CreateQuery();
             query.Add(x => x.LocaleId, localeId);
-            query.Add(x => x.Namespace, @namespace);
+            if (!string.IsNullOrWhiteSpace(@namespace))
+                query.Add(x => x.Namespace, @namespace);
             query.AddOrder(x => x.Key);
-            var result = _connector.GetAllAsync(query);
+            var result = await _connector.GetAllAsync(query);
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public async Task<Translation> GetAsync(string localeId, string @namespace, string key)
+        {
+            var query = _connector.CreateQuery();
+            query.Add(x => x.LocaleId, localeId);
+            
+                query.Add(x => x.Namespace, @namespace);
+            query.Add(x => x.Key, key);
+            var result = await _connector.GetFirstAsync(query);
             return result;
         }
 

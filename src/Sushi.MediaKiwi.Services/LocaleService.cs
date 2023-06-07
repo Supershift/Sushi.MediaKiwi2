@@ -16,16 +16,16 @@ namespace Sushi.MediaKiwi.Services
     public class LocaleService
     {
         private readonly ILocaleRepository _localeRepository;
+        private readonly ITranslationRepository _translationRepository;
         private readonly IMapper _mapper;
 
         /// <summary>
         /// Creates a new instance of <see cref="LocaleService"/>.
-        /// </summary>
-        /// <param name="localeRepository"></param>
-        /// <param name="mapper"></param>
-        public LocaleService(ILocaleRepository localeRepository, IMapper mapper)
+        /// </summary>        
+        public LocaleService(ILocaleRepository localeRepository, ITranslationRepository translationRepository, IMapper mapper)
         {
             _localeRepository = localeRepository;
+            _translationRepository = translationRepository;
             _mapper = mapper;
         }
 
@@ -43,6 +43,107 @@ namespace Sushi.MediaKiwi.Services
             _mapper.Map(locales, result.Result);
 
             return new Result<ListResult<Locale>>(result);
+        }
+
+        /// <summary>
+        /// Gets a <see cref="Locale"/> instance.
+        /// </summary>        
+        /// <returns></returns>
+        public async Task<Result<Locale>> GetAsync(string id)
+        {
+            // get locale from repository
+            var locale = await _localeRepository.GetAsync(id);
+
+            if (locale == null)
+                return new Result<Locale>(ResultCode.NotFound);
+
+            // map to result            
+            var result = _mapper.Map<Locale>(locale);
+
+            return new Result<Locale>(result);
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Locale"/>.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="locale"></param>
+        /// <returns></returns>
+        public async Task<Result<Locale>> CreateAsync(string id, Locale locale)
+        {
+            // get default locale
+            var defaultLocale = await _localeRepository.GetDefaultAsync();
+
+            // start transaction
+            using (var ts = DAL.Utility.CreateTransactionScope())
+            {
+                // map to repository model
+                var repositoryLocale = _mapper.Map<Locale, DAL.Locale>(locale);
+                repositoryLocale.Id = id;
+
+                // insert into repository
+                await _localeRepository.InsertAsync(repositoryLocale);
+
+                // duplicate translations from default locale, if it exists
+                if (defaultLocale != null)
+                {
+                    await _translationRepository.DuplicateAsync(defaultLocale.Id, repositoryLocale.Id);
+                }
+
+                // create result
+                var result = new Locale();
+                _mapper.Map(repositoryLocale, result);
+
+                // commit
+                ts.Complete();
+
+                return new Result<Locale>(result);
+            }
+        }
+
+        /// <summary>
+        /// Deletes a <see cref="Locale"/> instance.
+        /// </summary>        
+        /// <returns></returns>
+        public async Task<Result> DeleteAsync(string id)
+        {
+            // get locale from repository
+            var locale = await _localeRepository.GetAsync(id);
+
+            if (locale == null)
+                return new Result<Locale>(ResultCode.NotFound);
+
+            // delete
+            await _localeRepository.DeleteAsync(locale);
+
+            return new Result(ResultCode.Success);
+        }
+
+        /// <summary>
+        /// Updates an existing <see cref="Locale"/>.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="locale"></param>
+        /// <returns></returns>
+        public async Task<Result<Locale>> UpdateAsync(string id, Locale locale)
+        {
+            // get existing local
+            var repositoryLocale = await _localeRepository.GetAsync(id);            
+
+            if (repositoryLocale == null)
+                return new Result<Locale>(ResultCode.NotFound);
+
+            // map to repository model
+            _mapper.Map(locale, repositoryLocale);
+
+            // update into repository
+            await _localeRepository.UpdateAsync(repositoryLocale);
+
+            // create result
+            var result = new Locale();
+            _mapper.Map(repositoryLocale, result);
+
+            return new Result<Locale>(result);
         }
     }
 }
