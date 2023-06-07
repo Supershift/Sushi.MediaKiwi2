@@ -90,7 +90,7 @@ export async function useI18next(namespace?: string) {
     i18next,
     /** T function scoped to the namespace provided when adding composable. If non provided, scoped to default. */
     t,
-    /** T function scoped to the default namespace */
+    /** T function scoped to the default namespace (which by default is 'common') */
     defaultT,
     /** Formats a Date object or iso8601 string to a localized string with date and time */
     formatDateTime,
