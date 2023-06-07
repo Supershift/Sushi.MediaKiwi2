@@ -94,7 +94,7 @@
     checkbox
     item-view-id="SampleEdit"
   >
-    <template #actions>
+    <template #selection-actions>
       <v-btn @click="download">Download</v-btn>
       <v-btn @click="move">move</v-btn>
 

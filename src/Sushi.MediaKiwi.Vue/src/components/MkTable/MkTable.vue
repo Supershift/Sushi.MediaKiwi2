@@ -5,12 +5,10 @@
   import MkTableFilter from "@/components/MkTableFilter/MkTableFilter.vue";
   import MkTableView from "./MkTableView.vue";
   import MkTableToolbarVue from "./MkTableToolbar.vue";
-  import { useMediakiwiStore } from "@/stores";
-  import { useNavigation } from "@/composables/useNavigation";
+  import MkTableAction from "@/components/MkTableAction/MkTableAction.vue";
   import { IListResult, IPagingResult } from "@/models";
   import { useSnackbarStore } from "@/stores/snackbar";
   import { onMounted } from "vue";
-  import { useI18next } from "@/composables/useI18next";
 
   // define properties
   const props = defineProps<{
@@ -34,12 +32,14 @@
     selection?: unknown[];
     /** Displays new item button if set to true and itemViewId has a value */
     new?: boolean;
-
     /** Make each row in the table selectable. */
     checkbox?: boolean;
-
     /** Callback invoked when the component needs new data, i.e. a filter changes, the current page changes, etc. */
     onLoad?: () => Promise<void>;
+    /** Title specificly for the current table */
+    title?: string;
+    /** Displays the action bar if set to true and itemViewId has a value */
+    actions?: boolean;
   }>();
 
   // define events
@@ -52,10 +52,7 @@
   }>();
 
   // inject dependencies
-  const store = useMediakiwiStore();
-  const navigation = useNavigation();
   const snackbar = useSnackbarStore();
-  const { t } = await useI18next();
 
   // define reactive variables
   const inProgress = ref(false);
@@ -87,25 +84,6 @@
     await loadData();
   }
 
-  function onNewClick() {
-    // navigate user to target page if defined
-    if (props.itemViewId) {
-      // find navigation item for the view
-      const view = store.views.find((x) => x.id == props.itemViewId);
-
-      if (!view) {
-        throw new Error(`No view found for external id ${props.itemViewId}`);
-      }
-      const navigationItem = store.navigationItems.find((x) => x.viewId == view?.id);
-      if (!navigationItem) {
-        throw new Error(`No navigationItem found for view ${props.itemViewId}`);
-      }
-
-      // push user to target page
-      navigation.navigateTo(navigationItem, undefined);
-    }
-  }
-
   // local functions
   async function loadData() {
     // if a data callback is defined, call it so the parent can fetch data
@@ -129,19 +107,23 @@
   <v-card>
     <v-progress-linear v-if="inProgress" indeterminate absolute></v-progress-linear>
     <slot name="header"></slot>
-    <template v-if="filters || (props.new && props.itemViewId)">
-      <MkTableFilter :model-value="filters" @update:model-value="filterChanged">
-        <template #actions>
-          <v-btn v-if="props.new && props.itemViewId" prepend-icon="mdi-plus" @click="onNewClick">{{ t("New item") }}</v-btn>
-        </template>
-      </MkTableFilter>
+
+    <template v-if="(props.actions || props.new) && props.itemViewId">
+      <v-divider />
+      <MkTableAction :item-view-id="props.itemViewId" :new="props.new" :title="props.title">
+        <slot name="actions"></slot>
+      </MkTableAction>
+    </template>
+
+    <template v-if="filters">
+      <MkTableFilter :model-value="filters" @update:model-value="filterChanged" />
     </template>
 
     <template v-if="checkbox">
       <v-expand-transition>
         <MkTableToolbarVue v-if="selection?.length" :selection="selection" @click:close="mkTableViewComponent.clearSelection">
-          <template #actions>
-            <slot name="actions"></slot>
+          <template #selection-actions>
+            <slot name="selection-actions"></slot>
           </template>
         </MkTableToolbarVue>
       </v-expand-transition>

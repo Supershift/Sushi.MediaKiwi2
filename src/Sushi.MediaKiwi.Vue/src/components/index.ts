@@ -3,6 +3,7 @@ export * from "./MkNavigation";
 export * from "./MkScreen";
 export * from "./MkTable";
 export * from "./MkTableFilter";
+export * from "./MkTableAction";
 export * from "./MkIdentity";
 export * from "./MkThemeToggle";
 export * from "./MkBreadcrumbs";
