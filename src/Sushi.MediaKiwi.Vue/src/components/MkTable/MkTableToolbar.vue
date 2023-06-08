@@ -13,7 +13,7 @@
     <v-label class="ms-5 me-4"> {{ selection.length }} selected </v-label>
     <v-divider class="mx-2" inset vertical></v-divider>
 
-    <slot name="actions"></slot>
+    <slot name="selectionActions"></slot>
 
     <v-spacer></v-spacer>
 

@@ -12,7 +12,7 @@
 
   // define properties and events
   const props = defineProps<{
-    modelValue?: TableFilter;
+    modelValue: TableFilter;
   }>();
 
   const emit = defineEmits<{
@@ -120,19 +120,19 @@
 </script>
 
 <template>
-  <v-card variant="tonal">
+  <v-card variant="flat">
     <v-container>
       <v-row class="pb-2">
         <template v-if="modelValue">
           <v-menu v-model="menu" :close-on-content-click="false" location="end">
             <!-- Button -->
-            <template #activator="{ props }">
-              <v-btn class="mt-1 ml-1" v-bind="props" color="primary" variant="plain" icon="mdi-filter-variant"> </v-btn>
+            <template #activator="args">
+              <v-btn class="mt-1 ml-1" v-bind="args.props" color="primary" variant="plain" icon="mdi-filter-variant"> </v-btn>
             </template>
 
             <!-- context menu -->
             <v-list v-if="!state.currentFilter">
-              <v-list-item v-for="key in Object.keys(modelValue)" :value="modelValue[key]" @click="changeCurrentFilter(key, modelValue[key])">
+              <v-list-item v-for="key in Object.keys(modelValue)" :key="key" :value="modelValue[key]" @click="changeCurrentFilter(key, modelValue[key])">
                 <v-list-item-title>{{ modelValue[key].title }}</v-list-item-title>
               </v-list-item>
             </v-list>
@@ -170,12 +170,6 @@
             @click="openMenu"
           ></v-text-field>
         </template>
-
-        <v-spacer></v-spacer>
-
-        <v-sheet class="mt-2 mr-2">
-          <slot name="actions"></slot>
-        </v-sheet>
       </v-row>
     </v-container>
   </v-card>
