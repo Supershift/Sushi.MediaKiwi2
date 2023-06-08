@@ -25,9 +25,9 @@
 
   // get data
   async function onLoad() {
-    data.value = await localeConnector.GetLocales(false, { pageIndex: currentPage.value, pageSize: 10 });
+    data.value = await localeConnector.GetAll(false, { pageIndex: currentPage.value, pageSize: 10 });
   }
 </script>
 <template>
-  <mk-table :table-map="tableMap" v-model:current-page="currentPage" new :api-result="data" :on-load="onLoad" item-view-id="LocaleEdit"></mk-table>
+  <mk-table :table-map="tableMap" v-model:current-page="currentPage" new :api-result="data" :on-load="onLoad" item-view-id="MkLocaleEdit"></mk-table>
 </template>

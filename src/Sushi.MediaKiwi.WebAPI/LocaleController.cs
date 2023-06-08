@@ -78,7 +78,7 @@ namespace Sushi.MediaKiwi.WebAPI
         /// Deletes a locale.
         /// </summary>        
         /// <returns></returns>
-        [HttpGet]
+        [HttpDelete]
         [Route("{id}")]
         public async Task<ActionResult> DeleteLocale(string id)
         {
