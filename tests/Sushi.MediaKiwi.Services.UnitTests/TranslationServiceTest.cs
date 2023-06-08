@@ -28,7 +28,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             string ns = "someNamespace";
 
             var translationRepositoryMock = new Mock<ITranslationRepository>();
-            translationRepositoryMock.Setup(x => x.GetAllAsync(It.Is<string>(x=>x == localeId), It.Is<string>(x=>x == ns))).ReturnsAsync(stubs);
+            translationRepositoryMock.Setup(x => x.GetAllAsync(It.Is<string>(x=>x == localeId), It.Is<string>(x=>x == ns), null)).ReturnsAsync(stubs);
 
             var service = new TranslationService(translationRepositoryMock.Object);
 
@@ -45,7 +45,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
         }
 
         [Fact]
-        public async Task AddTranslationTest()
+        public async Task AddMissingTranslationTest()
         {
             // arrange
             string localeId = "nl";
@@ -54,16 +54,16 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             string value = "verwijderen";
 
             var translationRepositoryMock = new Mock<ITranslationRepository>();
-            translationRepositoryMock.Setup(x => x.InsertAsync(It.IsAny<DAL.Translation>())).Verifiable();
+            translationRepositoryMock.Setup(x => x.InsertMissingAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Verifiable();
 
             // act
             var service = new TranslationService(translationRepositoryMock.Object);
-            var result = await service.AddAsync(localeId, ns, key, value);
+            var result = await service.AddMissingAsync(localeId, ns, key, value);
 
             // assert
             Assert.NotNull(result);
             Assert.Equal(ResultCode.Success, result.Code);
-            translationRepositoryMock.Verify(x=>x.InsertAsync(It.IsAny<DAL.Translation>()), Times.Once);
+            translationRepositoryMock.Verify(x=> x.InsertMissingAsync(ns, key, value));
         }
     }
 }

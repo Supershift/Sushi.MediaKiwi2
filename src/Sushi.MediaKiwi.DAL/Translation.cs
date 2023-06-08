@@ -17,7 +17,8 @@ namespace Sushi.MediaKiwi.DAL
                 Id(x => x.LocaleId, "LocaleID").Assigned().SqlType(System.Data.SqlDbType.VarChar);
                 Id(x => x.Namespace, "Namespace").Assigned().SqlType(System.Data.SqlDbType.VarChar);
                 Id(x => x.Key, "TranslationKey").Assigned().SqlType(System.Data.SqlDbType.VarChar);
-                Map(x => x.Value, "Value").Assigned().SqlType(System.Data.SqlDbType.NVarChar);
+                Map(x => x.Value, "Value").SqlType(System.Data.SqlDbType.NVarChar);
+                Map(x => x.IsNew, "IsNew");
             }
         }
         
@@ -25,5 +26,6 @@ namespace Sushi.MediaKiwi.DAL
         public string Namespace { get; set; }
         public string Key { get; set; }        
         public string Value { get; set; }
+        public bool IsNew { get; set; }
     }
 }

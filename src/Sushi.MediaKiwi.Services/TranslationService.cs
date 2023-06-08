@@ -35,7 +35,7 @@ namespace Sushi.MediaKiwi.Services
         public async Task<Result<Dictionary<string, string>>> GetAllAsync(string localeId, string @namespace)
         {
             // get translations from repository
-            var translations = await _translationRepository.GetAllAsync(localeId, @namespace);
+            var translations = await _translationRepository.GetAllAsync(localeId, @namespace, null);
 
             // map to result
             var result = new Dictionary<string, string>();
@@ -48,21 +48,12 @@ namespace Sushi.MediaKiwi.Services
         }
 
         /// <summary>
-        /// Gets all <see cref="Translation"/> instances.
+        /// Adds a missing <see cref="Translation"/> instances.
         /// </summary>        
         /// <returns></returns>
-        public async Task<Result> AddAsync(string localeId, string @namespace, string key, string value)
-        {
-            // map input to dal
-            var translation = new DAL.Translation()
-            {
-                Key = key,
-                LocaleId = localeId,
-                Namespace = @namespace,
-                Value = value
-            };
-
-            await _translationRepository.InsertAsync(translation);
+        public async Task<Result> AddMissingAsync(string originalLocaleId, string @namespace, string key, string value)
+        {            
+            await _translationRepository.InsertMissingAsync(@namespace, key, value);
 
             return new Result(ResultCode.Success);
         }
