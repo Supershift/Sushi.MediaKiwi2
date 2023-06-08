@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { MkTable } from "../MkTable";
+  import { MkTable } from "@/components";
   import { TableMap, ListResult, Section } from "@/models";
   import { ref } from "vue";
   import { container } from "tsyringe";
@@ -28,5 +28,5 @@
   }
 </script>
 <template>
-  <mk-table v-model:current-page="currentPage" new :api-result="data" :on-load="onLoad" :table-map="tableMap" item-view-id="SectionEdit"></mk-table>
+  <mk-table v-model:current-page="currentPage" new :api-result="data" :on-load="onLoad" :table-map="tableMap" item-view-id="MkSectionEdit"></mk-table>
 </template>
