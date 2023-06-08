@@ -9,7 +9,7 @@
   // inject dependencies
   const localeConnector = container.resolve<ILocaleConnector>("ILocaleConnector");
   const navigation = useNavigation();
-  const { t, defaultT } = await useI18next();
+  const { defaultT } = await useI18next();
 
   // get id of the view from the route
   const localeId = navigation.currentViewParameter;

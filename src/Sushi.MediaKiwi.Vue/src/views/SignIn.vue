@@ -11,6 +11,7 @@
   const isAuthenticated = useIsAuthenticated();
   const { instance } = useMsal();
   const routerManager = container.resolve<RouterManager>("RouterManager");
+  // we need to manually set the view id, because this view is not part of the navigation
   const { t } = await useI18next("MkSignIn");
   // we could be coming back from an authentication redirect, so wait for authentication to complete
   await instance.handleRedirectPromise();

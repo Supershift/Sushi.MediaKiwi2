@@ -20,7 +20,7 @@
   }>();
 
   // inject dependencies
-  const { i18next, t } = await useI18next();
+  const { defaultT } = await useI18next();
 
   // define reactive variables
   const menu = ref(false);
@@ -142,7 +142,7 @@
               <component :is="GetComponentForFilterType(state.currentFilter)" v-model="state.currentFilterValue" :table-filter-item="state.currentFilter">
               </component>
               <v-card-actions>
-                <v-btn @click="applyFilter()">{{ t("Apply") }}</v-btn>
+                <v-btn @click="applyFilter()">{{ defaultT("Apply") }}</v-btn>
               </v-card-actions>
             </v-card>
           </v-menu>
@@ -161,7 +161,7 @@
           </template>
 
           <v-text-field
-            :placeholder="t('Filter')"
+            :placeholder="defaultT('Filter')"
             variant="plain"
             :hide-details="true"
             readonly

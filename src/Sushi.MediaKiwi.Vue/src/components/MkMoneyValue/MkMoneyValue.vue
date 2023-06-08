@@ -16,7 +16,7 @@
   }>();
 
   // inject dependencies
-  const { t } = await useI18next();
+  const { defaultT } = await useI18next();
 
   // define reactive variables
   const currencies = computed<string[]>(() => props.currencies || Intl.supportedValuesOf("currency"));
@@ -71,6 +71,6 @@
       clearable
       :disabled="currencyInputDisabled"
     ></v-autocomplete>
-    <v-text-field :model-value="amount" @update:model-value="amountUpdated" type="number" :label="t('Amount')"></v-text-field>
+    <v-text-field :model-value="amount" @update:model-value="amountUpdated" type="number" :label="defaultT('Amount')"></v-text-field>
   </v-input>
 </template>

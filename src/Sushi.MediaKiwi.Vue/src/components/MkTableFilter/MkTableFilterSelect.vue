@@ -13,7 +13,7 @@
   }>();
 
   // inject dependencies
-  const { t } = await useI18next();
+  const { defaultT } = await useI18next();
   function selectChanged(selectedValue: TableFilterValue) {
     emit("update:modelValue", selectedValue);
   }
@@ -22,5 +22,6 @@
 </script>
 
 <template>
-  <v-autocomplete v-model="value" :items="tableFilterItem.options" :label="t('Choose')" return-object @update:model-value="selectChanged"> </v-autocomplete>
+  <v-autocomplete v-model="value" :items="tableFilterItem.options" :label="defaultT('Choose')" return-object @update:model-value="selectChanged">
+  </v-autocomplete>
 </template>

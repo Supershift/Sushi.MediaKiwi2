@@ -13,7 +13,7 @@
   }>();
 
   // inject dependencies
-  const { t } = await useI18next();
+  const { defaultT } = await useI18next();
 
   function textFieldChanged(selectedValue: string) {
     emit("update:modelValue", { title: selectedValue, value: selectedValue });
@@ -23,5 +23,5 @@
 </script>
 
 <template>
-  <v-text-field v-model="value" @update:model-value="textFieldChanged" :label="t('Value')"> </v-text-field>
+  <v-text-field v-model="value" @update:model-value="textFieldChanged" :label="defaultT('Value')"> </v-text-field>
 </template>
