@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.DAL
 {
-    public class Locale
+    public record Locale
     {
         public class LocaleMap : DataMap<Locale>
         {
@@ -17,11 +17,13 @@ namespace Sushi.MediaKiwi.DAL
                 Id(x => x.Id, "LocaleID").Assigned().SqlType(System.Data.SqlDbType.VarChar);
                 Map(x => x.Name, "Name").SqlType(System.Data.SqlDbType.NVarChar);
                 Map(x => x.IsEnabled, "IsEnabled");
+                Map(x => x.IsDefault, "IsDefault");
             }
         }
         
         public string Id { get; set; }
         public string Name { get; set; }
         public bool IsEnabled { get; set; }
+        public bool IsDefault { get; set; }
     }
 }

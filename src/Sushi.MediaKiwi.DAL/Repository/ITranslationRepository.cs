@@ -18,13 +18,30 @@ namespace Sushi.MediaKiwi.DAL.Repository
         /// <param name="localeId"></param>
         /// <param name="namespace"></param>
         /// <returns></returns>
-        Task<QueryListResult<Translation>> GetAllAsync(string localeId, string @namespace);
+        Task<QueryListResult<Translation>> GetAllAsync(string localeId, string? @namespace);
 
         /// <summary>
-        /// Inserts a trasnlation.
+        /// Inserts a translation.
         /// </summary>
         /// <param name="translation"></param>
         /// <returns></returns>
         Task InsertAsync(Translation translation);
+
+        /// <summary>
+        /// Duplicates all missing translations from a base locale to a target locale.
+        /// </summary>
+        /// <param name="baseLocaleId"></param>
+        /// <param name="targetLocaleId"></param>
+        /// <returns></returns>
+        Task DuplicateAsync(string baseLocaleId, string targetLocaleId);
+
+        /// <summary>
+        /// Gets a translation.
+        /// </summary>
+        /// <param name="localeId"></param>
+        /// <param name="namespace"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        Task<Translation> GetAsync(string localeId, string @namespace, string key);
     }
 }

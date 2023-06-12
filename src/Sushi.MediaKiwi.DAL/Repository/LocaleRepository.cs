@@ -23,7 +23,13 @@ namespace Sushi.MediaKiwi.DAL.Repository
         }
 
         /// <inheritDoc />
-        public Task<QueryListResult<Locale>> GetAllAsync(bool onlyEnabled, PagingValues? pagingValues)
+        public async Task DeleteAsync(Locale locale)
+        {
+            await _connector.DeleteAsync(locale);
+        }
+
+        /// <inheritDoc />
+        public async Task<QueryListResult<Locale>> GetAllAsync(bool onlyEnabled, PagingValues? pagingValues)
         {
             var query = _connector.CreateQuery();
             if (onlyEnabled)
@@ -32,8 +38,38 @@ namespace Sushi.MediaKiwi.DAL.Repository
             if (pagingValues != null)
                 query.AddPaging(pagingValues);
 
-            var result = _connector.GetAllAsync(query);
+            var result = await _connector.GetAllAsync(query);
             return result;
+        }
+
+        /// <inheritDoc />
+        public async Task<Locale?> GetAsync(string id)
+        {
+            var query = _connector.CreateQuery();
+            query.Add(x => x.Id, id);
+            var result = await _connector.GetFirstAsync(query);
+            return result;
+        }
+
+        /// <inheritDoc />
+        public async Task<Locale?> GetDefaultAsync()
+        {
+            var query = _connector.CreateQuery();
+            query.Add(x => x.IsDefault, true);
+            var result = await _connector.GetFirstAsync(query);
+            return result;
+        }
+
+        /// <inheritDoc />
+        public async Task InsertAsync(Locale locale)
+        {
+            await _connector.InsertAsync(locale);
+        }
+
+        /// <inheritDoc />
+        public async Task UpdateAsync(Locale locale)
+        {
+            await _connector.UpdateAsync(locale);
         }
     }
 }

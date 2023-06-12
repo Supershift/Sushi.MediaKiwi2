@@ -49,5 +49,53 @@ namespace Sushi.MediaKiwi.WebAPI
             var result = await _localeService.GetAllAsync(onlyEnabled.GetValueOrDefault(), pagingValues);
             return this.CreateResponse(result);
         }
+
+        /// <summary>
+        /// Gets a locale.
+        /// </summary>        
+        /// <returns></returns>
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<ActionResult<Locale>> GetLocale(string id)
+        {
+            var result = await _localeService.GetAsync(id);
+            return this.CreateResponse(result);
+        }
+
+        /// <summary>
+        /// Creates a new locale.
+        /// </summary>        
+        /// <returns></returns>
+        [HttpPost]
+        [Route("{id}")]
+        public async Task<ActionResult<Locale>> CreateLocale(string id, Locale request)
+        {
+            var result = await _localeService.CreateAsync(id, request);
+            return this.CreateResponse(result);
+        }
+
+        /// <summary>
+        /// Deletes a locale.
+        /// </summary>        
+        /// <returns></returns>
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<ActionResult> DeleteLocale(string id)
+        {
+            var result = await _localeService.DeleteAsync(id);
+            return this.CreateResponse(result);
+        }
+
+        /// <summary>
+        /// Updates an existing locale.
+        /// </summary>        
+        /// <returns></returns>
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<ActionResult<Locale>> UpdateLocale(string id, Locale request)
+        {
+            var result = await _localeService.UpdateAsync(id, request);
+            return this.CreateResponse(result);
+        }
     }
 }
