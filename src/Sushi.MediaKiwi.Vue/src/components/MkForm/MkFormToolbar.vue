@@ -12,7 +12,7 @@
   defineEmits(["save", "undo", "delete"]);
 
   // inject dependencies
-  const { i18next, defaultT } = await useI18next();
+  const { defaultT } = await useI18next();
 
   // define reactive variables
   const dialog = ref(false);

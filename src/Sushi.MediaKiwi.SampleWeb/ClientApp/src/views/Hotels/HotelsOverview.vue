@@ -21,7 +21,7 @@
   // inject dependencies
   const connector = container.resolve(HotelConnector);
   const countriesConnector = container.resolve(CountryConnector);
-  const { formatDateTime, t } = await useI18next("HotelsOverview");
+  const { formatDateTime, t } = await useI18next();
 
   // define reactive variables
   const currentPage = ref(0);

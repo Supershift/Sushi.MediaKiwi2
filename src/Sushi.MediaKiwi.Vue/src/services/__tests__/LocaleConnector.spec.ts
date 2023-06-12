@@ -20,7 +20,7 @@ describe("LocaleConnector", () => {
 
     // create connector and call
     const connector = new LocaleConnector(axiosMock);
-    const result = await connector.GetLocales(true);
+    const result = await connector.GetAll(true);
 
     // assert
     expect(axiosMock.get).toHaveBeenCalledOnce();

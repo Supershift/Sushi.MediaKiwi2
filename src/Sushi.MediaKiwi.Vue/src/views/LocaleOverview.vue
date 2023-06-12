@@ -7,7 +7,7 @@
   import { MkTable } from "@/components";
   // inject dependencies
   const localeConnector = container.resolve<ILocaleConnector>("ILocaleConnector");
-  const { t, defaultT } = await useI18next();
+  const { defaultT } = await useI18next();
 
   // define reactive variables
   const data = ref<ListResult<Locale>>();
