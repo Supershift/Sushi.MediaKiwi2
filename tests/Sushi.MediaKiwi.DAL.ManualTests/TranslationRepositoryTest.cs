@@ -19,7 +19,7 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
         [Fact]
         public async Task GetAllTest()
         {
-            var translations = await _repository.GetAllAsync("en", "common");
+            var translations = await _repository.GetAllAsync("en", "common", null);
 
             Assert.True(translations.Count > 1);
         }
@@ -38,12 +38,51 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
                 await _repository.DuplicateAsync("en", targetLocale.Id);
 
                 // get all translations for english and test locale
-                var expectedTranslations = await _repository.GetAllAsync("en", null);
-                var actualTranslations = await _repository.GetAllAsync(targetLocale.Id, null);
+                var expectedTranslations = await _repository.GetAllAsync("en", null, null);
+                var actualTranslations = await _repository.GetAllAsync(targetLocale.Id, null, null);
 
                 // assert same keys exist
                 Assert.NotEmpty(expectedTranslations);
                 Assert.Equal(expectedTranslations.Select(x=>x.Key), actualTranslations.Select(x=>x.Key));
+            }
+        }
+
+        [Fact]
+        public async Task InsertMissingTest()
+        {
+            // start transaction to prevent test changing state permanently
+            using (var ts = DAL.Utility.CreateTransactionScope())
+            {
+                // get all locales
+                var allLocales = await _localeRepository.GetAllAsync(false, null);
+                
+                // create a new translation for a locale                
+                var translation = new Translation()
+                {
+                    Namespace = "fkgnfgn",
+                    Key = "sdfgsdgsd",
+                    Value = "test",
+                    IsNew = false,
+                    LocaleId = "en"
+                };
+                await _repository.InsertAsync(translation);
+
+                // duplicate for all other locales
+                await _repository.InsertMissingAsync(translation.Namespace, translation.Key, translation.Value);
+
+                // get all translations for this key and namespapce                
+                var translations = await _repository.GetAllAsync(null, translation.Namespace, translation.Key);
+
+                // assert a translation exists for each locale
+                Assert.NotEmpty(translations);
+                // the original locale has 'is new' false
+                Assert.Contains(translation, translations);
+
+                foreach (var locale in allLocales.Where(x => x.Id != translation.LocaleId))
+                {
+                    var expected = translation with { IsNew = true, LocaleId = locale.Id };
+                    Assert.Contains(expected, translations);
+                }                
             }
         }
     }

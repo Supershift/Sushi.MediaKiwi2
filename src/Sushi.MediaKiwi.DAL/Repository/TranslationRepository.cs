@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -49,12 +50,39 @@ AND NOT EXISTS
         }
 
         /// <inheritdoc/>
-        public async Task<QueryListResult<Translation>> GetAllAsync(string localeId, string? @namespace)
+        public async Task InsertMissingAsync(string @namespace, string key, string defaultValue)
         {
             var query = _connector.CreateQuery();
-            query.Add(x => x.LocaleId, localeId);
-            if (!string.IsNullOrWhiteSpace(@namespace))
-                query.Add(x => x.Namespace, @namespace);
+            query.AddParameter("@namespace", @namespace);
+            query.AddParameter("@key", key);
+            query.AddParameter("@value", defaultValue);
+            query.SqlQuery = @"
+INSERT INTO dbo.mk_Translations
+(LocaleID
+,Namespace
+,TranslationKey
+,Value
+,IsNew)
+SELECT LocaleID, @namespace, @key, @value, 1
+FROM mk_Locales
+WHERE NOT EXISTS
+(
+	SELECT *
+	FROM mk_Translations 
+	WHERE mk_Locales.LocaleID = mk_Translations.LocaleID
+	AND Namespace = @namespace
+	AND TranslationKey = @key	
+)";
+            await _connector.ExecuteNonQueryAsync(query);
+        }
+
+        /// <inheritdoc/>
+        public async Task<QueryListResult<Translation>> GetAllAsync(string? localeId, string? @namespace, string? key)
+        {
+            var query = _connector.CreateQuery();
+            if (!string.IsNullOrWhiteSpace(localeId)) query.Add(x => x.LocaleId, localeId);
+            if (!string.IsNullOrWhiteSpace(@namespace)) query.Add(x => x.Namespace, @namespace);
+            if (!string.IsNullOrWhiteSpace(key)) query.Add(x => x.Key, key);
             query.AddOrder(x => x.Key);
             var result = await _connector.GetAllAsync(query);
             return result;

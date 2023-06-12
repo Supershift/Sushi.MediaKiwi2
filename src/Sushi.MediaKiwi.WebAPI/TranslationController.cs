@@ -49,7 +49,7 @@ namespace Sushi.MediaKiwi.WebAPI
             if (data.Any() == false) {
                 return this.CreateResponse(new Result(ResultCode.ValidationFailed));
             }
-            var result = await _translationService.AddAsync(localeId, @namespace, data.First().Key, data.First().Value);
+            var result = await _translationService.AddMissingAsync(localeId, @namespace, data.First().Key, data.First().Value);
             return this.CreateResponse(result);
         }
     }
