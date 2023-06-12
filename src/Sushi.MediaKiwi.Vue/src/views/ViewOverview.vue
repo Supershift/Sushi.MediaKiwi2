@@ -1,12 +1,12 @@
 <script setup lang="ts">
-  import { MkTable } from "../MkTable";
+  import { MkTable } from "@/components";
   import { TableMap, ListResult, TableFilterItem, Sorting } from "@/models";
   import { View } from "@/models";
   import { useMediakiwiStore } from "@/stores";
   import { ref } from "vue";
   import { container } from "tsyringe";
   import { IViewConnector } from "@/services";
-  import { TableFilterType } from "../../models/enum/TableFilterType";
+  import { TableFilterType } from "@models/enum/TableFilterType";
 
   // inject dependencies
   const viewConnector = container.resolve<IViewConnector>("IViewConnector");
@@ -57,6 +57,6 @@
     :api-result="data"
     :on-load="onLoad"
     :table-map="tableMap"
-    item-view-id="ViewEdit"
+    item-view-id="MkViewEdit"
   ></mk-table>
 </template>
