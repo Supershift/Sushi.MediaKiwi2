@@ -13,18 +13,42 @@ namespace Sushi.MediaKiwi.DAL.Repository
     public interface ITranslationRepository
     {
         /// <summary>
-        /// Gets all <see cref="Translation"/> objects for a locale and namespace.
+        /// Gets all <see cref="Translation"/> objects for the given parameters
         /// </summary>
         /// <param name="localeId"></param>
         /// <param name="namespace"></param>
         /// <returns></returns>
-        Task<QueryListResult<Translation>> GetAllAsync(string localeId, string @namespace);
+        Task<QueryListResult<Translation>> GetAllAsync(string? localeId, string? @namespace, string? key);
 
         /// <summary>
-        /// Inserts a trasnlation.
+        /// Inserts a translation.
         /// </summary>
         /// <param name="translation"></param>
         /// <returns></returns>
         Task InsertAsync(Translation translation);
+
+        /// <summary>
+        /// Inserts a translation key for all locales that do not have that key yet.
+        /// </summary>
+        /// <param name="translation"></param>
+        /// <returns></returns>
+        Task InsertMissingAsync(string @namespace, string key, string defaultValue);
+
+        /// <summary>
+        /// Duplicates all missing translations from a base locale to a target locale.
+        /// </summary>
+        /// <param name="baseLocaleId"></param>
+        /// <param name="targetLocaleId"></param>
+        /// <returns></returns>
+        Task DuplicateAsync(string baseLocaleId, string targetLocaleId);
+
+        /// <summary>
+        /// Gets a translation.
+        /// </summary>
+        /// <param name="localeId"></param>
+        /// <param name="namespace"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        Task<Translation> GetAsync(string localeId, string @namespace, string key);
     }
 }

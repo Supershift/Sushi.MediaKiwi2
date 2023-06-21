@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { useI18next } from "@/composables/useI18next";
+  import { ref } from "vue";
 
   // define properties and events
   const props = defineProps<{
@@ -11,14 +12,17 @@
   defineEmits(["save", "undo", "delete"]);
 
   // inject dependencies
-  const { i18next, t } = await useI18next();
+  const { defaultT } = await useI18next();
+
+  // define reactive variables
+  const dialog = ref(false);
 </script>
 
 <template>
   <v-toolbar>
     <slot></slot>
-    <v-btn v-if="undo" :disabled="props.disabled" @click="$emit('undo', $event)">{{ t("Undo") }}</v-btn>
-    <v-btn v-if="save" :disabled="props.disabled" @click="$emit('save', $event)">{{ t("Save") }}</v-btn>
+    <v-btn v-if="undo" :disabled="props.disabled" @click="$emit('undo', $event)">{{ defaultT("Undo") }}</v-btn>
+    <v-btn v-if="save" :disabled="props.disabled" @click="$emit('save', $event)">{{ defaultT("Save") }}</v-btn>
 
     <v-btn v-if="props.delete" icon color="primary">
       <v-icon>mdi-dots-vertical</v-icon>
@@ -27,7 +31,26 @@
         <v-list :disabled="props.disabled">
           <v-list-item>
             <v-list-item-title>
-              <v-btn v-if="props.delete" @click="$emit('delete', $event)">{{ t("Delete") }}</v-btn>
+              <v-btn v-if="props.delete" color="primary">
+                {{ defaultT("Delete") }}
+
+                <v-dialog v-model="dialog" activator="parent" width="auto">
+                  <v-card>
+                    <v-card-text> {{ defaultT("Confirm delete") }} </v-card-text>
+                    <v-card-actions>
+                      <v-btn @click="dialog = false">{{ defaultT("Cancel") }}</v-btn>
+                      <v-btn
+                        color="primary"
+                        @click="
+                          dialog = false;
+                          $emit('delete', $event);
+                        "
+                        >{{ defaultT("Delete") }}</v-btn
+                      >
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </v-btn>
             </v-list-item-title>
           </v-list-item>
         </v-list>

@@ -12,7 +12,7 @@
   // inject dependencies
   const store = useMediakiwiStore();
   const navigation = useNavigation();
-  const { t } = await useI18next();
+  const { defaultT } = await useI18next();
 
   function onNewClick() {
     // navigate user to target page if defined
@@ -35,5 +35,5 @@
 </script>
 
 <template>
-  <v-btn prepend-icon="mdi-plus" @click="onNewClick">{{ t("New item") }}</v-btn>
+  <v-btn prepend-icon="mdi-plus" @click="onNewClick">{{ defaultT("New item") }}</v-btn>
 </template>

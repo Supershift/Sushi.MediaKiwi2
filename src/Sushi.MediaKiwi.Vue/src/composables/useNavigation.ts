@@ -47,9 +47,9 @@ export function useNavigation() {
    */
   function navigateTo(item: NavigationTypeGuard, itemId?: RouteParamValueRaw, options?: RouteLocationOptions): Promise<NavigationFailure | void | undefined> {
     if (checkTypeGuardIsSection(item)) {
-      // if it's the section, push to the first navigation item in the section
+      // if it's the section, push to the first navigation item in the section which is not a folder
       const section = item as Section;
-      const navigationItem = store.rootNavigationItems.find((x) => x.sectionId == section.id);
+      const navigationItem = store.rootNavigationItems.find((x) => x.sectionId == section.id && x.viewId);
       if (navigationItem) {
         return router.push({ name: navigationItem.id.toString() });
       } else {

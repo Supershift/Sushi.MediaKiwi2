@@ -1,13 +1,18 @@
+import "reflect-metadata";
 import { createApp, ref, App } from "vue";
 import { useI18next } from "../useI18next";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import i18next from "i18next";
-
+import { createTestingPinia } from "@pinia/testing";
+import { PublicClientApplication } from "@azure/msal-browser";
+import { identity } from "../../identity";
+import { View } from "../../models";
 // mock libraries
 vi.mock("i18next");
+vi.mock("@azure/msal-browser");
 
 describe("useI18next", () => {
-  function getComposable(ns?: string): ReturnType<typeof useI18next> {
+  async function getComposable(ns?: string | View): ReturnType<typeof useI18next> {
     let result;
     const app = createApp({
       setup() {
@@ -17,30 +22,32 @@ describe("useI18next", () => {
       },
     });
     app.provide("i18next", ref(i18next));
+    app.provide("i18initPromise", Promise.resolve());
+    app.use(createTestingPinia());
     app.mount(document.createElement("div"));
-
-    return result;
+    identity.msalInstance = new PublicClientApplication({ auth: { clientId: "test" } });
+    return await result;
   }
   beforeEach(() => {
     vi.clearAllMocks();
   });
   describe("t", () => {
-    it("Should call i18next.t without namespace", () => {
+    it("Should call i18next.t with view's id", async () => {
       // arrange
-      const spy = vi.spyOn(i18next, "t");
-      const composable = getComposable();
+      const spy = vi.spyOn(i18next, "getFixedT").mockImplementation(() => vi.fn());
+      const composable = await getComposable({ id: "myView" });
 
       // act
       composable.t.value("test");
 
       // assert
       expect(spy).toHaveBeenCalledOnce();
-      expect(spy).toHaveBeenCalledWith("test");
+      expect(spy).toHaveBeenCalledWith(null, "myView");
     });
-    it("Should call i18next.getFixedT with namespace", () => {
+    it("Should call i18next.getFixedT with namespace", async () => {
       // arrange
       const spy = vi.spyOn(i18next, "getFixedT").mockImplementation(() => vi.fn());
-      const composable = getComposable("myNamespace");
+      const composable = await getComposable("myNamespace");
 
       // act
       composable.t.value("test");
@@ -51,10 +58,10 @@ describe("useI18next", () => {
     });
   });
   describe("defaultT", () => {
-    it("Should call i18next.t", () => {
+    it("Should call i18next.t", async () => {
       // arrange
       const spy = vi.spyOn(i18next, "t");
-      const composable = getComposable("myNamespace");
+      const composable = await getComposable("myNamespace");
 
       // act
       composable.defaultT.value("test");
@@ -65,12 +72,12 @@ describe("useI18next", () => {
     });
   });
   describe("dateTime", () => {
-    it("Should parse Date object", () => {
+    it("Should parse Date object", async () => {
       // arrange
       const language = "en";
       i18next.resolvedLanguage = language;
       const spy = vi.spyOn(Intl, "DateTimeFormat");
-      const composable = getComposable("myNamespace");
+      const composable = await getComposable("myNamespace");
 
       // act
       const result = composable.formatDateTime.value(new Date(2021, 1, 1, 12, 0, 0));
@@ -79,12 +86,12 @@ describe("useI18next", () => {
       expect(spy).toHaveBeenCalledWith(language, { dateStyle: "short", timeStyle: "short" });
       expect(result).not.toBeUndefined();
     });
-    it("Should parse string", () => {
+    it("Should parse string", async () => {
       // arrange
       const language = "en";
       i18next.resolvedLanguage = language;
       const spy = vi.spyOn(Intl, "DateTimeFormat");
-      const composable = getComposable("myNamespace");
+      const composable = await getComposable("myNamespace");
 
       // act
       const result = composable.formatDateTime.value("2021-01-01T13:56:43Z");
@@ -95,12 +102,12 @@ describe("useI18next", () => {
     });
   });
   describe("date", () => {
-    it("Should parse Date object", () => {
+    it("Should parse Date object", async () => {
       // arrange
       const language = "en";
       i18next.resolvedLanguage = language;
       const spy = vi.spyOn(Intl, "DateTimeFormat");
-      const composable = getComposable("myNamespace");
+      const composable = await getComposable("myNamespace");
 
       // act
       const result = composable.formatDate.value(new Date(2021, 1, 1, 12, 0, 0));
@@ -109,12 +116,12 @@ describe("useI18next", () => {
       expect(spy).toHaveBeenCalledWith(language, { dateStyle: "short" });
       expect(result).not.toBeUndefined();
     });
-    it("Should parse string", () => {
+    it("Should parse string", async () => {
       // arrange
       const language = "en";
       i18next.resolvedLanguage = language;
       const spy = vi.spyOn(Intl, "DateTimeFormat");
-      const composable = getComposable("myNamespace");
+      const composable = await getComposable("myNamespace");
 
       // act
       const result = composable.formatDate.value("2021-01-01T13:56:43Z");
@@ -124,12 +131,12 @@ describe("useI18next", () => {
       expect(result).not.toBeUndefined();
     });
     describe("time", () => {
-      it("Should parse Date object", () => {
+      it("Should parse Date object", async () => {
         // arrange
         const language = "en";
         i18next.resolvedLanguage = language;
         const spy = vi.spyOn(Intl, "DateTimeFormat");
-        const composable = getComposable("myNamespace");
+        const composable = await getComposable("myNamespace");
 
         // act
         const result = composable.formatTime.value(new Date(2021, 1, 1, 12, 0, 0));
@@ -138,12 +145,12 @@ describe("useI18next", () => {
         expect(spy).toHaveBeenCalledWith(language, { timeStyle: "short" });
         expect(result).not.toBeUndefined();
       });
-      it("Should parse string", () => {
+      it("Should parse string", async () => {
         // arrange
         const language = "en";
         i18next.resolvedLanguage = language;
         const spy = vi.spyOn(Intl, "DateTimeFormat");
-        const composable = getComposable("myNamespace");
+        const composable = await getComposable("myNamespace");
 
         // act
         const result = composable.formatTime.value("2021-01-01T13:56:43Z");
@@ -154,12 +161,12 @@ describe("useI18next", () => {
       });
     });
     describe("formatMoneyValue", () => {
-      it("Should format money value", () => {
+      it("Should format money value", async () => {
         // arrange
         const language = "en";
         i18next.resolvedLanguage = language;
         const spy = vi.spyOn(Intl, "NumberFormat");
-        const composable = getComposable("myNamespace");
+        const composable = await getComposable("myNamespace");
 
         // act
         const result = composable.formatMoneyValue.value({ currency: "EUR", amount: 123.45 });
@@ -167,7 +174,7 @@ describe("useI18next", () => {
         // assert
         expect(spy).toHaveBeenCalledWith(language, { style: "currency", currency: "EUR" });
         expect(result).not.toBeUndefined();
-      })
+      });
     });
   });
 });

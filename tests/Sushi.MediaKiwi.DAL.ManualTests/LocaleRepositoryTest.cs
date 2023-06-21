@@ -21,5 +21,87 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
 
             Assert.True(locales.Count > 1);
         }
+
+        [Fact]
+        public async Task GetTest()
+        {
+            var locale = await _repository.GetAsync("en");
+            Assert.NotNull(locale);
+        }
+
+        [Fact]
+        public async Task GetDefaultTest()
+        {
+            var locale = await _repository.GetDefaultAsync();
+            Assert.NotNull(locale);
+            Assert.True(locale.IsDefault);
+        }
+
+        [Fact]
+        public async Task InsertTest()
+        {
+            var locale = new Locale()
+            {
+                Id = "test",
+                IsEnabled = true,
+                Name = "test",
+            };
+
+            // start transaction to prevent test changing state permanently
+            using (var ts = Utility.CreateTransactionScope())
+            {
+                await _repository.InsertAsync(locale);
+                
+                var result = await _repository.GetAsync(locale.Id);
+                Assert.NotNull(result);
+                Assert.Equal(locale, result);
+            }
+        }
+
+        [Fact]
+        public async Task UpdateTest()
+        {
+            // start transaction to prevent test changing state permanently
+            using (var ts = Utility.CreateTransactionScope())
+            {
+                // get existing locale
+                var locale = await _repository.GetAsync("en");
+
+                Assert.NotNull(locale);
+
+                // change something
+                locale.Name = locale.Name + locale.Name;
+
+                await _repository.UpdateAsync(locale);
+
+                var result = await _repository.GetAsync(locale.Id);
+                Assert.NotNull(result);
+                Assert.Equal(locale, result);
+            }
+        }
+
+        [Fact]
+        public async Task DeleteTest()
+        {
+            // start transaction to prevent test changing state permanently
+            using (var ts = Utility.CreateTransactionScope())
+            {
+                // create a new locale
+                var locale = new Locale()
+                {
+                    Id = "test",
+                    IsEnabled = true,
+                    Name = "test",
+                };
+                await _repository.InsertAsync(locale);               
+
+                // delete it
+                await _repository.DeleteAsync(locale);
+
+                // check it doesn't exist anymore
+                var result = await _repository.GetAsync(locale.Id);
+                Assert.Null(result);                
+            }
+        }
     }
 }

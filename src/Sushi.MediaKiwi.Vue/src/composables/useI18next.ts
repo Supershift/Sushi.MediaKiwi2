@@ -1,16 +1,18 @@
 import { identity } from "@/identity";
-import { MoneyValue } from "@/models";
+import { MoneyValue, View } from "@/models";
 import { tokenStore } from "@/plugins/i18next";
 import { i18n } from "i18next";
 import { Ref, computed, inject, ref } from "vue";
+import { useNavigation } from "./useNavigation";
 
 /**
  * Adds i18next to the component.
- * @param namespace If provided, the t function will be scoped to this namespace.
+ * @param scope If provided, the t function will be scoped to this namespace. If left undefined, it will be scoped to the current view.
  * @returns
  */
-export async function useI18next(namespace?: string) {
+export async function useI18next(scope?: View | string) {
   // inject dependencies
+  const navigation = useNavigation();
   const i18next = inject<Ref<i18n>>("i18next");
 
   if (!i18next) {
@@ -21,6 +23,19 @@ export async function useI18next(namespace?: string) {
 
   // check if i18next is initialized
   await i18nInitPromise;
+
+  // determine namespace
+  if (!scope) {
+    scope = navigation.currentNavigationItem.value?.view;
+    if (!scope) scope = "common";
+  }
+
+  let namespace: string;
+  if (typeof scope === "string") {
+    namespace = scope;
+  } else {
+    namespace = (scope as View).id;
+  }
 
   // if a namespace is provided, check if it already exists on i18next and if not, add it
   if (namespace && !i18next.value.hasLoadedNamespace(namespace)) {
@@ -90,7 +105,7 @@ export async function useI18next(namespace?: string) {
     i18next,
     /** T function scoped to the namespace provided when adding composable. If non provided, scoped to default. */
     t,
-    /** T function scoped to the default namespace */
+    /** T function scoped to the default namespace (which by default is 'common') */
     defaultT,
     /** Formats a Date object or iso8601 string to a localized string with date and time */
     formatDateTime,

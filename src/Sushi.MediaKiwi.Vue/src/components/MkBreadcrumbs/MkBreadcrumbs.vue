@@ -44,7 +44,7 @@
           </li>
 
           <v-breadcrumbs-item
-            :to="{ name: item.id.toString() }"
+            :to="item.viewId ? { name: item.id.toString() } : undefined"
             :active="isCurrentItem(index)"
             :disabled="isCurrentItem(index)"
             class="text-h4 text-container"

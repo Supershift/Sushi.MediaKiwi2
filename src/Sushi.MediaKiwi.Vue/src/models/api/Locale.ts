@@ -1,5 +1,5 @@
 export interface Locale {
   id: string;
-  name: string;
+  name?: string;
   isEnabled: boolean;
 }

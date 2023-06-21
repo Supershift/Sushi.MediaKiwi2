@@ -2,7 +2,7 @@
   import { useI18next } from "@supershift/mediakiwi-vue";
 
   // inject dependecies
-  const { t } = await useI18next("Home");
+  const { t } = await useI18next();
 </script>
 
 <template>
