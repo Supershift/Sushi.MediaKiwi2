@@ -9,7 +9,11 @@ export default mergeConfig(
   defineConfig({
     test: {
       globals: true,
-      environment: "happy-dom",
+      environment: "jsdom",
+      // environment: "happy-dom",
+      deps: {
+        inline: ["vuetify"],
+      },
     },
   })
 );
