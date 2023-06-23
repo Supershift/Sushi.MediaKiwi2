@@ -3,7 +3,7 @@ import "reflect-metadata";
 import MkMoneyValueComponent from "../MkMoneyValue.vue";
 import { describe, expect, vi, beforeEach } from "vitest";
 import { container } from "tsyringe";
-import { mountAsync } from "@tests/helpers/mount";
+import { mountAsync } from "@test/utils/mount";
 
 // mock libraries
 vi.mock("@azure/msal-browser");

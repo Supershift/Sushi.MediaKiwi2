@@ -10,7 +10,6 @@ export default mergeConfig(
     test: {
       globals: true,
       environment: "jsdom",
-      // environment: "happy-dom",
       deps: {
         inline: ["vuetify"],
       },
