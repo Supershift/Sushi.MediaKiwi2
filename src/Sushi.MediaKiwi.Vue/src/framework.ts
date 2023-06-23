@@ -103,4 +103,4 @@ export * from "@/stores";
 
 export * from "@/router";
 
-import "@/assets/main.css";
+import "@/assets/style/main.scss";

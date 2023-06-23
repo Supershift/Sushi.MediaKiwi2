@@ -1,0 +1,17 @@
+// Folder structure: https://dev.to/dostonnabotov/a-modern-sass-folder-structure-330f
+// @use "./abstracts";
+
+html {
+  overflow-y: hidden;
+}
+
+.mk-layout {
+  min-height: 100vh;
+}
+
+.v-main {
+  overflow-y: auto;
+  max-height: calc(100vh - var(--v-layout-top));
+  margin-top: var(--v-layout-top);
+  padding-top: 0;
+}

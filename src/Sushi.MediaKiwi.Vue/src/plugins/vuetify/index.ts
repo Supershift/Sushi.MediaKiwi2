@@ -8,7 +8,8 @@ import { md3 } from "vuetify/blueprints";
 
 import { mdi, aliases } from "vuetify/iconsets/mdi";
 
-import { mediaKiwiDarkTheme, mediaKiwiLightTheme } from "./Themes";
+import { mkDarkThemeDefinition } from "./themes/dark";
+import { mkLightThemeDefinition } from "./themes/light";
 
 import { mediaKiwiDefaults } from "./Defaults";
 
@@ -20,8 +21,13 @@ const defaultVuetifyOptions = <VuetifyOptions>{
   theme: {
     defaultTheme: "dark",
     themes: {
-      dark: mediaKiwiDarkTheme,
-      light: mediaKiwiLightTheme,
+      dark: mkDarkThemeDefinition,
+      light: mkLightThemeDefinition,
+    },
+    variations: {
+      colors: ["primary", "secondary", "tertiary", "error", "neutral", "neutral-variant"],
+      lighten: 10,
+      darken: 10,
     },
   },
   icons: {
