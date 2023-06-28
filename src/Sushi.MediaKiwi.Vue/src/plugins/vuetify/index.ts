@@ -1,5 +1,6 @@
 import "@mdi/font/css/materialdesignicons.css";
-import "vuetify/styles";
+
+import "@/styles/main.scss";
 import { VuetifyOptions } from "vuetify";
 import * as VComponents from "vuetify/components";
 import * as VDirectives from "vuetify/directives";
@@ -8,8 +9,8 @@ import { md3 } from "vuetify/blueprints";
 
 import { mdi, aliases } from "vuetify/iconsets/mdi";
 
-import { mkDarkThemeDefinition } from "./themes/dark";
-import { mkLightThemeDefinition } from "./themes/light";
+import { darkThemeDefinition } from "./themes/dark";
+import { lightThemeDefinition } from "./themes/light";
 
 import { mediaKiwiDefaults } from "./Defaults";
 
@@ -21,8 +22,8 @@ const defaultVuetifyOptions = <VuetifyOptions>{
   theme: {
     defaultTheme: "dark",
     themes: {
-      dark: mkDarkThemeDefinition,
-      light: mkLightThemeDefinition,
+      dark: darkThemeDefinition,
+      light: lightThemeDefinition,
     },
     variations: {
       colors: ["primary", "secondary", "tertiary", "error", "neutral", "neutral-variant"],

@@ -53,6 +53,7 @@ export default {
     } else {
       vuetifyOptions = defaultVuetifyOptions;
     }
+
     const vuetify = createVuetify(vuetifyOptions);
     app.use(vuetify);
 
@@ -103,4 +104,4 @@ export * from "@/stores";
 
 export * from "@/router";
 
-import "@/assets/style/main.scss";
+import "@/styles/main.scss";

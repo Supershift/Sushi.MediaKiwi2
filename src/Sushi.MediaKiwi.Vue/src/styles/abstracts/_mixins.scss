@@ -1,0 +1,14 @@
+@use "sass:map";
+@use "sass:meta";
+
+@mixin export-recursive($map) {
+  @each $node, $value in $map {
+    @if (meta.type-of($value) == map) {
+      @include export-recursive($value);
+    } @else {
+      :export {
+        #{$node}: $value;
+      }
+    }
+  }
+}

@@ -3,8 +3,10 @@ import App from "./App.vue";
 import { createApp } from "vue";
 import mediakiwi, { createAxiosClient } from "@supershift/mediakiwi-vue";
 
-// Import mediakiwi stylesheet AFTER vuetify to override
+// Import the mediakiwi stylesheet
 import "@supershift/mediakiwi-vue/dist/mediakiwi-vue.css";
+// Import my stylesheets
+import "./styles/main.scss";
 
 import { getSettings } from "./services/settings";
 import { container } from "tsyringe";
@@ -37,6 +39,16 @@ settings.mediaKiwi.i18nextOptions = {
   debug: true,
 };
 settings.mediaKiwi.i18nextCallback = (instance: i18n) => {};
+
+// import { sampleWebTheme } from "@/plugin/vuetify/theme/dark";
+// settings.mediaKiwi.vuetifyOptions = {
+//   theme: {
+//     defaultTheme: "sampleWebTheme",
+//     themes: {
+//       sampleWebTheme,
+//     },
+//   },
+// };
 
 // install mediakiwi
 app.use(mediakiwi, settings.mediaKiwi);

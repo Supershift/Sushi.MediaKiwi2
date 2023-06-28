@@ -1,7 +1,7 @@
 import { ThemeDefinition } from "vuetify";
-import { default as lightColors } from "@/assets/style/themes/light/abstracts/_colors.module.scss";
+import lightColors from "@/styles/themes/light/_colors.module.scss";
 
-export const mkLightThemeDefinition: ThemeDefinition = {
+export const lightThemeDefinition: ThemeDefinition = {
   dark: false,
   colors: {
     // Primary colors

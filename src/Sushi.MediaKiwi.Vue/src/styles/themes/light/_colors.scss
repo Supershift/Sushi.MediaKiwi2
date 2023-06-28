@@ -1,0 +1,44 @@
+@use "sass:map";
+
+$colors: (
+  primary: (
+    primary: #6750a4,
+    onPrimary: #ffffff,
+    primaryContainer: #eaddff,
+    onPrimaryContainer: #21005d,
+  ),
+  secondary: (
+    secondary: #625b71,
+    onSecondary: #ffffff,
+    secondaryContainer: #e8def8,
+    onSecondaryContainer: #1d192b,
+  ),
+  tertiary: (
+    tertiary: #7d5260,
+    onTertiary: #ffffff,
+    tertiaryContainer: #ffd8e4,
+    onTertiaryContainer: #31111d,
+  ),
+  error: (
+    error: #b3261e,
+    onError: #ffffff,
+    errorContainer: #f9dedc,
+    onErrorContainer: #410e0b,
+  ),
+  background: (
+    background: #fffbfe,
+    onBackground: #1c1b1f,
+  ),
+  surface: (
+    surface: #fffbfe,
+    onSurface: #1c1b1f,
+  ),
+  surfaceVariants: (
+    surfaceVariant: #e7e0ec,
+    onSurfaceVariant: #49454f,
+  ),
+  outline: (
+    outline: #79747e,
+    outlineVariant: #cac4d0,
+  ),
+);

@@ -1,0 +1,7 @@
+// Folder structure: https://dev.to/dostonnabotov/a-modern-sass-folder-structure-330f
+@use "./base/typography";
+@use "./abstracts/fonts";
+
+// These are some of the variables you can override
+// These have to live here in order to be passed from the Client App to vuetify
+@use "vuetify/lib/styles/main.sass";
