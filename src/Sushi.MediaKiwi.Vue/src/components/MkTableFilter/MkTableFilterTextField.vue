@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { useI18next } from "@/composables/useI18next";
   import type { TableFilterItem, TableFilterValue } from "@/models/table";
   import { ref } from "vue";
 
@@ -11,6 +12,9 @@
     (e: "update:modelValue", value: TableFilterValue): void;
   }>();
 
+  // inject dependencies
+  const { defaultT } = await useI18next();
+
   function textFieldChanged(selectedValue: string) {
     emit("update:modelValue", { title: selectedValue, value: selectedValue });
   }
@@ -19,5 +23,5 @@
 </script>
 
 <template>
-  <v-text-field v-model="value" @update:model-value="textFieldChanged" label="Value"> </v-text-field>
+  <v-text-field v-model="value" @update:model-value="textFieldChanged" :label="defaultT('Value')"> </v-text-field>
 </template>

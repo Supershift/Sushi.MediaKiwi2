@@ -1,4 +1,5 @@
 ﻿using Sushi.MediaKiwi.DAL.Paging;
+using Sushi.MediaKiwi.DAL.Sorting;
 using Sushi.MicroORM;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace Sushi.MediaKiwi.DAL.Repository
         }
 
         /// <inheritdoc/>    
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(string id)
         {
             var query = _connector.CreateQuery();
             query.Add(x => x.Id, id);
@@ -31,7 +32,7 @@ namespace Sushi.MediaKiwi.DAL.Repository
         }
 
         /// <inheritdoc/>    
-        public async Task<QueryListResult<View>> GetAllAsync(int? sectionID, PagingValues pagingValues)
+        public async Task<QueryListResult<View>> GetAllAsync(int? sectionID, PagingValues pagingValues, SortValues<View>? sortValues = null)
         {
             var query = _connector.CreateQuery();
             if (sectionID.HasValue)
@@ -39,7 +40,15 @@ namespace Sushi.MediaKiwi.DAL.Repository
                 query.Add(x => x.SectionId, sectionID.Value);
             }
 
-            query.AddOrder(x => x.Name);
+            if(sortValues != null)
+            {
+                query.AddOrder(sortValues);
+            }
+            else
+            {
+                query.AddOrder(x => x.Name);
+            }
+            
             query.AddPaging(pagingValues);
 
             var result = await _connector.GetAllAsync(query);
@@ -47,7 +56,7 @@ namespace Sushi.MediaKiwi.DAL.Repository
         }
 
         /// <inheritdoc/>    
-        public async Task<View?> GetAsync(int id)
+        public async Task<View?> GetAsync(string id)
         {
             var query = _connector.CreateQuery();
             query.Add(x => x.Id, id);
@@ -56,9 +65,15 @@ namespace Sushi.MediaKiwi.DAL.Repository
         }
 
         /// <inheritdoc/>    
-        public async Task SaveAsync(View view)
+        public async Task InsertAsync(View view)
         {
-            await _connector.SaveAsync(view);            
+            await _connector.InsertAsync(view);            
+        }
+
+        /// <inheritdoc/>    
+        public async Task UpdateAsync(View view)
+        {
+            await _connector.UpdateAsync(view);
         }
     }
 }

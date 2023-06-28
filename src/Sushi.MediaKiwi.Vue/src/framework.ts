@@ -1,4 +1,4 @@
-import type { App, Component } from "vue";
+import { type App } from "vue";
 import pinia from "./plugins/pinia";
 import { getDefaultRouterOptions } from "@/router/getDefaultRouterOptions";
 import { createRouter } from "vue-router";
@@ -16,6 +16,8 @@ import { registerOptions } from "./helpers/registerOptions";
 import { registerRouter } from "./helpers/registerRouter";
 import { addWaitOnRouterManager } from "./router/waitOnRouterManager";
 import { addCheckIsInRole } from "./router/checkIsInRole";
+import { registerAxios } from "./helpers/registerAxios";
+import i18next, { tokenStore } from "./plugins/i18next";
 
 export default {
   install(app: App, options: MediakiwiVueOptions): void {
@@ -24,6 +26,24 @@ export default {
 
     // register dependencies
     registerServices(container, options.serviceRegistrations);
+
+    // register axios
+    registerAxios(container, options);
+
+    // add i18n
+    app.use(
+      i18next,
+      options,
+      {
+        fallbackLng: "en",
+        ns: ["common"],
+        defaultNS: "common",
+        saveMissing: true,
+        partialBundledLanguages: true,
+        ...options.i18nextOptions,
+      },
+      options.i18nextCallback
+    );
 
     // create vuetify
     let vuetifyOptions: VuetifyOptions;
@@ -53,9 +73,6 @@ export default {
     // register the router as dependency
     registerRouter(container, router);
 
-    // use the router instance
-    app.use(router);
-
     // create navigation client for msal
     const navigationClient = new CustomNavigationClient(router);
     identity.msalInstance.setNavigationClient(navigationClient);
@@ -68,10 +85,15 @@ export default {
 
     // adds a guard to all routes with the meta property 'isInRole' to check role
     addCheckIsInRole(router);
+
+    // use the router instance
+    app.use(router);
   },
 };
 
 export * from "@/components";
+
+export * from "@/composables";
 
 export * from "@/models";
 
@@ -80,7 +102,5 @@ export * from "@/services";
 export * from "@/stores";
 
 export * from "@/router";
-
-export { container };
 
 import "@/assets/main.css";

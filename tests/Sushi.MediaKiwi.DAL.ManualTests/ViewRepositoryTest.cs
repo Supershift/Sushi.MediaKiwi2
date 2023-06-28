@@ -39,10 +39,10 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
         [Fact]
         public async Task GetOneTest()
         {
-            var view = await _repository.GetAsync(1);
+            var view = await _repository.GetAsync("Home");
 
             Assert.NotNull(view);
-            Assert.Equal(1, view.Id);
+            Assert.Equal("Home", view.Id);
         }
     }
 }

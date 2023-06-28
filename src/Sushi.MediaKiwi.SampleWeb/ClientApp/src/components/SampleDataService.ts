@@ -1,5 +1,5 @@
-import type { ITableSortingValue } from "@supershift/mediakiwi-vue";
-import { TableSortingDirection } from "@supershift/mediakiwi-vue";
+import type { Sorting } from "@supershift/mediakiwi-vue";
+import { SortDirection } from "@supershift/mediakiwi-vue";
 import type { ISampleData } from "./ISampleData";
 
 const data = <ISampleData[]>[
@@ -16,21 +16,21 @@ const data = <ISampleData[]>[
 ];
 
 export const SampleDataService = {
-  GetAll(countryCode: string, sortOrder?: ITableSortingValue): ISampleData[] {
+  GetAll(countryCode: string, sortOrder?: Sorting): ISampleData[] {
     let result = [...data];
     if (countryCode !== undefined) {
       result = result.filter((x) => x.countryCode == countryCode);
     }
 
     if (sortOrder) {
-      if (sortOrder.tableMapItemId === "country") {
+      if (sortOrder.sortBy === "countryName") {
         result = [...result.sort((a, b) => a.countryName.localeCompare(b.countryName))];
-      } else if (sortOrder.tableMapItemId === "name") {
-        result = [...result.sort((a, b) => a.name.localeCompare(b.name))];
+      } else if (sortOrder.sortBy === "id") {
+        result = [...result.sort((a, b) => a.id - b.id)];
       }
 
       // Reverse sortorder
-      if (sortOrder.sortDirection === TableSortingDirection.Desc) {
+      if (sortOrder.sortDirection === SortDirection.Desc) {
         result = [...result.reverse()];
       }
     }
@@ -45,7 +45,7 @@ export const SampleDataService = {
     }
     return result;
   },
-  Save(item: ISampleData): void {
+  async SaveAsync(item: ISampleData): Promise<void> {
     // this would be some sort of FK in reality
     if (item.countryCode == "NL") {
       item.countryName = "Nederland";
@@ -65,7 +65,7 @@ export const SampleDataService = {
       data[index] = item;
     }
   },
-  Delete(id: number): void {
+  async DeleteAsync(id: number): Promise<void> {
     const index = data.findIndex((x) => x.id == id);
     if (index != -1) {
       data.splice(index, 1);

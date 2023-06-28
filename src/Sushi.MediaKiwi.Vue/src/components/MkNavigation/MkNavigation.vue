@@ -4,7 +4,7 @@
   import { RouterManager } from "@/router/routerManager";
   import { container } from "tsyringe";
   import { useMediakiwiStore } from "@/stores";
-  import { ref } from "vue";
+  import { computed, ref } from "vue";
 
   // define events
   defineEmits(["change"]);
@@ -19,11 +19,14 @@
   const store = useMediakiwiStore();
 
   // use ref from store
-  const sections = ref(store.sections);
+  const sections = computed(() => {
+    // only display sections with navigation items
+    return store.sections.filter((section) => store.navigationItems.some((item) => item.sectionId === section.id));
+  });
   const navigationItems = ref(store.navigationItems);
 </script>
 
 <template>
-  <mk-navigation-rail :rail-items="sections"></mk-navigation-rail>
+  <mk-navigation-rail :rail-items="sections" v-if="sections.length > 1"></mk-navigation-rail>
   <mk-navigation-drawer v-model="store.drawer" :list-items="navigationItems"></mk-navigation-drawer>
 </template>

@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
+using Sushi.MediaKiwi.SampleAPI;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.WebAPI;
 using Sushi.MediaKiwi.WebAPI.Paging;
+using Sushi.MediaKiwi.WebAPI.Sorting;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -48,8 +50,12 @@ services.AddSwaggerGen(options =>
     options.OperationFilter<PagingSwaggerFilter>();
     options.OperationFilter<ContinuationSwaggerFilter>();
 
+    // add sorting parameters
+    options.OperationFilter<SortingSwaggerFilter>();
+
     // add docs for mediakiw
     options.SwaggerDoc("MediaKiwi", new OpenApiInfo { Title = "MediaKiwi" });
+    options.SwaggerDoc("SampleApi", new OpenApiInfo { Title = "SampleApi" });
     options.EnableAnnotations();
 
     // add JWT bearer
@@ -58,7 +64,7 @@ services.AddSwaggerGen(options =>
     {
         Name = "Authorization",
         In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
+        Type = SecuritySchemeType.Http,
         Scheme = "Bearer"
     });
     options.AddSecurityRequirement(new OpenApiSecurityRequirement()
@@ -80,7 +86,11 @@ services.AddSwaggerGen(options =>
     });
 });
 
-services.AddMediaKiwiApi(connectionString);
+// add mediakiwi API
+services.AddMediaKiwiApi(connectionString, autoMapperConfig: c=>c.AddProfile<Sushi.MediaKiwi.SampleAPI.Service.Model.AutoMapperProfile>());
+
+// add sample api depedencies
+services.AddSampleApiServices();
 
 var app = builder.Build();
 
@@ -91,6 +101,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(options =>
     {   
         options.SwaggerEndpoint("../swagger/MediaKiwi/swagger.json", "MediaKiwi");
+        options.SwaggerEndpoint("../swagger/SampleApi/swagger.json", "SampleApi");
+        
     });
 }
 

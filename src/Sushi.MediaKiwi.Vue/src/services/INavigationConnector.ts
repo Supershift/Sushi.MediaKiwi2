@@ -1,6 +1,6 @@
-import { ListResult } from "@/models";
+import { ListResult, Paging } from "@/models";
 import { NavigationItem } from "@/models";
 
 export interface INavigationConnector {
-  GetNavigationItems(): Promise<ListResult<NavigationItem>>;
+  GetNavigationItems(paging?: Paging): Promise<ListResult<NavigationItem>>;
 }

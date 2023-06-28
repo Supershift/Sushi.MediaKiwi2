@@ -1,21 +1,23 @@
 <script setup lang="ts">
-  import { MkBreadcrumbs } from "@/components/MkBreadcrumbs/";  
+  import { MkBreadcrumbs } from "@/components/MkBreadcrumbs/";
 </script>
 
 <template>
   <v-main style="min-height: 300px">
-    <v-container>
+    <div class="pa-10">
       <mk-breadcrumbs />
       <router-view v-slot="{ Component }">
         <suspense timeout="0">
           <template #default>
-            <component :is="Component" :key="$route.path"></component>
+            <div>
+              <component :is="Component" :key="$route.path"></component>
+            </div>
           </template>
           <template #fallback>
             <v-progress-circular indeterminate></v-progress-circular>
           </template>
         </suspense>
       </router-view>
-    </v-container>
+    </div>
   </v-main>
 </template>

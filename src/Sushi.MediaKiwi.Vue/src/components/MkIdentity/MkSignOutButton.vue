@@ -1,14 +1,17 @@
 <script setup lang="ts">
   import { identity } from "@/identity";
   import { useIsAuthenticated } from "@/composables/useIsAuthenticated";
+  import { useI18next } from "@/composables/useI18next";
+
+  // inject dependencies
+  const { defaultT } = await useI18next();
+  const isAuthenticated = useIsAuthenticated();
 
   const logoutRedirect = () => {
     identity.msalInstance.logoutRedirect();
   };
-
-  const isAuthenticated = useIsAuthenticated();
 </script>
 
 <template>
-  <v-btn @click="logoutRedirect" v-if="isAuthenticated">Sign out</v-btn>
+  <v-btn @click="logoutRedirect" v-if="isAuthenticated">{{ defaultT("Sign out") }}</v-btn>
 </template>

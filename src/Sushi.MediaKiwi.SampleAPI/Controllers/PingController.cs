@@ -1,12 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 
 namespace Sushi.MediaKiwi.SampleAPI.Controllers
-{
-    [ApiController]
-    public class PingController
+{   
+    public class PingController : SampleControllerBase
     {
         [HttpGet]
-        [Route("/ping")]
+        [Route($"{BaseRoute}/ping")]
         public ActionResult<string> Ping()
         {
             return "OK";

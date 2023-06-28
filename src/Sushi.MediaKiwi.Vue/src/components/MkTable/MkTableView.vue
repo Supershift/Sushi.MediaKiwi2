@@ -4,11 +4,10 @@
   import type { TableMapItem } from "@/models/table/TableMapItem";
   import MkTableCell from "./MkTableCell.vue";
   import { useMediakiwiStore } from "@/stores/";
-  import { TableSortingDirection } from "@/models";
-  import type { TableSortingValue } from "@/models";
-  import TableSortingHelper from "@/helpers/TableSortingHelper";
+  import type { Sorting } from "@/models";
   import MkTableCheckbox from "./MkTableCheckbox.vue";
   import { useTableMapItemSelection } from "@/composables/useTableMapItemSelection";
+  import { useTableMapItemSorting } from "@/composables/useTableMapItemSorting";
   import { watch } from "vue";
   import { useNavigation } from "@/composables/useNavigation";
 
@@ -19,7 +18,7 @@
     /** ExternalId of the view instance to which the user is pushed when clicking a row. */
     itemViewId?: string;
     /** */
-    selectedSortOption?: TableSortingValue;
+    sorting?: Sorting;
     selection?: unknown[];
     /** Make each row in the table selectable. */
     checkbox?: boolean;
@@ -28,13 +27,12 @@
   // define event
   const emit = defineEmits<{
     (e: "click:row", value: any): void;
-    (e: "update:selectedSortOption", value?: TableSortingValue): void;
+    (e: "update:sorting", value?: Sorting): void;
     (e: "update:selection", value?: unknown[]): void;
   }>();
 
   // inject dependencies
   const store = useMediakiwiStore();
-  const tableSortingHelper = new TableSortingHelper();
   const navigation = useNavigation();
 
   function onRowClick(event: Event, dataItem: unknown) {
@@ -44,7 +42,7 @@
     // navigate user to target page if defined
     if (props.itemViewId) {
       // find navigation item for the view
-      const view = store.views.find((x) => x.externalId == props.itemViewId);
+      const view = store.views.find((x) => x.id == props.itemViewId);
 
       if (!view) {
         throw new Error(`No view found for external id ${props.itemViewId}`);
@@ -73,11 +71,28 @@
     }
   }
 
-  function onSortClick(tableMapItem: TableMapItem<unknown>) {
+  /** Init sorting composable */
+  const { setSorting, getSortingClasses, selectedSorting, sortIcon } = useTableMapItemSorting({
+    selectedSortOption: props.sorting,
+  });
+
+  function onClick(tableMapItem: TableMapItem<unknown>) {
     if (tableMapItem?.sortingOptions) {
-      const dataItem = tableSortingHelper.parseTableSortingValue(tableMapItem, props.selectedSortOption);
-      emit("update:selectedSortOption", dataItem);
+      setSorting(tableMapItem.sortingOptions);
+      emit("update:sorting", selectedSorting.value);
     }
+  }
+
+  function getHeaderClasses(tableMapItem: TableMapItem<unknown>) {
+    if (tableMapItem?.sortingOptions) {
+      return getSortingClasses(tableMapItem.sortingOptions);
+    }
+  }
+
+  function sortingClasses() {
+    return {
+      hidden: !selectedSorting.value,
+    };
   }
 
   /** Init selection composable for item selection with the table map and data  */
@@ -107,21 +122,20 @@
           <MkTableCheckbox :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:is-selected="selectAll" />
         </th>
         <!-- render a header cell for each mapping item -->
-        <th v-for="mapItem in props.tableMap.items" :key="mapItem.id" :class="tableSortingHelper.getSortingClasses(mapItem, props.selectedSortOption)" @click="onSortClick(mapItem)">
+        <th v-for="(mapItem, index) in props.tableMap.items" :key="index" :class="getHeaderClasses(mapItem)" @click="onClick(mapItem)">
           {{ mapItem.headerTitle }}
-          <v-icon v-show="props.selectedSortOption?.sortDirection === TableSortingDirection.Asc">mdi-arrow-up</v-icon>
-          <v-icon v-show="props.selectedSortOption?.sortDirection === TableSortingDirection.Desc">mdi-arrow-down</v-icon>
+          <v-icon v-if="mapItem.sortingOptions" :icon="sortIcon" :class="sortingClasses()" />
         </th>
       </tr>
     </thead>
     <tbody>
       <!-- render a row for each provided data entity -->
-      <tr v-for="(dataItem, index) in props.data" :key="index" style="cursor: pointer" @click.stop="(e) => onRowClick(e, dataItem)">
+      <tr v-for="(dataItem, rowIndex) in props.data" :key="rowIndex" style="cursor: pointer" @click.stop="(e) => onRowClick(e, dataItem)">
         <td v-if="checkbox" @click.stop>
           <MkTableCheckbox :is-selected="isItemSelected(dataItem)" @update:is-selected="(e) => selectItem(dataItem, e)" />
         </td>
         <!-- render a cell for each mapping item -->
-        <MkTableCell v-for="mapItem in props.tableMap.items" :key="mapItem.id" :data="dataItem" :map-item="mapItem"></MkTableCell>
+        <MkTableCell v-for="(mapItem, cellIndex) in props.tableMap.items" :key="cellIndex" :data="dataItem" :map-item="mapItem"></MkTableCell>
       </tr>
     </tbody>
     <tfoot>
@@ -131,29 +145,42 @@
 </template>
 
 <style scoped lang="scss">
-  thead {
-    th {
-      &:not(.sortable-active) .v-icon {
-        visibility: hidden;
-      }
+  .v-table {
+    .v-table__wrapper {
+      table {
+        thead {
+          th {
+            &.sortable {
+              font-weight: 700 !important;
 
-      &.sortable {
-        font-weight: 700;
-        &:hover {
-          cursor: pointer;
-          .v-icon {
-            visibility: visible;
+              .v-icon {
+                visibility: hidden;
+              }
+
+              &:hover {
+                cursor: pointer;
+                .v-icon {
+                  visibility: visible;
+                }
+              }
+
+              &.sortable-active {
+                .v-icon {
+                  visibility: visible;
+                }
+              }
+            }
           }
         }
-      }
-    }
-  }
 
-  tbody {
-    tr {
-      transition: 0.2s background-color;
-      &:hover {
-        background: rgba(var(--v-theme-surface-variant), var(--v-hover-opacity));
+        tbody {
+          tr {
+            transition: 0.2s background-color;
+            &:hover {
+              background: rgba(var(--v-theme-surface-variant), var(--v-hover-opacity));
+            }
+          }
+        }
       }
     }
   }

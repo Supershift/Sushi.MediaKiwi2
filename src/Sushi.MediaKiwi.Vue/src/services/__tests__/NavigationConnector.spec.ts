@@ -24,7 +24,7 @@ describe("NavigationConnector", () => {
 
     // assert
     expect(axiosMock.get).toHaveBeenCalledOnce();
-    expect(axiosMock.get).toHaveBeenCalledWith("/navigationitems");
+    expect(axiosMock.get).toHaveBeenCalledWith("/navigationitems", { params: {} });
     expect(result).toBe(expectedResult.data);
   });
 });

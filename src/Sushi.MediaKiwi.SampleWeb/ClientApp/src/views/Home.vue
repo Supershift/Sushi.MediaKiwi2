@@ -1,10 +1,15 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  import { useI18next } from "@supershift/mediakiwi-vue";
+
+  // inject dependecies
+  const { t } = await useI18next();
+</script>
 
 <template>
   <v-lazy :options="{ threshold: 0.5 }" transition="fade-transition">
     <v-card>
-      <h1>Home Page</h1>
-      <p>Welcome to the home page!</p>
+      <h1>{{ t("Header") }}</h1>
+      <p>{{ t("Main") }}</p>
     </v-card>
   </v-lazy>
 </template>

@@ -24,7 +24,7 @@ describe("SectionConnector", () => {
 
     // assert
     expect(axiosMock.get).toHaveBeenCalledOnce();
-    expect(axiosMock.get).toHaveBeenCalledWith("/sections");
+    expect(axiosMock.get).toHaveBeenCalledWith("/sections", { params: {} });
     expect(result).toBe(expectedResult.data);
   });
 });

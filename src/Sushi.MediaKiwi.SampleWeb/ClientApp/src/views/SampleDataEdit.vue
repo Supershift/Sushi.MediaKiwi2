@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { MkForm, MkTableView } from "@supershift/mediakiwi-vue";
   import { useRoute, useRouter } from "@supershift/mediakiwi-vue";
-  import type { ITableMap } from "@supershift/mediakiwi-vue";
+  import type { TableMap } from "@supershift/mediakiwi-vue";
   import { SampleDataService } from "../components/SampleDataService";
   import type { ISampleData } from "../components/ISampleData";
   import { reactive, ref } from "vue";
@@ -35,7 +35,7 @@
     { id: "dfsdg", name: "bye" },
   ];
 
-  const myMap = <ITableMap<DeepData>>{
+  const myMap = <TableMap<DeepData>>{
     itemId: (item) => item.id,
     items: [{ headerTitle: "Name", value: (dataItem) => dataItem.name }],
   };
@@ -46,8 +46,8 @@
     data: candidate ? candidate : <ISampleData>{},
   });
 
-  function onSave() {
-    SampleDataService.Save(state.data);
+  async function onSaveAsync() : Promise<void> {
+   return await SampleDataService.SaveAsync(state.data);
   }
 
   function onUndo() {
@@ -55,8 +55,8 @@
     state.data = candidate ? candidate : <ISampleData>{};
   }
 
-  function onDelete() {
-    SampleDataService.Delete(state.data.id);
+  async function onDeleteAsync(event:Event) : Promise<void> {
+    return await SampleDataService.DeleteAsync(state.data.id);
   }
 
   const showMore = ref(false);
@@ -64,9 +64,9 @@
 
 <template>
   <v-card>
-    <MkForm title="Sample data edit" @save="onSave" @undo="onUndo" @delete="onDelete">
-      <v-text-field v-model="state.data.name" label="Name"></v-text-field>
-      <v-select v-model="state.data.countryCode" label="Country Code" :items="countries"></v-select>
+    <MkForm title="Sample data edit" @save="onSaveAsync" @undo="onUndo" @delete="onDeleteAsync">
+      <v-text-field label="Name" v-model="state.data.name"></v-text-field>
+      <v-select label="Country Code" v-model="state.data.countryCode" :items="countries"></v-select>
     </MkForm>
     <v-btn @click="showMore = !showMore">Show more</v-btn>
     <div v-show="showMore">

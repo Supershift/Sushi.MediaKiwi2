@@ -16,7 +16,7 @@
   }
 </script>
 <template>
-  <v-navigation-drawer rail :rail-width="72" permanent>
+  <v-navigation-drawer rail :rail-width="80" permanent>
     <v-list density="compact" open-strategy="list" nav>
       <v-list-item
         :active="item.id == navigation.currentNavigationItem.value?.sectionId"
@@ -34,3 +34,19 @@
     </v-list>
   </v-navigation-drawer>
 </template>
+
+<!-- Vuetify rail does not support text beneath the icon, therefore custom css is required -->
+<style scoped lang="scss">
+  .v-list-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    &__prepend {
+      > .v-icon {
+        margin-inline-end: unset;
+      }
+    }
+  }
+</style>

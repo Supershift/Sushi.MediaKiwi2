@@ -1,39 +1,40 @@
-import type { View } from "@/models";
+import type { Sorting, View } from "@/models";
 import { injectable, inject } from "tsyringe";
-import type { IMediakiwiAxiosInstance } from "@/services/interceptors/MediakiwiAxiosInstance";
 import type ListResult from "@/models/api/ListResult";
 import { IViewConnector } from "./IViewConnector";
 import { Paging } from "@/models/api/Paging";
+import type { AxiosInstance } from "axios";
 
 @injectable()
 export class ViewConnector implements IViewConnector {
-  constructor(@inject("IMediakiwiAxiosInstance") private axios: IMediakiwiAxiosInstance) {}
+  constructor(@inject("MediakiwiAxiosInstance") private axios: AxiosInstance) {}
 
-  async CreateView(request: View): Promise<View> {
-    const response = await this.axios.post<View>(`/views`, request);
+  async CreateView(id: string, request: View): Promise<View> {
+    const response = await this.axios.post<View>(`/views/${id}`, request);
     return response.data;
   }
 
-  async DeleteView(id: number): Promise<void> {
+  async DeleteView(id: string): Promise<void> {
     await this.axios.delete(`/views/${id}`);
   }
 
-  async GetViews(sectionId?: number, paging?: Paging): Promise<ListResult<View>> {
+  async GetViews(sectionId?: number, paging?: Paging, sorting?: Sorting): Promise<ListResult<View>> {
     // build querystring params
     const query = {
       sectionId: sectionId,
       ...paging,
+      ...sorting,
     };
     const response = await this.axios.get<ListResult<View>>("/views", { params: query });
     return response.data;
   }
 
-  async GetView(id: number): Promise<View | undefined> {
+  async GetView(id: string): Promise<View | undefined> {
     const response = await this.axios.get<View>(`/views/${id}`);
     return response.data;
   }
 
-  async UpdateView(id: number, request: View): Promise<View> {
+  async UpdateView(id: string, request: View): Promise<View> {
     const response = await this.axios.put<View>(`/views/${id}`, request);
     return response.data;
   }

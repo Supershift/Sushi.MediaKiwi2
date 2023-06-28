@@ -17,12 +17,12 @@ namespace Sushi.MediaKiwi.DAL
             public ViewRoleMap()
             {
                 Table("mk_ViewsRoles");
-                Id(x => x.ViewId, "ViewID").Assigned();
+                Id(x => x.ViewId, "ViewID").Assigned().SqlType(System.Data.SqlDbType.VarChar);
                 Id(x => x.Role, "RoleID").Assigned().SqlType(System.Data.SqlDbType.VarChar);
             }
         }
         
-        public int ViewId { get; set; }
+        public string ViewId { get; set; }
         public string Role { get; set; }
     }
 }

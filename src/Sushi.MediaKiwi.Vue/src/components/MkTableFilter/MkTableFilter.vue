@@ -6,9 +6,11 @@
   import { MkTableFilterDatePicker, MkTableFilterRadioGroup, MkTableFilterSelect, MkTableFilterTextField } from ".";
   import { DefineComponent } from "vue";
   import { TableFilterType } from "@/models/enum/TableFilterType";
-  import { MkInputChip } from "@/components/MkChip";  
+  import { MkInputChip } from "@/components/MkChip";
   import { defineAsyncComponent } from "vue";
+  import { useI18next } from "@/composables/useI18next";
 
+  // define properties and events
   const props = defineProps<{
     modelValue: TableFilter;
   }>();
@@ -17,6 +19,10 @@
     (e: "update:modelValue", value: TableFilter): void;
   }>();
 
+  // inject dependencies
+  const { defaultT } = await useI18next();
+
+  // define reactive variables
   const menu = ref(false);
 
   // holds the current filter being edited and its value
@@ -114,39 +120,56 @@
 </script>
 
 <template>
-  <v-card variant="tonal">
+  <v-card variant="flat">
     <v-container>
       <v-row class="pb-2">
-        <v-menu v-model="menu" :close-on-content-click="false" location="end">
-          <!-- Button -->
-          <template #activator="{ props }">
-            <v-btn class="mt-1 ml-1" v-bind="props" color="primary" variant="plain" icon="mdi-filter-variant"> </v-btn>
+        <template v-if="modelValue">
+          <v-menu v-model="menu" :close-on-content-click="false" location="end">
+            <!-- Button -->
+            <template #activator="args">
+              <v-btn class="mt-1 ml-1" v-bind="args.props" color="primary" variant="plain" icon="mdi-filter-variant"> </v-btn>
+            </template>
+
+            <!-- context menu -->
+            <v-list v-if="!state.currentFilter">
+              <v-list-item v-for="key in Object.keys(modelValue)" :key="key" :value="modelValue[key]" @click="changeCurrentFilter(key, modelValue[key])">
+                <v-list-item-title>{{ modelValue[key].title }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+
+            <!-- filter compoment -->
+            <v-card v-else-if="state.currentFilter" width="300" :title="state.currentFilter.title">
+              <component :is="GetComponentForFilterType(state.currentFilter)" v-model="state.currentFilterValue" :table-filter-item="state.currentFilter">
+              </component>
+              <v-card-actions>
+                <v-btn @click="applyFilter()">{{ defaultT("Apply") }}</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-menu>
+
+          <!-- Chips -->
+          <template v-for="key in Object.keys(modelValue)">
+            <MkInputChip
+              v-if="modelValue[key].selectedValue"
+              :key="key"
+              class="ml-2 mt-2"
+              @click="setCurrentFilter(key, modelValue[key])"
+              @click:remove="removeFilter(key)"
+            >
+              {{ modelValue[key].title }} : {{ modelValue[key].selectedValue?.title }}
+            </MkInputChip>
           </template>
 
-          <!-- context menu -->
-          <v-list v-if="!state.currentFilter">
-            <v-list-item v-for="key in Object.keys(modelValue)" :value="modelValue[key]" @click="changeCurrentFilter(key, modelValue[key])">
-              <v-list-item-title>{{ modelValue[key].title }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-
-          <!-- filter compoment -->
-          <v-card v-else-if="state.currentFilter" width="300" :title="state.currentFilter.title">
-            <component :is="GetComponentForFilterType(state.currentFilter)" v-model="state.currentFilterValue" :table-filter-item="state.currentFilter"> </component>
-            <v-card-actions>
-              <v-btn @click="applyFilter()">Apply</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-menu>
-
-        <!-- Chips -->
-        <template v-for="key in Object.keys(modelValue)">
-          <MkInputChip v-if="modelValue[key].selectedValue" :key="key" class="ml-2 mt-2" @click="setCurrentFilter(key, modelValue[key])" @click:remove="removeFilter(key)">
-            {{ modelValue[key].title }} : {{ modelValue[key].selectedValue?.title }}
-          </MkInputChip>
+          <v-text-field
+            :placeholder="defaultT('Filter')"
+            variant="plain"
+            :hide-details="true"
+            readonly
+            density="compact"
+            class="mx-2"
+            @click="openMenu"
+          ></v-text-field>
         </template>
-
-        <v-text-field placeholder="Filter" variant="plain" :hide-details="true" readonly density="compact" class="mx-2" @click="openMenu"></v-text-field>
       </v-row>
     </v-container>
   </v-card>

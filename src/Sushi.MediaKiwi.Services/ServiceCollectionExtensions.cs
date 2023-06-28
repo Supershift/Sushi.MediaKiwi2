@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using AutoMapper;
+using AutoMapper.Extensions.ExpressionMapping;
+using AutoMapper.Internal;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Sushi.MediaKiwi.DAL;
 using Sushi.MediaKiwi.DAL.Repository;
@@ -16,24 +19,33 @@ namespace Sushi.MediaKiwi.Services
     {
         /// <summary>
         /// Adds all services needed to run MediaKiwi to the <paramref name="collection"/>, including Sushi.MicroOrm.
-        /// </summary>
-        /// <param name="collection"></param>
-        /// <param name="defaultConnectionString"></param>
-        /// <param name="config"></param>
+        /// </summary>        
         /// <returns></returns>
-        public static IServiceCollection AddMediaKiwiServices(this IServiceCollection collection, string defaultConnectionString, Action<MicroOrmConfigurationBuilder>? config = null)
+        public static IServiceCollection AddMediaKiwiServices(this IServiceCollection collection, string defaultConnectionString, 
+            Action<MicroOrmConfigurationBuilder>? microOrmConfig = null,
+            Action<IMapperConfigurationExpression>? autoMapperConfig = null)
         {
             // add DAL (which includes MicroORM)
-            collection.AddMediaKiwiDAL(defaultConnectionString, config);
+            collection.AddMediaKiwiDAL(defaultConnectionString, microOrmConfig);
 
             // add automapper
-            collection.AddAutoMapper(c => c.AddProfile<AutoMapperProfile>());
+            collection.AddAutoMapper(c => {
+                // add client's config if supplied
+                if(autoMapperConfig != null)
+                    autoMapperConfig(c);
+                
+                // add our own config
+                c.AddProfile<AutoMapperProfile>();
+                c.AddExpressionMapping();                
+            });
 
             // add services
             collection.TryAddTransient<SectionService>();
             collection.TryAddTransient<ViewService>();
             collection.TryAddTransient<NavigationItemService>();
             collection.TryAddTransient<RoleService>();
+            collection.TryAddTransient<LocaleService>();
+            collection.TryAddTransient<TranslationService>();
 
             return collection;
         }

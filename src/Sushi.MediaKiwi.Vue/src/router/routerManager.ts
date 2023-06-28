@@ -14,7 +14,11 @@ export enum RouterManagerState {
 
 @injectable()
 export class RouterManager {
-  constructor(@inject("MediakiwiOptions") private options: MediakiwiVueOptions, @inject("Router") private router: Router, @inject("RouteGenerator") private routeGenerator: RouteGenerator) {}
+  constructor(
+    @inject("MediakiwiOptions") private options: MediakiwiVueOptions,
+    @inject("Router") private router: Router,
+    @inject("RouteGenerator") private routeGenerator: RouteGenerator
+  ) {}
 
   private _initialize?: Promise<RouterManagerState>;
   private _isInitialized: RouterManagerState = RouterManagerState.Empty;

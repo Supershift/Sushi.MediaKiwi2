@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { computed, ref } from "vue";
-  import type { TableMap, TableFilter, TableSortingValue, TableFilterItem } from "@supershift/mediakiwi-vue";
-  import { MkTable, TableFilterType, TableSortingDirection, IconPosition } from "@supershift/mediakiwi-vue";
+  import type { TableMap, TableFilter, Sorting } from "@supershift/mediakiwi-vue";
+  import { MkTable, TableFilterType, SortDirection, IconPosition } from "@supershift/mediakiwi-vue";
   import type { ISampleData } from "./ISampleData";
   import { SampleDataService } from "./SampleDataService";
 
@@ -9,21 +9,10 @@
   const myMap: TableMap<ISampleData> = {
     itemId: (item) => item.id,
     items: [
-      { headerTitle: "Id", value: (dataItem) => dataItem.id, sortingOptions: { defaultSortDirection: TableSortingDirection.Desc } },
+      { headerTitle: "Id", value: (dataItem) => dataItem.id, sortingOptions: { id: (x) => x.id } },
       { headerTitle: "Naam", value: (dataItem) => dataItem.name },
-      { headerTitle: "Land", value: (dataItem) => dataItem.countryName, sortingOptions: { defaultSortDirection: TableSortingDirection.Asc } },
-      { headerTitle: "Laast gezien", value: (dataItem) => dataItem.date?.toISOString(), sortingOptions: { defaultSortDirection: TableSortingDirection.Desc } },
-      {
-        headerTitle: "Hulp",
-        value: (dataItem) => dataItem.countryName,
-        icon: (dataItem) => {
-          return {
-            value: dataItem.countryCode === "NL" ? "mdi-help-box" : "mdi-help-circle",
-            tooltip: `Dynamische tooltip voor regel: ${dataItem.id} - ${dataItem.name} `,
-            position: IconPosition.behind,
-          };
-        },
-      },
+      { headerTitle: "Land", value: (dataItem) => dataItem.countryName, sortingOptions: { id: (x) => x.countryName } },
+      { headerTitle: "Laast gezien", value: (dataItem) => dataItem.date?.toISOString() },
       {
         headerTitle: "Checked",
         value: () => true, // MediaKiwi will render a mdi check icon if the value returns a boolean
@@ -65,9 +54,9 @@
   });
 
   // create a sorting option object with a default value
-  const selectedSortOption = ref<TableSortingValue>({
-    tableMapItemId: "lastSeen",
-    sortDirection: TableSortingDirection.Desc,
+  const selectedSortOption = ref<Sorting>({
+    sortBy: "id",
+    sortDirection: SortDirection.Desc,
   });
   // create a ref collection of selected table rows
   const selectedTableRows = ref([]);
@@ -96,8 +85,16 @@
 </script>
 
 <template>
-  <MkTable v-model:selected-sort-option="selectedSortOption" v-model:selection="selectedTableRows" v-model:filters="filters" :table-map="myMap" :data="sampleData" checkbox item-view-id="SampleEdit">
-    <template #actions>
+  <MkTable
+    v-model:sorting="selectedSortOption"
+    v-model:selection="selectedTableRows"
+    v-model:filters="filters"
+    :table-map="myMap"
+    :data="sampleData"
+    checkbox
+    item-view-id="SampleEdit"
+  >
+    <template #selectionActions>
       <v-btn @click="download">Download</v-btn>
       <v-btn @click="move">move</v-btn>
 

@@ -3,13 +3,12 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { container } from "tsyringe";
 import { RouterManager, RouterManagerState } from "../routerManager";
 import { RouteGenerator } from "../routeGenerator";
-import { IMediakiwiVueOptions } from "../../models/options";
+import { MediakiwiVueOptions } from "../../models";
 import { createRouter, RouteComponent, RouterOptions, RouteRecordRaw, createWebHistory } from "vue-router";
 import { Component } from "vue";
-import { type INavigationItem, type IScreen } from "../../models";
+import { type NavigationItem, type View } from "../../models";
 import { Configuration } from "@azure/msal-browser";
 import * as store from "../../stores/index";
-import { createTestingPinia } from "@pinia/testing";
 
 // mock libraries
 vi.mock("../routeGenerator");
@@ -19,15 +18,19 @@ const modules: Record<string, RouteComponent> = {
   a: <Component>{},
   b: <Component>{},
 };
-const navigationItems: INavigationItem[] = [<INavigationItem>{ id: 1, screenId: 1, path: "/orders" }, <INavigationItem>{ id: 2, screenId: 2, path: "/customers" }];
-const screens: IScreen[] = [<IScreen>{ id: 1, sectionId: 1, componentKey: "a", name: "screen a" }, <IScreen>{ id: 2, sectionId: 1, componentKey: "b", name: "screen b" }];
-const options: IMediakiwiVueOptions = {
+const navigationItems: NavigationItem[] = [
+  { id: 1, viewId: "a", path: "/orders", name: "", sectionId: 1 },
+  { id: 2, viewId: "b", path: "/customers", name: "", sectionId: 1 },
+];
+const screens: View[] = [
+  { id: "a", sectionId: 1, componentKey: "a", name: "screen a" },
+  { id: "b", sectionId: 1, componentKey: "b", name: "screen b" },
+];
+const options: MediakiwiVueOptions = {
   apiBaseUrl: "",
   modules: modules,
   msalConfig: <Configuration>{},
 };
-
-const pinia = createTestingPinia();
 
 describe("RouterManager", () => {
   beforeEach(() => {
@@ -40,6 +43,7 @@ describe("RouterManager", () => {
       history: createWebHistory(),
     });
     const routeGenerator = vi.mocked(new RouteGenerator());
+    console.log(routeGenerator);
     routeGenerator.generateRoutes.mockReturnValue([]);
     const routerManager = new RouterManager(options, router, routeGenerator);
 

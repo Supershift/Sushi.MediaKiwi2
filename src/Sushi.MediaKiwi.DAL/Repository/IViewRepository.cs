@@ -1,4 +1,5 @@
 ﻿using Sushi.MediaKiwi.DAL.Paging;
+using Sushi.MediaKiwi.DAL.Sorting;
 using Sushi.MicroORM;
 
 namespace Sushi.MediaKiwi.DAL.Repository
@@ -12,27 +13,34 @@ namespace Sushi.MediaKiwi.DAL.Repository
         /// Gets all <see cref="View"/> objects for the given filter parameters.
         /// </summary>        
         /// <returns></returns>
-        Task<QueryListResult<View>> GetAllAsync(int? sectionID, PagingValues pagingValues);
+        Task<QueryListResult<View>> GetAllAsync(int? sectionID, PagingValues pagingValues, SortValues<View>? sortValues = null);
 
         /// <summary>
         /// Gets a <see cref="View"/> by id.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<View?> GetAsync(int id);
+        Task<View?> GetAsync(string id);
 
         /// <summary>
-        /// Insert or updates a <see cref="View"/>.
+        /// Inserts a <see cref="View"/>.
         /// </summary>
         /// <param name="view"></param>
         /// <returns></returns>
-        Task SaveAsync(View view);
+        Task InsertAsync(View view);
+
+        /// <summary>
+        /// Updates a <see cref="View"/>.
+        /// </summary>
+        /// <param name="view"></param>
+        /// <returns></returns>
+        Task UpdateAsync(View view);
 
         /// <summary>
         /// Deletes a <see cref="View"/> by id.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task DeleteAsync(int id);
+        Task DeleteAsync(string id);
     }
 }
