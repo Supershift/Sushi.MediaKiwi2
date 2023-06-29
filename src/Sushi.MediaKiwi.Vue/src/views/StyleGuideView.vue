@@ -5,13 +5,12 @@
   import lightColors from "@/styles/themes/light/_colors.module.scss";
 
   const theme = useTheme();
-  const currentTheme = computed(() => (theme.global.current.value.dark ? "dark" : "light"));
 
   // Use the dark colors as keys since they are the same for both themes
   const colors = Object.keys(darkColors);
 
   const colorClasses = (key: string) => {
-    return `mk-color-${currentTheme.value}-${key}`;
+    return `mk-background-color-${key}`;
   };
 
   const hex = (key: string) => {
@@ -36,12 +35,13 @@
   });
 
   const typographyClasses = (key: string) => {
-    return `mk-typography-${key}`;
+    return `mk-text-${key}`;
   };
 </script>
 
 <template>
   <div class="color">
+    <p><i>Colors defined in the vuetify theme</i></p>
     <div v-for="key in colors" :key="key" class="color-item" :class="colorClasses(key)">
       <p>
         {{ key }} <br />
@@ -52,18 +52,30 @@
   <br />
   <hr />
   <br />
+  <div class="header">
+    <p><i>Headers are set based on the vuetify classes text-h1, text-h2, etc</i></p>
+    <h1 class="text-h1">Header 1</h1>
+    <h2 class="text-h2">Header 2</h2>
+    <h3 class="text-h3">Header 3</h3>
+    <h4 class="text-h4">Header 4</h4>
+    <h5 class="text-h5">Header 5</h5>
+    <h6 class="text-h6">Header 6</h6>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+      nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+      eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </p>
+
+    <v-btn>Knop</v-btn>
+  </div>
+  <br />
+  <hr />
+  <br />
   <div class="typography">
+    <p><i>Mediakiwi classes for the md3 typography are set based on the vuetify classes text-h1, text-h2, etc</i></p>
     <div v-for="t in typographyItems" :key="t" :class="typographyClasses(t)">
       {{ t.replace("-", " ") }}
     </div>
-
-    Headers:
-    <h1>Header 1</h1>
-    <h2>Header 2</h2>
-    <h3>Header 3</h3>
-    <h4>Header 4</h4>
-    <h5>Header 5</h5>
-    <h6>Header 6</h6>
   </div>
 </template>
 

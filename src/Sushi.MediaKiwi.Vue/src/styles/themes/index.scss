@@ -4,25 +4,13 @@
 @use "@/styles/abstracts/mixins" as m;
 
 .mk {
-  &-color {
-    &-dark {
-      // Add the dark colors
-      // E.g .mk-color-dark-primary, .mk-color-dark-secondary, etc
-      @include m.create-classes-from-map(darkColors.$colors, "background");
+  &-background-color {
+    // Add the colors variables
+    // E.g .mk-color-primary, .mk-color-secondary, etc
+    @include m.create-classes-from-map(lightColors.$colors, "background");
 
-      // Add the dark surfaces
-      // E.g .mk-color-dark-surface-variant-1, .mk-color-dark-surface-variant-2, etc
-      @include m.create-classes-from-map(lightColors.$surfaces, "background");
-    }
-
-    &-light {
-      // Add the light colors
-      // E.g .mk-color-light-primary, .mk-color-light-secondary, etc
-      @include m.create-classes-from-map(lightColors.$colors, "background");
-
-      // Add the light surfaces
-      // E.g .mk-color-light-surface-variant-1, .mk-color-light-surface-variant-2, etc
-      @include m.create-classes-from-map(lightColors.$surfaces, "background");
-    }
+    // Add the surfaces variables
+    // E.g .mk-color-surface-variant-1, .mk-color-surface-variant-2, etc
+    @include m.create-classes-from-map(lightColors.$surfaces, "background");
   }
 }

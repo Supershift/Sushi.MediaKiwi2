@@ -7,9 +7,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap");
 
 // Add typography classes here
-// E.g .mk-typography-display-large, .mk-typography-headline-medium, etc
+// E.g .mk-text-display-large, .mk-typography-headline-medium, etc
 .mk {
-  &-typography {
+  &-text {
     @include mixins.recursive-map(typography.$typography);
   }
 }

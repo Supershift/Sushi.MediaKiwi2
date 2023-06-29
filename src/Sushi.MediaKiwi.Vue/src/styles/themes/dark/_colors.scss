@@ -4,8 +4,10 @@
 $primary-colors: () !default;
 $primary-colors: map.deep-merge(
   (
-    "primary": #d0bcff,
-    "on-primary": #381e72,
+    "primary": #ff00ff,
+    // #d0bcff,
+    "on-primary": #fff000,
+    // #381e72,
     "primary-container": #4f378b,
     "on-primary-container": #eaddff,
   ),
