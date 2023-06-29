@@ -1,7 +1,8 @@
 // Folder structure: https://dev.to/dostonnabotov/a-modern-sass-folder-structure-330f
-@use "./base/typography";
-@use "./abstracts/fonts";
-
-// These are some of the variables you can override
-// These have to live here in order to be passed from the Client App to vuetify
-@use "vuetify/lib/styles/main.sass";
+// Use the abstract to pass to vuetify
+@use "./abstracts/typography" as t;
+@use "./base";
+@use "./themes";
+@use "vuetify/lib/styles/main.sass" with (
+  $body-font-family: t.$display-font-family
+);

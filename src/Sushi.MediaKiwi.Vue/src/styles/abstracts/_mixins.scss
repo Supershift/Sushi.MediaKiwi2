@@ -1,14 +1,39 @@
 @use "sass:map";
 @use "sass:meta";
+@use "@/styles/abstracts/functions" as f;
 
-@mixin export-recursive($map) {
+// Loops through a map and exports the values
+@mixin recursive-export($map) {
   @each $node, $value in $map {
-    @if (meta.type-of($value) == map) {
-      @include export-recursive($value);
+    @if meta.type-of($value) == map {
+      @include recursive-export($value);
     } @else {
       :export {
         #{$node}: $value;
       }
+    }
+  }
+}
+
+// Loops through a map and creates classes for the values
+@mixin recursive-map($map) {
+  @each $node, $value in $map {
+    @if meta.type-of($value) == map {
+      &-#{$node} {
+        @include recursive-map($value);
+      }
+    } @else {
+      #{$node}: $value;
+    }
+  }
+}
+
+// Render a map as a class using the vuetify css variable
+// E.g .mk-color-dark-primary, .mk-color-dark-secondary, etc
+@mixin create-classes-from-map($map, $rule) {
+  @each $name, $value in $map {
+    &-#{$name} {
+      #{$rule}: rgb(f.get-vuetify-var($name));
     }
   }
 }

@@ -1,0 +1,28 @@
+// Folder structure: https://dev.to/dostonnabotov/a-modern-sass-folder-structure-330f
+@use "./dark/colors" as darkColors;
+@use "./light/colors" as lightColors;
+@use "@/styles/abstracts/mixins" as m;
+
+.mk {
+  &-color {
+    &-dark {
+      // Add the dark colors
+      // E.g .mk-color-dark-primary, .mk-color-dark-secondary, etc
+      @include m.create-classes-from-map(darkColors.$colors, "background");
+
+      // Add the dark surfaces
+      // E.g .mk-color-dark-surface-variant-1, .mk-color-dark-surface-variant-2, etc
+      @include m.create-classes-from-map(lightColors.$surfaces, "background");
+    }
+
+    &-light {
+      // Add the light colors
+      // E.g .mk-color-light-primary, .mk-color-light-secondary, etc
+      @include m.create-classes-from-map(lightColors.$colors, "background");
+
+      // Add the light surfaces
+      // E.g .mk-color-light-surface-variant-1, .mk-color-light-surface-variant-2, etc
+      @include m.create-classes-from-map(lightColors.$surfaces, "background");
+    }
+  }
+}

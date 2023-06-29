@@ -1,0 +1,28 @@
+.color {
+  display: flex;
+  flex-flow: row wrap;
+  font-size: 14px;
+
+  &-item {
+    border: 1px solid white;
+    margin: 0 10px 10px 0;
+    padding: 10px;
+    width: 100px;
+    height: 100px;
+
+    p {
+      color: white;
+      mix-blend-mode: difference;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
+.typography {
+  > div {
+    text-transform: capitalize;
+    margin-bottom: 10px;
+  }
+}

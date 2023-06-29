@@ -1,0 +1,6 @@
+@use "sass:meta";
+
+// Concat the vuetify variable prefix with the $name
+@function get-vuetify-var($name) {
+  @return var(--v-theme-#{$name});
+}

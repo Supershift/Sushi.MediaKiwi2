@@ -3,4 +3,4 @@
 @use "./../../abstracts/mixins";
 @use "./colors" as *;
 
-@include mixins.export-recursive($colors);
+@include mixins.recursive-export($colors);

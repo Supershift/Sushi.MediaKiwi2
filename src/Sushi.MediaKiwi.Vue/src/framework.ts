@@ -103,5 +103,3 @@ export * from "@/services";
 export * from "@/stores";
 
 export * from "@/router";
-
-import "@/styles/main.scss";
