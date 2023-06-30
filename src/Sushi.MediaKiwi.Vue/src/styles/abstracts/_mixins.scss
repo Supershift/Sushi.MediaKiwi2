@@ -29,16 +29,6 @@
   }
 }
 
-// Render a map as a class using the vuetify css variable
-// E.g .mk-color-dark-primary, .mk-color-dark-secondary, etc
-@mixin create-classes-from-map($map, $rule) {
-  @each $name, $value in $map {
-    &-#{$name} {
-      #{$rule}: rgb(f.get-vuetify-var($name));
-    }
-  }
-}
-
 @mixin typography($type, $size) {
   $m: map.get(t.$typography, $type, $size);
 

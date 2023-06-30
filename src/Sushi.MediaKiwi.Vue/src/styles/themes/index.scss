@@ -2,15 +2,26 @@
 @use "./dark/colors" as darkColors;
 @use "./light/colors" as lightColors;
 @use "@/styles/abstracts/mixins" as m;
+@use "@/styles/abstracts/functions" as f;
+@use "@/styles/abstracts/typography" as t;
 
 .mk {
   &-background-color {
     // Add the colors variables
     // E.g .mk-color-primary, .mk-color-secondary, etc
-    @include m.create-classes-from-map(lightColors.$colors, "background");
+    @each $name, $value in lightColors.$colors {
+      &-#{$name} {
+        background: rgb(f.get-vuetify-var($name));
+      }
+    }
 
     // Add the surfaces variables
     // E.g .mk-color-surface-variant-1, .mk-color-surface-variant-2, etc
-    @include m.create-classes-from-map(lightColors.$surfaces, "background");
+    // @include m.create-classes-from-map(lightColors.$surfaces, "background");
+    @each $name, $value in lightColors.$surfaces {
+      &-#{$name} {
+        background: rgb(f.get-vuetify-var($name));
+      }
+    }
   }
 }
