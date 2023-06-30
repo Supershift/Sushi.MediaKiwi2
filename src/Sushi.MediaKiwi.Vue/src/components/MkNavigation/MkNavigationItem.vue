@@ -40,7 +40,6 @@
         v-bind="props"
         :exact="true"
         :active="isActive"
-        :active-class="'active-list-item'"
         :title="navigationItem.name"
         rounded="pill"
         class="mb-2"
@@ -54,12 +53,8 @@
     :active="isActive"
     :title="navigationItem.name"
     :exact="true"
-    :active-class="'active-list-item'"
     rounded="pill"
     class="mb-2"
     @click.stop="hasScreen(navigationItem) ? onItemClick(navigationItem) : {}"
   />
 </template>
-<style scoped lang="scss">
-  @use "@/styles/components/v-list-item.scss";
-</style>

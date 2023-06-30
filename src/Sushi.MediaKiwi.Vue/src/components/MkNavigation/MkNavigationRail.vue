@@ -23,7 +23,6 @@
         :key="item.id"
         class="ml-0 mr-0"
         :active="item.id == navigation.currentNavigationItem.value?.sectionId"
-        :active-class="'active-list-item'"
         rounded="xl"
         :value="item.name"
         @click.stop="onItemClick(item)"
@@ -42,7 +41,7 @@
 
 <!-- Vuetify rail does not support text beneath the icon, therefore custom css is required -->
 <style scoped lang="scss">
-  @use "@/styles/components/v-list-item";
+  @use "@/styles/abstracts/mixins" as *;
   .v-list {
     display: flex;
     flex-flow: column;
@@ -54,6 +53,10 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    .list-item-title {
+      @include typography("label", "small");
+    }
 
     &--density-comfortable {
       &.v-list-item--one-line {

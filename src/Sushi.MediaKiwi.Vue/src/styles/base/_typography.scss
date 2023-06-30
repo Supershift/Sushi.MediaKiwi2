@@ -1,5 +1,4 @@
-// Folder structure: https://dev.to/dostonnabotov/a-modern-sass-folder-structure-330f
-@use "@/styles/abstracts/typography";
+@use "@/styles/abstracts";
 @use "@/styles/abstracts/mixins";
 @use "sass:map";
 
@@ -10,6 +9,6 @@
 // E.g .mk-text-display-large, .mk-typography-headline-medium, etc
 .mk {
   &-text {
-    @include mixins.recursive-map(typography.$typography);
+    @include mixins.recursive-map(abstracts.$typography);
   }
 }

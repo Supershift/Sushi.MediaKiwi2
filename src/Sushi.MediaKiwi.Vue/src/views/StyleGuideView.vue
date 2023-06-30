@@ -58,6 +58,10 @@
   async function onLoad() {
     data.value = await sectionConnector.GetSections({ pageIndex: currentPage.value - 1, pageSize: 10 });
   }
+
+  function getVariants(): Array<"flat" | "text" | "elevated" | "tonal" | "outlined" | "plain"> {
+    return ["text", "elevated", "flat", "outlined", "tonal", "plain"];
+  }
 </script>
 
 <template>
@@ -71,7 +75,7 @@
     </div>
   </div>
   <br />
-  <hr />
+  <v-divider />
   <br />
   <div class="header">
     <p><i>Headers are set based on the vuetify classes text-h1, text-h2, etc</i></p>
@@ -86,11 +90,34 @@
       nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
       eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     </p>
-
-    <v-btn>Knop</v-btn>
   </div>
   <br />
-  <hr />
+  <v-divider />
+  <br />
+
+  <div class="input-elements">
+    <h2>Input elements</h2>
+    <br />
+
+    <h3>Buttons</h3>
+    <br />
+    <div>
+      <v-btn>Default</v-btn>
+      <v-divider vertical style="height: 30px; margin: 0 15px -6px" />
+      <v-btn v-for="(variant, index) in getVariants()" :key="index" :variant="variant">{{ variant }}</v-btn>
+    </div>
+    <br />
+    <h3>Chips</h3>
+    <br />
+    <div>
+      <v-chip>Default</v-chip>
+      <v-divider vertical style="height: 30px; margin: 0 15px -6px" />
+      <v-chip v-for="(variant, index) in getVariants()" :key="index" :variant="variant">{{ variant }}</v-chip>
+    </div>
+  </div>
+
+  <br />
+  <v-divider />
   <br />
   <div class="typography">
     <p><i>Mediakiwi classes for the md3 typography are set based on the vuetify classes text-h1, text-h2, etc</i></p>

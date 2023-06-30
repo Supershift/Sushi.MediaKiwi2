@@ -1,9 +1,7 @@
-// Folder structure: https://dev.to/dostonnabotov/a-modern-sass-folder-structure-330f
 @use "./dark/colors" as darkColors;
 @use "./light/colors" as lightColors;
 @use "@/styles/abstracts/mixins" as m;
 @use "@/styles/abstracts/functions" as f;
-@use "@/styles/abstracts/typography" as t;
 
 .mk {
   &-background-color {

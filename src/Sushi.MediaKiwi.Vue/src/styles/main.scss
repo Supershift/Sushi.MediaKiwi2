@@ -3,11 +3,14 @@
 @use "sass:map";
 @use "./abstracts";
 @use "./base";
+@use "./layout";
 @use "./themes";
+
 @use "vuetify/lib/styles/main.sass" with (
-  $typography: abstracts.$typography-vuetify,
-  $body-font-family: map.get(abstracts.$typography, "body", "large", "font-family"),
-  $font-size-root: map.get(abstracts.$typography, "body", "large", "font-size"),
-  $line-height-root: map.get(abstracts.$typography, "body", "large", "line-height"),
-  $border-radius-root: 3.33px // Check with UX t
-);
+    $typography: abstracts.$typography-vuetify,
+    $body-font-family: map.get(abstracts.$typography, "body", "large", "font-family"),
+    $font-size-root: map.get(abstracts.$typography, "body", "large", "font-size"),
+    $line-height-root: map.get(abstracts.$typography, "body", "large", "line-height"),
+    $border-radius-root: 3.33px,
+    // Check with UX team
+  );

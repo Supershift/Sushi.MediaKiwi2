@@ -1,18 +1,32 @@
 export const mediaKiwiDefaults = {
   VAppBar: {
-    /** Elevate the app bar to it sits on top of everything */
     elevation: 2,
   },
+  VNavigationDrawer: {
+    VList: {
+      variant: "flat",
+      color: "secondary-container",
+    },
+  },
+  VBtn: {
+    variant: "text",
+    style: [{ padding: "10px 12px" }],
+  },
+  VChip: {
+    appendIcon: "mdi-close",
+    rounded: "lg",
+    class: "bg-secondary-container",
+  },
+  VDivider: {
+    color: "outline-variant",
+    style: [{ opacity: "1" }],
+  },
   VCard: {
-    /** Disable any variants of de vcard by default */
     variant: "none",
-    /** Disable any rounded corners by default */
     rounded: false,
   },
   VTable: {
-    /** Disable any variants of de vtable by default */
     variant: "none",
-    /** Disable any rounded corners by default */
     rounded: false,
   },
 };
