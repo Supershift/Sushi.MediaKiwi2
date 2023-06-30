@@ -58,7 +58,7 @@ $surface-colors: () !default;
 $surface-colors: map.deep-merge(
   (
     "surface": #1c1b1f,
-    "on-surface": #e6e1e5,
+    "on-surface": #e6e1e5, // == 230, 225, 229
   ),
   $surface-colors
 );

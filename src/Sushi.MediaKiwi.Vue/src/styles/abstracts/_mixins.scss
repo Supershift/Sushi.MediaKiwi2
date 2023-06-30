@@ -1,6 +1,7 @@
 @use "sass:map";
 @use "sass:meta";
 @use "@/styles/abstracts/functions" as f;
+@use "@/styles/abstracts/typography" as t;
 
 // Loops through a map and exports the values
 @mixin recursive-export($map) {
@@ -35,5 +36,13 @@
     &-#{$name} {
       #{$rule}: rgb(f.get-vuetify-var($name));
     }
+  }
+}
+
+@mixin typography($type, $size) {
+  $m: map.get(t.$typography, $type, $size);
+
+  @each $name, $value in $m {
+    #{$name}: #{$value};
   }
 }

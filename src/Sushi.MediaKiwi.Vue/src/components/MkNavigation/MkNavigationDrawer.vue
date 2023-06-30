@@ -44,8 +44,8 @@
   }
 </script>
 <template>
-  <v-navigation-drawer absolute>
-    <v-list open-strategy="single">
+  <v-navigation-drawer absolute class="pa-3">
+    <v-list open-strategy="single" class="pa-0">
       <mk-navigation-item v-for="item in children" :key="item.id" :navigation-item="item" :all-items="allNavigationItems"></mk-navigation-item>
     </v-list>
   </v-navigation-drawer>

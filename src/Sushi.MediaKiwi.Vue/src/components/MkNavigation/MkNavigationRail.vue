@@ -16,19 +16,24 @@
   }
 </script>
 <template>
-  <v-navigation-drawer rail :rail-width="80" permanent>
-    <v-list density="compact" open-strategy="list" nav>
+  <v-navigation-drawer rail :rail-width="88" permanent>
+    <v-list density="comfortable" open-strategy="list" nav class="pa-3">
       <v-list-item
-        :active="item.id == navigation.currentNavigationItem.value?.sectionId"
         v-for="item in props.railItems || []"
         :key="item.id"
-        :title="item.name"
+        class="ml-0 mr-0"
+        :active="item.id == navigation.currentNavigationItem.value?.sectionId"
+        :active-class="'active-list-item'"
+        rounded="xl"
         :value="item.name"
         @click.stop="onItemClick(item)"
       >
-        <template v-slot:prepend>
+        <template #prepend>
           <v-icon v-if="item?.icon" :icon="item?.icon" @click.stop="onItemClick(item)"></v-icon>
           <v-icon v-else icon="mdi-puzzle" @click.stop="onItemClick(item)"></v-icon>
+        </template>
+        <template #title>
+          <label class="list-item-title">{{ item.name }}</label>
         </template>
       </v-list-item>
     </v-list>
@@ -37,11 +42,25 @@
 
 <!-- Vuetify rail does not support text beneath the icon, therefore custom css is required -->
 <style scoped lang="scss">
+  @use "@/styles/components/v-list-item";
+  .v-list {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+  }
+
   .v-list-item {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    &--density-comfortable {
+      &.v-list-item--one-line {
+        height: 56px;
+        width: 56px;
+      }
+    }
 
     &__prepend {
       > .v-icon {

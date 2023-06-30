@@ -1,0 +1,14 @@
+@use "@/styles/abstracts/mixins" as *;
+
+.v-list-item {
+  overflow: hidden;
+
+  // Set the active styles for the list item
+  &.active-list-item {
+    background-color: rgb(var(--v-theme-secondary-container));
+  }
+
+  .list-item-title {
+    @include typography("label", "small");
+  }
+}

@@ -42,16 +42,24 @@
         :active="isActive"
         :active-class="'active-list-item'"
         :title="navigationItem.name"
+        rounded="pill"
+        class="mb-2"
         @click.stop="hasScreen(navigationItem) ? onItemClick(navigationItem) : {}"
       />
     </template>
     <mk-navigation-item v-for="child in children" :key="child.id" :navigation-item="child" :all-items="allItems" />
   </v-list-group>
-  <v-list-item v-else :active="isActive" :title="navigationItem.name" :exact="true" :active-class="'active-list-item'" @click.stop="hasScreen(navigationItem) ? onItemClick(navigationItem) : {}" />
+  <v-list-item
+    v-else
+    :active="isActive"
+    :title="navigationItem.name"
+    :exact="true"
+    :active-class="'active-list-item'"
+    rounded="pill"
+    class="mb-2"
+    @click.stop="hasScreen(navigationItem) ? onItemClick(navigationItem) : {}"
+  />
 </template>
-
-<style lang="css">
-  .active-list-item {
-    background-color: rgb(86, 86, 86, 0.2);
-  }
+<style scoped lang="scss">
+  @use "@/styles/components/v-list-item.scss";
 </style>

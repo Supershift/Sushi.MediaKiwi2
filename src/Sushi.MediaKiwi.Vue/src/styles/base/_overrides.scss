@@ -13,3 +13,7 @@
   --v-selected-opacity: #{map.get(abstracts.$states, "selected")} !important;
   --v-activated-opacity: #{map.get(abstracts.$states, "activated")} !important;
 }
+
+.v-layout--full-height {
+  min-height: 100vh;
+}
