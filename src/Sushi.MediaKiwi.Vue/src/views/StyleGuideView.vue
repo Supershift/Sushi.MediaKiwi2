@@ -1,8 +1,12 @@
 <script setup lang="ts">
   import { useTheme } from "vuetify";
-  import { computed } from "vue";
+  import { computed, ref } from "vue";
   import darkColors from "@/styles/themes/dark/_colors.module.scss";
   import lightColors from "@/styles/themes/light/_colors.module.scss";
+  import { container } from "tsyringe";
+  import { SectionConnector } from "@/services";
+  import { ListResult, Section, TableMap } from "@/models";
+  import { MkTable } from "@/components";
 
   const theme = useTheme();
 
@@ -37,6 +41,23 @@
   const typographyClasses = (key: string) => {
     return `mk-text-${key}`;
   };
+
+  const sectionConnector = container.resolve<SectionConnector>("ISectionConnector");
+  const currentPage = ref(1);
+  const data = ref<ListResult<Section>>();
+  // define mapping
+  const tableMap: TableMap<Section> = {
+    itemId: (x) => x.id,
+    items: [
+      { headerTitle: "Name", value: (x) => x.name },
+      { headerTitle: "Icon", value: (x) => x.icon },
+      { headerTitle: "Sort order", value: (x) => x.sortOrder },
+    ],
+  };
+  // get data
+  async function onLoad() {
+    data.value = await sectionConnector.GetSections({ pageIndex: currentPage.value - 1, pageSize: 10 });
+  }
 </script>
 
 <template>
@@ -77,6 +98,8 @@
       {{ t.replace("-", " ") }}
     </div>
   </div>
+
+  <mk-table v-model:current-page="currentPage" :api-result="data" :on-load="onLoad" :table-map="tableMap"></mk-table>
 </template>
 
 <style lang="sass" src="@/styles/views/style-guide.scss" scoped />

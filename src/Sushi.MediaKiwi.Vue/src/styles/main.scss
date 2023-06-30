@@ -1,12 +1,12 @@
 // Folder structure: https://dev.to/dostonnabotov/a-modern-sass-folder-structure-330f
 // Use the abstract to pass to vuetify
 @use "sass:map";
-@use "./abstracts/typography" as t;
+@use "./abstracts";
 @use "./base";
 @use "./themes";
 @use "vuetify/lib/styles/main.sass" with (
-  $typography: t.$typography-vuetify,
-  $body-font-family: map.get(t.$typography, "body", "large", "font-family"),
-  $font-size-root: map.get(t.$typography, "body", "large", "font-size"),
-  $line-height-root: map.get(t.$typography, "body", "large", "line-height")
+  $typography: abstracts.$typography-vuetify,
+  $body-font-family: map.get(abstracts.$typography, "body", "large", "font-family"),
+  $font-size-root: map.get(abstracts.$typography, "body", "large", "font-size"),
+  $line-height-root: map.get(abstracts.$typography, "body", "large", "line-height")
 );
