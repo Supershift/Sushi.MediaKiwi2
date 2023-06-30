@@ -10,7 +10,10 @@ export const mediaKiwiDefaults = {
   },
   VBtn: {
     variant: "text",
-    style: [{ padding: "10px 12px" }],
+    style: {
+      padding: "10px 12px",
+      textTransform: "none",
+    },
   },
   VChip: {
     appendIcon: "mdi-close",
