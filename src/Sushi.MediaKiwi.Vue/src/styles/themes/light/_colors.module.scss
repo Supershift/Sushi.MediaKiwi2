@@ -4,3 +4,4 @@
 @use "./colors" as *;
 
 @include mixins.recursive-export($colors);
+@include mixins.recursive-export($surfaces);
