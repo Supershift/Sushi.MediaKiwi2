@@ -4,19 +4,10 @@
 @use "@/styles/abstracts/functions" as f;
 
 .mk {
-  &-background-color {
+  &-bg {
     // Add the colors variables
-    // E.g .mk-color-primary, .mk-color-secondary, etc
+    // E.g .mk-bg-primary, .mk-bg-secondary, etc
     @each $name, $value in lightColors.$colors {
-      &-#{$name} {
-        background: rgb(f.get-vuetify-var($name));
-      }
-    }
-
-    // Add the surfaces variables
-    // E.g .mk-color-surface-variant-1, .mk-color-surface-variant-2, etc
-    // @include m.create-classes-from-map(lightColors.$surfaces, "background");
-    @each $name, $value in lightColors.$surfaces {
       &-#{$name} {
         background: rgb(f.get-vuetify-var($name));
       }

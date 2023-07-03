@@ -25,11 +25,6 @@ const defaultVuetifyOptions = <VuetifyOptions>{
       dark: darkThemeDefinition,
       light: lightThemeDefinition,
     },
-    variations: {
-      colors: ["primary", "secondary", "tertiary", "error", "neutral", "neutral-variant"],
-      lighten: 10,
-      darken: 10,
-    },
   },
   icons: {
     defaultSet: "mdi",

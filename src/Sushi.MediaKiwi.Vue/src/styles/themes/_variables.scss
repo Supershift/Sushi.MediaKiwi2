@@ -1,34 +1,8 @@
-@use "./dark/colors" as darkColors;
-@use "./light/colors" as lightColors;
-
-:root {
-  // Add the dark colors
-  // E.g .mk-color-dark-primary, .mk-color-dark-secondary, etc
-  @each $name, $value in darkColors.$colors {
-    --v-theme-#{$name}: $value;
-  }
-
-  // Add the dark surfaces
-  // E.g .mk-color-dark-surface-variant-1, .mk-color-dark-surface-variant-2, etc
-  @each $name, $value in darkColors.$surfaces {
-    --v-theme-#{$name}: $value;
-  }
-}
-
-&-light {
-  // Add the light colors
-  // E.g .mk-color-light-primary, .mk-color-light-secondary, etc
-  @each $name, $value in lightColors.$colors {
-    &-#{$name} {
-      background: $value;
-    }
-  }
-
-  // Add the light surfaces
-  // E.g .mk-color-light-surface-variant-1, .mk-color-light-surface-variant-2, etc
-  @each $name, $value in lightColors.$surfaces {
-    &-#{$name} {
-      background: $value;
-    }
-  }
-}
+$states: (
+  "hover-opacity": 0.08,
+  "focus-opacity": 0.12,
+  "pressed-opacity": 0.8,
+  "dragged-opacity": 0.16,
+  "selected-opacity": 0.12,
+  "activated-opacity": 0.12,
+);

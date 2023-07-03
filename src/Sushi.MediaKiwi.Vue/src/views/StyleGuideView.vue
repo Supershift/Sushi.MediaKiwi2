@@ -1,47 +1,15 @@
 <script setup lang="ts">
-  import { useTheme } from "vuetify";
-  import { computed, ref } from "vue";
-  import darkColors from "@/styles/themes/dark/_colors.module.scss";
-  import lightColors from "@/styles/themes/light/_colors.module.scss";
+  import { ref } from "vue";
   import { container } from "tsyringe";
   import { SectionConnector } from "@/services";
   import { ListResult, Section, TableMap } from "@/models";
   import { MkTable } from "@/components";
+  import { useColors, useTypography } from "@/composables";
 
-  const theme = useTheme();
+  const { colors, surfaces, variants, cssVariables, variables, getColorBackgroundClasses } = useColors(); //getColorValue
+  const { typographyItems, getTypographyClasses } = useTypography();
 
-  // Use the dark colors as keys since they are the same for both themes
-  const colors = Object.keys(darkColors);
-
-  const colorClasses = (key: string) => {
-    return `mk-background-color-${key}`;
-  };
-
-  const hex = (key: string) => {
-    if (theme.global.current.value.dark) {
-      return darkColors[key];
-    } else {
-      return lightColors[key];
-    }
-  };
-
-  const typographyTypes = ["display", "headline", "title", "label", "body"];
-  const typographySizes = ["large", "medium", "small"];
-
-  const typographyItems = computed(() => {
-    const typographyClasses = typographyTypes.map((type) => {
-      return typographySizes.map((size) => {
-        return `${type}-${size}`;
-      });
-    });
-
-    return typographyClasses.flat();
-  });
-
-  const typographyClasses = (key: string) => {
-    return `mk-text-${key}`;
-  };
-
+  // Table data
   const sectionConnector = container.resolve<SectionConnector>("ISectionConnector");
   const currentPage = ref(1);
   const data = ref<ListResult<Section>>();
@@ -54,25 +22,51 @@
       { headerTitle: "Sort order", value: (x) => x.sortOrder },
     ],
   };
+
   // get data
   async function onLoad() {
     data.value = await sectionConnector.GetSections({ pageIndex: currentPage.value - 1, pageSize: 10 });
-  }
-
-  function getVariants(): Array<"flat" | "text" | "elevated" | "tonal" | "outlined" | "plain"> {
-    return ["text", "elevated", "flat", "outlined", "tonal", "plain"];
   }
 </script>
 
 <template>
   <div class="color">
     <p><i>Colors defined in the vuetify theme</i></p>
-    <div v-for="key in colors" :key="key" class="color-item" :class="colorClasses(key)">
+    <div v-for="color in colors" :key="color.key" class="color-item" :class="getColorBackgroundClasses(color.key)" :title="color.key">
       <p>
-        {{ key }} <br />
-        {{ hex(key) }}
+        {{ color.key }} <br />
+        {{ color.value }}
       </p>
     </div>
+
+    <p><i>Surfaces defined in the vuetify theme</i></p>
+    <div v-for="surface in surfaces" :key="surface.key" class="color-item" :class="getColorBackgroundClasses(surface.key)" :title="surface.key">
+      <p>
+        {{ surface.key }} <br />
+        {{ surface.value }}
+      </p>
+    </div>
+  </div>
+
+  <div class="variables">
+    <h3>Variables</h3>
+    <br />
+    <table border="1">
+      <thead>
+        <tr>
+          <th>Variable</th>
+          <th>Theme Value</th>
+          <th>CSS Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(value, key) in cssVariables" :key="key">
+          <td>{{ key }}</td>
+          <td>{{ variables[key] }}</td>
+          <td>{{ value }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
   <br />
   <v-divider />
@@ -91,6 +85,17 @@
       eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     </p>
   </div>
+
+  <br />
+  <v-divider />
+  <br />
+  <div class="typography">
+    <p><i>Mediakiwi classes for the md3 typography are set based on the vuetify classes text-h1, text-h2, etc</i></p>
+    <div v-for="t in typographyItems" :key="t" :class="getTypographyClasses(t)">
+      {{ t.replace("-", " ") }}
+    </div>
+  </div>
+
   <br />
   <v-divider />
   <br />
@@ -104,7 +109,7 @@
     <div>
       <v-btn>Default</v-btn>
       <v-divider vertical style="height: 30px; margin: 0 15px -6px" />
-      <v-btn v-for="(variant, index) in getVariants()" :key="index" :variant="variant">{{ variant }}</v-btn>
+      <v-btn v-for="(variant, index) in variants" :key="index" :variant="variant">{{ variant }}</v-btn>
     </div>
     <br />
     <h3>Chips</h3>
@@ -112,19 +117,13 @@
     <div>
       <v-chip>Default</v-chip>
       <v-divider vertical style="height: 30px; margin: 0 15px -6px" />
-      <v-chip v-for="(variant, index) in getVariants()" :key="index" :variant="variant">{{ variant }}</v-chip>
+      <v-chip v-for="(variant, index) in variants" :key="index" :variant="variant">{{ variant }}</v-chip>
     </div>
   </div>
 
   <br />
   <v-divider />
   <br />
-  <div class="typography">
-    <p><i>Mediakiwi classes for the md3 typography are set based on the vuetify classes text-h1, text-h2, etc</i></p>
-    <div v-for="t in typographyItems" :key="t" :class="typographyClasses(t)">
-      {{ t.replace("-", " ") }}
-    </div>
-  </div>
 
   <mk-table v-model:current-page="currentPage" :api-result="data" :on-load="onLoad" :table-map="tableMap"></mk-table>
 </template>

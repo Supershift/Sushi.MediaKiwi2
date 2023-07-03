@@ -223,25 +223,3 @@ $typography-vuetify: (
     text-transform: none,
   ),
 );
-
-$states: (
-  "hover": 0.08,
-  "focus": 0.12,
-  "pressed": 0.12,
-  "dragged": 0.15,
-  "selected": 0.12,
-  "activated": 0.12,
-);
-
-// Vuetify uses the css variable inside its mapping for some elements, so chaching the mapping work
-.v-theme {
-  &--dark &--light {
-    // states
-    --v-hover-opacity: #{map.get($states, "hover")} !important;
-    --v-focus-opacity: #{map.get($states, "focus")} !important;
-    --v-pressed-opacity: #{map.get($states, "pressed")} !important;
-    --v-dragged-opacity: #{map.get($states, "dragged")} !important;
-    --v-selected-opacity: #{map.get($states, "selected")} !important;
-    --v-activated-opacity: #{map.get($states, "activated")} !important;
-  }
-}

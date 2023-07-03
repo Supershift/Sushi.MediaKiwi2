@@ -4,3 +4,5 @@ export * from "./useNavigation";
 export * from "./useResponsiveHelpers";
 export * from "./useTableMapItemSelection";
 export * from "./useI18next";
+export * from "./useColors";
+export * from "./useTypography";

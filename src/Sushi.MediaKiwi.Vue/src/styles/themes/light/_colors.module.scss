@@ -1,7 +1,6 @@
 @use "sass:map";
 @use "sass:meta";
-@use "./../../abstracts/mixins";
-@use "./colors" as *;
+@use "@/styles/abstracts/mixins";
+@use "./colors" as c;
 
-@include mixins.recursive-export($colors);
-@include mixins.recursive-export($surfaces);
+@include mixins.recursive-export(c.$colors);
