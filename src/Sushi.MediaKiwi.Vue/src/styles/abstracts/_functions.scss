@@ -1,18 +1,6 @@
 @use "sass:meta";
-@use "sass:string";
 
 // Concat the vuetify variable prefix with the $name
 @function get-vuetify-var($name) {
   @return var(--v-theme-#{$name});
-}
-
-// String replace
-@function str-replace($string, $search, $replace: "") {
-  $index: string.index($string, $search);
-
-  @if $index {
-    @return string.slice($string, 1, $index - 1) + $replace + str-replace(string.slice($string, $index + string.length($search)), $search, $replace);
-  }
-
-  @return $string;
 }
