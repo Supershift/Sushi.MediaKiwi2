@@ -4,10 +4,10 @@
 
   // props that are used to customize the component
   const props = defineProps({
-    /** name of the element the sheet teleports on */
+    /** name of the element the sheet teleports on, this is  used as a hook*/
     idName: {
       type: String,
-      default: "mk-sp-container",
+      default: "mk-side-sheet-hook",
     },
     /** determines if the side sheet is open or not */
     modelValue: {
@@ -67,8 +67,10 @@
   const body = ref<HTMLElement | null>(null);
   const zIndex = ref<number | string>();
   const { mobile } = useDisplay();
-  const overlay = ref(props.modelValue);
+  const showOverlay = ref(false);
   const sheetValue = ref(false);
+  const isMounted = ref(false);
+  const hookName = ref(props.idName); // check if the hook name is set, if not use the default
 
   // computed
   const bodyHeight = computed<number | undefined>(() => {
@@ -112,12 +114,16 @@
     if (mobile.value) {
       sheetValue.value = false;
       setTimeout(() => {
-        overlay.value = false;
+        showOverlay.value = false;
       }, 500);
     }
   }
 
-  const getMaxZIndex = () => Math.max(...Array.from(document.querySelectorAll("body *"), (el) => parseFloat(window.getComputedStyle(el).zIndex)).filter((zIndex) => !Number.isNaN(zIndex)), 0);
+  const getMaxZIndex = () =>
+    Math.max(
+      ...Array.from(document.querySelectorAll("body *"), (el) => parseFloat(window.getComputedStyle(el).zIndex)).filter((zIndex) => !Number.isNaN(zIndex)),
+      0
+    );
 
   // hooks
   onBeforeMount(() => {
@@ -135,6 +141,8 @@
     window.removeEventListener("resize", calculateRightSize);
   });
   onMounted(() => {
+    showOverlay.value = props.modelValue;
+    isMounted.value = true;
     zIndex.value = props.zIndex === "auto" ? getMaxZIndex() : props.zIndex;
     setTimeout(() => {
       sheetValue.value = true;
@@ -146,50 +154,63 @@
   watch(
     () => [header.value, footer.value, props.height, props.width, props.modelValue],
     () => {
+      if (props.modelValue) {
+        showOverlay.value = true;
+      } else {
+        showOverlay.value = false;
+      }
       nextTick(() => calculateRightSize());
     }
   );
 </script>
 <template>
-  <teleport :to="`#${idName}`">
-    <v-overlay v-if="mobile" v-show="overlay && mobile" v-model="overlay" :activator="`#${idName}`" class="mk-sp-overlay d-flex justify-end">
-      <v-expand-x-transition>
+  <teleport :to="`#${hookName}`">
+    <div class=".mk-sp-overlay-wrapper">
+      <!-- Overlay Desktop -->
+      <v-overlay v-if="mobile" v-model:model-value="showOverlay" transition="v-expand-x-transition" class="mk-sp-overlay d-flex justify-end">
         <div class="mk-sp-wrapper" :class="[sheetValue && 'mk-sp-wrapper-active']" :style="wrapperStyles">
-          <v-sheet v-show="sheetValue" ref="mk-sp-sheet" class="mk-sp-sheet" :class="[sheetValue && 'mk-sp-sheet-active']" :style="sheetStyles">
+          <v-sheet ref="mk-sp-sheet" class="mk-sp-sheet" :class="[sheetValue && 'mk-sp-sheet-active']" :style="sheetStyles">
+            <!-- Start of Header  -->
             <v-card-item ref="mk-sp-header" :class="[headerClass, 'mk-sp-header']">
               <slot name="header"></slot>
               <template #append>
                 <v-btn icon="mdi-close" variant="text" @click="handleClose"> close </v-btn>
               </template>
             </v-card-item>
+            <!-- Start of Body -->
             <v-card-text ref="mk-sp-body" :class="[bodyClass, 'mk-sp-body']" :style="{ height: `${bodyHeight}px` }">
               <slot name="default"></slot>
             </v-card-text>
+            <!-- Start of Footer -->
             <v-card-actions ref="mk-sp-footer" :class="[footerClass, 'mk-sp-footer']">
               <slot name="footer"></slot>
             </v-card-actions>
           </v-sheet>
         </div>
-      </v-expand-x-transition>
-    </v-overlay>
-    <v-slide-x-transition v-else>
-      <div v-show="modelValue && !mobile" class="mk-sp-wrapper" :class="[modelValue && 'mk-sp-wrapper-active']" :style="wrapperStyles">
-        <v-sheet ref="mk-sp-sheet" class="mk-sp-sheet" :class="[modelValue && 'mk-sp-sheet-active']" :style="sheetStyles">
-          <v-card-item ref="mk-sp-header" :class="[headerClass, 'mk-sp-header']">
-            <slot name="header"></slot>
-            <template #append>
-              <v-btn icon="mdi-close" variant="text" @click="handleClose"> close </v-btn>
-            </template>
-          </v-card-item>
-          <v-card-text ref="mk-sp-body" :class="[bodyClass, 'mk-sp-body']" :style="{ height: `${bodyHeight}px` }">
-            <slot name="default"></slot>
-          </v-card-text>
-          <v-card-actions ref="mk-sp-footer" :class="[footerClass, 'mk-sp-footer']">
-            <slot name="footer"></slot>
-          </v-card-actions>
-        </v-sheet>
-      </div>
-    </v-slide-x-transition>
+      </v-overlay>
+      <!-- Overlay Mobile -->
+      <v-slide-x-transition v-else>
+        <div v-show="modelValue && !mobile" class="mk-sp-wrapper" :class="[modelValue && 'mk-sp-wrapper-active']" :style="wrapperStyles">
+          <v-sheet ref="mk-sp-sheet" class="mk-sp-sheet" :class="[modelValue && 'mk-sp-sheet-active']" :style="sheetStyles">
+            <!-- Start header -->
+            <v-card-item ref="mk-sp-header" :class="[headerClass, 'mk-sp-header']">
+              <slot name="header"></slot>
+              <template #append>
+                <v-btn icon="mdi-close" variant="text" @click="handleClose"> close </v-btn>
+              </template>
+            </v-card-item>
+            <!-- Start body -->
+            <v-card-text ref="mk-sp-body" :class="[bodyClass, 'mk-sp-body']" :style="{ height: `${bodyHeight}px` }">
+              <slot name="default"></slot>
+            </v-card-text>
+            <!-- Start footer -->
+            <v-card-actions ref="mk-sp-footer" :class="[footerClass, 'mk-sp-footer']">
+              <slot name="footer"></slot>
+            </v-card-actions>
+          </v-sheet>
+        </div>
+      </v-slide-x-transition>
+    </div>
   </teleport>
 </template>
 <style scoped lang="scss">
@@ -205,14 +226,16 @@
       &-header,
       &-body,
       &-footer {
+        text-align: center;
         overflow: auto;
       }
       &-body {
-        height: calc(100% - 192px); // so the content is scrollable ( accounting for margins top and bottom)
+        text-align: left;
+        height: calc(100% - 128px); // so the content is scrollable ( accounting for margins top and bottom)
       }
       @media (min-width: 900px) {
         &-body {
-          height: calc(100% - 128px); // so the content is scrollable ( accounting for margins top and bottom)
+          height: calc(100% - 175px); // so the content is scrollable ( accounting for margins top and bottom)
         }
       }
       &-footer {
