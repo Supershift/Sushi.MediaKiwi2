@@ -6,3 +6,4 @@ export * from "./useTableMapItemSelection";
 export * from "./useI18next";
 export * from "./useColors";
 export * from "./useTypography";
+export * from "./useElevations";

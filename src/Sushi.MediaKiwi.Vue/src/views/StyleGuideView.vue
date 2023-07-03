@@ -4,10 +4,11 @@
   import { SectionConnector } from "@/services";
   import { ListResult, Section, TableMap } from "@/models";
   import { MkTable } from "@/components";
-  import { useColors, useTypography } from "@/composables";
+  import { useColors, useTypography, useElevations } from "@/composables";
 
-  const { colors, surfaces, variants, cssVariables, variables, getColorBackgroundClasses } = useColors(); //getColorValue
+  const { colors, variants, cssVariables, variables, getColorBackgroundClasses } = useColors(); //getColorValue
   const { typographyItems, getTypographyClasses } = useTypography();
+  const { elevations, getElevationClass } = useElevations();
 
   // Table data
   const sectionConnector = container.resolve<SectionConnector>("ISectionConnector");
@@ -30,32 +31,30 @@
 </script>
 
 <template>
+  <h2 class="mk-text-headline-small">Colors</h2>
   <div class="color">
-    <p><i>Colors defined in the vuetify theme</i></p>
     <div v-for="color in colors" :key="color.key" class="color-item" :class="getColorBackgroundClasses(color.key)" :title="color.key">
       <p>
         {{ color.key }} <br />
-        {{ color.value }}
-      </p>
-    </div>
-
-    <p><i>Surfaces defined in the vuetify theme</i></p>
-    <div v-for="surface in surfaces" :key="surface.key" class="color-item" :class="getColorBackgroundClasses(surface.key)" :title="surface.key">
-      <p>
-        {{ surface.key }} <br />
-        {{ surface.value }}
+        {{ color.value }} <br />
+        <br />
+        {{ color.onKey }} <br />
+        {{ color.onValue }}
       </p>
     </div>
   </div>
 
+  <br />
+  <v-divider />
+  <br />
+
   <div class="variables">
-    <h3>Variables</h3>
-    <br />
+    <h2 class="mk-text-headline-small">Variables</h2>
     <table border="1">
       <thead>
         <tr>
-          <th>Variable</th>
-          <th>Theme Value</th>
+          <th>Name</th>
+          <th>JS Value</th>
           <th>CSS Value</th>
         </tr>
       </thead>
@@ -68,30 +67,29 @@
       </tbody>
     </table>
   </div>
+
   <br />
   <v-divider />
   <br />
+
   <div class="header">
-    <p><i>Headers are set based on the vuetify classes text-h1, text-h2, etc</i></p>
+    <h2 class="mk-text-headline-small">Typography</h2>
     <h1 class="text-h1">Header 1</h1>
     <h2 class="text-h2">Header 2</h2>
     <h3 class="text-h3">Header 3</h3>
     <h4 class="text-h4">Header 4</h4>
     <h5 class="text-h5">Header 5</h5>
-    <h6 class="text-h6">Header 6</h6>
+    <h2 class="mk-text-headline-small">Header 6</h2>
     <p>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
       nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
       eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     </p>
   </div>
-
-  <br />
-  <v-divider />
   <br />
   <div class="typography">
     <p><i>Mediakiwi classes for the md3 typography are set based on the vuetify classes text-h1, text-h2, etc</i></p>
-    <div v-for="t in typographyItems" :key="t" :class="getTypographyClasses(t)">
+    <div v-for="t in typographyItems" :key="t" :class="getTypographyClasses(t)" :title="getTypographyClasses(t)">
       {{ t.replace("-", " ") }}
     </div>
   </div>
@@ -100,11 +98,20 @@
   <v-divider />
   <br />
 
+  <h2 class="mk-text-headline-small">Elevations</h2>
+  <div class="elevations">
+    <div v-for="i of elevations" :key="i" class="elevations-item bg-surface" :class="getElevationClass(i)">Elevation {{ i }}</div>
+  </div>
+
+  <br />
+  <v-divider />
+  <br />
+
+  <h2 class="mk-text-headline-small">Input elements</h2>
   <div class="input-elements">
-    <h2>Input elements</h2>
     <br />
 
-    <h3>Buttons</h3>
+    <h3 class="mk-text-title-large">Buttons</h3>
     <br />
     <div>
       <v-btn>Default</v-btn>
@@ -112,7 +119,7 @@
       <v-btn v-for="(variant, index) in variants" :key="index" :variant="variant">{{ variant }}</v-btn>
     </div>
     <br />
-    <h3>Chips</h3>
+    <h3 class="mk-text-title-large">Chips</h3>
     <br />
     <div>
       <v-chip>Default</v-chip>
@@ -125,6 +132,7 @@
   <v-divider />
   <br />
 
+  <h2 class="mk-text-headline-small">Table</h2>
   <mk-table v-model:current-page="currentPage" :api-result="data" :on-load="onLoad" :table-map="tableMap"></mk-table>
 </template>
 

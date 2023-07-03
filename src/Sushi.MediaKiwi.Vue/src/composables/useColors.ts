@@ -14,44 +14,25 @@ export function useColors() {
    */
   const colors = computed(() => {
     return Object.keys(theme.global.current.value.colors)
+      .filter((color) => color.indexOf("on-") === -1)
       .map((key) => {
         return {
           key,
           value: theme.global.current.value.colors[key],
+          onKey: `on-${key}`,
+          onValue: theme.global.current.value.colors[`on-${key}`],
         };
       })
-      .filter((color) => color.key.indexOf("surface-") === -1) // remove surface colors
       .sort((a: color, b: color) => {
-        const aKey = a.key.toLowerCase().replace("on-", "");
-        const bKey = b.key.toLowerCase().replace("on-", "");
-        return aKey.localeCompare(bKey);
-      });
-  });
-
-  /**
-   * Collection of keys from the colors object, use dark colors as default since the keys are the same
-   */
-  const surfaces = computed(() => {
-    return Object.keys(theme.global.current.value.colors)
-      .map((key) => {
-        return {
-          key,
-          value: theme.global.current.value.colors[key],
-        };
-      })
-      .filter((color) => color.key.indexOf("surface-") > -1) // remove surface colors
-      .sort((a: color, b: color) => {
-        const aKey = a.key.toLowerCase().replace("on-", "");
-        const bKey = b.key.toLowerCase().replace("on-", "");
-        return aKey.localeCompare(bKey);
+        return a.key.localeCompare(b.key);
       });
   });
 
   const variables = theme.global.current.value.variables;
 
-  // /**
-  //  * Collection of keys from the colors object, use dark colors as default since the keys are the same
-  //  */
+  /**
+   * Collection of keys from the colors object, use dark colors as default since the keys are the same
+   */
   const cssVariables = computed(() => {
     let cssVariables = {};
     for (const key of Object.keys(variables)) {
@@ -91,7 +72,6 @@ export function useColors() {
   return {
     colors,
     variants,
-    surfaces,
     variables,
     cssVariables,
     getColorBackgroundClasses,

@@ -16,8 +16,6 @@
     aspect-ratio: 1/1;
 
     p {
-      color: #fff;
-      mix-blend-mode: difference;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -37,6 +35,30 @@
   }
 }
 
+.elevations {
+  display: flex;
+  flex-flow: row wrap;
+  font-size: 14px;
+
+  > p {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  &-item {
+    margin: 0 10px 10px 0;
+    padding: 10px;
+    width: 145px;
+    aspect-ratio: 1/1;
+
+    p {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
 .typography {
   > div {
     text-transform: capitalize;
@@ -51,4 +73,8 @@
     width: 100%;
     margin-bottom: 20px;
   }
+}
+
+.text-h6 {
+  margin-bottom: 10px;
 }
