@@ -9,6 +9,8 @@
         "ignorePseudoClasses": ["export"]
       }
     ],
-    "import-notation": "url"
+    "import-notation": "url",
+    "alpha-value-notation": null,
+    "color-function-notation": null
   }
 }

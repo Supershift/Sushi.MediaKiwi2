@@ -1,6 +1,6 @@
 @use "sass:map";
 @use "sass:meta";
-@use "@/styles/abstracts/mixins";
-@use "./variables" as v;
+@use "@/styles/abstracts";
+@use "./variables";
 
-@include mixins.recursive-export(v.$states);
+@include abstracts.recursive-export(variables.$states);

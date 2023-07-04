@@ -3,6 +3,7 @@ export const mediaKiwiDefaults = {
     elevation: 2,
   },
   VNavigationDrawer: {
+    bg: "surface1",
     VList: {
       variant: "flat",
       color: "secondary-container",

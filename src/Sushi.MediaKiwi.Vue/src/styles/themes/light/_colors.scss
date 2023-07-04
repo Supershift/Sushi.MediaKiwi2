@@ -1,5 +1,5 @@
-@use "sass:map" as map;
-@use "sass:color" as color;
+@use "sass:map";
+@use "sass:color";
 
 $primary-colors: () !default;
 $primary-colors: map.deep-merge(
@@ -66,11 +66,11 @@ $surface-colors: map.deep-merge(
 $surface-variations: () !default;
 $surface-variations: map.deep-merge(
   (
-    "surface-1": #f7f2f9,
-    "surface-2": #f3ecf7,
-    "surface-3": #eee7f5,
-    "surface-4": #ede5f3,
-    "surface-5": #ebe2f1,
+    "surface1": #f7f2f9,
+    "surface2": #f3ecf7,
+    "surface3": #eee7f5,
+    "surface4": #ede5f3,
+    "surface5": #ebe2f1,
   ),
   $surface-variations
 );

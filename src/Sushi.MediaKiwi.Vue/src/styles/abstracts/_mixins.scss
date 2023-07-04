@@ -1,7 +1,6 @@
 @use "sass:map";
 @use "sass:meta";
-@use "@/styles/abstracts/functions" as f;
-@use "@/styles/abstracts" as a;
+@use "./typography";
 
 // Loops through a map and exports the values
 @mixin recursive-export($map) {
@@ -30,7 +29,7 @@
 }
 
 @mixin typography($type, $size) {
-  $m: map.get(a.$typography, $type, $size);
+  $m: map.get(typography.$typography, $type, $size);
 
   @each $name, $value in $m {
     #{$name}: #{$value};

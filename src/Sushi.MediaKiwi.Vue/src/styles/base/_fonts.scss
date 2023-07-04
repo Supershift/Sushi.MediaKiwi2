@@ -1,5 +1,4 @@
 @use "@/styles/abstracts";
-@use "@/styles/abstracts/mixins";
 @use "sass:map";
 
 // import font here
@@ -9,6 +8,6 @@
 // E.g .mk-text-display-large, .mk-typography-headline-medium, etc
 .mk {
   &-text {
-    @include mixins.recursive-map(abstracts.$typography);
+    @include abstracts.recursive-map(abstracts.$typography);
   }
 }

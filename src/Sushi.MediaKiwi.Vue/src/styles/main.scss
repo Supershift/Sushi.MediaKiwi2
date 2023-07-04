@@ -9,5 +9,11 @@
   $typography: abstracts.$typography-vuetify,
   $body-font-family: map.get(abstracts.$typography, "body", "large", "font-family"),
   $font-size-root: map.get(abstracts.$typography, "body", "large", "font-size"),
-  $line-height-root: map.get(abstracts.$typography, "body", "large", "line-height")
+  $line-height-root: map.get(abstracts.$typography, "body", "large", "line-height"),
+  $shadow-key-umbra-opacity: abstracts.$shadow-key-umbra-opacity,
+  $shadow-key-penumbra-opacity: abstracts.$shadow-key-penumbra-opacity,
+  $shadow-key-ambient-opacity: abstracts.$shadow-key-ambient-opacity,
+  $shadow-key-umbra: abstracts.$shadow-key-umbra,
+  $shadow-key-penumbra: abstracts.$shadow-key-penumbra,
+  $shadow-key-ambient: abstracts.$shadow-key-ambient
 );

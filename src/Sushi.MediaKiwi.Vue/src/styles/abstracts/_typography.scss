@@ -3,7 +3,7 @@
 $display-font-family: "Roboto", sans-serif !default;
 $headline-font-family: $display-font-family !default;
 $title-font-family: $display-font-family !default;
-$label-font-family: $title-font-family !default;
+$label-font-family: $display-font-family !default;
 $body-font-family: $display-font-family !default;
 
 $typography: (
