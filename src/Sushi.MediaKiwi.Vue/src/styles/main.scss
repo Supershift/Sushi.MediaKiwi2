@@ -3,7 +3,6 @@
 @use "sass:map";
 @use "./abstracts";
 @use "./base";
-@use "./layout";
 
 @use "vuetify/lib/styles/main.sass" with (
   $typography: abstracts.$typography-vuetify,
@@ -17,3 +16,6 @@
   $shadow-key-penumbra: abstracts.$shadow-key-penumbra,
   $shadow-key-ambient: abstracts.$shadow-key-ambient
 );
+
+@use "./layout";
+@use "./components";

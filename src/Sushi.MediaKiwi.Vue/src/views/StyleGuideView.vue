@@ -33,7 +33,7 @@
 <template>
   <h2 class="mk-text-headline-small">Colors</h2>
   <div class="color">
-    <div v-for="color in colors" :key="color.key" class="color-item" :class="getColorBackgroundClasses(color.key)" :title="color.key">
+    <div v-for="color in colors" :key="color.key" class="color__item" :class="getColorBackgroundClasses(color.key)" :title="color.key">
       <p>
         {{ color.key }} <br />
         {{ color.value }} <br />
@@ -89,7 +89,7 @@
   <br />
   <div class="typography">
     <p><i>Mediakiwi classes for the md3 typography are set based on the vuetify classes text-h1, text-h2, etc</i></p>
-    <div v-for="t in typographyItems" :key="t" :class="getTypographyClasses(t)" :title="getTypographyClasses(t)">
+    <div v-for="t in typographyItems" :key="t" class="typography__item" :class="getTypographyClasses(t)" :title="getTypographyClasses(t)">
       {{ t.replace("-", " ") }}
     </div>
   </div>
@@ -100,7 +100,7 @@
 
   <h2 class="mk-text-headline-small">Elevations</h2>
   <div class="elevations">
-    <div v-for="i of elevations" :key="i" class="elevations-item bg-surface" :class="getElevationClass(i)">Elevation {{ i }}</div>
+    <div v-for="i of elevations" :key="i" class="elevations__item bg-surface" :class="getElevationClass(i)">Elevation {{ i }}</div>
   </div>
 
   <br />
@@ -114,7 +114,8 @@
     <h3 class="mk-text-title-large">Buttons</h3>
     <br />
     <div>
-      <v-btn>Default</v-btn>
+      <v-btn title="Variant: text">Default</v-btn>
+      <v-btn-primary title="Variant: flat"> Primary </v-btn-primary>
       <v-divider vertical style="height: 30px; margin: 0 15px -6px" />
       <v-btn v-for="(variant, index) in variants" :key="index" :variant="variant">{{ variant }}</v-btn>
     </div>

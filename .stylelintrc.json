@@ -11,6 +11,7 @@
     ],
     "import-notation": "url",
     "alpha-value-notation": null,
-    "color-function-notation": null
+    "color-function-notation": null,
+    "selector-class-pattern": null
   }
 }

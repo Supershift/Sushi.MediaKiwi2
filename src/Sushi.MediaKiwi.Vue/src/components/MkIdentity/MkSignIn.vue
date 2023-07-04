@@ -20,7 +20,7 @@
             <slot name="main"></slot>
           </v-card-text>
           <v-card-actions>
-            <v-btn size="x-large" prepend-icon="mdi-microsoft-azure" width="100%" @click="login">Azure Active Directory</v-btn>
+            <v-btn-primary size="x-large" prepend-icon="mdi-microsoft-azure" width="100%" @click="login">Azure Active Directory</v-btn-primary>
           </v-card-actions>
           <v-card-text>
             <slot name="footer"></slot>

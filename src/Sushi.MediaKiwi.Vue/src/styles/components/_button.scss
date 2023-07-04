@@ -1,0 +1,10 @@
+.v-btn {
+  &.v-btn {
+    &--mediakiwi {
+      &:not(&--icon) {
+        padding: 10px 12px;
+        text-transform: none;
+      }
+    }
+  }
+}
