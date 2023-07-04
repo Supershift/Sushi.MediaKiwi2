@@ -17,7 +17,7 @@ export function useTypography() {
     ?.flat();
 
   function getTypographyClasses(key: string) {
-    return `mk-text-${key}`;
+    return `text-${key}`;
   }
 
   return {

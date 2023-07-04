@@ -32,7 +32,7 @@ export const globalConfiguration: VuetifyOptions = {
       class: "v-btn--mediakiwi",
     },
     VChip: {
-      appendIcon: "mdi-close",
+      closeIcon: "mdi-close",
       rounded: "lg",
       class: "bg-secondary-container",
     },

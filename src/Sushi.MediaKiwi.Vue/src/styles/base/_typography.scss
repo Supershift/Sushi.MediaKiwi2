@@ -5,9 +5,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap");
 
 // Add typography classes here
-// E.g .mk-text-display-large, .mk-typography-headline-medium, etc
-.mk {
-  &-text {
-    @include abstracts.recursive-map(abstracts.$typography);
-  }
+// E.g .text-display-large, .typography-headline-medium, etc
+.text {
+  @include abstracts.recursive-map(abstracts.$typography);
 }
