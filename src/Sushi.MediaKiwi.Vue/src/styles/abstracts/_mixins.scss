@@ -23,7 +23,7 @@
         @include recursive-map($value);
       }
     } @else {
-      #{$node}: $value;
+      #{$node}: $value !important; // Vuetify uses !important so we need to override it
     }
   }
 }
@@ -32,6 +32,6 @@
   $m: map.get(typography.$typography, $type, $size);
 
   @each $name, $value in $m {
-    #{$name}: #{$value};
+    #{$name}: #{$value} !important; // Vuetify uses !important so we need to override it
   }
 }

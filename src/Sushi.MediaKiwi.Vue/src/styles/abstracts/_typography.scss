@@ -13,18 +13,21 @@ $typography: (
       line-height: 64px,
       font-weight: 400,
       font-family: $display-font-family,
+      letter-spacing: initial,
     ),
     medium: (
       font-size: 45px,
       line-height: 52px,
       font-weight: 400,
       font-family: $display-font-family,
+      letter-spacing: initial,
     ),
     small: (
       font-size: 36px,
       line-height: 44px,
       font-weight: 400,
       font-family: $display-font-family,
+      letter-spacing: initial,
     ),
   ),
   headline: (
@@ -33,18 +36,21 @@ $typography: (
       line-height: 40px,
       font-weight: 400,
       font-family: $headline-font-family,
+      letter-spacing: initial,
     ),
     medium: (
       font-size: 28px,
       line-height: 36px,
       font-weight: 400,
       font-family: $headline-font-family,
+      letter-spacing: initial,
     ),
     small: (
       font-size: 24px,
       line-height: 32px,
       font-weight: 400,
       font-family: $headline-font-family,
+      letter-spacing: initial,
     ),
   ),
   title: (
@@ -53,6 +59,7 @@ $typography: (
       line-height: 28px,
       font-weight: 400,
       font-family: $label-font-family,
+      letter-spacing: initial,
     ),
     medium: (
       font-size: 16px,

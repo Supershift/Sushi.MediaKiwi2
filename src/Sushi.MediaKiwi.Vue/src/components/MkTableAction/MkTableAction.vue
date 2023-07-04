@@ -24,7 +24,7 @@
   <v-card variant="text">
     <v-container>
       <v-row class="pb-2">
-        <v-card-title class="px-0">{{ title }}</v-card-title>
+        <v-card-title class="px-0 text-title-medium">{{ title }}</v-card-title>
 
         <v-spacer></v-spacer>
 

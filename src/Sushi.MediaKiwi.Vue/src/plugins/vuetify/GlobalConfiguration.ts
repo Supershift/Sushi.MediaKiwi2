@@ -51,5 +51,8 @@ export const globalConfiguration: VuetifyOptions = {
       variant: "none",
       rounded: false,
     },
+    VToolbar: {
+      color: "surface1",
+    },
   },
 };
