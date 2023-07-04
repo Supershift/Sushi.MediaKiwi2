@@ -69,7 +69,6 @@
   const { mobile } = useDisplay();
   const showOverlay = ref(false);
   const sheetValue = ref(false);
-  const isMounted = ref(false);
   const hookName = ref(props.idName); // check if the hook name is set, if not use the default
 
   // computed
@@ -85,7 +84,7 @@
   const sheetStyles = computed(
     () =>
       ({
-        width: !mobile.value ? props.width : "85vw", // ensures the full width overlay based on the display size
+        width: !mobile.value ? props.width : "100vw", // ensures the full width overlay based on the display size
         maxWidth: "100%",
         zIndex: zIndex.value, // (default: 1007, since drawer is 1006) layer positioning on the z-axis
         backgroundColor: props.sheetColor, // custom color for the sheet
@@ -110,13 +109,10 @@
 
   function handleClose() {
     emits("closed");
-
-    if (mobile.value) {
-      sheetValue.value = false;
-      setTimeout(() => {
-        showOverlay.value = false;
-      }, 500);
-    }
+    sheetValue.value = false;
+    setTimeout(() => {
+      showOverlay.value = false;
+    }, 1800);
   }
 
   const getMaxZIndex = () =>
@@ -139,15 +135,21 @@
   onBeforeUnmount(() => {
     // unregister listener for resizing
     window.removeEventListener("resize", calculateRightSize);
+
+    if (sheetValue.value) {
+      sheetValue.value = false;
+    }
+    if (showOverlay.value) {
+      showOverlay.value = false;
+    }
+
+    if (teleportContainer) {
+      document.body.removeChild(teleportContainer);
+    }
   });
   onMounted(() => {
     showOverlay.value = props.modelValue;
-    isMounted.value = true;
     zIndex.value = props.zIndex === "auto" ? getMaxZIndex() : props.zIndex;
-    setTimeout(() => {
-      sheetValue.value = true;
-      emits("opened");
-    }, 1500);
   });
 
   //watchers
@@ -156,8 +158,14 @@
     () => {
       if (props.modelValue) {
         showOverlay.value = true;
+        // delays the opening of the sheet to allow the transition to work
+        setTimeout(() => {
+          sheetValue.value = true;
+          emits("opened");
+        }, 800);
       } else {
         showOverlay.value = false;
+        sheetValue.value = false;
       }
       nextTick(() => calculateRightSize());
     }
@@ -165,16 +173,16 @@
 </script>
 <template>
   <teleport :to="`#${hookName}`">
-    <div class=".mk-sp-overlay-wrapper">
-      <!-- Overlay Desktop -->
-      <v-overlay v-if="mobile" v-model:model-value="showOverlay" transition="v-expand-x-transition" class="mk-sp-overlay d-flex justify-end">
-        <div class="mk-sp-wrapper" :class="[sheetValue && 'mk-sp-wrapper-active']" :style="wrapperStyles">
+    <!-- Overlay Desktop -->
+    <v-overlay v-if="mobile" v-model:model-value="showOverlay" class="mk-sp-overlay d-flex justify-end">
+      <v-expand-x-transition>
+        <div v-show="sheetValue" class="mk-sp-wrapper" :class="[sheetValue && 'mk-sp-wrapper-active']" :style="wrapperStyles">
           <v-sheet ref="mk-sp-sheet" class="mk-sp-sheet" :class="[sheetValue && 'mk-sp-sheet-active']" :style="sheetStyles">
             <!-- Start of Header  -->
             <v-card-item ref="mk-sp-header" :class="[headerClass, 'mk-sp-header']">
               <slot name="header"></slot>
               <template #append>
-                <v-btn icon="mdi-close" variant="text" @click="handleClose"> close </v-btn>
+                <v-icon aria-hidden="false" aria-label="close" @click="handleClose">mdi-close</v-icon>
               </template>
             </v-card-item>
             <!-- Start of Body -->
@@ -187,30 +195,30 @@
             </v-card-actions>
           </v-sheet>
         </div>
-      </v-overlay>
-      <!-- Overlay Mobile -->
-      <v-slide-x-transition v-else>
-        <div v-show="modelValue && !mobile" class="mk-sp-wrapper" :class="[modelValue && 'mk-sp-wrapper-active']" :style="wrapperStyles">
-          <v-sheet ref="mk-sp-sheet" class="mk-sp-sheet" :class="[modelValue && 'mk-sp-sheet-active']" :style="sheetStyles">
-            <!-- Start header -->
-            <v-card-item ref="mk-sp-header" :class="[headerClass, 'mk-sp-header']">
-              <slot name="header"></slot>
-              <template #append>
-                <v-btn icon="mdi-close" variant="text" @click="handleClose"> close </v-btn>
-              </template>
-            </v-card-item>
-            <!-- Start body -->
-            <v-card-text ref="mk-sp-body" :class="[bodyClass, 'mk-sp-body']" :style="{ height: `${bodyHeight}px` }">
-              <slot name="default"></slot>
-            </v-card-text>
-            <!-- Start footer -->
-            <v-card-actions ref="mk-sp-footer" :class="[footerClass, 'mk-sp-footer']">
-              <slot name="footer"></slot>
-            </v-card-actions>
-          </v-sheet>
-        </div>
-      </v-slide-x-transition>
-    </div>
+      </v-expand-x-transition>
+    </v-overlay>
+    <!-- Overlay Mobile -->
+    <v-expand-x-transition v-else>
+      <div v-show="modelValue && !mobile" class="mk-sp-wrapper" :class="[modelValue && 'mk-sp-wrapper-active']" :style="wrapperStyles">
+        <v-sheet ref="mk-sp-sheet" class="mk-sp-sheet" :class="[modelValue && 'mk-sp-sheet-active']" :style="sheetStyles">
+          <!-- Start header -->
+          <v-card-item ref="mk-sp-header" :class="[headerClass, 'mk-sp-header']">
+            <slot name="header"></slot>
+            <template #append>
+              <v-icon aria-hidden="false" aria-label="close" @click="handleClose">mdi-close</v-icon>
+            </template>
+          </v-card-item>
+          <!-- Start body -->
+          <v-card-text ref="mk-sp-body" :class="[bodyClass, 'mk-sp-body']" :style="{ height: `${bodyHeight}px` }">
+            <slot name="default"></slot>
+          </v-card-text>
+          <!-- Start footer -->
+          <v-card-actions ref="mk-sp-footer" :class="[footerClass, 'mk-sp-footer']">
+            <slot name="footer"></slot>
+          </v-card-actions>
+        </v-sheet>
+      </div>
+    </v-expand-x-transition>
   </teleport>
 </template>
 <style scoped lang="scss">

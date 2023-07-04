@@ -74,7 +74,7 @@
     </template>
     <template #default>
       <!-- DEMO: List-->
-      <v-list v-if="exampleChoice === 'list-view'" disabled>
+      <v-list v-if="exampleChoice === 'list-view'">
         <v-list-subheader>START</v-list-subheader>
 
         <v-list-item v-for="i in 20" :key="i">
