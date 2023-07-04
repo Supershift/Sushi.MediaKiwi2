@@ -75,6 +75,15 @@
   </v-card>
 </template>
 <style lang="scss" scoped>
+  @use "sass:map";
+  @use "vuetify/settings" as vuetify;
+
+  @media #{map.get(vuetify.$display-breakpoints, "md-and-down")} {
+    .breadcrumb-title-container {
+      margin-bottom: 10px;
+    }
+  }
+
   .breadcrumb-title-container {
     display: flex;
     align-items: center;

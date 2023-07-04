@@ -8,8 +8,8 @@ import * as VDirectives from "vuetify/directives";
 import { md3 } from "vuetify/blueprints";
 
 import { mdi, aliases } from "vuetify/iconsets/mdi";
-import { themeComfiguration } from "./themes";
 
+import { themeComfiguration } from "./themes";
 import { globalConfiguration } from "./GlobalConfiguration";
 
 const defaultVuetifyOptions = <VuetifyOptions>{

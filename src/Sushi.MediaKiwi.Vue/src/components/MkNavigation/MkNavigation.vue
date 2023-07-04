@@ -27,6 +27,6 @@
 </script>
 
 <template>
-  <mk-navigation-rail :rail-items="sections" v-if="sections.length > 1"></mk-navigation-rail>
+  <mk-navigation-rail v-if="sections.length > 1" v-model="store.drawer" :rail-items="sections"></mk-navigation-rail>
   <mk-navigation-drawer v-model="store.drawer" :list-items="navigationItems"></mk-navigation-drawer>
 </template>

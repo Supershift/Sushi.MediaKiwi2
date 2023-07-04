@@ -4,7 +4,7 @@
 
 <template>
   <v-main style="min-height: 300px">
-    <div class="pa-10">
+    <div class="pa-4 pa-md-10">
       <mk-breadcrumbs />
       <router-view v-slot="{ Component }">
         <suspense timeout="0">
@@ -21,3 +21,5 @@
     </div>
   </v-main>
 </template>
+
+<style lang="scss" scoped></style>
