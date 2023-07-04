@@ -40,16 +40,6 @@ settings.mediaKiwi.i18nextOptions = {
 };
 settings.mediaKiwi.i18nextCallback = (instance: i18n) => {};
 
-// import { sampleWebTheme } from "@/plugin/vuetify/theme/dark";
-// settings.mediaKiwi.vuetifyOptions = {
-//   theme: {
-//     defaultTheme: "sampleWebTheme",
-//     themes: {
-//       sampleWebTheme,
-//     },
-//   },
-// };
-
 // install mediakiwi
 app.use(mediakiwi, settings.mediaKiwi);
 
