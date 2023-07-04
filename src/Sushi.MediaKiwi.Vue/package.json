@@ -12,7 +12,8 @@
     "test": "jest src",
     "test:ui": "vitest --ui",
     "lint:all": "eslint src",
-    "lint:error": "eslint src --quiet"
+    "lint:error": "eslint src --quiet",
+    "stylelint:all": "stylelint src/**/*.scss"
   },
   "repository": {
     "type": "git",

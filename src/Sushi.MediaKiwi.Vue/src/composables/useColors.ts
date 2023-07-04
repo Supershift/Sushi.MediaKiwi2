@@ -36,7 +36,6 @@ export function useColors() {
   const cssVariables = computed(() => {
     let cssVariables = {};
     for (const key of Object.keys(variables)) {
-      console.log(`--v-${key}`);
       const value = getComputedStyle(document.documentElement).getPropertyValue(`--v-${key}`); // #00eb9b
 
       cssVariables = { ...cssVariables, ...{ [key]: value } };
@@ -48,14 +47,6 @@ export function useColors() {
    * Collection of variants defined by Vuetify
    */
   const variants = ref<Array<"flat" | "text" | "elevated" | "tonal" | "outlined" | "plain">>(["text", "elevated", "flat", "outlined", "tonal", "plain"]);
-
-  /**
-   * Get the color value for the key
-   * @param key The key of the color (e.g. primary, secondary, error, etc.)
-   */
-  // const getColorValue = (key: string) => {
-  //   return theme.global.current.value.colors[key];
-  // };
 
   /**
    * Return a background class for the color (e.g. bg-primary, bg-secondary, etc.)

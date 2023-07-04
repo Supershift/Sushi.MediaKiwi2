@@ -36,6 +36,9 @@ export const globalConfiguration: VuetifyOptions = {
       rounded: "lg",
       class: "bg-secondary-container",
     },
+    VCheckbox: {
+      color: "primary",
+    },
     VDivider: {
       color: "outline-variant",
       class: "v-divider--mediakiwi",

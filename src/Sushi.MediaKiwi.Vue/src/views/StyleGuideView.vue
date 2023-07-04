@@ -120,6 +120,12 @@
       <v-btn v-for="(variant, index) in variants" :key="index" :variant="variant">{{ variant }}</v-btn>
     </div>
     <br />
+    <h3 class="text-title-large">Checkboxes</h3>
+    <br />
+    <div>
+      <v-checkbox label="Default"></v-checkbox>
+    </div>
+    <br />
     <h3 class="text-title-large">Chips</h3>
     <br />
     <div>
