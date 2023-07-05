@@ -110,9 +110,7 @@
   function handleClose() {
     emits("closed");
     sheetValue.value = false;
-    setTimeout(() => {
-      showOverlay.value = false;
-    }, 1800);
+    showOverlay.value = false;
   }
 
   const getMaxZIndex = () =>
@@ -158,11 +156,11 @@
     () => {
       if (props.modelValue) {
         showOverlay.value = true;
-        // delays the opening of the sheet to allow the transition to work
+        // delays the opening of the sheet to allow the transition to work, primarily on mobile
         setTimeout(() => {
           sheetValue.value = true;
           emits("opened");
-        }, 800);
+        }, 300);
       } else {
         showOverlay.value = false;
         sheetValue.value = false;
@@ -221,7 +219,7 @@
     </v-expand-x-transition>
   </teleport>
 </template>
-<style scoped lang="scss">
+<style lang="scss">
   .mk-sp-wrapper {
     position: relative;
     height: 100vh;
@@ -257,5 +255,10 @@
         position: relative;
       }
     }
+  }
+
+  // this is needed to override the default overlay color
+  .v-overlay__scrim {
+    background: rgba(var(--v-theme-surface), 1) !important;
   }
 </style>
