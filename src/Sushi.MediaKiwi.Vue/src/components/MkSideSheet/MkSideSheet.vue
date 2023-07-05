@@ -171,7 +171,7 @@
 </script>
 <template>
   <teleport :to="`#${hookName}`">
-    <!-- Overlay Desktop -->
+    <!-- Overlay Mobile -->
     <v-overlay v-if="mobile" v-model:model-value="showOverlay" class="mk-sp-overlay d-flex justify-end">
       <v-expand-x-transition>
         <div v-show="sheetValue" class="mk-sp-wrapper" :class="[sheetValue && 'mk-sp-wrapper-active']" :style="wrapperStyles">
@@ -195,7 +195,7 @@
         </div>
       </v-expand-x-transition>
     </v-overlay>
-    <!-- Overlay Mobile -->
+    <!-- Overlay Desktop -->
     <v-expand-x-transition v-else>
       <div v-show="modelValue && !mobile" class="mk-sp-wrapper" :class="[modelValue && 'mk-sp-wrapper-active']" :style="wrapperStyles">
         <v-sheet ref="mk-sp-sheet" class="mk-sp-sheet" :class="[modelValue && 'mk-sp-sheet-active']" :style="sheetStyles">
