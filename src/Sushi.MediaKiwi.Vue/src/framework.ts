@@ -88,6 +88,14 @@ export default {
 
     // use the router instance
     app.use(router);
+
+    // use directive for the sidepanel
+    app.directive("side-sheet", {
+      mounted(el) {
+        // add class to element for the sidesheet => v-side-sheet can be used
+        el.classList.add("mk-side-sheet-hook");
+      },
+    });
   },
 };
 

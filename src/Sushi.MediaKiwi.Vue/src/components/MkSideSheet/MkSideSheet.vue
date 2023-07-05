@@ -170,7 +170,7 @@
   );
 </script>
 <template>
-  <teleport :to="`#${hookName}`">
+  <teleport :to="`.${hookName}`">
     <!-- Overlay Mobile -->
     <v-overlay v-if="mobile" v-model:model-value="showOverlay" class="mk-sp-overlay d-flex justify-end">
       <v-expand-x-transition>

@@ -10,7 +10,7 @@
 </script>
 <template>
   <v-card>
-    <v-layout id="mk-side-sheet-hook" :full-height="true" class="mk-layout">
+    <v-layout v-side-sheet :full-height="true" class="mk-layout">
       <mk-suspense>
         <v-app-bar v-if="isAuthenticated">
           <mk-navigation-icon />
