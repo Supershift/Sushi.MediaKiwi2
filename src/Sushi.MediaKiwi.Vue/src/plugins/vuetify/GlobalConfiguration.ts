@@ -50,9 +50,20 @@ export const globalConfiguration: VuetifyOptions = {
     VTable: {
       variant: "none",
       rounded: false,
+      style: { background: "none" },
     },
     VToolbar: {
       color: "surface1",
+    },
+    VInput: {
+      hideDetails: "auto",
+      variant: "outlined",
+    },
+    VTextField: {
+      variant: "outlined",
+    },
+    VSelect: {
+      variant: "outlined",
     },
   },
 };

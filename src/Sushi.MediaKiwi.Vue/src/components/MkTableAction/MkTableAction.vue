@@ -23,7 +23,7 @@
 <template>
   <v-card variant="text">
     <v-container>
-      <v-row class="pb-2">
+      <v-row class="pb-2 align-center">
         <v-card-title class="px-0 text-title-medium">{{ title }}</v-card-title>
 
         <v-spacer></v-spacer>

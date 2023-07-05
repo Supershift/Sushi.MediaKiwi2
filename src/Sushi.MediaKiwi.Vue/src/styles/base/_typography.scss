@@ -9,3 +9,7 @@
 .text {
   @include abstracts.recursive-map(abstracts.$typography);
 }
+
+p {
+  @include abstracts.typography("body", "medium");
+}

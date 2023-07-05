@@ -12,7 +12,7 @@
 </script>
 
 <template>
-  <span v-if="isAuthenticated">
+  <span>
     <div class="text-center">
       <v-menu v-model="menu" :close-on-content-click="false" location="bottom">
         <template #activator="{ props }">
