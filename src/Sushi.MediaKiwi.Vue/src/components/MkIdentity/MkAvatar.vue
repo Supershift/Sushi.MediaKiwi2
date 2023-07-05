@@ -24,7 +24,7 @@
         </template>
 
         <v-card min-width="300">
-          <v-list>
+          <v-list v-if="isAuthenticated">
             <v-container> {{ account?.username }} </v-container>
           </v-list>
 
@@ -36,7 +36,7 @@
             </v-list-item>
           </v-list>
 
-          <v-card-actions>
+          <v-card-actions v-if="isAuthenticated">
             <mk-sign-out-button></mk-sign-out-button>
             <v-spacer></v-spacer>
           </v-card-actions>

@@ -25,9 +25,8 @@
     navigation.navigateToHome();
   }
 </script>
-<template v-if="!isAuthenticated">
-  <MkLanguageSwitch></MkLanguageSwitch>
-  <MkSignIn>
+<template>
+  <MkSignIn v-if="!isAuthenticated" class="mk-view--signin">
     <template #main>
       {{ t("Main") }}
     </template>
@@ -36,3 +35,9 @@
     </template>
   </MkSignIn>
 </template>
+
+<style scoped lang="scss">
+  .mk-view--signin {
+    height: 100%;
+  }
+</style>
