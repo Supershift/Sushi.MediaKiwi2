@@ -40,7 +40,7 @@
       "import": "./dist/mediakiwi-vue.es.js",
       "require": "./dist/mediakiwi-vue.umd.js"
     },
-    "./dist/mediakiwi-vue.css": {
+    "./styles": {
       "import": "./dist/mediakiwi-vue.css",
       "require": "./dist/mediakiwi-vue.css"
     }

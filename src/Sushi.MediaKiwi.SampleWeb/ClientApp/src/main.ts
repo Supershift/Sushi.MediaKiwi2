@@ -4,7 +4,7 @@ import { createApp } from "vue";
 import mediakiwi, { createAxiosClient } from "@supershift/mediakiwi-vue";
 
 // Import the mediakiwi stylesheet
-import "@supershift/mediakiwi-vue/dist/mediakiwi-vue.css";
+import "@supershift/mediakiwi-vue/styles";
 
 import { getSettings } from "./services/settings";
 import { container } from "tsyringe";
