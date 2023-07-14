@@ -42,10 +42,22 @@
       return store.rootNavigationItems.filter((x) => x.sectionId == currentNavigationItem?.sectionId);
     }
   }
+  /** Navigates to the parent of the current navigation item */
+  function goBack() {
+    navigation.navigateToParent();
+  }
+  /** Determines if the back button should be shown */
+  const showBackButton = computed(() => {
+    return navigation.isReverseNavigable(navigation.currentNavigationItem.value);
+  });
 </script>
 <template>
   <v-navigation-drawer absolute>
     <v-list open-strategy="single">
+      <v-btn v-if="showBackButton" class="justify-start" variant="text" rounded="0" block @click="goBack()">
+        <v-icon>mdi-chevron-left</v-icon>
+        Back
+      </v-btn>
       <mk-navigation-item v-for="item in children" :key="item.id" :navigation-item="item" :all-items="allNavigationItems"></mk-navigation-item>
     </v-list>
   </v-navigation-drawer>
