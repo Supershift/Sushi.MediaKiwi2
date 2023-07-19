@@ -73,6 +73,9 @@ export default {
     // register the router as dependency
     registerRouter(container, router);
 
+    // register fonts as a dependency
+    registerLinks(options.links);
+
     // create navigation client for msal
     const navigationClient = new CustomNavigationClient(router);
     identity.msalInstance.setNavigationClient(navigationClient);
@@ -103,4 +106,5 @@ export * from "@/stores";
 
 export * from "@/router";
 
-import "@/assets/main.css";
+import "@/assets/main.css";import { registerFonts, registerLinks } from "./helpers/registerLinks";
+

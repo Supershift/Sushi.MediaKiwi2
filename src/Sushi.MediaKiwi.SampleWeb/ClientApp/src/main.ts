@@ -13,15 +13,6 @@ import { i18n } from "i18next";
 
 const app = createApp(App);
 
-// load fonts
-const webFontLoader = await import(/* webpackChunkName: "webfontloader" */ "webfontloader");
-
-webFontLoader.load({
-  google: {
-    families: ["Roboto:100,300,400,500,700,900&display=swap"],
-  },
-});
-
 // Fetch the settings from the function api
 const settings = await getSettings();
 
@@ -37,6 +28,28 @@ settings.mediaKiwi.i18nextOptions = {
   debug: true,
 };
 settings.mediaKiwi.i18nextCallback = (instance: i18n) => {};
+
+// external cdn links we want to render on runtime
+settings.mediaKiwi.links = [
+  {
+    rel: "preconnect",
+    href: "https://fonts.googleapis.com",
+  },
+  {
+    rel: "preconnect",
+    href: "https://fonts.gstatic.com",
+    crossorigin: true,
+  },
+  {
+    rel: "stylesheet",
+    type: "text/css",
+    href: "https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/7.2.96/css/materialdesignicons.min.css",
+  },
+  {
+    rel: "stylesheet",
+    href: "https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap",
+  },
+];
 
 // install mediakiwi
 app.use(mediakiwi, settings.mediaKiwi);
