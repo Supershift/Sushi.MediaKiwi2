@@ -10,6 +10,11 @@
   import { useTableMapItemSorting } from "@/composables/useTableMapItemSorting";
   import { watch } from "vue";
   import { useNavigation } from "@/composables/useNavigation";
+  import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
+  import { VuetifyPaginationMode } from "@/models/pagination/VuetifyPaginationMode";
+  import { ref } from "vue";
+  import { usePagination } from "@/composables/usePagination";
+  import { computed } from "vue";
 
   // define properties
   const props = defineProps<{
@@ -22,6 +27,8 @@
     selection?: unknown[];
     /** Make each row in the table selectable. */
     checkbox?: boolean;
+    /** Defines the pagination mode */
+    paginationMode?: MediakiwiPaginationMode;
   }>();
 
   // define event
@@ -109,39 +116,50 @@
     selectAll(false);
   }
 
+  const { updatePageIndex, pageIndex } = usePagination();
+  // deconstruct the prop to get the pagination mode for the vuetify component
+  const vuetifyPaginationMode = ref<VuetifyPaginationMode>(props.paginationMode as VuetifyPaginationMode);
+
+  function loadMore() {
+    updatePageIndex(pageIndex + 1);
+  }
+
   defineExpose({
     clearSelection,
   });
 </script>
 
 <template>
-  <v-table>
-    <thead>
-      <tr>
-        <th v-if="checkbox">
-          <MkTableCheckbox :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:is-selected="selectAll" />
-        </th>
-        <!-- render a header cell for each mapping item -->
-        <th v-for="(mapItem, index) in props.tableMap.items" :key="index" :class="getHeaderClasses(mapItem)" @click="onClick(mapItem)">
-          {{ mapItem.headerTitle }}
-          <v-icon v-if="mapItem.sortingOptions" :icon="sortIcon" :class="sortingClasses()" />
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- render a row for each provided data entity -->
-      <tr v-for="(dataItem, rowIndex) in props.data" :key="rowIndex" style="cursor: pointer" @click.stop="(e) => onRowClick(e, dataItem)">
-        <td v-if="checkbox" @click.stop>
-          <MkTableCheckbox :is-selected="isItemSelected(dataItem)" @update:is-selected="(e) => selectItem(dataItem, e)" />
-        </td>
-        <!-- render a cell for each mapping item -->
-        <MkTableCell v-for="(mapItem, cellIndex) in props.tableMap.items" :key="cellIndex" :data="dataItem" :map-item="mapItem"></MkTableCell>
-      </tr>
-    </tbody>
-    <tfoot>
-      <slot name="footer"></slot>
-    </tfoot>
-  </v-table>
+  <!-- INFINITE SCROLLER -->
+  <v-infinite-scroll :items="props.data" :onLoad="loadMore" :mode="vuetifyPaginationMode" :disabled="!paginationMode || paginationMode === 'controls'">
+    <v-table>
+      <thead>
+        <tr>
+          <th v-if="checkbox">
+            <MkTableCheckbox :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:is-selected="selectAll" />
+          </th>
+          <!-- render a header cell for each mapping item -->
+          <th v-for="(mapItem, index) in props.tableMap.items" :key="index" :class="getHeaderClasses(mapItem)" @click="onClick(mapItem)">
+            {{ mapItem.headerTitle }}
+            <v-icon v-if="mapItem.sortingOptions" :icon="sortIcon" :class="sortingClasses()" />
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- render a row for each provided data entity -->
+        <tr v-for="(dataItem, rowIndex) in props.data" :key="rowIndex" style="cursor: pointer" @click.stop="(e) => onRowClick(e, dataItem)">
+          <td v-if="checkbox" @click.stop>
+            <MkTableCheckbox :is-selected="isItemSelected(dataItem)" @update:is-selected="(e) => selectItem(dataItem, e)" />
+          </td>
+          <!-- render a cell for each mapping item -->
+          <MkTableCell v-for="(mapItem, cellIndex) in props.tableMap.items" :key="cellIndex" :data="dataItem" :map-item="mapItem"></MkTableCell>
+        </tr>
+      </tbody>
+      <tfoot>
+        <slot name="footer"></slot>
+      </tfoot>
+    </v-table>
+  </v-infinite-scroll>
 </template>
 
 <style scoped lang="scss">

@@ -2,6 +2,7 @@
   import { Country } from "@/models/Country";
   import { CountryConnector } from "@/services/CountryConnector";
   import { ListResult, MkTable, TableMap } from "@supershift/mediakiwi-vue";
+  import type { Paging } from "@supershift/mediakiwi-vue";
   import { container } from "tsyringe";
   import { ref } from "vue";
 
@@ -9,7 +10,7 @@
   const connector = container.resolve(CountryConnector);
 
   // define reactive variables
-  const currentPage = ref(0);
+  const currentPagination = ref<Paging>({});
   const countries = ref<ListResult<Country>>();
 
   // define mapping
@@ -23,9 +24,15 @@
 
   // load data
   async function LoadData() {
-    countries.value = await connector.GetAll({ pageIndex: currentPage.value });
+    countries.value = await connector.GetAll(currentPagination.value);
   }
 </script>
 <template>
-  <mk-table :api-result="countries" :table-map="tableMap" :on-load="LoadData" v-model:current-page="currentPage"></mk-table>
+  <mk-table
+    v-model:currentPagination="currentPagination"
+    :api-result="countries"
+    :table-map="tableMap"
+    :on-load="LoadData"
+    pagination-mode="intersect"
+  ></mk-table>
 </template>
