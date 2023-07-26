@@ -35,5 +35,5 @@
 </script>
 
 <template>
-  <v-btn prepend-icon="mdi-plus" @click="onNewClick">{{ defaultT("New item") }}</v-btn>
+  <v-btn prepend-icon="$plus" @click="onNewClick">{{ defaultT("New item") }}</v-btn>
 </template>

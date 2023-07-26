@@ -25,7 +25,7 @@
     <v-btn v-if="save" :disabled="props.disabled" @click="$emit('save', $event)">{{ defaultT("Save") }}</v-btn>
 
     <v-btn v-if="props.delete" icon color="primary">
-      <v-icon>mdi-dots-vertical</v-icon>
+      <v-icon icon="$dotsVertical"></v-icon>
 
       <v-menu activator="parent">
         <v-list :disabled="props.disabled">

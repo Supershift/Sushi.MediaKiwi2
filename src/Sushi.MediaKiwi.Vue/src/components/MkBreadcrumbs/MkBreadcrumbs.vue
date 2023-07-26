@@ -3,7 +3,7 @@
   import MkBackButton from "@/components/MkNavigation/MkBackButton.vue";
   import { useDisplay } from "vuetify";
   import { useNavigation } from "@/composables/useNavigation";
-  import type { NavigationItem } from "@/models";
+  import { NavigationItem, IconsLibrary } from "@/models";
 
   // inject dependencies
   const { xs } = useDisplay();
@@ -40,7 +40,7 @@
       <v-breadcrumbs class="breadcrumbs-list-container px-0 pt-0">
         <template v-for="(item, index) in breadcrumbs" :key="item.id">
           <li v-if="index" class="v-breadcrumbs-divider">
-            <v-icon icon="mdi-chevron-right" />
+            <v-icon :icon="IconsLibrary.mdiChevronRight" />
           </li>
 
           <v-breadcrumbs-item

@@ -1,5 +1,5 @@
 import { SortDirection } from "@/models";
-import type { Sorting, TableMapSortingOptions } from "@/models";
+import { Sorting, TableMapSortingOptions, IconsLibrary } from "@/models";
 import { nameof } from "@/helpers/UtilsHelper";
 import { computed, ref } from "vue";
 import type { ComputedRef } from "vue";
@@ -90,9 +90,9 @@ export function useTableMapItemSorting(options: tableMapItemSortingOptions): use
 
   const sortIcon = computed(() => {
     if (currentSort.value?.sortDirection === SortDirection.Asc) {
-      return "mdi-arrow-up";
+      return IconsLibrary.mdiArrowUp;
     } else {
-      return "mdi-arrow-down";
+      return IconsLibrary.mdiArrowDown;
     }
   });
 

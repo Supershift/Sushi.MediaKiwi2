@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import MkTableActionNewItemButton from "./MkTableActionNewItemButton.vue";
+  import { IconsLibrary } from "@/models";
 
   // define properties
   const props = defineProps<{
@@ -40,7 +41,7 @@
 
           <!-- Render the actions slot -->
           <v-btn v-if="slots.menuActions" icon color="primary">
-            <v-icon>mdi-dots-vertical</v-icon>
+            <v-icon :icon="IconsLibrary.mdiDotsVertical"></v-icon>
 
             <v-menu activator="parent">
               <slot name="menuActions"></slot>

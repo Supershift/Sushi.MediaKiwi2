@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { useMsal } from "@/composables/useMsal";
   import { identity } from "@/identity";
+  import { IconsLibrary } from "@/models";
 
   // inject dependencies
   const { instance } = useMsal();
@@ -20,7 +21,7 @@
             <slot name="main"></slot>
           </v-card-text>
           <v-card-actions>
-            <v-btn size="x-large" prepend-icon="mdi-microsoft-azure" variant="flat" width="100%" @click="login">Azure Active Directory</v-btn>
+            <v-btn size="x-large" :prepend-icon="IconsLibrary.mdiMicrosoftAzure" variant="flat" width="100%" @click="login">Azure Active Directory</v-btn>
           </v-card-actions>
           <v-card-text>
             <slot name="footer"></slot>

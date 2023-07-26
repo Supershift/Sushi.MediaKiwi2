@@ -27,6 +27,6 @@
 </script>
 <template>
   <v-btn variant="tonal" @click="navigateBack()">
-    <v-icon icon="mdi-chevron-left"></v-icon>
+    <v-icon icon="$chevronLeft"></v-icon>
   </v-btn>
 </template>

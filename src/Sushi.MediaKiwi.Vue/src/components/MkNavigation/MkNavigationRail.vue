@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import type { Section } from "@/models/api";
   import { useNavigation } from "@/composables/useNavigation";
+  import { IconsLibrary } from "@/models";
 
   defineEmits(["change"]);
   const props = defineProps<{
@@ -13,6 +14,9 @@
       navigation.navigateTo(item);
     }
     return false;
+  }
+  function icon(item: Section) {
+    return item.icon || IconsLibrary.mdiPuzzle;
   }
 </script>
 <template>
@@ -27,8 +31,7 @@
         @click.stop="onItemClick(item)"
       >
         <template v-slot:prepend>
-          <v-icon v-if="item?.icon" :icon="item?.icon" @click.stop="onItemClick(item)"></v-icon>
-          <v-icon v-else icon="mdi-puzzle" @click.stop="onItemClick(item)"></v-icon>
+          <v-icon v-if="icon(item)" @click.stop="onItemClick(item)">{{ icon(item) }}</v-icon>
         </template>
       </v-list-item>
     </v-list>

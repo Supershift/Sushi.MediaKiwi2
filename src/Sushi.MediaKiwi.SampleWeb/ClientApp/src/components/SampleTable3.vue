@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { computed, ref } from "vue";
   import type { TableMap, TableFilter, Sorting } from "@supershift/mediakiwi-vue";
-  import { MkTable, TableFilterType, SortDirection, IconPosition } from "@supershift/mediakiwi-vue";
+  import { MkTable, TableFilterType, SortDirection, IconsLibrary } from "@supershift/mediakiwi-vue";
   import type { ISampleData } from "./ISampleData";
   import { SampleDataService } from "./SampleDataService";
 
@@ -99,7 +99,8 @@
       <v-btn @click="move">move</v-btn>
 
       <v-btn icon color="primary">
-        <v-icon>mdi-dots-vertical</v-icon>
+        <!-- This icon should be loaded locally first, this only works because we have it preloaded in the MK project because MKFormToollbar and MKTableAction uses this  -->
+        <v-icon :icon="IconsLibrary.mdiDotsVertical"></v-icon>
 
         <v-menu activator="parent">
           <v-list>

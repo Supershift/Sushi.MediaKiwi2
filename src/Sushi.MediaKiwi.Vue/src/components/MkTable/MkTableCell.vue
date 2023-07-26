@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { computed } from "vue";
-  import { MoneyValue } from "@/models";
+  import { MoneyValue, IconsLibrary } from "@/models";
   import type { TableMapItem } from "@/models/table/TableMapItem";
   import MkTableCellIcon from "./MkTableCellIcon.vue";
   import { useI18next } from "@/composables";
@@ -43,7 +43,7 @@
     <template v-else>
       <!-- render a boolean -->
       <template v-if="isBooleanValue">
-        <v-icon :icon="mapItemValue ? 'mdi-check-circle-outline' : 'mdi-close-circle-outline'"></v-icon>
+        <v-icon :icon="mapItemValue ? IconsLibrary.mdiCheckCircleOutline : IconsLibrary.mdiCloseCircleOutline"></v-icon>
       </template>
       <!-- render a number -->
       <template v-else-if="isNumber"> {{ formatNumber(mapItemValue as number) }} </template>

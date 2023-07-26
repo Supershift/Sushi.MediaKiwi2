@@ -5,7 +5,7 @@ import * as VDirectives from "vuetify/directives";
 
 import { md3 } from "vuetify/blueprints";
 
-import { mdi, aliases } from "vuetify/iconsets/mdi";
+import { MediakiwiIconOptions } from "@/plugins/icons/icons";
 
 import { mediaKiwiDarkTheme, mediaKiwiLightTheme } from "./Themes";
 
@@ -23,13 +23,7 @@ const defaultVuetifyOptions = <VuetifyOptions>{
       light: mediaKiwiLightTheme,
     },
   },
-  icons: {
-    defaultSet: "mdi",
-    aliases,
-    sets: {
-      mdi,
-    },
-  },
+  icons: MediakiwiIconOptions,
 };
 
 export default defaultVuetifyOptions;

@@ -47,7 +47,14 @@
     </template>
     <mk-navigation-item v-for="child in children" :key="child.id" :navigation-item="child" :all-items="allItems" />
   </v-list-group>
-  <v-list-item v-else :active="isActive" :title="navigationItem.name" :exact="true" :active-class="'active-list-item'" @click.stop="hasScreen(navigationItem) ? onItemClick(navigationItem) : {}" />
+  <v-list-item
+    v-else
+    :active="isActive"
+    :title="navigationItem.name"
+    :exact="true"
+    :active-class="'active-list-item'"
+    @click.stop="hasScreen(navigationItem) ? onItemClick(navigationItem) : {}"
+  />
 </template>
 
 <style lang="css">
