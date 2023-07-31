@@ -1,0 +1,37 @@
+@use "sass:map";
+@use "sass:meta";
+@use "./typography";
+
+// Loops through a map and exports the values
+@mixin recursive-export($map) {
+  @each $node, $value in $map {
+    @if meta.type-of($value) == map {
+      @include recursive-export($value);
+    } @else {
+      :export {
+        #{$node}: $value;
+      }
+    }
+  }
+}
+
+// Loops through a map and creates classes for the values
+@mixin recursive-map($map) {
+  @each $node, $value in $map {
+    @if meta.type-of($value) == map {
+      &-#{$node} {
+        @include recursive-map($value);
+      }
+    } @else {
+      #{$node}: $value !important; // Vuetify uses !important so we need to override it
+    }
+  }
+}
+
+@mixin typography($type, $size) {
+  $m: map.get(typography.$typography, $type, $size);
+
+  @each $name, $value in $m {
+    #{$name}: #{$value} !important; // Vuetify uses !important so we need to override it
+  }
+}
