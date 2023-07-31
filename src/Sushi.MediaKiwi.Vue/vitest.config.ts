@@ -10,6 +10,9 @@ export default mergeConfig(
     test: {
       globals: true,
       environment: "jsdom",
+      deps: {
+        inline: ["vuetify"],
+      },
     },
   })
 );

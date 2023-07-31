@@ -9,7 +9,7 @@
     "test:unit": "vitest --environment jsdom --root src/",
     "test:e2e": "start-server-and-test preview :4173 'cypress run --e2e'",
     "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' :4173 'cypress open --e2e'",
-    "test": "jest src",
+    "test": "vitest",
     "test:ui": "vitest --ui",
     "lint:all": "eslint src",
     "lint:error": "eslint src --quiet",
