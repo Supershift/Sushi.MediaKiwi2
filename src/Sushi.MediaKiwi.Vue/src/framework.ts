@@ -53,6 +53,7 @@ export default {
     } else {
       vuetifyOptions = defaultVuetifyOptions;
     }
+
     const vuetify = createVuetify(vuetifyOptions);
     app.use(vuetify);
 
@@ -102,5 +103,3 @@ export * from "@/services";
 export * from "@/stores";
 
 export * from "@/router";
-
-import "@/assets/main.css";

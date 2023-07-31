@@ -12,4 +12,6 @@ export interface TableCellIcon {
   label?: string;
   /** Tooltip to display when hovering over the icon */
   tooltip?: string;
+  /** Color of the icon */
+  color?: string;
 }

@@ -1,0 +1,8 @@
+.v-divider {
+  // Use this to override the default opacity, using only &--mediakiwi won't prioritize this
+  &.v-divider {
+    &--mediakiwi {
+      opacity: var(--v-divider-opacity);
+    }
+  }
+}

@@ -65,12 +65,12 @@
     {{ label }}
     <v-autocomplete
       :model-value="currency"
-      @update:model-value="currencyUpdated"
       :items="currencies"
-      :label="t('Currency')"
+      :label="defaultT('Currency')"
       clearable
       :disabled="currencyInputDisabled"
+      @update:model-value="currencyUpdated"
     ></v-autocomplete>
-    <v-text-field :model-value="amount" @update:model-value="amountUpdated" type="number" :label="defaultT('Amount')"></v-text-field>
+    <v-text-field :model-value="amount" type="number" :label="defaultT('Amount')" @update:model-value="amountUpdated"></v-text-field>
   </v-input>
 </template>
