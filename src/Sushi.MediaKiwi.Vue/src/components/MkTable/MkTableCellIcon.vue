@@ -13,7 +13,7 @@
   <label v-if="data.label && data.position === TableIconPosition.Prepend">{{ data.label }}</label>
   <v-tooltip v-model="showTooltip" location="top" :disabled="!data.tooltip">
     <template #activator="{ props }">
-      <v-icon v-bind="props" :icon="data.iconName"></v-icon>
+      <v-icon v-bind="props" :icon="data.iconName" :color="data.color"></v-icon>
     </template>
     <span v-if="data.tooltip">{{ data.tooltip }}</span>
   </v-tooltip>

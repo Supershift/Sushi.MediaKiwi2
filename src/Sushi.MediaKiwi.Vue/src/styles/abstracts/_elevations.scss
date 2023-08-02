@@ -1,0 +1,58 @@
+$shadow-key-umbra-opacity: var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.3)) !default;
+$shadow-key-penumbra-opacity: var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.15)) !default;
+$shadow-key-ambient-opacity: var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0)) !default;
+
+$shadow-key-umbra: (
+  1: (
+    0 1px 2px 0 $shadow-key-umbra-opacity,
+  ),
+  2: (
+    0 2px 6px 2px $shadow-key-penumbra-opacity,
+  ),
+  3: (
+    0 1px 3px 0 $shadow-key-umbra-opacity,
+  ),
+  4: (
+    0 2px 3px 0 $shadow-key-umbra-opacity,
+  ),
+  5: (
+    0 4px 4px 0 $shadow-key-umbra-opacity,
+  ),
+);
+
+$shadow-key-penumbra: (
+  1: (
+    0 1px 3px 1px $shadow-key-penumbra-opacity,
+  ),
+  2: (
+    0 1px 2px 0 $shadow-key-umbra-opacity,
+  ),
+  3: (
+    0 4px 8px 3px $shadow-key-penumbra-opacity,
+  ),
+  4: (
+    0 6px 10px 4px $shadow-key-penumbra-opacity,
+  ),
+  5: (
+    0 8px 12px 6px $shadow-key-penumbra-opacity,
+  ),
+);
+
+// We don't use this in MediaKiwi, but vuetify still expects a value, or it will add its own. Which we don't want
+$shadow-key-ambient: (
+  1: (
+    0 0 0 0 rgba(0, 0, 0, 0),
+  ),
+  2: (
+    0 0 0 0 rgba(0, 0, 0, 0),
+  ),
+  3: (
+    0 0 0 0 rgba(0, 0, 0, 0),
+  ),
+  4: (
+    0 0 0 0 rgba(0, 0, 0, 0),
+  ),
+  5: (
+    0 0 0 0 rgba(0, 0, 0, 0),
+  ),
+);

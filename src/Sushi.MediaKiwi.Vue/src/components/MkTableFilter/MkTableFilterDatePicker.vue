@@ -30,7 +30,7 @@
 </script>
 
 <template>
-  <v-card class="px-5">
+  <v-card>
     <vue-date-picker
       v-model="value"
       model-type="yyyy-MM-dd"

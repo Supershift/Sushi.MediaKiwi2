@@ -2,6 +2,7 @@
   import { useNavigation } from "@/composables/useNavigation";
   import { useMediakiwiStore } from "@/stores";
   import { useI18next } from "@/composables/useI18next";
+  import { IconsLibrary } from "@/models";
 
   // define properties
   const props = defineProps<{
@@ -35,5 +36,5 @@
 </script>
 
 <template>
-  <v-btn prepend-icon="$plus" @click="onNewClick">{{ defaultT("New item") }}</v-btn>
+  <v-btn-primary :prepend-icon="IconsLibrary.plus" @click="onNewClick">{{ defaultT("New item") }}</v-btn-primary>
 </template>

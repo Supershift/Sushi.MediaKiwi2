@@ -7,7 +7,6 @@ import dts from "vite-plugin-dts";
 export default defineConfig({
   plugins: [
     vue(),
-
     dts({
       insertTypesEntry: true,
     }),
@@ -40,6 +39,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"), //'@': fileURLToPath(new URL('./src', import.meta.url)),
+      "@test": path.resolve(__dirname, "./test"),
       "@interfaces": path.resolve(__dirname, "./src/models/interfaces"),
       "@services": path.resolve(__dirname, "./src/services"),
       "@models": path.resolve(__dirname, "./src/models"),

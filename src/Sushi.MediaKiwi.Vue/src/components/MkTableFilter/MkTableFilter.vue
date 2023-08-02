@@ -9,6 +9,7 @@
   import { MkInputChip } from "@/components/MkChip";
   import { defineAsyncComponent } from "vue";
   import { useI18next } from "@/composables/useI18next";
+  import { MkDialogCard } from "@/components/MkDialog";
 
   // define properties and events
   const props = defineProps<{
@@ -120,7 +121,8 @@
 </script>
 
 <template>
-  <v-card variant="flat">
+  <v-divider />
+  <v-card class="mk-table-filter" variant="flat" rounded="0">
     <v-container>
       <v-row class="pb-2">
         <template v-if="modelValue">
@@ -138,13 +140,15 @@
             </v-list>
 
             <!-- filter compoment -->
-            <v-card v-else-if="state.currentFilter" width="300" :title="state.currentFilter.title">
-              <component :is="GetComponentForFilterType(state.currentFilter)" v-model="state.currentFilterValue" :table-filter-item="state.currentFilter">
-              </component>
-              <v-card-actions>
+            <MkDialogCard v-else-if="state.currentFilter" :title="state.currentFilter.title" @click:close="closeMenu">
+              <template #intro>
+                <p>Plase enter the correct item</p>
+              </template>
+              <component :is="GetComponentForFilterType(state.currentFilter)" v-model="state.currentFilterValue" :table-filter-item="state.currentFilter" />
+              <template #actions>
                 <v-btn @click="applyFilter()">{{ defaultT("Apply") }}</v-btn>
-              </v-card-actions>
-            </v-card>
+              </template>
+            </MkDialogCard>
           </v-menu>
 
           <!-- Chips -->
@@ -166,16 +170,24 @@
             :hide-details="true"
             readonly
             density="compact"
-            class="mx-2"
+            class="mk-table-filter__input mx-2"
             @click="openMenu"
           ></v-text-field>
         </template>
       </v-row>
     </v-container>
   </v-card>
+  <v-divider />
 </template>
 
-<stlye lang="css" scoped>
+<stlye lang="scss" scoped>
+.v-card--variant-flat {
+  &.mk-table-filter {
+    background: none;
+    color: rgb(var(--v-theme-on-surface-variant));
+  }
+}
+
 .v-input .v-field__input {
   --v-field-padding-top: 4px;
 }

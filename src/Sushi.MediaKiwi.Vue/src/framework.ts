@@ -54,6 +54,7 @@ export default {
     } else {
       vuetifyOptions = defaultVuetifyOptions;
     }
+
     const vuetify = createVuetify(vuetifyOptions);
     app.use(vuetify);
 
@@ -108,5 +109,3 @@ export * from "@/stores";
 export * from "@/router";
 
 export * from "@/plugins/icons/icons";
-
-import "@/assets/main.css";
