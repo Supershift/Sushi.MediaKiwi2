@@ -8,7 +8,6 @@ import "@supershift/mediakiwi-vue/dist/mediakiwi-vue.css";
 
 import { getSettings } from "./services/settings";
 import { container } from "tsyringe";
-import { CountryConnector } from "./services/CountryConnector";
 import { i18n } from "i18next";
 
 const app = createApp(App);
@@ -27,6 +26,7 @@ settings.mediaKiwi.modules = import.meta.glob("./views/**/*.vue");
 settings.mediaKiwi.i18nextOptions = {
   debug: true,
 };
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
 settings.mediaKiwi.i18nextCallback = (instance: i18n) => {};
 
 // install mediakiwi

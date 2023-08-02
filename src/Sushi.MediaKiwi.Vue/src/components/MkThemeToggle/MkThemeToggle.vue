@@ -9,7 +9,7 @@
     theme.global.name.value = theme.global.current.value.dark ? "light" : "dark";
   }
 
-  const icon = computed(() => (theme.global.current.value.dark ? IconsLibrary.mdiWeatherSunny : IconsLibrary.mdiWeatherNight));
+  const icon = computed(() => (theme.global.current.value.dark ? IconsLibrary.weatherSunny : IconsLibrary.weatherNight));
 </script>
 
 <template>

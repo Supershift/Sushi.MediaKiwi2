@@ -18,6 +18,7 @@ import { addWaitOnRouterManager } from "./router/waitOnRouterManager";
 import { addCheckIsInRole } from "./router/checkIsInRole";
 import { registerAxios } from "./helpers/registerAxios";
 import i18next, { tokenStore } from "./plugins/i18next";
+import { registerIcons } from "./helpers/registerIcons";
 
 export default {
   install(app: App, options: MediakiwiVueOptions): void {
@@ -59,6 +60,9 @@ export default {
     // Create an instance of Pinia
     app.use(pinia);
     console.log("pinia created");
+
+    // register icons
+    registerIcons(options);
 
     // create msal instance and install plugin
     identity.msalInstance = new PublicClientApplication(options.msalConfig);
@@ -102,5 +106,7 @@ export * from "@/services";
 export * from "@/stores";
 
 export * from "@/router";
+
+export * from "@/plugins/icons/icons";
 
 import "@/assets/main.css";

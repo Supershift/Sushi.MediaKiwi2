@@ -19,7 +19,7 @@
         <template #activator="{ props }">
           <v-container>
             <v-avatar color="surface" v-bind="props" :title="account?.username">
-              <v-icon :icon="IconsLibrary.mdiAccountCircle"></v-icon>
+              <v-icon :icon="IconsLibrary.accountCircle"></v-icon>
             </v-avatar>
           </v-container>
         </template>

@@ -100,7 +100,7 @@
 
       <v-btn icon color="primary">
         <!-- This icon should be loaded locally first, this only works because we have it preloaded in the MK project because MKFormToollbar and MKTableAction uses this  -->
-        <v-icon :icon="IconsLibrary.mdiDotsVertical"></v-icon>
+        <v-icon :icon="IconsLibrary.dotsVertical"></v-icon>
 
         <v-menu activator="parent">
           <v-list>

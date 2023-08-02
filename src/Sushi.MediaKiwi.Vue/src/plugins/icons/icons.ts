@@ -14,3 +14,4 @@ export const MediakiwiIconOptions: IconOptions = {
     mdi,
   },
 };
+export { mediakiwiIconAliases };

@@ -127,7 +127,7 @@
           <v-menu v-model="menu" :close-on-content-click="false" location="end">
             <!-- Button -->
             <template #activator="args">
-              <v-btn class="mt-1 ml-1" v-bind="args.props" color="primary" variant="plain" :icon="IconsLibrary.mdiFilterVariant"> </v-btn>
+              <v-btn class="mt-1 ml-1" v-bind="args.props" color="primary" variant="plain" :icon="IconsLibrary.filterVariant"> </v-btn>
             </template>
 
             <!-- context menu -->

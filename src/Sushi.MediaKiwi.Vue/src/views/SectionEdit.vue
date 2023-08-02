@@ -75,11 +75,11 @@
 </script>
 
 <template>
-  <v-alert v-if="isAdminSection" :icon="IconsLibrary.mdiInformationOutline" color="info" text="You cannot edit the Admin section" class="my-2"></v-alert>
+  <v-alert v-if="isAdminSection" :icon="IconsLibrary.informationOutline" color="info" text="You cannot edit the Admin section" class="my-2"></v-alert>
 
   <MkForm title="Section" :on-save="onSave" :on-load="onLoad" :on-delete="onDelete">
     <v-text-field v-model="state.section.name" label="Name" :disabled="isAdminSection"></v-text-field>
-    <v-text-field v-model="state.section.icon" label="Icon" :disabled="isAdminSection" :placeholder="IconsLibrary.mdiHome"></v-text-field>
+    <v-text-field v-model="state.section.icon" label="Icon" :disabled="isAdminSection" :placeholder="IconsLibrary.home"></v-text-field>
     <v-text-field v-model="state.section.sortOrder" label="Sort order" type="number" :disabled="isAdminSection"></v-text-field>
   </MkForm>
 </template>

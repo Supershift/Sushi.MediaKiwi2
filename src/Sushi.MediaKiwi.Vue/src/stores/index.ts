@@ -4,6 +4,7 @@ import type { INavigationConnector, IViewConnector, ISectionConnector } from "@/
 import type ListResult from "@/models/api/ListResult";
 import { container } from "tsyringe";
 import { IRoleConnector } from "@/services/IRoleConnector";
+import { VuetifyOptions } from "vuetify/lib/framework.mjs";
 
 const pageSize = 9999;
 
@@ -14,6 +15,7 @@ export interface MediaKiwiState {
   roles: Role[];
   isLocal: boolean;
   drawer: boolean;
+  externalIcons: boolean;
 }
 
 export const useMediakiwiStore = defineStore({
@@ -26,6 +28,7 @@ export const useMediakiwiStore = defineStore({
       roles: [],
       isLocal: true,
       drawer: true,
+      externalIcons: false,
     } as MediaKiwiState),
   getters: {
     rootNavigationItems: (state: MediaKiwiState) => state.navigationItems.filter((x) => x.parentNavigationItemId == null),
@@ -135,6 +138,13 @@ export const useMediakiwiStore = defineStore({
       navigationItems.forEach((item) => {
         item.view = this.views.find((x) => x.id === item.viewId);
       });
+    },
+    registerIcons(options: VuetifyOptions) {
+      if (options && options.icons !== undefined) {
+        this.externalIcons = true;
+      } else {
+        this.externalIcons = false;
+      }
     },
   },
 });

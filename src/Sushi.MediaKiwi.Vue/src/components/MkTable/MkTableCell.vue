@@ -43,7 +43,7 @@
     <template v-else>
       <!-- render a boolean -->
       <template v-if="isBooleanValue">
-        <v-icon :icon="mapItemValue ? IconsLibrary.mdiCheckCircleOutline : IconsLibrary.mdiCloseCircleOutline"></v-icon>
+        <v-icon :icon="mapItemValue ? IconsLibrary.checkCircleOutline : IconsLibrary.closeCircleOutline"></v-icon>
       </template>
       <!-- render a number -->
       <template v-else-if="isNumber"> {{ formatNumber(mapItemValue as number) }} </template>

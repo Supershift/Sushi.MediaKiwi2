@@ -41,7 +41,7 @@
 
           <!-- Render the actions slot -->
           <v-btn v-if="slots.menuActions" icon color="primary">
-            <v-icon :icon="IconsLibrary.mdiDotsVertical"></v-icon>
+            <v-icon :icon="IconsLibrary.dotsVertical"></v-icon>
 
             <v-menu activator="parent">
               <slot name="menuActions"></slot>

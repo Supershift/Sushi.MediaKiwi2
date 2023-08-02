@@ -43,10 +43,10 @@
       :hide-offset-dates="true"
     >
       <template #arrow-left>
-        <v-icon :icon="IconsLibrary.mdiChevronLeft"></v-icon>
+        <v-icon :icon="IconsLibrary.chevronLeft"></v-icon>
       </template>
       <template #arrow-right>
-        <v-icon :icon="IconsLibrary.mdiChevronRight"></v-icon>
+        <v-icon :icon="IconsLibrary.chevronRight"></v-icon>
       </template>
     </vue-date-picker>
   </v-card>

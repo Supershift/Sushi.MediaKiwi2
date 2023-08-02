@@ -19,6 +19,6 @@
 
     <v-spacer></v-spacer>
 
-    <v-btn :icon="IconsLibrary.mdiClose" @click="emit('click:close')"></v-btn>
+    <v-btn :icon="IconsLibrary.close" @click="emit('click:close')"></v-btn>
   </v-toolbar>
 </template>

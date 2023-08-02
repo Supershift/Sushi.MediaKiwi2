@@ -1,7 +1,8 @@
 <script setup lang="ts">
   import type { Section } from "@/models/api";
   import { useNavigation } from "@/composables/useNavigation";
-  import { IconsLibrary } from "@/models";
+  import { parseIconValue } from "@/composables";
+  import { useMediakiwiStore } from "@/stores";
 
   defineEmits(["change"]);
   const props = defineProps<{
@@ -9,29 +10,28 @@
   }>();
 
   const navigation = useNavigation();
+  const mediakiwiStore = useMediakiwiStore();
+
   function onItemClick(item: Section) {
     if (item) {
       navigation.navigateTo(item);
     }
     return false;
   }
-  function icon(item: Section) {
-    return item.icon || IconsLibrary.mdiPuzzle;
-  }
 </script>
 <template>
   <v-navigation-drawer rail :rail-width="80" permanent>
     <v-list density="compact" open-strategy="list" nav>
       <v-list-item
-        :active="item.id == navigation.currentNavigationItem.value?.sectionId"
         v-for="item in props.railItems || []"
         :key="item.id"
+        :active="item.id == navigation.currentNavigationItem.value?.sectionId"
         :title="item.name"
         :value="item.name"
         @click.stop="onItemClick(item)"
       >
-        <template v-slot:prepend>
-          <v-icon v-if="icon(item)" @click.stop="onItemClick(item)">{{ icon(item) }}</v-icon>
+        <template #prepend>
+          <v-icon v-if="item?.icon" @click.stop="onItemClick(item)">{{ parseIconValue(item.icon, mediakiwiStore.externalIcons) }}</v-icon>
         </template>
       </v-list-item>
     </v-list>

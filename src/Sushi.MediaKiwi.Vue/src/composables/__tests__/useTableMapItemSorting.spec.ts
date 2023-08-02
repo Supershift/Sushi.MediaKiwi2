@@ -54,7 +54,7 @@ describe("useTableMapItemSorting.spec", () => {
         sortDirection: SortDirection.Asc,
       });
 
-      expect(sortIcon.value === IconsLibrary.mdiArrowUp);
+      expect(sortIcon.value === IconsLibrary.arrowUp);
     });
 
     it("Should match desc icon", () => {
@@ -63,7 +63,7 @@ describe("useTableMapItemSorting.spec", () => {
         sortDirection: SortDirection.Desc,
       });
 
-      expect(sortIcon.value === IconsLibrary.mdiArrowDown);
+      expect(sortIcon.value === IconsLibrary.arrowDown);
     });
 
     it("Should have active class", () => {

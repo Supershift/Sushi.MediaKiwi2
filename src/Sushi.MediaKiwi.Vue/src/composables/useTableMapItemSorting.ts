@@ -90,9 +90,9 @@ export function useTableMapItemSorting(options: tableMapItemSortingOptions): use
 
   const sortIcon = computed(() => {
     if (currentSort.value?.sortDirection === SortDirection.Asc) {
-      return IconsLibrary.mdiArrowUp;
+      return IconsLibrary.arrowUp;
     } else {
-      return IconsLibrary.mdiArrowDown;
+      return IconsLibrary.arrowDown;
     }
   });
 
