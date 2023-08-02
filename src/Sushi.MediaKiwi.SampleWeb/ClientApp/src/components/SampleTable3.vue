@@ -95,7 +95,7 @@
     item-view-id="SampleEdit"
   >
     <template #selectionActions>
-      <v-btn @click="download">Download</v-btn>
+      <v-btn @click="download"><v-icon :icon="IconsLibrary.trayArrowDown"></v-icon> Download</v-btn>
       <v-btn @click="move">move</v-btn>
 
       <v-btn icon color="primary">

@@ -9,7 +9,12 @@
   <v-lazy :options="{ threshold: 0.5 }" transition="fade-transition">
     <v-card>
       <h1>{{ t("Header") }}</h1>
-      <p>{{ t("Main") }}</p>
+      <p>
+        <br />
+        {{ t("Main") }}
+        <br />
+        {{ t("A simple icon test") }} <v-icon icon="$testTube"></v-icon>
+      </p>
     </v-card>
   </v-lazy>
 </template>
