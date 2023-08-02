@@ -62,7 +62,7 @@ export default {
     app.use(pinia);
     console.log("pinia created");
 
-    // register icons
+    // register icons after pinia and vuetify are created
     registerIcons(options);
 
     // create msal instance and install plugin

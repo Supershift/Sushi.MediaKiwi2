@@ -25,13 +25,8 @@
     ],
   };
 
-  // get IconsLibrary keys
+  // IconsLibrary keys
   const iconKeys = Object.keys(IconsLibrary);
-  const tableMapIcons: TableMap<string> = {
-    itemId: (x) => x,
-    items: [{ headerTitle: "Name", value: (x) => x }],
-  };
-  const paging = ref(1);
 
   // get data
   async function onLoad() {
