@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { onBeforeMount, onBeforeUnmount, StyleValue, nextTick, watch, computed, onMounted, ref } from "vue";
+  import { onBeforeMount, onBeforeUnmount, StyleValue, nextTick, watch, computed, onMounted, ref, reactive } from "vue";
   import { useDisplay } from "vuetify";
 
   // props that are used to customize the component
@@ -48,6 +48,11 @@
     footerClass: {
       type: String,
       default: "",
+    },
+    /** role we assigned the sidesheet, this ensures we only have one instance running of the sheet */
+    role: {
+      type: String,
+      default: "dialog",
     },
   });
 
@@ -108,6 +113,7 @@
   };
 
   function handleClose() {
+    closeSideSheet(props.role);
     emits("closed");
     sheetValue.value = false;
     showOverlay.value = false;
@@ -118,6 +124,54 @@
       ...Array.from(document.querySelectorAll("body *"), (el) => parseFloat(window.getComputedStyle(el).zIndex)).filter((zIndex) => !Number.isNaN(zIndex)),
       0
     );
+
+  interface IDialogRole {
+    type: string;
+    isOpen: boolean;
+  }
+
+  const modal = reactive({
+    role: Array<IDialogRole>(),
+  });
+
+  /** checks if the sidesheet role exists and returns a boolean */
+  function hasDialogRole(role: string) {
+    if (!role) {
+      return false;
+    }
+
+    const findRole = modal.role.find((currentRole: IDialogRole) => (currentRole.type === "" ? false : currentRole.type === role));
+
+    if (!findRole) {
+      return false;
+    } else {
+      return findRole.type === role && findRole.isOpen === true;
+    }
+  }
+
+  /** closes the side sheet if we have the appropriate role */
+  function closeSideSheet(role: string) {
+    if (role) {
+      const index = modal.role.findIndex((currentRole: IDialogRole) => currentRole.type === role);
+      if (index !== -1) {
+        modal.role[index].isOpen = !modal.role[index].isOpen;
+      }
+    }
+  }
+
+  /** opens the side sheet if we have the appropriate role, otherwise make one and open it */
+  function openSideSheet(role = "") {
+    const dialogRole: IDialogRole = {
+      type: role,
+      isOpen: true,
+    };
+
+    if (modal.role.findIndex((currentRole: IDialogRole) => currentRole.type === role) === -1) {
+      modal.role.push(dialogRole);
+    } else {
+      modal.role[modal.role.findIndex((currentRole: IDialogRole) => currentRole.type === role)].isOpen = true;
+    }
+  }
 
   // hooks
   onBeforeMount(() => {
@@ -158,6 +212,7 @@
         showOverlay.value = true;
         // delays the opening of the sheet to allow the transition to work, primarily on mobile
         setTimeout(() => {
+          openSideSheet(props.role);
           sheetValue.value = true;
           emits("opened");
         }, 300);

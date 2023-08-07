@@ -8,5 +8,6 @@
   "azureFunctions.projectLanguage": "JavaScript",
   "azureFunctions.projectRuntime": "~4",
   "debug.internalConsoleOptions": "neverOpen",
-  "azureFunctions.preDeployTask": "npm prune (functions)"
+  "azureFunctions.preDeployTask": "npm prune (functions)",
+  "dotnet.defaultSolution": "Sushi.MediaKiwi.sln"
 }

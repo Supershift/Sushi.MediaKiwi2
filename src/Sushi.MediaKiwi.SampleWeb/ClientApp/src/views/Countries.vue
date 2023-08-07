@@ -14,6 +14,7 @@
 
   // define sheet example variables
   const toggle = ref(false);
+  const toggle2 = ref(false);
   const countryItem = ref<Country>();
 
   const exampleChoice = ref("primary");
@@ -30,6 +31,9 @@
     items: [
       { headerTitle: "Code", value: (x) => x.code },
       { headerTitle: "Name", value: (x) => x.name },
+      {
+        headerTitle: "Toggle",
+      },
     ],
   };
 
@@ -48,6 +52,12 @@
   async function close() {
     toggle.value = false;
   }
+  async function onCliked() {
+    toggle2.value = true;
+  }
+  async function close2() {
+    toggle2.value = false;
+  }
   async function reserve() {
     example_loading.value = true;
 
@@ -55,6 +65,7 @@
   }
 </script>
 <template>
+  <v-btn @click="onCliked()"></v-btn>
   <!-- CHOICES -->
   <v-radio-group v-if="toggle" v-model="exampleChoice" inline>
     <v-radio label="list-view" color="info" value="list-view"></v-radio>
@@ -177,5 +188,8 @@
       <!-- <v-btn class="d-inline-block" variant="text">action 1</v-btn>
       <v-btn class="d-inline-block" variant="text">action 2</v-btn> -->
     </template>
+  </mk-side-sheet>
+  <mk-side-sheet :model-value="toggle2" @close="close2">
+    <template #default> TEST! </template>
   </mk-side-sheet>
 </template>
