@@ -3,6 +3,7 @@
   import { pageSizeOptions } from "@/constants";
   import { Paging } from "@/models/api/Paging";
   import { ITableMapPaging } from "@/models/table/TableMapPaging";
+  import { useI18next } from "@/composables/useI18next";
 
   // Components
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
@@ -22,6 +23,8 @@
     (e: "update:modelValue", value: Paging): void;
   }>();
 
+  // inject dependencies
+  const { defaultT } = await useI18next();
   const { updatePageIndex, updatePageSize, pageIndex, pageSize } = usePagination();
 
   watch([pageIndex, pageSize], () => {
@@ -52,7 +55,9 @@
   <v-divider />
   <div class="mk-pagination">
     <div class="mk-pagination__items-per-page">
-      <span class="mk-pagination__items-per-page__label">Rows per page</span>
+      <span class="mk-pagination__items-per-page__label">
+        {{ defaultT("Rows per page") }}
+      </span>
       <VSelect
         density="compact"
         class="mk-pagination__items-per-page__select"
