@@ -28,11 +28,5 @@
   }
 </script>
 <template>
-  <mk-table
-    v-model:currentPagination="currentPagination"
-    :api-result="countries"
-    :table-map="tableMap"
-    :on-load="LoadData"
-    pagination-mode="controls"
-  ></mk-table>
+  <mk-table v-model:currentPagination="currentPagination" :api-result="countries" :table-map="tableMap" :on-load="LoadData"></mk-table>
 </template>

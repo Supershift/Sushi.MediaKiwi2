@@ -102,6 +102,7 @@
     }
 
     &__info {
+      @include abstracts.typography("body", "medium");
       display: flex;
       padding-inline-end: 24px;
     }
