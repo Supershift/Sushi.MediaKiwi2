@@ -156,6 +156,10 @@
     <tfoot>
       <slot name="footer"></slot>
     </tfoot>
+
+    <template #bottom>
+      <slot name="bottom"></slot>
+    </template>
   </v-table>
 </template>
 

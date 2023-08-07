@@ -49,60 +49,77 @@
 </script>
 
 <template>
-  <v-container class="mk-pagination pa-0">
-    <v-row class="pa-0">
-      <v-spacer class="pa-0"></v-spacer>
-      <v-col class="mk-pagination__items-per-page pa-0">
-        <label class="mk-pagination__items-per-page__label"> Rows per page</label>
-        <VSelect
-          variant="underlined"
-          density="compact"
-          class="mk-pagination__items-per-page__select"
-          hide-details
-          :items="pageSizeOptions"
-          :model-value="pageSize"
-          @update:model-value="updatePageSize"
-        ></VSelect>
-
-        <div class="mk-pagination__items-per-page__info pa-0">
-          {{ info }}
-        </div>
-      </v-col>
-      <v-col class="mk-pagination__pagination pa-0">
-        <VPagination
-          density="compact"
-          total-visible=""
-          :model-value="pageIndex + 1"
-          :length="pagingResult?.pageCount"
-          show-first-last-page
-          @update:model-value="updatePageIndex"
-        />
-      </v-col>
-    </v-row>
-  </v-container>
+  <v-divider />
+  <div class="mk-pagination">
+    <div class="mk-pagination__items-per-page">
+      <span class="mk-pagination__items-per-page__label">Rows per page</span>
+      <VSelect
+        density="compact"
+        class="mk-pagination__items-per-page__select"
+        hide-details
+        :items="pageSizeOptions"
+        :model-value="pageSize"
+        @update:model-value="updatePageSize"
+      ></VSelect>
+    </div>
+    <div class="mk-pagination__info">
+      {{ info }}
+    </div>
+    <div class="mk-pagination__pagination">
+      <VPagination
+        total-visible=""
+        density="compact"
+        :model-value="pageIndex + 1"
+        :length="pagingResult?.pageCount"
+        show-first-last-page
+        @update:model-value="updatePageIndex"
+      />
+    </div>
+  </div>
+  <v-divider />
 </template>
 <style scoped lang="scss">
+  @use "@/styles/abstracts";
+
   .mk-pagination {
+    height: 52px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 0 8px;
+    justify-content: flex-end;
+
     &__items-per-page {
+      padding-inline-end: 24px;
       display: flex;
       align-items: center;
+      justify-content: space-between;
 
       &__label {
-        margin-right: 0.5rem;
-      }
-
-      &__select {
-        max-width: 75px;
-      }
-
-      &__info {
-        margin: 0 24px;
+        @include abstracts.typography("body", "medium");
+        padding-inline-end: 24px;
       }
     }
 
+    &__info {
+      display: flex;
+      padding-inline-end: 24px;
+    }
+
     &__pagination {
-      flex: 0;
-      margin-right: 48px;
+      display: flex;
+      align-items: center;
+    }
+  }
+</style>
+<style lang="scss">
+  .v-pagination__item {
+    display: none;
+  }
+
+  .mk-pagination__items-per-page__select {
+    .v-field__outline {
+      display: none;
     }
   }
 </style>

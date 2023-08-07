@@ -33,6 +33,6 @@
     :api-result="countries"
     :table-map="tableMap"
     :on-load="LoadData"
-    pagination-mode="intersect"
+    pagination-mode="controls"
   ></mk-table>
 </template>

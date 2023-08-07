@@ -192,19 +192,19 @@
       @update:sorting="sortingChanged"
       @update:selection="(e) => emit('update:selection', e)"
     >
-      <template v-if="paginationMode === 'controls'" #footer>
-        <tr>
-          <td :colspan="tableMap.items.length" justify="end">
-            <!-- Only show the controls if the pagination mode is not set or set to 'controls' -->
-            <MkPagination
-              v-if="currentPagination"
-              :model-value="currentPagination"
-              :paging-result="pagingResult"
-              :mode="paginationMode"
-              @update:model-value="pageChanged"
-            />
-          </td>
-        </tr>
+      <template v-if="paginationMode === 'controls'" #bottom>
+        <!-- <tr>
+          <td :colspan="tableMap.items.length" justify="end"> -->
+        <!-- Only show the controls if the pagination mode is unset or set to 'controls' -->
+        <MkPagination
+          v-if="currentPagination"
+          :model-value="currentPagination"
+          :paging-result="pagingResult"
+          :mode="paginationMode"
+          @update:model-value="pageChanged"
+        />
+        <!-- </td>
+        </tr> -->
       </template>
     </MkTableView>
 
@@ -225,4 +225,3 @@
     }
   }
 </style>
-@/models/pagination/VuetifyPaginationMode
