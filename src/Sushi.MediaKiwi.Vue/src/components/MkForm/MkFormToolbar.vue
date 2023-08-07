@@ -20,6 +20,7 @@
 
 <template>
   <v-toolbar>
+    <v-spacer />
     <slot></slot>
     <v-btn v-if="undo" :disabled="props.disabled" @click="$emit('undo', $event)">{{ defaultT("Undo") }}</v-btn>
     <v-btn v-if="save" :disabled="props.disabled" @click="$emit('save', $event)">{{ defaultT("Save") }}</v-btn>

@@ -26,7 +26,5 @@
   }
 </script>
 <template>
-  <v-btn variant="tonal" @click="navigateBack()">
-    <v-icon icon="mdi-chevron-left"></v-icon>
-  </v-btn>
+  <v-btn icon="mdi-arrow-left" color="on-surface-variant" @click="navigateBack()"></v-btn>
 </template>
