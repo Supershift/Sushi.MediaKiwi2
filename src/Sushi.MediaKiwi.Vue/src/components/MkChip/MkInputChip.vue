@@ -15,6 +15,7 @@
     :append-icon="props.appendIcon"
     :prepend-icon="props.prependIcon"
     closable
+    color="primary"
     @click:close.stop="(e) => emit('click:remove')"
     @click.stop="() => emit('click')"
   >
