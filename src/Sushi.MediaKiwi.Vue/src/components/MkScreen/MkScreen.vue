@@ -4,12 +4,12 @@
 
 <template>
   <v-main style="min-height: 300px">
-    <div class="pa-10">
+    <div class="pa-4 pa-md-10 mk-screen">
       <mk-breadcrumbs />
       <router-view v-slot="{ Component }">
         <suspense timeout="0">
           <template #default>
-            <div>
+            <div class="mk-screen__content">
               <component :is="Component" :key="$route.path"></component>
             </div>
           </template>
@@ -21,3 +21,13 @@
     </div>
   </v-main>
 </template>
+
+<style lang="scss" scoped>
+  .mk-screen {
+    height: 100%;
+
+    &__content {
+      height: inherit;
+    }
+  }
+</style>

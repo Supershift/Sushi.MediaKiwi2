@@ -52,8 +52,8 @@
   });
 </script>
 <template>
-  <v-navigation-drawer absolute>
-    <v-list open-strategy="single">
+  <v-navigation-drawer absolute class="pa-3">
+    <v-list open-strategy="single" class="pa-0">
       <v-btn v-if="showBackButton" class="justify-start" variant="text" rounded="0" block @click="goBack()">
         <v-icon>mdi-chevron-left</v-icon>
         Back

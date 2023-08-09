@@ -1,0 +1,15 @@
+@use "@/styles/abstracts";
+@use "sass:map";
+
+// import font here
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap");
+
+// Add typography classes here
+// E.g .text-display-large, .typography-headline-medium, etc
+.text {
+  @include abstracts.recursive-map(abstracts.$typography);
+}
+
+p {
+  @include abstracts.typography("body", "medium");
+}
