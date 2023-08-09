@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import { IconsLibrary } from "@/models";
+
   defineProps<{
     selection: unknown[];
   }>();
@@ -17,6 +19,6 @@
 
     <v-spacer></v-spacer>
 
-    <v-btn icon="mdi-close" @click="emit('click:close')"></v-btn>
+    <v-btn :icon="IconsLibrary.close" @click="emit('click:close')"></v-btn>
   </v-toolbar>
 </template>

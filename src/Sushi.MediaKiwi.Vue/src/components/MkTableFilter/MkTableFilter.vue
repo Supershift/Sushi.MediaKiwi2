@@ -5,7 +5,7 @@
   import { TableFilterValue } from "@/models/table/TableFilterValue.js";
   import { MkTableFilterDatePicker, MkTableFilterRadioGroup, MkTableFilterSelect, MkTableFilterTextField } from ".";
   import { DefineComponent } from "vue";
-  import { TableFilterType } from "@/models/enum/TableFilterType";
+  import { TableFilterType, IconsLibrary } from "@/models";
   import { MkInputChip } from "@/components/MkChip";
   import { defineAsyncComponent } from "vue";
   import { useI18next } from "@/composables/useI18next";
@@ -129,7 +129,7 @@
           <v-menu v-model="menu" :close-on-content-click="false" location="end">
             <!-- Button -->
             <template #activator="args">
-              <v-btn class="mt-1 ml-1" v-bind="args.props" color="primary" variant="plain" icon="mdi-filter-variant"> </v-btn>
+              <v-btn class="mt-1 ml-1" v-bind="args.props" color="primary" variant="plain" :icon="IconsLibrary.filterVariant"> </v-btn>
             </template>
 
             <!-- context menu -->

@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { useMsal } from "@/composables/useMsal";
   import { identity } from "@/identity";
+  import { IconsLibrary } from "@/models";
   import { useI18next } from "@/composables/useI18next";
 
   const { t } = await useI18next("MkSignIn");
@@ -25,7 +26,7 @@
           </v-card-text>
           <v-card-actions flex="1">
             <!-- Continue with Microsoft -->
-            <v-btn variant="outlined" size="x-large" prepend-icon="mdi-microsoft-azure" width="100%" @click="login">
+            <v-btn variant="outlined" size="x-large" :prepend-icon="IconsLibrary.microsoftAzure" width="100%" @click="login">
               {{ t("SignInMicrosoft") }}
             </v-btn>
           </v-card-actions>
