@@ -22,4 +22,8 @@ export interface NavigationItem {
   leaf?: NavigationItem;
   /** view to load when this navigation item is activated. If empty, the item is a folder. */
   view?: View;
+  /** icon we want to load in the front ( based on mdi and standard loaded icons, other need to manually added ). */
+  prependIcon?: string;
+  /** icon we want to load in the back ( based on mdi and standard loaded icons, other need to manually added ). */
+  appendIcon?: string;
 }

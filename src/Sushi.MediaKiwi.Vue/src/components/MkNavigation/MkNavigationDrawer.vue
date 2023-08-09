@@ -4,6 +4,7 @@
   import type { NavigationItem } from "@/models/api";
   import { useMediakiwiStore } from "@/stores";
   import { useNavigation } from "@/composables/useNavigation";
+  import { useI18next } from "@/composables/useI18next";
 
   defineEmits(["change"]);
   defineProps<{
@@ -15,6 +16,9 @@
 
   const allNavigationItems = computed(getNavigationItems);
   const children = computed(getChildren);
+
+  // inject dependencies
+  const { defaultT } = await useI18next();
 
   /** Gets all navigation items for the current item's section */
   function getNavigationItems(): NavigationItem[] {
@@ -54,10 +58,14 @@
 <template>
   <v-navigation-drawer absolute class="pa-3">
     <v-list open-strategy="single" class="pa-0">
-      <v-btn v-if="showBackButton" class="justify-start" variant="text" rounded="0" block @click="goBack()">
-        <v-icon>mdi-chevron-left</v-icon>
-        Back
-      </v-btn>
+      <v-list-item
+        v-if="showBackButton"
+        :title="defaultT('Back')"
+        rounded="pill"
+        class="mb-2"
+        prepend-icon="mdi-chevron-left"
+        @click.stop="goBack()"
+      ></v-list-item>
       <mk-navigation-item v-for="item in children" :key="item.id" :navigation-item="item" :all-items="allNavigationItems"></mk-navigation-item>
     </v-list>
   </v-navigation-drawer>
