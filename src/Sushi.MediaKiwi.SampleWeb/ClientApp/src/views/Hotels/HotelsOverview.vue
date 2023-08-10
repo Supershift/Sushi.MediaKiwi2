@@ -3,6 +3,8 @@
   import { Hotel } from "@/models/Hotel";
   import { CountryConnector } from "@/services/CountryConnector";
   import { HotelConnector } from "@/services/HotelConnector";
+  import { IconsLibrary } from "@supershift/mediakiwi-vue";
+
   import {
     ListResult,
     MkTable,
@@ -32,7 +34,7 @@
   function srpIcon(item: Hotel): TableCellIcon {
     return {
       position: item.srp ? TableIconPosition.Append : TableIconPosition.Prepend,
-      iconName: item.srp ? "mdi-account-check" : "mdi-alert-circle",
+      iconName: item.srp ? "$accountCheckOutline" : IconsLibrary.accountCircle,
       tooltip: item.srp ? "SRP" : "NoSRP",
       label: item.srp ? "SRP correct" : "Define SRP",
     };

@@ -3,6 +3,7 @@
   import { useIsAuthenticated } from "@/composables/useIsAuthenticated";
   import { MkSignOutButton, MkLanguageSwitch } from "@/components";
   import { ref } from "vue";
+  import { IconsLibrary } from "@/models";
 
   const { account } = useMsal();
 
@@ -18,7 +19,7 @@
         <template #activator="{ props }">
           <v-container>
             <v-avatar color="surface" v-bind="props" :title="account?.username">
-              <v-icon icon="mdi-account-circle"></v-icon>
+              <v-icon :icon="IconsLibrary.accountCircle"></v-icon>
             </v-avatar>
           </v-container>
         </template>

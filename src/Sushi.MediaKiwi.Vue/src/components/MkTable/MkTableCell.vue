@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { computed } from "vue";
-  import { MoneyValue } from "@/models";
+  import { MoneyValue, IconsLibrary } from "@/models";
   import type { TableMapItem } from "@/models/table/TableMapItem";
   import MkTableCellIcon from "./MkTableCellIcon.vue";
   import { useI18next } from "@/composables";
@@ -34,7 +34,7 @@
 
   const booleanIcon = computed(() => {
     const value = mapItemValue.value as boolean;
-    const iconName = value ? "mdi-check-circle-outline" : "mdi-close-circle-outline";
+    const iconName = value ? IconsLibrary.checkCircleOutline : IconsLibrary.closeCircleOutline;
     const color = value ? "success" : "error";
 
     return {
