@@ -14,7 +14,9 @@ const defaultVuetifyOptions = <VuetifyOptions>{
   ...globalConfiguration,
   ...themeComfiguration,
   blueprint: md3,
-  components: VComponents,
+  components: {
+    ...VComponents,
+  },
   directives: VDirectives,
   icons: MediakiwiIconOptions,
 };

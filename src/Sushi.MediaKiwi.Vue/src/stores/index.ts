@@ -4,9 +4,8 @@ import type { INavigationConnector, IViewConnector, ISectionConnector } from "@/
 import type ListResult from "@/models/api/ListResult";
 import { container } from "tsyringe";
 import { IRoleConnector } from "@/services/IRoleConnector";
+import { defaultPageSize } from "@/constants";
 import { VuetifyOptions } from "vuetify/lib/framework.mjs";
-
-const pageSize = 9999;
 
 export interface MediaKiwiState {
   navigationItems: Array<NavigationItem>;
@@ -50,17 +49,17 @@ export const useMediakiwiStore = defineStore({
       // get instance of INavigationConnector
       const connector = container.resolve<INavigationConnector>("INavigationConnector");
       // get nav items and store them
-      const navigationItems = await connector.GetNavigationItems({ pageSize: pageSize });
+      const navigationItems = await connector.GetNavigationItems({ pageSize: defaultPageSize });
       this.setNavigationItems(navigationItems);
     },
     async getViews() {
       const connector = container.resolve<IViewConnector>("IViewConnector");
-      const views = await connector.GetViews(undefined, { pageSize: pageSize });
+      const views = await connector.GetViews(undefined, { pageSize: defaultPageSize });
       this.setViews(views);
     },
     async getSections() {
       const connector = container.resolve<ISectionConnector>("ISectionConnector");
-      const sections = await connector.GetSections({ pageSize: pageSize });
+      const sections = await connector.GetSections({ pageSize: defaultPageSize });
       this.setSections(sections);
     },
     toggleDrawer() {

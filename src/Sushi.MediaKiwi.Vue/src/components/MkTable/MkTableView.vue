@@ -10,6 +10,11 @@
   import { useTableMapItemSorting } from "@/composables/useTableMapItemSorting";
   import { watch } from "vue";
   import { useNavigation } from "@/composables/useNavigation";
+  import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
+  import { VuetifyPaginationMode } from "@/models/pagination/VuetifyPaginationMode";
+  import { ref } from "vue";
+  import { usePagination } from "@/composables/usePagination";
+  import { computed } from "vue";
 
   // define properties
   const props = defineProps<{
@@ -22,6 +27,8 @@
     selection?: unknown[];
     /** Make each row in the table selectable. */
     checkbox?: boolean;
+    /** Defines the pagination mode */
+    paginationMode?: MediakiwiPaginationMode;
   }>();
 
   // define event
@@ -109,6 +116,14 @@
     selectAll(false);
   }
 
+  const { updatePageIndex, pageIndex } = usePagination();
+  // deconstruct the prop to get the pagination mode for the vuetify component
+  const vuetifyPaginationMode = ref<VuetifyPaginationMode>(props.paginationMode as VuetifyPaginationMode);
+
+  function loadMore() {
+    updatePageIndex(pageIndex + 1);
+  }
+
   defineExpose({
     clearSelection,
   });
@@ -141,6 +156,10 @@
     <tfoot>
       <slot name="footer"></slot>
     </tfoot>
+
+    <template #bottom>
+      <slot name="bottom"></slot>
+    </template>
   </v-table>
 </template>
 
