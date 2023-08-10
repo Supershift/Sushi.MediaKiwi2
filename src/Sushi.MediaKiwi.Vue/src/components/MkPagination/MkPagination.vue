@@ -74,7 +74,9 @@
       ></VSelect>
     </div>
     <div class="mk-pagination__info">
-      {{ defaultT("PagingInfo", { resultSet }) }}
+      <template v-if="resultSet">
+        {{ defaultT("PagingInfo", { resultSet }) }}
+      </template>
     </div>
     <div class="mk-pagination__pagination">
       <VPagination
