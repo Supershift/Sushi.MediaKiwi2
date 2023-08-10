@@ -11,7 +11,7 @@
 </script>
 
 <template>
-  <v-toolbar>
+  <v-toolbar color="surface1">
     <v-label class="ms-5 me-4"> {{ selection.length }} selected </v-label>
     <v-divider class="mx-2" inset vertical></v-divider>
 

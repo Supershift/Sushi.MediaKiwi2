@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { shallowReactive, ref, watch, type Component } from "vue";
+  import { shallowReactive, ref, watch, type Component, computed } from "vue";
   import { TableFilter } from "@/models/table/TableFilter.js";
   import { TableFilterItem } from "@/models/table/TableFilterItem.js";
   import { TableFilterValue } from "@/models/table/TableFilterValue.js";
@@ -25,6 +25,11 @@
 
   // define reactive variables
   const menu = ref(false);
+
+  // check if we have a filter value
+  const containsFilterValue = computed(() => {
+    return props.modelValue && Object.keys(props.modelValue).some((key) => props.modelValue[key].selectedValue !== undefined);
+  });
 
   // holds the current filter being edited and its value
   interface IState {
@@ -122,11 +127,11 @@
 
 <template>
   <v-divider />
-  <v-card class="mk-table-filter" variant="flat" rounded="0">
+  <v-card class="mk-table-filter" variant="flat" rounded="10" color="surface">
     <v-container>
       <v-row class="pb-2">
         <template v-if="modelValue">
-          <v-menu v-model="menu" :close-on-content-click="false" location="end">
+          <v-menu v-model="menu" :close-on-content-click="false" location="end" colo>
             <!-- Button -->
             <template #activator="args">
               <v-btn class="mt-1 ml-1" v-bind="args.props" color="primary" variant="plain" :icon="IconsLibrary.filterVariant"> </v-btn>
@@ -144,7 +149,11 @@
               <template #intro>
                 <p>Plase enter the correct item</p>
               </template>
-              <component :is="GetComponentForFilterType(state.currentFilter)" v-model="state.currentFilterValue" :table-filter-item="state.currentFilter" />
+              <Suspense>
+                <component :is="GetComponentForFilterType(state.currentFilter)" v-model="state.currentFilterValue" :table-filter-item="state.currentFilter" />
+                <!-- loading state via #fallback slot -->
+                <template #fallback> Loading filter... </template>
+              </Suspense>
               <template #actions>
                 <v-btn @click="applyFilter()">{{ defaultT("Apply") }}</v-btn>
               </template>
@@ -165,7 +174,7 @@
           </template>
 
           <v-text-field
-            :placeholder="defaultT('Filter')"
+            :placeholder="!containsFilterValue ? defaultT('Filter') : ''"
             variant="plain"
             :hide-details="true"
             readonly
@@ -177,7 +186,7 @@
       </v-row>
     </v-container>
   </v-card>
-  <v-divider />
+  <v-divider :thickness="20" class="border-opacity-0" />
 </template>
 
 <stlye lang="scss" scoped>
