@@ -39,18 +39,18 @@
   });
 
   /**
-   * Get the first and last index of the current page
-   * @returns { { firstIndex: number, lastIndex: number } | null }
+   * Get the start, end and total of the current paging result
+   * @returns { { start: number, end: number, total: number } | null }
    */
   const resultSet = computed(() => {
     if (props.pagingResult) {
       const { totalCount, resultCount } = props.pagingResult;
       if (totalCount && resultCount) {
-        const firstIndex = pageSize.value * pageIndex.value;
-        const lastIndex = firstIndex + resultCount;
+        const start = pageSize.value * pageIndex.value;
+        const end = start + resultCount;
 
-        // Add 1 to first index to start at 1 instead of 0
-        return { firstIndex: firstIndex + 1, lastIndex, totalCount };
+        // Add 1 to start to begin at 1 instead of 0
+        return { start: start + 1, end, total: totalCount };
       }
     }
     return null;
