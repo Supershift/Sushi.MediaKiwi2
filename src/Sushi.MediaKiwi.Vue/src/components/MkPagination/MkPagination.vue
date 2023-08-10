@@ -38,16 +38,22 @@
     emit("update:modelValue", pagination);
   });
 
-  const info = computed(() => {
+  /**
+   * Get the first and last index of the current page
+   * @returns { { firstIndex: number, lastIndex: number } | null }
+   */
+  const resultSet = computed(() => {
     if (props.pagingResult) {
       const { totalCount, resultCount } = props.pagingResult;
       if (totalCount && resultCount) {
-        const r = pageSize.value * pageIndex.value;
-        const p = r + resultCount;
-        return `${r + 1}-${p} of ${totalCount}`;
+        const firstIndex = pageSize.value * pageIndex.value;
+        const lastIndex = firstIndex + resultCount;
+
+        // Add 1 to first index to start at 1 instead of 0
+        return { firstIndex: firstIndex + 1, lastIndex, totalCount };
       }
     }
-    return "";
+    return null;
   });
 </script>
 
@@ -68,7 +74,7 @@
       ></VSelect>
     </div>
     <div class="mk-pagination__info">
-      {{ info }}
+      {{ defaultT("PagingInfo", { resultSet }) }}
     </div>
     <div class="mk-pagination__pagination">
       <VPagination
