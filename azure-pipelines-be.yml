@@ -18,6 +18,12 @@ variables:
 steps:
   - task: DotNetCoreCLI@2
     inputs:
+      command: 'test'
+      projects: |
+        tests/Sushi.MediaKiwi.DAL.UnitTests/*.csproj
+        tests/Sushi.MediaKiwi.Services.UnitTests/*.csproj
+  - task: DotNetCoreCLI@2
+    inputs:
       command: "publish"
       publishWebProjects: false
       arguments: "src/Sushi.MediaKiwi.SampleAPI/Sushi.MediaKiwi.SampleAPI.csproj --configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)"
