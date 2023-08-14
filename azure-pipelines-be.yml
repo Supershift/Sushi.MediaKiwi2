@@ -23,6 +23,7 @@ steps:
       projects: |
         tests/Sushi.MediaKiwi.DAL.UnitTests/*.csproj
         tests/Sushi.MediaKiwi.Services.UnitTests/*.csproj
+        tests/Sushi.MediaKiwi.WebApi.UnitTests/*.csproj
   - task: DotNetCoreCLI@2
     displayName: Build Sample API
     inputs:
