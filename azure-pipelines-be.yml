@@ -17,18 +17,21 @@ variables:
 
 steps:
   - task: DotNetCoreCLI@2
+    displayName: Tests
     inputs:
       command: 'test'
       projects: |
         tests/Sushi.MediaKiwi.DAL.UnitTests/*.csproj
         tests/Sushi.MediaKiwi.Services.UnitTests/*.csproj
   - task: DotNetCoreCLI@2
+    displayName: Build Sample API
     inputs:
       command: "publish"
       publishWebProjects: false
       arguments: "src/Sushi.MediaKiwi.SampleAPI/Sushi.MediaKiwi.SampleAPI.csproj --configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)"
       zipAfterPublish: true
   - task: PublishBuildArtifacts@1
+    displayName: Publish artifacts
     inputs:
       PathtoPublish: "$(Build.ArtifactStagingDirectory)"
       ArtifactName: "drop"
