@@ -1,14 +1,5 @@
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
-using Microsoft.Identity.Web;
-using Microsoft.OpenApi.Models;
 using Sushi.MediaKiwi.SampleAPI;
-using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.WebAPI;
-using Sushi.MediaKiwi.WebAPI.Paging;
-using Sushi.MediaKiwi.WebAPI.Sorting;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,65 +20,18 @@ if (addCORS)
     });
 }
 
-// add authentication, maybe move to MK?
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
-
 services.AddControllers();
 services.AddEndpointsApiExplorer();
 
-// todo: move MK stuff to helper method
 services.AddSwaggerGen(options =>
 {
-    // add documentation
-    var apiFilename = $"{Assembly.GetAssembly(typeof(SectionController))?.GetName().Name}.xml";
-    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, apiFilename));
-
-    var webModelFilename = $"{Assembly.GetAssembly(typeof(SectionService))?.GetName().Name}.xml";
-    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, webModelFilename));
-
-    // add paging parameters
-    options.OperationFilter<PagingSwaggerFilter>();
-    options.OperationFilter<ContinuationSwaggerFilter>();
-
-    // add sorting parameters
-    options.OperationFilter<SortingSwaggerFilter>();
-
-    // add docs for mediakiw
-    options.SwaggerDoc("MediaKiwi", new OpenApiInfo { Title = "MediaKiwi" });
-    options.SwaggerDoc("SampleApi", new OpenApiInfo { Title = "SampleApi" });
-    options.EnableAnnotations();
-
-    // add JWT bearer
-    // add bearer token
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
-    {
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.Http,
-        Scheme = "Bearer"
-    });
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement()
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                },
-                Scheme = "oauth2",
-                Name = "Bearer",
-                In = ParameterLocation.Header
-            },
-            new List<string>()
-        }
-    });
+    options.AddMediaKiwiSwagger();
 });
 
 // add mediakiwi API
-services.AddMediaKiwiApi(connectionString, autoMapperConfig: c=>c.AddProfile<Sushi.MediaKiwi.SampleAPI.Service.Model.AutoMapperProfile>());
+services.AddMediaKiwiApi(defaultConnectionString: connectionString, 
+    azureAdConfig: config.GetSection("AzureAd"), 
+    autoMapperConfig: c=>c.AddProfile<Sushi.MediaKiwi.SampleAPI.Service.Model.AutoMapperProfile>());
 
 // add sample api depedencies
 services.AddSampleApiServices();
@@ -99,10 +43,9 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(options =>
-    {   
-        options.SwaggerEndpoint("../swagger/MediaKiwi/swagger.json", "MediaKiwi");
-        options.SwaggerEndpoint("../swagger/SampleApi/swagger.json", "SampleApi");
-        
+    {
+        options.AddMediaKiwiSwaggerUI();
+        options.SwaggerEndpoint("../swagger/SampleApi/swagger.json", "SampleApi");        
     });
 }
 
