@@ -34,6 +34,22 @@ steps:
       versioningScheme: 'off'
       verbosityPack: 'Normal'
   - task: DotNetCoreCLI@2
+    displayName: Pack Sushi.MediaKiwi.Services
+    inputs:
+      command: 'pack'
+      packagesToPack: 'src/Sushi.MediaKiwi.Services/*.csproj'
+      packDirectory: '$(Build.ArtifactStagingDirectory)/packages'
+      versioningScheme: 'off'
+      verbosityPack: 'Normal'
+  - task: DotNetCoreCLI@2
+    displayName: Pack Sushi.MediaKiwi.WebAPI
+    inputs:
+      command: 'pack'
+      packagesToPack: 'src/Sushi.MediaKiwi.WebAPI/*.csproj'
+      packDirectory: '$(Build.ArtifactStagingDirectory)/packages'
+      versioningScheme: 'off'
+      verbosityPack: 'Normal'
+  - task: DotNetCoreCLI@2
     displayName: Build Sample API
     inputs:
       command: "publish"
