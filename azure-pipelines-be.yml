@@ -25,6 +25,12 @@ steps:
         tests/Sushi.MediaKiwi.Services.UnitTests/*.csproj
         tests/Sushi.MediaKiwi.WebApi.UnitTests/*.csproj
   - task: DotNetCoreCLI@2
+    displayName: Pack Sushi.MediaKiwi.DAL
+    inputs:
+      command: 'pack'
+      packagesToPack: 'src/Sushi.MediaKiwi.DAL/*.csproj'
+      versioningScheme: 'off'
+  - task: DotNetCoreCLI@2
     displayName: Build Sample API
     inputs:
       command: "publish"
