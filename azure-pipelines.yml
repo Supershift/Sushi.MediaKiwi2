@@ -16,62 +16,82 @@ variables:
   buildConfiguration: "Release"
 
 steps:
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: "publish"
-      publishWebProjects: false
-      arguments: "src/Sushi.MediaKiwi.SampleAPI/Sushi.MediaKiwi.SampleAPI.csproj --configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)"
-      zipAfterPublish: true
-
+# Install Dependencies
   - task: NodeTool@0
+    displayName: "Install Node"
     inputs:
       versionSource: "spec"
       versionSpec: "18.x"
       checkLatest: true
-
+  
   - task: Npm@1
+    displayName: "Npm install on MediaKiwi.Vue"
     inputs:
       command: "ci"
       workingDir: "src/Sushi.MediaKiwi.Vue"
-    displayName: "npm install on MediaKiwi.Vue"
 
   - task: Npm@1
+    displayName: "Npm install on SampleWeb"
+    inputs:
+      command: "ci"
+      workingDir: "src/Sushi.MediaKiwi.SampleWeb/ClientApp"
+
+# Run Tests
+  - task: Npm@1
+    displayName: "Npm test on MediaKiwi.Vue"
+    inputs:
+      command: "custom"
+      customCommand: "run test"
+      workingDir: "src/Sushi.MediaKiwi.Vue"
+    continueOnError: true
+
+# Build and Pack mediakiwi-vue
+  - task: Npm@1
+    displayName: "Npm build on MediaKiwi.Vue"
     inputs:
       command: "custom"
       workingDir: "src/Sushi.MediaKiwi.Vue"
       customCommand: "run build:prd"
-    displayName: "npm build on MediaKiwi.Vue"
-    continueOnError: true
-
+  
   - task: Npm@1
+    displayName: "Npm pack on MediaKiwi.Vue"
     inputs:
-      command: "ci"
-      workingDir: "src/Sushi.MediaKiwi.SampleWeb/ClientApp"
-    displayName: "npm install on SampleWeb"
+      command: "custom"
+      workingDir: "src/Sushi.MediaKiwi.Vue"
+      customCommand: "pack"
+  
+  - task: CopyFiles@2
+    displayName: 'Copy archives to artifacts staging directory'
+    inputs:
+      contents: '*.tgz'
+      targetFolder: $(Build.ArtifactStagingDirectory)
 
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Mediakiwi Artifact'
+    inputs:
+      targetPath: $(Build.ArtifactStagingDirectory)
+      ArtifactName: package      
+      
+  
+# Build and Pack SampleWeb
   - task: Npm@1
+    displayName: "npm build SampleWeb"
     inputs:
       command: "custom"
       workingDir: "src/Sushi.MediaKiwi.SampleWeb/ClientApp"
       customCommand: "run build"
-    displayName: "npm build on SampleWeb"
 
   - task: CopyFiles@2
+    displayName: "Pack SampleWeb"
     inputs:
       SourceFolder: "src/Sushi.MediaKiwi.SampleWeb"
       Contents: |
         ClientApp/dist/**
         Function/**
       TargetFolder: "SampleWeb"
-    displayName: "Copy ClientApp/dist and Function to SampleWeb"
-
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: "$(Build.ArtifactStagingDirectory)"
-      ArtifactName: "drop"
-      publishLocation: "Container"
-
+    
   - task: PublishPipelineArtifact@1
+    displayName: "Publish SampleWeb Artifact"
     inputs:
       targetPath: "SampleWeb"
       artifact: "dropSampleWeb"
