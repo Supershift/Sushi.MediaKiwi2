@@ -46,12 +46,12 @@ steps:
         dist/
         package.json
         README.md
-      TargetFolder: '$(Build.ArtifactStagingDirectory)'
+      TargetFolder: '$(Build.ArtifactStagingDirectory)/package'
 
   - task: PublishBuildArtifacts@1
     displayName: "Publish packages artifact"
     inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/package'
       ArtifactName: 'packages'
       publishLocation: 'Container'
 
