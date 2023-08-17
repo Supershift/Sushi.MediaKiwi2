@@ -47,6 +47,7 @@ steps:
   
   - task: CopyFiles@2
     inputs:
+      SourceFolder: "src/Sushi.MediaKiwi.Vue"
       Contents: '*.tgz'
       TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
