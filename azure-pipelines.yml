@@ -54,5 +54,35 @@ steps:
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      ArtifactName: 'drop'
+      ArtifactName: 'packages'
       publishLocation: 'Container'
+
+# Build and Pack SampleWeb
+  - task: Npm@1
+    displayName: "Npm install on SampleWeb"
+    inputs:
+      command: "ci"
+      workingDir: "src/Sushi.MediaKiwi.SampleWeb/ClientApp"
+
+  - task: Npm@1
+    displayName: "npm build SampleWeb"
+    inputs:
+      command: "custom"
+      workingDir: "src/Sushi.MediaKiwi.SampleWeb/ClientApp"
+      customCommand: "run build"
+
+  - task: CopyFiles@2
+    displayName: "Pack SampleWeb"
+    inputs:
+      SourceFolder: "src/Sushi.MediaKiwi.SampleWeb"
+      Contents: |
+        ClientApp/dist/**
+        Function/**
+      TargetFolder: "SampleWeb"
+
+  - task: PublishPipelineArtifact@1
+    displayName: "Publish SampleWeb Artifact"
+    inputs:
+      targetPath: "SampleWeb"
+      artifact: "drop"
+      publishLocation: "pipeline"
