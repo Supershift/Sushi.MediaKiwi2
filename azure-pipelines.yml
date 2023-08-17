@@ -30,12 +30,6 @@ steps:
       command: "ci"
       workingDir: "src/Sushi.MediaKiwi.Vue"
 
-  - task: Npm@1
-    displayName: "Npm install on SampleWeb"
-    inputs:
-      command: "ci"
-      workingDir: "src/Sushi.MediaKiwi.SampleWeb/ClientApp"
-
   # Build and Pack mediakiwi-vue
   - task: Npm@1
     displayName: "Npm build on MediaKiwi.Vue"
