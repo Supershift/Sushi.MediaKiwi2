@@ -49,7 +49,9 @@ steps:
     displayName: "Copy packge to ArtifactStagingDirectory"
     inputs:
       SourceFolder: "src/Sushi.MediaKiwi.Vue"
-      Contents: '*.tgz'
+      Contents: |
+        *.tgz
+        .npmrc
       TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
   - task: PublishBuildArtifacts@1
