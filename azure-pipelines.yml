@@ -46,12 +46,14 @@ steps:
       customCommand: "pack"
   
   - task: CopyFiles@2
+    displayName: "Copy packge to ArtifactStagingDirectory"
     inputs:
       SourceFolder: "src/Sushi.MediaKiwi.Vue"
       Contents: '*.tgz'
       TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
   - task: PublishBuildArtifacts@1
+    displayName: "Publish packages artifact"
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
       ArtifactName: 'packages'
@@ -72,7 +74,7 @@ steps:
       customCommand: "run build"
 
   - task: CopyFiles@2
-    displayName: "Pack SampleWeb"
+    displayName: "Copy ClientApp/Function to target"
     inputs:
       SourceFolder: "src/Sushi.MediaKiwi.SampleWeb"
       Contents: |
@@ -81,7 +83,7 @@ steps:
       TargetFolder: "SampleWeb"
 
   - task: PublishPipelineArtifact@1
-    displayName: "Publish SampleWeb Artifact"
+    displayName: "Publish SampleWeb artifact"
     inputs:
       targetPath: "SampleWeb"
       artifact: "drop"
