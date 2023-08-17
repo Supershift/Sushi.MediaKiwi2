@@ -43,12 +43,12 @@ steps:
     inputs:
       command: "custom"
       workingDir: "src/Sushi.MediaKiwi.Vue"
-      customCommand: "pack"
+      customCommand: "pack --pack-destination='./package'"
   
   - task: CopyFiles@2
     inputs:
-      SourceFolder: '/'
-      Contents: '*.tgz'
+      SourceFolder: "package"
+      Contents: '*'
       TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
   - task: PublishBuildArtifacts@1
