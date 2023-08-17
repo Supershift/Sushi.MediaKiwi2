@@ -43,7 +43,7 @@ steps:
     inputs:
       command: "custom"
       workingDir: "src/Sushi.MediaKiwi.Vue"
-      customCommand: "pack --pack-destination='./package'"
+      customCommand: "pack --pack-destination=package"
   
   - task: CopyFiles@2
     inputs:
