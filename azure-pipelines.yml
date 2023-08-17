@@ -37,27 +37,15 @@ steps:
       command: "custom"
       workingDir: "src/Sushi.MediaKiwi.Vue"
       customCommand: "run build:prd"
-
-  - task: Npm@1
-    displayName: "Npm pack on MediaKiwi.Vue"
-    inputs:
-      command: "custom"
-      workingDir: "src/Sushi.MediaKiwi.Vue"
-      customCommand: "pack"
   
-  - task: ExtractFiles@1
-    inputs:
-      archiveFilePatterns: '**/*.tgz'
-      destinationFolder: 'src/Sushi.MediaKiwi.Vue/package'
-      cleanDestinationFolder: true
-      overwriteExistingFiles: false
-
   - task: CopyFiles@2
     displayName: "Copy packge to ArtifactStagingDirectory"
     inputs:
-      SourceFolder: "src/Sushi.MediaKiwi.Vue/package"
+      SourceFolder: "src/Sushi.MediaKiwi.Vue"
       Contents: |
-        **/*.tar
+        dist/**
+        package.json
+        README.md
       TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
   - task: PublishBuildArtifacts@1
