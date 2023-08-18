@@ -1,6 +1,6 @@
 {
   "name": "@supershift/mediakiwi-vue",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Vue 3 Library for the MediaKiwi Portal Builder",
   "scripts": {
     "build": "vite build --mode development",
@@ -15,20 +15,6 @@
     "lint:error": "eslint src --quiet",
     "stylelint:all": "stylelint src/**/*.scss"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Supershift/Sushi.MediaKiwi2.git",
-    "directory": "src/Sushi.MediaKiwi.Vue"
-  },
-  "license": "MIT",
-  "keywords": [
-    "mediakiwi",
-    "ui framework",
-    "portal",
-    "builder",
-    "vue",
-    "vuetify"
-  ],
   "type": "module",
   "files": [
     "dist"
@@ -92,5 +78,34 @@
     "vue-tsc": "^1.6.5",
     "vuetify": "^3.3.6",
     "webfontloader": "^1.6.28"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Supershift/Sushi.MediaKiwi2.git",
+    "directory": "src/Sushi.MediaKiwi.Vue"
+  },
+  "author": {
+    "name": "Supershift",
+    "url": "https://www.supershift.nl/"
+  },
+  "contributors": [
+    {
+      "name": "Mark de Vries"
+    },
+    {
+      "name": "Jean=Paul Kommers"
+    },
+    {
+      "name": "Luigi Arends"
+    }
+  ],
+  "license": "MIT",
+  "keywords": [
+    "mediakiwi",
+    "ui framework",
+    "portal",
+    "builder",
+    "vue",
+    "vuetify"
+  ]
 }
