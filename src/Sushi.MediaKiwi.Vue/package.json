@@ -88,17 +88,6 @@
     "name": "Supershift",
     "url": "https://www.supershift.nl/"
   },
-  "contributors": [
-    {
-      "name": "Mark de Vries"
-    },
-    {
-      "name": "Jean=Paul Kommers"
-    },
-    {
-      "name": "Luigi Arends"
-    }
-  ],
   "license": "MIT",
   "keywords": [
     "mediakiwi",
