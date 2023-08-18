@@ -39,6 +39,12 @@ steps:
       workingDir: "src/Sushi.MediaKiwi.Vue"
     continueOnError: true
 
+  - task: PublishTestResults@2
+    displayName: Publish test results
+    inputs:
+      testResultsFormat: "JUnit"
+      testResultsFiles: "**/TEST-*.xml"
+
   - task: Npm@1
     displayName: "Npm build on MediaKiwi.Vue"
     inputs:
