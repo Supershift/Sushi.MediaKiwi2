@@ -59,7 +59,6 @@ steps:
       Contents: |
         dist/**
         package.json
-        .npmrc
         README.md
       TargetFolder: "$(Build.ArtifactStagingDirectory)"
 
