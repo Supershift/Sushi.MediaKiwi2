@@ -6,10 +6,8 @@ import { container } from "tsyringe";
 import { mountAsync } from "@test/utils/mount";
 
 // mock libraries
-vi.mock("@azure/msal-browser");
 vi.mock("i18next");
-vi.mock("vue-router");
-vi.mock("vuetify");
+vi.mock("@azure/msal-browser");
 
 describe("MkMoneyValue", () => {
   // Declare the props to be used in all tests
