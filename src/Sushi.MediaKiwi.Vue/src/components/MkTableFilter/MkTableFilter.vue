@@ -186,7 +186,6 @@
       </v-row>
     </v-container>
   </v-card>
-  <v-divider :thickness="20" class="border-opacity-0" />
 </template>
 
 <stlye lang="scss" scoped>
