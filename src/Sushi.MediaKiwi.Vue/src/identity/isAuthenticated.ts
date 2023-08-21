@@ -12,7 +12,7 @@ export async function tryIsAuthenticated(interactionType: InteractionType, login
   // If your application uses redirects for interaction, handleRedirectPromise must be called and awaited on each page load before determining if a user is signed in or not
   return identity.msalInstance
     .handleRedirectPromise()
-    .then(() => {      
+    .then(() => {
       if (isAuthenticated()) {
         return true;
       }
