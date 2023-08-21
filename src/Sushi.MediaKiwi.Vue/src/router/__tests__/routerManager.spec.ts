@@ -9,6 +9,8 @@ import { Component } from "vue";
 import { type NavigationItem, type View } from "../../models";
 import { Configuration } from "@azure/msal-browser";
 import * as store from "../../stores/index";
+import { setActivePinia } from "pinia";
+import { createTestingPinia } from "@pinia/testing";
 
 // mock libraries
 vi.mock("../routeGenerator");
@@ -36,6 +38,7 @@ describe("RouterManager", () => {
   beforeEach(() => {
     container.reset();
     vi.clearAllMocks();
+    setActivePinia(createTestingPinia());
   });
   it("Should call store on initialize", async () => {
     const router = createRouter(<RouterOptions>{

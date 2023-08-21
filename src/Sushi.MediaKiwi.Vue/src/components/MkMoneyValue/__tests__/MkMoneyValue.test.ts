@@ -6,10 +6,8 @@ import { container } from "tsyringe";
 import { mountAsync } from "@test/utils/mount";
 
 // mock libraries
-vi.mock("@azure/msal-browser");
 vi.mock("i18next");
-vi.mock("vue-router");
-vi.mock("vuetify");
+vi.mock("@azure/msal-browser");
 
 describe("MkMoneyValue", () => {
   // Declare the props to be used in all tests
@@ -64,7 +62,7 @@ describe("MkMoneyValue", () => {
       const wrapper = await mountAsync(MkMoneyValueComponent, props);
 
       // Get the input element and cast it to HTMLInputElement to access the value
-      const inputElement = wrapper.find(".v-field__field input[type='number'].v-field__input").element as HTMLInputElement;
+      const inputElement = wrapper.find(".v-field__field input[type='number']").element as HTMLInputElement;
 
       // Check that the element is rendered and contains the currency
       expect(inputElement).toBeDefined();
