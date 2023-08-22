@@ -11,7 +11,10 @@ namespace Sushi.MediaKiwi.Services.Model
     /// Represents a user role as registered in the identity provider.
     /// </summary>
     public class Role
-    {   
-        public string Id { get; set; }
+    {
+        /// <summary>
+        /// Unique identifier for the role as registered in the identity provider.
+        /// </summary>
+        public string Id { get; set; } = null!;
     }
 }

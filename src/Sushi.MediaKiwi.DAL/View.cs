@@ -8,10 +8,19 @@ using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.DAL
 {
+    /// <summary>
+    /// Represents a view in the application.
+    /// </summary>
     public class View
     {
+        /// <summary>
+        /// Represents the mapping between <see cref="View"/> and the database.
+        /// </summary>
         public class ViewMap : DataMap<View>
         {
+            /// <summary>
+            /// Creates a new instance of <see cref="ViewMap"/>.
+            /// </summary>
             public ViewMap()
             {
                 Table("mk_Views");                
@@ -22,17 +31,29 @@ namespace Sushi.MediaKiwi.DAL
                 Map(x => x.ParameterName, "ParameterName").SqlType(SqlDbType.VarChar);
             }
         }
-        
+
         /// <summary>
         /// Gets or sets a human-readable unique ID.
         /// </summary>
-        public string Id { get; set; }                
+        public string Id { get; set; } = null!;
         /// <summary>
         /// Gets or sets the key of the Vue component implementing this view, e.g. ./views/myView.vue, MyKey
         /// </summary>
-        public string ComponentKey { get; set; }
-        public string Name { get; set; }        
-        public int SectionId { get; set; }        
-        public string? ParameterName { get; set; }
+        public string ComponentKey { get; set; } = null!;
+
+        /// <summary>
+        /// Name for this view.
+        /// </summary>
+        public string Name { get; set; } = null!;
+
+        /// <summary>
+        /// Section to which this view belongs.
+        /// </summary>
+        public int SectionId { get; set; }
+
+        /// <summary>
+        /// Name of the URL parameter required by this view.
+        /// </summary>
+        public string? ParameterName { get; set; } = null!;
     }
 }

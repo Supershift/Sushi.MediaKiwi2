@@ -31,7 +31,7 @@ namespace Sushi.MediaKiwi.WebAPI
         /// </summary>        
         /// <returns></returns>
         public static IServiceCollection AddMediaKiwiApi(this IServiceCollection services, string defaultConnectionString,
-            IConfiguration azureAdConfig,
+            IConfiguration? azureAdConfig,
             Action<MicroOrmConfigurationBuilder>? microOrmConfig = null,
             Action<IMapperConfigurationExpression>? autoMapperConfig = null)
         {
@@ -48,7 +48,9 @@ namespace Sushi.MediaKiwi.WebAPI
             services.TryAddTransient<Sorting.SortingRetriever>();
 
             // add authentication
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddMicrosoftIdentityWebApi(azureAdConfig);
+            var authenticationBuilder = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
+            if(azureAdConfig != null)
+                authenticationBuilder.AddMicrosoftIdentityWebApi(azureAdConfig);
 
             return services;
         }
