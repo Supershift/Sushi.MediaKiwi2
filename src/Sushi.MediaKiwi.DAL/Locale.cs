@@ -7,10 +7,19 @@ using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.DAL
 {
+    /// <summary>
+    /// Represents a locale used in localization.
+    /// </summary>
     public record Locale
     {
+        /// <summary>
+        /// Represents the mapping between a <see cref="Locale"/> and the database.
+        /// </summary>
         public class LocaleMap : DataMap<Locale>
         {
+            /// <summary>
+            /// Creates a new instance of <see cref="LocaleMap"/>
+            /// </summary>
             public LocaleMap()
             {
                 Table("mk_Locales");
@@ -20,10 +29,25 @@ namespace Sushi.MediaKiwi.DAL
                 Map(x => x.IsDefault, "IsDefault");
             }
         }
-        
-        public string Id { get; set; }
-        public string Name { get; set; }
+
+        /// <summary>
+        /// Unique id of the locale, following ISO standards, e.g. en, jp, nl-NL, en-US
+        /// </summary>
+        public string Id { get; set; } = null!;
+
+        /// <summary>
+        /// Display name of the locale in its own language.
+        /// </summary>
+        public string Name { get; set; } = null!;
+
+        /// <summary>
+        /// If set to true, this locale can be used.
+        /// </summary>
         public bool IsEnabled { get; set; }
+        
+        /// <summary>
+        /// If set to true, this is the default locale.
+        /// </summary>
         public bool IsDefault { get; set; }
     }
 }

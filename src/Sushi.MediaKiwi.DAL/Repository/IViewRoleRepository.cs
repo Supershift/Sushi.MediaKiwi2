@@ -27,8 +27,7 @@ namespace Sushi.MediaKiwi.DAL.Repository
 
         /// <summary>
         /// Inserts a role assignment.
-        /// </summary>
-        /// <param name="viewRoles"></param>
+        /// </summary>        
         /// <returns></returns>
         Task InsertAsync(ViewRole viewRole);
     }

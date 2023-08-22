@@ -44,7 +44,7 @@ namespace Sushi.MediaKiwi.DAL.Sorting
         /// </summary>
         /// <param name="sortField"></param>
         /// <param name="direction"></param>
-        public SortValues(Expression<Func<T, object>> sortField, SortDirection direction) : base(sortField, direction)
+        public SortValues(Expression<Func<T, object?>> sortField, SortDirection direction) : base(sortField, direction)
         {
             
         }
@@ -52,6 +52,6 @@ namespace Sushi.MediaKiwi.DAL.Sorting
         /// <summary>
         /// Gets the field to sort by.
         /// </summary>
-        public new Expression<Func<T, object>> SortField => (Expression<Func<T, object>>)base.SortField;
+        public new Expression<Func<T, object?>> SortField => (Expression<Func<T, object?>>)base.SortField;
     }
 }

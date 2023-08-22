@@ -7,25 +7,49 @@ using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.DAL
 {
+    /// <summary>
+    /// Represents an item in the navigation tree
+    /// </summary>
     public class NavigationItem
     {
+        /// <summary>
+        /// Represents the mapping between <see cref="NavigationItem"/> and the database
+        /// </summary>
         public class NavigationItemMap : DataMap<NavigationItem>
         {
+            /// <summary>
+            /// Creates a new instance of <see cref="NavigationItemMap"/>
+            /// </summary>
             public NavigationItemMap()
             {
                 Table("mk_NavigationItems");
                 Id(x => x.Id, "NavigationItemID");
-                Map(x => x.Name, "Name");                
+                Map(x => x.Name, "Name");
                 Map(x => x.SectionId, "SectionID");
                 Map(x => x.ParentNavigationItemId, "ParentNavigationItemID");
                 Map(x => x.ViewId, "ViewID").SqlType(System.Data.SqlDbType.VarChar);
             }
         }
-        
+
+        /// <summary>
+        /// Unique identifier for the item.
+        /// </summary>
         public int Id { get; set; }
-        public string Name { get; set; }        
-        public int SectionId { get; set; }  
+        /// <summary>
+        /// Default display name for the item.
+        /// </summary>
+        public string Name { get; set; } = null!;
+        /// <summary>
+        /// Section to which this item belongs.
+        /// </summary>
+        public int SectionId { get; set; }
+        /// <summary>
+        /// If set, parent of the item in the tree.
+        /// </summary>
         public int? ParentNavigationItemId { get; set; }
-        public string? ViewId { get; set; }        
+        /// <summary>
+        /// If set, id of the view to which this item navigates.
+        /// </summary>
+        public string? ViewId { get; set; } = null!;
     }
 }

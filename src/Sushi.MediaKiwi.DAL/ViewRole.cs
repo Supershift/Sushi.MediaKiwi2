@@ -12,8 +12,14 @@ namespace Sushi.MediaKiwi.DAL
     /// </summary>
     public class ViewRole
     {
+        /// <summary>
+        /// Represents the mapping between <see cref="ViewRole"/> and the database.
+        /// </summary>
         public class ViewRoleMap : DataMap<ViewRole>
         {
+            /// <summary>
+            /// Creates a new instance of <see cref="ViewRoleMap"/>.
+            /// </summary>
             public ViewRoleMap()
             {
                 Table("mk_ViewsRoles");
@@ -21,8 +27,15 @@ namespace Sushi.MediaKiwi.DAL
                 Id(x => x.Role, "RoleID").Assigned().SqlType(System.Data.SqlDbType.VarChar);
             }
         }
-        
-        public string ViewId { get; set; }
-        public string Role { get; set; }
+
+        /// <summary>
+        /// View to which the role has access.
+        /// </summary>
+        public string ViewId { get; set; } = null!;
+
+        /// <summary>
+        /// Role that has access to the view.
+        /// </summary>
+        public string Role { get; set; } = null!;
     }
 }

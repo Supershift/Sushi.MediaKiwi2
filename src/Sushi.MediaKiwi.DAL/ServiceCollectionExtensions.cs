@@ -10,8 +10,18 @@ using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.DAL
 {
+    /// <summary>
+    /// Extends <see cref="IServiceCollection"/> with methods to add MediaKiwi DAL.
+    /// </summary>
     public static class ServiceCollectionExtensions
     {
+        /// <summary>
+        /// Adds dependencies for MediaKiwi DAL to the service collection.
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="defaultConnectionString"></param>
+        /// <param name="config"></param>
+        /// <returns></returns>
         public static IServiceCollection AddMediaKiwiDAL(this IServiceCollection services, string defaultConnectionString, Action<MicroOrmConfigurationBuilder>? config = null)
         {
             services.AddMicroORM(defaultConnectionString, config);

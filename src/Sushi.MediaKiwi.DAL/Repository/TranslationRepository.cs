@@ -89,12 +89,11 @@ WHERE NOT EXISTS
         }
 
         /// <inheritdoc/>
-        public async Task<Translation> GetAsync(string localeId, string @namespace, string key)
+        public async Task<Translation?> GetAsync(string localeId, string @namespace, string key)
         {
             var query = _connector.CreateQuery();
             query.Add(x => x.LocaleId, localeId);
-            
-                query.Add(x => x.Namespace, @namespace);
+            query.Add(x => x.Namespace, @namespace);
             query.Add(x => x.Key, key);
             var result = await _connector.GetFirstAsync(query);
             return result;
