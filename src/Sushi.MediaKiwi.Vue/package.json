@@ -25,7 +25,8 @@
   "exports": {
     ".": {
       "import": "./dist/mediakiwi-vue.es.js",
-      "require": "./dist/mediakiwi-vue.umd.js"
+      "require": "./dist/mediakiwi-vue.umd.js",
+      "types": "./dist/main.d.ts"
     },
     "./styles": {
       "import": "./dist/mediakiwi-vue.css",
