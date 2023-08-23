@@ -31,7 +31,7 @@ namespace Sushi.MediaKiwi.WebAPI
         /// </summary>        
         /// <returns></returns>
         public static IServiceCollection AddMediaKiwiApi(this IServiceCollection services, string defaultConnectionString,
-            IConfiguration? azureAdConfig,
+            IConfigurationSection? azureAdConfig,
             Action<MicroOrmConfigurationBuilder>? microOrmConfig = null,
             Action<IMapperConfigurationExpression>? autoMapperConfig = null)
         {
@@ -49,9 +49,9 @@ namespace Sushi.MediaKiwi.WebAPI
 
             // add authentication
             var authenticationBuilder = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
-            if(azureAdConfig != null)
+            if (azureAdConfig != null)
                 authenticationBuilder.AddMicrosoftIdentityWebApi(azureAdConfig);
-
+            
             return services;
         }
 
@@ -64,10 +64,12 @@ namespace Sushi.MediaKiwi.WebAPI
         {
             // add documentation
             var apiFilename = $"{Assembly.GetAssembly(typeof(SectionController))?.GetName().Name}.xml";
-            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, apiFilename));
+            if (File.Exists(apiFilename))
+                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, apiFilename));
 
             var webModelFilename = $"{Assembly.GetAssembly(typeof(SectionService))?.GetName().Name}.xml";
-            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, webModelFilename));
+            if (File.Exists(webModelFilename))
+                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, webModelFilename));
 
             // add paging parameters
             options.OperationFilter<PagingSwaggerFilter>();
