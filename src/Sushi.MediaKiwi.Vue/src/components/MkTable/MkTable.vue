@@ -5,8 +5,10 @@
   import { ref } from "vue";
   import MkTableFilter from "@/components/MkTableFilter/MkTableFilter.vue";
   import MkTableView from "./MkTableView.vue";
-  import MkTableToolbarVue from "./MkTableToolbar.vue";
-  import MkTableAction from "@/components/MkTableAction/MkTableAction.vue";
+
+  import MkBulkActionBar from "@/components/MkBulkActionBar/MkBulkActionBar.vue";
+  import MkToolbar from "@/components/MkToolbar/MkToolbar.vue";
+
   import MkPagination from "@/components/MkPagination/MkPagination.vue";
   import { IListResult, IPagingResult } from "@/models";
   import { useSnackbarStore } from "@/stores/snackbar";
@@ -68,11 +70,11 @@
   // define slots
   const slots = defineSlots<{
     header?: (props: unknown) => any;
-    /** Visible action slot for the MkTableAction bar */
+    /** Visible action slot for the MkToolbar bar */
     actions?: (props: unknown) => any;
-    /** Action slot for the MkTableAction bar */
+    /** Action slot for the MkToolbar bar */
     menuActions?: (props: unknown) => any;
-    /** Action slot for the MkTableToolbar */
+    /** Action slot for the MkToolbar */
     selectionActions?: (props: unknown) => any;
     footer?: (props: unknown) => any;
   }>();
@@ -154,14 +156,14 @@
 
     <template v-if="(slots.actions || slots.menuActions || props.new || props.title) && props.itemViewId">
       <v-divider />
-      <MkTableAction :item-view-id="props.itemViewId" :new="props.new" :title="props.title">
+      <MkToolbar :item-view-id="props.itemViewId" :new="props.new" :title="props.title">
         <template v-if="slots.actions" #actions>
           <slot name="actions"></slot>
         </template>
         <template v-if="slots.menuActions" #menuActions>
           <slot name="menuActions"></slot>
         </template>
-      </MkTableAction>
+      </MkToolbar>
     </template>
 
     <template v-if="filters">
@@ -170,11 +172,11 @@
 
     <template v-if="checkbox">
       <v-expand-transition>
-        <MkTableToolbarVue v-if="selection?.length" :selection="selection" @click:close="mkTableViewComponent.clearSelection">
+        <MkBulkActionBar v-if="selection?.length" :selection="selection" @click:close="mkTableViewComponent.clearSelection">
           <template #selectionActions>
             <slot name="selectionActions"></slot>
           </template>
-        </MkTableToolbarVue>
+        </MkBulkActionBar>
       </v-expand-transition>
     </template>
 
