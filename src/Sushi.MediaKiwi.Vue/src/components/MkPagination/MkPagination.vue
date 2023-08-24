@@ -10,6 +10,7 @@
   import { usePagination } from "@/composables/usePagination";
   import { watch } from "vue";
   import { computed } from "vue";
+  import { mdiConsoleNetworkOutline } from "@mdi/js";
 
   // define properties
   const props = defineProps<{
@@ -47,7 +48,11 @@
       const { totalCount, resultCount } = props.pagingResult;
       if (totalCount && resultCount) {
         const start = pageSize.value * pageIndex.value;
-        const end = start + resultCount;
+        let end = start + resultCount;
+
+        if (end > totalCount) {
+          end = totalCount;
+        }
 
         // Add 1 to start to begin at 1 instead of 0
         return { start: start + 1, end, total: totalCount };
