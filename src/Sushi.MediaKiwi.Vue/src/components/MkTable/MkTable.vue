@@ -40,8 +40,6 @@
       selection?: unknown[];
       /** Displays new item button if set to true and itemViewId has a value */
       new?: boolean;
-      /** Make each row in the table selectable. */
-      checkbox?: boolean;
       /** Callback invoked when the component needs new data, i.e. a filter changes, the current page changes, etc. */
       onLoad?: () => Promise<void>;
       /** Title specificly for the current table */
@@ -83,6 +81,10 @@
   // define reactive variables
   const inProgress = ref(false);
   const mkTableViewComponent = ref();
+
+  const showSelectionCheckbox = computed<boolean>(() => {
+    return props.selection ? true : false;
+  });
 
   // Deconstruct the ApiResult or paging prop to an ITableMapPaging
   const pagingResult = computed<ITableMapPaging | undefined | null>(() => {
@@ -168,7 +170,7 @@
       <MkTableFilter :model-value="filters" @update:model-value="filterChanged" />
     </template>
 
-    <template v-if="checkbox">
+    <template v-if="showSelectionCheckbox">
       <v-expand-transition>
         <MkTableToolbarVue v-if="selection?.length" :selection="selection" @click:close="mkTableViewComponent.clearSelection">
           <template #selectionActions>
@@ -185,7 +187,7 @@
       :item-view-id="itemViewId"
       :sorting="sorting"
       :selection="selection"
-      :checkbox="checkbox"
+      :checkbox="showSelectionCheckbox"
       class="mk-table"
       :pagination-mode="paginationMode"
       @click:row="(e) => emit('click:row', e)"
