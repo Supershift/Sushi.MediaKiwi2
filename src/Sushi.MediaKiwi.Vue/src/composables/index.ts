@@ -8,3 +8,4 @@ export * from "./useIcons";
 export * from "./useColors";
 export * from "./useTypography";
 export * from "./useElevations";
+export * from "./useKeyboardShortcuts";
