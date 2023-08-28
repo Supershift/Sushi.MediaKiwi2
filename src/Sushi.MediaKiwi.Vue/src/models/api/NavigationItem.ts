@@ -22,4 +22,6 @@ export interface NavigationItem {
   leaf?: NavigationItem;
   /** view to load when this navigation item is activated. If empty, the item is a folder. */
   view?: View;
+  /** Set to true if this is a dynamic item with its own children. */
+  hasItemNavigation?: boolean;
 }

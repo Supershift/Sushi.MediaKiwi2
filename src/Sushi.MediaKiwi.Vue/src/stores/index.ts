@@ -83,6 +83,8 @@ export const useMediakiwiStore = defineStore({
         });
         // add leaf node (dynamic items without children have a different leaf node)
         this.setLeafNodes(this.navigationItems);
+        // set 'has item navigation'
+        this.setHasItemNavigation(this.navigationItems);
       }
     },
     setRoles(payload: ListResult<Role>) {
@@ -136,6 +138,14 @@ export const useMediakiwiStore = defineStore({
     setNavigaiontItemsView(navigationItems: Array<NavigationItem>) {
       navigationItems.forEach((item) => {
         item.view = this.views.find((x) => x.id === item.viewId);
+      });
+    },
+    setHasItemNavigation(navigationItems: Array<NavigationItem>) {
+      // if an item is dynamic AND it has children, then it has item navigation
+      navigationItems.forEach((item) => {
+        if (item?.view?.parameterName && item.children) {
+          item.hasItemNavigation = true;
+        }
       });
     },
     registerIcons(options: VuetifyOptions) {

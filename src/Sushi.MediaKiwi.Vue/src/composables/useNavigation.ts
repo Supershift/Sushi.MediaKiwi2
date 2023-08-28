@@ -80,22 +80,22 @@ export function useNavigation() {
 
   /**
    *
-   * @returns The current root item. The root item is the first dynamic item in the tree which is also a leaf node or undefined if no such item exists.
+   * @returns The current root item. The root item is the first dynamic item in the tree which has item navigation or it is undefined if no such item exists.
    */
   function determineCurrentRoootItem(): NavigationItem | undefined {
     // go up the tree untill a dynamic item which is its own leaf node is found
     let result: NavigationItem | undefined = undefined;
     let candidate: NavigationItem | undefined = currentNavigationItem.value;
     while (candidate && !result) {
-      if (candidate.view?.parameterName && candidate.leaf?.id == candidate.id) {
-        // we have found a dynamic route which is a leaf node
+      console.log(candidate);
+      if (candidate.hasItemNavigation) {
         result = candidate;
       } else {
         if (candidate.parent) {
           // get parent and use it as next candidate
           candidate = candidate.parent;
         } else {
-          // parent is undefined, we have reached the top of the tree
+          // if parent is undefined, we have reached the top of the tree
           candidate = undefined;
           result = candidate;
         }

@@ -32,9 +32,11 @@
   function getChildren() {
     // get current root navigation item
     const rootNode = navigation.currentRootItem.value;
+
     if (rootNode) {
-      // get all children for navigation item
+      // get all children for navigation item + the navigation item itself
       const result = navigation.getChildren(rootNode);
+      result.unshift(rootNode);
       return result;
     } else {
       // we are on the root level, so return all root items for current section
@@ -46,6 +48,14 @@
 <template>
   <v-navigation-drawer absolute class="pa-3">
     <v-list open-strategy="single" class="pa-0">
+      <v-list-item
+        v-if="navigation.currentRootItem.value?.parent"
+        title="Back"
+        :exact="true"
+        rounded="pill"
+        class="mb-2"
+        @click.stop="navigation.navigateTo(navigation.currentRootItem.value.parent)"
+      />
       <mk-navigation-item v-for="item in children" :key="item.id" :navigation-item="item" :all-items="allNavigationItems"></mk-navigation-item>
     </v-list>
   </v-navigation-drawer>
