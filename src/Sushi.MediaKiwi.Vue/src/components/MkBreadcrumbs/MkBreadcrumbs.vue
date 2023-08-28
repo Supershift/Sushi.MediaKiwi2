@@ -77,6 +77,7 @@
 <style lang="scss" scoped>
   @use "sass:map";
   @use "vuetify/settings" as vuetify;
+  @use "@/styles/abstracts";
 
   @media #{map.get(vuetify.$display-breakpoints, "md-and-down")} {
     .breadcrumb-title-container {
@@ -92,6 +93,8 @@
     justify-content: flex-start;
 
     .v-btn {
+      @include abstracts.typography("title", "large");
+
       &:not(.v-btn--active) {
         font-weight: 400;
       }
