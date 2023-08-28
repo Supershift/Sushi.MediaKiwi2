@@ -126,15 +126,14 @@
 </script>
 
 <template>
-  <v-divider />
-  <v-card class="mk-table-filter" variant="flat" rounded="10" color="surface">
+  <v-card class="mk-table-filter" variant="flat" rounded="10" color="surface1">
     <v-container>
       <v-row class="pb-2">
         <template v-if="modelValue">
           <v-menu v-model="menu" :close-on-content-click="false" location="end" colo>
             <!-- Button -->
             <template #activator="args">
-              <v-btn class="mt-1 ml-1" v-bind="args.props" color="primary" variant="plain" :icon="IconsLibrary.filterVariant"> </v-btn>
+              <v-btn class="mt-1 ml-1" v-bind="args.props" color="on-surface1" variant="plain" :icon="IconsLibrary.filterVariant"> </v-btn>
             </template>
 
             <!-- context menu -->
@@ -180,6 +179,7 @@
             readonly
             density="compact"
             class="mk-table-filter__input mx-2"
+            color="on-surface1"
             @click="openMenu"
           ></v-text-field>
         </template>
@@ -189,13 +189,6 @@
 </template>
 
 <stlye lang="scss" scoped>
-.v-card--variant-flat {
-  &.mk-table-filter {
-    background: none;
-    color: rgb(var(--v-theme-on-surface-variant));
-  }
-}
-
 .v-input .v-field__input {
   --v-field-padding-top: 4px;
 }

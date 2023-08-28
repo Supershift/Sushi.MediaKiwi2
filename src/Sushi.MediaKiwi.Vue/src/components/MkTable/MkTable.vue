@@ -153,7 +153,6 @@
     <slot name="header"></slot>
 
     <template v-if="(slots.actions || slots.menuActions || props.new || props.title) && props.itemViewId">
-      <v-divider />
       <MkTableAction :item-view-id="props.itemViewId" :new="props.new" :title="props.title">
         <template v-if="slots.actions" #actions>
           <slot name="actions"></slot>

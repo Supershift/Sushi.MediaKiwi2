@@ -4,7 +4,7 @@ import { lightThemeDefinition } from "./light";
 
 export const themeComfiguration: VuetifyOptions = {
   theme: {
-    defaultTheme: "dark",
+    defaultTheme: "light",
     themes: {
       dark: darkThemeDefinition,
       light: lightThemeDefinition,
