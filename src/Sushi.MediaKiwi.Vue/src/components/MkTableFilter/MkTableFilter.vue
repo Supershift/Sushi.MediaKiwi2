@@ -126,7 +126,7 @@
 </script>
 
 <template>
-  <v-card class="mk-table-filter" variant="flat" rounded="10" color="surface1">
+  <v-card class="mk-table-filter mb-4" variant="flat" rounded="10" color="surface1">
     <v-container>
       <v-row class="pb-2">
         <template v-if="modelValue">
