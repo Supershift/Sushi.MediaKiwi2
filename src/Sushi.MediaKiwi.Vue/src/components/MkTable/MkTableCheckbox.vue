@@ -6,11 +6,11 @@
   }>();
 
   const emit = defineEmits<{
-    (e: "update:isSelected", value: boolean): void;
+    (e: "update:selected", value: boolean): void;
   }>();
 
   function selectChanged(selectedValue: boolean) {
-    emit("update:isSelected", selectedValue);
+    emit("update:selected", selectedValue);
   }
 
   const value = ref(props.isSelected);
@@ -23,5 +23,11 @@
   );
 </script>
 <template>
-  <v-checkbox v-model="value" :indeterminate="props.isIndeterminate" :hide-details="true" density="comfortable" @update:model-value="selectChanged"></v-checkbox>
+  <v-checkbox
+    v-model="value"
+    :indeterminate="props.isIndeterminate"
+    :hide-details="true"
+    density="comfortable"
+    @update:model-value="selectChanged"
+  ></v-checkbox>
 </template>

@@ -3,7 +3,7 @@
   import { Hotel } from "@/models/Hotel";
   import { CountryConnector } from "@/services/CountryConnector";
   import { HotelConnector } from "@/services/HotelConnector";
-  import { IconsLibrary } from "@supershift/mediakiwi-vue";
+  import { IconsLibrary, Paging } from "@supershift/mediakiwi-vue";
 
   import {
     ListResult,
@@ -26,7 +26,7 @@
   const { formatDateTime, t } = await useI18next();
 
   // define reactive variables
-  const currentPage = ref(0);
+  const currentPagination = ref<Paging>({});
   const hotels = ref<ListResult<Hotel>>();
   const countries = ref<Country[]>();
 
@@ -71,7 +71,7 @@
   // load data
   async function LoadData() {
     hotels.value = await connector.GetAllAsync(
-      { pageIndex: currentPage.value },
+      currentPagination.value,
       filters.value.countryCode.selectedValue?.value,
       filters.value.isActive.selectedValue?.value
     );
@@ -90,7 +90,7 @@
 
 <template>
   <mk-table
-    v-model:current-page="currentPage"
+    v-model:current-pagination="currentPagination"
     v-model:filters="filters"
     new
     :api-result="hotels"
