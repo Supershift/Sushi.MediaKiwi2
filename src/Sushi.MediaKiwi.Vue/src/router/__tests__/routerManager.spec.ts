@@ -46,7 +46,7 @@ describe("RouterManager", () => {
       history: createWebHistory(),
     });
     const routeGenerator = vi.mocked(new RouteGenerator());
-    console.log(routeGenerator);
+
     routeGenerator.generateRoutes.mockReturnValue([]);
     const routerManager = new RouterManager(options, router, routeGenerator);
 

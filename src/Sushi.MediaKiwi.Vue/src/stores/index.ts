@@ -69,7 +69,7 @@ export const useMediakiwiStore = defineStore({
       if (payload) {
         this.navigationItems = payload.result;
         // add view to items
-        this.setNavigaiontItemsView(this.navigationItems);
+        this.setNavigationItemsView(this.navigationItems);
         // add parent/child relations
         this.navigationItems.forEach((item) => {
           // add parent
@@ -81,8 +81,6 @@ export const useMediakiwiStore = defineStore({
         this.navigationItems.forEach((item) => {
           item.path = this.getParentPath(item);
         });
-        // add leaf node (dynamic items without children have a different leaf node)
-        this.setLeafNodes(this.navigationItems);
         // set 'has item navigation'
         this.setHasItemNavigation(this.navigationItems);
       }
@@ -119,33 +117,15 @@ export const useMediakiwiStore = defineStore({
       }
       return result;
     },
-    setLeafNodes(navigationItems: Array<NavigationItem>) {
-      // add leaf node (dynamic items without children have a different leaf node)
-      navigationItems.forEach((item) => {
-        if (item?.view?.parameterName && item.children?.filter((x) => !x.view?.parameterName)) {
-          let candidate: NavigationItem | undefined = item.parent;
-          while (candidate && !item.leaf) {
-            if (!candidate.view?.parameterName || candidate.children?.some((x) => !x.view?.parameterName)) {
-              item.leaf = candidate;
-            }
-            candidate = candidate.parent;
-          }
-        } else {
-          item.leaf = item;
-        }
-      });
-    },
-    setNavigaiontItemsView(navigationItems: Array<NavigationItem>) {
+    setNavigationItemsView(navigationItems: Array<NavigationItem>) {
       navigationItems.forEach((item) => {
         item.view = this.views.find((x) => x.id === item.viewId);
       });
     },
     setHasItemNavigation(navigationItems: Array<NavigationItem>) {
-      // if an item is dynamic AND it has children, then it has item navigation
+      // if an item has dynamic children, it has 'item navigation'
       navigationItems.forEach((item) => {
-        if (item?.view?.parameterName && item.children) {
-          item.hasItemNavigation = true;
-        }
+        if (item?.children?.some((x) => x.view?.parameterName)) item.hasItemNavigation = true;
       });
     },
     registerIcons(options: VuetifyOptions) {

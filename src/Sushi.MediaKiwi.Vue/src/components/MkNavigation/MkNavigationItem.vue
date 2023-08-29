@@ -29,7 +29,20 @@
   }
 
   const isActive = computed(() => {
-    return navigation.currentNavigationItem.value?.leaf?.id == props.navigationItem.id;
+    const currentItem = navigation.currentNavigationItem.value;
+    const currentParent = currentItem?.parent;
+    if (!currentItem) return false;
+
+    // if the provided navigation item is the same as the current navigation item, then it is active
+    // or if the provided navigation item is the ONLY child of the current navigation item that 'has item navigation', and points to a view, then it is active
+    const result =
+      currentItem.id === props.navigationItem.id ||
+      (currentParent?.id === props.navigationItem.id &&
+        props.navigationItem.hasItemNavigation &&
+        props.navigationItem.view &&
+        props.navigationItem.children?.length === 1);
+
+    return result === true;
   });
 </script>
 
