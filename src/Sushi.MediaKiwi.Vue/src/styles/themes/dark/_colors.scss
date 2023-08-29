@@ -93,6 +93,15 @@ $outline-colors: map.deep-merge(
   $outline-colors
 );
 
+$inverse-surface-colors: () !default;
+$inverse-surface-colors: map.deep-merge(
+  (
+    "inverse-surface": #fffbfe,
+    "inverse-on-surface": #1c1b1f,
+  ),
+  $inverse-surface-colors
+);
+
 $colors: () !default;
 $colors: map.deep-merge($colors, $primary-colors);
 $colors: map.deep-merge($colors, $secondary-colors);
@@ -103,3 +112,4 @@ $colors: map.deep-merge($colors, $surface-colors);
 $colors: map.deep-merge($colors, $surface-variations);
 $colors: map.deep-merge($colors, $surface-variant-colors);
 $colors: map.deep-merge($colors, $outline-colors);
+$colors: map.deep-merge($colors, $inverse-surface-colors);

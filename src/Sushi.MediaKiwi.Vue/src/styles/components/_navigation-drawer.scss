@@ -1,0 +1,12 @@
+.v-navigation-drawer {
+  &__content {
+    .v-list {
+      .v-list-item {
+        &--active {
+          background: rgb(var(--v-theme-secondary-container));
+          color: rgb(var(--v-theme-on-secondary-container));
+        }
+      }
+    }
+  }
+}
