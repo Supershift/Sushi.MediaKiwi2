@@ -82,10 +82,6 @@
   const inProgress = ref(false);
   const mkTableViewComponent = ref();
 
-  const showSelectionCheckbox = computed<boolean>(() => {
-    return props.selection ? true : false;
-  });
-
   // Deconstruct the ApiResult or paging prop to an ITableMapPaging
   const pagingResult = computed<ITableMapPaging | undefined | null>(() => {
     const resultCount = props.apiResult?.result?.length;
@@ -170,7 +166,7 @@
       <MkTableFilter :model-value="filters" @update:model-value="filterChanged" />
     </template>
 
-    <template v-if="showSelectionCheckbox">
+    <template v-if="selection">
       <v-expand-transition>
         <MkTableToolbarVue v-if="selection?.length" :selection="selection" @click:close="mkTableViewComponent.clearSelection">
           <template #selectionActions>
@@ -187,7 +183,7 @@
       :item-view-id="itemViewId"
       :sorting="sorting"
       :selection="selection"
-      :checkbox="showSelectionCheckbox"
+      :checkbox="selection ? true : false"
       class="mk-table"
       :pagination-mode="paginationMode"
       @click:row="(e) => emit('click:row', e)"
