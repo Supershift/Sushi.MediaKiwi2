@@ -18,8 +18,8 @@ export interface NavigationItem {
   parent?: NavigationItem;
   /** Children of this item in the navigation hierarchy */
   children?: NavigationItem[];
-  /** Leaf in the tree to which this item belongs (a dynamic item without children is on the same leaf as its parent) */
-  leaf?: NavigationItem;
   /** view to load when this navigation item is activated. If empty, the item is a folder. */
   view?: View;
+  /** Set to true if this is a dynamic item with its own children. */
+  hasItemNavigation?: boolean;
 }
