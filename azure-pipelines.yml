@@ -45,6 +45,11 @@ steps:
       testResultsFormat: "JUnit"
       testResultsFiles: "**/TEST-*.xml"
 
+  - task: PublishCodeCoverageResults@2
+    displayName: Publish coverage results
+    inputs:
+      summaryFileLocation: "**/coverage/cobertura-coverage.xml"
+
   - task: Npm@1
     displayName: "Npm build on MediaKiwi.Vue"
     inputs:
