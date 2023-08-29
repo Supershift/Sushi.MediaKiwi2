@@ -14,6 +14,7 @@
 
   import { ITableMapPaging } from "@/models/table/TableMapPaging";
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
+  import { pageSizeOptions } from "@/constants";
 
   // define properties
   const props = withDefaults(
@@ -28,10 +29,6 @@
       data?: any[];
       /** When set, enables paging based on provided values. */
       paging?: IPagingResult;
-      /** Currently selected page index.
-       * @obsolete Use currentPagination instead.
-       */
-      currentPage?: number;
       /** ExternalId of the view instance to which the user is pushed when clicking a row. */
       itemViewId?: string;
       /** */
@@ -96,6 +93,11 @@
       return { pageCount, totalCount, resultCount };
     }
     return undefined;
+  });
+
+  const showPagination = computed(() => {
+    const lowestPagingOption = Math.min(...pageSizeOptions);
+    return props.currentPagination && pagingResult.value && pagingResult.value.totalCount && pagingResult.value.totalCount > lowestPagingOption;
   });
 
   // event listeners
@@ -193,18 +195,14 @@
       @update:selection="(e) => emit('update:selection', e)"
     >
       <template v-if="paginationMode === 'controls'" #bottom>
-        <!-- <tr>
-          <td :colspan="tableMap.items.length" justify="end"> -->
         <!-- Only show the controls if the pagination mode is unset or set to 'controls' -->
         <MkPagination
-          v-if="currentPagination"
+          v-if="showPagination"
           :model-value="currentPagination"
           :paging-result="pagingResult"
           :mode="paginationMode"
           @update:model-value="pageChanged"
         />
-        <!-- </td>
-        </tr> -->
       </template>
     </MkTableView>
 
