@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { SortDirection } from "./../../models";
 import type { TableMap } from "./../../models/table/TableMap";
 import { useTableMapItemSelection } from "./../useTableMapItemSelection";
+import { computed } from "vue";
 
 interface ISampleData {
   id: number;
@@ -30,7 +31,7 @@ describe("useTableMapItemSelection", () => {
   /** Init selection composable for item selection with the table map and data  */
   const { selectAll, selectItem, isItemSelected, isAllSelected, isIndeterminate, selectedItems } = useTableMapItemSelection({
     tableMap: myMap,
-    data: testData,
+    data: computed(() => testData),
   });
 
   describe("Select items", () => {

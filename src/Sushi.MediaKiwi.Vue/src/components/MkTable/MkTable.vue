@@ -39,8 +39,6 @@
       selection?: unknown[];
       /** Displays new item button if set to true and itemViewId has a value */
       new?: boolean;
-      /** Make each row in the table selectable. */
-      checkbox?: boolean;
       /** Callback invoked when the component needs new data, i.e. a filter changes, the current page changes, etc. */
       onLoad?: () => Promise<void>;
       /** Title specificly for the current table */
@@ -172,7 +170,7 @@
       <MkTableFilter :model-value="filters" @update:model-value="filterChanged" />
     </template>
 
-    <template v-if="checkbox">
+    <template v-if="selection">
       <v-expand-transition>
         <MkBulkActionBar v-if="selection?.length" :selection="selection" @click:close="mkTableViewComponent.clearSelection">
           <template #selectionActions>
@@ -189,7 +187,7 @@
       :item-view-id="itemViewId"
       :sorting="sorting"
       :selection="selection"
-      :checkbox="checkbox"
+      :checkbox="selection ? true : false"
       class="mk-table"
       :pagination-mode="paginationMode"
       @click:row="(e) => emit('click:row', e)"

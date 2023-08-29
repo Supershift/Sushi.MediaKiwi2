@@ -18,7 +18,7 @@ interface useTableMapItemSelection {
 /** Tablemap options for the composable to use */
 interface tableMapItemSelectionOptions {
   tableMap: TableMap<unknown>;
-  data?: unknown[];
+  data?: ComputedRef<unknown[] | undefined>;
 }
 
 /**
@@ -58,7 +58,9 @@ export function useTableMapItemSelection(options: tableMapItemSelectionOptions):
 
   /** Select ALL items of the tablemap */
   function selectAll(value: boolean): void {
-    select(data!, value);
+    if (data?.value) {
+      select(data?.value, value);
+    }
   }
 
   /** Select the provided data item */
@@ -67,25 +69,29 @@ export function useTableMapItemSelection(options: tableMapItemSelectionOptions):
   }
 
   /** Returns if the provided item ids are selected */
-  function isSelected(dataItems: unknown[]): boolean {
-    return dataItems.every((dataItem) => {
-      if (tableMap.itemId) {
-        const itemId = tableMap.itemId(dataItem);
-        return selected.value.indexOf(itemId) > -1;
-      }
-      return false;
-    });
+  function isSelected(dataItems?: unknown[]): boolean {
+    return (
+      dataItems?.every((dataItem) => {
+        if (tableMap.itemId) {
+          const itemId = tableMap.itemId(dataItem);
+          return selected.value.indexOf(itemId) > -1;
+        }
+        return false;
+      }) || false
+    );
   }
 
   /** Returns of some of the provided item ids are selected */
-  function isSomeSelected(dataItems: unknown[]): boolean {
-    return dataItems.some((dataItem) => {
-      if (tableMap.itemId) {
-        const itemId = tableMap.itemId(dataItem);
-        return selected.value.indexOf(itemId) > -1;
-      }
-      return false;
-    });
+  function isSomeSelected(dataItems?: unknown[]): boolean {
+    return (
+      dataItems?.some((dataItem) => {
+        if (tableMap.itemId) {
+          const itemId = tableMap.itemId(dataItem);
+          return selected.value.indexOf(itemId) > -1;
+        }
+        return false;
+      }) || false
+    );
   }
 
   /** Returns the provided dataItem is selected */
@@ -94,10 +100,10 @@ export function useTableMapItemSelection(options: tableMapItemSelectionOptions):
   }
 
   /** Returns if 'some' items are selected */
-  const isIndeterminate = computed(() => !isSelected(data) && isSomeSelected(data));
+  const isIndeterminate = computed(() => !isSelected(data?.value) && isSomeSelected(data?.value));
 
   /** Returns if all items ids are selected */
-  const isAllSelected = computed(() => isSelected(data));
+  const isAllSelected = computed(() => isSelected(data?.value));
 
   /** Return a collection of unknown objects from the data based on the the selection */
   const selectedItems = computed<unknown[]>(() => {
@@ -105,9 +111,11 @@ export function useTableMapItemSelection(options: tableMapItemSelectionOptions):
       return [];
     }
 
-    return data.filter((item) => {
-      return isItemSelected(item);
-    });
+    return (
+      data?.value?.filter((item) => {
+        return isItemSelected(item);
+      }) || []
+    );
   });
 
   return {

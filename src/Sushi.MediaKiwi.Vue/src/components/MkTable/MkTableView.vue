@@ -105,7 +105,7 @@
   /** Init selection composable for item selection with the table map and data  */
   const { selectAll, selectItem, isItemSelected, isAllSelected, isIndeterminate, selectedItems } = useTableMapItemSelection({
     tableMap: props.tableMap,
-    data: props.data,
+    data: computed(() => props.data),
   });
 
   watch(selectedItems, (value) => {
@@ -134,7 +134,7 @@
     <thead>
       <tr>
         <th v-if="checkbox">
-          <MkTableCheckbox :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:is-selected="selectAll" />
+          <MkTableCheckbox :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:selected="selectAll" />
         </th>
         <!-- render a header cell for each mapping item -->
         <th v-for="(mapItem, index) in props.tableMap.items" :key="index" :class="getHeaderClasses(mapItem)" @click="onClick(mapItem)">
@@ -147,7 +147,7 @@
       <!-- render a row for each provided data entity -->
       <tr v-for="(dataItem, rowIndex) in props.data" :key="rowIndex" style="cursor: pointer" @click.stop="(e) => onRowClick(e, dataItem)">
         <td v-if="checkbox" @click.stop>
-          <MkTableCheckbox :is-selected="isItemSelected(dataItem)" @update:is-selected="(e) => selectItem(dataItem, e)" />
+          <MkTableCheckbox :is-selected="isItemSelected(dataItem)" @update:selected="(e) => selectItem(dataItem, e)" />
         </td>
         <!-- render a cell for each mapping item -->
         <MkTableCell v-for="(mapItem, cellIndex) in props.tableMap.items" :key="cellIndex" :data="dataItem" :map-item="mapItem"></MkTableCell>
