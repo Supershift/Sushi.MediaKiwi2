@@ -45,6 +45,14 @@ steps:
       testResultsFormat: "JUnit"
       testResultsFiles: "**/TEST-*.xml"
 
+  - task: Npm@1
+    displayName: "Npm coverage on MediaKiwi.Vue"
+    inputs:
+      command: "custom"
+      customCommand: "run coverage"
+      workingDir: "src/Sushi.MediaKiwi.Vue"
+    continueOnError: true
+
   - task: PublishCodeCoverageResults@2
     displayName: Publish coverage results
     inputs:
