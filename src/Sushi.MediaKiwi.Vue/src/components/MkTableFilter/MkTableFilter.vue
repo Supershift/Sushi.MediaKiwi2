@@ -10,6 +10,9 @@
   import { defineAsyncComponent } from "vue";
   import { useI18next } from "@/composables/useI18next";
   import { MkDialogCard } from "@/components/MkDialog";
+  import { useKeyboardShortcuts } from "@/composables/useKeyboardShortcuts";
+  import { onDeactivated } from "vue";
+  import { KeyboardShortcutCollection } from "@/models/keyboard/KeyboardShortcutCollection";
 
   // define properties and events
   const props = defineProps<{
@@ -22,6 +25,7 @@
 
   // inject dependencies
   const { defaultT } = await useI18next();
+  const { addKeyboardShortcuts, removeKeyboardShortcuts } = useKeyboardShortcuts();
 
   // define reactive variables
   const menu = ref(false);
@@ -123,6 +127,20 @@
       closeFilter();
     }
   });
+
+  /** Define Keybinding collection */
+  const shortCuts: KeyboardShortcutCollection = {
+    "control+f": (e: KeyboardEvent) => {
+      e.preventDefault();
+      openMenu();
+    },
+  };
+
+  addKeyboardShortcuts(shortCuts);
+
+  onDeactivated(() => {
+    removeKeyboardShortcuts(shortCuts);
+  });
 </script>
 
 <template>
@@ -181,6 +199,7 @@
             density="compact"
             class="mk-table-filter__input mx-2"
             @click="openMenu"
+            @keypress.enter="openMenu"
           ></v-text-field>
         </template>
       </v-row>
@@ -208,3 +227,4 @@
   padding-bottom: 6px;
 }
 </stlye>
+@/models/keyboard/KeyboardShortcutCollection
