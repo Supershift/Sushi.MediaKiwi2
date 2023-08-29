@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import MkTableActionNewItemButton from "./MkTableActionNewItemButton.vue";
+  import MkToolbarNewItemButton from "./MkToolbarNewItemButton.vue";
   import { IconsLibrary } from "@/models";
 
   // define properties
@@ -36,7 +36,7 @@
 
           <!-- Render the new button when the prop is set -->
           <template v-if="props.itemViewId && props.new">
-            <MkTableActionNewItemButton :item-view-id="props.itemViewId" />
+            <MkToolbarNewItemButton :item-view-id="props.itemViewId" />
           </template>
 
           <!-- Render the actions slot -->
