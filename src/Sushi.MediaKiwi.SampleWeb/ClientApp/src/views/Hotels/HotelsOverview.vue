@@ -8,6 +8,7 @@
   import {
     ListResult,
     MkTable,
+    MkOverflowMenuIcon,
     TableCellIcon,
     TableIconPosition,
     TableFilter,
@@ -15,6 +16,7 @@
     TableFilterValue,
     TableMap,
     useI18next,
+    MkNewItemButton,
   } from "@supershift/mediakiwi-vue";
 
   import { container } from "tsyringe";
@@ -92,7 +94,6 @@
   <mk-table
     v-model:current-pagination="currentPagination"
     v-model:filters="filters"
-    new
     :api-result="hotels"
     :table-map="tableMap"
     :on-load="LoadData"
@@ -100,17 +101,18 @@
     item-view-id="HotelEdit"
     title="Subtitle for the hotel list"
   >
-    <template #actions>
+    <template #toolbar>
       <v-btn>Knop 1</v-btn>
       <v-btn>Knop 2</v-btn>
-    </template>
-    <template #menuActions>
-      <v-list>
-        <v-list-item title="Action 1" @click="action" />
-        <v-list-item title="Action 2" @click="action" />
-        <v-list-item title="Action 3" @click="action" />
-        <v-list-item title="Action 4" @click="action" />
-      </v-list>
+
+      <MkNewItemButton item-view-id="HotelEdit" />
+
+      <MkOverflowMenuIcon>
+        <v-list-item title="Menu Action 1" @click="action" />
+        <v-list-item title="Menu Action 2" @click="action" />
+        <v-list-item title="Menu Action 3" @click="action" />
+        <v-list-item title="Menu Action 4" @click="action" />
+      </MkOverflowMenuIcon>
     </template>
   </mk-table>
 </template>

@@ -37,8 +37,6 @@
       sorting?: Sorting;
       /** */
       selection?: unknown[];
-      /** Displays new item button if set to true and itemViewId has a value */
-      new?: boolean;
       /** Callback invoked when the component needs new data, i.e. a filter changes, the current page changes, etc. */
       onLoad?: () => Promise<void>;
       /** Title specificly for the current table */
@@ -65,13 +63,11 @@
   // define slots
   const slots = defineSlots<{
     header?: (props: unknown) => any;
-    /** Visible action slot for the MkToolbar bar */
-    actions?: (props: unknown) => any;
-    /** Action slot for the MkToolbar bar */
-    menuActions?: (props: unknown) => any;
-    /** Action slot for the MkToolbar */
-    selectionActions?: (props: unknown) => any;
     footer?: (props: unknown) => any;
+    /** Visible action slot for the MkToolbar bar */
+    toolbar?: (props: unknown) => never;
+    /** Action slot for the MkBulkActionBar */
+    bulkActionBar?: (props: unknown) => never;
   }>();
 
   // inject dependencies
@@ -154,16 +150,9 @@
     <v-progress-linear v-if="inProgress" indeterminate absolute></v-progress-linear>
     <slot name="header"></slot>
 
-    <template v-if="(slots.actions || slots.menuActions || props.new || props.title) && props.itemViewId">
-      <MkToolbar :item-view-id="props.itemViewId" :new="props.new" :title="props.title">
-        <template v-if="slots.actions" #actions>
-          <slot name="actions"></slot>
-        </template>
-        <template v-if="slots.menuActions" #menuActions>
-          <slot name="menuActions"></slot>
-        </template>
-      </MkToolbar>
-    </template>
+    <MkToolbar v-if="itemViewId && slots.toolbar" :item-view-id="itemViewId" :title="title">
+      <slot name="toolbar"></slot>
+    </MkToolbar>
 
     <template v-if="filters">
       <MkTableFilter :model-value="filters" @update:model-value="filterChanged" />
@@ -172,9 +161,7 @@
     <template v-if="selection">
       <v-expand-transition>
         <MkBulkActionBar v-if="selection?.length" :selection="selection" @click:close="mkTableViewComponent.clearSelection">
-          <template #selectionActions>
-            <slot name="selectionActions"></slot>
-          </template>
+          <slot name="bulkActionBar"></slot>
         </MkBulkActionBar>
       </v-expand-transition>
     </template>
