@@ -13,6 +13,13 @@
   const groupOpened = ref(false);
   const children = navigation.getChildren(props.navigationItem);
 
+  const icon = computed(() => {
+    if (props.navigationItem?.icon) {
+      return props.navigationItem.icon;
+    }
+    return undefined;
+  });
+
   function hasScreen(item: NavigationItem): boolean {
     if (item?.viewId) {
       return true;
@@ -42,7 +49,8 @@
         :active="isActive"
         :title="navigationItem.name"
         rounded="pill"
-        class="mb-2"
+        class="mk-navigation-item mb-2"
+        :prepend-icon="icon"
         @click.stop="hasScreen(navigationItem) ? onItemClick(navigationItem) : {}"
       />
     </template>
@@ -54,7 +62,14 @@
     :title="navigationItem.name"
     :exact="true"
     rounded="pill"
-    class="mb-2"
+    class="mk-navigation-item mb-2"
+    :prepend-icon="icon"
     @click.stop="hasScreen(navigationItem) ? onItemClick(navigationItem) : {}"
   />
 </template>
+<style lang="scss">
+  /** Used to override the spacing for icons vuetify that ships with */
+  .mk-navigation-item > .v-list-item__prepend > .v-icon {
+    margin-inline-end: 12px;
+  }
+</style>

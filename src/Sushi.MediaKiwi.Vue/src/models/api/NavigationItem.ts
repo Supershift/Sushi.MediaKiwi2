@@ -22,4 +22,6 @@ export interface NavigationItem {
   leaf?: NavigationItem;
   /** view to load when this navigation item is activated. If empty, the item is a folder. */
   view?: View;
+  /** prepend icon - if available will place an icon inform of the Navigation Item */
+  icon?: string;
 }
