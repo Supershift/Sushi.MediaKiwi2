@@ -10,6 +10,9 @@
   import { defineAsyncComponent } from "vue";
   import { useI18next } from "@/composables/useI18next";
   import { MkDialogCard } from "@/components/MkDialog";
+  import { useKeyboardShortcuts } from "@/composables/useKeyboardShortcuts";
+  import { onDeactivated } from "vue";
+  import { KeyboardShortcutCollection } from "@/models/keyboard/KeyboardShortcutCollection";
 
   // define properties and events
   const props = defineProps<{
@@ -22,6 +25,7 @@
 
   // inject dependencies
   const { defaultT } = await useI18next();
+  const { addKeyboardShortcuts, removeKeyboardShortcuts } = useKeyboardShortcuts();
 
   // define reactive variables
   const menu = ref(false);
@@ -123,18 +127,31 @@
       closeFilter();
     }
   });
+
+  /** Define Keybinding collection */
+  const shortCuts: KeyboardShortcutCollection = {
+    "control+f": (e: KeyboardEvent) => {
+      e.preventDefault();
+      openMenu();
+    },
+  };
+
+  addKeyboardShortcuts(shortCuts);
+
+  onDeactivated(() => {
+    removeKeyboardShortcuts(shortCuts);
+  });
 </script>
 
 <template>
-  <v-divider />
-  <v-card class="mk-table-filter" variant="flat" rounded="10" color="surface">
+  <v-card class="mk-table-filter mb-4" variant="flat" rounded="10" color="surface1">
     <v-container>
       <v-row class="pb-2">
         <template v-if="modelValue">
           <v-menu v-model="menu" :close-on-content-click="false" location="end" colo>
             <!-- Button -->
             <template #activator="args">
-              <v-btn class="mt-1 ml-1" v-bind="args.props" color="primary" variant="plain" :icon="IconsLibrary.filterVariant"> </v-btn>
+              <v-btn class="mt-1 ml-1" v-bind="args.props" color="on-surface1" variant="plain" :icon="IconsLibrary.filterVariant"> </v-btn>
             </template>
 
             <!-- context menu -->
@@ -180,7 +197,9 @@
             readonly
             density="compact"
             class="mk-table-filter__input mx-2"
+            color="on-surface1"
             @click="openMenu"
+            @keypress.enter="openMenu"
           ></v-text-field>
         </template>
       </v-row>
@@ -189,13 +208,6 @@
 </template>
 
 <stlye lang="scss" scoped>
-.v-card--variant-flat {
-  &.mk-table-filter {
-    background: none;
-    color: rgb(var(--v-theme-on-surface-variant));
-  }
-}
-
 .v-input .v-field__input {
   --v-field-padding-top: 4px;
 }
@@ -208,3 +220,4 @@
   padding-bottom: 6px;
 }
 </stlye>
+@/models/keyboard/KeyboardShortcutCollection

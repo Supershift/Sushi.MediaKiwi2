@@ -20,14 +20,15 @@
   }
 </script>
 <template>
-  <v-navigation-drawer rail :rail-width="88" permanent>
+  <!-- VNavigationRail is an alias for VNavigationDrawer set in the GlobalConfiguration with the rail prop set to true -->
+  <v-navigation-rail :rail-width="88" permanent>
     <v-list density="comfortable" open-strategy="list" nav class="pa-3">
       <v-list-item
         v-for="item in props.railItems || []"
         :key="item.id"
         class="ml-0 mr-0"
         :active="item.id == navigation.currentNavigationItem.value?.sectionId"
-        rounded="xl"
+        rounded="lg"
         :value="item.name"
         @click.stop="onItemClick(item)"
       >
@@ -39,7 +40,7 @@
         </template>
       </v-list-item>
     </v-list>
-  </v-navigation-drawer>
+  </v-navigation-rail>
 </template>
 
 <!-- Vuetify rail does not support text beneath the icon, therefore custom css is required -->

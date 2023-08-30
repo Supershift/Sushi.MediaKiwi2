@@ -1,10 +1,13 @@
 <script setup lang="ts">
   import { Country } from "@/models/Country";
   import { CountryConnector } from "@/services/CountryConnector";
-  import { ListResult, MkTable, TableMap } from "@supershift/mediakiwi-vue";
-  import type { Paging } from "@supershift/mediakiwi-vue";
+  import { ListResult, MkTable, TableMap, useKeyboardShortcuts } from "@supershift/mediakiwi-vue";
+  import type { Paging, KeyboardShortcutCollection } from "@supershift/mediakiwi-vue";
   import { container } from "tsyringe";
+  import { onDeactivated } from "vue";
   import { ref } from "vue";
+
+  const { addKeyboardShortcuts, removeKeyboardShortcuts } = useKeyboardShortcuts();
 
   // inject dependencies
   const connector = container.resolve(CountryConnector);
@@ -21,6 +24,20 @@
       { headerTitle: "Name", value: (x) => x.name },
     ],
   };
+
+  /** Define Keybinding collection */
+  const shortCuts: KeyboardShortcutCollection = {
+    "shift+c": (e: KeyboardEvent) => {
+      e.preventDefault();
+      alert("You've pressed shift+c, this is a little secret!");
+    },
+  };
+
+  addKeyboardShortcuts(shortCuts);
+
+  onDeactivated(() => {
+    removeKeyboardShortcuts(shortCuts);
+  });
 
   // load data
   async function LoadData() {

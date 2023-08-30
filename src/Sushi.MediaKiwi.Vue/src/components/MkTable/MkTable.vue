@@ -5,8 +5,10 @@
   import { ref } from "vue";
   import MkTableFilter from "@/components/MkTableFilter/MkTableFilter.vue";
   import MkTableView from "./MkTableView.vue";
-  import MkTableToolbarVue from "./MkTableToolbar.vue";
-  import MkTableAction from "@/components/MkTableAction/MkTableAction.vue";
+
+  import MkBulkActionBar from "@/components/MkBulkActionBar/MkBulkActionBar.vue";
+  import MkToolbar from "@/components/MkToolbar/MkToolbar.vue";
+
   import MkPagination from "@/components/MkPagination/MkPagination.vue";
   import { IListResult, IPagingResult } from "@/models";
   import { useSnackbarStore } from "@/stores/snackbar";
@@ -14,6 +16,7 @@
 
   import { ITableMapPaging } from "@/models/table/TableMapPaging";
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
+  import { pageSizeOptions } from "@/constants";
 
   // define properties
   const props = withDefaults(
@@ -28,10 +31,6 @@
       data?: any[];
       /** When set, enables paging based on provided values. */
       paging?: IPagingResult;
-      /** Currently selected page index.
-       * @obsolete Use currentPagination instead.
-       */
-      currentPage?: number;
       /** ExternalId of the view instance to which the user is pushed when clicking a row. */
       itemViewId?: string;
       /** */
@@ -40,8 +39,6 @@
       selection?: unknown[];
       /** Displays new item button if set to true and itemViewId has a value */
       new?: boolean;
-      /** Make each row in the table selectable. */
-      checkbox?: boolean;
       /** Callback invoked when the component needs new data, i.e. a filter changes, the current page changes, etc. */
       onLoad?: () => Promise<void>;
       /** Title specificly for the current table */
@@ -68,11 +65,11 @@
   // define slots
   const slots = defineSlots<{
     header?: (props: unknown) => any;
-    /** Visible action slot for the MkTableAction bar */
+    /** Visible action slot for the MkToolbar bar */
     actions?: (props: unknown) => any;
-    /** Action slot for the MkTableAction bar */
+    /** Action slot for the MkToolbar bar */
     menuActions?: (props: unknown) => any;
-    /** Action slot for the MkTableToolbar */
+    /** Action slot for the MkToolbar */
     selectionActions?: (props: unknown) => any;
     footer?: (props: unknown) => any;
   }>();
@@ -96,6 +93,11 @@
       return { pageCount, totalCount, resultCount };
     }
     return undefined;
+  });
+
+  const showPagination = computed(() => {
+    const lowestPagingOption = Math.min(...pageSizeOptions);
+    return props.currentPagination && pagingResult.value && pagingResult.value.totalCount && pagingResult.value.totalCount > lowestPagingOption;
   });
 
   // event listeners
@@ -153,28 +155,27 @@
     <slot name="header"></slot>
 
     <template v-if="(slots.actions || slots.menuActions || props.new || props.title) && props.itemViewId">
-      <v-divider />
-      <MkTableAction :item-view-id="props.itemViewId" :new="props.new" :title="props.title">
+      <MkToolbar :item-view-id="props.itemViewId" :new="props.new" :title="props.title">
         <template v-if="slots.actions" #actions>
           <slot name="actions"></slot>
         </template>
         <template v-if="slots.menuActions" #menuActions>
           <slot name="menuActions"></slot>
         </template>
-      </MkTableAction>
+      </MkToolbar>
     </template>
 
     <template v-if="filters">
       <MkTableFilter :model-value="filters" @update:model-value="filterChanged" />
     </template>
 
-    <template v-if="checkbox">
+    <template v-if="selection">
       <v-expand-transition>
-        <MkTableToolbarVue v-if="selection?.length" :selection="selection" @click:close="mkTableViewComponent.clearSelection">
+        <MkBulkActionBar v-if="selection?.length" :selection="selection" @click:close="mkTableViewComponent.clearSelection">
           <template #selectionActions>
             <slot name="selectionActions"></slot>
           </template>
-        </MkTableToolbarVue>
+        </MkBulkActionBar>
       </v-expand-transition>
     </template>
 
@@ -185,7 +186,7 @@
       :item-view-id="itemViewId"
       :sorting="sorting"
       :selection="selection"
-      :checkbox="checkbox"
+      :checkbox="selection ? true : false"
       class="mk-table"
       :pagination-mode="paginationMode"
       @click:row="(e) => emit('click:row', e)"
@@ -193,18 +194,14 @@
       @update:selection="(e) => emit('update:selection', e)"
     >
       <template v-if="paginationMode === 'controls'" #bottom>
-        <!-- <tr>
-          <td :colspan="tableMap.items.length" justify="end"> -->
         <!-- Only show the controls if the pagination mode is unset or set to 'controls' -->
         <MkPagination
-          v-if="currentPagination"
+          v-if="showPagination"
           :model-value="currentPagination"
           :paging-result="pagingResult"
           :mode="paginationMode"
           @update:model-value="pageChanged"
         />
-        <!-- </td>
-        </tr> -->
       </template>
     </MkTableView>
 

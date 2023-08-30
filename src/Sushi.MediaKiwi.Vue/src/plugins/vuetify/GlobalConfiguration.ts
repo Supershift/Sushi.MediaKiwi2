@@ -1,5 +1,6 @@
 import type { VuetifyOptions } from "vuetify";
 import { VBtn } from "vuetify/components/VBtn";
+import { VNavigationDrawer } from "vuetify/components/VNavigationDrawer";
 
 /**
  * Global configuration for Vuetify
@@ -9,18 +10,36 @@ export const globalConfiguration: VuetifyOptions = {
   aliases: {
     // Create an alias, so we can use <v-btn-primary> instead of <v-btn color="primary" variant="flat">
     VBtnPrimary: VBtn,
+    VNavigationRail: VNavigationDrawer,
   },
   defaults: {
+    // Patterns
     VAppBar: {
-      elevation: 2,
+      color: "background",
+    },
+    VNavigationRail: {
+      color: "background",
+      border: "none",
+      rail: true,
     },
     VNavigationDrawer: {
-      bg: "surface1",
+      color: "surface1",
+      border: "none",
+      style: {
+        "border-top-left-radius": "16px",
+        "border-top-right-radius": "16px",
+      },
       VList: {
-        variant: "flat",
-        color: "secondary-container",
+        VListItem: {
+          variant: "text",
+        },
       },
     },
+    VMain: {
+      color: "background",
+      class: "bg-background",
+    },
+    // Small Components
     VBtn: {
       variant: "text",
       class: "v-btn--mediakiwi",
@@ -29,7 +48,7 @@ export const globalConfiguration: VuetifyOptions = {
       variant: "flat",
       color: "primary",
       rounded: "xl",
-      class: "v-btn--mediakiwi",
+      class: "v-btn--mediakiwi v-btn--mediakiwi--primary",
     },
     VChip: {
       closeIcon: "mdi-close",

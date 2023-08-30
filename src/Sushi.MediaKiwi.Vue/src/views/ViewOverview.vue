@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { MkTable } from "@/components";
-  import { TableMap, ListResult, TableFilterItem, Sorting } from "@/models";
+  import { TableMap, ListResult, TableFilterItem, Sorting, Paging } from "@/models";
   import { View } from "@/models";
   import { useMediakiwiStore } from "@/stores";
   import { ref } from "vue";
@@ -15,7 +15,7 @@
   // define reactive variables
   const sections = ref(store.sections);
   const data = ref<ListResult<View>>();
-  const currentPage = ref(0);
+  const currentPagination = ref<Paging>({});
   const sorting = ref<Sorting | undefined>();
 
   // define mapping
@@ -45,13 +45,13 @@
 
   // get data
   async function onLoad() {
-    data.value = await viewConnector.GetViews(filters.value.section?.selectedValue?.value, { pageIndex: currentPage.value, pageSize: 10 }, sorting.value);
+    data.value = await viewConnector.GetViews(filters.value.section?.selectedValue?.value, currentPagination.value, sorting.value);
   }
 </script>
 <template>
   <mk-table
     v-model:filters="filters"
-    v-model:current-page="currentPage"
+    v-model:current-pagination="currentPagination"
     v-model:sorting="sorting"
     new
     :api-result="data"
