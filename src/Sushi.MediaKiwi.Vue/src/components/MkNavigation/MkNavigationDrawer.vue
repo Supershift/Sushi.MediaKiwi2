@@ -5,6 +5,7 @@
   import { useMediakiwiStore } from "@/stores";
   import { useNavigation } from "@/composables/useNavigation";
   import { useI18next } from "@/composables";
+  import { IconsLibrary } from "@/models";
 
   // define properties
   defineEmits(["change"]);
@@ -49,14 +50,6 @@
       return store.rootNavigationItems.filter((x) => x.sectionId == currentNavigationItem?.sectionId);
     }
   }
-  // /** Navigates to the parent of the current navigation item */
-  // function goBack() {
-  //   navigation.navigateToParent();
-  // }
-  // /** Determines if the back button should be shown */
-  // const showBackButton = computed(() => {
-  //   return navigation.isReverseNavigable(navigation.currentNavigationItem.value);
-  // });
 </script>
 <template>
   <v-navigation-drawer absolute class="pa-3">
@@ -67,7 +60,7 @@
         exact
         rounded="pill"
         class="mb-2"
-        prepend-icon="mdi-chevron-left"
+        :prepend-icon="IconsLibrary.arrowLeft"
         @click.stop="navigation.navigateTo(navigation.currentRootItem.value)"
       />
       <mk-navigation-item v-for="item in children" :key="item.id" :navigation-item="item" :all-items="allNavigationItems"></mk-navigation-item>
