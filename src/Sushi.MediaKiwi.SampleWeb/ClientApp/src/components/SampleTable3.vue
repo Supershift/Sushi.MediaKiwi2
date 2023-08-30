@@ -89,6 +89,7 @@
     v-model:sorting="selectedSortOption"
     v-model:selection="selectedTableRows"
     v-model:filters="filters"
+    new
     :table-map="myMap"
     :data="sampleData"
     checkbox

@@ -37,6 +37,8 @@
       sorting?: Sorting;
       /** */
       selection?: unknown[];
+      /** Displays new item button if set to true and itemViewId has a value */
+      new?: boolean;
       /** Callback invoked when the component needs new data, i.e. a filter changes, the current page changes, etc. */
       onLoad?: () => Promise<void>;
       /** Title specificly for the current table */
@@ -64,8 +66,10 @@
   const slots = defineSlots<{
     header?: (props: unknown) => any;
     footer?: (props: unknown) => any;
-    /** Visible action slot for the MkToolbar bar */
+    /** Visible action slot for the MkToolbar */
     toolbar?: (props: unknown) => never;
+    /** Menu actions for the MkToolbar */
+    overflowMenuActions?: (props: unknown) => never;
     /** Action slot for the MkBulkActionBar */
     bulkActionBar?: (props: unknown) => never;
   }>();
@@ -150,9 +154,16 @@
     <v-progress-linear v-if="inProgress" indeterminate absolute></v-progress-linear>
     <slot name="header"></slot>
 
-    <MkToolbar v-if="itemViewId && slots.toolbar" :item-view-id="itemViewId" :title="title">
-      <slot name="toolbar"></slot>
-    </MkToolbar>
+    <template v-if="(slots.toolbar || slots.overflowMenuActions || props.new || props.title) && props.itemViewId">
+      <MkToolbar :item-view-id="props.itemViewId" :new="props.new" :title="props.title">
+        <template v-if="slots.toolbar" #toolbar>
+          <slot name="toolbar"></slot>
+        </template>
+        <template v-if="slots.overflowMenuActions" #overflowMenuActions>
+          <slot name="overflowMenuActions"></slot>
+        </template>
+      </MkToolbar>
+    </template>
 
     <template v-if="filters">
       <MkTableFilter :model-value="filters" @update:model-value="filterChanged" />

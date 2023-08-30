@@ -94,6 +94,7 @@
   <mk-table
     v-model:current-pagination="currentPagination"
     v-model:filters="filters"
+    new
     :api-result="hotels"
     :table-map="tableMap"
     :on-load="LoadData"
@@ -104,15 +105,10 @@
     <template #toolbar>
       <v-btn>Knop 1</v-btn>
       <v-btn>Knop 2</v-btn>
+    </template>
 
-      <MkNewItemButton item-view-id="HotelEdit" />
-
-      <MkOverflowMenuIcon>
-        <v-list-item title="Menu Action 1" @click="action" />
-        <v-list-item title="Menu Action 2" @click="action" />
-        <v-list-item title="Menu Action 3" @click="action" />
-        <v-list-item title="Menu Action 4" @click="action" />
-      </MkOverflowMenuIcon>
+    <template #overflowMenuActions>
+      <v-list-item @click="action">Knop 3</v-list-item>
     </template>
   </mk-table>
 </template>
