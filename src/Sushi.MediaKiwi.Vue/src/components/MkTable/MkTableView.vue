@@ -15,6 +15,7 @@
   import { ref } from "vue";
   import { usePagination } from "@/composables/usePagination";
   import { computed } from "vue";
+  import { truncate } from "fs";
 
   // define properties
   const props = defineProps<{
@@ -90,10 +91,23 @@
     }
   }
 
-  function getHeaderClasses(tableMapItem: TableMapItem<unknown>) {
+  function getHeaderClasses(tableMapItem: TableMapItem<unknown>): Record<string, boolean> {
     if (tableMapItem?.sortingOptions) {
-      return getSortingClasses(tableMapItem.sortingOptions);
+      return getSortingClasses(tableMapItem?.sortingOptions);
     }
+    return {};
+  }
+
+  function getTableHeadClasses(tableMapItem: TableMapItem<unknown>): Record<string, boolean> {
+    const classes: Record<string, boolean> = {};
+
+    // Get the type of the first item in the data array
+    if (tableMapItem && tableMapItem.value && props.data && props.data[0]) {
+      const type = typeof tableMapItem.value(props.data[0]);
+      classes[type] = true;
+    }
+
+    return classes;
   }
 
   function sortingClasses() {
@@ -130,7 +144,7 @@
 </script>
 
 <template>
-  <v-table>
+  <v-table class="mk-table-view">
     <thead>
       <tr>
         <th v-if="checkbox">
@@ -138,8 +152,10 @@
         </th>
         <!-- render a header cell for each mapping item -->
         <th v-for="(mapItem, index) in props.tableMap.items" :key="index" :class="getHeaderClasses(mapItem)" @click="onClick(mapItem)">
-          {{ mapItem.headerTitle }}
-          <v-icon v-if="mapItem.sortingOptions" :icon="sortIcon" :class="sortingClasses()" />
+          <span class="mk-table-view__header" :class="getTableHeadClasses(mapItem)">
+            <label> {{ mapItem.headerTitle }} </label>
+            <v-icon v-if="mapItem.sortingOptions" class="ml-1" :icon="sortIcon" :class="sortingClasses()" />
+          </span>
         </th>
       </tr>
     </thead>
@@ -169,15 +185,41 @@
       table {
         thead {
           th {
+            // truncate logic
+            .mk-table-view__header {
+              display: flex;
+              flex-direction: row;
+              white-space: nowrap;
+              overflow: hidden;
+              contain: inline-size;
+
+              // Make an exception for boolean values
+              &.boolean {
+                contain: unset;
+              }
+
+              label {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+
+              .v-icon {
+                flex: 0 0 auto;
+              }
+            }
+
+            // Sorting icon logic
             &.sortable {
               font-weight: 700 !important;
 
-              .v-icon {
-                visibility: hidden;
-              }
-
               &:hover {
                 cursor: pointer;
+
+                span {
+                  cursor: inherit;
+                }
+
                 .v-icon {
                   visibility: visible;
                 }
@@ -187,6 +229,10 @@
                 .v-icon {
                   visibility: visible;
                 }
+              }
+
+              .v-icon {
+                visibility: hidden;
               }
             }
           }
