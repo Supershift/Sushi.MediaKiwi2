@@ -13,20 +13,6 @@
   const groupOpened = ref(false);
   const children = navigation.getChildren(props.navigationItem);
 
-  const prependIcon = computed(() => {
-    if (props.navigationItem.prependIcon) {
-      return props.navigationItem.prependIcon;
-    }
-    return "";
-  });
-
-  const appendIcon = computed(() => {
-    if (props.navigationItem.appendIcon) {
-      return props.navigationItem.appendIcon;
-    }
-    return "";
-  });
-
   function hasScreen(item: NavigationItem): boolean {
     if (item?.viewId) {
       return true;
@@ -65,7 +51,6 @@
     <template #activator="{ props }">
       <v-list-item
         v-bind="props"
-        :prepend-icon="prependIcon"
         :exact="true"
         :active="isActive"
         :title="navigationItem.name"
@@ -78,8 +63,6 @@
   </v-list-group>
   <v-list-item
     v-else
-    :prepend-icon="prependIcon"
-    :append-icon="appendIcon"
     :active="isActive"
     :title="navigationItem.name"
     :exact="true"

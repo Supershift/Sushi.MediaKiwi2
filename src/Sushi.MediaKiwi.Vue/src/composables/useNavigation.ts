@@ -103,16 +103,6 @@ export function useNavigation() {
     return result;
   }
 
-  /** Checks if the parent of the provided navigation item has a view */
-  function parentHasView(navigationItem: NavigationItem): boolean {
-    return store.navigationItems.some((item) => item.id == navigationItem.parentNavigationItemId && item.viewId);
-  }
-
-  /** Checks if the provided navigation item is reverse navigable. A navigation item is reverse navigable if it has a parent and its parent has a view. */
-  function isReverseNavigable(navigationItem: NavigationItem): boolean {
-    return (navigationItem?.parent ? true : false) && parentHasView(navigationItem);
-  }
-
   const currentRootItem = computed(determineCurrentRoootItem);
 
   const currentRouteParamId = computed(() => {
@@ -147,7 +137,6 @@ export function useNavigation() {
     navigateToParent,
     navigateToHome,
     getChildren,
-    isReverseNavigable,
     currentRouteParamId,
     /** Gets the id from the url for the current view, if the current view has a parameter. */
     currentViewParameter,

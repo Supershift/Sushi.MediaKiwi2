@@ -1,11 +1,10 @@
 <script setup lang="ts">
   import MkNavigationItem from "@/components/MkNavigation/MkNavigationItem.vue";
   import { computed } from "vue";
-  import type { NavigationItem } from "@/models/api";
   import { useMediakiwiStore } from "@/stores";
   import { useNavigation } from "@/composables/useNavigation";
   import { useI18next } from "@/composables";
-  import { IconsLibrary } from "@/models";
+  import { NavigationItem, IconsLibrary } from "@/models";
 
   // define properties
   defineEmits(["change"]);
