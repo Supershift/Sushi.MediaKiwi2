@@ -1,15 +1,19 @@
 <script setup lang="ts">
   import { Country } from "@/models/Country";
   import { CountryConnector } from "@/services/CountryConnector";
-  import { ListResult, MkTable, TableMap } from "@supershift/mediakiwi-vue";
+  import { ListResult, MkTable, TableMap, useKeyboardShortcuts } from "@supershift/mediakiwi-vue";
+  import type { Paging, KeyboardShortcutCollection } from "@supershift/mediakiwi-vue";
   import { container } from "tsyringe";
+  import { onDeactivated } from "vue";
   import { ref } from "vue";
+
+  const { addKeyboardShortcuts, removeKeyboardShortcuts } = useKeyboardShortcuts();
 
   // inject dependencies
   const connector = container.resolve(CountryConnector);
 
   // define reactive variables
-  const currentPage = ref(0);
+  const currentPagination = ref<Paging>({});
   const countries = ref<ListResult<Country>>();
 
   // define mapping
@@ -21,11 +25,25 @@
     ],
   };
 
+  /** Define Keybinding collection */
+  const shortCuts: KeyboardShortcutCollection = {
+    "shift+c": (e: KeyboardEvent) => {
+      e.preventDefault();
+      alert("You've pressed shift+c, this is a little secret!");
+    },
+  };
+
+  addKeyboardShortcuts(shortCuts);
+
+  onDeactivated(() => {
+    removeKeyboardShortcuts(shortCuts);
+  });
+
   // load data
   async function LoadData() {
-    countries.value = await connector.GetAll({ pageIndex: currentPage.value });
+    countries.value = await connector.GetAll(currentPagination.value);
   }
 </script>
 <template>
-  <mk-table :api-result="countries" :table-map="tableMap" :on-load="LoadData" v-model:current-page="currentPage"></mk-table>
+  <mk-table v-model:currentPagination="currentPagination" :api-result="countries" :table-map="tableMap" :on-load="LoadData"></mk-table>
 </template>

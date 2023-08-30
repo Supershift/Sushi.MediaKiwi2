@@ -24,6 +24,7 @@ module.exports = {
       jsx: "off",
     },
   },
+  ignorePatterns: ["**/node_modules/*", "**/dist/*", "**/public/*", "**/__tests__/**"],
   rules: {
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",

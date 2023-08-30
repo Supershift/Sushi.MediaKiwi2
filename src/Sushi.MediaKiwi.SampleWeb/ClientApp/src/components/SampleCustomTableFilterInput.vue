@@ -1,33 +1,29 @@
 <script setup lang="ts">
-  import type { ITableFilterItem } from "@supershift/mediakiwi-vue";
-  import type { ITableFilterValue } from "@supershift/mediakiwi-vue";
+  import type { TableFilterItem } from "@supershift/mediakiwi-vue";
+  import type { TableFilterValue } from "@supershift/mediakiwi-vue";
+  import { reactive } from "vue";
 
   const props = defineProps<{
-    tableFilterItem: ITableFilterItem;
-    modelValue: ITableFilterValue;
+    tableFilterItem: TableFilterItem;
+    modelValue: TableFilterValue;
   }>();
+
+  const refFullName = reactive(props.modelValue?.value ?? { firstName: "", surName: "" });
 
   const emit = defineEmits<{
-    (e: "update:modelValue", value: ITableFilterValue): void;
+    (e: "update:modelValue", value: TableFilterValue): void;
   }>();
 
-  function firstNameChanged(firstName: string) {
+  function onChange() {
     emit("update:modelValue", {
-      title: firstName + " " + props.modelValue?.value?.surName,
-      value: { firstName: firstName, surName: props.modelValue?.value?.surName },
-    });
-  }
-
-  function surNameChanged(surName: string) {
-    emit("update:modelValue", {
-      title: props.modelValue?.value?.firstName + " " + surName,
-      value: { firstName: props.modelValue?.value?.firstName, surName: surName },
+      title: refFullName.firstName + " " + refFullName.surName,
+      value: refFullName,
     });
   }
 </script>
 
 <template>
-  <v-text-field :value="modelValue?.value.firstName" @update:model-value="firstNameChanged" label="Voornaam"> </v-text-field>
+  <v-text-field v-model="refFullName.firstName" label="Voornaam" @update:model-value="onChange"> </v-text-field>
   <v-spacer></v-spacer>
-  <v-text-field :value="modelValue?.value.surName" @update:model-value="surNameChanged" label="Achternaam"> </v-text-field>
+  <v-text-field v-model="refFullName.surName" label="Achternaam" @update:model-value="onChange"> </v-text-field>
 </template>

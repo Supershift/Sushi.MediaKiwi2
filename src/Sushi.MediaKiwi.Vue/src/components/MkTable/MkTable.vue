@@ -1,44 +1,57 @@
+<!-- eslint-disable vue/require-default-prop -->
 <script setup lang="ts">
   import type { TableMap, TableFilter } from "@/models/table";
-  import type { Sorting } from "@/models/api";
+  import type { Paging, Sorting } from "@/models/api";
   import { ref } from "vue";
   import MkTableFilter from "@/components/MkTableFilter/MkTableFilter.vue";
   import MkTableView from "./MkTableView.vue";
-  import MkTableToolbarVue from "./MkTableToolbar.vue";
-  import MkTableAction from "@/components/MkTableAction/MkTableAction.vue";
+
+  import MkBulkActionBar from "@/components/MkBulkActionBar/MkBulkActionBar.vue";
+  import MkToolbar from "@/components/MkToolbar/MkToolbar.vue";
+
+  import MkPagination from "@/components/MkPagination/MkPagination.vue";
   import { IListResult, IPagingResult } from "@/models";
   import { useSnackbarStore } from "@/stores/snackbar";
-  import { onMounted } from "vue";
+  import { onMounted, computed } from "vue";
+
+  import { ITableMapPaging } from "@/models/table/TableMapPaging";
+  import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
+  import { pageSizeOptions } from "@/constants";
 
   // define properties
-  const props = defineProps<{
-    /** Collection of filters to filter data. */
-    filters?: TableFilter;
-    /** Defines mapping between data and the table. */
-    tableMap: TableMap<any>;
-    /** Sets data and paging properties based on the API's result. */
-    apiResult?: IListResult<any>;
-    /** An array of objects used for automatically generating rows. */
-    data?: any[];
-    /** When set, enables paging based on provided values. */
-    paging?: IPagingResult;
-    /** Currently selected page index. */
-    currentPage?: number;
-    /** ExternalId of the view instance to which the user is pushed when clicking a row. */
-    itemViewId?: string;
-    /** */
-    sorting?: Sorting;
-    /** */
-    selection?: unknown[];
-    /** Displays new item button if set to true and itemViewId has a value */
-    new?: boolean;
-    /** Make each row in the table selectable. */
-    checkbox?: boolean;
-    /** Callback invoked when the component needs new data, i.e. a filter changes, the current page changes, etc. */
-    onLoad?: () => Promise<void>;
-    /** Title specificly for the current table */
-    title?: string;
-  }>();
+  const props = withDefaults(
+    defineProps<{
+      /** Collection of filters to filter data. */
+      filters?: TableFilter;
+      /** Defines mapping between data and the table. */
+      tableMap: TableMap<any>;
+      /** Sets data and paging properties based on the API's result. */
+      apiResult?: IListResult<any>;
+      /** An array of objects used for automatically generating rows. */
+      data?: any[];
+      /** When set, enables paging based on provided values. */
+      paging?: IPagingResult;
+      /** ExternalId of the view instance to which the user is pushed when clicking a row. */
+      itemViewId?: string;
+      /** */
+      sorting?: Sorting;
+      /** */
+      selection?: unknown[];
+      /** Displays new item button if set to true and itemViewId has a value */
+      new?: boolean;
+      /** Callback invoked when the component needs new data, i.e. a filter changes, the current page changes, etc. */
+      onLoad?: () => Promise<void>;
+      /** Title specificly for the current table */
+      title?: string;
+      /** Currently selected page index and optional size */
+      currentPagination: Paging;
+      /** Defines the pagination mode */
+      paginationMode?: MediakiwiPaginationMode;
+    }>(),
+    {
+      paginationMode: "controls",
+    }
+  );
 
   // define events
   const emit = defineEmits<{
@@ -46,17 +59,17 @@
     (e: "click:row", value: unknown): void;
     (e: "update:sorting", value?: Sorting): void;
     (e: "update:selection", value?: unknown[]): void;
-    (e: "update:currentPage", value: number): void;
+    (e: "update:currentPagination", value: Paging): void;
   }>();
 
   // define slots
   const slots = defineSlots<{
     header?: (props: unknown) => any;
-    /** Visible action slot for the MkTableAction bar */
+    /** Visible action slot for the MkToolbar bar */
     actions?: (props: unknown) => any;
-    /** Action slot for the MkTableAction bar */
+    /** Action slot for the MkToolbar bar */
     menuActions?: (props: unknown) => any;
-    /** Action slot for the MkTableToolbar */
+    /** Action slot for the MkToolbar */
     selectionActions?: (props: unknown) => any;
     footer?: (props: unknown) => any;
   }>();
@@ -68,19 +81,42 @@
   const inProgress = ref(false);
   const mkTableViewComponent = ref();
 
+  // Deconstruct the ApiResult or paging prop to an ITableMapPaging
+  const pagingResult = computed<ITableMapPaging | undefined | null>(() => {
+    const resultCount = props.apiResult?.result?.length;
+
+    if (props.apiResult) {
+      const { pageCount, totalCount } = props.apiResult;
+      return { pageCount, totalCount, resultCount };
+    } else if (props.paging) {
+      const { pageCount, totalCount } = props.paging;
+      return { pageCount, totalCount, resultCount };
+    }
+    return undefined;
+  });
+
+  const showPagination = computed(() => {
+    const lowestPagingOption = Math.min(...pageSizeOptions);
+    return props.currentPagination && pagingResult.value && pagingResult.value.totalCount && pagingResult.value.totalCount > lowestPagingOption;
+  });
+
   // event listeners
   onMounted(async () => {
     await loadData();
   });
 
-  async function pageChanged(value: number) {
-    emit("update:currentPage", value - 1);
+  async function pageChanged(value: Paging) {
+    // Change the current page index
+    emit("update:currentPagination", value);
     await loadData();
   }
 
   async function filterChanged(value: TableFilter) {
     // reset paging
-    emit("update:currentPage", 0);
+    emit("update:currentPagination", {
+      pageIndex: 0,
+      pageSize: props.currentPagination.pageSize,
+    });
     // update filters
     emit("update:filters", value);
     // fetch data
@@ -119,28 +155,27 @@
     <slot name="header"></slot>
 
     <template v-if="(slots.actions || slots.menuActions || props.new || props.title) && props.itemViewId">
-      <v-divider />
-      <MkTableAction :item-view-id="props.itemViewId" :new="props.new" :title="props.title">
+      <MkToolbar :item-view-id="props.itemViewId" :new="props.new" :title="props.title">
         <template v-if="slots.actions" #actions>
           <slot name="actions"></slot>
         </template>
         <template v-if="slots.menuActions" #menuActions>
           <slot name="menuActions"></slot>
         </template>
-      </MkTableAction>
+      </MkToolbar>
     </template>
 
     <template v-if="filters">
       <MkTableFilter :model-value="filters" @update:model-value="filterChanged" />
     </template>
 
-    <template v-if="checkbox">
+    <template v-if="selection">
       <v-expand-transition>
-        <MkTableToolbarVue v-if="selection?.length" :selection="selection" @click:close="mkTableViewComponent.clearSelection">
+        <MkBulkActionBar v-if="selection?.length" :selection="selection" @click:close="mkTableViewComponent.clearSelection">
           <template #selectionActions>
             <slot name="selectionActions"></slot>
           </template>
-        </MkTableToolbarVue>
+        </MkBulkActionBar>
       </v-expand-transition>
     </template>
 
@@ -151,25 +186,25 @@
       :item-view-id="itemViewId"
       :sorting="sorting"
       :selection="selection"
-      :checkbox="checkbox"
+      :checkbox="selection ? true : false"
       class="mk-table"
+      :pagination-mode="paginationMode"
       @click:row="(e) => emit('click:row', e)"
       @update:sorting="sortingChanged"
       @update:selection="(e) => emit('update:selection', e)"
     >
-      <template #footer>
-        <tr>
-          <td :colspan="tableMap.items.length" justify="end">
-            <v-pagination
-              v-if="currentPage !== undefined"
-              :model-value="currentPage + 1"
-              :length="apiResult ? apiResult.pageCount : paging?.pageCount"
-              @update:model-value="pageChanged"
-            ></v-pagination>
-          </td>
-        </tr>
+      <template v-if="paginationMode === 'controls'" #bottom>
+        <!-- Only show the controls if the pagination mode is unset or set to 'controls' -->
+        <MkPagination
+          v-if="showPagination"
+          :model-value="currentPagination"
+          :paging-result="pagingResult"
+          :mode="paginationMode"
+          @update:model-value="pageChanged"
+        />
       </template>
     </MkTableView>
+
     <slot name="footer"></slot>
   </v-card>
 </template>

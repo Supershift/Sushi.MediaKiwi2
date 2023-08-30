@@ -1,15 +1,18 @@
 <script setup lang="ts">
-  import { shallowReactive, ref, watch, type Component } from "vue";
+  import { shallowReactive, ref, watch, type Component, computed } from "vue";
   import { TableFilter } from "@/models/table/TableFilter.js";
   import { TableFilterItem } from "@/models/table/TableFilterItem.js";
   import { TableFilterValue } from "@/models/table/TableFilterValue.js";
   import { MkTableFilterDatePicker, MkTableFilterRadioGroup, MkTableFilterSelect, MkTableFilterTextField } from ".";
   import { DefineComponent } from "vue";
-  import { TableFilterType } from "@/models/enum/TableFilterType";
+  import { TableFilterType, IconsLibrary } from "@/models";
   import { MkInputChip } from "@/components/MkChip";
   import { defineAsyncComponent } from "vue";
   import { useI18next } from "@/composables/useI18next";
   import { MkDialogCard } from "@/components/MkDialog";
+  import { useKeyboardShortcuts } from "@/composables/useKeyboardShortcuts";
+  import { onDeactivated } from "vue";
+  import { KeyboardShortcutCollection } from "@/models/keyboard/KeyboardShortcutCollection";
 
   // define properties and events
   const props = defineProps<{
@@ -22,9 +25,15 @@
 
   // inject dependencies
   const { defaultT } = await useI18next();
+  const { addKeyboardShortcuts, removeKeyboardShortcuts } = useKeyboardShortcuts();
 
   // define reactive variables
   const menu = ref(false);
+
+  // check if we have a filter value
+  const containsFilterValue = computed(() => {
+    return props.modelValue && Object.keys(props.modelValue).some((key) => props.modelValue[key].selectedValue !== undefined);
+  });
 
   // holds the current filter being edited and its value
   interface IState {
@@ -118,18 +127,31 @@
       closeFilter();
     }
   });
+
+  /** Define Keybinding collection */
+  const shortCuts: KeyboardShortcutCollection = {
+    "control+f": (e: KeyboardEvent) => {
+      e.preventDefault();
+      openMenu();
+    },
+  };
+
+  addKeyboardShortcuts(shortCuts);
+
+  onDeactivated(() => {
+    removeKeyboardShortcuts(shortCuts);
+  });
 </script>
 
 <template>
-  <v-divider />
-  <v-card class="mk-table-filter" variant="flat" rounded="0">
+  <v-card class="mk-table-filter mb-4" variant="flat" rounded="10" color="surface1">
     <v-container>
       <v-row class="pb-2">
         <template v-if="modelValue">
-          <v-menu v-model="menu" :close-on-content-click="false" location="end">
+          <v-menu v-model="menu" :close-on-content-click="false" location="end" colo>
             <!-- Button -->
             <template #activator="args">
-              <v-btn class="mt-1 ml-1" v-bind="args.props" color="primary" variant="plain" icon="mdi-filter-variant"> </v-btn>
+              <v-btn class="mt-1 ml-1" v-bind="args.props" color="on-surface1" variant="plain" :icon="IconsLibrary.filterVariant"> </v-btn>
             </template>
 
             <!-- context menu -->
@@ -144,7 +166,11 @@
               <template #intro>
                 <p>Plase enter the correct item</p>
               </template>
-              <component :is="GetComponentForFilterType(state.currentFilter)" v-model="state.currentFilterValue" :table-filter-item="state.currentFilter" />
+              <Suspense>
+                <component :is="GetComponentForFilterType(state.currentFilter)" v-model="state.currentFilterValue" :table-filter-item="state.currentFilter" />
+                <!-- loading state via #fallback slot -->
+                <template #fallback> Loading filter... </template>
+              </Suspense>
               <template #actions>
                 <v-btn @click="applyFilter()">{{ defaultT("Apply") }}</v-btn>
               </template>
@@ -165,29 +191,23 @@
           </template>
 
           <v-text-field
-            :placeholder="defaultT('Filter')"
+            :placeholder="!containsFilterValue ? defaultT('Filter') : ''"
             variant="plain"
             :hide-details="true"
             readonly
             density="compact"
             class="mk-table-filter__input mx-2"
+            color="on-surface1"
             @click="openMenu"
+            @keypress.enter="openMenu"
           ></v-text-field>
         </template>
       </v-row>
     </v-container>
   </v-card>
-  <v-divider />
 </template>
 
 <stlye lang="scss" scoped>
-.v-card--variant-flat {
-  &.mk-table-filter {
-    background: none;
-    color: rgb(var(--v-theme-on-surface-variant));
-  }
-}
-
 .v-input .v-field__input {
   --v-field-padding-top: 4px;
 }
@@ -200,3 +220,4 @@
   padding-bottom: 6px;
 }
 </stlye>
+@/models/keyboard/KeyboardShortcutCollection

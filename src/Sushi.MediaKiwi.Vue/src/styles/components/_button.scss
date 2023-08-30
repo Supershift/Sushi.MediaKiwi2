@@ -1,8 +1,17 @@
+@use "@/styles/abstracts";
+
 .v-btn {
   &.v-btn--mediakiwi {
+    @include abstracts.typography("label", "large");
+
     &:not(.v-btn--icon) {
       padding: 10px 12px;
       text-transform: none;
+      height: auto;
+
+      &.v-btn--mediakiwi--primary {
+        padding: 10px 24px 10px 16px;
+      }
     }
 
     &.v-btn--disabled {

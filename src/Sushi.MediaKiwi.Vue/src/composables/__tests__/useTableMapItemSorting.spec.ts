@@ -3,7 +3,7 @@ import { describe, it, expect } from "vitest";
 import type { Sorting } from "../../models/api/Sorting";
 import type { TableMap } from "../../models/table/TableMap";
 import { useTableMapItemSorting } from "./../useTableMapItemSorting";
-import { SortDirection } from "../../models";
+import { IconsLibrary, SortDirection } from "../../models";
 import { nameof } from "../..//helpers/UtilsHelper";
 
 interface ISampleData {
@@ -54,7 +54,7 @@ describe("useTableMapItemSorting.spec", () => {
         sortDirection: SortDirection.Asc,
       });
 
-      expect(sortIcon.value === "mdi-arrow-up");
+      expect(sortIcon.value === IconsLibrary.arrowUp);
     });
 
     it("Should match desc icon", () => {
@@ -63,7 +63,7 @@ describe("useTableMapItemSorting.spec", () => {
         sortDirection: SortDirection.Desc,
       });
 
-      expect(sortIcon.value === "mdi-arrow-up");
+      expect(sortIcon.value === IconsLibrary.arrowDown);
     });
 
     it("Should have active class", () => {

@@ -13,6 +13,15 @@ export default mergeConfig(
       deps: {
         inline: ["vuetify"],
       },
+      reporters: ["default", "junit"],
+      outputFile: {
+        junit: "coverage/TEST-junit.xml",
+      },
+      coverage: {
+        provider: "istanbul",
+        reporter: ["text", "cobertura"],
+        reportsDirectory: "coverage",
+      },
     },
   })
 );

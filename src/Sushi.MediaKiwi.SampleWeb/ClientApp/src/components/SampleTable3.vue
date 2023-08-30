@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { computed, ref } from "vue";
   import type { TableMap, TableFilter, Sorting } from "@supershift/mediakiwi-vue";
-  import { MkTable, TableFilterType, SortDirection, IconPosition } from "@supershift/mediakiwi-vue";
+  import { MkTable, TableFilterType, SortDirection, IconsLibrary } from "@supershift/mediakiwi-vue";
   import type { ISampleData } from "./ISampleData";
   import { SampleDataService } from "./SampleDataService";
 
@@ -10,9 +10,9 @@
     itemId: (item) => item.id,
     items: [
       { headerTitle: "Id", value: (dataItem) => dataItem.id, sortingOptions: { id: (x) => x.id } },
-      { headerTitle: "Naam", value: (dataItem) => dataItem.name },
+      { headerTitle: "Naam", value: (dataItem) => dataItem.name, sortingOptions: { id: (x) => x.name } },
       { headerTitle: "Land", value: (dataItem) => dataItem.countryName, sortingOptions: { id: (x) => x.countryName } },
-      { headerTitle: "Laast gezien", value: (dataItem) => dataItem.date?.toISOString() },
+      { headerTitle: "Laast gezien", value: (dataItem) => dataItem.date?.toISOString(), sortingOptions: { id: (x) => x.date } },
       {
         headerTitle: "Checked",
         value: () => true, // MediaKiwi will render a mdi check icon if the value returns a boolean
@@ -95,11 +95,12 @@
     item-view-id="SampleEdit"
   >
     <template #selectionActions>
-      <v-btn @click="download">Download</v-btn>
+      <v-btn @click="download"><v-icon :icon="IconsLibrary.trayArrowDown"></v-icon> Download</v-btn>
       <v-btn @click="move">move</v-btn>
 
       <v-btn icon color="primary">
-        <v-icon>mdi-dots-vertical</v-icon>
+        <!-- This icon should be loaded locally first, this only works because we have it preloaded in the MK project because MKFormToollbar and MkToolbar uses this  -->
+        <v-icon :icon="IconsLibrary.dotsVertical"></v-icon>
 
         <v-menu activator="parent">
           <v-list>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { useRouter } from "@/router";
   import { useNavigation } from "@/composables/useNavigation";
+  import { IconsLibrary } from "@/models";
 
   const emit = defineEmits(["navigateBack"]);
 
@@ -26,5 +27,5 @@
   }
 </script>
 <template>
-  <v-btn icon="mdi-arrow-left" color="on-surface-variant" @click="navigateBack()"></v-btn>
+  <v-btn :icon="IconsLibrary.arrowLeft" color="on-surface-variant" @click="navigateBack()"></v-btn>
 </template>

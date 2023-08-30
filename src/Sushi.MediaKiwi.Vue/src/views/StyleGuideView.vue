@@ -2,9 +2,10 @@
   import { ref } from "vue";
   import { container } from "tsyringe";
   import { SectionConnector } from "@/services";
-  import { ListResult, Section, TableMap } from "@/models";
+  import { ListResult, Paging, Section, TableMap } from "@/models";
   import { MkTable } from "@/components";
   import { useColors, useTypography, useElevations } from "@/composables";
+  import { IconsLibrary } from "@/models";
 
   const { colors, variants, cssVariables, variables, getColorBackgroundClasses } = useColors(); //getColorValue
   const { typographyItems, getTypographyClasses } = useTypography();
@@ -12,7 +13,7 @@
 
   // Table data
   const sectionConnector = container.resolve<SectionConnector>("ISectionConnector");
-  const currentPage = ref(1);
+  const currentPagination = ref<Paging>({});
   const data = ref<ListResult<Section>>();
   // define mapping
   const tableMap: TableMap<Section> = {
@@ -24,9 +25,12 @@
     ],
   };
 
+  // IconsLibrary keys
+  const iconKeys = Object.keys(IconsLibrary);
+
   // get data
   async function onLoad() {
-    data.value = await sectionConnector.GetSections({ pageIndex: currentPage.value - 1, pageSize: 10 });
+    data.value = await sectionConnector.GetSections(currentPagination.value);
   }
 </script>
 
@@ -143,7 +147,38 @@
   <br />
 
   <h2 class="text-headline-small">Table</h2>
-  <mk-table v-model:current-page="currentPage" :api-result="data" :on-load="onLoad" :table-map="tableMap"></mk-table>
+  <mk-table v-model:current-pagination="currentPagination" :api-result="data" :on-load="onLoad" :table-map="tableMap"></mk-table>
+  <br />
+
+  <br />
+  <v-divider />
+  <br />
+
+  <h2 class="text-headline-small">Icons and aliases</h2>
+  <v-container class="ma-0 pa-0">
+    <v-row>
+      <v-col cols="9">
+        <v-table>
+          <thead>
+            <tr>
+              <th class="text-left">Name</th>
+              <th class="text-left">Alias</th>
+              <th class="text-center">Icon</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in iconKeys" :key="item">
+              <td>{{ item }}</td>
+              <td>
+                <code>{{ "$" + item }}</code>
+              </td>
+              <td class="text-center"><v-icon :icon="'$' + item"></v-icon></td>
+            </tr>
+          </tbody>
+        </v-table>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <style lang="sass" src="@/styles/views/style-guide.scss" scoped />

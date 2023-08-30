@@ -61,8 +61,8 @@ export function useNavigation() {
       let routeParams: RouteParamsRaw | undefined = undefined;
       if (navigationItem.view?.parameterName) {
         // if this is a dynamic route, try to resolve route parameter
-        routeParams = {};
-        routeParams[navigationItem.view.parameterName] = itemId;
+        routeParams = route.params;
+        if (itemId) routeParams[navigationItem.view.parameterName] = itemId;
       }
 
       // called to send user to target screen
@@ -80,22 +80,21 @@ export function useNavigation() {
 
   /**
    *
-   * @returns The current root item. The root item is the first dynamic item in the tree which is also a leaf node or undefined if no such item exists.
+   * @returns The current root item. The root item is a parent with item navigation or the section.
    */
   function determineCurrentRoootItem(): NavigationItem | undefined {
-    // go up the tree untill a dynamic item which is its own leaf node is found
+    // go up the tree untill a parent is found which has item navigation AND has multiple items
     let result: NavigationItem | undefined = undefined;
-    let candidate: NavigationItem | undefined = currentNavigationItem.value;
+    let candidate: NavigationItem | undefined = currentNavigationItem.value?.parent;
     while (candidate && !result) {
-      if (candidate.view?.parameterName && candidate.leaf?.id == candidate.id) {
-        // we have found a dynamic route which is a leaf node
+      if (candidate.hasItemNavigation && candidate.children && candidate.children.length > 1) {
         result = candidate;
       } else {
         if (candidate.parent) {
           // get parent and use it as next candidate
           candidate = candidate.parent;
         } else {
-          // parent is undefined, we have reached the top of the tree
+          // if parent is undefined, we have reached the top of the tree
           candidate = undefined;
           result = candidate;
         }

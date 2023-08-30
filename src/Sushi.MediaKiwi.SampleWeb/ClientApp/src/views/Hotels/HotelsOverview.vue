@@ -3,6 +3,8 @@
   import { Hotel } from "@/models/Hotel";
   import { CountryConnector } from "@/services/CountryConnector";
   import { HotelConnector } from "@/services/HotelConnector";
+  import { IconsLibrary, Paging } from "@supershift/mediakiwi-vue";
+
   import {
     ListResult,
     MkTable,
@@ -24,7 +26,7 @@
   const { formatDateTime, t } = await useI18next();
 
   // define reactive variables
-  const currentPage = ref(0);
+  const currentPagination = ref<Paging>({});
   const hotels = ref<ListResult<Hotel>>();
   const countries = ref<Country[]>();
 
@@ -32,7 +34,7 @@
   function srpIcon(item: Hotel): TableCellIcon {
     return {
       position: item.srp ? TableIconPosition.Append : TableIconPosition.Prepend,
-      iconName: item.srp ? "mdi-account-check" : "mdi-alert-circle",
+      iconName: item.srp ? "$accountCheckOutline" : IconsLibrary.accountCircle,
       tooltip: item.srp ? "SRP" : "NoSRP",
       label: item.srp ? "SRP correct" : "Define SRP",
     };
@@ -69,7 +71,7 @@
   // load data
   async function LoadData() {
     hotels.value = await connector.GetAllAsync(
-      { pageIndex: currentPage.value },
+      currentPagination.value,
       filters.value.countryCode.selectedValue?.value,
       filters.value.isActive.selectedValue?.value
     );
@@ -88,7 +90,7 @@
 
 <template>
   <mk-table
-    v-model:current-page="currentPage"
+    v-model:current-pagination="currentPagination"
     v-model:filters="filters"
     new
     :api-result="hotels"

@@ -4,8 +4,8 @@ import type { INavigationConnector, IViewConnector, ISectionConnector } from "@/
 import type ListResult from "@/models/api/ListResult";
 import { container } from "tsyringe";
 import { IRoleConnector } from "@/services/IRoleConnector";
-
-const pageSize = 9999;
+import { noPageSize } from "@/constants";
+import { VuetifyOptions } from "vuetify/lib/framework.mjs";
 
 export interface MediaKiwiState {
   navigationItems: Array<NavigationItem>;
@@ -14,6 +14,7 @@ export interface MediaKiwiState {
   roles: Role[];
   isLocal: boolean;
   drawer: boolean;
+  externalIcons: boolean;
 }
 
 export const useMediakiwiStore = defineStore({
@@ -26,6 +27,7 @@ export const useMediakiwiStore = defineStore({
       roles: [],
       isLocal: true,
       drawer: true,
+      externalIcons: false,
     } as MediaKiwiState),
   getters: {
     rootNavigationItems: (state: MediaKiwiState) => state.navigationItems.filter((x) => x.parentNavigationItemId == null),
@@ -47,17 +49,17 @@ export const useMediakiwiStore = defineStore({
       // get instance of INavigationConnector
       const connector = container.resolve<INavigationConnector>("INavigationConnector");
       // get nav items and store them
-      const navigationItems = await connector.GetNavigationItems({ pageSize: pageSize });
+      const navigationItems = await connector.GetNavigationItems({ pageSize: noPageSize });
       this.setNavigationItems(navigationItems);
     },
     async getViews() {
       const connector = container.resolve<IViewConnector>("IViewConnector");
-      const views = await connector.GetViews(undefined, { pageSize: pageSize });
+      const views = await connector.GetViews(undefined, { pageSize: noPageSize });
       this.setViews(views);
     },
     async getSections() {
       const connector = container.resolve<ISectionConnector>("ISectionConnector");
-      const sections = await connector.GetSections({ pageSize: pageSize });
+      const sections = await connector.GetSections({ pageSize: noPageSize });
       this.setSections(sections);
     },
     toggleDrawer() {
@@ -67,7 +69,7 @@ export const useMediakiwiStore = defineStore({
       if (payload) {
         this.navigationItems = payload.result;
         // add view to items
-        this.setNavigaiontItemsView(this.navigationItems);
+        this.setNavigationItemsView(this.navigationItems);
         // add parent/child relations
         this.navigationItems.forEach((item) => {
           // add parent
@@ -79,8 +81,8 @@ export const useMediakiwiStore = defineStore({
         this.navigationItems.forEach((item) => {
           item.path = this.getParentPath(item);
         });
-        // add leaf node (dynamic items without children have a different leaf node)
-        this.setLeafNodes(this.navigationItems);
+        // set 'has item navigation'
+        this.setHasItemNavigation(this.navigationItems);
       }
     },
     setRoles(payload: ListResult<Role>) {
@@ -115,26 +117,23 @@ export const useMediakiwiStore = defineStore({
       }
       return result;
     },
-    setLeafNodes(navigationItems: Array<NavigationItem>) {
-      // add leaf node (dynamic items without children have a different leaf node)
-      navigationItems.forEach((item) => {
-        if (item?.view?.parameterName && item.children?.filter((x) => !x.view?.parameterName)) {
-          let candidate: NavigationItem | undefined = item.parent;
-          while (candidate && !item.leaf) {
-            if (!candidate.view?.parameterName || candidate.children?.some((x) => !x.view?.parameterName)) {
-              item.leaf = candidate;
-            }
-            candidate = candidate.parent;
-          }
-        } else {
-          item.leaf = item;
-        }
-      });
-    },
-    setNavigaiontItemsView(navigationItems: Array<NavigationItem>) {
+    setNavigationItemsView(navigationItems: Array<NavigationItem>) {
       navigationItems.forEach((item) => {
         item.view = this.views.find((x) => x.id === item.viewId);
       });
+    },
+    setHasItemNavigation(navigationItems: Array<NavigationItem>) {
+      // if an item has dynamic children, it has 'item navigation'
+      navigationItems.forEach((item) => {
+        if (item?.children?.some((x) => x.view?.parameterName)) item.hasItemNavigation = true;
+      });
+    },
+    registerIcons(options: VuetifyOptions) {
+      if (options && options.icons !== undefined) {
+        this.externalIcons = true;
+      } else {
+        this.externalIcons = false;
+      }
     },
   },
 });

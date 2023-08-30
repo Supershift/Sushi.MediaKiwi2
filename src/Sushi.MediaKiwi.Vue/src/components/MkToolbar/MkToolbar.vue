@@ -1,5 +1,6 @@
 <script setup lang="ts">
-  import MkTableActionNewItemButton from "./MkTableActionNewItemButton.vue";
+  import MkToolbarNewItemButton from "./MkToolbarNewItemButton.vue";
+  import { IconsLibrary } from "@/models";
 
   // define properties
   const props = defineProps<{
@@ -23,7 +24,7 @@
 <template>
   <v-card variant="text">
     <v-container>
-      <v-row class="pb-2 align-center">
+      <v-row class="pb-2 ml-0 align-center">
         <v-card-title class="px-0 text-title-medium">{{ title }}</v-card-title>
 
         <v-spacer></v-spacer>
@@ -35,12 +36,12 @@
 
           <!-- Render the new button when the prop is set -->
           <template v-if="props.itemViewId && props.new">
-            <MkTableActionNewItemButton :item-view-id="props.itemViewId" />
+            <MkToolbarNewItemButton :item-view-id="props.itemViewId" />
           </template>
 
           <!-- Render the actions slot -->
           <v-btn v-if="slots.menuActions" icon color="primary">
-            <v-icon>mdi-dots-vertical</v-icon>
+            <v-icon :icon="IconsLibrary.dotsVertical"></v-icon>
 
             <v-menu activator="parent">
               <slot name="menuActions"></slot>

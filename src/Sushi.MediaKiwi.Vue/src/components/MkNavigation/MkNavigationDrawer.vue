@@ -4,13 +4,15 @@
   import type { NavigationItem } from "@/models/api";
   import { useMediakiwiStore } from "@/stores";
   import { useNavigation } from "@/composables/useNavigation";
-  import { useI18next } from "@/composables/useI18next";
+  import { useI18next } from "@/composables";
 
+  // define properties
   defineEmits(["change"]);
   defineProps<{
     listItems: Array<NavigationItem>;
   }>();
 
+  // inject dependencies
   const store = useMediakiwiStore();
   const navigation = useNavigation();
 
@@ -36,9 +38,10 @@
   function getChildren() {
     // get current root navigation item
     const rootNode = navigation.currentRootItem.value;
+
     if (rootNode) {
       // get all children for navigation item
-      const result = navigation.getChildren(rootNode);
+      const result = rootNode.children;
       return result;
     } else {
       // we are on the root level, so return all root items for current section
@@ -46,26 +49,27 @@
       return store.rootNavigationItems.filter((x) => x.sectionId == currentNavigationItem?.sectionId);
     }
   }
-  /** Navigates to the parent of the current navigation item */
-  function goBack() {
-    navigation.navigateToParent();
-  }
-  /** Determines if the back button should be shown */
-  const showBackButton = computed(() => {
-    return navigation.isReverseNavigable(navigation.currentNavigationItem.value);
-  });
+  // /** Navigates to the parent of the current navigation item */
+  // function goBack() {
+  //   navigation.navigateToParent();
+  // }
+  // /** Determines if the back button should be shown */
+  // const showBackButton = computed(() => {
+  //   return navigation.isReverseNavigable(navigation.currentNavigationItem.value);
+  // });
 </script>
 <template>
   <v-navigation-drawer absolute class="pa-3">
     <v-list open-strategy="single" class="pa-0">
       <v-list-item
-        v-if="showBackButton"
+        v-if="navigation.currentRootItem.value"
         :title="defaultT('Back')"
+        exact
         rounded="pill"
         class="mb-2"
         prepend-icon="mdi-chevron-left"
-        @click.stop="goBack()"
-      ></v-list-item>
+        @click.stop="navigation.navigateTo(navigation.currentRootItem.value)"
+      />
       <mk-navigation-item v-for="item in children" :key="item.id" :navigation-item="item" :all-items="allNavigationItems"></mk-navigation-item>
     </v-list>
   </v-navigation-drawer>

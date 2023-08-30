@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { MkTable } from "@/components";
-  import { TableMap, ListResult, Section } from "@/models";
+  import { TableMap, ListResult, Section, Paging } from "@/models";
   import { ref } from "vue";
   import { container } from "tsyringe";
   import { SectionConnector } from "@/services";
@@ -10,7 +10,7 @@
 
   // define reactive variables
   const data = ref<ListResult<Section>>();
-  const currentPage = ref(1);
+  const currentPagination = ref<Paging>({});
 
   // define mapping
   const tableMap: TableMap<Section> = {
@@ -24,9 +24,16 @@
 
   // get data
   async function onLoad() {
-    data.value = await sectionConnector.GetSections({ pageIndex: currentPage.value - 1, pageSize: 10 });
+    data.value = await sectionConnector.GetSections(currentPagination.value);
   }
 </script>
 <template>
-  <mk-table v-model:current-page="currentPage" new :api-result="data" :on-load="onLoad" :table-map="tableMap" item-view-id="MkSectionEdit"></mk-table>
+  <mk-table
+    v-model:current-pagination="currentPagination"
+    new
+    :api-result="data"
+    :on-load="onLoad"
+    :table-map="tableMap"
+    item-view-id="MkSectionEdit"
+  ></mk-table>
 </template>
