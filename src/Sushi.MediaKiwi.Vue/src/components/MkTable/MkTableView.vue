@@ -15,7 +15,6 @@
   import { ref } from "vue";
   import { usePagination } from "@/composables/usePagination";
   import { computed } from "vue";
-  import { truncate } from "fs";
 
   // define properties
   const props = defineProps<{
