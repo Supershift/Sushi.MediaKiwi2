@@ -83,6 +83,11 @@ function removeKeyboardShortcuts(shortcuts: KeyboardShortcutCollection) {
 function addKeyPressed(e: KeyboardEvent) {
   keysPressed.value.add(e.key.toLowerCase());
   handleKeyboardShortcuts(e);
+
+  // When browser functionality intervenes (for example: ctrl + t) the keyup event is not triggered.
+  // This will cause the keys pressed set to be out of sync.
+  // This will clear the keys pressed set after 3 seconds.
+  setTimeout(() => removeKeyPressed(e), 3000);
 }
 
 /**
