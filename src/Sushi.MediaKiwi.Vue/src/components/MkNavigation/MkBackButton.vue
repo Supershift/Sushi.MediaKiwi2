@@ -2,12 +2,17 @@
   import { useRouter } from "@/router";
   import { useNavigation } from "@/composables/useNavigation";
   import { IconsLibrary } from "@/models";
+  import { computed } from "vue";
 
   const emit = defineEmits(["navigateBack"]);
 
   // inject dependencies
   const navigation = useNavigation();
   const router = useRouter();
+
+  const icon = computed(() => {
+    return IconsLibrary.arrowLeft;
+  });
 
   // We would need to check if there is something in the list of crumbs, otherwise just back
   function navigateBack() {
@@ -27,5 +32,5 @@
   }
 </script>
 <template>
-  <v-btn :icon="IconsLibrary.arrowLeft" color="on-surface-variant" @click="navigateBack()"></v-btn>
+  <v-btn :icon="icon" color="on-surface-variant" @click="navigateBack()"></v-btn>
 </template>
