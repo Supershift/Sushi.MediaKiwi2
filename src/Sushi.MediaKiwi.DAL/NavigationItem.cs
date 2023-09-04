@@ -28,6 +28,7 @@ namespace Sushi.MediaKiwi.DAL
                 Map(x => x.SectionId, "SectionID");
                 Map(x => x.ParentNavigationItemId, "ParentNavigationItemID");
                 Map(x => x.ViewId, "ViewID").SqlType(System.Data.SqlDbType.VarChar);
+                Map(x => x.Icon, "Icon");
             }
         }
 
@@ -51,5 +52,10 @@ namespace Sushi.MediaKiwi.DAL
         /// If set, id of the view to which this item navigates.
         /// </summary>
         public string? ViewId { get; set; } = null!;
+
+        /// <summary>
+        /// If set, adds an Icon infront of the navigation Item
+        /// </summary>
+        public string? Icon { get; set; } = null!;
     }
 }

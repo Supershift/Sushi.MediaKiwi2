@@ -23,5 +23,7 @@ namespace Sushi.MediaKiwi.Services.Model
         public int? ParentNavigationItemId { get; set; }
         
         public string? ViewId { get; set; }        
+        
+        public string? Icon { get; set; }   
     }
 }
