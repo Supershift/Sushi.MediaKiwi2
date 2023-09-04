@@ -1,10 +1,10 @@
 <script setup lang="ts">
   import MkNavigationItem from "@/components/MkNavigation/MkNavigationItem.vue";
   import { computed } from "vue";
-  import type { NavigationItem } from "@/models/api";
   import { useMediakiwiStore } from "@/stores";
   import { useNavigation } from "@/composables/useNavigation";
   import { useI18next } from "@/composables";
+  import { NavigationItem, IconsLibrary } from "@/models";
 
   // define properties
   defineEmits(["change"]);
@@ -59,6 +59,7 @@
         exact
         rounded="pill"
         class="mb-2"
+        :prepend-icon="IconsLibrary.arrowLeft"
         @click.stop="navigation.navigateTo(navigation.currentRootItem.value)"
       />
       <mk-navigation-item v-for="item in children" :key="item.id" :navigation-item="item" :all-items="allNavigationItems"></mk-navigation-item>
