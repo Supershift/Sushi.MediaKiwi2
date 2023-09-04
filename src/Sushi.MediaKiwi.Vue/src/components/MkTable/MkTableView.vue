@@ -83,6 +83,10 @@
     selectedSortOption: props.sorting,
   });
 
+  const SortIconVariant = computed(() => {
+    return !selectedSorting.value ? "tonal" : "text";
+  });
+
   function onClick(tableMapItem: TableMapItem<unknown>) {
     if (tableMapItem?.sortingOptions) {
       setSorting(tableMapItem.sortingOptions);
@@ -98,6 +102,7 @@
 
   function sortingClasses() {
     return {
+      "sort-icon": true,
       hidden: !selectedSorting.value,
     };
   }
@@ -139,7 +144,7 @@
         <!-- render a header cell for each mapping item -->
         <th v-for="(mapItem, index) in props.tableMap.items" :key="index" :class="getHeaderClasses(mapItem)" @click="onClick(mapItem)">
           {{ mapItem.headerTitle }}
-          <v-icon v-if="mapItem.sortingOptions" :icon="sortIcon" :class="sortingClasses()" />
+          <v-btn v-if="mapItem.sortingOptions" :icon="sortIcon" :class="sortingClasses()" :variant="SortIconVariant" />
         </th>
       </tr>
     </thead>
@@ -172,19 +177,19 @@
             &.sortable {
               font-weight: 700 !important;
 
-              .v-icon {
+              .sort-icon {
                 visibility: hidden;
               }
 
               &:hover {
                 cursor: pointer;
-                .v-icon {
+                .sort-icon {
                   visibility: visible;
                 }
               }
 
               &.sortable-active {
-                .v-icon {
+                .sort-icon {
                   visibility: visible;
                 }
               }
