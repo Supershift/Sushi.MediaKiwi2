@@ -1,23 +1,22 @@
 <script setup lang="ts">
-  import MkToolbarNewItemButton from "./MkToolbarNewItemButton.vue";
-  import { IconsLibrary } from "@/models";
+  import { MkNewItemButton, MkOverflowMenuIcon } from "@/components";
 
   // define properties
   const props = defineProps<{
     /** ExternalId of the view instance */
     itemViewId?: string;
-    /** Displays new item button if set to true and itemViewId has a value */
-    new?: boolean;
     /** Title specificly for the current table */
     title?: string;
+    /** Displays new item button if set to true and itemViewId has a value */
+    new?: boolean;
   }>();
 
   // define slots
   const slots = defineSlots<{
-    /** Slot for the visible buttons in the action obar */
-    actions?: (props: unknown) => any;
-    /** Slot designed for the buttons (or whatever the user wants) that are available behind the 3 dots menu */
-    menuActions?: (props: unknown) => any;
+    /** Visible action slot for the MkToolbar */
+    toolbar?: (props: unknown) => never;
+    /** Menu actions for the MkToolbar */
+    overflowMenuActions?: (props: unknown) => never;
   }>();
 </script>
 
@@ -30,23 +29,18 @@
         <v-spacer></v-spacer>
 
         <v-card-actions>
-          <template v-if="slots.actions">
-            <slot name="actions"></slot>
+          <template v-if="slots.toolbar">
+            <slot name="toolbar"></slot>
           </template>
 
           <!-- Render the new button when the prop is set -->
           <template v-if="props.itemViewId && props.new">
-            <MkToolbarNewItemButton :item-view-id="props.itemViewId" />
+            <MkNewItemButton :item-view-id="props.itemViewId" />
           </template>
 
-          <!-- Render the actions slot -->
-          <v-btn v-if="slots.menuActions" icon color="primary">
-            <v-icon :icon="IconsLibrary.dotsVertical"></v-icon>
-
-            <v-menu activator="parent">
-              <slot name="menuActions"></slot>
-            </v-menu>
-          </v-btn>
+          <MkOverflowMenuIcon v-if="slots.overflowMenuActions">
+            <slot name="overflowMenuActions"></slot>
+          </MkOverflowMenuIcon>
         </v-card-actions>
       </v-row>
     </v-container>
