@@ -12,7 +12,7 @@
     "test": "vitest",
     "test:ui": "vitest --ui ",
     "test:run": "vitest run",
-    "coverage": "vitest run --coverage",
+    "coverage": "vitest run --ui --coverage",
     "lint:all": "eslint src",
     "lint:error": "eslint src --quiet",
     "stylelint:all": "stylelint src/**/*.scss"
