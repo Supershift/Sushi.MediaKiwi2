@@ -83,6 +83,10 @@
     selectedSortOption: props.sorting,
   });
 
+  const SortIconVariant = computed(() => {
+    return !selectedSorting.value ? "tonal" : "text";
+  });
+
   function onClick(tableMapItem: TableMapItem<unknown>) {
     if (tableMapItem?.sortingOptions) {
       setSorting(tableMapItem.sortingOptions);
@@ -111,6 +115,7 @@
 
   function sortingClasses() {
     return {
+      "sort-icon": true,
       hidden: !selectedSorting.value,
     };
   }
@@ -151,10 +156,8 @@
         </th>
         <!-- render a header cell for each mapping item -->
         <th v-for="(mapItem, index) in props.tableMap.items" :key="index" :class="getHeaderClasses(mapItem)" @click="onClick(mapItem)">
-          <span class="mk-table-view__header" :class="getTableHeadClasses(mapItem)">
-            <label> {{ mapItem.headerTitle }} </label>
-            <v-icon v-if="mapItem.sortingOptions" class="ml-1" :icon="sortIcon" :class="sortingClasses()" />
-          </span>
+          {{ mapItem.headerTitle }}
+          <v-icon v-if="mapItem.sortingOptions" :icon="sortIcon" :class="sortingClasses()" />
         </th>
       </tr>
     </thead>
@@ -212,20 +215,19 @@
             &.sortable {
               font-weight: 700 !important;
 
+              .v-icon {
+                visibility: hidden;
+              }
+
               &:hover {
                 cursor: pointer;
-
-                span {
-                  cursor: inherit;
-                }
-
                 .v-icon {
                   visibility: visible;
                 }
               }
 
               &.sortable-active {
-                .v-icon {
+                .sort-icon {
                   visibility: visible;
                 }
               }

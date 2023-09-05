@@ -35,6 +35,7 @@ export const navigationItems = <INavigationItem[]>[
     viewId: 2,
     sectionId: 1,
     parentNavigationItemId: null,
+    icon: "$accountCircle",
   },
   {
     id: 21,
