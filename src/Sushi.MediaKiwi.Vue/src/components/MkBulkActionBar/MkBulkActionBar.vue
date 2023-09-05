@@ -19,7 +19,7 @@
     <v-label class="ms-5 me-4"> {{ selection.length }} {{ defaultT("selected") }} </v-label>
     <v-divider class="mx-2" inset vertical></v-divider>
 
-    <slot name="selectionActions"></slot>
+    <slot></slot>
 
     <v-spacer></v-spacer>
 

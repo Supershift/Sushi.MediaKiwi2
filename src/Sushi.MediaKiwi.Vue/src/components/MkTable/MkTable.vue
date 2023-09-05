@@ -65,13 +65,13 @@
   // define slots
   const slots = defineSlots<{
     header?: (props: unknown) => any;
-    /** Visible action slot for the MkToolbar bar */
-    actions?: (props: unknown) => any;
-    /** Action slot for the MkToolbar bar */
-    menuActions?: (props: unknown) => any;
-    /** Action slot for the MkToolbar */
-    selectionActions?: (props: unknown) => any;
     footer?: (props: unknown) => any;
+    /** Visible action slot for the MkToolbar */
+    toolbar?: (props: unknown) => never;
+    /** Menu actions for the MkToolbar */
+    overflowMenuActions?: (props: unknown) => never;
+    /** Action slot for the MkBulkActionBar */
+    bulkActionBar?: (props: unknown) => never;
   }>();
 
   // inject dependencies
@@ -154,13 +154,13 @@
     <v-progress-linear v-if="inProgress" indeterminate absolute></v-progress-linear>
     <slot name="header"></slot>
 
-    <template v-if="(slots.actions || slots.menuActions || props.new || props.title) && props.itemViewId">
+    <template v-if="(slots.toolbar || slots.overflowMenuActions || props.new || props.title) && props.itemViewId">
       <MkToolbar :item-view-id="props.itemViewId" :new="props.new" :title="props.title">
-        <template v-if="slots.actions" #actions>
-          <slot name="actions"></slot>
+        <template v-if="slots.toolbar" #toolbar>
+          <slot name="toolbar"></slot>
         </template>
-        <template v-if="slots.menuActions" #menuActions>
-          <slot name="menuActions"></slot>
+        <template v-if="slots.overflowMenuActions" #overflowMenuActions>
+          <slot name="overflowMenuActions"></slot>
         </template>
       </MkToolbar>
     </template>
@@ -172,9 +172,7 @@
     <template v-if="selection">
       <v-expand-transition>
         <MkBulkActionBar v-if="selection?.length" :selection="selection" @click:close="mkTableViewComponent.clearSelection">
-          <template #selectionActions>
-            <slot name="selectionActions"></slot>
-          </template>
+          <slot name="bulkActionBar"></slot>
         </MkBulkActionBar>
       </v-expand-transition>
     </template>
