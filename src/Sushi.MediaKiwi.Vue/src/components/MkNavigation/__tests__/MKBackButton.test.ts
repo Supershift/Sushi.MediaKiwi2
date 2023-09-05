@@ -52,7 +52,8 @@ describe("MKBackButton", () => {
         wrapper.find("button").trigger("click");
     
         // Expect router.push to have been called 
-        vi.spyOn(router, 'push').mockClear();
+        vi.spyOn(router, 'push').mockReturnValue("push");
+        
         // Ensure router.back is not called
         expect(router.back).not.toHaveBeenCalled();
         
