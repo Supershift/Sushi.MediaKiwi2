@@ -10,9 +10,13 @@
     itemId: (item) => item.id,
     items: [
       { headerTitle: "Id", value: (dataItem) => dataItem.id, sortingOptions: { id: (x) => x.id } },
-      { headerTitle: "Naam", value: (dataItem) => dataItem.name, sortingOptions: { id: (x) => x.name } },
-      { headerTitle: "Land", value: (dataItem) => dataItem.countryName, sortingOptions: { id: (x) => x.countryName } },
-      { headerTitle: "Laast gezien", value: (dataItem) => dataItem.date?.toISOString(), sortingOptions: { id: (x) => x.date } },
+      { headerTitle: "Name", value: (dataItem) => dataItem.name, sortingOptions: { id: (x) => x.name } },
+      { headerTitle: "Country of origin", value: (dataItem) => dataItem.countryName, sortingOptions: { id: (x) => x.countryName } },
+      {
+        headerTitle: "Last seen",
+        value: (dataItem) => dataItem.date?.toISOString(),
+        sortingOptions: { id: (x) => x.date },
+      },
       {
         headerTitle: "Checked",
         value: () => true, // MediaKiwi will render a mdi check icon if the value returns a boolean
