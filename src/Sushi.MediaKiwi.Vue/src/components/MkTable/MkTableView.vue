@@ -36,6 +36,7 @@
     (e: "click:row", value: any): void;
     (e: "update:sorting", value?: Sorting): void;
     (e: "update:selection", value?: unknown[]): void;
+    (e: "update:data-item", dataItem: unknown): void;
   }>();
 
   // inject dependencies
@@ -142,6 +143,22 @@
     updatePageIndex(pageIndex + 1);
   }
 
+  /**
+   * Update the data item with the new value
+   * @param dataItem
+   * @param mapItem
+   * @param value
+   */
+  function updateData(dataItem: any, mapItem: TableMapItem<unknown>, value: any) {
+    // Bind the new value to the data item if the property is defined
+    if (dataItem) {
+      dataItem[mapItem.editOptions?.property] = value;
+    }
+
+    // Emit the updated data items
+    emit("update:data-item", dataItem);
+  }
+
   defineExpose({
     clearSelection,
   });
@@ -168,7 +185,13 @@
           <MkTableCheckbox :is-selected="isItemSelected(dataItem)" @update:selected="(e) => selectItem(dataItem, e)" />
         </td>
         <!-- render a cell for each mapping item -->
-        <MkTableCell v-for="(mapItem, cellIndex) in props.tableMap.items" :key="cellIndex" :data="dataItem" :map-item="mapItem"></MkTableCell>
+        <MkTableCell
+          v-for="(mapItem, cellIndex) in props.tableMap.items"
+          :key="cellIndex"
+          :data="dataItem"
+          :map-item="mapItem"
+          @update:data="(mapItem, value) => updateData(dataItem, mapItem, value)"
+        ></MkTableCell>
       </tr>
     </tbody>
     <tfoot>

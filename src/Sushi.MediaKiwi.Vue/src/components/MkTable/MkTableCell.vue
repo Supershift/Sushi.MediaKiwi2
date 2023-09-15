@@ -12,6 +12,10 @@
     mapItem: TableMapItem<any>;
   }>();
 
+  const emit = defineEmits<{
+    (e: "update:data", mapItem: TableMapItem<any>, value: unknown): void;
+  }>();
+
   // inject dependencies
   const { formatNumber, formatMoneyValue } = await useI18next();
 
@@ -48,8 +52,18 @@
 <template>
   <td>
     <!-- render a dynamic component-->
-    <template v-if="mapItem.component !== undefined">
+    <template v-if="mapItem.component">
       <component :is="mapItem.component" :data="mapItemValue"></component>
+    </template>
+    <template v-else-if="mapItem.editOptions && mapItem.editOptions.component">
+      <span @click.stop>
+        <component
+          :is="mapItem.editOptions.component"
+          :data="mapItemValue"
+          v-bind="mapItem.editOptions.componentProps"
+          @update:data="(value: unknown) => emit('update:data', mapItem, value)"
+        ></component>
+      </span>
     </template>
     <!-- render the result for calling 'value()'-->
     <template v-else>

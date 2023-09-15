@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/require-default-prop -->
 <script setup lang="ts">
-  import type { TableMap, TableFilter } from "@/models/table";
+  import type { TableMap, TableFilter, TableMapItem } from "@/models/table";
   import type { Paging, Sorting } from "@/models/api";
   import { ref } from "vue";
   import MkTableFilter from "@/components/MkTableFilter/MkTableFilter.vue";
@@ -60,6 +60,7 @@
     (e: "update:sorting", value?: Sorting): void;
     (e: "update:selection", value?: unknown[]): void;
     (e: "update:currentPagination", value: Paging): void;
+    (e: "update:data-item", dataItem: unknown): void;
   }>();
 
   // define slots
@@ -190,6 +191,7 @@
       @click:row="(e) => emit('click:row', e)"
       @update:sorting="sortingChanged"
       @update:selection="(e) => emit('update:selection', e)"
+      @update:data-item="(dataItem) => emit('update:data-item', dataItem)"
     >
       <template v-if="paginationMode === 'controls'" #bottom>
         <!-- Only show the controls if the pagination mode is unset or set to 'controls' -->
