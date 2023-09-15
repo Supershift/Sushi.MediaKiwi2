@@ -28,5 +28,13 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
             var result = await _countryService.GetAllAsync(pagingValues);
             return this.CreateResponse(result);
         }
+
+        [HttpPut]
+        [Route("{code}")]
+        public async Task<ActionResult<Country>> UpdateCountry(string code, Country request)
+        {
+            var result = await _countryService.UpdateAsync(code, request);
+            return this.CreateResponse(result);
+        }
     }
 }

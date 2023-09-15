@@ -15,4 +15,8 @@ export class CountryConnector {
     const response = await this.axios.get<ListResult<Country>>("/countries", { params: query });
     return response.data;
   }
+
+  async SaveAsync(request: Country): Promise<Country> {
+    return (await this.axios.put<Country>(`/countries/${request.code}`, request)).data;
+  }
 }
