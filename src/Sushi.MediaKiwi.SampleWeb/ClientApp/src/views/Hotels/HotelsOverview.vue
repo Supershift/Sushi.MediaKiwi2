@@ -8,7 +8,6 @@
   import {
     ListResult,
     MkTable,
-    MkOverflowMenuIcon,
     TableCellIcon,
     TableIconPosition,
     TableFilter,
@@ -16,7 +15,8 @@
     TableFilterValue,
     TableMap,
     useI18next,
-    MkNewItemButton,
+    MkCheckbox,
+    MkAutocomplete,
   } from "@supershift/mediakiwi-vue";
 
   import { container } from "tsyringe";
@@ -32,6 +32,9 @@
   const hotels = ref<ListResult<Hotel>>();
   const countries = ref<Country[]>();
 
+  // Load countries
+  countries.value = (await countriesConnector.GetAll({ pageIndex: 0, pageSize: 9999 })).result;
+
   // define mapping
   function srpIcon(item: Hotel): TableCellIcon {
     return {
@@ -44,12 +47,29 @@
   const tableMap: TableMap<Hotel> = {
     itemId: (item) => item.id,
     items: [
-      { headerTitle: t.value("Name"), value: (item) => item.name },
-      { headerTitle: t.value("Created"), value: (item) => formatDateTime.value(item.created) },
-      { headerTitle: t.value("Country"), value: (item) => countries.value!.find((x) => x.code == item.countryCode)?.name },
-      { headerTitle: t.value("Active"), value: (item) => item.isActive },
-      { headerTitle: t.value("SRP"), value: (item) => item.srp },
-      { headerTitle: "", value: (item) => srpIcon(item) },
+      { headerTitle: t.value("Name"), value: (item: Hotel) => item.name },
+      { headerTitle: t.value("Created"), value: (item: Hotel) => formatDateTime.value(item.created) },
+      {
+        headerTitle: t.value("Country"),
+        value: (item: Hotel) => countries.value!.find((x) => x.code == item.countryCode)?.code,
+        editOptions: {
+          property: "countryCode",
+          component: MkAutocomplete,
+          componentProps: {
+            options: countries.value?.map(({ code, name }) => <TableFilterValue>{ title: name, value: code }),
+          },
+        },
+      },
+      {
+        headerTitle: t.value("Active"),
+        value: (item: Hotel) => item.isActive,
+        editOptions: {
+          property: "isActive",
+          component: MkCheckbox,
+        },
+      },
+      { headerTitle: t.value("SRP"), value: (item: Hotel) => item.srp },
+      { headerTitle: "", value: (item: Hotel) => srpIcon(item) },
     ],
   };
 
@@ -79,14 +99,17 @@
     );
   }
 
-  // Load countries
-  countries.value = (await countriesConnector.GetAll({ pageIndex: 0, pageSize: 9999 })).result;
-
   // Set filter options
   filters.value.countryCode.options = countries.value?.map(({ code, name }) => <TableFilterValue>{ title: name, value: code });
 
   function action() {
     //
+  }
+
+  async function onUpdateDataItem(newValue: Hotel) {
+    // Update existing hotel
+    // TODO Implement feedback
+    await connector.SaveAsync(newValue);
   }
 </script>
 
@@ -101,6 +124,7 @@
     :data="hotels?.result"
     item-view-id="HotelEdit"
     title="Subtitle for the hotel list"
+    @update:data-item="onUpdateDataItem"
   >
     <template #toolbar>
       <v-btn>Knop 1</v-btn>
