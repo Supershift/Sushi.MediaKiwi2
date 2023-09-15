@@ -2,6 +2,7 @@ import type { Component, DefineComponent } from "vue";
 import type { TableMapSortingOptions } from "./TableMapSortingOptions";
 import { MoneyValue } from "../api";
 import { TableCellIcon } from "./TableCellIcon";
+import { TableMapItemEditOptions } from "./TableMapItemEditOptions";
 
 /** Represents a column in a table, mapping bound entities to table cells.  */
 export interface TableMapItem<Type> {
@@ -14,4 +15,6 @@ export interface TableMapItem<Type> {
   component?: Component | DefineComponent;
   /** Mark the column sortable */
   sortingOptions?: TableMapSortingOptions<Type>;
+  /** */
+  editOptions: TableMapItemEditOptions<Type>;
 }
