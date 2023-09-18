@@ -4,13 +4,15 @@
   import { RouterManager } from "@/router/routerManager";
   import { container } from "tsyringe";
   import { useMediakiwiStore } from "@/stores";
-  import { computed, ref } from "vue";
+  import { useNavigation } from "@/composables/useNavigation";
 
   // define events
   defineEmits(["change"]);
 
   // inject dependencies
-  var routerManager = container.resolve<RouterManager>("RouterManager");
+  const routerManager = container.resolve<RouterManager>("RouterManager");
+  // get values from navigation composables
+  const { currentSections } = useNavigation();
 
   // initialize router manager
   await routerManager.Initialize();
@@ -18,15 +20,9 @@
   // use dependencies
   const store = useMediakiwiStore();
 
-  // use ref from store
-  const sections = computed(() => {
-    // only display sections with navigation items
-    return store.sections.filter((section) => store.navigationItems.some((item) => item.sectionId === section.id));
-  });
-  const navigationItems = ref(store.navigationItems);
 </script>
 
 <template>
-  <mk-navigation-rail v-if="sections.length > 1" v-model="store.drawer" :rail-items="sections"></mk-navigation-rail>
-  <mk-navigation-drawer v-model="store.drawer" :list-items="navigationItems"></mk-navigation-drawer>
+  <mk-navigation-rail v-if="currentSections.length > 1" v-model="store.drawer" :rail-items="currentSections"></mk-navigation-rail>
+  <mk-navigation-drawer v-model="store.drawer"></mk-navigation-drawer>
 </template>
