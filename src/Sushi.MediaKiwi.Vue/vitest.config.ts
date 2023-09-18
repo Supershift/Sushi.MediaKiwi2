@@ -17,12 +17,14 @@ export default mergeConfig(
       },
       reporters: ["default", "junit"],
       outputFile: {
-        junit: "coverage/TEST-junit.xml",
+        junit: "test/coverage/TEST-junit.xml",
       },
       coverage: {
+        enabled: true,
         provider: "istanbul",
-        reporter: ["text", "cobertura"],
-        reportsDirectory: "coverage",
+        reporter: ["text", "cobertura", "html"],
+        reportsDirectory: "test/coverage",
+        exclude: ["**/*.test.ts", "**/*.spec.ts", "**/*.d.ts"],
       },
     },
   })
