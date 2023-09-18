@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import MkNavigationItem from "@/components/MkNavigation/MkNavigationItem.vue";
   import { useNavigation } from "@/composables/useNavigation";
-  import { useI18next } from "@/composables";
+  import { useI18next } from "@/composables/useI18next";
   import { IconsLibrary } from "@/models";
 
   // define properties

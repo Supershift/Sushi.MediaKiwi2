@@ -12,7 +12,7 @@ export default mergeConfig(
       environment: "jsdom",
       server: {
         deps: {
-          inline: ["vuetify"],
+          inline: ["vuetify", "i18next", "tysringe"],
         },
       },
       reporters: ["default", "junit"],
