@@ -11,7 +11,8 @@
 
   // inject dependencies
   const routerManager = container.resolve<RouterManager>("RouterManager");
-  const navigation = useNavigation();
+  // get values from navigation composables
+  const { currentSections } = useNavigation();
 
   // initialize router manager
   await routerManager.Initialize();
@@ -19,11 +20,9 @@
   // use dependencies
   const store = useMediakiwiStore();
 
-  // get values from navigation composables
-  const sections = navigation.currentSections;
 </script>
 
 <template>
-  <mk-navigation-rail v-if="sections.length > 1" v-model="store.drawer" :rail-items="sections"></mk-navigation-rail>
+  <mk-navigation-rail v-if="currentSections.length > 1" v-model="store.drawer" :rail-items="currentSections"></mk-navigation-rail>
   <mk-navigation-drawer v-model="store.drawer"></mk-navigation-drawer>
 </template>
