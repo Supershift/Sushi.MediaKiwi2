@@ -1,26 +1,18 @@
 import "reflect-metadata";
 import App from "./App.vue";
 import { createApp } from "vue";
-import mediakiwi, { createAxiosClient } from "@supershift/mediakiwi-vue";
+import mediakiwi, { createAxiosClient, mediakiwiIconAliases } from "@supershift/mediakiwi-vue";
 
-// Import mediakiwi stylesheet AFTER vuetify to override
-import "@supershift/mediakiwi-vue/dist/mediakiwi-vue.css";
+// Import the mediakiwi stylesheet
+import "@supershift/mediakiwi-vue/styles";
 
 import { getSettings } from "./services/settings";
 import { container } from "tsyringe";
-import { CountryConnector } from "./services/CountryConnector";
 import { i18n } from "i18next";
+import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
+import { mdiAccountCheckOutline, mdiTestTube } from "@mdi/js";
 
 const app = createApp(App);
-
-// load fonts
-const webFontLoader = await import(/* webpackChunkName: "webfontloader" */ "webfontloader");
-
-webFontLoader.load({
-  google: {
-    families: ["Roboto:100,300,400,500,700,900&display=swap"],
-  },
-});
 
 // Fetch the settings from the function api
 const settings = await getSettings();
@@ -36,7 +28,24 @@ settings.mediaKiwi.modules = import.meta.glob("./views/**/*.vue");
 settings.mediaKiwi.i18nextOptions = {
   debug: true,
 };
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
 settings.mediaKiwi.i18nextCallback = (instance: i18n) => {};
+
+//install some additional icons (demo)
+settings.mediaKiwi.vuetifyOptions = {
+  icons: {
+    defaultSet: "mdi",
+    aliases: {
+      ...aliases, // add the default aliases
+      ...mediakiwiIconAliases, // add the already known mediakiwi aliases
+      accountCheckOutline: mdiAccountCheckOutline, // add your own aliases
+      testTube: mdiTestTube, // add your own aliases
+    },
+    sets: {
+      mdi,
+    },
+  },
+};
 
 // install mediakiwi
 app.use(mediakiwi, settings.mediaKiwi);

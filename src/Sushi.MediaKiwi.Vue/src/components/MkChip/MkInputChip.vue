@@ -11,7 +11,14 @@
 </script>
 
 <template>
-  <v-chip :append-icon="props.appendIcon" :prepend-icon="props.prependIcon" closable @click:close.stop="(e) => emit('click:remove')" @click.stop="() => emit('click')">
+  <v-chip
+    :append-icon="props.appendIcon"
+    :prepend-icon="props.prependIcon"
+    closable
+    color="primary"
+    @click:close.stop="(e) => emit('click:remove')"
+    @click.stop="() => emit('click')"
+  >
     <slot></slot>
   </v-chip>
 </template>

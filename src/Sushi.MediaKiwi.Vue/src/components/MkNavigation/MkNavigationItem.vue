@@ -13,6 +13,14 @@
   const groupOpened = ref(false);
   const children = navigation.getChildren(props.navigationItem);
 
+  const icon = computed(() => {
+    if (props.navigationItem?.icon) {
+      return props.navigationItem.icon;
+    }
+    return undefined;
+  });
+
+  // determine if navigation item has a screen
   function hasScreen(item: NavigationItem): boolean {
     if (item?.viewId) {
       return true;
@@ -28,9 +36,8 @@
     return false;
   }
 
-  const isActive = computed(() => {
-    return navigation.currentNavigationItem.value?.leaf?.id == props.navigationItem.id;
-  });
+  // determine if navigation item is active
+  const isActive = computed(() => navigation.determineIfNavigationItemIsActive(props.navigationItem));
 </script>
 
 <template>
@@ -40,18 +47,29 @@
         v-bind="props"
         :exact="true"
         :active="isActive"
-        :active-class="'active-list-item'"
         :title="navigationItem.name"
+        rounded="pill"
+        class="mk-navigation-item mb-2"
+        :prepend-icon="icon"
         @click.stop="hasScreen(navigationItem) ? onItemClick(navigationItem) : {}"
       />
     </template>
     <mk-navigation-item v-for="child in children" :key="child.id" :navigation-item="child" :all-items="allItems" />
   </v-list-group>
-  <v-list-item v-else :active="isActive" :title="navigationItem.name" :exact="true" :active-class="'active-list-item'" @click.stop="hasScreen(navigationItem) ? onItemClick(navigationItem) : {}" />
+  <v-list-item
+    v-else
+    :active="isActive"
+    :title="navigationItem.name"
+    :exact="true"
+    rounded="pill"
+    class="mk-navigation-item mb-2"
+    :prepend-icon="icon"
+    @click.stop="hasScreen(navigationItem) ? onItemClick(navigationItem) : {}"
+  />
 </template>
-
-<style lang="css">
-  .active-list-item {
-    background-color: rgb(86, 86, 86, 0.2);
+<style lang="scss">
+  /** Used to override the spacing for icons vuetify that ships with */
+  .mk-navigation-item > .v-list-item__prepend > .v-icon {
+    margin-inline-end: 12px;
   }
 </style>

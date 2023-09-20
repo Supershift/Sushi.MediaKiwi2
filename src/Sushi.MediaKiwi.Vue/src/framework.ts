@@ -18,6 +18,7 @@ import { addWaitOnRouterManager } from "./router/waitOnRouterManager";
 import { addCheckIsInRole } from "./router/checkIsInRole";
 import { registerAxios } from "./helpers/registerAxios";
 import i18next, { tokenStore } from "./plugins/i18next";
+import { registerIcons } from "./helpers/registerIcons";
 
 export default {
   install(app: App, options: MediakiwiVueOptions): void {
@@ -53,12 +54,16 @@ export default {
     } else {
       vuetifyOptions = defaultVuetifyOptions;
     }
+
     const vuetify = createVuetify(vuetifyOptions);
     app.use(vuetify);
 
     // Create an instance of Pinia
     app.use(pinia);
     console.log("pinia created");
+
+    // register icons after pinia and vuetify are created
+    registerIcons(options);
 
     // create msal instance and install plugin
     identity.msalInstance = new PublicClientApplication(options.msalConfig);
@@ -111,4 +116,4 @@ export * from "@/stores";
 
 export * from "@/router";
 
-import "@/assets/main.css";
+export * from "@/plugins/icons/icons";

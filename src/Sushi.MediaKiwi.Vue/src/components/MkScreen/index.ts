@@ -1,1 +1,1 @@
-export { default as MkScreen } from './MkScreen.vue'
+export { default as MkScreen } from "./MkScreen.vue";

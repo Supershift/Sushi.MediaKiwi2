@@ -32,6 +32,7 @@
     item-value="id"
     :model-value="i18next.resolvedLanguage"
     :items="locales"
+    hide-details
     @update:model-value="changeLanguage"
   ></v-select>
 </template>

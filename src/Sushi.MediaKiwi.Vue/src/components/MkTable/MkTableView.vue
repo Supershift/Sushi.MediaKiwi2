@@ -10,6 +10,11 @@
   import { useTableMapItemSorting } from "@/composables/useTableMapItemSorting";
   import { watch } from "vue";
   import { useNavigation } from "@/composables/useNavigation";
+  import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
+  import { VuetifyPaginationMode } from "@/models/pagination/VuetifyPaginationMode";
+  import { ref } from "vue";
+  import { usePagination } from "@/composables/usePagination";
+  import { computed } from "vue";
 
   // define properties
   const props = defineProps<{
@@ -22,6 +27,8 @@
     selection?: unknown[];
     /** Make each row in the table selectable. */
     checkbox?: boolean;
+    /** Defines the pagination mode */
+    paginationMode?: MediakiwiPaginationMode;
   }>();
 
   // define event
@@ -76,6 +83,10 @@
     selectedSortOption: props.sorting,
   });
 
+  const SortIconVariant = computed(() => {
+    return !selectedSorting.value ? "tonal" : "text";
+  });
+
   function onClick(tableMapItem: TableMapItem<unknown>) {
     if (tableMapItem?.sortingOptions) {
       setSorting(tableMapItem.sortingOptions);
@@ -83,14 +94,28 @@
     }
   }
 
-  function getHeaderClasses(tableMapItem: TableMapItem<unknown>) {
+  function getHeaderClasses(tableMapItem: TableMapItem<unknown>): Record<string, boolean> {
     if (tableMapItem?.sortingOptions) {
-      return getSortingClasses(tableMapItem.sortingOptions);
+      return getSortingClasses(tableMapItem?.sortingOptions);
     }
+    return {};
+  }
+
+  function getTableHeadClasses(tableMapItem: TableMapItem<unknown>): Record<string, boolean> {
+    const classes: Record<string, boolean> = {};
+
+    // Get the type of the first item in the data array
+    if (tableMapItem && tableMapItem.value && props.data && props.data[0]) {
+      const type = typeof tableMapItem.value(props.data[0]);
+      classes[type] = true;
+    }
+
+    return classes;
   }
 
   function sortingClasses() {
     return {
+      "sort-icon": true,
       hidden: !selectedSorting.value,
     };
   }
@@ -98,7 +123,7 @@
   /** Init selection composable for item selection with the table map and data  */
   const { selectAll, selectItem, isItemSelected, isAllSelected, isIndeterminate, selectedItems } = useTableMapItemSelection({
     tableMap: props.tableMap,
-    data: props.data,
+    data: computed(() => props.data),
   });
 
   watch(selectedItems, (value) => {
@@ -109,17 +134,25 @@
     selectAll(false);
   }
 
+  const { updatePageIndex, pageIndex } = usePagination();
+  // deconstruct the prop to get the pagination mode for the vuetify component
+  const vuetifyPaginationMode = ref<VuetifyPaginationMode>(props.paginationMode as VuetifyPaginationMode);
+
+  function loadMore() {
+    updatePageIndex(pageIndex + 1);
+  }
+
   defineExpose({
     clearSelection,
   });
 </script>
 
 <template>
-  <v-table>
+  <v-table class="mk-table-view">
     <thead>
       <tr>
         <th v-if="checkbox">
-          <MkTableCheckbox :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:is-selected="selectAll" />
+          <MkTableCheckbox :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:selected="selectAll" />
         </th>
         <!-- render a header cell for each mapping item -->
         <th v-for="(mapItem, index) in props.tableMap.items" :key="index" :class="getHeaderClasses(mapItem)" @click="onClick(mapItem)">
@@ -132,7 +165,7 @@
       <!-- render a row for each provided data entity -->
       <tr v-for="(dataItem, rowIndex) in props.data" :key="rowIndex" style="cursor: pointer" @click.stop="(e) => onRowClick(e, dataItem)">
         <td v-if="checkbox" @click.stop>
-          <MkTableCheckbox :is-selected="isItemSelected(dataItem)" @update:is-selected="(e) => selectItem(dataItem, e)" />
+          <MkTableCheckbox :is-selected="isItemSelected(dataItem)" @update:selected="(e) => selectItem(dataItem, e)" />
         </td>
         <!-- render a cell for each mapping item -->
         <MkTableCell v-for="(mapItem, cellIndex) in props.tableMap.items" :key="cellIndex" :data="dataItem" :map-item="mapItem"></MkTableCell>
@@ -141,6 +174,10 @@
     <tfoot>
       <slot name="footer"></slot>
     </tfoot>
+
+    <template #bottom>
+      <slot name="bottom"></slot>
+    </template>
   </v-table>
 </template>
 
@@ -150,6 +187,31 @@
       table {
         thead {
           th {
+            // truncate logic
+            .mk-table-view__header {
+              display: flex;
+              flex-direction: row;
+              white-space: nowrap;
+              overflow: hidden;
+              contain: inline-size;
+
+              // Make an exception for boolean values
+              &.boolean {
+                contain: unset;
+              }
+
+              label {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+
+              .v-icon {
+                flex: 0 0 auto;
+              }
+            }
+
+            // Sorting icon logic
             &.sortable {
               font-weight: 700 !important;
 
@@ -165,9 +227,13 @@
               }
 
               &.sortable-active {
-                .v-icon {
+                .sort-icon {
                   visibility: visible;
                 }
+              }
+
+              .v-icon {
+                visibility: hidden;
               }
             }
           }

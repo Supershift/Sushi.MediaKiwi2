@@ -1,6 +1,6 @@
 {
   "name": "@supershift/mediakiwi-vue",
-  "version": "0.0.1",
+  "version": "0.1.0-beta.2",
   "description": "Vue 3 Library for the MediaKiwi Portal Builder",
   "scripts": {
     "build": "vite build --mode development",
@@ -9,25 +9,14 @@
     "test:unit": "vitest --environment jsdom --root src/",
     "test:e2e": "start-server-and-test preview :4173 'cypress run --e2e'",
     "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' :4173 'cypress open --e2e'",
-    "test": "jest src",
-    "test:ui": "vitest --ui",
+    "test": "vitest",
+    "test:ui": "vitest --ui ",
+    "test:run": "vitest run",
+    "coverage": "vitest run --ui --coverage",
     "lint:all": "eslint src",
-    "lint:error": "eslint src --quiet"
+    "lint:error": "eslint src --quiet",
+    "stylelint:all": "stylelint src/**/*.scss"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Supershift/Sushi.MediaKiwi2.git",
-    "directory": "src/Sushi.MediaKiwi.Vue"
-  },
-  "license": "MIT",
-  "keywords": [
-    "mediakiwi",
-    "ui framework",
-    "portal",
-    "builder",
-    "vue",
-    "vuetify"
-  ],
   "type": "module",
   "files": [
     "dist"
@@ -37,9 +26,10 @@
   "exports": {
     ".": {
       "import": "./dist/mediakiwi-vue.es.js",
-      "require": "./dist/mediakiwi-vue.umd.js"
+      "require": "./dist/mediakiwi-vue.umd.js",
+      "types": "./dist/main.d.ts"
     },
-    "./dist/mediakiwi-vue.css": {
+    "./styles": {
       "import": "./dist/mediakiwi-vue.css",
       "require": "./dist/mediakiwi-vue.css"
     }
@@ -58,11 +48,10 @@
     "tsyringe": "^4.7.0",
     "vite-plugin-dts": "^2.0.2",
     "vite-plugin-vuetify": "^1.0.2",
-    "vue-router": "^4.1.6",
-    "vuetify": "^3.1.3"
+    "vue-router": "^4.1.6"
   },
   "devDependencies": {
-    "@mdi/font": "^7.1.96",
+    "@mdi/js": "^7.2.96",
     "@pinia/testing": "^0.0.15",
     "@rushstack/eslint-patch": "^1.1.4",
     "@types/jsdom": "^20.0.1",
@@ -71,7 +60,9 @@
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.51.0",
     "@vitejs/plugin-vue": "^4.2.3",
-    "@vitest/ui": "^0.28.5",
+    "@vitest/coverage-istanbul": "^0.34.3",
+    "@vitest/coverage-v8": "^0.34.3",
+    "@vitest/ui": "^0.34.3",
     "@vue/eslint-config-prettier": "^7.0.0",
     "@vue/eslint-config-typescript": "^11.0.3",
     "@vue/test-utils": "^2.2.6",
@@ -80,16 +71,35 @@
     "eslint": "^8.22.0",
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-vue": "^9.14.1",
-    "jsdom": "^20.0.3",
+    "jsdom": "^22.1.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.7.1",
+    "sass": "^1.63.6",
     "start-server-and-test": "^1.15.2",
     "typescript": "~4.7.4",
-    "vite": "^4.2.3",
-    "vitest": "^0.25.6",
+    "vite": "^4.4.9",
+    "vitest": "^0.34.3",
     "vue": "^3.3.4",
     "vue-tsc": "^1.6.5",
-    "vuetify": "^3.1.3",
+    "vuetify": "^3.3.6",
     "webfontloader": "^1.6.28"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Supershift/Sushi.MediaKiwi2.git",
+    "directory": "src/Sushi.MediaKiwi.Vue"
+  },
+  "author": {
+    "name": "Supershift",
+    "url": "https://www.supershift.nl/"
+  },
+  "license": "MIT",
+  "keywords": [
+    "mediakiwi",
+    "ui framework",
+    "portal",
+    "builder",
+    "vue",
+    "vuetify"
+  ]
 }

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { TableMap, Locale, ListResult } from "@/models";
+  import { TableMap, Locale, ListResult, Paging } from "@/models";
   import { useI18next } from "@/composables";
   import { container } from "tsyringe";
   import { ILocaleConnector } from "@/services";
@@ -11,7 +11,7 @@
 
   // define reactive variables
   const data = ref<ListResult<Locale>>();
-  const currentPage = ref(0);
+  const currentPagination = ref<Paging>({});
 
   // define mapping
   const tableMap: TableMap<Locale> = {
@@ -25,9 +25,16 @@
 
   // get data
   async function onLoad() {
-    data.value = await localeConnector.GetAll(false, { pageIndex: currentPage.value, pageSize: 10 });
+    data.value = await localeConnector.GetAll(false, currentPagination.value);
   }
 </script>
 <template>
-  <mk-table :table-map="tableMap" v-model:current-page="currentPage" new :api-result="data" :on-load="onLoad" item-view-id="MkLocaleEdit"></mk-table>
+  <mk-table
+    v-model:current-pagination="currentPagination"
+    :table-map="tableMap"
+    new
+    :api-result="data"
+    :on-load="onLoad"
+    item-view-id="MkLocaleEdit"
+  ></mk-table>
 </template>

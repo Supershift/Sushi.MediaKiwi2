@@ -10,6 +10,22 @@ export default mergeConfig(
     test: {
       globals: true,
       environment: "jsdom",
+      server: {
+        deps: {
+          inline: ["vuetify"],
+        },
+      },
+      reporters: ["default", "junit"],
+      outputFile: {
+        junit: "test/coverage/TEST-junit.xml",
+      },
+      coverage: {
+        enabled: true,
+        provider: "istanbul",
+        reporter: ["text", "cobertura", "html"],
+        reportsDirectory: "test/coverage",
+        exclude: ["**/*.test.ts", "**/*.spec.ts", "**/*.d.ts"],
+      },
     },
   })
 );

@@ -1,10 +1,10 @@
 <script setup lang="ts">
   import { computed } from "vue";
-  import { MoneyValue } from "@/models";
+  import { MoneyValue, IconsLibrary } from "@/models";
   import type { TableMapItem } from "@/models/table/TableMapItem";
   import MkTableCellIcon from "./MkTableCellIcon.vue";
   import { useI18next } from "@/composables";
-  import { TableCellIcon } from "@/models/table/TableCellIcon";
+  import { TableCellIcon, TableIconPosition } from "@/models/table/TableCellIcon";
 
   // define properties
   const props = defineProps<{
@@ -31,6 +31,18 @@
     const value = mapItemValue.value as TableCellIcon;
     return value?.iconName;
   });
+
+  const booleanIcon = computed(() => {
+    const value = mapItemValue.value as boolean;
+    const iconName = value ? IconsLibrary.checkCircleOutline : IconsLibrary.closeCircleOutline;
+    const color = value ? "success" : "error";
+
+    return {
+      iconName,
+      color,
+      position: TableIconPosition.Append,
+    };
+  });
 </script>
 
 <template>
@@ -43,7 +55,7 @@
     <template v-else>
       <!-- render a boolean -->
       <template v-if="isBooleanValue">
-        <v-icon :icon="mapItemValue ? 'mdi-check-circle-outline' : 'mdi-close-circle-outline'"></v-icon>
+        <MkTableCellIcon :data="booleanIcon"></MkTableCellIcon>
       </template>
       <!-- render a number -->
       <template v-else-if="isNumber"> {{ formatNumber(mapItemValue as number) }} </template>

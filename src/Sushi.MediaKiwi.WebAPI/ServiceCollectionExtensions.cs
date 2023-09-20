@@ -1,14 +1,24 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Identity.Web;
+using Microsoft.OpenApi.Models;
 using Sushi.MediaKiwi.DAL;
 using Sushi.MediaKiwi.DAL.Repository;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
+using Sushi.MediaKiwi.WebAPI.Paging;
+using Sushi.MediaKiwi.WebAPI.Sorting;
 using Sushi.MicroORM;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,26 +27,97 @@ namespace Sushi.MediaKiwi.WebAPI
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds all services needed to run MediaKiwi to the <paramref name="collection"/>, including Sushi.MicroOrm.
+        /// Adds all services needed to run MediaKiwi to the <paramref name="services"/>, including Sushi.MicroOrm.
         /// </summary>        
         /// <returns></returns>
-        public static IServiceCollection AddMediaKiwiApi(this IServiceCollection collection, string defaultConnectionString, 
-            Action<MicroOrmConfigurationBuilder>? microOrmConfig = null, 
+        public static IServiceCollection AddMediaKiwiApi(this IServiceCollection services, string defaultConnectionString,
+            IConfigurationSection? azureAdConfig,
+            Action<MicroOrmConfigurationBuilder>? microOrmConfig = null,
             Action<IMapperConfigurationExpression>? autoMapperConfig = null)
         {
             // add mk services
-            collection.AddMediaKiwiServices(defaultConnectionString, 
-                microOrmConfig: microOrmConfig, 
+            services.AddMediaKiwiServices(defaultConnectionString,
+                microOrmConfig: microOrmConfig,
                 autoMapperConfig: autoMapperConfig);
 
             // add context accessor
-            collection.AddHttpContextAccessor();
-            
-            // add mk dependencies
-            collection.TryAddTransient<Paging.PagingRetriever>();
-            collection.TryAddTransient<Sorting.SortingRetriever>();
+            services.AddHttpContextAccessor();
 
-            return collection;
+            // add mk dependencies
+            services.TryAddTransient<Paging.PagingRetriever>();
+            services.TryAddTransient<Sorting.SortingRetriever>();
+
+            // add authentication
+            var authenticationBuilder = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
+            if (azureAdConfig != null)
+                authenticationBuilder.AddMicrosoftIdentityWebApi(azureAdConfig);
+            
+            return services;
+        }
+
+        /// <summary>
+        /// Adds MediaKiwi to the <paramref name="options"/>.
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public static SwaggerGenOptions AddMediaKiwiSwagger(this SwaggerGenOptions options)
+        {
+            // add documentation
+            var apiFilename = $"{Assembly.GetAssembly(typeof(SectionController))?.GetName().Name}.xml";
+            if (File.Exists(apiFilename))
+                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, apiFilename));
+
+            var webModelFilename = $"{Assembly.GetAssembly(typeof(SectionService))?.GetName().Name}.xml";
+            if (File.Exists(webModelFilename))
+                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, webModelFilename));
+
+            // add paging parameters
+            options.OperationFilter<PagingSwaggerFilter>();
+            options.OperationFilter<ContinuationSwaggerFilter>();
+
+            // add sorting parameters
+            options.OperationFilter<SortingSwaggerFilter>();
+
+            // add docs for mediakiw
+            options.SwaggerDoc("MediaKiwi", new OpenApiInfo { Title = "MediaKiwi" });
+            options.SwaggerDoc("SampleApi", new OpenApiInfo { Title = "SampleApi" });
+            options.EnableAnnotations();
+
+            // add JWT bearer
+            // add bearer token
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+            {
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Scheme = "Bearer"
+            });
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        },
+                        Scheme = "oauth2",
+                        Name = "Bearer",
+                        In = ParameterLocation.Header
+                    },
+                    new List<string>()
+                }
+            });
+
+            return options;
+        }
+
+        public static SwaggerUIOptions AddMediaKiwiSwaggerUI(this SwaggerUIOptions options)
+        {
+            options.SwaggerEndpoint("../swagger/MediaKiwi/swagger.json", "MediaKiwi");            
+            return options;
         }
     }
+
 }

@@ -1,0 +1,69 @@
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+  - main
+  
+# no PR triggers
+pr: none
+
+pool:
+  vmImage: windows-latest
+
+variables:
+  buildConfiguration: "Release"
+
+steps:
+  - task: DotNetCoreCLI@2
+    displayName: Tests    
+    inputs:
+      command: 'test'
+      projects: |
+        tests/Sushi.MediaKiwi.DAL.UnitTests/*.csproj
+        tests/Sushi.MediaKiwi.Services.UnitTests/*.csproj
+        tests/Sushi.MediaKiwi.WebApi.UnitTests/*.csproj  
+  - task: DotNetCoreCLI@2
+    displayName: Pack Sushi.MediaKiwi.DAL
+    inputs:
+      command: 'pack'
+      packagesToPack: 'src/Sushi.MediaKiwi.DAL/*.csproj'
+      packDirectory: '$(Build.ArtifactStagingDirectory)/packages'
+      versioningScheme: 'off'
+      verbosityPack: 'Normal'
+  - task: DotNetCoreCLI@2
+    displayName: Pack Sushi.MediaKiwi.Services
+    inputs:
+      command: 'pack'
+      packagesToPack: 'src/Sushi.MediaKiwi.Services/*.csproj'
+      packDirectory: '$(Build.ArtifactStagingDirectory)/packages'
+      versioningScheme: 'off'
+      verbosityPack: 'Normal'
+  - task: DotNetCoreCLI@2
+    displayName: Pack Sushi.MediaKiwi.WebAPI
+    inputs:
+      command: 'pack'
+      packagesToPack: 'src/Sushi.MediaKiwi.WebAPI/*.csproj'
+      packDirectory: '$(Build.ArtifactStagingDirectory)/packages'
+      versioningScheme: 'off'
+      verbosityPack: 'Normal'
+  - task: DotNetCoreCLI@2
+    displayName: Build Sample API
+    inputs:
+      command: "publish"
+      publishWebProjects: false
+      arguments: "src/Sushi.MediaKiwi.SampleAPI/Sushi.MediaKiwi.SampleAPI.csproj --configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)/web"
+      zipAfterPublish: true  
+  - task: PublishBuildArtifacts@1
+    displayName: Publish packages artifacts
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/packages'
+      ArtifactName: 'packages'
+      publishLocation: 'Container'
+  - task: PublishBuildArtifacts@1
+    displayName: Publish web artifacts
+    inputs:
+      PathtoPublish: "$(Build.ArtifactStagingDirectory)/web"
+      ArtifactName: "drop"
+      publishLocation: "Container"

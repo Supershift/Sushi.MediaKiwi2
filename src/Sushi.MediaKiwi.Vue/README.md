@@ -1,68 +1,66 @@
-# mediakiwi
+# Front-End Development Setup
 
-This template should help get you started developing with Vue 3 in Vite.
+### Introduction
 
-## Recommended IDE Setup
+There are two front-end projects that you'll need to get up and running.
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+- Sushi.MediaKiwi.Vue
+- Sushi.MediaKiwi.SampleWeb
 
-## Type Support for `.vue` Imports in TS
+#### Stack & Tools
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+- [Node v18.13.0](https://nodejs.org/en)
+- [Npm v8.19.3](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+- [Azure Core Functions Tools](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=v4%2Cwindows%2Ccsharp%2Cportal%2Cbash)
+- [VS Code](https://code.visualstudio.com/)
+- [Volar (VS Code Extension)](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
+- [TypeScript Vue Plugin (VS Code Extension)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin)
+- [Prettier (VS Code Extension)](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+- [ESList (VS Code Extension)](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+##### Useful tools
 
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+- [Npm Intellisense (VS Code Extension)](https://marketplace.visualstudio.com/items?itemName=christian-kohler.npm-intellisense)
+- [Document This (VS Code Extension)](https://marketplace.visualstudio.com/items?itemName=oouo-diogo-perdigao.docthis)
 
-## Customize configuration
+## Setup the Sushi.Mediakiwi.Vue library
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+### Install the dependencies:
 
-## Project Setup
+Install the dependencies for all projects by running the install command from the root of the repository. The postinstall script will install the node_modules on the sub projects.
 
-```sh
+```shell
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+### Build the library
 
-```sh
-npm run dev
-```
+Build the Sushi.MediaKiwi.Vue library once or keep a watch going. This will create the `/dist` folder.
 
-### Type-Check, Compile and Minify for Production
-
-```sh
+```shell
+# Sushi.MediaKiwi.Vue
 npm run build
+
+# or
+
+# Sushi.MediaKiwi.Vue
+npm run build:watch
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+### Link your local build
 
-```sh
-npm run test:unit
+Use the npm link command in the `Sushi.MediaKiwi.Vue` folder to use your local codebase of Sushi.MediaKiwi.
+
+```shell
+# Sushi.MediaKiwi.Vue
+npm link @supershift/mediakiwi-vue
 ```
 
-### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
+Check if the link was made successful by running the following command.
 
-```sh
-npm run test:e2e:dev
-```
+```shell
+# Sushi.MediaKiwi.Vue
+npm ls -g --link=true
 
-This runs the end-to-end tests against the Vite development server.
-It is much faster than the production build.
-
-But it's still recommended to test the production build with `test:e2e` before deploying (e.g. in CI environments):
-
-```sh
-npm run build
-npm run test:e2e
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
+# Output: @supershift/mediakiwi-vue@0.0.x -> [local_path]\Sushi.MediaKiwi2\src\Sushi.MediaKiwi.Vue
 ```

@@ -353,3 +353,6 @@ MigrationBackup/
 # Launch options for workspace folder
 .vscode/launch.json
 local.settings.json
+src/Sushi.MediaKiwi.Vue/coverage/
+src/Sushi.MediaKiwi.Vue/test/coverage/
+

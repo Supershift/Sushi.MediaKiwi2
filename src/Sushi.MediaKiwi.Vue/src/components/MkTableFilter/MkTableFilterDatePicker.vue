@@ -3,7 +3,7 @@
   import VueDatePicker from "@vuepic/vue-datepicker";
   import "@vuepic/vue-datepicker/dist/main.css";
   import { useTheme } from "vuetify";
-  import type { TableFilterItem, TableFilterValue } from "@/models/table";
+  import { TableFilterItem, TableFilterValue, IconsLibrary } from "@/models";
   import { ref } from "vue";
   const theme = useTheme();
 
@@ -30,7 +30,7 @@
 </script>
 
 <template>
-  <v-card class="px-5">
+  <v-card>
     <vue-date-picker
       v-model="value"
       model-type="yyyy-MM-dd"
@@ -43,10 +43,10 @@
       :hide-offset-dates="true"
     >
       <template #arrow-left>
-        <v-icon icon="mdi-chevron-left"></v-icon>
+        <v-icon :icon="IconsLibrary.chevronLeft"></v-icon>
       </template>
       <template #arrow-right>
-        <v-icon icon="mdi-chevron-right"></v-icon>
+        <v-icon :icon="IconsLibrary.chevronRight"></v-icon>
       </template>
     </vue-date-picker>
   </v-card>

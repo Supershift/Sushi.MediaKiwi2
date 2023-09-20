@@ -12,9 +12,10 @@
   <v-card>
     <v-layout v-side-sheet :full-height="true" class="mk-layout">
       <mk-suspense>
-        <v-app-bar v-if="isAuthenticated">
+        <v-app-bar>
           <mk-navigation-icon />
-          <v-toolbar-title>MediaKiwi 2.0</v-toolbar-title>
+          <v-toolbar-title v-if="isAuthenticated">MediaKiwi 2.0</v-toolbar-title>
+          <v-spacer v-else></v-spacer>
           <mk-theme-toggle></mk-theme-toggle>
           <mk-avatar></mk-avatar>
         </v-app-bar>

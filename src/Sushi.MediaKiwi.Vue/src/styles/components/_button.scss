@@ -1,0 +1,28 @@
+@use "@/styles/abstracts";
+
+.v-btn {
+  &.v-btn--mediakiwi {
+    @include abstracts.typography("label", "large");
+
+    &:not(.v-btn--icon) {
+      padding: 10px 12px;
+      text-transform: none;
+      height: auto;
+
+      &.v-btn--mediakiwi--primary {
+        padding: 10px 24px 10px 16px;
+      }
+    }
+
+    &.v-btn--disabled {
+      opacity: 0.37;
+      color: rgb(var(--v-theme-on-surface)) !important; // vuetify uses an important... so we have to as well
+
+      &.v-btn--variant-text {
+        .v-btn__overlay {
+          background: none;
+        }
+      }
+    }
+  }
+}
