@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { IconsLibrary } from "@/models";
   import { onBeforeMount, onBeforeUnmount, StyleValue, nextTick, watch, computed, onMounted, ref, reactive } from "vue";
   import { useDisplay } from "vuetify";
 
@@ -54,10 +55,22 @@
       type: String,
       default: "dialog",
     },
+    /** determines if we have a close button or not */
+    hasClose: {
+      type: Boolean,
+      default: false,
+    },
   });
 
   // emits
   const emits = defineEmits(["closed", "opened"]);
+
+  // slots
+  const sl = defineSlots<{
+    header?: (props: unknown) => unknown;
+    default?: (props: unknown) => unknown;
+    footer?: (props: unknown) => unknown;
+  }>();
 
   // Local variables
   let teleportContainer = undefined as HTMLDivElement | undefined;
@@ -102,6 +115,7 @@
         marginTop: props.modelValue && !mobile.value ? "64px" : "0",
       } as StyleValue)
   );
+  const hasCloseButton = computed(() => props.hasClose == true);
 
   // functions
   const calculateRightSize = async () => {
@@ -183,6 +197,8 @@
     document.body.appendChild(teleportContainer);
     // register listener for resizing
     window.addEventListener("resize", calculateRightSize);
+
+    console.log(sl.footer);
   });
   onBeforeUnmount(() => {
     // unregister listener for resizing
@@ -232,18 +248,18 @@
         <div v-show="sheetValue" class="mk-sp-wrapper" :class="[sheetValue && 'mk-sp-wrapper-active']" :style="wrapperStyles">
           <v-sheet ref="mk-sp-sheet" class="mk-sp-sheet" :class="[sheetValue && 'mk-sp-sheet-active']" :style="sheetStyles">
             <!-- Start of Header  -->
-            <v-card-item ref="mk-sp-header" :class="[headerClass, 'mk-sp-header']">
+            <v-card-item v-if="sl.header" ref="mk-sp-header" :class="[headerClass, 'mk-sp-header']">
               <slot name="header"></slot>
               <template #append>
-                <v-icon aria-hidden="false" aria-label="close" @click="handleClose">mdi-close</v-icon>
+                <v-icon v-if="hasCloseButton" :aria-hidden="!hasCloseButton" aria-label="close" :icon="IconsLibrary.close" @click="handleClose"></v-icon>
               </template>
             </v-card-item>
             <!-- Start of Body -->
-            <v-card-text ref="mk-sp-body" :class="[bodyClass, 'mk-sp-body']" :style="{ height: `${bodyHeight}px` }">
+            <v-card-text v-if="sl.default" ref="mk-sp-body" :class="[bodyClass, 'mk-sp-body']" :style="{ height: `${bodyHeight}px` }">
               <slot name="default"></slot>
             </v-card-text>
             <!-- Start of Footer -->
-            <v-card-actions ref="mk-sp-footer" :class="[footerClass, 'mk-sp-footer']">
+            <v-card-actions v-if="sl.footer" ref="mk-sp-footer" :class="[footerClass, 'mk-sp-footer']">
               <slot name="footer"></slot>
             </v-card-actions>
           </v-sheet>
@@ -255,18 +271,19 @@
       <div v-show="modelValue && !mobile" class="mk-sp-wrapper" :class="[modelValue && 'mk-sp-wrapper-active']" :style="wrapperStyles">
         <v-sheet ref="mk-sp-sheet" class="mk-sp-sheet" :class="[modelValue && 'mk-sp-sheet-active']" :style="sheetStyles">
           <!-- Start header -->
-          <v-card-item ref="mk-sp-header" :class="[headerClass, 'mk-sp-header']">
+          <v-card-item v-if="sl.header" ref="mk-sp-header" :class="[headerClass, 'mk-sp-header']">
             <slot name="header"></slot>
             <template #append>
-              <v-icon aria-hidden="false" aria-label="close" @click="handleClose">mdi-close</v-icon>
+              <v-icon v-if="hasCloseButton" :aria-hidden="!hasCloseButton" aria-label="close" :icon="IconsLibrary.close" @click="handleClose"></v-icon>
             </template>
           </v-card-item>
           <!-- Start body -->
-          <v-card-text ref="mk-sp-body" :class="[bodyClass, 'mk-sp-body']" :style="{ height: `${bodyHeight}px` }">
+          <v-card-text v-if="sl.default" ref="mk-sp-body" :class="[bodyClass, 'mk-sp-body']" :style="{ height: `${bodyHeight}px` }">
             <slot name="default"></slot>
           </v-card-text>
+          <v-divider v-if="sl.footer" />
           <!-- Start footer -->
-          <v-card-actions ref="mk-sp-footer" :class="[footerClass, 'mk-sp-footer']">
+          <v-card-actions v-if="sl.footer" ref="mk-sp-footer" :class="[footerClass, 'mk-sp-footer']">
             <slot name="footer"></slot>
           </v-card-actions>
         </v-sheet>
@@ -278,11 +295,14 @@
   .mk-sp-wrapper {
     position: relative;
     height: 100vh;
+    background-color: rgb(var(--v-theme-surface));
 
     .mk-sp {
       &-sheet {
         height: 100%;
-        background-color: rgba(var(--v-theme-surface), 1);
+        background-color: rgb(var(--v-theme-surface1));
+        border-top-left-radius: 16px;
+        border-top-right-radius: 16px;
       }
       &-header,
       &-body,
@@ -304,7 +324,7 @@
         bottom: 0;
         width: 100%;
         height: 64px;
-        background: rgba(var(--v-theme-surface), 1);
+        background: rgb(var(--v-theme-surface1));
       }
       &-body {
         position: relative;
@@ -314,6 +334,6 @@
 
   // this is needed to override the default overlay color
   .v-overlay__scrim {
-    background: rgba(var(--v-theme-surface), 1) !important;
+    background: rgba(var(--v-theme-surface-1)) !important;
   }
 </style>
