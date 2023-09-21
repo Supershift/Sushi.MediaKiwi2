@@ -67,6 +67,9 @@ export default {
 
     // create msal instance and install plugin
     identity.msalInstance = new PublicClientApplication(options.msalConfig);
+    // add api scope to msal instance
+    identity.scopes = [`api://${options.msalConfig.auth.clientId}/access_via_approle_assignments`];
+    // install msal plugin
     app.use(msalPlugin, identity.msalInstance);
 
     // get default router options
