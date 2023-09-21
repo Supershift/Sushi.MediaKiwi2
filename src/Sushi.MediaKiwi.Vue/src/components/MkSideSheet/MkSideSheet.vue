@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import { IconsLibrary } from "@/models";
-  import { onBeforeMount, onBeforeUnmount, StyleValue, nextTick, watch, computed, onMounted, ref, reactive } from "vue";
+  import { onBeforeMount, onBeforeUnmount, StyleValue, nextTick, watch, computed, onMounted, ref } from "vue";
   import { useDisplay } from "vuetify";
-
+  import useSideSheet from "@/composables/useSideSheet";
   // props that are used to customize the component
   const props = defineProps({
     /** name of the element the sheet teleports on, this is  used as a hook*/
@@ -53,7 +53,7 @@
     /** role we assigned the sidesheet, this ensures we only have one instance running of the sheet */
     role: {
       type: String,
-      default: "dialog",
+      default: "sideSheet",
     },
     /** determines if we have a close button or not */
     hasClose: {
@@ -88,6 +88,7 @@
   const showOverlay = ref(false);
   const sheetValue = ref(false);
   const hookName = ref(props.idName); // check if the hook name is set, if not use the default
+  const { state, openSideSheet, closeSideSheet, hasRole } = useSideSheet();
 
   // computed
   const bodyHeight = computed<number | undefined>(() => {
@@ -128,7 +129,7 @@
 
   function handleClose() {
     closeSideSheet(props.role);
-    emits("closed");
+    emits("closed", state);
     sheetValue.value = false;
     showOverlay.value = false;
   }
@@ -138,54 +139,6 @@
       ...Array.from(document.querySelectorAll("body *"), (el) => parseFloat(window.getComputedStyle(el).zIndex)).filter((zIndex) => !Number.isNaN(zIndex)),
       0
     );
-
-  interface IDialogRole {
-    type: string;
-    isOpen: boolean;
-  }
-
-  const modal = reactive({
-    role: Array<IDialogRole>(),
-  });
-
-  /** checks if the sidesheet role exists and returns a boolean */
-  function hasDialogRole(role: string) {
-    if (!role) {
-      return false;
-    }
-
-    const findRole = modal.role.find((currentRole: IDialogRole) => (currentRole.type === "" ? false : currentRole.type === role));
-
-    if (!findRole) {
-      return false;
-    } else {
-      return findRole.type === role && findRole.isOpen === true;
-    }
-  }
-
-  /** closes the side sheet if we have the appropriate role */
-  function closeSideSheet(role: string) {
-    if (role) {
-      const index = modal.role.findIndex((currentRole: IDialogRole) => currentRole.type === role);
-      if (index !== -1) {
-        modal.role[index].isOpen = !modal.role[index].isOpen;
-      }
-    }
-  }
-
-  /** opens the side sheet if we have the appropriate role, otherwise make one and open it */
-  function openSideSheet(role = "") {
-    const dialogRole: IDialogRole = {
-      type: role,
-      isOpen: true,
-    };
-
-    if (modal.role.findIndex((currentRole: IDialogRole) => currentRole.type === role) === -1) {
-      modal.role.push(dialogRole);
-    } else {
-      modal.role[modal.role.findIndex((currentRole: IDialogRole) => currentRole.type === role)].isOpen = true;
-    }
-  }
 
   // hooks
   onBeforeMount(() => {
@@ -197,8 +150,6 @@
     document.body.appendChild(teleportContainer);
     // register listener for resizing
     window.addEventListener("resize", calculateRightSize);
-
-    console.log(sl.footer);
   });
   onBeforeUnmount(() => {
     // unregister listener for resizing
@@ -230,7 +181,7 @@
         setTimeout(() => {
           openSideSheet(props.role);
           sheetValue.value = true;
-          emits("opened");
+          emits("opened", state);
         }, 300);
       } else {
         showOverlay.value = false;
@@ -241,25 +192,26 @@
   );
 </script>
 <template>
-  <teleport :to="`.${hookName}`">
+  <teleport :to="`.${hookName}`" class="side-sheet">
     <!-- Overlay Mobile -->
-    <v-overlay v-if="mobile" v-model:model-value="showOverlay" class="mk-sp-overlay d-flex justify-end">
+    <v-overlay v-if="mobile && hasRole(props.role)" v-model:model-value="showOverlay" class="side-sheet__overlay d-flex justify-end">
       <v-expand-x-transition>
-        <div v-show="sheetValue" class="mk-sp-wrapper" :class="[sheetValue && 'mk-sp-wrapper-active']" :style="wrapperStyles">
-          <v-sheet ref="mk-sp-sheet" class="mk-sp-sheet" :class="[sheetValue && 'mk-sp-sheet-active']" :style="sheetStyles">
+        <div v-show="sheetValue" class="side-sheet__wrapper side-sheet--mobile" :class="[sheetValue && 'side-sheet__wrapper--active']" :style="wrapperStyles">
+          <v-sheet ref="side-sheet__sheet" class="side-sheet__sheet" :class="[sheetValue && 'side-sheet__sheet--active']" :style="sheetStyles">
             <!-- Start of Header  -->
-            <v-card-item v-if="sl.header" ref="mk-sp-header" :class="[headerClass, 'mk-sp-header']">
+            <v-card-item v-if="sl.header" ref="side-sheet__header" :class="[headerClass, 'side-sheet__header']">
               <slot name="header"></slot>
               <template #append>
                 <v-icon v-if="hasCloseButton" :aria-hidden="!hasCloseButton" aria-label="close" :icon="IconsLibrary.close" @click="handleClose"></v-icon>
               </template>
             </v-card-item>
             <!-- Start of Body -->
-            <v-card-text v-if="sl.default" ref="mk-sp-body" :class="[bodyClass, 'mk-sp-body']" :style="{ height: `${bodyHeight}px` }">
+            <v-card-text v-if="sl.default" ref="side-sheet__body" :class="[bodyClass, 'side-sheet__body']" :style="{ height: `${bodyHeight}px` }">
               <slot name="default"></slot>
             </v-card-text>
+            <v-divider v-if="sl.footer" />
             <!-- Start of Footer -->
-            <v-card-actions v-if="sl.footer" ref="mk-sp-footer" :class="[footerClass, 'mk-sp-footer']">
+            <v-card-actions v-if="sl.footer" ref="side-sheet__footer" :class="[footerClass, 'side-sheet__footer']">
               <slot name="footer"></slot>
             </v-card-actions>
           </v-sheet>
@@ -268,22 +220,27 @@
     </v-overlay>
     <!-- Overlay Desktop -->
     <v-expand-x-transition v-else>
-      <div v-show="modelValue && !mobile" class="mk-sp-wrapper" :class="[modelValue && 'mk-sp-wrapper-active']" :style="wrapperStyles">
-        <v-sheet ref="mk-sp-sheet" class="mk-sp-sheet" :class="[modelValue && 'mk-sp-sheet-active']" :style="sheetStyles">
+      <div
+        v-show="modelValue && !mobile && hasRole(props.role)"
+        class="side-sheet__wrapper"
+        :class="[modelValue && 'side-sheet__wrapper--active']"
+        :style="wrapperStyles"
+      >
+        <v-sheet ref="side-sheet__sheet" class="side-sheet__sheet" :class="[modelValue && 'side-sheet__sheet--active']" :style="sheetStyles">
           <!-- Start header -->
-          <v-card-item v-if="sl.header" ref="mk-sp-header" :class="[headerClass, 'mk-sp-header']">
+          <v-card-item v-if="sl.header" ref="side-sheet__header" :class="[headerClass, 'side-sheet__header']">
             <slot name="header"></slot>
             <template #append>
               <v-icon v-if="hasCloseButton" :aria-hidden="!hasCloseButton" aria-label="close" :icon="IconsLibrary.close" @click="handleClose"></v-icon>
             </template>
           </v-card-item>
           <!-- Start body -->
-          <v-card-text v-if="sl.default" ref="mk-sp-body" :class="[bodyClass, 'mk-sp-body']" :style="{ height: `${bodyHeight}px` }">
+          <v-card-text v-if="sl.default" ref="side-sheet__body" :class="[bodyClass, 'side-sheet__body']" :style="{ height: `${bodyHeight}px` }">
             <slot name="default"></slot>
           </v-card-text>
           <v-divider v-if="sl.footer" />
           <!-- Start footer -->
-          <v-card-actions v-if="sl.footer" ref="mk-sp-footer" :class="[footerClass, 'mk-sp-footer']">
+          <v-card-actions v-if="sl.footer" ref="side-sheet__footer" :class="[footerClass, 'side-sheet__footer']">
             <slot name="footer"></slot>
           </v-card-actions>
         </v-sheet>
@@ -292,47 +249,51 @@
   </teleport>
 </template>
 <style lang="scss">
-  .mk-sp-wrapper {
-    position: relative;
-    height: 100vh;
-    background-color: rgb(var(--v-theme-surface));
+  .side-sheet {
+    &__wrapper {
+      position: relative;
+      background-color: rgb(var(--v-theme-surface));
 
-    .mk-sp {
-      &-sheet {
-        height: 100%;
-        background-color: rgb(var(--v-theme-surface1));
-        border-top-left-radius: 16px;
-        border-top-right-radius: 16px;
-      }
-      &-header,
-      &-body,
-      &-footer {
-        text-align: center;
-        overflow: auto;
-      }
-      &-body {
-        text-align: left;
-        height: calc(100% - 128px); // so the content is scrollable ( accounting for margins top and bottom)
-      }
-      @media (min-width: 900px) {
-        &-body {
-          height: calc(100% - 175px); // so the content is scrollable ( accounting for margins top and bottom)
+      .side-sheet {
+        &__sheet {
+          height: 100%;
+          background-color: rgb(var(--v-theme-surface1));
+          border-top-left-radius: 16px;
+          border-top-right-radius: 16px;
+        }
+        &__header,
+        &__body,
+        &__footer {
+          text-align: center;
+          overflow: auto;
+        }
+        &__body {
+          text-align: left;
+          height: calc(100% - 128px); // so the content is scrollable ( accounting for margins top and bottom)
+        }
+        @media (min-width: 900px) {
+          &__body {
+            height: calc(100% - 175px); // so the content is scrollable ( accounting for margins top and bottom)
+          }
+        }
+        &__footer {
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+          height: 64px;
+          background: rgb(var(--v-theme-surface1));
+        }
+        &__body {
+          position: relative;
         }
       }
-      &-footer {
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        height: 64px;
-        background: rgb(var(--v-theme-surface1));
-      }
-      &-body {
-        position: relative;
-      }
+    }
+    &--mobile {
+      height: 100vh;
     }
   }
 
-  // this is needed to override the default overlay color
+  // this is needed to override the default overlay color of vuetify
   .v-overlay__scrim {
     background: rgba(var(--v-theme-surface-1)) !important;
   }

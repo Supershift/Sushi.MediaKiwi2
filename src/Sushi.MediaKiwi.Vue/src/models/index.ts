@@ -6,3 +6,4 @@ export * from "./requests";
 export * from "./table";
 export * from "./pagination";
 export * from "./keyboard";
+export * from "./sidesheet";

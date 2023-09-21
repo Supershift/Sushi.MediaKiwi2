@@ -57,9 +57,7 @@
   <!-- Side sheet demo  -->
   <mk-side-sheet :model-value="toggle" @closed="close">
     <template #header>
-      <h3>
-        {{ props.customer.name ?? "[Name]" }}
-      </h3>
+      {{ props.customer.name ?? "[Name]" }}
     </template>
     <template #default>
       <v-card class="mx-auto my-12">
