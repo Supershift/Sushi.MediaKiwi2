@@ -7,7 +7,6 @@ export const identity = <
     getAccessToken: () => Promise<string | undefined>;
   }
 >{
-  scopes: ["api://7cd2eddb-b79e-4e04-ac24-0011821ccb8e/access_via_approle_assignments"],
   getAccessToken: async (): Promise<string | undefined> => {
     let result: string | undefined = undefined;
     const account = identity.msalInstance.getActiveAccount();
