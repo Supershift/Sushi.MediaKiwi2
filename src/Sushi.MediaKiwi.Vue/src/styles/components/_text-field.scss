@@ -4,8 +4,14 @@
       &--focused {
         color: rgb(var(--v-theme-primary)) !important; // vuetify uses an important... so we have to as well
       }
+      &--disabled{
+        color: rgb(var(--v-theme-on-surface-variant));
+      }
       .text-outline{
         color: rgb(var(--v-theme-primary)) !important;
+      }
+      .v-field__field {
+        color: rgb(var(--v-theme-on-surface));
       }
     }
     &.v-field--error {
