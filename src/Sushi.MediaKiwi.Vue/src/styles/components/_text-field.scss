@@ -1,0 +1,13 @@
+.v-text-field {
+  &.v-field--mediakiwi {
+    .v-field--focused {
+      color: rgb(var(--v-theme-primary)) !important; // vuetify uses an important... so we have to as well
+    }
+    &.v-field--error {
+        color: rgb(var(--v-theme-error)) !important;
+    }
+    &:hover {
+        color: rgb(var(--v-theme-on-surface)) !important;
+    }
+  }
+}

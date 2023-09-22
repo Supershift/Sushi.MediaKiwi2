@@ -80,6 +80,7 @@ export const globalConfiguration: VuetifyOptions = {
     },
     VTextField: {
       variant: "outlined",
+      class: "v-field--mediakiwi",
     },
     VSelect: {
       variant: "outlined",
