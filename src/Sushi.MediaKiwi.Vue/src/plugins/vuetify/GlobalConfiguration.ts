@@ -84,5 +84,10 @@ export const globalConfiguration: VuetifyOptions = {
     VSelect: {
       variant: "outlined",
     },
+    VAutocomplete: {
+      variant: "outlined",
+      color: "outline",
+      class: "v-autocomplete--mediakiwi",
+    },
   },
 };
