@@ -2,8 +2,8 @@ import { identity } from "@/identity";
 import { MoneyValue, View } from "@/models";
 import { tokenStore } from "@/plugins/i18next";
 import { i18n } from "i18next";
-import { Ref, computed, inject, ref } from "vue";
-import { useNavigation } from "./useNavigation";
+import { Ref, computed, inject } from "vue";
+import { useNavigation } from "@/composables/useNavigation";
 
 /**
  * Adds i18next to the component.

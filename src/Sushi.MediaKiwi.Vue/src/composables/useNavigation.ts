@@ -139,7 +139,7 @@ export function useNavigation() {
   /** Gets all items for the current root item
    * @returns The children of the current root item or all root items for the current section if no root item is found
    */
-  function getItemsBasedOnRoot() {
+  function getItemsBasedOnRoot(): NavigationItem[] | undefined {
     // get current root navigation item
     const rootNode = currentRootItem.value;
 
@@ -201,6 +201,13 @@ export function useNavigation() {
     return result === true;
   }
 
+  function determineIfSectionIsActive(section: Section): boolean {
+    if (!section) {
+      return false;
+    }
+    return currentNavigationItem.value?.sectionId === section.id;
+  }
+
   return {
     currentNavigationItem,
     currentRootItem,
@@ -212,6 +219,7 @@ export function useNavigation() {
     getItemsBasedOnRoot,
     getAllItemsBasedOnSection,
     determineIfNavigationItemIsActive,
+    determineIfSectionIsActive,
     currentRouteParamId,
     /** Gets the id from the url for the current view, if the current view has a parameter. */
     currentViewParameter,
