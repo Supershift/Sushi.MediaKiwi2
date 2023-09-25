@@ -51,7 +51,7 @@ export const globalConfiguration: VuetifyOptions = {
       class: "v-btn--mediakiwi v-btn--mediakiwi--primary",
     },
     VChip: {
-      closeIcon: "mdi-close",
+      closeIcon: "$close",
       rounded: "lg",
       class: "bg-secondary-container",
     },
