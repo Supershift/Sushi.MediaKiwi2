@@ -12,6 +12,7 @@
   const countriesConnector = container.resolve(CountryConnector);
 
   const navigation = useNavigation();
+  const radioModel = ref("1");
 
   // declare reactive variables
   var state = reactive({
@@ -86,6 +87,11 @@
       ></v-autocomplete>
       <v-checkbox label="Is Active" v-model="state.hotel.isActive"></v-checkbox>
       <mk-money-value label="SRP" v-model="state.hotel.srp"></mk-money-value>
+      <v-radio-group v-model="radioModel">
+        <v-radio label="City" value="1" disabled></v-radio>
+        <v-radio label="Beach" value="2"></v-radio>
+        <v-radio label="Remote" value="3"></v-radio>
+      </v-radio-group>
     </MkForm>
   </v-card>
 </template>
