@@ -21,6 +21,8 @@ if (!settings) {
   throw new Error("Failed to retrieve settings");
 }
 
+settings.mediaKiwi.title = "MediaKiwi 2.0 - SampleWeb";
+
 // import all views as models
 settings.mediaKiwi.modules = import.meta.glob("./views/**/*.vue");
 
