@@ -6,7 +6,7 @@
                     bottom: -7px !important;
                     border-left: 10px solid transparent;
                     border-right: 10px solid transparent;
-                    border-top: 11px solid currentColor;
+                    border-top: 10px solid currentColor;
                 }
                 &__label-container {
                     left: calc(var(--v-slider-thumb-size) / -5);
@@ -21,9 +21,6 @@
         .v-slider-thumb__label{
             color: rgb(var(--v-theme-on-primary));
             background: rgb(var(--v-theme-primary));
-            min-width: 30px;
-            height: 30px;
-            border-radius: 15px;
             &::before {
                 color: rgb(var(--v-theme-primary));
             }

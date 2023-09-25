@@ -88,7 +88,7 @@
       ></v-autocomplete>
       <v-checkbox v-model="state.hotel.isActive" label="Is Active"></v-checkbox>
       <mk-money-value v-model="state.hotel.srp" label="SRP"></mk-money-value>
-      <v-slider v-model="slider" show-ticks step="10"></v-slider>
+      <v-slider v-model="slider" show-ticks step="10" thumb-label="always"></v-slider>
     </MkForm>
   </v-card>
 </template>

@@ -1,0 +1,5 @@
+@use "vuetify/settings" with (
+    $slider-thumb-label-min-width: 30px,
+    $slider-thumb-label-height: 30px,
+    $slider-thumb-label-border-radius: 15px,
+);
