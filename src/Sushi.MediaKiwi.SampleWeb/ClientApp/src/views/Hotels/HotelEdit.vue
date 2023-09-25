@@ -87,10 +87,10 @@
       ></v-autocomplete>
       <v-checkbox label="Is Active" v-model="state.hotel.isActive"></v-checkbox>
       <mk-money-value label="SRP" v-model="state.hotel.srp"></mk-money-value>
-      <v-radio-group v-model="radioModel">
-        <v-radio label="City" value="1" disabled></v-radio>
-        <v-radio label="Beach" value="2"></v-radio>
-        <v-radio label="Remote" value="3"></v-radio>
+      <v-radio-group v-model="radioModel" :rules="[() => radioModel === '2' || 'Hide is the only option']">
+        <v-radio label="Hide" value="1" disabled></v-radio>
+        <v-radio label="Show" value="2"></v-radio>
+        <v-radio label="Is Featured" value="3"></v-radio>
       </v-radio-group>
     </MkForm>
   </v-card>
