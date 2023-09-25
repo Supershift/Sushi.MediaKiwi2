@@ -84,5 +84,13 @@ export const globalConfiguration: VuetifyOptions = {
     VSelect: {
       variant: "outlined",
     },
+    VSlider: {
+      color: "primary",
+      thumbColor: "primary",
+      trackColor: "surface-variant",
+      trackSize: 4,
+      tickSize: 3,
+      class: "v-slider--mediakiwi",
+    },
   },
 };
