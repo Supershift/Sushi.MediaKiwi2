@@ -78,6 +78,8 @@ export function mergeDeep(target: any, source: any): any {
         Object.assign(target, { [key]: source[key] });
       }
     }
+  } else {
+    return target;
   }
 
   // Return the updated target object
@@ -90,7 +92,7 @@ export function mergeDeep(target: any, source: any): any {
  * @param {string} input
  * @returns {number|boolean|string}
  */
-function getTypedValue(input: any): number | boolean | string | undefined {
+export function getTypedValue(input: any): number | boolean | string | undefined {
   if (!input) {
     return;
   }

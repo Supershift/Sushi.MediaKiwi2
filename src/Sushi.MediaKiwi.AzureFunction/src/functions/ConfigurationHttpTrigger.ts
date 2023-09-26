@@ -10,7 +10,7 @@ export const ConfigurationHttpTrigger: AzureFunction = async function (context: 
   const result = connector.Get(sections);
 
   context.res = {
-    // status: 200, /* Defaults to 200 */
+    status: 200,
     body: result,
   };
 };

@@ -1,4 +1,4 @@
-import { getSection } from "@/helpers/EnvHelper";
+import { getSection } from "@/helpers/envHelper";
 import { Configuration } from "@/models/Configuration";
 
 export class ConfigurationConnector {
