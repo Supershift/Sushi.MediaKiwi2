@@ -1,6 +1,7 @@
 {
   "name": "@supershift/mediakiwi-azure-function",
   "version": "0.0.1",
+  "description": "Azure Function extension for hosting the MediaKiwi Portal Builder",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -25,5 +26,26 @@
   },
   "dependencies": {
     "vite-plugin-dts": "^3.5.4"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Supershift/Sushi.MediaKiwi2.git",
+    "directory": "src/Sushi.MediaKiwi.AzureFunction"
+  },
+  "author": {
+    "name": "Supershift",
+    "url": "https://www.supershift.nl/"
+  },
+  "license": "MIT",
+  "keywords": [
+    "mediakiwi",
+    "ui framework",
+    "portal",
+    "builder",
+    "vue",
+    "vuetify",
+    "azure",
+    "azure function",
+    "static web app"
+  ]
 }
