@@ -1,4 +1,4 @@
-export * from "@/functions/settings";
+export * from "@/functions";
 
 export * from "@/helpers";
 

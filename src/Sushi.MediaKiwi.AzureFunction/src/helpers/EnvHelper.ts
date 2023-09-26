@@ -1,4 +1,5 @@
-import { parseToNestedObject, mergeDeep } from "./object-helper.js";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { parseToNestedObject, mergeDeep } from "./ObjectHelper.js";
 /**
  * Filters for the source properties with the provided prefix.
  * @param {string} prefix

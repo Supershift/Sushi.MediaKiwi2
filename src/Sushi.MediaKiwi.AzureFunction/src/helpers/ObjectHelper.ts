@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Parses a dot separated key to an object with the deepest level containing the value
  * @param {string} key MediaKiwi.msalConfig.auth.tenantId
