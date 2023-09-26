@@ -12,6 +12,7 @@
   const countriesConnector = container.resolve(CountryConnector);
 
   const navigation = useNavigation();
+  const fileUpload = ref<File[]>([]);
 
   // declare reactive variables
   var state = reactive({
@@ -70,22 +71,36 @@
       await hotelConnector.DeleteAsync(navigation.currentViewParameterNumber.value);
     }
   };
+  function deleteChip(index: number) {
+    // Open issue: https://github.com/vuetifyjs/vuetify/issues/18063
+    // Also handy: https://github.com/vuetifyjs/vuetify/issues/7837 (but not working)
+    fileUpload.value.splice(index, 1);
+  }
 </script>
 
 <template>
   <v-card>
     <MkForm title="Hotel edit" @save="onSave" @undo="onUndo" @delete="onDelete" @load="onLoad">
-      <v-text-field label="Name" v-model="state.hotel.name" :rules="[() => !!state.hotel.name || 'This field is required']"></v-text-field>
+      <v-text-field v-model="state.hotel.name" label="Name" :rules="[() => !!state.hotel.name || 'This field is required']"></v-text-field>
       <v-autocomplete
-        label="Country"
         v-model="state.hotel.countryCode"
+        label="Country"
         :items="state.countries"
         item-title="name"
         item-text="name"
         item-value="code"
       ></v-autocomplete>
-      <v-checkbox label="Is Active" v-model="state.hotel.isActive"></v-checkbox>
-      <mk-money-value label="SRP" v-model="state.hotel.srp"></mk-money-value>
+      <v-checkbox v-model="state.hotel.isActive" label="Is Active"></v-checkbox>
+      <mk-money-value v-model="state.hotel.srp" label="SRP"></mk-money-value>
+      <v-file-input v-model="fileUpload" multiple label="Hotel blueprint" :rules="[() => fileUpload.length || 'Upload is required!']">
+        <template #selection="{ fileNames }">
+          <template v-for="(fileName, idx) in fileNames">
+            <v-chip v-if="fileName" :key="fileName" size="small" label color="primary" close-icon="$close" closable @click:close="deleteChip(idx, fileName)">
+              {{ fileName }}
+            </v-chip>
+          </template>
+        </template>
+      </v-file-input>
     </MkForm>
   </v-card>
 </template>

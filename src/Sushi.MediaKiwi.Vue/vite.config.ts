@@ -1,5 +1,6 @@
 import path from "path";
 import { defineConfig } from "vite";
+import vuetify from "vite-plugin-vuetify";
 import vue from "@vitejs/plugin-vue";
 import dts from "vite-plugin-dts";
 
@@ -9,6 +10,13 @@ export default defineConfig({
     vue(),
     dts({
       insertTypesEntry: true,
+    }),
+    vuetify({
+      autoImport: true,
+      styles: {
+        // Generate a custom settings.scss file with all your modifications to override sass variables from vuetify
+        configFile: path.resolve(__dirname, "./src/styles/settings.scss"),
+      },
     }),
   ],
   build: {
