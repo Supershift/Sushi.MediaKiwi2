@@ -1,38 +1,38 @@
 import "reflect-metadata";
 import App from "./App.vue";
 import { createApp } from "vue";
-import mediakiwi, { createAxiosClient, mediakiwiIconAliases } from "@supershift/mediakiwi-vue";
+import mediakiwi, { createAxiosClient, mediakiwiIconAliases, ConfigurationConnector, MediakiwiVueOptions } from "@supershift/mediakiwi-vue";
 
 // Import the mediakiwi stylesheet
 import "@supershift/mediakiwi-vue/styles";
-
-import { getSettings } from "./services/settings";
 import { container } from "tsyringe";
 import { i18n } from "i18next";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
 import { mdiAccountCheckOutline, mdiTestTube } from "@mdi/js";
-
-const app = createApp(App);
+import { SampleWebConfiguration } from "./models/SampleWebConfiguration";
 
 // Fetch the settings from the function api
-const settings = await getSettings();
+const connector = new ConfigurationConnector("/api/configuration", import.meta.env.VITE_APP_SETTINGS_BASE_URL);
+const settings = await connector.GetAsync<SampleWebConfiguration>();
 
 if (!settings) {
   throw new Error("Failed to retrieve settings");
 }
 
+const mediakiwiOptions: MediakiwiVueOptions = { ...settings.mediaKiwi };
+
 // import all views as models
-settings.mediaKiwi.modules = import.meta.glob("./views/**/*.vue");
+mediakiwiOptions.modules = import.meta.glob("./views/**/*.vue");
 
 // i18next options
-settings.mediaKiwi.i18nextOptions = {
+mediakiwiOptions.i18nextOptions = {
   debug: true,
 };
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
-settings.mediaKiwi.i18nextCallback = (instance: i18n) => {};
+mediakiwiOptions.i18nextCallback = (instance: i18n) => {};
 
 //install some additional icons (demo)
-settings.mediaKiwi.vuetifyOptions = {
+mediakiwiOptions.vuetifyOptions = {
   icons: {
     defaultSet: "mdi",
     aliases: {
@@ -47,8 +47,11 @@ settings.mediaKiwi.vuetifyOptions = {
   },
 };
 
+// Create the app
+const app = createApp(App);
+
 // install mediakiwi
-app.use(mediakiwi, settings.mediaKiwi);
+app.use(mediakiwi, mediakiwiOptions);
 
 // register dependencies
 const sampleApiAxiosInstance = createAxiosClient(settings.sampleApi.apiBaseUrl);
