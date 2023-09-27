@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { reactive, ref, watch } from "vue";
-  import { MkSideSheet, MkForm } from "@supershift/mediakiwi-vue";
+  import { MkSideSheet } from "@supershift/mediakiwi-vue";
   import type { ICustomer } from "@/models/Customer";
   // import { SampleDataService } from "./SampleDataService";
 
@@ -55,7 +55,7 @@
 </script>
 <template>
   <!-- Side sheet demo  -->
-  <mk-side-sheet :model-value="toggle" @closed="close">
+  <mk-side-sheet :model-value="toggle" :close-button="true" @closed-sheet="close">
     <template #header>
       {{ props.customer.name ?? "[Name]" }}
     </template>

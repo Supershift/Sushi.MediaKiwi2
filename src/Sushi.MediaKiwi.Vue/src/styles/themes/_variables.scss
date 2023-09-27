@@ -7,3 +7,10 @@ $states: (
   "activated-opacity": 0.12,
   "divider-opacity": 1,
 );
+$breakpoints: (
+  xs: 0,
+  sm: 600px,
+  md: 960px,
+  lg: 1280px,
+  xl: 1920px,
+);
