@@ -5,7 +5,7 @@
   import { useMediakiwiStore } from "@/stores/";
   import type { Sorting } from "@/models";
   import MkTableCheckbox from "./MkTableCheckbox.vue";
-  import { useTableMapItemSelection } from "@/composables/useTableMapItemSelection";
+  import { useTableRowSelection } from "@/composables/useTableRowSelection";
   import { watch } from "vue";
   import { useNavigation } from "@/composables/useNavigation";
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
@@ -19,8 +19,7 @@
   // define properties
   const props = defineProps<{
     tableMap?: TableMap<any>;
-    /**  */
-    itemId?: (entity: any) => string | number;
+    itemId?: (entity: any) => any;
     data?: any[];
     /** ExternalId of the view instance to which the user is pushed when clicking a row. */
     itemViewId?: string;
@@ -95,8 +94,8 @@
   }
 
   /** Init selection composable for item selection with the table map and data  */
-  const { selectAll, selectItem, isItemSelected, isAllSelected, isIndeterminate, selectedItems } = useTableMapItemSelection({
-    tableMap: props.tableMap || { items: [] },
+  const { selectAll, selectItem, isItemSelected, isAllSelected, isIndeterminate, selectedItems } = useTableRowSelection({
+    itemId: props.tableMap?.itemId || props.itemId,
     data: computed(() => props.data),
   });
 

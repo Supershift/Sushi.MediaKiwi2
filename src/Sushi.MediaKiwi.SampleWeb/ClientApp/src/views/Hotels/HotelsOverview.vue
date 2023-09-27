@@ -46,17 +46,6 @@
       label: item.srp ? "SRP correct" : "Define SRP",
     };
   }
-  // const tableMap: TableMap<Hotel> = {
-  //   itemId: (item) => item.id,
-  //   items: [
-  //     { headerTitle: t.value("Name"), value: (item) => item.name },
-  //     { headerTitle: t.value("Created"), value: (item) => formatDateTime.value(item.created) },
-  //     { headerTitle: t.value("Country"), value: (item) => countries.value!.find((x) => x.code == item.countryCode)?.name },
-  //     { headerTitle: t.value("Active"), value: (item) => item.isActive },
-  //     { headerTitle: t.value("SRP"), value: (item) => item.srp },
-  //     { headerTitle: "", value: (item) => srpIcon(item) },
-  //   ],
-  // };
 
   // define filters
   const filters = ref<TableFilter>({
@@ -114,6 +103,7 @@
   <mk-table
     v-model:current-pagination="currentPagination"
     v-model:filters="filters"
+    v-model:selection="selectedRows"
     new
     :api-result="hotels"
     :on-load="LoadData"
@@ -141,9 +131,9 @@
     </template>
 
     <template #tbody="{ dataItem }: TableBodySlotResult<Hotel>">
-      <mk-td :value="dataItem.name" />
+      <mk-td :value="dataItem.name"> </mk-td>
       <mk-td :value="formatDateTime(dataItem.created)" />
-      <mk-td>
+      <mk-td @click.stop>
         <v-autocomplete
           v-model="dataItem.countryCode"
           :items="countryOptions"
