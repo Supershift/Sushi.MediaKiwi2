@@ -1,13 +1,11 @@
 <script setup lang="ts">
   import { RouteParamValueRaw } from "vue-router";
   import type { TableMap } from "@/models/table/TableMap";
-  import type { TableMapItem } from "@/models/table/TableMapItem";
   import MkTableCell from "./MkTableCell.vue";
   import { useMediakiwiStore } from "@/stores/";
   import type { Sorting } from "@/models";
   import MkTableCheckbox from "./MkTableCheckbox.vue";
   import { useTableMapItemSelection } from "@/composables/useTableMapItemSelection";
-  import { useTableMapItemSorting } from "@/composables/useTableMapItemSorting";
   import { watch } from "vue";
   import { useNavigation } from "@/composables/useNavigation";
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
@@ -15,10 +13,14 @@
   import { ref } from "vue";
   import { usePagination } from "@/composables/usePagination";
   import { computed } from "vue";
+  import MkTableHead from "./MkTableHead.vue";
+  import { TableBodySlotResult } from "@/models/table/TableBodySlotResult";
 
   // define properties
   const props = defineProps<{
-    tableMap: TableMap<any>;
+    tableMap?: TableMap<any>;
+    /**  */
+    itemId?: (entity: any) => string | number;
     data?: any[];
     /** ExternalId of the view instance to which the user is pushed when clicking a row. */
     itemViewId?: string;
@@ -38,9 +40,23 @@
     (e: "update:selection", value?: unknown[]): void;
   }>();
 
+  // define slots
+  const slots = defineSlots<{
+    footer?: (props: unknown) => any;
+    bottom?: (props: unknown) => any;
+    /** table templating  */
+    thead?: (props: unknown) => never;
+    /** table templating */
+    tbody?: (props: TableBodySlotResult<any>) => never;
+  }>();
+
   // inject dependencies
   const store = useMediakiwiStore();
   const navigation = useNavigation();
+
+  const getItemId = computed(() => {
+    return props.tableMap?.itemId || props.itemId;
+  });
 
   function onRowClick(event: Event, dataItem: unknown) {
     // emit event
@@ -62,10 +78,10 @@
       // try to resolve route parameter
       let itemId: RouteParamValueRaw = undefined;
       if (navigationItem.view?.parameterName) {
-        if (!props.tableMap.itemId) {
+        if (!getItemId.value) {
           throw new Error(`No itemId function found to resolve ${navigationItem.view?.parameterName}`);
         }
-        itemId = props.tableMap.itemId(dataItem);
+        itemId = getItemId.value(dataItem);
         if (!itemId) {
           throw new Error(`No value returned by itemId function`);
         }
@@ -78,51 +94,9 @@
     }
   }
 
-  /** Init sorting composable */
-  const { setSorting, getSortingClasses, selectedSorting, sortIcon } = useTableMapItemSorting({
-    selectedSortOption: props.sorting,
-  });
-
-  const SortIconVariant = computed(() => {
-    return !selectedSorting.value ? "tonal" : "text";
-  });
-
-  function onClick(tableMapItem: TableMapItem<unknown>) {
-    if (tableMapItem?.sortingOptions) {
-      setSorting(tableMapItem.sortingOptions);
-      emit("update:sorting", selectedSorting.value);
-    }
-  }
-
-  function getHeaderClasses(tableMapItem: TableMapItem<unknown>): Record<string, boolean> {
-    if (tableMapItem?.sortingOptions) {
-      return getSortingClasses(tableMapItem?.sortingOptions);
-    }
-    return {};
-  }
-
-  function getTableHeadClasses(tableMapItem: TableMapItem<unknown>): Record<string, boolean> {
-    const classes: Record<string, boolean> = {};
-
-    // Get the type of the first item in the data array
-    if (tableMapItem && tableMapItem.value && props.data && props.data[0]) {
-      const type = typeof tableMapItem.value(props.data[0]);
-      classes[type] = true;
-    }
-
-    return classes;
-  }
-
-  function sortingClasses() {
-    return {
-      "sort-icon": true,
-      hidden: !selectedSorting.value,
-    };
-  }
-
   /** Init selection composable for item selection with the table map and data  */
   const { selectAll, selectItem, isItemSelected, isAllSelected, isIndeterminate, selectedItems } = useTableMapItemSelection({
-    tableMap: props.tableMap,
+    tableMap: props.tableMap || { items: [] },
     data: computed(() => props.data),
   });
 
@@ -142,6 +116,14 @@
     updatePageIndex(pageIndex + 1);
   }
 
+  const isBooleanColumn = computed(() => {
+    if (props.tableMap && props.tableMap.items && props.tableMap.items[0] && props.tableMap.items[0].value && props.data && props.data[0]) {
+      const value = props.tableMap.items[0].value(props.data[0]);
+      return typeof value === "boolean";
+    }
+    return false;
+  });
+
   defineExpose({
     clearSelection,
   });
@@ -154,11 +136,21 @@
         <th v-if="checkbox">
           <MkTableCheckbox :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:selected="selectAll" />
         </th>
-        <!-- render a header cell for each mapping item -->
-        <th v-for="(mapItem, index) in props.tableMap.items" :key="index" :class="getHeaderClasses(mapItem)" @click="onClick(mapItem)">
-          {{ mapItem.headerTitle }}
-          <v-icon v-if="mapItem.sortingOptions" :icon="sortIcon" :class="sortingClasses()" />
-        </th>
+        <!-- if a thead slot is provided, render the slot, else render the table the in the default way -->
+        <template v-if="slots.thead">
+          <slot name="thead"></slot>
+        </template>
+        <template v-else>
+          <!-- render a header cell for each mapping item -->
+          <MkTableHead
+            v-for="(mapItem, index) in props.tableMap?.items"
+            :key="index"
+            :sorting="sorting"
+            :map-item="mapItem"
+            :truncate="!isBooleanColumn"
+            @update:sorting="(value) => emit('update:sorting', value)"
+          />
+        </template>
       </tr>
     </thead>
     <tbody>
@@ -167,8 +159,14 @@
         <td v-if="checkbox" @click.stop>
           <MkTableCheckbox :is-selected="isItemSelected(dataItem)" @update:selected="(e) => selectItem(dataItem, e)" />
         </td>
-        <!-- render a cell for each mapping item -->
-        <MkTableCell v-for="(mapItem, cellIndex) in props.tableMap.items" :key="cellIndex" :data="dataItem" :map-item="mapItem"></MkTableCell>
+        <!-- if a tbody slot is provided, render the slot, else render the table the in the default way -->
+        <template v-if="slots.tbody">
+          <slot name="tbody" :data-item="dataItem"></slot>
+        </template>
+        <template v-else>
+          <!-- render a body cell for each mapping item -->
+          <MkTableCell v-for="(mapItem, cellIndex) in props.tableMap?.items" :key="cellIndex" :data="dataItem" :map-item="mapItem"></MkTableCell>
+        </template>
       </tr>
     </tbody>
     <tfoot>
@@ -185,60 +183,6 @@
   .v-table {
     .v-table__wrapper {
       table {
-        thead {
-          th {
-            // truncate logic
-            .mk-table-view__header {
-              display: flex;
-              flex-direction: row;
-              white-space: nowrap;
-              overflow: hidden;
-              contain: inline-size;
-
-              // Make an exception for boolean values
-              &.boolean {
-                contain: unset;
-              }
-
-              label {
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-              }
-
-              .v-icon {
-                flex: 0 0 auto;
-              }
-            }
-
-            // Sorting icon logic
-            &.sortable {
-              font-weight: 700 !important;
-
-              .v-icon {
-                visibility: hidden;
-              }
-
-              &:hover {
-                cursor: pointer;
-                .v-icon {
-                  visibility: visible;
-                }
-              }
-
-              &.sortable-active {
-                .sort-icon {
-                  visibility: visible;
-                }
-              }
-
-              .v-icon {
-                visibility: hidden;
-              }
-            }
-          }
-        }
-
         tbody {
           tr {
             transition: 0.2s background-color;
@@ -251,3 +195,4 @@
     }
   }
 </style>
+@/composables/useTableSorting

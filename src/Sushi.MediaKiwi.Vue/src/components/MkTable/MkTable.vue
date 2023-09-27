@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/require-default-prop -->
 <script setup lang="ts">
-  import type { TableMap, TableFilter } from "@/models/table";
+  import type { TableMap, TableFilter, TableBodySlotResult } from "@/models/table";
   import type { Paging, Sorting } from "@/models/api";
   import { ref } from "vue";
   import MkTableFilter from "@/components/MkTableFilter/MkTableFilter.vue";
@@ -24,7 +24,7 @@
       /** Collection of filters to filter data. */
       filters?: TableFilter;
       /** Defines mapping between data and the table. */
-      tableMap: TableMap<any>;
+      tableMap?: TableMap<any>;
       /** Sets data and paging properties based on the API's result. */
       apiResult?: IListResult<any>;
       /** An array of objects used for automatically generating rows. */
@@ -47,6 +47,8 @@
       currentPagination: Paging;
       /** Defines the pagination mode */
       paginationMode?: MediakiwiPaginationMode;
+      /** */
+      itemId?: (entity: any) => string | number;
     }>(),
     {
       paginationMode: "controls",
@@ -72,6 +74,10 @@
     overflowMenuActions?: (props: unknown) => never;
     /** Action slot for the MkBulkActionBar */
     bulkActionBar?: (props: unknown) => never;
+    /** table templating  */
+    thead?: (props: unknown) => never;
+    /** table templating */
+    tbody?: (props: TableBodySlotResult<any>) => never;
   }>();
 
   // inject dependencies
@@ -187,10 +193,18 @@
       :checkbox="selection ? true : false"
       class="mk-table"
       :pagination-mode="paginationMode"
+      :item-id="itemId"
       @click:row="(e) => emit('click:row', e)"
       @update:sorting="sortingChanged"
       @update:selection="(e) => emit('update:selection', e)"
     >
+      <template v-if="slots.thead" #thead>
+        <slot name="thead"></slot>
+      </template>
+      <template v-if="slots.tbody" #tbody="{ dataItem }">
+        <slot name="tbody" :data-item="dataItem"></slot>
+      </template>
+
       <template v-if="paginationMode === 'controls'" #bottom>
         <!-- Only show the controls if the pagination mode is unset or set to 'controls' -->
         <MkPagination
