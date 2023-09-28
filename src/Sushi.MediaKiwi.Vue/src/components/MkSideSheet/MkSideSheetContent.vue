@@ -129,6 +129,7 @@
   </v-sheet>
 </template>
 <style lang="scss">
+  @import "../../styles/themes/variables.scss";
   .side-sheet {
     &__sheet {
       height: 100%;
@@ -143,7 +144,7 @@
       background: rgb(var(--v-theme-surface1));
     }
     &__header {
-      @media (min-width: 1280px) {
+      @media (min-width: $breakpoints-lg) {
         border-top-left-radius: 16px;
         border-top-right-radius: 16px;
       }
@@ -159,7 +160,7 @@
     &__body {
       text-align: left;
       height: calc(100% - 150px); // so the content is scrollable ( accounting for margins top and bottom)
-      @media (min-width: 1280px) {
+      @media (min-width: $breakpoints-lg) {
         height: calc(100vh - 220px); // so the content is scrollable ( accounting for margins top and bottom)
       }
     }

@@ -200,6 +200,7 @@
   </teleport>
 </template>
 <style lang="scss">
+  @import "../../styles/themes/variables.scss";
   .side-sheet {
     &__wrapper {
       position: relative;
@@ -219,7 +220,7 @@
   .v-overlay__scrim {
     background: rgba(var(--v-theme-surface-1)) !important;
   }
-  @media (max-width: 1280px) {
+  @media (max-width: $breakpoints-lg) {
     .v-overlay__content {
       right: 0;
       top: 0;
