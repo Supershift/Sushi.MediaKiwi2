@@ -2,6 +2,8 @@ import { IconsLibrary } from "@/models";
 import type { VuetifyOptions } from "vuetify";
 import { VBtn } from "vuetify/components/VBtn";
 import { VNavigationDrawer } from "vuetify/components/VNavigationDrawer";
+import { IconsLibrary } from "@/models/enum";
+
 
 /**
  * Global configuration for Vuetify
@@ -58,6 +60,11 @@ export const globalConfiguration: VuetifyOptions = {
     },
     VCheckbox: {
       color: "primary",
+      trueIcon: IconsLibrary.checkboxMarked,
+      falseIcons: IconsLibrary.squareOutline,
+      indeterminateIcon: IconsLibrary.minusBox,
+      class: "v-checkbox--mediakiwi",
+      disabled: true,
     },
     VDivider: {
       color: "outline-variant",
@@ -81,6 +88,8 @@ export const globalConfiguration: VuetifyOptions = {
     },
     VTextField: {
       variant: "outlined",
+      color: "outline",
+      class: "v-field--mediakiwi",
     },
     VSelect: {
       variant: "outlined",
@@ -94,6 +103,12 @@ export const globalConfiguration: VuetifyOptions = {
       trueIcon: IconsLibrary.radioOn,
       falseIcon: IconsLibrary.radioOff,
       class: "v-radio--mediakiwi",
+    },
+    VAutocomplete: {
+      variant: "outlined",
+      color: "outline",
+      class: "v-autocomplete--mediakiwi",
+      menuIcon: IconsLibrary.menuDown,
     },
   },
 };
