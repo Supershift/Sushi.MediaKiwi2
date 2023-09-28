@@ -13,6 +13,9 @@
 
   const navigation = useNavigation();
   const fileUpload = ref<File[]>([]);
+  const radioModel = ref("1");
+
+  const slider = ref(20);
 
   // declare reactive variables
   var state = reactive({
@@ -71,11 +74,6 @@
       await hotelConnector.DeleteAsync(navigation.currentViewParameterNumber.value);
     }
   };
-  function deleteChip(index: number) {
-    // Open issue: https://github.com/vuetifyjs/vuetify/issues/18063
-    // Also handy: https://github.com/vuetifyjs/vuetify/issues/7837 (but not working)
-    fileUpload.value.splice(index, 1);
-  }
 </script>
 
 <template>
@@ -92,15 +90,13 @@
       ></v-autocomplete>
       <v-checkbox v-model="state.hotel.isActive" label="Is Active"></v-checkbox>
       <mk-money-value v-model="state.hotel.srp" label="SRP"></mk-money-value>
-      <v-file-input v-model="fileUpload" multiple label="Hotel blueprint" :rules="[() => fileUpload.length || 'Upload is required!']">
-        <template #selection="{ fileNames }">
-          <template v-for="(fileName, idx) in fileNames">
-            <v-chip v-if="fileName" :key="fileName" size="small" label color="primary" close-icon="$close" closable @click:close="deleteChip(idx, fileName)">
-              {{ fileName }}
-            </v-chip>
-          </template>
-        </template>
-      </v-file-input>
+      <v-file-input v-model="fileUpload" multiple label="Hotel blueprint" :rules="[() => fileUpload.length < 0 || 'Upload is required!']"></v-file-input>
+      <v-slider v-model="slider" show-ticks step="10" thumb-label="always"></v-slider>
+      <v-radio-group v-model="radioModel" :rules="[() => radioModel === '2' || 'Show is the only option']">
+        <v-radio label="Hide" value="1" disabled></v-radio>
+        <v-radio label="Show" value="2"></v-radio>
+        <v-radio label="Is Featured" value="3"></v-radio>
+      </v-radio-group>
     </MkForm>
   </v-card>
 </template>

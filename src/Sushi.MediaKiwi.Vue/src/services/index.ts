@@ -5,5 +5,6 @@ export { type ILocaleConnector } from "@/services/ILocaleConnector";
 export { NavigationConnector } from "@/services/NavigationConnector";
 export { ViewConnector } from "@/services/ViewConnector";
 export { SectionConnector } from "@/services/SectionConnector";
+export { ConfigurationConnector } from "./ConfigurationConnector";
 export { createAxiosClient } from "./axios/createAxiosClient";
 export { addAuthentication } from "./axios/addAuthentication";

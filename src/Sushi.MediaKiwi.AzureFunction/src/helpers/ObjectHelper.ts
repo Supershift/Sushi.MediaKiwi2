@@ -1,36 +1,11 @@
-/**
- * Filters for the source properties with the provided prefix.
- * @param {string} prefix
- * @returns {object} source of filtered values
- */
-function getValues(prefix, source) {
-  // Filter and build new object based on source
-  const values = Object.keys(source)
-    .filter((key) => key.toLowerCase().includes(prefix.toLowerCase()))
-    .reduce((cur, key) => {
-      // get the appsetting value
-      const value = source[key];
-
-      // parse the key to an object
-      const result = parseToNestedObject(key, value);
-
-      // merge with the current result object
-      const mergedObj = mergeDeep(cur, result);
-
-      // return the merged object
-      return mergedObj;
-    }, {});
-
-  return values;
-}
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Parses a dot separated key to an object with the deepest level containing the value
  * @param {string} key MediaKiwi.msalConfig.auth.tenantId
  * @param {string} value some-value
  * @returns {*} { "mediaKiwi": { "msalConfig": { "auth": { "tenantId": "some-value" } } } }
  */
-function parseToNestedObject(key, value) {
+export function parseToNestedObject(key: string, value: string): object {
   if (!key) {
     return {};
   }
@@ -52,7 +27,7 @@ function parseToNestedObject(key, value) {
     if (!index) {
       // Set the value for the deepest level
       // E.g. "tenantId": "some-value"
-      Object.assign(result, { [propertyName]: getTypedValue(value) });
+      Object.assign(result, { [propertyName]: getTypedValue(value as any) });
     } else {
       // Set the current result object as a property on the new object
       // E.g. { "tenantId": "some-value" } to { auth: { "tenantId": "some-value"} }
@@ -71,7 +46,7 @@ function parseToNestedObject(key, value) {
  * @param {any} item
  * @returns {boolean}
  */
-function isObject(item) {
+function isObject(item: any): boolean {
   return item && typeof item === "object";
 }
 
@@ -80,7 +55,7 @@ function isObject(item) {
  * @param target
  * @param ...sources
  */
-function mergeDeep(target, source) {
+export function mergeDeep(target: any, source: any): any {
   if (!source) {
     return target;
   }
@@ -103,6 +78,8 @@ function mergeDeep(target, source) {
         Object.assign(target, { [key]: source[key] });
       }
     }
+  } else {
+    return target;
   }
 
   // Return the updated target object
@@ -115,7 +92,7 @@ function mergeDeep(target, source) {
  * @param {string} input
  * @returns {number|boolean|string}
  */
-function getTypedValue(input) {
+export function getTypedValue(input: any): number | boolean | string | undefined {
   if (!input) {
     return;
   }
@@ -137,7 +114,7 @@ function getTypedValue(input) {
  * @param {string} key Property name of the object
  * @returns {string} Formatted key
  */
-function formatKey(key) {
+export function formatKey(key: string): string | undefined {
   if (!key) {
     return;
   }
@@ -147,12 +124,3 @@ function formatKey(key) {
 
   return newKey;
 }
-
-module.exports = {
-  getValues,
-  parseToNestedObject,
-  isObject,
-  mergeDeep,
-  getTypedValue,
-  formatKey,
-};

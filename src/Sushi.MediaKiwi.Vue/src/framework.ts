@@ -96,6 +96,12 @@ export default {
 
     // use the router instance
     app.use(router);
+
+    // Set the title of the application
+    options.title = options.title ?? "MediaKiwi 2.0";
+
+    // provide the application with the mediakiwi configuration
+    app.provide("mediakiwi", { ...options });
   },
 };
 
