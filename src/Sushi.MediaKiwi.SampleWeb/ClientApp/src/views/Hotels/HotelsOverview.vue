@@ -77,22 +77,25 @@
   filters.value.countryCode.options = countries.value?.map(({ code, name }) => <TableFilterValue>{ title: name, value: code });
   const countryOptions = countries.value?.map(({ code, name }) => <TableFilterValue>{ title: name, value: code });
 
-  function action() {
-    //
-  }
-
   // create a sorting option object with a default value
   const sorting = ref<Sorting>({
     sortBy: "name",
     sortDirection: SortDirection.Desc,
   });
 
-  // create a ref collection of selected table rows
-  const selectedRows = ref([]);
+  async function onNameChanged(hotel: Hotel, name: string) {
+    hotel.name = name;
+    await SaveData(hotel);
+  }
 
-  function onCountryCodeChanged(hotel: Hotel, code: string) {
+  async function onCountryCodeChanged(hotel: Hotel, code: string) {
     hotel.countryCode = code;
-    console.log("hotel:", hotel);
+    await SaveData(hotel);
+  }
+
+  /** TODO Implement */
+  async function SaveData(hotel: Hotel) {
+    console.log(hotel);
   }
 </script>
 
@@ -100,7 +103,6 @@
   <mk-table
     v-model:current-pagination="currentPagination"
     v-model:filters="filters"
-    v-model:selection="selectedRows"
     new
     :api-result="hotels"
     :on-load="LoadData"
@@ -115,7 +117,7 @@
     </template>
 
     <template #overflowMenuActions>
-      <v-list-item @click="action">Knop 3</v-list-item>
+      <v-list-item>Knop 3</v-list-item>
     </template>
 
     <template #thead>
@@ -129,7 +131,7 @@
 
     <template #tbody="{ dataItem }: TableBodySlotResult<Hotel>">
       <mk-td @click.stop>
-        <v-text-field v-model="dataItem.name" />
+        <v-text-field v-model="dataItem.name" @update:model-value="(name:string) => onNameChanged(dataItem, name)" />
       </mk-td>
       <mk-td :value="formatDateTime(dataItem.created)" />
       <mk-td @click.stop>
