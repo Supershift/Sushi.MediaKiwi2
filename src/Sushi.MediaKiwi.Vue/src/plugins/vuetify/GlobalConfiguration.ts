@@ -1,3 +1,4 @@
+import { IconsLibrary } from "@/models";
 import type { VuetifyOptions } from "vuetify";
 import { VBtn } from "vuetify/components/VBtn";
 import { VNavigationDrawer } from "vuetify/components/VNavigationDrawer";
@@ -92,6 +93,16 @@ export const globalConfiguration: VuetifyOptions = {
     },
     VSelect: {
       variant: "outlined",
+    },
+    VRadioGroup: {
+      color: "primary",
+      class: "v-radio-group--mediakiwi",
+    },
+    VRadio: {
+      color: "primary",
+      trueIcon: IconsLibrary.radioOn,
+      falseIcon: IconsLibrary.radioOff,
+      class: "v-radio--mediakiwi",
     },
     VAutocomplete: {
       variant: "outlined",
