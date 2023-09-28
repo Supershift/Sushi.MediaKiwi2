@@ -1,8 +1,8 @@
 @use "vuetify/settings" with (
     $file-input-chip-margin-inline-end: 8px,
-    $file-input-details-padding-inline: 20px,
     $file-input-chips-margin-bottom: 6px,
     $file-input-chips-margin-top: 6px,
+    // $file-input-details-padding-inline: 20px !default,
     $slider-thumb-label-min-width: 30px,
     $slider-thumb-label-height: 30px,
     $slider-thumb-label-border-radius: 15px,
