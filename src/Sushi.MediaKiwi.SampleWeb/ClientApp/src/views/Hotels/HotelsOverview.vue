@@ -131,7 +131,9 @@
     </template>
 
     <template #tbody="{ dataItem }: TableBodySlotResult<Hotel>">
-      <mk-td :value="dataItem.name"> </mk-td>
+      <mk-td @click.stop>
+        <v-text-field v-model="dataItem.name" />
+      </mk-td>
       <mk-td :value="formatDateTime(dataItem.created)" />
       <mk-td @click.stop>
         <v-autocomplete
