@@ -194,4 +194,3 @@
     }
   }
 </style>
-@/composables/useTableSorting
