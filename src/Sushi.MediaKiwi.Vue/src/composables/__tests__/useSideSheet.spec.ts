@@ -1,46 +1,54 @@
 import { describe, it, expect } from "vitest";
 import useSideSheet from "../useSideSheet";
 
-const role = "test";
-const { toggleSideSheet, openSideSheet, closeSideSheet, hasRole, state } = useSideSheet();
+const { toggleSideSheet, openSideSheet, closeSideSheet, mountTeleportContainer, unMountTeleportContainer, isOpen, state } = useSideSheet();
 
 describe("useSideSheet", () => {
     it("Should have state", () => {
         // Arrange
+        openSideSheet();
         // Act & Assert
+
         expect(state).toBeDefined();
-        expect(state.role).toBeDefined();
+        expect(state.isOpen).toBeDefined();
     });
     it("Should open side sheet", () => {
         // Arrange
         // Act
-        openSideSheet(role);
+        openSideSheet();
         // Assert
-        expect(state.role[state.role.findIndex((currentRole) => currentRole.type === role)].type).toBe(role);
+        expect(state.isOpen).toBe(true);
     });
     it("Should close side sheet", () => {
         // Arrange
-        openSideSheet(role);
-        expect(state.role[state.role.findIndex((currentRole) => currentRole.type === role)].type).toBe(role);
+        openSideSheet();
+        expect(state.isOpen).toBe(true);
         // Act
-        closeSideSheet(role);
+        closeSideSheet();
         // Assert
-        expect(state.role[state.role.findIndex((currentRole) => currentRole.type === role)].isOpen).toBe(false);
+        expect(state.isOpen).toBe(false);
     });
     it("Should toggle side sheet", () => {
          // Arrange
-         openSideSheet(role);
-         expect(state.role[state.role.findIndex((currentRole) => currentRole.type === role)].type).toBe(role);
+         openSideSheet();
+         expect(state.isOpen).toBe(true);
          // Act
-         toggleSideSheet(role);
+         toggleSideSheet();
          // Assert
-         expect(state.role.findIndex((currentRole) => currentRole.type === role)).toBe(-1);
+         expect(state.isOpen).toBe(false);
     });
-    it("Should have role", () => {
+    it("Should check state", () => {
         // Arrange
-        openSideSheet(role);
-        expect(state.role[state.role.findIndex((currentRole) => currentRole.type === role)].type).toBe(role);
+        openSideSheet();
+        expect(state.isOpen).toBe(true);
         // Act & Assert
-        expect(hasRole(role)).toBe(true);
+        expect(isOpen()).toBe(true);
+    });
+    // TODO: This is a render function and should be tested with a render library
+    it.skip("Should mount container", async () => {
+        
+    });
+    it.skip("Should unmount container", async () => {
+        
     });
 });
