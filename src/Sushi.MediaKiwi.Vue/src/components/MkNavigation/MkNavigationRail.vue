@@ -18,6 +18,9 @@
     }
     return false;
   }
+  function isActive(item: Section) {
+    return navigation.determineIfSectionIsActive(item);
+  }
 </script>
 <template>
   <!-- VNavigationRail is an alias for VNavigationDrawer set in the GlobalConfiguration with the rail prop set to true -->
@@ -27,7 +30,7 @@
         v-for="item in props.railItems || []"
         :key="item.id"
         class="ml-0 mr-0"
-        :active="item.id == navigation.currentNavigationItem.value?.sectionId"
+        :active="isActive(item)"
         rounded="lg"
         :value="item.name"
         @click.stop="onItemClick(item)"

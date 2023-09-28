@@ -7,3 +7,4 @@ export * from "./table";
 export * from "./pagination";
 export * from "./keyboard";
 export * from "./sidesheet";
+export * from "./configuration";

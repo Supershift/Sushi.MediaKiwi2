@@ -1,12 +1,19 @@
 {
-  "name": "api",
+  "name": "",
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "func start --javascript"
+    "build": "tsc",
+    "watch": "tsc -w",
+    "prestart": "npm run build",
+    "start": "func start",
+    "test": "echo \"No tests yet...\""
   },
   "dependencies": {},
   "devDependencies": {
-    "vitest": "^0.25.6"
+    "@azure/functions": "^3.0.0",
+    "azure-functions-core-tools": "^4.x",
+    "@types/node": "16.x",
+    "typescript": "^4.0.0"
   }
 }

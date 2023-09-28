@@ -19,7 +19,6 @@
 
   // use dependencies
   const store = useMediakiwiStore();
-
 </script>
 
 <template>

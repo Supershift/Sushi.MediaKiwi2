@@ -130,7 +130,7 @@ describe("MKNavigationItem", () => {
         expect(outputHtml).toContain("v-list-item");
         // check if icons is right set and is called
         expect(wrapper.vm.$vuetify.icons.aliases).not.toBeNull();
-        expect(wrapper.vm.$vuetify.icons.aliases?.ratingFull).toEqual("mdi-star"); // we use a default icon instead since we're testing the icon
+        expect(wrapper.vm.$vuetify.icons.aliases?.ratingFull).toEqual("M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"); // we use a default icon instead since we're testing the icon (mdi-star path values)
         expect(wrapper.vm.$vuetify.icons.defaultSet).toEqual("mdi");
         // make sure the icon is set
         expect(outputHtml).toContain("v-list-item__prepend");

@@ -18,4 +18,5 @@ export interface MediakiwiVueOptions {
   i18nextOptions?: InitOptions;
 
   i18nextCallback?: (instance: i18n) => void;
+  title?: string;
 }
