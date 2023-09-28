@@ -1,7 +1,8 @@
 import type { VuetifyOptions } from "vuetify";
 import { VBtn } from "vuetify/components/VBtn";
 import { VNavigationDrawer } from "vuetify/components/VNavigationDrawer";
-import { IconsLibrary } from "@/models/enum/IconsLibrary";
+import { IconsLibrary } from "@/models/enum";
+
 
 /**
  * Global configuration for Vuetify
@@ -91,6 +92,12 @@ export const globalConfiguration: VuetifyOptions = {
     },
     VSelect: {
       variant: "outlined",
+    },
+    VAutocomplete: {
+      variant: "outlined",
+      color: "outline",
+      class: "v-autocomplete--mediakiwi",
+      menuIcon: IconsLibrary.menuDown,
     },
   },
 };
