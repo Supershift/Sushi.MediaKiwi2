@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { formatKey, getTypedValue, parseToNestedObject, mergeDeep } from "../objectHelper";
+import { formatKey, getTypedValue, parseToNestedObject, mergeDeep } from "../ObjectHelper";
 
 describe("ObjectHelper", () => {
   describe("formatKey", () => {
