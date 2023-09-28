@@ -1,50 +1,29 @@
-import { reactive, readonly } from "vue";
-import { DialogRole, Modal } from "@/models";
+import { readonly, ref } from "vue";
+import { SideSheet } from "@/models";
 
 export default function useSideSheet() {
-  /** the modal object that holds the role and name of the sidesheet */
-  const modal: Modal = reactive({
-    role: [],
-    name: "",
-  });
+  /** the sidesheet state */
+  const sideSheet = ref<SideSheet>({ isOpen: false });
+
   /** the teleport container that will be created */
   let teleportContainer = undefined as HTMLDivElement | undefined;
 
-  /** toggles the sidesheet with the given role */
-  const toggleSideSheet = (_role = "") => {
-    modal.role.pop();
+  /** toggles the sidesheet to show or hide */
+  const toggleSideSheet = () => {
+    sideSheet.value.isOpen = !sideSheet.value.isOpen;
   };
-  /** opens the sidesheet with the given role */
-  const openSideSheet = (_role = "") => {
-    const dialogRole: DialogRole = {
-      type: _role,
-      isOpen: true,
-    };
-
+  /** opens the sideSheet  */
+  const openSideSheet = () => {
     // we only deal with one role at a time
-    if (modal.role.length > 0) {
-      modal.role = [];
-    }
-    modal.role.push(dialogRole);
+    sideSheet.value.isOpen = true;
   };
-  /** Closes the modal with the role given */
-  const closeSideSheet = (_role = "") => {
-    if (_role) {
-      const index = modal.role.findIndex((currentRole: DialogRole) => currentRole.type === _role);
-      if (index !== -1) {
-        modal.role[index].isOpen = false;
-      }
-    } else {
-      modal.role = [];
-    }
+  /** Closes the sideSheet */
+  const closeSideSheet = () => {
+    sideSheet.value.isOpen = false;
   };
-  /** checks if the sidesheet role exists and returns a boolean */
-  const hasRole = (_role = "") => {
-    if (_role === "") return false;
-    const findRole = modal.role.find((currentRole) => (currentRole.type === "" ? null : currentRole.type === _role));
-    if (findRole === undefined) return false;
-
-    return findRole.type === _role && findRole.isOpen === true ? true : false;
+  /** checks if the sidesheet is open and returns a boolean */
+  const isOpen = () => {
+    return sideSheet.value.isOpen;
   };
   /** Mounts the teleport conttainer based on the hookName */
   const mountTeleportContainer = (hookName: string) => {
@@ -64,9 +43,9 @@ export default function useSideSheet() {
     toggleSideSheet,
     openSideSheet,
     closeSideSheet,
-    hasRole,
+    isOpen,
     mountTeleportContainer,
     unMountTeleportContainer,
-    state: readonly(modal),
+    state: readonly(sideSheet),
   };
 }

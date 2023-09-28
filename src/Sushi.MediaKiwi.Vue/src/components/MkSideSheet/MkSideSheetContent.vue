@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { StyleValue, computed, nextTick, ref, watch } from "vue";
+  import { StyleValue, computed, ref } from "vue";
   import { IconsLibrary } from "@/models";
 
   // props that are used to customize the component
@@ -72,20 +72,21 @@
 
   // slots
   const slots = defineSlots<{
-    header?: (props: unknown) => unknown;
+    title?: (props: unknown) => unknown;
+    subtitle?: (props: unknown) => unknown;
     default?: (props: unknown) => unknown;
     footer?: (props: unknown) => unknown;
   }>();
 
   //emits
-  const emits = defineEmits(["update:modelValue", "closed", "opened"]);
+  const emits = defineEmits(["closed", "opened"]);
 
   // computed
   const sheetStyles = computed(
     () =>
       ({
-        width: !props.mobile ? props.width : "100vw", // ensures the full width overlay based on the display size
-        zIndex: 1007, //props.zIndex, // (default: 1007, since drawer is 1006) layer positioning on the z-axis
+        width: !props.mobile ? props.width : "unset", // ensures the full width overlay based on the display size
+        zIndex: props.zIndex !== "auto" ? props.zIndex : 1007, // (default: 1007, since drawer is 1006) layer positioning on the z-axis
         backgroundColor: props.sheetColor ?? "rgb(var(--v-theme-surface1))", // custom color for the sheet
       } as StyleValue)
   );
@@ -99,29 +100,30 @@
     }
     return height;
   });
-  const widthStyles = computed(
-    () =>
-      ({
-        width: !props.mobile ? props.width : "100vw",
-      } as StyleValue)
-  );
 </script>
 <template>
   <v-sheet ref="side-sheet__sheet" class="side-sheet__sheet" :class="[modelValue && 'side-sheet__sheet--active']" :style="sheetStyles">
     <!-- Start header -->
-    <v-card-item v-if="slots.header" ref="side-sheet__header" :class="[headerClass, 'side-sheet__header']">
-      <slot name="header"></slot>
+    <v-card-item ref="side-sheet__header" :class="[headerClass, 'side-sheet__header']">
+      <v-card-title v-if="slots.title">
+        <slot name="title"></slot>
+      </v-card-title>
+      <v-card-subtitle v-if="slots.subtitle">
+        <slot name="subtitle"></slot>
+      </v-card-subtitle>
       <template #append>
         <v-icon v-if="props.closeButton" :aria-hidden="!props.closeButton" aria-label="close" :icon="IconsLibrary.close" @click="emits('closed')"></v-icon>
       </template>
     </v-card-item>
     <!-- Start body -->
     <v-card-text v-if="slots.default" ref="side-sheet__body" :class="[bodyClass, 'side-sheet__body']" :style="{ height: `${bodyHeight}px` }">
-      <slot name="default"></slot>
+      <div class="side-sheet__inner-body">
+        <slot name="default"></slot>
+      </div>
     </v-card-text>
     <v-divider class="side-sheet__divider" />
     <!-- Start footer -->
-    <v-card-actions v-if="slots.footer" ref="side-sheet__footer" :class="[footerClass, 'side-sheet__footer']" :style="widthStyles">
+    <v-card-actions v-if="slots.footer" ref="side-sheet__footer" :class="[footerClass, 'side-sheet__footer']">
       <slot name="footer"></slot>
     </v-card-actions>
   </v-sheet>
@@ -137,31 +139,37 @@
     &__body,
     &__footer {
       padding: 1.5rem;
-      text-align: center;
       overflow: auto;
       background: rgb(var(--v-theme-surface1));
     }
     &__header {
-      border-top-left-radius: 16px;
-      border-top-right-radius: 16px;
+      @media (min-width: 1280px) {
+        border-top-left-radius: 16px;
+        border-top-right-radius: 16px;
+      }
+      .v-card-item__append {
+        display: flex;
+        align-self: start;
+      }
+      .v-card-subtitle {
+        overflow: visible;
+        white-space: normal;
+      }
     }
     &__body {
       text-align: left;
-      height: calc(100% - 102px); // so the content is scrollable ( accounting for margins top and bottom)
-    }
-    @media (min-width: md) {
-      &__body {
-        height: calc(100vh - 166px); // so the content is scrollable ( accounting for margins top and bottom)
+      height: calc(100% - 150px); // so the content is scrollable ( accounting for margins top and bottom)
+      @media (min-width: 1280px) {
+        height: calc(100vh - 220px); // so the content is scrollable ( accounting for margins top and bottom)
       }
     }
+
     &__footer {
-      position: fixed;
-      bottom: 0;
       justify-content: flex-end;
-      // width: 100%;
-      // height: 64px;
-      border-bottom-left-radius: 16px;
-      border-bottom-right-radius: 16px;
+      @media (min-width: 1280px) {
+        border-bottom-left-radius: 16px;
+        border-bottom-right-radius: 16px;
+      }
     }
     &__body {
       position: relative;

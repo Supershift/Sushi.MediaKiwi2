@@ -24,7 +24,7 @@
     /** width of the sheet, ex. 20px, 100vw */
     width: {
       type: [String, Number],
-      default: "auto",
+      default: "100vw",
     },
     /** height of the sheet, ex. 20px, 100vh */
     height: {
@@ -63,7 +63,8 @@
 
   // slots
   defineSlots<{
-    header?: (props: unknown) => unknown;
+    title?: (props: unknown) => unknown;
+    subtitle?: (props: unknown) => unknown;
     default?: (props: unknown) => unknown;
     footer?: (props: unknown) => unknown;
   }>();
@@ -73,7 +74,7 @@
   const sheetValue = ref(false);
   const zIndex = ref<number | string>();
   const { mobile } = useDisplay();
-  const { state, openSideSheet, closeSideSheet, hasRole, mountTeleportContainer, unMountTeleportContainer } = useSideSheet();
+  const { state, openSideSheet, closeSideSheet, isOpen, mountTeleportContainer, unMountTeleportContainer } = useSideSheet();
 
   // computed
   const wrapperStyles = computed(
@@ -86,7 +87,7 @@
 
   // functions
   function handleClose() {
-    closeSideSheet("sideSheet");
+    closeSideSheet();
     emits("closedSheet", state);
     sheetValue.value = false;
     showOverlay.value = false;
@@ -95,7 +96,7 @@
     showOverlay.value = true;
     // delays the opening of the sheet to allow the transition to work, primarily on mobile
     setTimeout(() => {
-      openSideSheet("sideSheet");
+      openSideSheet();
       sheetValue.value = true;
       emits("openedSheet", state);
     }, 300);
@@ -131,7 +132,7 @@
 <template>
   <teleport :to="`.${props.idName}`" class="side-sheet">
     <!-- Overlay Mobile -->
-    <v-overlay v-if="mobile && hasRole('sideSheet')" v-model:model-value="showOverlay" class="side-sheet__overlay d-flex justify-end">
+    <v-overlay v-if="mobile && isOpen()" v-model:model-value="showOverlay" class="side-sheet__overlay d-flex justify-end">
       <v-expand-x-transition>
         <div v-show="sheetValue" class="side-sheet__wrapper side-sheet--mobile" :class="[sheetValue && 'side-sheet__wrapper--active']" :style="wrapperStyles">
           <mk-side-sheet-content
@@ -148,8 +149,11 @@
             @closed="handleClose"
             @opened="handleOpen"
           >
-            <template #header>
-              <slot name="header"></slot>
+            <template #title>
+              <slot name="title"></slot>
+            </template>
+            <template #subtitle>
+              <slot name="subtitle"></slot>
             </template>
             <template #default>
               <slot name="default"></slot>
@@ -163,12 +167,7 @@
     </v-overlay>
     <!-- Overlay Desktop -->
     <v-expand-x-transition v-else>
-      <div
-        v-show="modelValue && !mobile && hasRole('sideSheet')"
-        class="side-sheet__wrapper"
-        :class="[modelValue && 'side-sheet__wrapper--active']"
-        :style="wrapperStyles"
-      >
+      <div v-show="modelValue && !mobile && isOpen()" class="side-sheet__wrapper" :class="[modelValue && 'side-sheet__wrapper--active']" :style="wrapperStyles">
         <mk-side-sheet-content
           :model-value="modelValue"
           :close-button="closeButton"
@@ -183,8 +182,11 @@
           @closed="handleClose"
           @opened="handleOpen"
         >
-          <template #header>
-            <slot name="header"></slot>
+          <template #title>
+            <slot name="title"></slot>
+          </template>
+          <template #subtitle>
+            <slot name="subtitle"></slot>
           </template>
           <template #default>
             <slot name="default"></slot>
@@ -217,7 +219,7 @@
   .v-overlay__scrim {
     background: rgba(var(--v-theme-surface-1)) !important;
   }
-  @media (max-width: 900px) {
+  @media (max-width: 1280px) {
     .v-overlay__content {
       right: 0;
       top: 0;
