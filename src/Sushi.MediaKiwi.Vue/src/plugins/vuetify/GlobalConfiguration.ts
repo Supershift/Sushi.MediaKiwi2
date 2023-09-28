@@ -1,6 +1,7 @@
 import type { VuetifyOptions } from "vuetify";
 import { VBtn } from "vuetify/components/VBtn";
 import { VNavigationDrawer } from "vuetify/components/VNavigationDrawer";
+import { IconsLibrary } from "@/models/enum/IconsLibrary";
 
 /**
  * Global configuration for Vuetify
@@ -57,6 +58,11 @@ export const globalConfiguration: VuetifyOptions = {
     },
     VCheckbox: {
       color: "primary",
+      trueIcon: IconsLibrary.checkboxMarked,
+      falseIcons: IconsLibrary.squareOutline,
+      indeterminateIcon: IconsLibrary.minusBox,
+      class: "v-checkbox--mediakiwi",
+      disabled: true,
     },
     VDivider: {
       color: "outline-variant",
