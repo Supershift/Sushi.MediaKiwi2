@@ -12,6 +12,7 @@
   const countriesConnector = container.resolve(CountryConnector);
 
   const navigation = useNavigation();
+  const radioModel = ref("1");
 
   const slider = ref(20);
 
@@ -89,6 +90,11 @@
       <v-checkbox v-model="state.hotel.isActive" label="Is Active"></v-checkbox>
       <mk-money-value v-model="state.hotel.srp" label="SRP"></mk-money-value>
       <v-slider v-model="slider" show-ticks step="10" thumb-label="always"></v-slider>
+      <v-radio-group v-model="radioModel" :rules="[() => radioModel === '2' || 'Show is the only option']">
+        <v-radio label="Hide" value="1" disabled></v-radio>
+        <v-radio label="Show" value="2"></v-radio>
+        <v-radio label="Is Featured" value="3"></v-radio>
+      </v-radio-group>
     </MkForm>
   </v-card>
 </template>

@@ -1,6 +1,9 @@
+import { IconsLibrary } from "@/models";
 import type { VuetifyOptions } from "vuetify";
 import { VBtn } from "vuetify/components/VBtn";
 import { VNavigationDrawer } from "vuetify/components/VNavigationDrawer";
+import { IconsLibrary } from "@/models/enum";
+
 
 /**
  * Global configuration for Vuetify
@@ -51,12 +54,17 @@ export const globalConfiguration: VuetifyOptions = {
       class: "v-btn--mediakiwi v-btn--mediakiwi--primary",
     },
     VChip: {
-      closeIcon: "mdi-close",
+      closeIcon: "$close",
       rounded: "lg",
       class: "bg-secondary-container",
     },
     VCheckbox: {
       color: "primary",
+      trueIcon: IconsLibrary.checkboxMarked,
+      falseIcons: IconsLibrary.squareOutline,
+      indeterminateIcon: IconsLibrary.minusBox,
+      class: "v-checkbox--mediakiwi",
+      disabled: true,
     },
     VDivider: {
       color: "outline-variant",
@@ -80,6 +88,8 @@ export const globalConfiguration: VuetifyOptions = {
     },
     VTextField: {
       variant: "outlined",
+      color: "outline",
+      class: "v-field--mediakiwi",
     },
     VSelect: {
       variant: "outlined",
@@ -91,6 +101,22 @@ export const globalConfiguration: VuetifyOptions = {
       trackSize: 4,
       tickSize: 3,
       class: "v-slider--mediakiwi",
+    },
+    VRadioGroup: {
+      color: "primary",
+      class: "v-radio-group--mediakiwi",
+    },
+    VRadio: {
+      color: "primary",
+      trueIcon: IconsLibrary.radioOn,
+      falseIcon: IconsLibrary.radioOff,
+      class: "v-radio--mediakiwi",
+    },
+    VAutocomplete: {
+      variant: "outlined",
+      color: "outline",
+      class: "v-autocomplete--mediakiwi",
+      menuIcon: IconsLibrary.menuDown,
     },
   },
 };

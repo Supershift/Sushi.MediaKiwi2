@@ -1,0 +1,48 @@
+/**
+ * Autocomplete
+ */
+.v-input {
+    &.v-autocomplete--mediakiwi {
+        .v-field{
+            &--focused {
+                color: rgb(var(--v-theme-primary));
+            }
+            &--error{
+                color: rgb(var(--v-theme-error));
+            }
+            &--disabled{
+                color: rgb(var(--v-theme-on-surface-variant));
+            }
+            &:hover {
+                color: rgb(var(--v-theme-on-surface));
+            }
+            .v-field__field {
+                color: rgb(var(--v-theme-on-surface));
+            }
+        }
+        &:has(.v-field[aria-expanded="true"]){
+            color: rgb(var(--v-theme-primary));
+        }
+        &.v-autocomplete{
+            &--active-menu {
+                .v-field,
+                .text-outline {
+                    color: rgb(var(--v-theme-primary)) !important;
+                }
+            }
+        }
+    }
+}
+/**
+ * Autocomplete Menu
+ */
+.v-overlay {
+    &.v-menu {
+        .v-autocomplete__content {
+            .v-list {
+                color: rgb(var(--v-theme-on-surface)) !important;
+                background-color: rgb(var(--v-theme-surface2)) !important;
+            }
+        }
+    }
+}
