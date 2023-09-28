@@ -1,10 +1,13 @@
 <script setup lang="ts">
   import { useMsal } from "@/composables/useMsal";
   import { identity } from "@/identity";
-  import { IconsLibrary } from "@/models";
+  import { IconsLibrary, MediakiwiVueOptions } from "@/models";
+  import { inject } from "vue";
   import { useI18next } from "@/composables/useI18next";
 
   const { t } = await useI18next("MkSignIn");
+
+  const mediakiwi = inject("mediakiwi") as MediakiwiVueOptions;
 
   // inject dependencies
   const { instance } = useMsal();
@@ -18,7 +21,7 @@
     <v-row justify="center" align="center">
       <v-col xs="12" sm="10" md="8" lg="4" xl="3" class="mk-signin__colu,m">
         <v-card class="mk-signin__card pa-5 text-center" rounded="lg" elevation="3">
-          <v-card-title tag="h1" class="text-headline-large">MediaKiwi 2.0</v-card-title>
+          <v-card-title tag="h1" class="text-headline-large" :title="mediakiwi.title">{{ mediakiwi.title }}</v-card-title>
           <v-divider class="mt-5 mb-5 mx-5" />
           <v-spacer></v-spacer>
           <v-card-text>

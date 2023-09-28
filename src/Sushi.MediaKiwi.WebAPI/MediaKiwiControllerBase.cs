@@ -12,6 +12,7 @@ namespace Sushi.MediaKiwi.WebAPI
     /// Serves as a base class for all MediaKiwi controllers, setting shared attributes.
     /// </summary>
     [ApiController]
+    [ApiVersionNeutral]
     [ApiExplorerSettings(GroupName = "MediaKiwi")]    
     [Authorize(Roles = "Admin")]
     public abstract class MediaKiwiControllerBase : ControllerBase

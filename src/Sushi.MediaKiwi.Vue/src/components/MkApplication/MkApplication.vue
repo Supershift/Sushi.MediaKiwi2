@@ -1,9 +1,11 @@
 <script setup lang="ts">
   import { MkNavigation, MkScreen, MkNavigationIcon, MkThemeToggle, MkAvatar, MkSuspense } from "@/components";
   import { useIsAuthenticated } from "@/composables/useIsAuthenticated";
+  import { MediakiwiVueOptions } from "@/models";
   import { useSnackbarStore } from "@/stores/snackbar";
-  import { onMounted, ref } from "vue";
   import { inject } from "vue";
+  const mediakiwi = inject("mediakiwi") as MediakiwiVueOptions;
+
   // inject dependencies
   const isAuthenticated = useIsAuthenticated();
   const snackbar = useSnackbarStore();
@@ -14,7 +16,7 @@
       <mk-suspense>
         <v-app-bar>
           <mk-navigation-icon />
-          <v-toolbar-title v-if="isAuthenticated">MediaKiwi 2.0</v-toolbar-title>
+          <v-toolbar-title v-if="isAuthenticated">{{ mediakiwi.title }}</v-toolbar-title>
           <v-spacer v-else></v-spacer>
           <mk-theme-toggle></mk-theme-toggle>
           <mk-avatar></mk-avatar>
