@@ -152,7 +152,6 @@ steps:
         ClientApp/dist/**
         Function/**
         !**/.funcignore
-        !**/node_modules/**        
         !**/package-lock.json
         !**/tsconfig.json
       TargetFolder: "SampleWeb"
