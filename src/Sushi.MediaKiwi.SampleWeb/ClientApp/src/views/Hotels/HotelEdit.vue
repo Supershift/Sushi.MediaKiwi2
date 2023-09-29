@@ -96,7 +96,7 @@
         <v-radio label="Show" value="2"></v-radio>
         <v-radio label="Is Featured" value="3"></v-radio>
       </v-radio-group>
-      <v-file-input v-model="fileUpload" label="Hotel blueprint" :rules="[() => fileUpload.length < 0 || 'Upload is required!']"></v-file-input>
+      <v-file-input v-model="fileUpload" label="Hotel blueprint" :rules="[() => !!fileUpload.length || 'Blueprint is required!']"></v-file-input>
       <mk-multiple-file-input
         :uploads="fileUpload"
         label="Hotel pool blueprints"
