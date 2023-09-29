@@ -79,7 +79,7 @@ steps:
     displayName: "Publish Mediakiwi artifact"
     inputs:
       PathtoPublish: "$(Build.ArtifactStagingDirectory)/mediakiwi-vue"
-      ArtifactName: "packages/mediakiwi-vue"
+      ArtifactName: "mediakiwi-vue"
       publishLocation: "Container"
 
   # Build and Pack mediakiwi-azure-function
@@ -120,7 +120,7 @@ steps:
     displayName: "Publish Mediakiwi artifact"
     inputs:
       PathtoPublish: "$(Build.ArtifactStagingDirectory)/mediakiwi-azure-function"
-      ArtifactName: "packages/mediakiwi-azure-function"
+      ArtifactName: "mediakiwi-azure-function"
       publishLocation: "Container"
 
   # Build and Pack SampleWeb
