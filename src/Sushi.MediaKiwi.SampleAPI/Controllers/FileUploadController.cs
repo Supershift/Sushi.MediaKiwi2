@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Sushi.MediaKiwi.SampleAPI.Controllers;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.WebAPI.Paging;
 using System;
@@ -9,10 +10,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sushi.MediaKiwi.WebAPI
+namespace Sushi.MediaKiwi.SampleAPI
 {
     [Microsoft.AspNetCore.Components.Route($"{BaseRoute}/upload")]
-    public class FileUploadController : MediaKiwiControllerBase
+    public class FileUploadController : SampleControllerBase
     {
         private FileUploadService _fileUploadService;
 
@@ -42,7 +43,9 @@ namespace Sushi.MediaKiwi.WebAPI
                 }
             }
 
-            return Ok();
+            var result = await _fileUploadService.CreateAsync(file);
+
+            return Ok(result);
         }
     }
 }
