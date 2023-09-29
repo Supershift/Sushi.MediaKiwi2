@@ -73,13 +73,54 @@ steps:
         dist/**
         package.json
         README.md
-      TargetFolder: "$(Build.ArtifactStagingDirectory)"
+      TargetFolder: "$(Build.ArtifactStagingDirectory)/mediakiwi-vue"
 
   - task: PublishBuildArtifacts@1
     displayName: "Publish Mediakiwi artifact"
     inputs:
-      PathtoPublish: "$(Build.ArtifactStagingDirectory)"
-      ArtifactName: "packages"
+      PathtoPublish: "$(Build.ArtifactStagingDirectory)/mediakiwi-vue"
+      ArtifactName: "mediakiwi-vue"
+      publishLocation: "Container"
+
+  # Build and Pack mediakiwi-azure-function
+  - task: Npm@1
+    displayName: "Npm test on MediaKiwi.AzureFunction"
+    inputs:
+      command: "custom"
+      customCommand: "run test:run"
+      workingDir: "src/Sushi.MediaKiwi.AzureFunction"
+    continueOnError: true
+
+  - task: Npm@1
+    displayName: "Npm coverage on MediaKiwi.AzureFunction"
+    inputs:
+      command: "custom"
+      customCommand: "run coverage"
+      workingDir: "src/Sushi.MediaKiwi.AzureFunction"
+    continueOnError: true
+
+  - task: Npm@1
+    displayName: "Npm build on MediaKiwi.AzureFunction"
+    inputs:
+      command: "custom"
+      workingDir: "src/Sushi.MediaKiwi.AzureFunction"
+      customCommand: "run build"
+
+  - task: CopyFiles@2
+    displayName: "Copy files to package"
+    inputs:
+      SourceFolder: "src/Sushi.MediaKiwi.AzureFunction"
+      Contents: |
+        dist/**
+        package.json
+        README.md
+      TargetFolder: "$(Build.ArtifactStagingDirectory)/mediakiwi-azure-function"
+
+  - task: PublishBuildArtifacts@1
+    displayName: "Publish Mediakiwi artifact"
+    inputs:
+      PathtoPublish: "$(Build.ArtifactStagingDirectory)/mediakiwi-azure-function"
+      ArtifactName: "mediakiwi-azure-function"
       publishLocation: "Container"
 
   # Build and Pack SampleWeb
