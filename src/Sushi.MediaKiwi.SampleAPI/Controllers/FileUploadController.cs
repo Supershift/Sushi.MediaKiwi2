@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Sushi.MediaKiwi.SampleAPI.Controllers;
+using Sushi.MediaKiwi.SampleAPI.Service;
+using Sushi.MediaKiwi.SampleAPI.Service.Model;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.WebAPI.Paging;
 using System;
@@ -9,10 +11,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
-namespace Sushi.MediaKiwi.SampleAPI
+namespace Sushi.MediaKiwi.SampleAPI.Controllers
 {
-    [Microsoft.AspNetCore.Components.Route($"{BaseRoute}/upload")]
+    [Route($"{BaseRoute}/upload")]
     public class FileUploadController : SampleControllerBase
     {
         private FileUploadService _fileUploadService;
@@ -31,19 +34,9 @@ namespace Sushi.MediaKiwi.SampleAPI
         /// </summary>        
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<IActionResult>> UploadFile([FromBody] IFormFile file)
+        public async Task<ActionResult<List<FileUpload>>> UploadFile([FromBody] List<IFormFile> files)
         {
-            byte[] data = new byte[file.Length];
-
-            using (var bstream = file.OpenReadStream())
-            {
-                while (bstream.CanRead)
-                {
-                    bstream.Read(data);
-                }
-            }
-
-            var result = await _fileUploadService.CreateAsync(file);
+            var result = await _fileUploadService.Upload(files);
 
             return Ok(result);
         }

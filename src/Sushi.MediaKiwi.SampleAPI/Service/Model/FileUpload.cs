@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sushi.MediaKiwi.Services.Model
+namespace Sushi.MediaKiwi.SampleAPI.Service.Model
 {
     public class FileUpload
     {
