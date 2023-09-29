@@ -95,7 +95,6 @@ export const globalConfiguration: VuetifyOptions = {
     VFileInput: {
       variant: "outlined",
       baseColor: "on-surface-variant",
-      chips: true,
       clearable: true,
       centerAffix: true,
       clearIcon: IconsLibrary.clear,
