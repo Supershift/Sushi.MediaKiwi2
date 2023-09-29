@@ -151,6 +151,9 @@ steps:
       Contents: |
         ClientApp/dist/**
         Function/**
+        !**/node_modules/**
+        !**/.funcignore/**
+        !**/package-lock.json
       TargetFolder: "SampleWeb"
 
   - task: PublishPipelineArtifact@1
