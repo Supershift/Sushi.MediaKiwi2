@@ -1,1 +1,1 @@
-export { default as MkMultipleFileInput } from "./MkMultipleFileInput.vue";
+export { default as MkFileInput } from "./MkFileInput.vue";

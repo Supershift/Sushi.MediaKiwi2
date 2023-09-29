@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { MkForm, MkMoneyValue, MkMultipleFileInput, useNavigation } from "@supershift/mediakiwi-vue";
+  import { MkForm, MkMoneyValue, MkFileInput, useNavigation } from "@supershift/mediakiwi-vue";
   import { HotelConnector } from "@/services/HotelConnector";
   import { CountryConnector } from "@/services/CountryConnector";
   import { reactive, ref } from "vue";
@@ -96,12 +96,13 @@
         <v-radio label="Show" value="2"></v-radio>
         <v-radio label="Is Featured" value="3"></v-radio>
       </v-radio-group>
-      <v-file-input v-model="fileUpload" label="Hotel blueprint" :rules="[() => !!fileUpload.length || 'Blueprint is required!']"></v-file-input>
-      <mk-multiple-file-input
+      <mk-file-input :uploads="fileUpload" label="Hotel blueprint" :rules="[() => !!fileUpload.length || 'Blueprint is required!']"></mk-file-input>
+      <mk-file-input
         :uploads="fileUpload"
-        label="Hotel pool blueprints"
-        :rules="[() => fileUpload.length < 0 || 'Upload is required!']"
-      ></mk-multiple-file-input>
+        label="Pool blueprints"
+        :multiple="true"
+        :rules="[() => fileUpload.length <= 2 || 'Multiple files only!']"
+      ></mk-file-input>
     </MkForm>
   </v-card>
 </template>
