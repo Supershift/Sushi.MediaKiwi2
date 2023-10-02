@@ -34,9 +34,9 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
         /// </summary>        
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<List<FileUpload>>> UploadFile([FromBody] List<IFormFile> files)
+        public ActionResult<List<FileUpload>> UploadFiles([FromBody] List<IFormFile> files)
         {
-            var result = await _fileUploadService.Upload(files);
+            var result = _fileUploadService.Upload(files);
 
             return Ok(result);
         }

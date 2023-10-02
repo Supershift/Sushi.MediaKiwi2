@@ -21,7 +21,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
         /// <param name="id"></param>
         /// <param name="files"></param>
         /// <returns></returns>
-        public  async Task<ListResult<FileUpload>> Upload(List<IFormFile> files)
+        public ListResult<FileUpload> Upload(List<IFormFile> files)
         {
             var results = new ListResult<FileUpload>();
 
@@ -32,14 +32,16 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
                     if (file.Length > 0)
                     {
                         // TODO: This is just for mocking, later we really upload
-                        var result = new FileUpload();
-                        result.Name = file.Name;
-                        result.Size = file.Length;
-                        result.FileUrl = file.FileName;
-                        result.FileType = file.ContentType;
+                        var result = new FileUpload()
+                        {
+                            Name = file.Name,
+                            Size = file.Length,
+                            FileUrl = file.FileName,
+                            FileType = file.ContentType
+                        };
                         results.Result.Add(result);
                     }
-                   
+
                 }
             }
 
