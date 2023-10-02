@@ -3,7 +3,14 @@ import MkMoneyValue from "./../MkMoneyValue.vue";
 
 describe("<MkMoneyValue />", () => {
   it("renders", () => {
-    // see: https://on.cypress.io/mounting-vue
-    cy.mount(MkMoneyValue);
+    cy.mount(MkMoneyValue, {
+      props: {
+        label: "SRP",
+        modelValue: {
+          currency: "EUR",
+          amount: 12.5,
+        },
+      },
+    });
   });
 });

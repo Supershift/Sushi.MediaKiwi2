@@ -1,3 +1,19 @@
+import "reflect-metadata";
+import { Suspense, computed, defineComponent, h, ref } from "vue";
+import { createPinia } from "pinia";
+import i18next from "i18next";
+import { createRouter } from "vue-router";
+import { getDefaultRouterOptions } from "@/router/getDefaultRouterOptions";
+import { createVuetify } from "vuetify";
+import defaultVuetifyOptions from "@/plugins/vuetify/index";
+import { mount } from "cypress/vue";
+import { VLayout } from "vuetify/components";
+import { identity } from "@/identity";
+
+// Import commands.js using ES2015 syntax:
+import "./commands";
+import { PublicClientApplication } from "@azure/msal-browser";
+
 /* eslint-disable @typescript-eslint/no-namespace */
 // ***********************************************************
 // This example support/component.ts is processed and
@@ -14,13 +30,8 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-// Import commands.js using ES2015 syntax:
-import "./commands";
-
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
-
-import { mount } from "cypress/vue";
 
 // Augment the Cypress namespace to include type definitions for
 // your custom command.
@@ -34,7 +45,50 @@ declare global {
   }
 }
 
-Cypress.Commands.add("mount", mount);
+Cypress.Commands.add("mount", (component, ...args: any) => {
+  // Create the router options
+  const routerOptions = getDefaultRouterOptions();
+
+  // Create the vuetify instance
+  const vuetify = createVuetify(defaultVuetifyOptions);
+
+  // Create the global options
+  args.global = args.global || {};
+  args.global.plugins = args.global.plugins || [];
+  args.global.provide = args.global.provide || [];
+
+  // Add the plugins
+  args.global.plugins.push(createPinia());
+  args.global.plugins.push(createRouter(routerOptions));
+  args.global.plugins.push(vuetify);
+
+  args.global.provide.i18next = ref(i18next);
+  args.global.provide.defaultT = (key: string) => computed(() => key);
+  args.global.provide.t = (key: string) => computed(() => key);
+  args.global.provide.i18initPromise = Promise.resolve();
+  args.global.provide.vuetify = vuetify;
+
+  // Return the mount with the new arguments wrapped in a VApp
+  const suspenseWrapper = defineComponent({
+    render() {
+      return h(Suspense, null, {
+        default: () => {
+          return h(VLayout, null, {
+            default: () => {
+              return h(component, args.props);
+            },
+          });
+        },
+      });
+    },
+  });
+
+  // Set msalInstance to a dummy value
+  identity.msalInstance = new PublicClientApplication({ auth: { clientId: "test" } });
+
+  mount(suspenseWrapper, args);
+  // });
+});
 
 // Example use:
 // cy.mount(MyComponent)
