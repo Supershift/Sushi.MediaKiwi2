@@ -17,6 +17,8 @@
   import { ITableMapPaging } from "@/models/table/TableMapPaging";
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
   import { pageSizeOptions } from "@/constants";
+  import MkTableHead from "./MkTableHead.vue"; // Mk-Th
+  import MkTableCell from "./MkTableCell.vue"; // Mk-Td
 
   // define properties
   const props = withDefaults(
@@ -86,6 +88,14 @@
   // define reactive variables
   const inProgress = ref(false);
   const mkTableViewComponent = ref();
+
+  const isBooleanColumn = computed(() => {
+    if (props.tableMap && props.tableMap.items && props.tableMap.items[0] && props.tableMap.items[0].value && props.data && props.data[0]) {
+      const value = props.tableMap.items[0].value(props.data[0]);
+      return typeof value === "boolean";
+    }
+    return false;
+  });
 
   // Deconstruct the ApiResult or paging prop to an ITableMapPaging
   const pagingResult = computed<ITableMapPaging | undefined | null>(() => {
@@ -198,15 +208,31 @@
       @update:sorting="sortingChanged"
       @update:selection="(e) => emit('update:selection', e)"
     >
-      <template v-if="slots.thead" #thead>
-        <slot name="thead"></slot>
-      </template>
-      <template v-if="slots.tbody" #tbody="{ dataItem }">
-        <slot name="tbody" :data-item="dataItem"></slot>
+      <template #thead>
+        <slot v-if="slots.thead" name="thead"></slot>
+        <template v-else>
+          <!-- render a head cell for each mapping item -->
+          <MkTableHead
+            v-for="(mapItem, index) in props.tableMap?.items"
+            :key="index"
+            :sorting="sorting"
+            :map-item="mapItem"
+            :truncate="!isBooleanColumn"
+            @update:sorting="(value) => emit('update:sorting', value)"
+          />
+        </template>
       </template>
 
+      <template #tbody="{ dataItem }">
+        <slot v-if="slots.tbody" name="tbody" :data-item="dataItem"></slot>
+        <template v-else>
+          <!-- render a body cell for each mapping item -->
+          <MkTableCell v-for="(mapItem, cellIndex) in props.tableMap?.items" :key="cellIndex" :data="dataItem" :map-item="mapItem"></MkTableCell>
+        </template>
+      </template>
+
+      <!-- Only show the controls if the pagination mode is unset or set to 'controls' -->
       <template v-if="paginationMode === 'controls'" #bottom>
-        <!-- Only show the controls if the pagination mode is unset or set to 'controls' -->
         <MkPagination
           v-if="showPagination"
           :model-value="currentPagination"

@@ -123,17 +123,15 @@
     <template #thead>
       <mk-th v-model:sorting="sorting" :sorting-options="{ id: 'name' }">{{ t("Name") }}</mk-th>
       <mk-th v-model:sorting="sorting" :sorting-options="{ id: 'created' }">{{ t("Created") }}</mk-th>
-      <mk-th>{{ t("Country") }}</mk-th>
-      <mk-th>{{ t("Active") }}</mk-th>
-      <mk-th>{{ t("SRP") }}</mk-th>
-      <mk-th></mk-th>
+      <th>{{ t("Country") }}</th>
+      <th>{{ t("Active") }}</th>
+      <th>{{ t("SRP") }}</th>
+      <th></th>
     </template>
 
     <template #tbody="{ dataItem }: TableBodySlotResult<Hotel>">
-      <mk-td @click.stop>
-        <v-text-field v-model="dataItem.name" @update:model-value="(name:string) => onNameChanged(dataItem, name)" />
-      </mk-td>
-      <mk-td :value="formatDateTime(dataItem.created)" />
+      <td>{{ dataItem.name }}</td>
+      <td>{{ formatDateTime(dataItem.created) }}</td>
       <mk-td @click.stop>
         <v-autocomplete
           v-model="dataItem.countryCode"

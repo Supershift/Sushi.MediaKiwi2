@@ -44,9 +44,9 @@
     footer?: (props: unknown) => any;
     bottom?: (props: unknown) => any;
     /** table templating  */
-    thead?: (props: unknown) => never;
+    thead: (props: unknown) => never;
     /** table templating */
-    tbody?: (props: TableBodySlotResult<any>) => never;
+    tbody: (props: TableBodySlotResult<any>) => never;
   }>();
 
   // inject dependencies
@@ -115,14 +115,6 @@
     updatePageIndex(pageIndex + 1);
   }
 
-  const isBooleanColumn = computed(() => {
-    if (props.tableMap && props.tableMap.items && props.tableMap.items[0] && props.tableMap.items[0].value && props.data && props.data[0]) {
-      const value = props.tableMap.items[0].value(props.data[0]);
-      return typeof value === "boolean";
-    }
-    return false;
-  });
-
   defineExpose({
     clearSelection,
   });
@@ -135,21 +127,7 @@
         <th v-if="checkbox">
           <MkTableCheckbox :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:selected="selectAll" />
         </th>
-        <!-- if a thead slot is provided, render the slot, else render the table the in the default way -->
-        <template v-if="slots.thead">
-          <slot name="thead"></slot>
-        </template>
-        <template v-else>
-          <!-- render a header cell for each mapping item -->
-          <MkTableHead
-            v-for="(mapItem, index) in props.tableMap?.items"
-            :key="index"
-            :sorting="sorting"
-            :map-item="mapItem"
-            :truncate="!isBooleanColumn"
-            @update:sorting="(value) => emit('update:sorting', value)"
-          />
-        </template>
+        <slot name="thead"></slot>
       </tr>
     </thead>
     <tbody>
@@ -158,14 +136,7 @@
         <td v-if="checkbox" @click.stop>
           <MkTableCheckbox :is-selected="isItemSelected(dataItem)" @update:selected="(e) => selectItem(dataItem, e)" />
         </td>
-        <!-- if a tbody slot is provided, render the slot, else render the table the in the default way -->
-        <template v-if="slots.tbody">
-          <slot name="tbody" :data-item="dataItem"></slot>
-        </template>
-        <template v-else>
-          <!-- render a body cell for each mapping item -->
-          <MkTableCell v-for="(mapItem, cellIndex) in props.tableMap?.items" :key="cellIndex" :data="dataItem" :map-item="mapItem"></MkTableCell>
-        </template>
+        <slot name="tbody" :data-item="dataItem"></slot>
       </tr>
     </tbody>
     <tfoot>
