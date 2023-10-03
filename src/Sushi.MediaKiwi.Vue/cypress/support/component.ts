@@ -79,14 +79,19 @@ Cypress.Commands.add("mount", (component, options = {}) => {
   registerRouter(container, options.router);
 
   // Create the vuetify instance
-  const vuetify = createVuetify(defaultVuetifyOptions);
-  options.global.plugins.push(vuetify);
+
+  // Create the router options
+  if (!options.vuetify) {
+    const vuetify = createVuetify(defaultVuetifyOptions);
+    options.vuetify = vuetify;
+  }
+  options.global.plugins.push(options.vuetify);
 
   options.global.provide.i18next = ref(i18next);
   options.global.provide.defaultT = (key: string) => computed(() => key);
   options.global.provide.t = (key: string) => computed(() => key);
   options.global.provide.i18initPromise = Promise.resolve();
-  options.global.provide.vuetify = vuetify;
+  options.global.provide.vuetify = options.vuetify;
 
   // Use store passed in from options, or initialize a new one
   const { ...mountOptions } = options;
