@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { Suspense, computed, defineComponent, h, ref } from "vue";
+import { ComponentPublicInstance, Suspense, computed, h, ref } from "vue";
 import { createPinia } from "pinia";
 import i18next from "i18next";
 import { createRouter } from "vue-router";
@@ -9,10 +9,10 @@ import defaultVuetifyOptions from "@/plugins/vuetify/index";
 import { mount } from "cypress/vue";
 import { VLayout } from "vuetify/components";
 import { identity } from "@/identity";
-
 // Import commands.js using ES2015 syntax:
 import "./commands";
 import { PublicClientApplication } from "@azure/msal-browser";
+import { VueWrapper } from "@vue/test-utils";
 
 /* eslint-disable @typescript-eslint/no-namespace */
 // ***********************************************************
@@ -37,15 +37,21 @@ import { PublicClientApplication } from "@azure/msal-browser";
 // your custom command.
 // Alternatively, can be defined in cypress/support/component.d.ts
 // with a <reference path="./component" /> at the top of your spec.
+
 declare global {
   namespace Cypress {
     interface Chainable {
-      mount: typeof mount;
+      /**
+       * Helper mount function for Vue Components
+       * @param component Vue Component or JSX Element to mount
+       * @param options Options passed to Vue Test Utils
+       */
+      mount(component: any, options?: any): Chainable<any>;
     }
   }
 }
 
-Cypress.Commands.add("mount", (component, ...args: any) => {
+Cypress.Commands.add("mount", (component, options = {}) => {
   // Create the router options
   const routerOptions = getDefaultRouterOptions();
 
@@ -53,41 +59,38 @@ Cypress.Commands.add("mount", (component, ...args: any) => {
   const vuetify = createVuetify(defaultVuetifyOptions);
 
   // Create the global options
-  args.global = args.global || {};
-  args.global.plugins = args.global.plugins || [];
-  args.global.provide = args.global.provide || [];
+  options.global = options.global || {};
+  options.global.plugins = options.global.plugins || [];
+  options.global.provide = options.global.provide || [];
 
   // Add the plugins
-  args.global.plugins.push(createPinia());
-  args.global.plugins.push(createRouter(routerOptions));
-  args.global.plugins.push(vuetify);
+  options.global.plugins.push(createPinia());
+  options.global.plugins.push(createRouter(routerOptions));
+  options.global.plugins.push(vuetify);
 
-  args.global.provide.i18next = ref(i18next);
-  args.global.provide.defaultT = (key: string) => computed(() => key);
-  args.global.provide.t = (key: string) => computed(() => key);
-  args.global.provide.i18initPromise = Promise.resolve();
-  args.global.provide.vuetify = vuetify;
+  options.global.provide.i18next = ref(i18next);
+  options.global.provide.defaultT = (key: string) => computed(() => key);
+  options.global.provide.t = (key: string) => computed(() => key);
+  options.global.provide.i18initPromise = Promise.resolve();
+  options.global.provide.vuetify = vuetify;
 
-  // Return the mount with the new arguments wrapped in a VApp
-  const suspenseWrapper = defineComponent({
-    render() {
-      return h(Suspense, null, {
-        default: () => {
-          return h(VLayout, null, {
-            default: () => {
-              return h(component, args.props);
-            },
-          });
-        },
-      });
-    },
-  });
+  // Use store passed in from options, or initialize a new one
+  const { ...mountOptions } = options;
 
   // Set msalInstance to a dummy value
   identity.msalInstance = new PublicClientApplication({ auth: { clientId: "test" } });
 
-  mount(suspenseWrapper, args);
-  // });
+  return mount(() => {
+    return h(Suspense, null, {
+      default: () => {
+        return h(VLayout, null, {
+          default: () => {
+            return h(component, mountOptions.props);
+          },
+        });
+      },
+    });
+  }, options);
 });
 
 // Example use:
