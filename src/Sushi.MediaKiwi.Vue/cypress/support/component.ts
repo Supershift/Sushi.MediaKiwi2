@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { ComponentPublicInstance, Suspense, computed, h, ref } from "vue";
+import { Suspense, computed, h, ref } from "vue";
 import { createPinia } from "pinia";
 import i18next from "i18next";
 import { createRouter } from "vue-router";
@@ -12,7 +12,9 @@ import { identity } from "@/identity";
 // Import commands.js using ES2015 syntax:
 import "./commands";
 import { PublicClientApplication } from "@azure/msal-browser";
-import { VueWrapper } from "@vue/test-utils";
+
+import { container } from "tsyringe";
+import { registerRouter } from "@/helpers/registerRouter";
 
 /* eslint-disable @typescript-eslint/no-namespace */
 // ***********************************************************
@@ -52,20 +54,32 @@ declare global {
 }
 
 Cypress.Commands.add("mount", (component, options = {}) => {
-  // Create the router options
-  const routerOptions = getDefaultRouterOptions();
-
-  // Create the vuetify instance
-  const vuetify = createVuetify(defaultVuetifyOptions);
-
   // Create the global options
   options.global = options.global || {};
   options.global.plugins = options.global.plugins || [];
   options.global.provide = options.global.provide || [];
 
-  // Add the plugins
-  options.global.plugins.push(createPinia());
-  options.global.plugins.push(createRouter(routerOptions));
+  // Add pinia
+  const pinia = createPinia();
+  options.global.plugins.push(pinia);
+
+  // Create the router options
+  if (!options.router) {
+    const routerOptions = getDefaultRouterOptions();
+    options.router = createRouter(routerOptions);
+  }
+
+  // Add router plugin
+  options.global.plugins.push({
+    install(app: any) {
+      app.use(options.router);
+    },
+  });
+
+  registerRouter(container, options.router);
+
+  // Create the vuetify instance
+  const vuetify = createVuetify(defaultVuetifyOptions);
   options.global.plugins.push(vuetify);
 
   options.global.provide.i18next = ref(i18next);
