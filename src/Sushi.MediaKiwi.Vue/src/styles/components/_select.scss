@@ -1,0 +1,43 @@
+.v-select {
+    &--mediakiwi {
+        .v-field {
+            &__clearable {
+                color: rgb(var(--v-theme-on-surface)) !important;
+            }
+            &__input {
+                // Global defaults chips are not overriden this way
+                .v-chip {
+                  height: calc(var(--v-chip-height) + 8px); 
+                  margin-right: 8px;
+                  .v-chip__close,
+                  .v-chip__content {
+                    color: rgb(var(--v-theme-on-secondary-container));
+                  }
+                }
+            }
+        }
+    }
+}
+// select menu is rendered in a seperate overlay
+.v-menu {
+    .v-select__content {
+      .v-list-item {
+        .v-list-item {
+          &__prepend {
+            padding: 12px;
+            margin-right: 16px;
+          }
+          &__overlay {
+            background: none;
+          }
+        }
+        &--active {
+          .v-list-item {
+            &__prepend {
+              color: rgb(var(--v-theme-primary));
+            }
+          }
+        }
+      }
+    }
+}

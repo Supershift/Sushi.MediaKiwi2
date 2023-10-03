@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { MkForm, MkMoneyValue, useNavigation } from "@supershift/mediakiwi-vue";
+  import { MkForm, MkMoneyValue, useNavigation, MkMultiSelect, IconsLibrary } from "@supershift/mediakiwi-vue";
   import { HotelConnector } from "@/services/HotelConnector";
   import { CountryConnector } from "@/services/CountryConnector";
   import { reactive, ref } from "vue";
@@ -13,6 +13,7 @@
 
   const navigation = useNavigation();
   const radioModel = ref("1");
+  const selectHotelType = ref([]);
 
   const slider = ref(20);
 
@@ -95,6 +96,7 @@
         <v-radio label="Show" value="2"></v-radio>
         <v-radio label="Is Featured" value="3"></v-radio>
       </v-radio-group>
+      <mk-multi-select v-model:model-value="selectHotelType" multiple :items="['City', 'Hostel', 'Resort', 'Motel']" label="Hotel Type"></mk-multi-select>
     </MkForm>
   </v-card>
 </template>
