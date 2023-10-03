@@ -33,7 +33,8 @@ namespace Sushi.MediaKiwi.WebAPI
         public static IServiceCollection AddMediaKiwiApi(this IServiceCollection services, string defaultConnectionString,
             IConfigurationSection? azureAdConfig,
             Action<MicroOrmConfigurationBuilder>? microOrmConfig = null,
-            Action<IMapperConfigurationExpression>? autoMapperConfig = null)
+            Action<IMapperConfigurationExpression>? autoMapperConfig = null,
+            string[]? adminRoles = null)
         {
             // add mk services
             services.AddMediaKiwiServices(defaultConnectionString,
@@ -46,6 +47,18 @@ namespace Sushi.MediaKiwi.WebAPI
             // add mk dependencies
             services.TryAddTransient<Paging.PagingRetriever>();
             services.TryAddTransient<Sorting.SortingRetriever>();
+
+            // Define admin role policy
+            if (adminRoles?.Any() == true)
+            {
+                services.AddAuthorization(options =>
+                {
+                    options.AddPolicy(Constants.AdminPolicyName, policy =>
+                    {
+                        policy.RequireRole(adminRoles);
+                    });
+                });
+            }
 
             // add authentication
             var authenticationBuilder = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);

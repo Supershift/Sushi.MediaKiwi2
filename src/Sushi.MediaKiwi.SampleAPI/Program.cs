@@ -31,7 +31,8 @@ services.AddSwaggerGen(options =>
 // add mediakiwi API
 services.AddMediaKiwiApi(defaultConnectionString: connectionString, 
     azureAdConfig: config.GetSection("AzureAd"), 
-    autoMapperConfig: c=>c.AddProfile<Sushi.MediaKiwi.SampleAPI.Service.Model.AutoMapperProfile>());
+    autoMapperConfig: c=>c.AddProfile<Sushi.MediaKiwi.SampleAPI.Service.Model.AutoMapperProfile>(),
+    adminRoles: new[] { "SuperAdmin", "Admin" } );
 
 // add sample api depedencies
 services.AddSampleApiServices();
