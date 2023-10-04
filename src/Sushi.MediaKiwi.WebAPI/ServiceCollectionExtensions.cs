@@ -37,8 +37,7 @@ namespace Sushi.MediaKiwi.WebAPI
             IConfigurationSection? azureAdConfig,
             Action<MicroOrmConfigurationBuilder>? microOrmConfig = null,
             Action<IMapperConfigurationExpression>? autoMapperConfig = null,
-            string[]? adminRoles = null,
-            Dictionary<string, Action<AuthorizationPolicyBuilder>>? customAuthorizationPolicies = null)
+            Action<AuthorizationOptions> authorizationOptions = null)
         {
             // add mk services
             services.AddMediaKiwiServices(defaultConnectionString,
@@ -53,25 +52,19 @@ namespace Sushi.MediaKiwi.WebAPI
             services.TryAddTransient<Sorting.SortingRetriever>();
 
             // Define admin role policy
-            if (adminRoles?.Any() == true)
+            if (authorizationOptions == null)
             {
+                // Add default admin role policy
                 services.AddAuthorization(options =>
                 {
-                    // Add authorization policies for admin roles
-                    options.AddPolicy(Constants.AdminPolicyName, policy =>
-                    {
-                        policy.RequireRole(adminRoles);
-                    });
-
-                    // Add custom authorization policies
-                    if (customAuthorizationPolicies != null)
-                    {
-                        foreach (var customAuthorizationPolicy in customAuthorizationPolicies)
-                        {
-                            options.AddPolicy(customAuthorizationPolicy.Key, customAuthorizationPolicy.Value);
-                        }
-                    }
+                    options.AddPolicy(Constants.AdminPolicyName, policy => policy.RequireRole(Constants.AdminRoleName));
                 });
+            }
+            else
+            {
+                // Use custom authorization options
+                services.AddAuthorization(authorizationOptions);
+                
             }
 
             // add authentication

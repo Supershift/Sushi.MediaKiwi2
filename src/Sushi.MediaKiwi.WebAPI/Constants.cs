@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
-    internal static class Constants
+    public static class Constants
     {
         public const string AdminPolicyName = "MediaKiwiAdminPolicy";
+        public const string AdminRoleName = "AdminPolicy";
     }
 }

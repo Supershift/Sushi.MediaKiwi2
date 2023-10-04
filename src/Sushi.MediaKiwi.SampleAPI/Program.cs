@@ -29,26 +29,28 @@ services.AddSwaggerGen(options =>
     options.AddMediaKiwiSwagger();
 });
 
-// Define roles and policies
-var adminRoles = new[] { "SuperAdmin", "Admin" };
-var customAuthorizationPolicies = new Dictionary<string, Action<AuthorizationPolicyBuilder>>
-    {
-        {
-            Constants.CustomPolicyName,
-            policy =>
-            {
-                policy.RequireRole(Constants.CustomRoleName);
-            }
-        }
-    };
+// Define admin roles
+var adminRoles = new[] { Sushi.MediaKiwi.WebAPI.Constants.AdminRoleName, "SuperAdmin" };
 
 // add mediakiwi API
 services.AddMediaKiwiApi(
     defaultConnectionString: connectionString, 
     azureAdConfig: config.GetSection("AzureAd"), 
     autoMapperConfig: c => c.AddProfile<Sushi.MediaKiwi.SampleAPI.Service.Model.AutoMapperProfile>(),
-    adminRoles: adminRoles,
-    customAuthorizationPolicies: customAuthorizationPolicies);
+    authorizationOptions: options => {
+        
+        // Add authorization policies for admin roles
+        options.AddPolicy(Sushi.MediaKiwi.WebAPI.Constants.AdminPolicyName, policy =>
+        {
+            policy.RequireRole(adminRoles);
+        });
+
+        // Add custom authorization policies
+        options.AddPolicy(Sushi.MediaKiwi.SampleAPI.Constants.CustomPolicyName, policy =>
+        {
+            policy.RequireRole(Sushi.MediaKiwi.SampleAPI.Constants.CustomRoleName);
+        });
+    });
 
 // add sample api depedencies
 services.AddSampleApiServices();
