@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,13 +29,16 @@ namespace Sushi.MediaKiwi.WebAPI
     {
         /// <summary>
         /// Adds all services needed to run MediaKiwi to the <paramref name="services"/>, including Sushi.MicroOrm.
-        /// </summary>        
+        /// </summary>
+        /// <param name="adminRoles">Collection of role names which are allowed to access admin resources</param>
+        /// <param name="customAuthorizationPolicies">Dictionary where the key is the name of the policy and the value is the policy builder action</param>
         /// <returns></returns>
         public static IServiceCollection AddMediaKiwiApi(this IServiceCollection services, string defaultConnectionString,
             IConfigurationSection? azureAdConfig,
             Action<MicroOrmConfigurationBuilder>? microOrmConfig = null,
             Action<IMapperConfigurationExpression>? autoMapperConfig = null,
-            string[]? adminRoles = null)
+            string[]? adminRoles = null,
+            Dictionary<string, Action<AuthorizationPolicyBuilder>>? customAuthorizationPolicies = null)
         {
             // add mk services
             services.AddMediaKiwiServices(defaultConnectionString,
@@ -53,10 +57,20 @@ namespace Sushi.MediaKiwi.WebAPI
             {
                 services.AddAuthorization(options =>
                 {
+                    // Add authorization policies for admin roles
                     options.AddPolicy(Constants.AdminPolicyName, policy =>
                     {
                         policy.RequireRole(adminRoles);
                     });
+
+                    // Add custom authorization policies
+                    if (customAuthorizationPolicies != null)
+                    {
+                        foreach (var customAuthorizationPolicy in customAuthorizationPolicies)
+                        {
+                            options.AddPolicy(customAuthorizationPolicy.Key, customAuthorizationPolicy.Value);
+                        }
+                    }
                 });
             }
 
