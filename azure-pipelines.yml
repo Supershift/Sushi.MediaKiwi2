@@ -151,6 +151,9 @@ steps:
       Contents: |
         ClientApp/dist/**
         Function/**
+        !**/.funcignore
+        !**/package-lock.json
+        !**/tsconfig.json
       TargetFolder: "SampleWeb"
 
   - task: PublishPipelineArtifact@1
