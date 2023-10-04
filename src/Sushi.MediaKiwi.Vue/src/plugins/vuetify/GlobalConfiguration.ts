@@ -85,6 +85,7 @@ export const globalConfiguration: VuetifyOptions = {
     VInput: {
       hideDetails: "auto",
       variant: "outlined",
+      class: "v-input--mediakiwi",
     },
     VTextField: {
       variant: "outlined",
