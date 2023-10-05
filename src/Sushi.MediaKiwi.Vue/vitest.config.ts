@@ -24,7 +24,7 @@ export default mergeConfig(
         provider: "istanbul",
         reporter: ["text", "cobertura", "html"],
         reportsDirectory: "test/coverage",
-        exclude: ["**/*.test.ts", "**/*.spec.ts", "**/*.d.ts"],
+        exclude: ["**/*.vue", "**/*.test.ts", "**/*.spec.ts", "**/*.d.ts", "**/*.cy.ts"],
       },
     },
   })

@@ -1,4 +1,5 @@
 import "reflect-metadata";
+import "@cypress/code-coverage/support";
 import { Suspense, computed, h, ref } from "vue";
 import { createPinia } from "pinia";
 import i18next from "i18next";
