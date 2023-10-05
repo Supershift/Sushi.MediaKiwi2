@@ -3,9 +3,9 @@
 </script>
 
 <template>
-  <v-main style="min-height: 300px">
+  <v-main>
+    <mk-breadcrumbs :sticky="true" />
     <div class="pa-4 pa-md-10 mk-screen">
-      <mk-breadcrumbs />
       <router-view v-slot="{ Component }">
         <suspense timeout="0">
           <template #default>
@@ -23,6 +23,9 @@
 </template>
 
 <style lang="scss" scoped>
+  .v-main {
+    overflow: auto;
+  }
   .mk-screen {
     height: 100%;
 

@@ -5,6 +5,14 @@
   import { useNavigation } from "@/composables/useNavigation";
   import { NavigationItem, IconsLibrary } from "@/models";
 
+  // define props
+  const props = defineProps({
+    sticky: {
+      type: Boolean,
+      default: false,
+    },
+  });
+
   // inject dependencies
   const { xs } = useDisplay();
   const navigation = useNavigation();
@@ -44,7 +52,7 @@
   }
 </script>
 <template>
-  <v-card v-if="breadcrumbs?.length" class="ml-0">
+  <v-card v-if="breadcrumbs?.length" :class="['ml-0', { 'v-breadcrumbs--sticky': props.sticky }]">
     <div v-if="showBackButton" class="breadcrumb-title-container">
       <mk-back-button class="mr-5" />
       <div class="v-breadcrumbs-item text-title-large d-inline-block text-truncate">
@@ -78,6 +86,7 @@
   @use "sass:map";
   @use "vuetify/settings" as vuetify;
   @use "@/styles/abstracts";
+  @use "@/styles/themes/variables";
 
   @media #{map.get(vuetify.$display-breakpoints, "md-and-down")} {
     .breadcrumb-title-container {
@@ -110,5 +119,10 @@
         font-size: 1.5em; // 16px * 1.5 = 24px
       }
     }
+  }
+  .v-breadcrumbs--sticky {
+    position: sticky;
+    top: 0;
+    z-index: 1010;
   }
 </style>
