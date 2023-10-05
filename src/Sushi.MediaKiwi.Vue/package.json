@@ -14,7 +14,8 @@
     "vi:coverage": "vitest run --coverage",
     "cy:open": "cypress open",
     "cy:run-e2e": "cypress run --e2e",
-    "cy:run-component": "cypress run --component",
+    "cy:run:component": "cypress run --component --env coverage=false",
+    "cy:coverage:component": "cypress run --component",
     "lint:all": "eslint src",
     "lint:error": "eslint src --quiet",
     "stylelint:all": "stylelint src/**/*.scss"

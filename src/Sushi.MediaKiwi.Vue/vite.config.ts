@@ -21,7 +21,7 @@ export default defineConfig({
     }),
     istanbul({
       include: "src/*",
-      exclude: ["node_modules", "dist", "cypress", "__tests__"],
+      exclude: ["node_modules", "dist", "cypress", "**/__tests__/**"],
       extension: [".js", ".ts", ".vue"],
       requireEnv: false,
       cypress: true,

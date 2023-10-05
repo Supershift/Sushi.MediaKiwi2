@@ -4,7 +4,7 @@
   "all": true,
   "reporter": ["text", "html", "cobertura", "json"],
   "include": "./src/**/*{.ts,.tsx,.vue}",
-  "exclude": ["node_modules", "dist", "cypress", "*/**/__tests__", "*/**/*.spec.ts"],
+  "exclude": ["node_modules", "dist", "cypress", "**/__tests__/**"],
   "report-dir": "./test/component/coverage",
   "temp-dir": "./test/component/.nyc_output"
 }
