@@ -1,7 +1,5 @@
 import "reflect-metadata";
 import MkMoneyValue from "./../MkMoneyValue.vue";
-import exp from "constants";
-import { VueWrapper } from "@vue/test-utils";
 
 // Declare the props to be used in all tests
 const props = {
