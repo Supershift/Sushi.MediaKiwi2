@@ -52,15 +52,15 @@
   }
 </script>
 <template>
-  <v-card v-if="breadcrumbs?.length" :class="['ml-0', { 'v-breadcrumbs--sticky': props.sticky }]">
+  <v-card v-if="breadcrumbs?.length" :class="['breadcrumbs-container ml-0 pa-10 pb-0', { 'v-breadcrumbs--sticky': props.sticky }]">
     <div v-if="showBackButton" class="breadcrumb-title-container">
-      <mk-back-button class="mr-5" />
+      <mk-back-button />
       <div class="v-breadcrumbs-item text-title-large d-inline-block text-truncate">
         {{ navigation.currentNavigationItem.value?.name }}
       </div>
     </div>
     <div v-else>
-      <v-breadcrumbs class="v-breadcrumbs--mediakiwi px-0 pt-0" color="primary">
+      <v-breadcrumbs class="px-0 pt-0">
         <template v-for="(item, index) in breadcrumbs" :key="item.id">
           <li v-if="index" class="v-breadcrumbs-divider">
             <v-icon :icon="IconsLibrary.chevronRight" />
@@ -98,31 +98,8 @@
     display: flex;
     align-items: center;
   }
-  .v-breadcrumbs--mediakiwi {
-    justify-content: flex-start;
 
-    .v-btn {
-      @include abstracts.typography("title", "large");
-
-      &:not(.v-btn--active) {
-        font-weight: 400;
-      }
-      &.v-btn--active {
-        opacity: 1;
-      }
-    }
-
-    .v-breadcrumbs-divider {
-      padding: 0;
-
-      .v-icon {
-        font-size: 1.5em; // 16px * 1.5 = 24px
-      }
-    }
-  }
-  .v-breadcrumbs--sticky {
-    position: sticky;
-    top: 0;
-    z-index: 1010;
+  .breadcrumbs-container {
+    background-color: rgb(var(--v-theme-surface));
   }
 </style>

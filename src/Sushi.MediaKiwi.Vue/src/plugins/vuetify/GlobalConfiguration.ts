@@ -119,5 +119,10 @@ export const globalConfiguration: VuetifyOptions = {
       class: "v-autocomplete--mediakiwi",
       menuIcon: IconsLibrary.menuDown,
     },
+    VBreadcrumbs: {
+      color: "primary",
+      density: "compact",
+      class: "v-breadcrumbs--mediakiwi",
+    },
   },
 };
