@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.OpenApi.Models;
 using Sushi.MediaKiwi.SampleAPI;
 using Sushi.MediaKiwi.WebAPI;
 
@@ -27,6 +28,7 @@ services.AddEndpointsApiExplorer();
 services.AddSwaggerGen(options =>
 {
     options.AddMediaKiwiSwagger();
+    options.SwaggerDoc("SampleApi", new OpenApiInfo { Title = "SampleApi" });
 });
 
 // Define admin roles
