@@ -32,11 +32,12 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
             // get hotels from datastore
             var items = await _hotelRepository.GetAllAsync(pagingValues, countryCode, isActive);
 
-            // create result object
-            var result = new ListResult<Hotel>(items.TotalNumberOfRows, items.TotalNumberOfPages);
-
             // map to result
-            _mapper.Map(items, result.Result);
+            var itemsDto = _mapper.Map<List<Hotel>>(items);
+
+            // create result object
+            var result = new ListResult<Hotel>(itemsDto, items);
+            
             return new Result<ListResult<Hotel>>(result);
         }
 
