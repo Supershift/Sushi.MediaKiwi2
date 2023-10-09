@@ -99,8 +99,7 @@ namespace Sushi.MediaKiwi.WebAPI
             options.OperationFilter<SortingSwaggerFilter>();
 
             // add docs for mediakiw
-            options.SwaggerDoc("MediaKiwi", new OpenApiInfo { Title = "MediaKiwi" });
-            options.SwaggerDoc("SampleApi", new OpenApiInfo { Title = "SampleApi" });
+            options.SwaggerDoc("MediaKiwi", new OpenApiInfo { Title = "MediaKiwi" });            
             options.EnableAnnotations();
 
             // add JWT bearer
