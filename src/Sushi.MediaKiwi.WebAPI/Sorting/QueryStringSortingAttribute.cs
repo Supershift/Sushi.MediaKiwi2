@@ -24,14 +24,14 @@ namespace Sushi.MediaKiwi.WebAPI.Sorting
     /// <summary>
     /// Attribute adding sorting querystring parameters when applied to a WebAPI method. Adds 'sortBy' and 'sortDirection' querystring parameters.
     /// </summary>    
-    public class QueryStringSortingAttribute<T> : ActionFilterAttribute, IQueryStringSortingAttribute where T : ISortMap, new()
+    public class QueryStringSortingAttribute<TSortMap> : ActionFilterAttribute, IQueryStringSortingAttribute where TSortMap : ISortMap, new()
     {
         /// <summary>
         /// Creates a new instance of <see cref="QueryStringSortingAttribute{T}"/>.
         /// </summary>
         public QueryStringSortingAttribute()
         {
-            SortMap = new T();
+            SortMap = new TSortMap();
         }
 
         /// <inheritdoc/>        
