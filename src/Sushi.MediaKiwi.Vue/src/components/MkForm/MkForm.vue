@@ -3,7 +3,6 @@
   import MkFormToolbar from "./MkFormToolbar.vue";
   import { useNavigation } from "@/composables/useNavigation";
   import { useSnackbarStore } from "@/stores/snackbar";
-  import { onMounted } from "vue";
 
   // define properties
   const props = defineProps<{
@@ -95,6 +94,7 @@
     :delete="$props.onDelete ? true : false"
     :save="$props.onSave ? true : false"
     :undo="$props.onLoad && $props.onSave ? true : false"
+    :sticky="true"
     @save="onSave"
     @undo="onUndo"
     @delete="onDelete"

@@ -7,6 +7,7 @@
 
   // define props
   const props = defineProps({
+    /** Determines if the breadcrumbs become sticky at the top of the page, default: false */
     sticky: {
       type: Boolean,
       default: false,

@@ -6,10 +6,16 @@
 
   // define properties and events
   const props = defineProps<{
+    /** Determines if the toolbar is disabled, default: false */
     disabled?: boolean;
+    /** Determines if the delete button is shown, default: false */
     delete?: boolean;
+    /** Determines if the save button is shown, default: false */
     save?: boolean;
+    /** Determines if the undo button is shown, default: false */
     undo?: boolean;
+    /** Determines if the toolbar becomes sticky at the top of the page, default: false */
+    sticky?: boolean;
   }>();
   defineEmits(["save", "undo", "delete"]);
 
@@ -21,7 +27,7 @@
 </script>
 
 <template>
-  <v-toolbar>
+  <v-toolbar :class="['mb-10', { 'v-toolbar--sticky': props.sticky }]" color="surface">
     <v-spacer />
     <slot></slot>
     <v-btn v-if="undo" :disabled="props.disabled" @click="$emit('undo', $event)">{{ defaultT("Undo") }}</v-btn>
@@ -50,3 +56,12 @@
     </MkOverflowMenuIcon>
   </v-toolbar>
 </template>
+<style lang="scss">
+  .v-toolbar {
+    &--mediakiwi {
+      .v-toolbar__content > .v-toolbar-title {
+        margin-left: 0;
+      }
+    }
+  }
+</style>

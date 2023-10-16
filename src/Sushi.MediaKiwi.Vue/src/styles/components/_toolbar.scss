@@ -1,0 +1,9 @@
+.v-toolbar {
+    &--mediakiwi {
+        &.v-toolbar--sticky {
+            position: sticky;
+            top: 80px;
+            z-index: 1;
+          }
+    }
+}

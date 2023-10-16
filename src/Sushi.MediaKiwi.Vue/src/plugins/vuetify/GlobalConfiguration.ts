@@ -81,6 +81,7 @@ export const globalConfiguration: VuetifyOptions = {
     },
     VToolbar: {
       color: "surface1",
+      class: "v-toolbar--mediakiwi",
     },
     VInput: {
       hideDetails: "auto",
