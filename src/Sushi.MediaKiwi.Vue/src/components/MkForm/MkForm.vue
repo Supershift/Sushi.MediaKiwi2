@@ -1,8 +1,12 @@
 <script setup lang="ts">
   import { ref } from "vue";
-  import MkFormToolbar from "./MkFormToolbar.vue";
+  import { MkToolbar } from "@/components/MkToolbar";
   import { useNavigation } from "@/composables/useNavigation";
   import { useSnackbarStore } from "@/stores/snackbar";
+  import { useI18next } from "@/composables/useI18next";
+
+  // inject dependencies
+  const { defaultT } = await useI18next();
 
   // define properties
   const props = defineProps<{
@@ -88,9 +92,12 @@
   await onLoad();
 </script>
 <template>
-  <MkFormToolbar
-    :disabled="inProgress"
+  <MkToolbar
+    :loading="inProgress"
     v-bind="$attrs"
+    :item-view-id="navigation.currentNavigationItem.value.viewId"
+    :title="navigation.currentNavigationItem.value.viewId"
+    :new="false"
     :delete="$props.onDelete ? true : false"
     :save="$props.onSave ? true : false"
     :undo="$props.onLoad && $props.onSave ? true : false"
@@ -99,8 +106,18 @@
     @undo="onUndo"
     @delete="onDelete"
   >
-    <v-progress-linear v-if="inProgress" indeterminate absolute></v-progress-linear>
-  </MkFormToolbar>
+    <template #header>
+      <v-card-text>
+        Personal details, also known as personal information or personal data, refer to specific pieces of information that are associated with an individual
+        and can help identify or describe that person.
+      </v-card-text>
+
+      <v-card-actions>
+        <v-btn v-if="onUndo" :disabled="false" @click="onUndo">{{ defaultT("Undo") }}</v-btn>
+        <v-btn v-if="onSave" :disabled="false" @click="onSave">{{ defaultT("Save") }}</v-btn>
+      </v-card-actions>
+    </template>
+  </MkToolbar>
   <v-form :disabled="inProgress">
     <slot></slot>
   </v-form>

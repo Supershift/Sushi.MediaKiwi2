@@ -9,23 +9,40 @@
     title?: string;
     /** Displays new item button if set to true and itemViewId has a value */
     new?: boolean;
+    /** Determines if the toolbar is disabled, default: false */
+    disabled?: boolean;
+    /** Determines if the delete button is shown, default: false */
+    delete?: boolean;
+    /** Determines if the save button is shown, default: false */
+    save?: boolean;
+    /** Determines if the undo button is shown, default: false */
+    undo?: boolean;
+    /** Determines if the toolbar becomes sticky at the top of the page, default: false */
+    sticky?: boolean;
   }>();
 
   // define slots
   const slots = defineSlots<{
     /** Visible action slot for the MkToolbar */
     toolbar?: (props: unknown) => never;
+    /** Visible header for the MkToolbar */
+    header?: (props: unknown) => never;
     /** Menu actions for the MkToolbar */
     overflowMenuActions?: (props: unknown) => never;
   }>();
+
+  // define events
+  defineEmits(["save", "undo", "delete"]);
 </script>
 
 <template>
-  <v-card variant="text">
-    <v-container>
+  <v-card variant="text" :class="['v-toolbar--mediakiwi', { 'v-toolbar--sticky': props.sticky }]">
+    <v-container class="pl-0">
+      <v-row v-if="slots.header">
+        <slot name="header"></slot>
+      </v-row>
       <v-row class="pb-2 ml-0 align-center">
-        <v-card-title class="px-0 text-title-medium">{{ title }}</v-card-title>
-
+        <v-card-title v-if="title" class="px-0 text-title-medium">{{ title }}</v-card-title>
         <v-spacer></v-spacer>
 
         <v-card-actions>
