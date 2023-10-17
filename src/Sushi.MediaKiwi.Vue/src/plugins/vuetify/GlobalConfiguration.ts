@@ -80,7 +80,7 @@ export const globalConfiguration: VuetifyOptions = {
       VTextField: {
         variant: "outlined",
         hideDetails: true,
-        class: "v-text-field--mediakiwi v-field--mediakiwi--table",
+        class: "v-text-field--mediakiwi",
       },
       VAutocomplete: {
         variant: "outlined",
