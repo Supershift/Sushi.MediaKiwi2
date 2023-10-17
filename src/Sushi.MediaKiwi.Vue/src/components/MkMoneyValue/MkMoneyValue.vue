@@ -61,7 +61,7 @@
   }
 </script>
 <template>
-  <v-input>
+  <v-input data-cy="mk-money-value">
     {{ label }}
     <v-autocomplete
       :model-value="currency"
@@ -69,8 +69,9 @@
       :label="defaultT('Currency')"
       clearable
       :disabled="currencyInputDisabled"
+      data-cy="currency-autocomplete"
       @update:model-value="currencyUpdated"
     ></v-autocomplete>
-    <v-text-field :model-value="amount" type="number" :label="defaultT('Amount')" @update:model-value="amountUpdated"></v-text-field>
+    <v-text-field :model-value="amount" type="number" :label="defaultT('Amount')" data-cy="value-input" @update:model-value="amountUpdated"></v-text-field>
   </v-input>
 </template>

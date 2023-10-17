@@ -37,7 +37,7 @@
 
 <template>
   <v-card variant="text" :class="['v-toolbar--mediakiwi', { 'v-toolbar--sticky': props.sticky }]">
-    <v-container class="pl-0">
+    <v-container class="pl-0" fluid>
       <v-row v-if="slots.header">
         <slot name="header"></slot>
       </v-row>
