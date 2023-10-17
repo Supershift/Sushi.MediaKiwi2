@@ -89,7 +89,6 @@
 
   async function onFilesSave() {
     if (navigation.currentViewParameterNumber.value > 0) {
-      console.log("Uploading files for hotel... " + state.files.length);
       // upload files
       await fileUploadConnector.PostFiles(state.files);
     }
@@ -125,7 +124,7 @@
         :uploads="state.files"
         label="Pool blueprints"
         :multiple="true"
-        :rules="[() => state.files.length <= 2 || 'Multiple files only!']"
+        :rules="[() => state.files?.length <= 2 || 'Multiple files only!']"
       ></mk-file-input>
     </MkForm>
   </v-card>

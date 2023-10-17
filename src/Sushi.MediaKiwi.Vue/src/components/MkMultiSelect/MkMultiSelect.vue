@@ -29,7 +29,7 @@
     rules: {
       type: Array as PropType<ValidationRules[]>,
       required: false,
-      default: () => null,
+      default: () => [],
     },
     /** determines if the input is disabled */
     disabled: {
