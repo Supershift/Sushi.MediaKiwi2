@@ -57,11 +57,13 @@ namespace Sushi.MediaKiwi.Services
         public async Task<Result<ListResult<Section>>> GetAllAsync(PagingValues pagingValues)
         {
             // get all sections from database
-            var sections = await _sectionRepository.GetAllAsync(pagingValues);
+            var items = await _sectionRepository.GetAllAsync(pagingValues);
 
             // map to result
-            var result = new ListResult<Section>(sections.TotalNumberOfRows, sections.TotalNumberOfPages);
-            _mapper.Map(sections, result.Result);
+            var itemsDto = _mapper.Map<List<Section>>(items);
+
+            // create result object
+            var result = new ListResult<Section>(itemsDto, items);            
 
             return new Result<ListResult<Section>>(result);
         }
