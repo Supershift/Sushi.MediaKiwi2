@@ -60,7 +60,7 @@
     </v-file-input>
   </template>
   <template v-else>
-    <v-file-input v-model="fileUploads" label="Hotel blueprint" :rules="props.rules" :show-size="showSize" :loading="loading"></v-file-input>
+    <v-file-input v-model="fileUploads" :label="props.label" :rules="props.rules" :show-size="showSize" :loading="loading"></v-file-input>
   </template>
 </template>
 <style lang="scss">
