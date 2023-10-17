@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Sushi.MicroORM" Version="3.1.0-b3" />
+    <PackageReference Include="Sushi.MicroORM" Version="3.1.0-b5" />
   </ItemGroup>
 
 </Project>

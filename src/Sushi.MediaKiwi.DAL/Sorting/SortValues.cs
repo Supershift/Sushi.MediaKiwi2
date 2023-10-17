@@ -10,7 +10,7 @@ namespace Sushi.MediaKiwi.DAL.Sorting
     /// <summary>
     /// Represents a sort field and direction.
     /// </summary>
-    public class SortValues
+    public record SortValues
     {
         /// <summary>
         /// Creates a new instance of <see cref="SortValues"/>.
@@ -37,7 +37,7 @@ namespace Sushi.MediaKiwi.DAL.Sorting
     /// <summary>
     /// Represents a strongly typed sort field and direction.
     /// </summary>
-    public class SortValues<T> : SortValues
+    public record SortValues<T> : SortValues
     {
         /// <summary>
         /// Creates a new instance of <see cref="SortValues{T}"/>.
