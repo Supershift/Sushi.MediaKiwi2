@@ -1,5 +1,7 @@
 .v-input {
     &--mediakiwi {
-        margin-bottom: 24px;
+        &.v-input:not(.mk-table-filter__input) {
+            margin-bottom: 24px;
+        }
     }
 }

@@ -10,3 +10,17 @@
     }
   }
 }
+
+.v-navigation-rail {
+  &--mediakiwi {
+    .v-list {
+      .v-list-item {
+        &__prepend {
+          .v-list-item__spacer {
+            width: auto;
+          }
+        }
+      }
+    }
+  }
+}

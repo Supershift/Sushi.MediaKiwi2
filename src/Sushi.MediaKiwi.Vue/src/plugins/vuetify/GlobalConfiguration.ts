@@ -24,6 +24,7 @@ export const globalConfiguration: VuetifyOptions = {
       color: "background",
       border: "none",
       rail: true,
+      class: "v-navigation-rail--mediakiwi",
     },
     VNavigationDrawer: {
       color: "surface1",
