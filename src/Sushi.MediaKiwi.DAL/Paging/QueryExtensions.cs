@@ -20,7 +20,7 @@ namespace Sushi.MediaKiwi.DAL.Paging
         /// <typeparam name="T"></typeparam>
         /// <param name="query"></param>
         /// <param name="pagingValues"></param>
-        public static void AddPaging<T>(this DataQuery<T> query, PagingValues pagingValues) where T : new()
+        public static void AddPaging<T>(this DataQuery<T> query, PagingValues pagingValues)
         {
             query.AddPaging(pagingValues.PageSize, pagingValues.PageIndex);
         }

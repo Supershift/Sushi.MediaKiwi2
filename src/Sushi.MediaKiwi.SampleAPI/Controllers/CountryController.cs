@@ -9,6 +9,7 @@ using Sushi.MediaKiwi.WebAPI.Paging;
 namespace Sushi.MediaKiwi.SampleAPI.Controllers
 {   
     [Route($"{BaseRoute}/countries")]
+    [Authorize(Constants.CustomPolicyName)]
     public class CountryController : SampleControllerBase
     {
         private readonly CountryService _countryService;
