@@ -145,7 +145,7 @@
 
 <template>
   <v-card class="mk-table-filter mb-4" variant="flat" rounded="10" color="surface1">
-    <v-container>
+    <v-container fluid>
       <v-row class="pb-2">
         <template v-if="modelValue">
           <v-menu v-model="menu" :close-on-content-click="false" location="end" colo>
