@@ -1,9 +1,7 @@
-import { IconsLibrary } from "@/models";
 import type { VuetifyOptions } from "vuetify";
 import { VBtn } from "vuetify/components/VBtn";
 import { VNavigationDrawer } from "vuetify/components/VNavigationDrawer";
-import { IconsLibrary } from "@/models/enum";
-
+import { IconsLibrary } from "@/models";
 
 /**
  * Global configuration for Vuetify
@@ -93,6 +91,15 @@ export const globalConfiguration: VuetifyOptions = {
     },
     VSelect: {
       variant: "outlined",
+    },
+    VFileInput: {
+      variant: "outlined",
+      baseColor: "on-surface-variant",
+      clearable: true,
+      centerAffix: true,
+      clearIcon: IconsLibrary.clear,
+      prependInnerIcon: IconsLibrary.paperclip,
+      class: "v-file-input--mediakiwi",
     },
     VSlider: {
       color: "primary",
