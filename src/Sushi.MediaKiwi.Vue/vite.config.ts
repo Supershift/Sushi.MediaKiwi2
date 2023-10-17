@@ -3,6 +3,7 @@ import { defineConfig } from "vite";
 import vuetify from "vite-plugin-vuetify";
 import vue from "@vitejs/plugin-vue";
 import dts from "vite-plugin-dts";
+import istanbul from "vite-plugin-istanbul";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -18,8 +19,16 @@ export default defineConfig({
         configFile: path.resolve(__dirname, "./src/styles/settings.scss"),
       },
     }),
+    istanbul({
+      include: "src/*",
+      exclude: ["node_modules", "dist", "cypress", "**/__tests__/**"],
+      extension: [".js", ".ts", ".vue"],
+      requireEnv: false,
+      cypress: true,
+    }),
   ],
   build: {
+    sourcemap: "hidden",
     cssCodeSplit: true,
     lib: {
       // Could also be a dictionary or array of multiple entry points
