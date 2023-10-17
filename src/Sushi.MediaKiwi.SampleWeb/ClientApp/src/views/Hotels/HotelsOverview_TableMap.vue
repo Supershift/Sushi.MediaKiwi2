@@ -36,7 +36,7 @@
   function srpIcon(item: Hotel): TableCellIcon {
     return {
       position: item.srp ? TableIconPosition.Append : TableIconPosition.Prepend,
-      iconName: item.srp ? "$accountCheckOutline" : IconsLibrary.accountCircle,
+      iconName: item.srp ? IconsLibrary.accountCheckOutline : IconsLibrary.accountCircle,
       tooltip: item.srp ? "SRP" : "NoSRP",
       label: item.srp ? "SRP correct" : "Define SRP",
     };
@@ -84,10 +84,6 @@
 
   // Set filter options
   filters.value.countryCode.options = countries.value?.map(({ code, name }) => <TableFilterValue>{ title: name, value: code });
-
-  function action() {
-    //
-  }
 </script>
 
 <template>
@@ -108,7 +104,7 @@
     </template>
 
     <template #overflowMenuActions>
-      <v-list-item @click="action">Knop 3</v-list-item>
+      <v-list-item>Knop 3</v-list-item>
     </template>
   </mk-table>
 </template>
