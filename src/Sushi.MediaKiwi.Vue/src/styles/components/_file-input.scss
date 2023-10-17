@@ -1,0 +1,37 @@
+.v-file-input {
+    &--mediakiwi {
+      .v-input__prepend {
+        display: none;
+      }
+      .v-field {
+        &--error {
+            &:not(.v-field--disabled) {
+                .v-field__prepend-inner > .v-icon {
+                    color: rgb(var(--v-theme-on-surface-variant));
+                }
+                .v-field__clearable > .v-icon {
+                    color: rgb(var(--v-theme-on-surface-variant));
+                }
+            }
+        }
+        &--focused {
+            &:not(.v-field--disabled),
+            &:not(.v-field--error) {
+                .v-field__outline {
+                    color: rgb(var(--v-theme-primary));
+                }
+            }
+        }
+      }
+      .v-field__input {
+        .v-chip {
+            height: calc(var(--v-chip-height) + 8px); // global defaults chips are not ovverriden this way
+            margin-right: 8px;
+            .v-chip__close,
+            .v-chip__content {
+                color: rgb(var(--v-theme-on-secondary-container))
+            }
+        }
+      }
+    }
+}
