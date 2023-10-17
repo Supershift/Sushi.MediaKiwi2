@@ -36,11 +36,13 @@ namespace Sushi.MediaKiwi.Services
         public async Task<Result<ListResult<Locale>>> GetAllAsync(bool onlyEnabled, PagingValues pagingValues)
         {
             // get locales from repository
-            var locales = await _localeRepository.GetAllAsync(onlyEnabled, pagingValues);
+            var items = await _localeRepository.GetAllAsync(onlyEnabled, pagingValues);
 
             // map to result
-            var result = new ListResult<Locale>(locales.TotalNumberOfRows, locales.TotalNumberOfPages);
-            _mapper.Map(locales, result.Result);
+            var itemsDto = _mapper.Map<List<Locale>>(items);
+
+            // create result object
+            var result = new ListResult<Locale>(itemsDto, items);            
 
             return new Result<ListResult<Locale>>(result);
         }
