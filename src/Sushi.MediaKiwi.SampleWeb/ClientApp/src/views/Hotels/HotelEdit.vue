@@ -12,7 +12,10 @@
   const countriesConnector = container.resolve(CountryConnector);
 
   const navigation = useNavigation();
+  const fileUpload = ref<File[]>([]);
   const radioModel = ref("1");
+
+  const slider = ref(20);
 
   // declare reactive variables
   var state = reactive({
@@ -76,17 +79,19 @@
 <template>
   <v-card>
     <MkForm title="Hotel edit" @save="onSave" @undo="onUndo" @delete="onDelete" @load="onLoad">
-      <v-text-field label="Name" v-model="state.hotel.name" :rules="[() => !!state.hotel.name || 'This field is required']"></v-text-field>
+      <v-text-field v-model="state.hotel.name" label="Name" :rules="[() => !!state.hotel.name || 'This field is required']"></v-text-field>
       <v-autocomplete
-        label="Country"
         v-model="state.hotel.countryCode"
+        label="Country"
         :items="state.countries"
         item-title="name"
         item-text="name"
         item-value="code"
       ></v-autocomplete>
-      <v-checkbox label="Is Active" v-model="state.hotel.isActive"></v-checkbox>
-      <mk-money-value label="SRP" v-model="state.hotel.srp"></mk-money-value>
+      <v-checkbox v-model="state.hotel.isActive" label="Is Active"></v-checkbox>
+      <mk-money-value v-model="state.hotel.srp" label="SRP"></mk-money-value>
+      <v-file-input v-model="fileUpload" label="Hotel blueprint" :rules="[() => !!fileUpload.length || 'Blueprint is required!']"></v-file-input>
+      <v-slider v-model="slider" show-ticks step="10" thumb-label="always"></v-slider>
       <v-radio-group v-model="radioModel" :rules="[() => radioModel === '2' || 'Show is the only option']">
         <v-radio label="Hide" value="1" disabled></v-radio>
         <v-radio label="Show" value="2"></v-radio>

@@ -71,11 +71,11 @@ namespace Sushi.MediaKiwi.Services
             var views = await _viewRepository.GetAllAsync(sectionID, pagingValues, sortValuesDal);
             var viewsRoles = await _viewRoleRepository.GetAllAsync(null);
 
-            // create result object
-            var result = new ListResult<View>(views.TotalNumberOfRows, views.TotalNumberOfPages);
-
             // map to result
-            _mapper.Map(views, result.Result);
+            var viewsDto = _mapper.Map<List<View>>(views);
+
+            // create result object
+            var result = new ListResult<View>(viewsDto, views);            
 
             // add roles
             foreach(var view in result.Result)

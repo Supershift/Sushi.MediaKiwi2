@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,12 +29,15 @@ namespace Sushi.MediaKiwi.WebAPI
     {
         /// <summary>
         /// Adds all services needed to run MediaKiwi to the <paramref name="services"/>, including Sushi.MicroOrm.
-        /// </summary>        
+        /// </summary>
+        /// <param name="adminRoles">Collection of role names which are allowed to access admin resources</param>
+        /// <param name="customAuthorizationPolicies">Dictionary where the key is the name of the policy and the value is the policy builder action</param>
         /// <returns></returns>
         public static IServiceCollection AddMediaKiwiApi(this IServiceCollection services, string defaultConnectionString,
             IConfigurationSection? azureAdConfig,
             Action<MicroOrmConfigurationBuilder>? microOrmConfig = null,
-            Action<IMapperConfigurationExpression>? autoMapperConfig = null)
+            Action<IMapperConfigurationExpression>? autoMapperConfig = null,
+            Action<AuthorizationOptions> authorizationOptions = null)
         {
             // add mk services
             services.AddMediaKiwiServices(defaultConnectionString,
@@ -46,6 +50,22 @@ namespace Sushi.MediaKiwi.WebAPI
             // add mk dependencies
             services.TryAddTransient<Paging.PagingRetriever>();
             services.TryAddTransient<Sorting.SortingRetriever>();
+
+            // Define admin role policy
+            if (authorizationOptions == null)
+            {
+                // Add default admin role policy
+                services.AddAuthorization(options =>
+                {
+                    options.AddPolicy(Constants.AdminPolicyName, policy => policy.RequireRole(Constants.AdminRoleName));
+                });
+            }
+            else
+            {
+                // Use custom authorization options
+                services.AddAuthorization(authorizationOptions);
+                
+            }
 
             // add authentication
             var authenticationBuilder = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
@@ -79,8 +99,7 @@ namespace Sushi.MediaKiwi.WebAPI
             options.OperationFilter<SortingSwaggerFilter>();
 
             // add docs for mediakiw
-            options.SwaggerDoc("MediaKiwi", new OpenApiInfo { Title = "MediaKiwi" });
-            options.SwaggerDoc("SampleApi", new OpenApiInfo { Title = "SampleApi" });
+            options.SwaggerDoc("MediaKiwi", new OpenApiInfo { Title = "MediaKiwi" });            
             options.EnableAnnotations();
 
             // add JWT bearer

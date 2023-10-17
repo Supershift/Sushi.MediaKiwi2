@@ -24,10 +24,13 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
         {
             // get countries from datastore
             var items = await _countryRepository.GetAllAsync(pagingValues);
-            // create result object
-            var result = new ListResult<Country>(items.TotalNumberOfRows, items.TotalNumberOfPages);
+
             // map to result
-            _mapper.Map(items, result.Result);
+            var itemsDto = _mapper.Map<List<Country>>(items);
+
+            // create result object
+            var result = new ListResult<Country>(itemsDto, items);            
+            
             return new Result<ListResult<Country>>(result);
         }
     }

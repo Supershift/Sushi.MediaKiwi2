@@ -21,7 +21,7 @@ namespace Sushi.MediaKiwi.DAL.Sorting
         /// <typeparam name="T"></typeparam>
         /// <param name="query"></param>
         /// <param name="sortingValues"></param>
-        public static void AddOrder<T>(this DataQuery<T> query, SortValues<T> sortingValues) where T : new()
+        public static void AddOrder<T>(this DataQuery<T> query, SortValues<T> sortingValues)
         {   
             query.AddOrder(sortingValues.SortField, sortingValues.Direction == SortDirection.DESC ? SortOrder.DESC : SortOrder.ASC);
         }
