@@ -131,10 +131,17 @@ steps:
       workingDir: "src/Sushi.MediaKiwi.SampleWeb/ClientApp"
 
   - task: Npm@1
-    displayName: "npm build SampleWeb"
+    displayName: "npm build SampleWeb:ClientApp"
     inputs:
       command: "custom"
       workingDir: "src/Sushi.MediaKiwi.SampleWeb/ClientApp"
+      customCommand: "run build"
+
+  - task: Npm@1
+    displayName: "npm build SampleWeb:Function"
+    inputs:
+      command: "custom"
+      workingDir: "src/Sushi.MediaKiwi.SampleWeb/Function"
       customCommand: "run build"
 
   - task: CopyFiles@2
@@ -144,6 +151,9 @@ steps:
       Contents: |
         ClientApp/dist/**
         Function/**
+        !**/.funcignore
+        !**/package-lock.json
+        !**/tsconfig.json
       TargetFolder: "SampleWeb"
 
   - task: PublishPipelineArtifact@1

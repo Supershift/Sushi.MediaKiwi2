@@ -14,7 +14,7 @@ namespace Sushi.MediaKiwi.WebAPI
     [ApiController]
     [ApiVersionNeutral]
     [ApiExplorerSettings(GroupName = "MediaKiwi")]    
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public abstract class MediaKiwiControllerBase : ControllerBase
     {
         /// <summary>
