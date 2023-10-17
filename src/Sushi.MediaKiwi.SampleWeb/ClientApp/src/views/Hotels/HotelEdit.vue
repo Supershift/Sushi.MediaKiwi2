@@ -12,6 +12,7 @@
   const countriesConnector = container.resolve(CountryConnector);
 
   const navigation = useNavigation();
+  const fileUpload = ref<File[]>([]);
   const radioModel = ref("1");
   const selectHotelType = ref([]);
 
@@ -90,6 +91,7 @@
       ></v-autocomplete>
       <v-checkbox v-model="state.hotel.isActive" label="Is Active"></v-checkbox>
       <mk-money-value v-model="state.hotel.srp" label="SRP"></mk-money-value>
+      <v-file-input v-model="fileUpload" label="Hotel blueprint" :rules="[() => !!fileUpload.length || 'Blueprint is required!']"></v-file-input>
       <v-slider v-model="slider" show-ticks step="10" thumb-label="always"></v-slider>
       <v-radio-group v-model="radioModel" :rules="[() => radioModel === '2' || 'Show is the only option']">
         <v-radio label="Hide" value="1" disabled></v-radio>

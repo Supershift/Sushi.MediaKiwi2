@@ -96,6 +96,15 @@ export const globalConfiguration: VuetifyOptions = {
       clearIcon: IconsLibrary.clear,
       class: "v-select--mediakiwi",
     },
+    VFileInput: {
+      variant: "outlined",
+      baseColor: "on-surface-variant",
+      clearable: true,
+      centerAffix: true,
+      clearIcon: IconsLibrary.clear,
+      prependInnerIcon: IconsLibrary.paperclip,
+      class: "v-file-input--mediakiwi",
+    },
     VSlider: {
       color: "primary",
       thumbColor: "primary",
