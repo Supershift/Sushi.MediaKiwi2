@@ -32,11 +32,13 @@ namespace Sushi.MediaKiwi.Services
         public async Task<Result<ListResult<Role>>> GetAllAsync()
         {
             // get all roles from database
-            var roles = await _repository.GetAllAsync();
+            var items = await _repository.GetAllAsync();
 
             // map to result
-            var result = new ListResult<Role>(roles.TotalNumberOfRows, roles.TotalNumberOfPages);
-            _mapper.Map(roles, result.Result);
+            var itemsDto = _mapper.Map<List<Role>>(items);
+
+            // create result object
+            var result = new ListResult<Role>(itemsDto, items);            
 
             return new Result<ListResult<Role>>(result);
         }

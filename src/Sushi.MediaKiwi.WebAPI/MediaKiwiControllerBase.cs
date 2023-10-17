@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace Sushi.MediaKiwi.WebAPI
     [ApiController]
     [ApiVersionNeutral]
     [ApiExplorerSettings(GroupName = "MediaKiwi")]    
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public abstract class MediaKiwiControllerBase : ControllerBase
     {
         /// <summary>
