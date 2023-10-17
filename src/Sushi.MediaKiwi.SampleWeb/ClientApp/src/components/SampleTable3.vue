@@ -86,6 +86,7 @@
   function move() {
     console.log("move", selectedTableRows.value);
   }
+  defineEmits(["clicked:customer"]);
 </script>
 
 <template>
@@ -98,6 +99,7 @@
     :data="sampleData"
     checkbox
     item-view-id="SampleEdit"
+    @click:row="$emit('clicked:customer', $event)"
   >
     <template #bulkActionBar>
       <v-btn @click="download"><v-icon :icon="IconsLibrary.trayArrowDown"></v-icon> Download</v-btn>
