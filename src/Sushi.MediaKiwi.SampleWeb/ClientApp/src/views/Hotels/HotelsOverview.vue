@@ -14,7 +14,6 @@
     TableFilterType,
     TableFilterValue,
     useI18next,
-    TableBodySlotResult,
     MkTh,
     MkTd,
     Sorting,
@@ -129,7 +128,7 @@
       <th></th>
     </template>
 
-    <template #tbody="{ dataItem }: TableBodySlotResult<Hotel>">
+    <template #tbody="dataItem: Hotel">
       <td>{{ dataItem.name }}</td>
       <td>{{ formatDateTime(dataItem.created) }}</td>
       <mk-td @click.stop>

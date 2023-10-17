@@ -13,8 +13,6 @@
   import { ref } from "vue";
   import { usePagination } from "@/composables/usePagination";
   import { computed } from "vue";
-  import MkTableHead from "./MkTableHead.vue";
-  import { TableBodySlotResult } from "@/models/table/TableBodySlotResult";
 
   // define properties
   const props = defineProps<{
@@ -46,7 +44,7 @@
     /** table templating  */
     thead: (props: unknown) => never;
     /** table templating */
-    tbody: (props: TableBodySlotResult<any>) => never;
+    tbody: (props: any) => never;
   }>();
 
   // inject dependencies
@@ -136,7 +134,7 @@
         <td v-if="checkbox" @click.stop>
           <MkTableCheckbox :is-selected="isItemSelected(dataItem)" @update:selected="(e) => selectItem(dataItem, e)" />
         </td>
-        <slot name="tbody" :data-item="dataItem"></slot>
+        <slot name="tbody" v-bind="dataItem"></slot>
       </tr>
     </tbody>
     <tfoot>

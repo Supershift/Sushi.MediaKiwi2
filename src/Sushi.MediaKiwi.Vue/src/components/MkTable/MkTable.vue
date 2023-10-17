@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/require-default-prop -->
 <script setup lang="ts">
-  import type { TableMap, TableFilter, TableBodySlotResult } from "@/models/table";
+  import type { TableMap, TableFilter } from "@/models/table";
   import type { Paging, Sorting } from "@/models/api";
   import { ref } from "vue";
   import MkTableFilter from "@/components/MkTableFilter/MkTableFilter.vue";
@@ -79,7 +79,7 @@
     /** table templating  */
     thead?: (props: unknown) => never;
     /** table templating */
-    tbody?: (props: TableBodySlotResult<any>) => never;
+    tbody?: (props: any) => never;
   }>();
 
   // inject dependencies
@@ -223,8 +223,8 @@
         </template>
       </template>
 
-      <template #tbody="{ dataItem }">
-        <slot v-if="slots.tbody" name="tbody" :data-item="dataItem"></slot>
+      <template #tbody="dataItem">
+        <slot v-if="slots.tbody" name="tbody" v-bind="dataItem"></slot>
         <template v-else>
           <!-- render a body cell for each mapping item -->
           <MkTableCell v-for="(mapItem, cellIndex) in props.tableMap?.items" :key="cellIndex" :data="dataItem" :map-item="mapItem"></MkTableCell>
