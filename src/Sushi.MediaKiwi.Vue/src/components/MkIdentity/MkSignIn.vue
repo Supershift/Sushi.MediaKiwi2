@@ -19,7 +19,7 @@
 <template>
   <v-container class="mk-signin">
     <v-row justify="center" align="center">
-      <v-col xs="12" sm="10" md="8" lg="4" xl="3" class="mk-signin__colu,m">
+      <v-col xs="12" sm="10" md="8" lg="4" xl="3">
         <v-card class="mk-signin__card pa-5 text-center" rounded="lg" elevation="3">
           <v-card-title tag="h1" class="text-headline-large" :title="mediakiwi.title">{{ mediakiwi.title }}</v-card-title>
           <v-divider class="mt-5 mb-5 mx-5" />
@@ -53,10 +53,8 @@
     }
 
     .mk-signin__card {
-      height: 375px;
-      max-height: calc(100% - 100px);
+      min-height: 375px;
       background-color: rgb(var(--v-theme-surface1));
-      height: inherit;
       display: flex;
       flex-direction: column;
 
