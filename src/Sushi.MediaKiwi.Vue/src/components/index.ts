@@ -17,3 +17,4 @@ export * from "./MkMoneyValue";
 export * from "./MkOverflowMenuIcon";
 export * from "./MkButton";
 export * from "./MkMultiSelect";
+export * from "./MkFileInput";
