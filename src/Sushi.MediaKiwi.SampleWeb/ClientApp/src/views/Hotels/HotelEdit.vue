@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { MkForm, MkMoneyValue, useNavigation } from "@supershift/mediakiwi-vue";
+  import { MkForm, MkMoneyValue, MkFileInput, useNavigation } from "@supershift/mediakiwi-vue";
   import { HotelConnector } from "@/services/HotelConnector";
   import { CountryConnector } from "@/services/CountryConnector";
   import { reactive, ref } from "vue";
@@ -90,13 +90,19 @@
       ></v-autocomplete>
       <v-checkbox v-model="state.hotel.isActive" label="Is Active"></v-checkbox>
       <mk-money-value v-model="state.hotel.srp" label="SRP"></mk-money-value>
-      <v-file-input v-model="fileUpload" label="Hotel blueprint" :rules="[() => !!fileUpload.length || 'Blueprint is required!']"></v-file-input>
       <v-slider v-model="slider" show-ticks step="10" thumb-label="always"></v-slider>
       <v-radio-group v-model="radioModel" :rules="[() => radioModel === '2' || 'Show is the only option']">
         <v-radio label="Hide" value="1" disabled></v-radio>
         <v-radio label="Show" value="2"></v-radio>
         <v-radio label="Is Featured" value="3"></v-radio>
       </v-radio-group>
+      <mk-file-input :uploads="fileUpload" label="Hotel blueprint" :rules="[() => !!fileUpload.length || 'Blueprint is required!']"></mk-file-input>
+      <mk-file-input
+        :uploads="fileUpload"
+        label="Pool blueprints"
+        :multiple="true"
+        :rules="[() => fileUpload.length <= 2 || 'Multiple files only!']"
+      ></mk-file-input>
     </MkForm>
   </v-card>
 </template>
