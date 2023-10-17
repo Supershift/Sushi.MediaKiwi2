@@ -22,6 +22,9 @@
     items: [
       { headerTitle: "Code", value: (x) => x.code },
       { headerTitle: "Name", value: (x) => x.name },
+      {
+        headerTitle: "Toggle",
+      },
     ],
   };
 

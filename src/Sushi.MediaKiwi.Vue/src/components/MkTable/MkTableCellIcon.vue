@@ -2,20 +2,18 @@
   import { ref } from "vue";
   import { TableCellIcon, TableIconPosition } from "@/models/table/TableCellIcon";
 
-  const props = defineProps<{
+  defineProps<{
     data: TableCellIcon;
   }>();
-
-  const showTooltip = ref(false);
 </script>
 
 <template>
-  <label v-if="data.label && data.position === TableIconPosition.Prepend">{{ data.label }}</label>
-  <v-tooltip v-model="showTooltip" location="top" :disabled="!data.tooltip">
+  <label v-if="data.label && data.position === TableIconPosition.Prepend" data-cy="prepend-label">{{ data.label }}</label>
+  <v-tooltip location="top" :disabled="!data.tooltip">
     <template #activator="{ props }">
-      <v-icon v-bind="props" :icon="data.iconName" :color="data.color"></v-icon>
+      <v-icon v-bind="props" :icon="data.iconName" :color="data.color" data-cy="icon"></v-icon>
     </template>
-    <span v-if="data.tooltip">{{ data.tooltip }}</span>
+    <span v-if="data.tooltip" data-cy="tooltip">{{ data.tooltip }}</span>
   </v-tooltip>
-  <label v-if="data.label && data.position === TableIconPosition.Append">{{ data.label }}</label>
+  <label v-if="data.label && data.position === TableIconPosition.Append" data-cy="append-label">{{ data.label }}</label>
 </template>

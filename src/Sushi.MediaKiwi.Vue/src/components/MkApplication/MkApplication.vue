@@ -12,7 +12,7 @@
 </script>
 <template>
   <v-card>
-    <v-layout :full-height="true" class="mk-layout">
+    <v-layout v-side-sheet :full-height="true" class="mk-layout">
       <mk-suspense>
         <v-app-bar>
           <mk-navigation-icon />

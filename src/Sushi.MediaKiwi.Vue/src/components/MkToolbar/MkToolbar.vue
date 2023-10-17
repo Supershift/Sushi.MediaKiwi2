@@ -22,7 +22,7 @@
 
 <template>
   <v-card variant="text">
-    <v-container>
+    <v-container fluid>
       <v-row class="pb-2 ml-0 align-center">
         <v-card-title class="px-0 text-title-medium">{{ title }}</v-card-title>
 
