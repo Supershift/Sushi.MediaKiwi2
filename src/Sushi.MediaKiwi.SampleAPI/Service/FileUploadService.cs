@@ -23,7 +23,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
         /// <returns></returns>
         public ListResult<FileUpload> Upload(List<IFormFile> files)
         {
-            var results = new ListResult<FileUpload>();
+            var results = new List<FileUpload>();
 
             if (files.Any())
             {
@@ -39,13 +39,13 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
                             FileUrl = file.FileName,
                             FileType = file.ContentType
                         };
-                        results.Result.Add(result);
+                        results.Add(result);
                     }
 
                 }
             }
 
-            return results;
+            return new ListResult<FileUpload>(results);
         }
 
     }
