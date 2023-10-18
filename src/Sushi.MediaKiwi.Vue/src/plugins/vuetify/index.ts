@@ -4,7 +4,7 @@ import * as VComponents from "vuetify/components";
 import * as VDirectives from "vuetify/directives";
 
 // Still in labs, but we need it
-import { VStepper } from "vuetify/lib/labs/components.mjs";
+import { VStepper, VDatePicker } from "vuetify/lib/labs/components.mjs";
 
 import { md3 } from "vuetify/blueprints";
 
@@ -20,6 +20,7 @@ const defaultVuetifyOptions = <VuetifyOptions>{
   components: {
     ...VComponents,
     VStepper,
+    VDatePicker,
   },
   directives: VDirectives,
   icons: MediakiwiIconOptions,
