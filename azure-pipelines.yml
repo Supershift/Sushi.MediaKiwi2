@@ -31,32 +31,37 @@ steps:
       workingDir: "src/Sushi.MediaKiwi.Vue"
 
   # Build and Pack mediakiwi-vue
+  # Run vitest tests
   - task: Npm@1
-    displayName: "Npm test on MediaKiwi.Vue"
+    displayName: "Npm vitest coverage on MediaKiwi.Vue"
     inputs:
       command: "custom"
-      customCommand: "run test:run"
+      customCommand: "run vi:coverage"
       workingDir: "src/Sushi.MediaKiwi.Vue"
     continueOnError: true
 
+  # Run Cypress tests
+  - task: Npm@1
+    displayName: "Npm cypress coverage on MediaKiwi.Vue"
+    inputs:
+      command: "custom"
+      customCommand: "run cy:coverage:component"
+      workingDir: "src/Sushi.MediaKiwi.Vue"
+    continueOnError: true
+
+  # Publish results
   - task: PublishTestResults@2
     displayName: Publish test results
     inputs:
       testResultsFormat: "JUnit"
       testResultsFiles: "**/TEST-*.xml"
-
-  - task: Npm@1
-    displayName: "Npm coverage on MediaKiwi.Vue"
-    inputs:
-      command: "custom"
-      customCommand: "run coverage"
-      workingDir: "src/Sushi.MediaKiwi.Vue"
     continueOnError: true
 
   - task: PublishCodeCoverageResults@2
     displayName: Publish coverage results
     inputs:
       summaryFileLocation: "**/coverage/cobertura-coverage.xml"
+    continueOnError: true
 
   - task: Npm@1
     displayName: "Npm build on MediaKiwi.Vue"
