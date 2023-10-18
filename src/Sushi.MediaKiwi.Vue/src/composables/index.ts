@@ -9,5 +9,6 @@ export * from "./useColors";
 export * from "./useTypography";
 export * from "./useElevations";
 export * from "./useKeyboardShortcuts";
+export * from "./useValidationRules";
 export * from "./useSideSheet";
 export * from "./useFormFields";
