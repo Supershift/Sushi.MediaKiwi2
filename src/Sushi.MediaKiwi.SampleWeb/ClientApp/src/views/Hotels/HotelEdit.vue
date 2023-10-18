@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { MkForm, MkMoneyValue, useNavigation, useValidationRules, MkFileInput, MkMultiSelect } from "@supershift/mediakiwi-vue";
+  import { MkForm, MkMoneyValue, useNavigation, useValidationRules, MkFileInput } from "@supershift/mediakiwi-vue";
   import { HotelConnector } from "@/services/HotelConnector";
   import { CountryConnector } from "@/services/CountryConnector";
   import { FileUploadConnector } from "@/services/FileUploadConnector";
@@ -118,7 +118,16 @@
         <v-radio label="Show" value="2"></v-radio>
         <v-radio label="Is Featured" value="3"></v-radio>
       </v-radio-group>
-      <mk-multi-select v-model:model-value="selectHotelType" multiple :items="['City', 'Hostel', 'Resort', 'Motel']" label="Hotel Type"></mk-multi-select>
+      <v-select
+        v-model:model-value="selectHotelType"
+        multiple
+        :items="['City', 'Hostel', 'Resort', 'Motel']"
+        label="Hotel Type"
+        chips
+        closable-chips
+        clearable
+        menu
+      ></v-select>
     </MkForm>
     <MkForm title="Hotel files" @save="onFilesSave" @undo="onFilesUndo" @delete="onFilesDelete" @load="onFilesLoad">
       <mk-file-input
