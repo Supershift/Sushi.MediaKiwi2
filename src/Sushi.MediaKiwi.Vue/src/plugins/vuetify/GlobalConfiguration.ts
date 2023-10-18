@@ -77,6 +77,16 @@ export const globalConfiguration: VuetifyOptions = {
       variant: "none",
       rounded: false,
       style: { background: "none" },
+      // Form fields inside a table have some other layout properties
+      VTextField: {
+        variant: "outlined",
+        hideDetails: true,
+        class: "v-text-field--mediakiwi",
+      },
+      VAutocomplete: {
+        variant: "outlined",
+        class: "v-autocomplete--mediakiwi",
+      },
     },
     VToolbar: {
       color: "surface1",

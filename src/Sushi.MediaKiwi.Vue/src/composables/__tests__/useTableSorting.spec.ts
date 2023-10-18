@@ -1,10 +1,9 @@
 import "reflect-metadata";
 import { describe, it, expect } from "vitest";
 import type { Sorting } from "../../models/api/Sorting";
-import type { TableMap } from "../../models/table/TableMap";
-import { useTableMapItemSorting } from "./../useTableMapItemSorting";
+import { useTableSorting } from "../useTableSorting";
 import { IconsLibrary, SortDirection } from "../../models";
-import { nameof } from "../..//helpers/UtilsHelper";
+import { nameof } from "../../helpers/UtilsHelper";
 
 interface ISampleData {
   id: number;
@@ -20,10 +19,10 @@ const selectedSortOption: Sorting = {
   sortDirection: SortDirection.Desc,
 };
 
-describe("useTableMapItemSorting.spec", () => {
+describe("useTableSorting.spec", () => {
   /** Init selection composable for item selection with the table map and data  */
   /** Init sorting composable */
-  const { setSorting, getSortingClasses, selectedSorting, sortIcon } = useTableMapItemSorting({
+  const { setSorting, getSortingClasses, selectedSorting, sortIcon } = useTableSorting({
     selectedSortOption,
   });
 

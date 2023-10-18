@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { MkForm, MkMoneyValue, useNavigation, MkMultiSelect, MkFileInput, IconsLibrary } from "@supershift/mediakiwi-vue";
+  import { MkForm, MkMoneyValue, useNavigation, useValidationRules, MkFileInput, MkMultiSelect } from "@supershift/mediakiwi-vue";
   import { HotelConnector } from "@/services/HotelConnector";
   import { CountryConnector } from "@/services/CountryConnector";
   import { FileUploadConnector } from "@/services/FileUploadConnector";
@@ -11,6 +11,7 @@
   // inject dependencies
   const hotelConnector = container.resolve(HotelConnector);
   const countriesConnector = container.resolve(CountryConnector);
+  const { required } = useValidationRules();
   const fileUploadConnector = container.resolve(FileUploadConnector);
 
   const navigation = useNavigation();
@@ -100,7 +101,7 @@
 <template>
   <v-card>
     <MkForm title="Hotel edit" @save="onSave" @undo="onUndo" @delete="onDelete" @load="onLoad">
-      <v-text-field v-model="state.hotel.name" label="Name" :rules="[() => !!state.hotel.name || 'This field is required']"></v-text-field>
+      <v-text-field v-model="state.hotel.name" label="Name" :rules="[...required(state.hotel.name, 'This field is required')]"></v-text-field>
       <v-autocomplete
         v-model="state.hotel.countryCode"
         label="Country"

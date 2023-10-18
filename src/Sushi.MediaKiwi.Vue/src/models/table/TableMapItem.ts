@@ -1,5 +1,5 @@
 import type { Component, DefineComponent } from "vue";
-import type { TableMapSortingOptions } from "./TableMapSortingOptions";
+import type { TableSortingOptions } from "./TableSortingOptions";
 import { MoneyValue } from "../api";
 import { TableCellIcon } from "./TableCellIcon";
 
@@ -13,5 +13,5 @@ export interface TableMapItem<Type> {
    * Use the property 'data' to pass the entity to the component. */
   component?: Component | DefineComponent;
   /** Mark the column sortable */
-  sortingOptions?: TableMapSortingOptions<Type>;
+  sortingOptions?: TableSortingOptions<Type>;
 }
