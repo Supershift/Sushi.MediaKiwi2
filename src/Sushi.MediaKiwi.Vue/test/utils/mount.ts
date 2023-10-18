@@ -16,7 +16,7 @@ import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 import { globalConfiguration } from "@/plugins/vuetify/GlobalConfiguration";
 import defaultVuetifyOptions from "@/plugins/vuetify/index";
-
+import { makeValidationProps, useValidation, ValidationProps } from "vuetify/lib/composables/validation.mjs";
 /**
  * Create the default mounting options
  * @param options
@@ -126,4 +126,19 @@ function createMockResolveValue(data: unknown) {
   };
 }
 
-export { mountAsync, mountWithLayoutAsync, createMockResolveValue, mount };
+/** Used for testing Validation Rules */
+function mountFunction(props: Partial<ValidationProps> = {}) {
+  return mount(
+    defineComponent({
+      props: makeValidationProps(),
+      emits: ["update:modelValue"],
+      setup(props) {
+        return useValidation(props, "validation");
+      },
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      render: () => {}, // eslint-disable-line vue/require-render-return
+    }),
+    { props }
+  );
+}
+export { mountAsync, mountWithLayoutAsync, createMockResolveValue, mount, mountFunction };

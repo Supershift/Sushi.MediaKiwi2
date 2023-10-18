@@ -1,0 +1,19 @@
+.mk-table {
+  .v-text-field,
+  .v-autocomplete {
+    &--mediakiwi {
+      .v-field {
+        &--variant-outlined {
+          .v-field__input {
+            padding-left: 0;
+            padding-right: 0;
+          }
+
+          .v-field__outline {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}

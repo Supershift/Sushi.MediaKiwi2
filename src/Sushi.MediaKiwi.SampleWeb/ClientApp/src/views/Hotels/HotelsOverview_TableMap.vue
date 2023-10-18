@@ -8,16 +8,15 @@
   import {
     ListResult,
     MkTable,
+    MkOverflowMenuIcon,
     TableCellIcon,
     TableIconPosition,
     TableFilter,
     TableFilterType,
     TableFilterValue,
+    TableMap,
     useI18next,
-    MkTh,
-    MkTd,
-    Sorting,
-    SortDirection,
+    MkNewItemButton,
   } from "@supershift/mediakiwi-vue";
 
   import { container } from "tsyringe";
@@ -37,11 +36,22 @@
   function srpIcon(item: Hotel): TableCellIcon {
     return {
       position: item.srp ? TableIconPosition.Append : TableIconPosition.Prepend,
-      iconName: item.srp ? "$accountCheckOutline" : IconsLibrary.accountCircle,
+      iconName: item.srp ? IconsLibrary.accountCheckOutline : IconsLibrary.accountCircle,
       tooltip: item.srp ? "SRP" : "NoSRP",
       label: item.srp ? "SRP correct" : "Define SRP",
     };
   }
+  const tableMap: TableMap<Hotel> = {
+    itemId: (item) => item.id,
+    items: [
+      { headerTitle: t.value("Name"), value: (item) => item.name },
+      { headerTitle: t.value("Created"), value: (item) => formatDateTime.value(item.created) },
+      { headerTitle: t.value("Country"), value: (item) => countries.value!.find((x) => x.code == item.countryCode)?.name },
+      { headerTitle: t.value("Active"), value: (item) => item.isActive },
+      { headerTitle: t.value("SRP"), value: (item) => item.srp },
+      { headerTitle: "", value: (item) => srpIcon(item) },
+    ],
+  };
 
   // define filters
   const filters = ref<TableFilter>({
@@ -74,28 +84,6 @@
 
   // Set filter options
   filters.value.countryCode.options = countries.value?.map(({ code, name }) => <TableFilterValue>{ title: name, value: code });
-  const countryOptions = countries.value?.map(({ code, name }) => <TableFilterValue>{ title: name, value: code });
-
-  // create a sorting option object with a default value
-  const sorting = ref<Sorting>({
-    sortBy: "name",
-    sortDirection: SortDirection.Desc,
-  });
-
-  async function onNameChanged(hotel: Hotel, name: string) {
-    hotel.name = name;
-    await SaveData(hotel);
-  }
-
-  async function onCountryCodeChanged(hotel: Hotel, code: string) {
-    hotel.countryCode = code;
-    await SaveData(hotel);
-  }
-
-  /** TODO Implement */
-  async function SaveData(hotel: Hotel) {
-    console.log(hotel);
-  }
 </script>
 
 <template>
@@ -104,9 +92,9 @@
     v-model:filters="filters"
     new
     :api-result="hotels"
+    :table-map="tableMap"
     :on-load="LoadData"
     :data="hotels?.result"
-    :item-id="(item: Hotel) => item.id"
     item-view-id="HotelEdit"
     title="Subtitle for the hotel list"
   >
@@ -117,31 +105,6 @@
 
     <template #overflowMenuActions>
       <v-list-item>Knop 3</v-list-item>
-    </template>
-
-    <template #thead>
-      <mk-th v-model:sorting="sorting" :sorting-options="{ id: 'name' }">{{ t("Name") }}</mk-th>
-      <mk-th v-model:sorting="sorting" :sorting-options="{ id: 'created' }">{{ t("Created") }}</mk-th>
-      <th>{{ t("Country") }}</th>
-      <th>{{ t("Active") }}</th>
-      <th>{{ t("SRP") }}</th>
-      <th></th>
-    </template>
-
-    <template #tbody="dataItem: Hotel">
-      <td>{{ dataItem.name }}</td>
-      <td>{{ formatDateTime(dataItem.created) }}</td>
-      <mk-td @click.stop>
-        <v-autocomplete
-          v-model="dataItem.countryCode"
-          :items="countryOptions"
-          hide-details
-          @update:model-value="(code:string) => onCountryCodeChanged(dataItem, code)"
-        />
-      </mk-td>
-      <mk-td :value="dataItem.isActive" />
-      <mk-td :value="dataItem.srp" />
-      <mk-td :value="srpIcon(dataItem)" />
     </template>
   </mk-table>
 </template>

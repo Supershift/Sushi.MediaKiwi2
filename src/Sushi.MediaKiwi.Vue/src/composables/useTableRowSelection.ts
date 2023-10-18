@@ -1,43 +1,40 @@
 import { ref, computed } from "vue";
 import type { ComputedRef } from "vue";
-import type { TableMap } from "@/models/table/TableMap";
+// import type { TableMap } from "@/models/table/TableMap";
 
 /** Proxy type for number or string to allow an array of either type */
 type tableMapIdentifierType = number | string | undefined;
 
-/** Return type of the composable */
-interface useTableMapItemSelection {
-  selectAll: (value: boolean) => void;
-  selectItem: (dataItem: unknown, value: boolean) => void;
-  isItemSelected: (dataItem: unknown) => boolean;
-  isIndeterminate: ComputedRef<boolean>;
-  isAllSelected: ComputedRef<boolean>;
-  selectedItems: ComputedRef<unknown[]>;
-}
-
 /** Tablemap options for the composable to use */
-interface tableMapItemSelectionOptions {
-  tableMap: TableMap<unknown>;
+interface useTableRowSelectionOptions {
+  //tableMap: TableMap<unknown>;
   data?: ComputedRef<unknown[] | undefined>;
+  itemId?: (entity: any) => any;
 }
 
 /**
  * Composable to select table rows
  * @param options TableMap and data to use to keep track of selection
- * @returns {useTableMapItemSelection}
  */
-export function useTableMapItemSelection(options: tableMapItemSelectionOptions): useTableMapItemSelection {
+export function useTableRowSelection(options: useTableRowSelectionOptions) {
   /** Private collection of the returned itemId() value */
   const selected = ref<tableMapIdentifierType[]>([]);
-  const { tableMap, data } = options;
+  const { itemId, data } = options;
+
+  function invokeId(dataItem?: unknown): any {
+    if (itemId && typeof itemId === "function") {
+      return itemId(dataItem);
+    }
+    return null;
+  }
 
   /** Select or remove one or more items from the collection */
   function select(dataItems: unknown[], value: boolean): void {
     const newSelected = [...selected.value];
 
     for (const dataItem of dataItems) {
-      if (tableMap.itemId) {
-        const itemId = tableMap.itemId(dataItem);
+      const itemId = invokeId(dataItem);
+      if (itemId) {
         const index = newSelected.indexOf(itemId);
 
         if (value) {
@@ -72,8 +69,8 @@ export function useTableMapItemSelection(options: tableMapItemSelectionOptions):
   function isSelected(dataItems?: unknown[]): boolean {
     return (
       dataItems?.every((dataItem) => {
-        if (tableMap.itemId) {
-          const itemId = tableMap.itemId(dataItem);
+        const itemId = invokeId(dataItem);
+        if (itemId) {
           return selected.value.indexOf(itemId) > -1;
         }
         return false;
@@ -85,8 +82,8 @@ export function useTableMapItemSelection(options: tableMapItemSelectionOptions):
   function isSomeSelected(dataItems?: unknown[]): boolean {
     return (
       dataItems?.some((dataItem) => {
-        if (tableMap.itemId) {
-          const itemId = tableMap.itemId(dataItem);
+        const itemId = invokeId(dataItem);
+        if (itemId) {
           return selected.value.indexOf(itemId) > -1;
         }
         return false;

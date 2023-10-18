@@ -1,41 +1,34 @@
 import { SortDirection } from "@/models";
-import { Sorting, TableMapSortingOptions, IconsLibrary } from "@/models";
+import { Sorting, TableSortingOptions, IconsLibrary } from "@/models";
 import { nameof } from "@/helpers/UtilsHelper";
 import { computed, ref } from "vue";
-import type { ComputedRef } from "vue";
-
-/** Return type of the composable */
-interface useTableMapItemSorting {
-  setSorting: (sortingOptions: TableMapSortingOptions<unknown>) => void;
-  getSortingClasses: (sortingOptions: TableMapSortingOptions<unknown>) => Record<string, boolean>;
-  sortIcon: ComputedRef<string>;
-  selectedSorting: ComputedRef<Sorting | undefined>;
-}
 
 /** Tablemap options for the composable to use */
-interface tableMapItemSortingOptions {
+interface useTableSortingOptions {
   selectedSortOption?: Sorting;
 }
+
+const currentSort = ref<Sorting>();
 
 /**
  * Helper class to help determine sorting
  * @class TableSortingHelper
  */
-export function useTableMapItemSorting(options: tableMapItemSortingOptions): useTableMapItemSorting {
+export function useTableSorting(options: useTableSortingOptions) {
   /** Private collection of the returned itemId() value */
   const { selectedSortOption } = options;
-  const currentSort = ref<Sorting>();
 
   if (selectedSortOption) {
     currentSort.value = selectedSortOption;
   }
+
   /**
    * Creates an ISorting result with a direction for the new tableMapItem
-   * @param {TableMapSortingOptions<unknown>} sortingOptions
+   * @param {TableSortingOptions<unknown>} sortingOptions
    * @param {Sorting}
    * @return {Sorting}
    */
-  function setSorting(sortingOptions: TableMapSortingOptions<unknown>) {
+  function setSorting(sortingOptions: TableSortingOptions<unknown>) {
     const sortingId = invokeId(sortingOptions);
     const sortDirection = getSortingDirection(sortingId);
     currentSort.value = { sortBy: sortingId, sortDirection };
@@ -43,10 +36,10 @@ export function useTableMapItemSorting(options: tableMapItemSortingOptions): use
 
   /**
    * Returns classes based on the sortingOptions
-   * @param {TableMapSortingOptions<unknown>} sortingOptions
+   * @param {TableSortingOptions<unknown>} sortingOptions
    * @return {Object}
    */
-  function getSortingClasses(sortingOptions: TableMapSortingOptions<unknown>): Record<string, boolean> {
+  function getSortingClasses(sortingOptions: TableSortingOptions<unknown>): Record<string, boolean> {
     return {
       sortable: true,
       "sortable-active": isActiveSort(sortingOptions),
@@ -55,12 +48,15 @@ export function useTableMapItemSorting(options: tableMapItemSortingOptions): use
 
   /**
    * Get the Id set in the sortingOptions
-   * @param {TableMapSortingOptions<unknown>} sortingOptions
+   * @param {TableSortingOptions<unknown>} sortingOptions
    * @return {string}
    */
-  function invokeId(sortingOptions: TableMapSortingOptions<unknown>): string {
-    const id = nameof(sortingOptions.id);
-    return id;
+  function invokeId(sortingOptions: TableSortingOptions<unknown>): string {
+    if (typeof sortingOptions.id === "function") {
+      return nameof(sortingOptions.id);
+    } else {
+      return sortingOptions.id;
+    }
   }
 
   /**
@@ -82,7 +78,7 @@ export function useTableMapItemSorting(options: tableMapItemSortingOptions): use
     // Toggle the sort
     return currentSort.value?.sortDirection === SortDirection.Desc ? SortDirection.Asc : SortDirection.Desc;
   }
-  function isActiveSort(sortingOptions: TableMapSortingOptions<unknown>): boolean {
+  function isActiveSort(sortingOptions: TableSortingOptions<unknown>): boolean {
     return currentSort.value?.sortBy === invokeId(sortingOptions);
   }
 

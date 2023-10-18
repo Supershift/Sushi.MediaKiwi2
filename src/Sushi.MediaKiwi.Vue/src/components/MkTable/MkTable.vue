@@ -17,6 +17,8 @@
   import { ITableMapPaging } from "@/models/table/TableMapPaging";
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
   import { pageSizeOptions } from "@/constants";
+  import MkTableHead from "./MkTableHead.vue"; // Mk-Th
+  import MkTableCell from "./MkTableCell.vue"; // Mk-Td
 
   // define properties
   const props = withDefaults(
@@ -24,7 +26,7 @@
       /** Collection of filters to filter data. */
       filters?: TableFilter;
       /** Defines mapping between data and the table. */
-      tableMap: TableMap<any>;
+      tableMap?: TableMap<any>;
       /** Sets data and paging properties based on the API's result. */
       apiResult?: IListResult<any>;
       /** An array of objects used for automatically generating rows. */
@@ -47,6 +49,8 @@
       currentPagination: Paging;
       /** Defines the pagination mode */
       paginationMode?: MediakiwiPaginationMode;
+      /** */
+      itemId?: (entity: any) => string | number;
     }>(),
     {
       paginationMode: "controls",
@@ -72,6 +76,10 @@
     overflowMenuActions?: (props: unknown) => never;
     /** Action slot for the MkBulkActionBar */
     bulkActionBar?: (props: unknown) => never;
+    /** table templating  */
+    thead?: (props: unknown) => never;
+    /** table templating */
+    tbody?: (props: any) => never;
   }>();
 
   // inject dependencies
@@ -80,6 +88,14 @@
   // define reactive variables
   const inProgress = ref(false);
   const mkTableViewComponent = ref();
+
+  const isBooleanColumn = computed(() => {
+    if (props.tableMap && props.tableMap.items && props.tableMap.items[0] && props.tableMap.items[0].value && props.data && props.data[0]) {
+      const value = props.tableMap.items[0].value(props.data[0]);
+      return typeof value === "boolean";
+    }
+    return false;
+  });
 
   // Deconstruct the ApiResult or paging prop to an ITableMapPaging
   const pagingResult = computed<ITableMapPaging | undefined | null>(() => {
@@ -187,12 +203,36 @@
       :checkbox="selection ? true : false"
       class="mk-table"
       :pagination-mode="paginationMode"
+      :item-id="itemId"
       @click:row="(e) => emit('click:row', e)"
       @update:sorting="sortingChanged"
       @update:selection="(e) => emit('update:selection', e)"
     >
+      <template #thead>
+        <slot v-if="slots.thead" name="thead"></slot>
+        <template v-else>
+          <!-- render a head cell for each mapping item -->
+          <MkTableHead
+            v-for="(mapItem, index) in props.tableMap?.items"
+            :key="index"
+            :sorting="sorting"
+            :map-item="mapItem"
+            :truncate="!isBooleanColumn"
+            @update:sorting="(value) => emit('update:sorting', value)"
+          />
+        </template>
+      </template>
+
+      <template #tbody="dataItem">
+        <slot v-if="slots.tbody" name="tbody" v-bind="dataItem"></slot>
+        <template v-else>
+          <!-- render a body cell for each mapping item -->
+          <MkTableCell v-for="(mapItem, cellIndex) in props.tableMap?.items" :key="cellIndex" :data="dataItem" :map-item="mapItem"></MkTableCell>
+        </template>
+      </template>
+
+      <!-- Only show the controls if the pagination mode is unset or set to 'controls' -->
       <template v-if="paginationMode === 'controls'" #bottom>
-        <!-- Only show the controls if the pagination mode is unset or set to 'controls' -->
         <MkPagination
           v-if="showPagination"
           :model-value="currentPagination"
