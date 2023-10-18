@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { MkForm, MkMoneyValue, useNavigation, useValidationRules,  MkFileInput } from "@supershift/mediakiwi-vue";
+  import { MkForm, MkMoneyValue, useNavigation, useValidationRules, MkFileInput } from "@supershift/mediakiwi-vue";
   import { HotelConnector } from "@/services/HotelConnector";
   import { CountryConnector } from "@/services/CountryConnector";
   import { FileUploadConnector } from "@/services/FileUploadConnector";
@@ -16,6 +16,7 @@
 
   const navigation = useNavigation();
   const radioModel = ref("1");
+  const selectHotelType = ref([]);
 
   const slider = ref(20);
 
@@ -89,7 +90,6 @@
 
   async function onFilesSave() {
     if (navigation.currentViewParameterNumber.value > 0) {
-      console.log("Uploading files for hotel... " + state.files.length);
       // upload files
       await fileUploadConnector.PostFiles(state.files);
     }
@@ -118,13 +118,22 @@
         <v-radio label="Show" value="2"></v-radio>
         <v-radio label="Is Featured" value="3"></v-radio>
       </v-radio-group>
+      <v-select
+        v-model:model-value="selectHotelType"
+        multiple
+        :items="['City', 'Hostel', 'Resort', 'Motel']"
+        label="Hotel Type"
+        chips
+        closable-chips
+        clearable
+      ></v-select>
     </MkForm>
     <MkForm title="Hotel files" @save="onFilesSave" @undo="onFilesUndo" @delete="onFilesDelete" @load="onFilesLoad">
       <mk-file-input
         :uploads="state.files"
         label="Pool blueprints"
         :multiple="true"
-        :rules="[() => state.files.length <= 2 || 'Multiple files only!']"
+        :rules="[() => state.files?.length <= 2 || 'Multiple files only!']"
       ></mk-file-input>
     </MkForm>
   </v-card>

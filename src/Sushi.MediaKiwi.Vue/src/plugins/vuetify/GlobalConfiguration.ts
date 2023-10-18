@@ -1,7 +1,9 @@
-import type { VuetifyOptions } from "vuetify";
+import { IconsLibrary } from "@/models";
+import { type VuetifyOptions } from "vuetify";
 import { VBtn } from "vuetify/components/VBtn";
 import { VNavigationDrawer } from "vuetify/components/VNavigationDrawer";
-import { IconsLibrary } from "@/models/enum";
+
+export const InputVariant = "outlined";
 
 /**
  * Global configuration for Vuetify
@@ -40,6 +42,9 @@ export const globalConfiguration: VuetifyOptions = {
       color: "background",
       class: "bg-background",
     },
+    VMenu: {
+      class: "v-menu--mediakiwi",
+    },
     // Small Components
     VBtn: {
       variant: "text",
@@ -52,14 +57,14 @@ export const globalConfiguration: VuetifyOptions = {
       class: "v-btn--mediakiwi v-btn--mediakiwi--primary",
     },
     VChip: {
-      closeIcon: "$close",
+      closeIcon: IconsLibrary.close,
       rounded: "lg",
       class: "bg-secondary-container",
     },
     VCheckbox: {
       color: "primary",
       trueIcon: IconsLibrary.checkboxMarked,
-      falseIcons: IconsLibrary.squareOutline,
+      falseIcons: IconsLibrary.checkboxOff,
       indeterminateIcon: IconsLibrary.minusBox,
       class: "v-checkbox--mediakiwi",
     },
@@ -91,15 +96,18 @@ export const globalConfiguration: VuetifyOptions = {
     },
     VInput: {
       hideDetails: "auto",
-      variant: "outlined",
+      variant: InputVariant,
     },
     VTextField: {
-      variant: "outlined",
+      variant: InputVariant,
       color: "outline",
       class: "v-field--mediakiwi",
     },
     VSelect: {
-      variant: "outlined",
+      variant: InputVariant,
+      menuIcon: IconsLibrary.menuDown,
+      clearIcon: IconsLibrary.clear,
+      class: "v-select--mediakiwi",
     },
     VFileInput: {
       variant: "outlined",
@@ -129,7 +137,7 @@ export const globalConfiguration: VuetifyOptions = {
       class: "v-radio--mediakiwi",
     },
     VAutocomplete: {
-      variant: "outlined",
+      variant: InputVariant,
       color: "outline",
       class: "v-autocomplete--mediakiwi",
       menuIcon: IconsLibrary.menuDown,
