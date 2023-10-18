@@ -1,7 +1,7 @@
 import type { VuetifyOptions } from "vuetify";
 import { VBtn } from "vuetify/components/VBtn";
 import { VNavigationDrawer } from "vuetify/components/VNavigationDrawer";
-import { IconsLibrary } from "@/models";
+import { IconsLibrary } from "@/models/enum";
 
 /**
  * Global configuration for Vuetify
@@ -62,7 +62,6 @@ export const globalConfiguration: VuetifyOptions = {
       falseIcons: IconsLibrary.squareOutline,
       indeterminateIcon: IconsLibrary.minusBox,
       class: "v-checkbox--mediakiwi",
-      disabled: true,
     },
     VDivider: {
       color: "outline-variant",
@@ -76,6 +75,16 @@ export const globalConfiguration: VuetifyOptions = {
       variant: "none",
       rounded: false,
       style: { background: "none" },
+      // Form fields inside a table have some other layout properties
+      VTextField: {
+        variant: "outlined",
+        hideDetails: true,
+        class: "v-text-field--mediakiwi",
+      },
+      VAutocomplete: {
+        variant: "outlined",
+        class: "v-autocomplete--mediakiwi",
+      },
     },
     VToolbar: {
       color: "surface1",
