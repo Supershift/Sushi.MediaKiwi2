@@ -83,7 +83,7 @@ export const globalConfiguration: VuetifyOptions = {
       },
       VAutocomplete: {
         variant: "outlined",
-        class: "v-autocomplete--mediakiwi v-autocomplete--mediakiwi--table",
+        class: "v-autocomplete--mediakiwi",
       },
     },
     VToolbar: {
