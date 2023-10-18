@@ -42,6 +42,9 @@ export const globalConfiguration: VuetifyOptions = {
       color: "background",
       class: "bg-background",
     },
+    VMenu: {
+      class: "v-menu--mediakiwi",
+    },
     // Small Components
     VBtn: {
       variant: "text",

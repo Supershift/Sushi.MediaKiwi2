@@ -126,7 +126,6 @@
         chips
         closable-chips
         clearable
-        menu
       ></v-select>
     </MkForm>
     <MkForm title="Hotel files" @save="onFilesSave" @undo="onFilesUndo" @delete="onFilesDelete" @load="onFilesLoad">
