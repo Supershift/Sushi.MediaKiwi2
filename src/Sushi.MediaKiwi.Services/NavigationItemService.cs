@@ -28,11 +28,11 @@ namespace Sushi.MediaKiwi.Services
             // get navigationitems from datastore
             var items = await _navigationItemRepository.GetAllAsync(sectionID, pagingValues);
 
-            // create result object
-            var result = new ListResult<NavigationItem>(items.TotalNumberOfRows, items.TotalNumberOfPages);
-
             // map to result
-            _mapper.Map(items, result.Result);
+            var itemsDto = _mapper.Map<List<NavigationItem>>(items);
+
+            // create result object
+            var result = new ListResult<NavigationItem>(itemsDto, items);            
 
             return new Result<ListResult<NavigationItem>>(result);
         }

@@ -1,5 +1,5 @@
 import { vi, describe, it, expect } from "vitest";
-import { getSection } from "../envHelper";
+import { getSection } from "../EnvHelper";
 
 // Stub the environment variables
 vi.stubEnv("SampleWeb.Test:SettingA", "value-a");

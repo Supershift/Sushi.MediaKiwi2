@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <v-main style="min-height: 300px">
+  <v-main id="main" style="min-height: 300px">
     <div class="pa-4 pa-md-10 mk-screen">
       <mk-breadcrumbs />
       <router-view v-slot="{ Component }">

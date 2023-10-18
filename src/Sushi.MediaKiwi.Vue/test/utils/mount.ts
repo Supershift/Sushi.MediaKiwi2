@@ -64,7 +64,7 @@ async function mountAsync(component: Component, props?: any, options?: MountingO
   const suspenseWrapper = defineComponent({
     render() {
       return h(Suspense, null, {
-        default: h(component, props as VNodeProps),
+        default: h(component, props as VNodeProps, "<div id='test'>test</div>"),
       });
     },
   });

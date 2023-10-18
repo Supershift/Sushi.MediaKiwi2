@@ -35,9 +35,3 @@
     </template>
   </MkSignIn>
 </template>
-
-<style scoped lang="scss">
-  .mk-view--signin {
-    height: 100%;
-  }
-</style>

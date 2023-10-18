@@ -79,7 +79,7 @@ steps:
     displayName: "Publish Mediakiwi artifact"
     inputs:
       PathtoPublish: "$(Build.ArtifactStagingDirectory)/mediakiwi-vue"
-      ArtifactName: "packages/mediakiwi-vue"
+      ArtifactName: "mediakiwi-vue"
       publishLocation: "Container"
 
   # Build and Pack mediakiwi-azure-function
@@ -120,7 +120,7 @@ steps:
     displayName: "Publish Mediakiwi artifact"
     inputs:
       PathtoPublish: "$(Build.ArtifactStagingDirectory)/mediakiwi-azure-function"
-      ArtifactName: "packages/mediakiwi-azure-function"
+      ArtifactName: "mediakiwi-azure-function"
       publishLocation: "Container"
 
   # Build and Pack SampleWeb
@@ -131,10 +131,17 @@ steps:
       workingDir: "src/Sushi.MediaKiwi.SampleWeb/ClientApp"
 
   - task: Npm@1
-    displayName: "npm build SampleWeb"
+    displayName: "npm build SampleWeb:ClientApp"
     inputs:
       command: "custom"
       workingDir: "src/Sushi.MediaKiwi.SampleWeb/ClientApp"
+      customCommand: "run build"
+
+  - task: Npm@1
+    displayName: "npm build SampleWeb:Function"
+    inputs:
+      command: "custom"
+      workingDir: "src/Sushi.MediaKiwi.SampleWeb/Function"
       customCommand: "run build"
 
   - task: CopyFiles@2
@@ -144,6 +151,9 @@ steps:
       Contents: |
         ClientApp/dist/**
         Function/**
+        !**/.funcignore
+        !**/package-lock.json
+        !**/tsconfig.json
       TargetFolder: "SampleWeb"
 
   - task: PublishPipelineArtifact@1
