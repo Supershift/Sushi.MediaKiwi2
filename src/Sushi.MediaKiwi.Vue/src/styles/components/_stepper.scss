@@ -3,7 +3,7 @@
         &.v-stepper--sticky {
             .v-stepper-header {
                 position: sticky;
-                top: 80px;
+                top: 0;
                 z-index: 2;
                 background-color: rgb(var(--v-theme-background));
             }

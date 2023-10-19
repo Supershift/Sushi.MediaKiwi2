@@ -38,14 +38,14 @@
 <template>
   <v-card variant="text" :class="['v-toolbar--mediakiwi', { 'v-toolbar--sticky': props.sticky }]">
     <v-container class="pl-0" fluid>
-      <v-row v-if="slots.header">
+      <v-row v-if="slots.header" class="justify-end">
         <slot name="header"></slot>
       </v-row>
-      <v-row class="pb-2 ml-0 align-center">
-        <v-card-title v-if="title" class="px-0 text-title-medium">{{ title }}</v-card-title>
+      <v-row v-if="slots.toolbar || slots.overflowMenuActions || ($props.itemViewId && $props.new)" class="pb-2 ml-0 align-center">
         <v-spacer></v-spacer>
+        <v-card-title v-if="title" class="px-0 text-title-medium">{{ title }}</v-card-title>
 
-        <v-card-actions class="justify-end">
+        <v-card-actions>
           <template v-if="slots.toolbar">
             <slot name="toolbar"></slot>
           </template>
