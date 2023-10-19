@@ -2,6 +2,8 @@
   import { MkForm } from "@supershift/mediakiwi-vue";
   import { ref } from "vue";
   import SampleTableCustomers from "../../components/SampleTableCustomers.vue";
+  import SampleTableRooms from "../../components/SampleTableRooms.vue";
+
   const steps = ref(["Date Selection", "Room selection", "Customer selection", "Success"]);
 
   const checkinDate = ref([new Date("2023-10-10"), new Date("2023-10-20")]);
@@ -38,7 +40,7 @@
       </template>
       <template #item.2>
         <h3>{{ steps[1] }}</h3>
-        <SampleTableCustomers></SampleTableCustomers>
+        <SampleTableRooms></SampleTableRooms>
       </template>
       <template #item.3>
         <h3>{{ steps[2] }}</h3>
