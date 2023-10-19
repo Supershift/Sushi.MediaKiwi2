@@ -1,0 +1,12 @@
+.v-stepper {
+    &--mediakiwi {
+        &.v-stepper--sticky {
+            .v-stepper-header {
+                position: sticky;
+                top: 80px;
+                z-index: 2;
+                background-color: rgb(var(--v-theme-background));
+            }
+        }
+    }
+}

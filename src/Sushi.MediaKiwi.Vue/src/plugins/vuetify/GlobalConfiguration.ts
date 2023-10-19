@@ -150,5 +150,8 @@ export const globalConfiguration: VuetifyOptions = {
       density: "compact",
       class: "v-breadcrumbs--mediakiwi",
     },
+    VStepper: {
+      class: "v-stepper--mediakiwi",
+    },
   },
 };

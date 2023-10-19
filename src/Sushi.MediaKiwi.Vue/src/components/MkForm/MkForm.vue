@@ -15,6 +15,12 @@
     onLoad?: (event?: Event) => Promise<void>;
   }>();
 
+  // define slots
+  const slots = defineSlots<{
+    toolbarHeader?: void;
+    default?: void;
+  }>();
+
   // define reactive variables
   const inProgress = ref(false);
 
@@ -107,11 +113,7 @@
     @delete="onDelete"
   >
     <template #header>
-      <v-card-text>
-        Personal details, also known as personal information or personal data, refer to specific pieces of information that are associated with an individual
-        and can help identify or describe that person.
-      </v-card-text>
-
+      <slot name="toolbarHeader"></slot>
       <v-card-actions>
         <v-btn v-if="onUndo" :disabled="false" @click="onUndo">{{ defaultT("Undo") }}</v-btn>
         <v-btn v-if="onSave" :disabled="false" @click="onSave">{{ defaultT("Save") }}</v-btn>

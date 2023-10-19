@@ -24,36 +24,44 @@
 </script>
 <template>
   <mk-form @load="onLoad" @delete="onDelete" @save="onSave" @undo="onUndo">
-    <v-stepper :items="steps">
-      <template #item.1>
-        <h3>{{ steps[0] }}</h3>
-        <v-container>
-          <v-row justify="space-between">
-            <v-col>
-              <v-date-picker v-model="checkinDate" title="Check-in" :min="checkinDate[0]" multiple></v-date-picker>
-            </v-col>
-            <v-col>
-              <v-date-picker v-model="checkinDate" :allowed-dates="roomOpenUntilDate" title="Rooms open till" multiple></v-date-picker>
-            </v-col>
-          </v-row>
-        </v-container>
-      </template>
-      <template #item.2>
-        <h3>{{ steps[1] }}</h3>
-        <SampleTableRooms></SampleTableRooms>
-      </template>
-      <template #item.3>
-        <h3>{{ steps[2] }}</h3>
-        <SampleTableCustomers></SampleTableCustomers>
-      </template>
-      <template #item.4>
-        <h3>{{ steps[3] }}</h3>
-        <v-container>
-          <v-row justify="space-between">
-            <v-col> Successfully sent offer! </v-col>
-          </v-row>
-        </v-container>
-      </template>
-    </v-stepper>
+    <template #toolbarHeader>
+      <v-card-text class="flex-1-1 w-75">
+        Personal details, also known as personal information or personal data, refer to specific pieces of information that are associated with an individual
+        and can help identify or describe that person.
+      </v-card-text>
+    </template>
+    <template #default>
+      <v-stepper :items="steps" class="v-stepper--sticky">
+        <template #item.1>
+          <h3>{{ steps[0] }}</h3>
+          <v-container>
+            <v-row justify="space-between">
+              <v-col>
+                <v-date-picker v-model="checkinDate" title="Check-in" :min="checkinDate[0]" multiple></v-date-picker>
+              </v-col>
+              <v-col>
+                <v-date-picker v-model="checkinDate" :allowed-dates="roomOpenUntilDate" title="Rooms open till" multiple></v-date-picker>
+              </v-col>
+            </v-row>
+          </v-container>
+        </template>
+        <template #item.2>
+          <h3>{{ steps[1] }}</h3>
+          <SampleTableRooms></SampleTableRooms>
+        </template>
+        <template #item.3>
+          <h3>{{ steps[2] }}</h3>
+          <SampleTableCustomers></SampleTableCustomers>
+        </template>
+        <template #item.4>
+          <h3>{{ steps[3] }}</h3>
+          <v-container>
+            <v-row justify="space-between">
+              <v-col> Successfully sent offer! </v-col>
+            </v-row>
+          </v-container>
+        </template>
+      </v-stepper>
+    </template>
   </mk-form>
 </template>

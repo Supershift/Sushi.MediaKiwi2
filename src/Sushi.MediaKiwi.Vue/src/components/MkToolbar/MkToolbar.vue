@@ -45,7 +45,7 @@
         <v-card-title v-if="title" class="px-0 text-title-medium">{{ title }}</v-card-title>
         <v-spacer></v-spacer>
 
-        <v-card-actions>
+        <v-card-actions class="justify-end">
           <template v-if="slots.toolbar">
             <slot name="toolbar"></slot>
           </template>
