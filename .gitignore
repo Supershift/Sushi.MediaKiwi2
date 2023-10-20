@@ -356,3 +356,4 @@ local.settings.json
 **/coverage/
 **/.nyc_output/
 **/test/coverage/
+**/vite.config.ts.timestamp-*.mjs

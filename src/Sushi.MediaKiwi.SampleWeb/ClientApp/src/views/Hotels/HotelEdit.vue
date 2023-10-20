@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { MkForm, MkMoneyValue, useNavigation, useValidationRules, MkFileInput } from "@supershift/mediakiwi-vue";
+  import { MkForm, MkMoneyValue, useNavigation, useValidationRules, useBreadcrumbs, MkFileInput } from "@supershift/mediakiwi-vue";
   import { HotelConnector } from "@/services/HotelConnector";
   import { CountryConnector } from "@/services/CountryConnector";
   import { FileUploadConnector } from "@/services/FileUploadConnector";
@@ -13,6 +13,7 @@
   const countriesConnector = container.resolve(CountryConnector);
   const { required } = useValidationRules();
   const fileUploadConnector = container.resolve(FileUploadConnector);
+  const { setCustomPageTitle } = useBreadcrumbs();
 
   const navigation = useNavigation();
   const radioModel = ref("1");
@@ -48,6 +49,7 @@
         alert("No hotel found!");
       }
       state.hotel = candidate!;
+      setCustomPageTitle(state.hotel.name);
     } else {
       // create a new hotel
       state.hotel = <Hotel>{ id: 0 };

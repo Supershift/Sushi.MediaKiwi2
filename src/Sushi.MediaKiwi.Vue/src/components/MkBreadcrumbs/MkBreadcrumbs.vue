@@ -4,10 +4,13 @@
   import { useDisplay } from "vuetify";
   import { useNavigation } from "@/composables/useNavigation";
   import { NavigationItem, IconsLibrary } from "@/models";
+  import { useBreadcrumbs } from "@/composables/useBreadcrumbs";
 
   // inject dependencies
   const { xs } = useDisplay();
   const navigation = useNavigation();
+  const { customPageTitle, setCustomPageTitle } = useBreadcrumbs();
+
   // determine if we show the whole breadcrumb or only a back button
   const showBackButton = computed(() => xs.value && breadcrumbs.value.length > 1);
 
@@ -15,11 +18,19 @@
   const breadcrumbs = computed(() => {
     const currentItem = navigation.currentNavigationItem.value;
     const result: Array<NavigationItem> = [];
-    let candidate: NavigationItem | undefined = currentItem;
+    let candidate: NavigationItem | undefined = { ...currentItem };
     while (candidate) {
       result.unshift(candidate);
       candidate = candidate.parent;
     }
+
+    // Alter the title of the last item in the collection
+    if (customPageTitle.value && result && result[result.length - 1]) {
+      result[result.length - 1].name = customPageTitle.value ?? result[result.length - 1].name;
+      // Reset the custom title
+      setCustomPageTitle();
+    }
+
     return result;
   });
 

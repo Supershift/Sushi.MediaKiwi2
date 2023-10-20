@@ -13,3 +13,4 @@ export * from "./useTableSorting";
 export * from "./useValidationRules";
 export * from "./useSideSheet";
 export * from "./useFormFields";
+export * from "./useBreadcrumbs";
