@@ -100,6 +100,9 @@
 
 <template>
   <MkForm title="Hotel edit" @save="onSave" @undo="onUndo" @delete="onDelete" @load="onLoad">
+    <template #toolbarHeader>
+      <v-card-text class="flex-1-1 w-75"> Hotel edit </v-card-text>
+    </template>
     <v-text-field v-model="state.hotel.name" label="Name" :rules="[...required(state.hotel.name, 'This field is required')]"></v-text-field>
     <v-autocomplete
       v-model="state.hotel.countryCode"
@@ -128,6 +131,9 @@
     ></v-select>
   </MkForm>
   <MkForm title="Hotel files" @save="onFilesSave" @undo="onFilesUndo" @delete="onFilesDelete" @load="onFilesLoad">
+    <template #toolbarHeader>
+      <v-card-text class="flex-1-1 w-75"> File Upload </v-card-text>
+    </template>
     <mk-file-input
       :uploads="state.files"
       label="Pool blueprints"

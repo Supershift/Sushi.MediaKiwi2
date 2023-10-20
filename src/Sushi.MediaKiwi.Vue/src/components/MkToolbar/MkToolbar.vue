@@ -42,8 +42,8 @@
         <slot name="header"></slot>
       </v-row>
       <v-row v-if="slots.toolbar || slots.overflowMenuActions || ($props.itemViewId && $props.new)" class="pb-2 ml-0 align-center">
-        <v-spacer></v-spacer>
         <v-card-title v-if="title" class="px-0 text-title-medium">{{ title }}</v-card-title>
+        <v-spacer></v-spacer>
 
         <v-card-actions>
           <template v-if="slots.toolbar">
