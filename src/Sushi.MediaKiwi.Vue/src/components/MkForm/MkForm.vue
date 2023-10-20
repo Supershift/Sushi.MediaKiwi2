@@ -13,6 +13,8 @@
     onSave?: (event: Event) => Promise<void>;
     onDelete?: (event: Event) => Promise<void>;
     onLoad?: (event?: Event) => Promise<void>;
+    sticky?: boolean;
+    title?: string;
   }>();
 
   // define slots
@@ -102,12 +104,12 @@
     :loading="inProgress"
     v-bind="$attrs"
     :item-view-id="navigation.currentNavigationItem.value.viewId"
-    :title="navigation.currentNavigationItem.value.viewId"
+    :title="props.title ?? navigation.currentNavigationItem.value.viewId"
     :new="false"
     :delete="$props.onDelete ? true : false"
     :save="$props.onSave ? true : false"
     :undo="$props.onLoad && $props.onSave ? true : false"
-    :sticky="true"
+    :sticky="props.sticky ? true : false"
     @save="onSave"
     @undo="onUndo"
     @delete="onDelete"
@@ -120,7 +122,7 @@
       </v-card-actions>
     </template>
   </MkToolbar>
-  <v-form :disabled="inProgress">
+  <v-form :disabled="inProgress" :class="[{ 'v-form--sticky': $props.sticky }]">
     <slot></slot>
   </v-form>
 </template>
