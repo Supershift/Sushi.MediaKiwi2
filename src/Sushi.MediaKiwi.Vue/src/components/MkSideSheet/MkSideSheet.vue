@@ -3,6 +3,7 @@
   import { useDisplay } from "vuetify";
   import useSideSheet from "@/composables/useSideSheet";
   import MkSideSheetContent from "./MkSideSheetContent.vue";
+  import { IconsLibrary } from "@/models";
 
   // props that are used to customize the component
   const props = defineProps({
@@ -21,10 +22,10 @@
       type: [String, Number],
       default: "auto",
     },
-    /** width of the sheet, ex. 20px, 100vw */
+    /** width of the sheet, ex. 20 */
     width: {
-      type: [String, Number],
-      default: "100vw",
+      type: Number,
+      default: 475,
     },
     /** height of the sheet, ex. 20px, 100vh */
     height: {
@@ -75,15 +76,15 @@
   const zIndex = ref<number | string>();
   const { mobile } = useDisplay();
   const { state, openSideSheet, closeSideSheet, isOpen, mountTeleportContainer, unMountTeleportContainer } = useSideSheet();
+  // Proxy ref for the drawer to mutate
+  const drawerModelValue = ref(props.modelValue);
 
   // computed
-  const wrapperStyles = computed(
-    () =>
-      ({
-        width: props.modelValue && mobile.value ? props.width : "30vw", // this determines if the content gets pushed or not, minimal 20vw
-        marginTop: props.modelValue && !mobile.value ? "64px" : "0",
-      } as StyleValue)
-  );
+  const width = computed(() => {
+    return props.width; // this determines if the content gets pushed or not, minimal 20vw
+  });
+
+  const wrapperStyles = computed(() => ({ width: width.value } as StyleValue));
 
   // functions
   function handleClose() {
@@ -94,12 +95,9 @@
   }
   function handleOpen() {
     showOverlay.value = true;
-    // delays the opening of the sheet to allow the transition to work, primarily on mobile
-    setTimeout(() => {
-      openSideSheet();
-      sheetValue.value = true;
-      emits("openedSheet", state);
-    }, 300);
+    openSideSheet();
+    sheetValue.value = true;
+    emits("openedSheet", state);
   }
 
   const getMaxZIndex = () =>
@@ -126,6 +124,14 @@
       } else {
         handleClose();
       }
+    }
+  );
+
+  // watch the modelValue and update the drawerModelValue
+  watch(
+    () => props.modelValue,
+    (value) => {
+      drawerModelValue.value = value;
     }
   );
 </script>
@@ -165,9 +171,9 @@
         </div>
       </v-expand-x-transition>
     </v-overlay>
-    <!-- Overlay Desktop -->
-    <v-expand-x-transition v-else>
-      <div v-show="modelValue && !mobile && isOpen()" class="side-sheet__wrapper" :class="[modelValue && 'side-sheet__wrapper--active']" :style="wrapperStyles">
+    <div v-else>
+      <!-- Overlay Desktop This component is an aliass created in the GlobalConfiguration  -->
+      <v-navigation-drawer-side-sheet v-show="!mobile" v-model="drawerModelValue" :width="width" disable-resize-watcher>
         <mk-side-sheet-content
           :model-value="modelValue"
           :close-button="closeButton"
@@ -195,22 +201,13 @@
             <slot name="footer"></slot>
           </template>
         </mk-side-sheet-content>
-      </div>
-    </v-expand-x-transition>
+      </v-navigation-drawer-side-sheet>
+    </div>
   </teleport>
 </template>
 <style lang="scss">
   @import "../../styles/themes/variables.scss";
   .side-sheet {
-    &__wrapper {
-      position: relative;
-      background-color: rgb(var(--v-theme-surface));
-      @media (min-width: md) {
-        position: fixed;
-        right: 0;
-        top: 0;
-      }
-    }
     &--mobile {
       height: 100vh;
     }
