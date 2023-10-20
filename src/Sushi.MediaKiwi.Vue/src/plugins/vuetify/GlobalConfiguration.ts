@@ -151,7 +151,12 @@ export const globalConfiguration: VuetifyOptions = {
       class: "v-breadcrumbs--mediakiwi",
     },
     VStepper: {
+      color: "primary",
+      variant: "flat",
       class: "v-stepper--mediakiwi",
+    },
+    VForm: {
+      class: "v-form--mediakiwi",
     },
   },
 };
