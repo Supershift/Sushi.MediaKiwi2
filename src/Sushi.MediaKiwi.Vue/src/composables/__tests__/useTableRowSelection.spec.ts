@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { SortDirection } from "./../../models";
-import type { TableMap } from "./../../models/table/TableMap";
-import { useTableMapItemSelection } from "./../useTableMapItemSelection";
+import type { TableMap } from "../../models/table/TableMap";
+import { useTableRowSelection } from "../useTableRowSelection";
 import { computed } from "vue";
 
 interface ISampleData {
@@ -27,10 +26,10 @@ const testData = <ISampleData[]>[
   { id: 3, name: "Data C" },
 ];
 
-describe("useTableMapItemSelection", () => {
+describe("useTableRowSelection", () => {
   /** Init selection composable for item selection with the table map and data  */
-  const { selectAll, selectItem, isItemSelected, isAllSelected, isIndeterminate, selectedItems } = useTableMapItemSelection({
-    tableMap: myMap,
+  const { selectAll, selectItem, isItemSelected, isAllSelected, isIndeterminate, selectedItems } = useTableRowSelection({
+    itemId: (item) => item.id,
     data: computed(() => testData),
   });
 
