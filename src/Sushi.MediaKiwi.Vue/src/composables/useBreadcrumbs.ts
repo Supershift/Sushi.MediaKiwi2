@@ -1,16 +1,13 @@
 import { computed, ref } from "vue";
 
-/**
- * Page title for the breadcrumb.
- */
+/** Page title for the breadcrumb. */
 const pageTitle = ref<string | undefined>();
 
 /**
- * Use keyboard shortcuts composable.
- * This function will return the addKeyboardShortcuts and removeKeyboardShortcuts functions.
- * These functions can be used to add and remove key shortcuts.
- * See link for options https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values
- * @returns { addKeyboardShortcuts, removeKeyboardShortcuts, keysPressed, registerdKeyboardShortcuts }
+ * Composable to interfere for breadcrumbs.
+ * TODO; May need further thought on how to handle in a more generic way.
+ * @returns {Object} Object with customPageTitle and setCustomPageTitle.
+ * @example
  */
 export function useBreadcrumbs() {
   function setCustomPageTitle(value?: string) {
