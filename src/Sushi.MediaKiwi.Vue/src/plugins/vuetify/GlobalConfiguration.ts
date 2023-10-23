@@ -14,6 +14,7 @@ export const globalConfiguration: VuetifyOptions = {
     // Create an alias, so we can use <v-btn-primary> instead of <v-btn color="primary" variant="flat">
     VBtnPrimary: VBtn,
     VNavigationRail: VNavigationDrawer,
+    VNavigationDrawerSideSheet: VNavigationDrawer,
   },
   defaults: {
     // Patterns
@@ -37,6 +38,11 @@ export const globalConfiguration: VuetifyOptions = {
           variant: "text",
         },
       },
+    },
+    VNavigationDrawerSideSheet: {
+      color: "background",
+      border: "none",
+      location: "right",
     },
     VMain: {
       color: "background",

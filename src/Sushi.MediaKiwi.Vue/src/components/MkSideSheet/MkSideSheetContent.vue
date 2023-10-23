@@ -132,10 +132,13 @@
   @import "../../styles/themes/variables.scss";
   .side-sheet {
     &__sheet {
+      display: flex;
+      flex-flow: column;
       height: 100%;
       max-width: 100%;
       background-color: rgb(var(--v-theme-surface1));
     }
+
     &__header,
     &__body,
     &__footer {
@@ -143,6 +146,7 @@
       overflow: auto;
       background: rgb(var(--v-theme-surface1));
     }
+
     &__header {
       @media (min-width: $breakpoints-lg) {
         border-top-left-radius: 16px;
@@ -157,6 +161,7 @@
         white-space: normal;
       }
     }
+
     &__body {
       text-align: left;
       height: calc(100% - 150px); // so the content is scrollable ( accounting for margins top and bottom)
@@ -172,6 +177,7 @@
         border-bottom-right-radius: 16px;
       }
     }
+
     &__body {
       position: relative;
     }
