@@ -20,7 +20,6 @@ export function setPageTitle(router: Router, options?: MediakiwiVueOptions): voi
     if (to.meta?.navigationItem) {
       // Get the navigation item from the meta of the route
       const navigationItem = <NavigationItem>to.meta?.navigationItem;
-      console.log(navigationItem);
 
       if (navigationItem) {
         // Get the sections from the store
