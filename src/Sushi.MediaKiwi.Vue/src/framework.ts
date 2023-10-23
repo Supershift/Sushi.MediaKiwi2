@@ -80,7 +80,7 @@ export default {
     const router = createRouter(routerOptions);
 
     // register the router as dependency
-    registerRouter(container, router);
+    registerRouter(container, router, options);
 
     // create navigation client for msal
     const navigationClient = new CustomNavigationClient(router);

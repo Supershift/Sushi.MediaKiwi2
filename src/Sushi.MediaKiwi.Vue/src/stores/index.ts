@@ -100,6 +100,13 @@ export const useMediakiwiStore = defineStore({
         this.sections = payload.result;
       }
     },
+    getParentName(navigationItem: NavigationItem): string {
+      if (navigationItem.parent) {
+        return this.getParentName(navigationItem.parent);
+      }
+
+      return navigationItem.name;
+    },
     getParentPath(navigationItem: NavigationItem): string {
       // get the full path for this item by recursively going up the tree
       let parentPath = "";
