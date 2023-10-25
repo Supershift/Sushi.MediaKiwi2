@@ -54,6 +54,11 @@
       type: String,
       default: "",
     },
+    /** indicator to show the progress bar */
+    inProgress: {
+      type: Boolean,
+      default: false,
+    },
   });
 
   // data
@@ -105,15 +110,22 @@
   <v-sheet ref="side-sheet__sheet" class="side-sheet__sheet" :class="[modelValue && 'side-sheet__sheet--active']" :style="sheetStyles">
     <!-- Start header -->
     <v-card-item ref="side-sheet__header" :class="[headerClass, 'side-sheet__header']">
-      <v-card-title v-if="slots.title">
-        <slot name="title"></slot>
-      </v-card-title>
-      <v-card-subtitle v-if="slots.subtitle">
-        <slot name="subtitle"></slot>
-      </v-card-subtitle>
+      <div :class="['side-sheet__header__content']">
+        <v-card-title v-if="slots.title">
+          <slot name="title"></slot>
+        </v-card-title>
+        <v-card-subtitle v-if="slots.subtitle">
+          <slot name="subtitle"></slot>
+        </v-card-subtitle>
+      </div>
+
       <template #append>
         <v-icon v-if="props.closeButton" :aria-hidden="!props.closeButton" aria-label="close" :icon="IconsLibrary.close" @click="emits('closed')"></v-icon>
       </template>
+
+      <div :class="['side-sheet__header__footer']">
+        <v-progress-linear v-if="inProgress" absolute indeterminate></v-progress-linear>
+      </div>
     </v-card-item>
     <!-- Start body -->
     <v-card-text v-if="slots.default" ref="side-sheet__body" :class="[bodyClass, 'side-sheet__body']" :style="{ height: `${bodyHeight}px` }">
@@ -139,7 +151,19 @@
       background-color: rgb(var(--v-theme-surface1));
     }
 
-    &__header,
+    &__header {
+      padding: 0;
+      position: relative;
+
+      &__footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        border-bottom: thin solid rgba(var(--v-border-color), var(--v-border-opacity));
+      }
+    }
+
+    &__header__content,
     &__body,
     &__footer {
       padding: 1.5rem;
@@ -153,6 +177,7 @@
         border-top-right-radius: 16px;
       }
       .v-card-item__append {
+        padding: 1.5rem;
         display: flex;
         align-self: start;
       }
