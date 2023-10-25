@@ -19,7 +19,7 @@
 </script>
 
 <template>
-  <v-radio-group v-model="value" @update:model-value="selectChanged" :hide-details="true">
-    <v-radio v-for="option in tableFilterItem.options" :label="option.title" :value="option"></v-radio>
+  <v-radio-group v-model="value" hide-details @update:model-value="selectChanged">
+    <v-radio v-for="(option, index) in tableFilterItem.options" :key="index" :label="option.title" :value="option"></v-radio>
   </v-radio-group>
 </template>

@@ -104,4 +104,11 @@
       justify-content: flex-end;
     }
   }
+
+  td {
+    // Every first child, whatever it it.
+    > * {
+      white-space: nowrap;
+    }
+  }
 </style>

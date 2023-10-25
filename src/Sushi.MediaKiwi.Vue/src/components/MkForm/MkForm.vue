@@ -15,6 +15,7 @@
     onLoad?: (event?: Event) => Promise<void>;
     sticky?: boolean;
     title?: string;
+    hideToolbar?: boolean;
   }>();
 
   // define slots
@@ -101,6 +102,7 @@
 </script>
 <template>
   <MkToolbar
+    v-if="!hideToolbar"
     :loading="inProgress"
     v-bind="$attrs"
     :item-view-id="navigation.currentNavigationItem.value.viewId"

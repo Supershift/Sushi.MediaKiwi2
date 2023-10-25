@@ -3,7 +3,6 @@
   import { useDisplay } from "vuetify";
   import useSideSheet from "@/composables/useSideSheet";
   import MkSideSheetContent from "./MkSideSheetContent.vue";
-  import { IconsLibrary } from "@/models";
 
   // props that are used to customize the component
   const props = defineProps({
@@ -25,7 +24,7 @@
     /** width of the sheet, ex. 20 */
     width: {
       type: Number,
-      default: 475,
+      default: 400,
     },
     /** height of the sheet, ex. 20px, 100vh */
     height: {
@@ -54,6 +53,11 @@
     },
     /** determines if we have a close button or not */
     closeButton: {
+      type: Boolean,
+      default: false,
+    },
+    /** indicator to show the progress bar */
+    loading: {
       type: Boolean,
       default: false,
     },
@@ -151,6 +155,7 @@
             :width="width"
             :sheet-color="sheetColor"
             :z-index="zIndex"
+            :loading="loading"
             :mobile="true"
             @closed="handleClose"
             @opened="handleOpen"
@@ -184,6 +189,7 @@
           :width="width"
           :sheet-color="sheetColor"
           :z-index="zIndex"
+          :loading="loading"
           :mobile="true"
           @closed="handleClose"
           @opened="handleOpen"
