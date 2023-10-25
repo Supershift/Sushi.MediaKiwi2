@@ -23,5 +23,5 @@
 </script>
 
 <template>
-  <v-text-field v-model="value" :label="defaultT('Value')" @update:model-value="textFieldChanged"> </v-text-field>
+  <v-text-field v-model="value" :label="defaultT('Value')" hide-details @update:model-value="textFieldChanged"> </v-text-field>
 </template>
