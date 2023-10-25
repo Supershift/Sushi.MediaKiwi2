@@ -1,15 +1,26 @@
 <script setup lang="ts">
   import { ref } from "vue";
-  import MkFormToolbar from "./MkFormToolbar.vue";
+  import { MkToolbar } from "@/components/MkToolbar";
   import { useNavigation } from "@/composables/useNavigation";
   import { useSnackbarStore } from "@/stores/snackbar";
-  import { onMounted } from "vue";
+  import { useI18next } from "@/composables/useI18next";
+
+  // inject dependencies
+  const { defaultT } = await useI18next();
 
   // define properties
   const props = defineProps<{
     onSave?: (event: Event) => Promise<void>;
     onDelete?: (event: Event) => Promise<void>;
     onLoad?: (event?: Event) => Promise<void>;
+    sticky?: boolean;
+    title?: string;
+  }>();
+
+  // define slots
+  const slots = defineSlots<{
+    toolbarHeader?: void;
+    default?: void;
   }>();
 
   // define reactive variables
@@ -89,19 +100,29 @@
   await onLoad();
 </script>
 <template>
-  <MkFormToolbar
-    :disabled="inProgress"
+  <MkToolbar
+    :loading="inProgress"
     v-bind="$attrs"
+    :item-view-id="navigation.currentNavigationItem.value.viewId"
+    :title="props.title ?? navigation.currentNavigationItem.value.viewId"
+    :new="false"
     :delete="$props.onDelete ? true : false"
     :save="$props.onSave ? true : false"
     :undo="$props.onLoad && $props.onSave ? true : false"
+    :sticky="props.sticky ? true : false"
     @save="onSave"
     @undo="onUndo"
     @delete="onDelete"
   >
-    <v-progress-linear v-if="inProgress" indeterminate absolute></v-progress-linear>
-  </MkFormToolbar>
-  <v-form :disabled="inProgress">
+    <template #header>
+      <slot name="toolbarHeader"></slot>
+      <v-card-actions>
+        <v-btn v-if="onUndo" :disabled="false" @click="onUndo">{{ defaultT("Undo") }}</v-btn>
+        <v-btn v-if="onSave" :disabled="false" @click="onSave">{{ defaultT("Save") }}</v-btn>
+      </v-card-actions>
+    </template>
+  </MkToolbar>
+  <v-form :disabled="inProgress" :class="[{ 'v-form--sticky': $props.sticky }]">
     <slot></slot>
   </v-form>
 </template>

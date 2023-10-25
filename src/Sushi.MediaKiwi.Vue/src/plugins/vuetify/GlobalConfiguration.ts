@@ -25,6 +25,7 @@ export const globalConfiguration: VuetifyOptions = {
       color: "background",
       border: "none",
       rail: true,
+      class: "v-navigation-rail--mediakiwi",
     },
     VNavigationDrawer: {
       color: "surface1",
@@ -99,9 +100,11 @@ export const globalConfiguration: VuetifyOptions = {
     },
     VToolbar: {
       color: "surface1",
+      class: "v-toolbar--mediakiwi",
     },
     VInput: {
       hideDetails: "auto",
+      class: "v-input--mediakiwi",
       variant: InputVariant,
     },
     VTextField: {
@@ -147,6 +150,19 @@ export const globalConfiguration: VuetifyOptions = {
       color: "outline",
       class: "v-autocomplete--mediakiwi",
       menuIcon: IconsLibrary.menuDown,
+    },
+    VBreadcrumbs: {
+      color: "primary",
+      density: "compact",
+      class: "v-breadcrumbs--mediakiwi",
+    },
+    VStepper: {
+      color: "primary",
+      variant: "flat",
+      class: "v-stepper--mediakiwi",
+    },
+    VForm: {
+      class: "v-form--mediakiwi",
     },
   },
 };

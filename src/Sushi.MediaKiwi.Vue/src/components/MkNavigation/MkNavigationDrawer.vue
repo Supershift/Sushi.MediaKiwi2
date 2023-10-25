@@ -12,7 +12,7 @@
   const { defaultT } = await useI18next();
 </script>
 <template>
-  <v-navigation-drawer absolute class="pa-3">
+  <v-navigation-drawer class="pa-3">
     <v-list open-strategy="single" class="pa-0">
       <v-list-item
         v-if="currentRootItem"
