@@ -55,7 +55,7 @@
       default: "",
     },
     /** indicator to show the progress bar */
-    inProgress: {
+    loading: {
       type: Boolean,
       default: false,
     },
@@ -124,7 +124,7 @@
       </template>
 
       <div :class="['side-sheet__header__footer']">
-        <v-progress-linear v-if="inProgress" absolute indeterminate></v-progress-linear>
+        <v-progress-linear v-if="loading" absolute indeterminate></v-progress-linear>
       </div>
     </v-card-item>
     <!-- Start body -->

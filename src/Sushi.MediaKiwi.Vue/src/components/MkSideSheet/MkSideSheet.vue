@@ -24,7 +24,7 @@
     /** width of the sheet, ex. 20 */
     width: {
       type: Number,
-      default: 475,
+      default: 400,
     },
     /** height of the sheet, ex. 20px, 100vh */
     height: {
@@ -57,7 +57,7 @@
       default: false,
     },
     /** indicator to show the progress bar */
-    inProgress: {
+    loading: {
       type: Boolean,
       default: false,
     },
@@ -155,7 +155,7 @@
             :width="width"
             :sheet-color="sheetColor"
             :z-index="zIndex"
-            :in-progress="inProgress"
+            :loading="loading"
             :mobile="true"
             @closed="handleClose"
             @opened="handleOpen"
@@ -189,7 +189,7 @@
           :width="width"
           :sheet-color="sheetColor"
           :z-index="zIndex"
-          :in-progress="inProgress"
+          :loading="loading"
           :mobile="true"
           @closed="handleClose"
           @opened="handleOpen"
