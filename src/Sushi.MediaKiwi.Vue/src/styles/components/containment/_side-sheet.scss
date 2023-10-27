@@ -1,0 +1,7 @@
+.side-sheet {
+  &__footer {
+    &:empty {
+      display: none;
+    }
+  }
+}
