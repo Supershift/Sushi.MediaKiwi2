@@ -4,7 +4,7 @@ import { createApp } from "vue";
 import mediakiwi, { createAxiosClient, mediakiwiIconAliases, ConfigurationConnector, MediakiwiVueOptions } from "@supershift/mediakiwi-vue";
 
 // Import the mediakiwi stylesheet
-import "@supershift/mediakiwi-vue/styles";
+import "./styles/main.scss";
 import { container } from "tsyringe";
 import { i18n } from "i18next";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
