@@ -36,9 +36,10 @@
     // Alter the title of the last item in the collection
     if (customPageTitle.value && result && result[result.length - 1]) {
       result[result.length - 1].name = customPageTitle.value ?? result[result.length - 1].name;
-      // Reset the custom title
-      setCustomPageTitle();
     }
+
+    // Reset the custom title
+    setCustomPageTitle();
 
     return result;
   });
