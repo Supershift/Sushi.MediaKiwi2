@@ -1,12 +1,13 @@
-.v-radio{
-    &.v-radio--mediakiwi {
-        .v-selection-control {
-            &--disabled {
-                color: rgb(var(--v-theme-on-surface))
-            }
-            &__wrapper:not(.text-primary) {
-                color: rgb(var(--v-theme-on-surface)) !important; // text-primary is "selected", so not that one
-            }
-        }
+.v-radio {
+  &.v-radio--mediakiwi {
+    .v-selection-control {
+      &--disabled {
+        color: rgb(var(--v-theme-on-surface));
+      }
+
+      &__wrapper:not(.text-primary) {
+        color: rgb(var(--v-theme-on-surface)) !important; // text-primary is "selected", so not that one
+      }
     }
+  }
 }

@@ -1,9 +1,10 @@
 .v-form {
-    &--mediakiwi {
-        height: auto;
-        &.v-form--sticky{
-            height: inherit;
-        }
-        padding-top: 24px;
+  &--mediakiwi {
+    height: auto;
+    padding-top: 24px;
+
+    &.v-form--sticky {
+      height: inherit;
     }
+  }
 }

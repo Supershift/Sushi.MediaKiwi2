@@ -14,7 +14,7 @@
   $shadow-key-ambient-opacity: abstracts.$shadow-key-ambient-opacity,
   $shadow-key-umbra: abstracts.$shadow-key-umbra,
   $shadow-key-penumbra: abstracts.$shadow-key-penumbra,
-  $shadow-key-ambient: abstracts.$shadow-key-ambient,
+  $shadow-key-ambient: abstracts.$shadow-key-ambient
 );
 
 @use "./layout";
