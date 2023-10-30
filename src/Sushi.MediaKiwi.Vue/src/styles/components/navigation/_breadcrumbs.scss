@@ -2,13 +2,13 @@
 
 .v-breadcrumbs--mediakiwi {
   justify-content: flex-start;
+  transform: translateX(abstracts.$button-padding-x * -1);
 
   .v-btn {
     @include abstracts.typography("title", "large");
 
     &:not(.v-btn--active) {
       font-weight: 400;
-      padding-left: 0;
     }
 
     &.v-btn--active {
