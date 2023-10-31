@@ -22,14 +22,6 @@ if (!settings) {
 // Create the options object
 const mediakiwiOptions: MediakiwiVueOptions = { ...settings.mediaKiwi };
 
-/**
- * Set the portal title and logo using the MediaKiwi options.
- * Comment out the following lines due to the slot implementation in the App.vue
- * Both options can be used to set the title and logo.
- */
-// mediakiwiOptions.title = "MediaKiwi 2.0 - SampleWeb";
-// mediakiwiOptions.logo = "/logo128.webp";
-
 // import all views as models
 mediakiwiOptions.modules = import.meta.glob("./views/**/*.vue");
 

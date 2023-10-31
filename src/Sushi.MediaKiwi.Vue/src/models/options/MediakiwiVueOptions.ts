@@ -17,8 +17,4 @@ export interface MediakiwiVueOptions {
   /** Override default i18next options. Provided object will be merged with default options. */
   i18nextOptions?: InitOptions;
   i18nextCallback?: (instance: i18n) => void;
-  /** Sets the title to be displayed in the App bar */
-  title?: string;
-  /** Sets the logo to be displayed in the App bar */
-  logo?: string;
 }

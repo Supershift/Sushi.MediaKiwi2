@@ -10,7 +10,9 @@
 
   // define slots
   const slots = defineSlots<{
+    /** Slot to render the logo */
     logo?: (props: unknown) => never;
+    /** Slot to render the title the application, preferably v-toolbar-title */
     title?: (props: unknown) => never;
   }>();
 </script>
