@@ -22,9 +22,6 @@ if (!settings) {
 // Create the options object
 const mediakiwiOptions: MediakiwiVueOptions = { ...settings.mediaKiwi };
 
-// Set the portal title
-mediakiwiOptions.title = "MediaKiwi 2.0 - SampleWeb";
-
 // import all views as models
 mediakiwiOptions.modules = import.meta.glob("./views/**/*.vue");
 

@@ -80,7 +80,7 @@ export default {
     const router = createRouter(routerOptions);
 
     // register the router as dependency
-    registerRouter(container, router, options);
+    registerRouter(container, router);
 
     // create navigation client for msal
     const navigationClient = new CustomNavigationClient(router);
@@ -100,9 +100,6 @@ export default {
 
     // used for registering directives
     registerDirectives(app);
-
-    // Set the title of the application
-    options.title = options.title ?? "MediaKiwi 2.0";
 
     // provide the application with the mediakiwi configuration
     app.provide("mediakiwi", { ...options });
