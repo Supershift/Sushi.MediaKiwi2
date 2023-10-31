@@ -1,14 +1,18 @@
 <script setup lang="ts">
   import { MkNavigation, MkScreen, MkNavigationIcon, MkThemeToggle, MkAvatar, MkSuspense } from "@/components";
   import { useIsAuthenticated } from "@/composables/useIsAuthenticated";
-  import { MediakiwiVueOptions } from "@/models";
   import { useSnackbarStore } from "@/stores/snackbar";
-  import { inject } from "vue";
-  const mediakiwi = inject("mediakiwi") as MediakiwiVueOptions;
+  import MkLogoLockup from "./MkLogoLockup.vue";
 
   // inject dependencies
   const isAuthenticated = useIsAuthenticated();
   const snackbar = useSnackbarStore();
+
+  // define slots
+  const slots = defineSlots<{
+    logo?: (props: unknown) => never;
+    title?: (props: unknown) => never;
+  }>();
 </script>
 <template>
   <v-card>
@@ -16,8 +20,15 @@
       <mk-suspense>
         <v-app-bar>
           <mk-navigation-icon />
-          <v-toolbar-title v-if="isAuthenticated">{{ mediakiwi.title }}</v-toolbar-title>
-          <v-spacer v-else></v-spacer>
+          <mk-logo-lockup>
+            <template v-if="slots.logo" #logo>
+              <slot name="logo"></slot>
+            </template>
+            <template v-if="slots.title" #title>
+              <slot name="title"></slot>
+            </template>
+          </mk-logo-lockup>
+          <v-spacer></v-spacer>
           <mk-theme-toggle></mk-theme-toggle>
           <mk-avatar></mk-avatar>
         </v-app-bar>
