@@ -1,9 +1,10 @@
 import path from "path";
-import { defineConfig } from "vite";
+import { defineConfig, normalizePath } from "vite";
 import vuetify from "vite-plugin-vuetify";
 import vue from "@vitejs/plugin-vue";
 import dts from "vite-plugin-dts";
 import istanbul from "vite-plugin-istanbul";
+import { viteStaticCopy } from "vite-plugin-static-copy";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -11,6 +12,7 @@ export default defineConfig({
     vue(),
     dts({
       insertTypesEntry: true,
+      outputDir: "./lib",
     }),
     vuetify({
       autoImport: true,
@@ -25,6 +27,15 @@ export default defineConfig({
       extension: [".js", ".ts", ".vue"],
       requireEnv: false,
       cypress: true,
+    }),
+    viteStaticCopy({
+      targets: [
+        {
+          // https://github.com/mrmlnc/fast-glob#how-to-write-patterns-on-windows
+          src: normalizePath(path.resolve(__dirname, "./src/styles")),
+          dest: normalizePath(path.resolve(__dirname, "./lib")),
+        },
+      ],
     }),
   ],
   build: {

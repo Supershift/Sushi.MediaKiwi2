@@ -76,6 +76,7 @@ steps:
       SourceFolder: "src/Sushi.MediaKiwi.Vue"
       Contents: |
         dist/**
+        lib/**
         package.json
         README.md
       TargetFolder: "$(Build.ArtifactStagingDirectory)/mediakiwi-vue"

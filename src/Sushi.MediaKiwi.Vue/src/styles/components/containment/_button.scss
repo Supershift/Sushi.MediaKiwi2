@@ -5,7 +5,7 @@
     @include abstracts.typography("label", "large");
 
     &:not(.v-btn--icon) {
-      padding: 10px 12px;
+      padding: abstracts.$button-padding-x abstracts.$button-padding-y;
       text-transform: none;
       height: auto;
 

@@ -1,0 +1,26 @@
+// select menu is rendered in a seperate overlay
+.v-menu {
+  &--mediakiwi {
+    .v-select__content {
+      .v-list-item {
+        .v-list-item {
+          &__prepend {
+            margin-right: 16px;
+          }
+
+          &__overlay {
+            background: none;
+          }
+        }
+
+        &--active {
+          .v-list-item {
+            &__prepend {
+              color: rgb(var(--v-theme-primary));
+            }
+          }
+        }
+      }
+    }
+  }
+}

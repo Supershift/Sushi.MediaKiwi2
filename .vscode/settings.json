@@ -1,17 +1,17 @@
 {
-  "volar.inlayHints.eventArgumentInInlineHandlers": false,
-  "editor.formatOnSave": true,
-  "prettier.configPath": ".prettierrc.json",
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "azureFunctions.deploySubpath": "api",
   "azureFunctions.postDeployTask": "npm install (functions)",
   "azureFunctions.projectLanguage": "JavaScript",
   "azureFunctions.projectRuntime": "~4",
-  "debug.internalConsoleOptions": "neverOpen",
   "azureFunctions.preDeployTask": "npm prune (functions)",
-  "stylelint.validate": [
-    "css",
-    "scss"
-  ],
-  "dotnet.defaultSolution": "Sushi.MediaKiwi.sln"
+  "debug.internalConsoleOptions": "neverOpen",
+  "dotnet.defaultSolution": "Sushi.MediaKiwi.sln",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.stylelint": true
+  },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.configPath": ".prettierrc.json",
+  "stylelint.validate": ["css", "scss"],
+  "volar.inlayHints.eventArgumentInInlineHandlers": false
 }
