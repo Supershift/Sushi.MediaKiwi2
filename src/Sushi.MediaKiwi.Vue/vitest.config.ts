@@ -20,7 +20,6 @@ export default mergeConfig(
         junit: "test/unit/coverage/TEST-junit.xml",
       },
       coverage: {
-        enabled: true,
         provider: "istanbul",
         reporter: ["text", "cobertura", "json", ["html", { subdir: "html" }]],
         reportsDirectory: "test/unit/coverage",
