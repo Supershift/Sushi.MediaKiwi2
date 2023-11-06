@@ -12,7 +12,6 @@ export default defineConfig({
     vue(),
     dts({
       insertTypesEntry: true,
-      outputDir: "./lib",
     }),
     vuetify({
       autoImport: true,
