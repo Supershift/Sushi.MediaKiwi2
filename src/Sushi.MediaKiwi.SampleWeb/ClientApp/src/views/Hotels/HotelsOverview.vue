@@ -102,12 +102,14 @@
   <mk-table
     v-model:current-pagination="currentPagination"
     v-model:filters="filters"
-    new
     :api-result="hotels"
     :on-load="LoadData"
     :data="hotels?.result"
     :item-id="(item: Hotel) => item.id"
+    :new-item-button-title="t('New hotel')"
     item-view-id="HotelEdit"
+    new-button
+    only-emit-on-new
     title="Subtitle for the hotel list"
   >
     <template #toolbar>

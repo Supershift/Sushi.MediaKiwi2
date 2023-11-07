@@ -39,8 +39,12 @@
       sorting?: Sorting;
       /** */
       selection?: unknown[];
-      /** Displays new item button if set to true and itemViewId has a value */
-      new?: boolean;
+      /** Determines if the toolbar has a new button, default: false. */
+      newButton?: boolean;
+      /** Determines if we only want to emit instead of navigating to the given itemViewId */
+      onlyEmitOnNew?: boolean;
+      /** Overrides the "new item" button title */
+      newItemButtonTitle?: string;
       /** Callback invoked when the component needs new data, i.e. a filter changes, the current page changes, etc. */
       onLoad?: () => Promise<void>;
       /** Title specificly for the current table */
@@ -170,8 +174,14 @@
     <v-progress-linear v-if="inProgress" indeterminate absolute></v-progress-linear>
     <slot name="header"></slot>
 
-    <template v-if="(slots.toolbar || slots.overflowMenuActions || props.new || props.title) && props.itemViewId">
-      <MkToolbar :item-view-id="props.itemViewId" :new="props.new" :title="props.title">
+    <template v-if="(slots.toolbar || slots.overflowMenuActions || props.onlyEmitOnNew || props.title) && props.itemViewId">
+      <MkToolbar
+        :item-view-id="props.itemViewId"
+        :title="props.title"
+        :new-button="props.newButton"
+        :only-emit-on-new="props.onlyEmitOnNew"
+        :new-item-button-title="props.newItemButtonTitle"
+      >
         <template v-if="slots.toolbar" #toolbar>
           <slot name="toolbar"></slot>
         </template>
