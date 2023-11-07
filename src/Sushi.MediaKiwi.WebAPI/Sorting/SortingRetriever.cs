@@ -52,6 +52,20 @@ namespace Sushi.MediaKiwi.WebAPI.Sorting
         /// <summary>
         /// Gets <see cref="SortValues{T}"/> from the current <see cref="HttpContext"/>.
         /// </summary>
+        /// <returns>SortValues as set on context, or default if none found.</returns>
+        public SortValues<T> GetSorting<T>(Expression<Func<T, object?>> defaultSortField, SortDirection defaultDirection)
+        {
+            var result = GetSorting<T>();
+
+            if (result == null)
+                result = new SortValues<T>(defaultSortField, defaultDirection);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets <see cref="SortValues{T}"/> from the current <see cref="HttpContext"/>.
+        /// </summary>
         /// <returns></returns>
         public SortValues<T>? GetSorting<T>()
         {
@@ -64,7 +78,7 @@ namespace Sushi.MediaKiwi.WebAPI.Sorting
             }
 
             // try to convert to generic instance
-            if(candidate.SortField is Expression<Func<T, object>> sortField)
+            if(candidate.SortField is Expression<Func<T, object?>> sortField)
             {
                 return new SortValues<T>(sortField, candidate.Direction);
             }
