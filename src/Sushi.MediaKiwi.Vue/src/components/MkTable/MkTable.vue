@@ -40,11 +40,11 @@
       /** */
       selection?: unknown[];
       /** Determines if the toolbar has a new button, default: false. */
-      newButton?: boolean;
+      new?: boolean;
       /** Determines if we only want to emit instead of navigating to the given itemViewId */
-      onlyEmitOnNew?: boolean;
+      newEmit?: boolean;
       /** Overrides the "new item" button title */
-      newItemButtonTitle?: string;
+      newTitle?: string;
       /** Callback invoked when the component needs new data, i.e. a filter changes, the current page changes, etc. */
       onLoad?: () => Promise<void>;
       /** Title specificly for the current table */
@@ -68,6 +68,7 @@
     (e: "update:sorting", value?: Sorting): void;
     (e: "update:selection", value?: unknown[]): void;
     (e: "update:currentPagination", value: Paging): void;
+    (e: "click:new", value: string): void;
   }>();
 
   // define slots
@@ -174,13 +175,14 @@
     <v-progress-linear v-if="inProgress" indeterminate absolute></v-progress-linear>
     <slot name="header"></slot>
 
-    <template v-if="(slots.toolbar || slots.overflowMenuActions || props.onlyEmitOnNew || props.title) && props.itemViewId">
+    <template v-if="(slots.toolbar || slots.overflowMenuActions || props.newEmit || props.title) && props.itemViewId">
       <MkToolbar
         :item-view-id="props.itemViewId"
         :title="props.title"
-        :new-button="props.newButton"
-        :only-emit-on-new="props.onlyEmitOnNew"
-        :new-item-button-title="props.newItemButtonTitle"
+        :new="props.new"
+        :new-emit="props.newEmit"
+        :new-title="props.newTitle"
+        @click:new="emit('click:new', $event)"
       >
         <template v-if="slots.toolbar" #toolbar>
           <slot name="toolbar"></slot>

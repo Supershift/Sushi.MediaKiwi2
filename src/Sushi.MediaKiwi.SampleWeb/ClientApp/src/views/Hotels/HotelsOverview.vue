@@ -106,11 +106,12 @@
     :on-load="LoadData"
     :data="hotels?.result"
     :item-id="(item: Hotel) => item.id"
-    :new-item-button-title="t('New hotel')"
     item-view-id="HotelEdit"
-    new-button
-    only-emit-on-new
+    new
+    new-emit
+    :new-title="t('New hotel')"
     title="Subtitle for the hotel list"
+    @click:new="console.log('New Button Clicked: ' + $event)"
   >
     <template #toolbar>
       <v-btn>Knop 1</v-btn>

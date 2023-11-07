@@ -9,9 +9,9 @@
     /** ExternalId of the view instance to which the user is pushed when clicking a row. */
     itemViewId?: string;
     /** label for the title  */
-    title?: string;
+    newTitle?: string;
     /** Determines if we only want to emit instead of navigating to the given itemViewId */
-    onlyEmit?: boolean;
+    newEmit?: boolean;
   }>();
 
   // inject dependencies
@@ -24,7 +24,7 @@
 
   function onNewClick() {
     console.log(props);
-    if (props && props?.onlyEmit) {
+    if (props && props?.newEmit) {
       // emit event
       emit("click:new", props.itemViewId);
     } else {
@@ -49,5 +49,5 @@
 </script>
 
 <template>
-  <v-btn-primary :prepend-icon="IconsLibrary.plus" @click="onNewClick">{{ props.title ?? defaultT("New item") }}</v-btn-primary>
+  <v-btn-primary :prepend-icon="IconsLibrary.plus" @click="onNewClick">{{ props.newTitle ?? defaultT("New item") }}</v-btn-primary>
 </template>
