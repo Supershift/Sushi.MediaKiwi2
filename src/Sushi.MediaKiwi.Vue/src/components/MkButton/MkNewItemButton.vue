@@ -20,7 +20,9 @@
   const { defaultT } = await useI18next();
 
   // define events
-  const emit = defineEmits(["click:new"]);
+  const emit = defineEmits<{
+    (e: "click:new", value: string | undefined): void;
+  }>();
 
   function onNewClick() {
     console.log(props);

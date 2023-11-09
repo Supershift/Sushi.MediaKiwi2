@@ -36,7 +36,12 @@
   }>();
 
   // define events
-  const emit = defineEmits(["save", "undo", "delete", "click:new"]);
+  const emit = defineEmits<{
+    (e: "save"): void;
+    (e: "undo"): void;
+    (e: "delete"): void;
+    (e: "click:new", value: string | undefined): void;
+  }>();
 </script>
 
 <template>
