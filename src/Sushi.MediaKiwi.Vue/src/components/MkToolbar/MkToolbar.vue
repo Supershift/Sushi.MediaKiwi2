@@ -40,7 +40,7 @@
     (e: "save"): void;
     (e: "undo"): void;
     (e: "delete"): void;
-    (e: "click:new", value: string | undefined): void;
+    (e: "click:new", value?: string): void;
   }>();
 </script>
 

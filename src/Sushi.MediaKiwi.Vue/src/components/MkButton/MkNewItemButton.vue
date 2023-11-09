@@ -21,7 +21,7 @@
 
   // define events
   const emit = defineEmits<{
-    (e: "click:new", value: string | undefined): void;
+    (e: "click:new", value?: string): void;
   }>();
 
   function onNewClick() {

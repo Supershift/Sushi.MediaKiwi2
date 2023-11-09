@@ -68,7 +68,7 @@
     (e: "update:sorting", value?: Sorting): void;
     (e: "update:selection", value?: unknown[]): void;
     (e: "update:currentPagination", value: Paging): void;
-    (e: "click:new", value: string | undefined): void;
+    (e: "click:new", value?: string): void;
   }>();
 
   // define slots
