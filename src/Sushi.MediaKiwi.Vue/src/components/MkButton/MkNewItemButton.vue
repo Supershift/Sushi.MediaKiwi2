@@ -25,7 +25,6 @@
   }>();
 
   function onNewClick() {
-    console.log(props);
     if (props && props?.newEmit) {
       // emit event
       emit("click:new", props.itemViewId);
