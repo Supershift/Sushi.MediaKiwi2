@@ -5,19 +5,11 @@
   const { defaultT } = await useI18next();
 
   // define properties and events
-  withDefaults(
-    defineProps<{
-      title: string;
-
-      width?: string | number;
-      /** indicator to show the progress bar */
-      loading: boolean;
-    }>(),
-    {
-      width: 312,
-      loading: false,
-    }
-  );
+  defineProps<{
+    title: string;
+    /** indicator to show the progress bar */
+    loading: boolean;
+  }>();
 
   const emit = defineEmits<{
     (e: "update:modelValue", value: boolean): void;
