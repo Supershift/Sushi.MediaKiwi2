@@ -59,6 +59,8 @@ export default {
     const vuetify = createVuetify(vuetifyOptions);
     app.use(vuetify);
 
+    app.provide("vuetifyOptions", { ...vuetifyOptions });
+
     // Create an instance of Pinia
     app.use(pinia);
     console.log("pinia created");
