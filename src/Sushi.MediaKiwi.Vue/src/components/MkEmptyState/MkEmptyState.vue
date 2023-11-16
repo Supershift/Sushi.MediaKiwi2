@@ -1,16 +1,25 @@
 <script setup lang="ts">
   import { useI18next } from "@/composables";
+  import { MkNewItemButton } from "@/components";
   const { t } = await useI18next();
 
-  defineProps<{
+  const props = defineProps<{
     /** The title of the empty state */
     title?: string;
     /** The subtitle of the empty state */
     subtitle?: string;
+    /**  */
+    new?: boolean;
+    /** label for the title  */
+    itemViewId?: string;
+    /** label for the title  */
+    newTitle?: string;
+    /** Determines if we only want to emit instead of navigating to the given itemViewId */
+    newEmit?: boolean;
   }>();
 
   const emit = defineEmits<{
-    (e: "click:btn"): void;
+    (e: "click:new"): void;
   }>();
 
   // define slots
@@ -34,7 +43,9 @@
 
     <v-card-actions class="justify-center pt-5">
       <slot v-if="slots.actions" name="actions"></slot>
-      <v-btn-primary v-else @click="() => emit('click:btn')">Add</v-btn-primary>
+      <template v-if="props.new">
+        <MkNewItemButton :item-view-id="props.itemViewId" :title="props.newTitle" :new-emit="props.newEmit" @click:new="() => emit('click:new')" />
+      </template>
     </v-card-actions>
   </v-card>
 </template>
