@@ -211,22 +211,11 @@
     </div>
   </teleport>
 </template>
-<style lang="scss">
+<style lang="scss" scoped>
   @import "../../styles/themes/variables.scss";
   .side-sheet {
     &--mobile {
       height: 100vh;
-    }
-  }
-
-  // this is needed to override the default overlay color of vuetify
-  .v-overlay__scrim {
-    background: rgba(var(--v-theme-surface-1)) !important;
-  }
-  @media (max-width: $breakpoints-lg) {
-    .v-overlay__content {
-      right: 0;
-      top: 0;
     }
   }
 </style>
