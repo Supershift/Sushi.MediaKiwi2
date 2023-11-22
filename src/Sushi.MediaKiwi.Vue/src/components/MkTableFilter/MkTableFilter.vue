@@ -61,17 +61,19 @@
 
   /* Reads the value currently set in the filter input and sets it on the filter as the selected value. */
   function applyFilter() {
+    const copy = { ...props.modelValue };
+
     // get value and set it to selected filter values
     if (state.currentFilter !== undefined) {
       if (state.currentFilterValue !== undefined) {
-        props.modelValue[state.currentFilterKey!].selectedValue = state.currentFilterValue;
-      } else if (props.modelValue[state.currentFilterKey!]) {
+        copy[state.currentFilterKey!].selectedValue = state.currentFilterValue;
+      } else if (copy[state.currentFilterKey!]) {
         // delete the filter value if we had a value, but it is now undefined
-        props.modelValue[state.currentFilterKey!].selectedValue = undefined;
+        copy[state.currentFilterKey!].selectedValue = undefined;
       }
     }
     // emit an event telling the selected filters have changed
-    emit("update:modelValue", props.modelValue);
+    emit("update:modelValue", copy);
 
     closeFilter();
     closeMenu();
@@ -79,11 +81,13 @@
 
   /* Removed the filterItem id from the modelValue collection. */
   function removeFilter(key: string) {
+    const copy = { ...props.modelValue };
+
     // delete the filter value if we had a value, but it is now undefined
-    props.modelValue[key].selectedValue = undefined;
+    copy[key].selectedValue = undefined;
 
     // emit an event telling the selected filters have changed
-    emit("update:modelValue", props.modelValue);
+    emit("update:modelValue", copy);
   }
 
   function closeMenu() {
@@ -162,19 +166,22 @@
             </v-list>
 
             <!-- filter compoment -->
-            <MkDialogCard v-else-if="state.currentFilter" :title="state.currentFilter.title" @click:close="closeMenu">
-              <template #intro>
-                <p>Plase enter the correct item</p>
-              </template>
+            <template v-else-if="state.currentFilter">
               <Suspense>
-                <component :is="GetComponentForFilterType(state.currentFilter)" v-model="state.currentFilterValue" :table-filter-item="state.currentFilter" />
-                <!-- loading state via #fallback slot -->
-                <template #fallback> Loading filter... </template>
+                <component
+                  :is="GetComponentForFilterType(state.currentFilter)"
+                  v-model="state.currentFilterValue"
+                  :table-filter-item="state.currentFilter"
+                  @click:close="closeMenu"
+                  @update:model-value="applyFilter"
+                />
+                <template #fallback>
+                  <v-card>
+                    {{ defaultT("Loading filter...") }}
+                  </v-card>
+                </template>
               </Suspense>
-              <template #actions>
-                <v-btn @click="applyFilter()">{{ defaultT("Apply") }}</v-btn>
-              </template>
-            </MkDialogCard>
+            </template>
           </v-menu>
 
           <!-- Chips -->
@@ -220,4 +227,3 @@
   padding-bottom: 6px;
 }
 </stlye>
-@/models/keyboard/KeyboardShortcutCollection

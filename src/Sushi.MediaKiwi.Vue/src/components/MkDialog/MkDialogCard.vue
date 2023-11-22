@@ -1,18 +1,31 @@
 <script setup lang="ts">
   import { useI18next } from "@/composables";
+  import { computed } from "vue";
 
   // inject dependencies
   const { defaultT } = await useI18next();
 
   // define properties and events
-  defineProps<{
-    title: string;
-    /** indicator to show the progress bar */
-    loading: boolean;
-  }>();
+  const props = withDefaults(
+    defineProps<{
+      /** Title of the dialog */
+      title?: string;
+      /** indicator to show the progress bar */
+      loading?: boolean;
+      /** hides the header  */
+      hideHeader?: boolean;
+      /** Enables the padding around the content box */
+      removeContentPadding?: boolean;
+      /** */
+      contentClasses?: string;
+    }>(),
+    {
+      title: "",
+      contentClasses: "px-6 py-2",
+    }
+  );
 
   const emit = defineEmits<{
-    (e: "update:modelValue", value: boolean): void;
     (e: "click:close"): void;
   }>();
 
@@ -34,14 +47,14 @@
 
 <template>
   <v-card class="mk-dialog-card" :class="{ 'text-center': slots.heroIcon }" rounded="xl" variant="elevated">
-    <div class="mk-dialog-card__header pa-6">
+    <div v-if="!hideHeader" class="mk-dialog-card__header pa-6">
       <slot name="heroIcon"></slot>
       <v-card-title v-if="title" tag="h6" class="text-headline-small pa-0 mb-4"> {{ title }} </v-card-title>
       <slot name="intro"></slot>
       <v-progress-linear v-if="loading" class="mk-dialog-card__header__loader" absolute indeterminate></v-progress-linear>
     </div>
-    <v-divider />
-    <div class="mk-dialog-card__content py-2 px-6">
+    <v-divider v-if="!hideHeader" />
+    <div class="mk-dialog-card__content" :class="contentClasses">
       <slot></slot>
     </div>
     <v-divider />
