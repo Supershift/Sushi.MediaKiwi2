@@ -3,7 +3,7 @@
   import { TableFilter } from "@/models/table/TableFilter.js";
   import { TableFilterItem } from "@/models/table/TableFilterItem.js";
   import { TableFilterValue } from "@/models/table/TableFilterValue.js";
-  import { MkTableFilterDatePicker, MkTableFilterRadioGroup, MkTableFilterSelect, MkTableFilterTextField } from ".";
+  import { MkTableFilterDateRangePicker, MkTableFilterRadioGroup, MkTableFilterSelect, MkTableFilterTextField } from ".";
   import { DefineComponent } from "vue";
   import { TableFilterType, IconsLibrary } from "@/models";
   import { MkInputChip } from "@/components/MkChip";
@@ -105,8 +105,8 @@
 
   function GetComponentForFilterType(item: TableFilterItem): Component | DefineComponent {
     switch (item.type) {
-      case TableFilterType.DatePicker:
-        return MkTableFilterDatePicker;
+      case TableFilterType.DateRange:
+        return MkTableFilterDateRangePicker;
       case TableFilterType.RadioGroup:
         return MkTableFilterRadioGroup;
       case TableFilterType.Select:

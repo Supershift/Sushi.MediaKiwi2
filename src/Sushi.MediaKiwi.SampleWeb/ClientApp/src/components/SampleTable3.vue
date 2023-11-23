@@ -53,7 +53,7 @@
     },
     date: {
       title: "Dates",
-      type: TableFilterType.DatePicker,
+      type: TableFilterType.DateRange,
     },
   });
 
