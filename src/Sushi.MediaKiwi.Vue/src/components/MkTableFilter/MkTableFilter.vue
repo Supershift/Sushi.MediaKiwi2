@@ -12,6 +12,7 @@
   import { useKeyboardShortcuts } from "@/composables/useKeyboardShortcuts";
   import { onDeactivated } from "vue";
   import { KeyboardShortcutCollection } from "@/models/keyboard/KeyboardShortcutCollection";
+  import MkTableFilterDatePicker from "./MkTableFilterDatePicker.vue";
 
   // define properties and events
   const props = defineProps<{
@@ -105,14 +106,16 @@
 
   function GetComponentForFilterType(item: TableFilterItem): Component | DefineComponent {
     switch (item.type) {
-      case TableFilterType.DateRange:
-        return MkTableFilterDateRangePicker;
+      case TableFilterType.DatePicker:
+        return MkTableFilterDatePicker;
       case TableFilterType.RadioGroup:
         return MkTableFilterRadioGroup;
       case TableFilterType.Select:
         return MkTableFilterSelect;
       case TableFilterType.TextField:
         return MkTableFilterTextField;
+      case TableFilterType.DateRange:
+        return MkTableFilterDateRangePicker;
       case TableFilterType.Custom:
         if (item.component) return defineAsyncComponent(item.component);
         else throw new Error(`No component found for filter type ${item.type}, add a component to the filter item.`);

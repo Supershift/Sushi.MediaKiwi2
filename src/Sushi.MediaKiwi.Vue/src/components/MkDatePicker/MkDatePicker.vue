@@ -52,6 +52,11 @@
       // Assign it back to the model
       model.value = items;
     }
+
+    // When the model is not an array, make it an array
+    if (!Array.isArray(model.value)) {
+      model.value = [model.value];
+    }
   }
 </script>
 
