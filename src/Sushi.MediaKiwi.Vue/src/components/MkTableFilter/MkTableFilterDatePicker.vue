@@ -1,15 +1,7 @@
 <script setup lang="ts">
-  import MkDialogCard from "../MkDialog/MkDialogCard.vue";
   import { TableFilterItem, TableFilterValue } from "@/models";
   import { ref } from "vue";
-  import { useI18next } from "@/composables";
-  import { useLocale } from "vuetify";
-
-  // inject dependencies
-  const { i18next, defaultT, t, formatDate } = await useI18next();
-  const { current } = useLocale();
-  // TODO There needs to be a better way to set the locale through the custom i18n plugin
-  current.value = i18next.value.language;
+  import { MkDatePresetMenu } from "../MkDatePresetMenu";
 
   const props = defineProps<{
     modelValue: TableFilterValue;
@@ -22,25 +14,18 @@
   }>();
 
   // state
-  const model = ref(props.modelValue?.value);
+  const model = ref(props.modelValue);
 
   function applyFilter() {
     emit("update:modelValue", {
-      title: formatDate.value(model.value),
-      value: model.value,
+      title: model.value.title,
+      value: model.value.value,
     });
   }
 </script>
 
 <template>
-  <MkDialogCard hide-header remove-content-padding content-classes="py-2" @click:close="() => emit('click:close')">
-    <template #default>
-      <v-date-picker v-model="model" :title="t('DatePickerTitle', 'Select date')" :header="t('DatePickerHeader', 'Enter Date')"> </v-date-picker>
-    </template>
-    <template #actions>
-      <v-btn @click="applyFilter">{{ defaultT("Apply") }}</v-btn>
-    </template>
-  </MkDialogCard>
+  <MkDatePresetMenu v-model="model" @update:model-value="applyFilter" />
 </template>
 
 <style>

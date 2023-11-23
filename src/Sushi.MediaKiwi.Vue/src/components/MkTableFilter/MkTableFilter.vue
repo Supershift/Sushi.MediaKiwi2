@@ -9,7 +9,6 @@
   import { MkInputChip } from "@/components/MkChip";
   import { defineAsyncComponent } from "vue";
   import { useI18next } from "@/composables/useI18next";
-  import { MkDialogCard } from "@/components/MkDialog";
   import { useKeyboardShortcuts } from "@/composables/useKeyboardShortcuts";
   import { onDeactivated } from "vue";
   import { KeyboardShortcutCollection } from "@/models/keyboard/KeyboardShortcutCollection";
