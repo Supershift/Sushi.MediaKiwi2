@@ -20,9 +20,13 @@ import { registerAxios } from "./helpers/registerAxios";
 import i18next, { tokenStore } from "./plugins/i18next";
 import { registerIcons } from "./helpers/registerIcons";
 import { registerDirectives } from "./helpers/registerDirectives";
+import { useDeepMerge } from "./composables/useDeepMerge";
 
 export default {
   install(app: App, options: MediakiwiVueOptions): void {
+    // inject dependencies
+    const { mergeDeep } = useDeepMerge();
+
     // register options
     registerOptions(container, options);
 
@@ -51,7 +55,7 @@ export default {
     let vuetifyOptions: VuetifyOptions;
     if (options.vuetifyOptions !== undefined) {
       // merge default options with custom options, if custom options is provided
-      vuetifyOptions = { ...defaultVuetifyOptions, ...options.vuetifyOptions };
+      vuetifyOptions = mergeDeep(defaultVuetifyOptions, options.vuetifyOptions);
     } else {
       vuetifyOptions = defaultVuetifyOptions;
     }

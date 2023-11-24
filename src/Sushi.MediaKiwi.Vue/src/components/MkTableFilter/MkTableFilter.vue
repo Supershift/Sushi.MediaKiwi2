@@ -144,7 +144,7 @@
 </script>
 
 <template>
-  <v-card class="mk-table-filter mb-4" variant="flat" rounded="10" color="surface1">
+  <v-card class="mk-table-filter mb-4" variant="flat" rounded="10">
     <v-container fluid>
       <v-row class="pb-2">
         <template v-if="modelValue">
@@ -219,5 +219,9 @@
 .v-row {
   padding-bottom: 6px;
 }
+
+.mk-table-filter {
+  background-color: rgb(var(--v-theme-surface1));
+  color: rgb(var(--v-theme-on-surface1));
+}
 </stlye>
-@/models/keyboard/KeyboardShortcutCollection
