@@ -8,7 +8,7 @@ import { createVuetify, type VuetifyOptions } from "vuetify";
 import { msalPlugin } from "./plugins/msalPlugin";
 import { CustomNavigationClient } from "./router/navigationClient";
 import { addCheckIsAuthenticated } from "./router/checkIsAuthenticated";
-import defaultVuetifyOptions from "./plugins/vuetify";
+import { defaultVuetifyOptions } from "./plugins/vuetify";
 import { identity } from "./identity";
 import { container } from "tsyringe";
 import { registerServices } from "./helpers/registerServices";
@@ -120,4 +120,6 @@ export * from "@/stores";
 
 export * from "@/router";
 
-export * from "@/plugins/icons/icons";
+export * from "@/plugins/icons";
+
+export * from "@/plugins/vuetify";
