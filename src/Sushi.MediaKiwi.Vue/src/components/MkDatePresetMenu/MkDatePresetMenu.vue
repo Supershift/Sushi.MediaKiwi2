@@ -1,11 +1,11 @@
 <script setup lang="ts">
-  import { useDateRange } from "@/composables/useDateRange";
+  import { useDatePresets } from "@/composables/useDatePresets";
   import { useI18next } from "@/composables/useI18next";
   import { DateRange } from "@/models/ranges";
   import { reactive } from "vue";
   import { MkDatePicker } from "../MkDatePicker";
 
-  const { presets } = useDateRange();
+  const { presets } = useDatePresets();
   const { formatMonth, defaultT, formatDate } = await useI18next();
   const defaultLastXDays = "Last {{duration}} days";
 
