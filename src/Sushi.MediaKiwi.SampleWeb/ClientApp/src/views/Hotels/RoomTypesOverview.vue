@@ -49,5 +49,5 @@
     </template>
   </mk-table>
 
-  <MkEmptyState v-else new item-view-id="HotelEdit"></MkEmptyState>
+  <MkEmptyState v-else new item-view-id="HotelEdit" new-title="Test Button" title="Test empty list title"></MkEmptyState>
 </template>
