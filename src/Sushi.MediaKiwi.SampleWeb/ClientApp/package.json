@@ -49,7 +49,7 @@
   },
   "dependencies": {
     "@azure/msal-browser": "^2.33.0",
-    "axios": "^1.3.2",
+    "axios": "^1.6.0",
     "pinia": "^2.0.0-rc.10",
     "rollup-plugin-typescript2": "^0.34.1",
     "vite-plugin-dts": "^2.0.2",
