@@ -164,5 +164,8 @@ export const GlobalConfiguration: VuetifyOptions = {
     VForm: {
       class: "v-form--mediakiwi",
     },
+    VDatePicker: {
+      class: "v-date-picker--mediakiwi",
+    },
   },
 };

@@ -60,18 +60,22 @@ export async function useI18next(scope?: View | string) {
 
   // format datetime
   const formatDateTimeInternal = (date: string | Date): string => {
-    return formatDateTimeGeneric(date, { dateStyle: "short", timeStyle: "short" });
+    return formatDateTimeGenericInternal(date, { dateStyle: "short", timeStyle: "short" });
   };
 
   const formatDateInternal = (date: string | Date): string => {
-    return formatDateTimeGeneric(date, { dateStyle: "short" });
+    return formatDateTimeGenericInternal(date, { dateStyle: "short" });
   };
 
   const formatTimeInternal = (date: string | Date): string => {
-    return formatDateTimeGeneric(date, { timeStyle: "short" });
+    return formatDateTimeGenericInternal(date, { timeStyle: "short" });
   };
 
-  const formatDateTimeGeneric = (date: string | Date, options: Intl.DateTimeFormatOptions): string => {
+  const formatMonthInternal = (date: string | Date): string => {
+    return formatDateTimeGenericInternal(date, { month: "long" });
+  };
+
+  const formatDateTimeGenericInternal = (date: string | Date, options: Intl.DateTimeFormatOptions): string => {
     // parse or cast to date, depending on parameter type
     let dateValue: Date;
     if (typeof date === "string") {
@@ -86,6 +90,8 @@ export async function useI18next(scope?: View | string) {
   const formatDateTime = computed(() => formatDateTimeInternal);
   const formatDate = computed(() => formatDateInternal);
   const formatTime = computed(() => formatTimeInternal);
+  const formatMonth = computed(() => formatMonthInternal);
+  const formatDateTimeGeneric = computed(() => formatDateTimeGenericInternal);
 
   // number formatting
   const formatNumberInternal = (value: number): string => {
@@ -115,5 +121,8 @@ export async function useI18next(scope?: View | string) {
     formatTime,
     formatNumber,
     formatMoneyValue,
+    /**  */
+    formatMonth,
+    formatDateTimeGeneric,
   };
 }

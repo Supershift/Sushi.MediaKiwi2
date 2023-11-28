@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { computed, ref } from "vue";
-  import type { TableMap, TableFilter, Sorting } from "@supershift/mediakiwi-vue";
+  import type { TableMap, TableFilter, Sorting, Paging } from "@supershift/mediakiwi-vue";
   import { MkTable, TableFilterType, SortDirection, IconsLibrary, MkOverflowMenuIcon } from "@supershift/mediakiwi-vue";
   import type { ISampleData } from "./ISampleData";
   import { SampleDataService } from "./SampleDataService";
@@ -23,6 +23,8 @@
       },
     ],
   };
+
+  const currentPagination = ref<Paging>({});
 
   // define filters
   const filters = ref<TableFilter>({
@@ -51,8 +53,12 @@
       ],
       type: TableFilterType.RadioGroup,
     },
-    date: {
+    dates: {
       title: "Dates",
+      type: TableFilterType.DateRange,
+    },
+    date: {
+      title: "Date",
       type: TableFilterType.DatePicker,
     },
   });
@@ -94,6 +100,7 @@
     v-model:sorting="selectedSortOption"
     v-model:selection="selectedTableRows"
     v-model:filters="filters"
+    v-model:current-pagination="currentPagination"
     new
     :table-map="myMap"
     :data="sampleData"
