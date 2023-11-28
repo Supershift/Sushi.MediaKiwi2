@@ -5,13 +5,33 @@
   import { reactive } from "vue";
   import { MkDatePicker } from "../MkDatePicker";
 
-  const { presets } = useDatePresets();
+  const props = withDefaults(
+    defineProps<{
+      modelValue: { value: any[]; title: string };
+      /**
+       * Collection of days representing days in the past
+       * @example [7, 28, 90, 365]
+       */
+      days?: Array<number>;
+      /**
+       * Collection of months representing months in the past
+       * Zero representing the current month
+       * @example [0, 1, 2]
+       */
+      months?: number[];
+    }>(),
+    {
+      days: () => [7, 28, 90, 365],
+      months: () => [0, 1, 2],
+    }
+  );
+
+  const { presets } = useDatePresets({
+    dayPresets: props.days,
+    monthPresets: props.months,
+  });
   const { formatMonth, defaultT, formatDate } = await useI18next();
   const defaultLastXDays = "Last {{duration}} days";
-
-  const props = defineProps<{
-    modelValue: { value: any[]; title: string };
-  }>();
 
   const state = reactive({
     datePicker: false,

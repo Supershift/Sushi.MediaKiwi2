@@ -3,18 +3,25 @@ import { DateRange } from "@/models/ranges/DateRange";
 import { useDayjs } from "./useDayjs";
 
 type DatePresetOptions = {
-  dayOptions: number[];
-  monthOptions: number[];
+  /**
+   * Collection of days representing days in the past
+   * @example [7, 28, 90, 365]
+   */
+  dayPresets: number[];
+  /**
+   * Collection of months representing months in the past
+   * Zero besed, representing the current month
+   * @example [0, 1, 2] Current month, last month, 2 months ago
+   */
+  monthPresets: number[];
 };
 
-export function useDatePresets(options?: DatePresetOptions) {
+export function useDatePresets(options: DatePresetOptions) {
   // refs
   const { currentDate, substractDate, startOf, endOf } = useDayjs();
-  const { dayOptions, monthOptions } = options || { dayOptions: [7, 28, 90, 365], monthOptions: [0, 1, 2] };
+  const { dayPresets, monthPresets } = options;
 
-  /**
-   * Preset ranges
-   */
+  /** Preset ranges */
   const presets = computed(() => {
     return {
       days: getPreset("day"),
@@ -35,7 +42,7 @@ export function useDatePresets(options?: DatePresetOptions) {
 
     if (type === "day") {
       // Last x days
-      for (const day of dayOptions) {
+      for (const day of dayPresets) {
         const current = substractDate(start, day, "day");
         result.push({
           start: current,
@@ -48,7 +55,7 @@ export function useDatePresets(options?: DatePresetOptions) {
       result.sort((a, b) => b.start.getTime() - a.start.getTime());
     } else if (type === "month") {
       // Add current and last 2 months
-      for (const month of monthOptions) {
+      for (const month of monthPresets) {
         const current = substractDate(start, month, "month");
         const m = startOf(current, "month");
 
