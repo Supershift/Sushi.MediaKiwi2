@@ -25,7 +25,7 @@ import { useDeepMerge } from "./composables/useDeepMerge";
 export default {
   install(app: App, options: MediakiwiVueOptions): void {
     // inject dependencies
-    const { mergeDeep } = useDeepMerge();
+    const { deepMerge } = useDeepMerge();
 
     // register options
     registerOptions(container, options);
@@ -55,7 +55,7 @@ export default {
     let vuetifyOptions: VuetifyOptions;
     if (options.vuetifyOptions !== undefined) {
       // merge default options with custom options, if custom options is provided
-      vuetifyOptions = mergeDeep(defaultVuetifyOptions, options.vuetifyOptions);
+      vuetifyOptions = deepMerge(defaultVuetifyOptions, options.vuetifyOptions);
     } else {
       vuetifyOptions = defaultVuetifyOptions;
     }

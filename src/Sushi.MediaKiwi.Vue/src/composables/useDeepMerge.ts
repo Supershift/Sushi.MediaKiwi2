@@ -1,3 +1,42 @@
+/**
+ * Utility to recursively merges multiple objectes into a single object. Retaining all properties and nested objects.
+ * @example
+ * const obj1 = {
+ *   foo: {
+ *     prop1: 42,
+ *   },
+ * };
+ *
+ * const obj2 = {
+ *   foo: {
+ *     prop2: 21,
+ *   },
+ *   bar: {
+ *     prop3: 10,
+ *   },
+ * };
+ *
+ * When using DeepMerge:
+ * const result = {
+ *   foo: {
+ *     prop1: 42,
+ *     prop2: 21,    // `obj2.foo` got merged into `obj1.foo`.
+ *   },
+ *   bar: {
+ *     prop3: 10,
+ *   },
+ * };
+ *
+ * Regular Shallow Merge when using Object.assign or the spread operator (...):
+ * const result = {
+ *   foo: {          // `foo` got overwritten with the value of `obj2`
+ *     prop2: 21,
+ *   },
+ *   bar: {
+ *     prop3: 10,
+ *   },
+ * };
+ */
 export function useDeepMerge() {
   /**
    * Check if the input item is an object
@@ -9,11 +48,12 @@ export function useDeepMerge() {
   }
 
   /**
-   * Recursivly deep merges two objects
-   * @param target
-   * @param ...sources
+   * Utility function to recursively merge `target` and `source` into a single object.
+   * Where the Spread operator {...} only performs a shallow merge, this function performs a deep merge, combining nested objects and their properties.
+   * @param target The target object into which the `source` object will be merged. If `source` is falsy (null or undefined), the function returns the `target` object without any modifications.
+   * @param source The source object whose properties will be merged into the `target` object. If `source` is falsy, the function returns the `target` object without any modifications.
    */
-  function mergeDeep(target: any, source: any): any {
+  function deepMerge(target: any, source: any): any {
     if (!source) {
       return target;
     }
@@ -30,7 +70,7 @@ export function useDeepMerge() {
           }
 
           // Merge the source value to the target value (recursive)
-          mergeDeep(target[key], source[key]);
+          deepMerge(target[key], source[key]);
         } else {
           // Set the value on the target object
           Object.assign(target, { [key]: source[key] });
@@ -44,5 +84,5 @@ export function useDeepMerge() {
     return target;
   }
 
-  return { isObject, mergeDeep };
+  return { isObject, deepMerge };
 }
