@@ -21,4 +21,4 @@ const defaultVuetifyOptions = <VuetifyOptions>{
   icons: MediakiwiIconOptions,
 };
 
-export default defaultVuetifyOptions;
+export { defaultVuetifyOptions };
