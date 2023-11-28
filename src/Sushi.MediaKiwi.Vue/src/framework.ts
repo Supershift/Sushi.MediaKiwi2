@@ -8,7 +8,7 @@ import { createVuetify, type VuetifyOptions } from "vuetify";
 import { msalPlugin } from "./plugins/msalPlugin";
 import { CustomNavigationClient } from "./router/navigationClient";
 import { addCheckIsAuthenticated } from "./router/checkIsAuthenticated";
-import defaultVuetifyOptions from "./plugins/vuetify";
+import { defaultVuetifyOptions } from "./plugins/vuetify";
 import { identity } from "./identity";
 import { container } from "tsyringe";
 import { registerServices } from "./helpers/registerServices";
@@ -20,9 +20,13 @@ import { registerAxios } from "./helpers/registerAxios";
 import i18next, { tokenStore } from "./plugins/i18next";
 import { registerIcons } from "./helpers/registerIcons";
 import { registerDirectives } from "./helpers/registerDirectives";
+import { useDeepMerge } from "./composables/useDeepMerge";
 
 export default {
   install(app: App, options: MediakiwiVueOptions): void {
+    // inject dependencies
+    const { deepMerge } = useDeepMerge();
+
     // register options
     registerOptions(container, options);
 
@@ -51,7 +55,7 @@ export default {
     let vuetifyOptions: VuetifyOptions;
     if (options.vuetifyOptions !== undefined) {
       // merge default options with custom options, if custom options is provided
-      vuetifyOptions = { ...defaultVuetifyOptions, ...options.vuetifyOptions };
+      vuetifyOptions = deepMerge(defaultVuetifyOptions, options.vuetifyOptions);
     } else {
       vuetifyOptions = defaultVuetifyOptions;
     }
@@ -120,4 +124,6 @@ export * from "@/stores";
 
 export * from "@/router";
 
-export * from "@/plugins/icons/icons";
+export * from "@/plugins/icons";
+
+export * from "@/plugins/vuetify";

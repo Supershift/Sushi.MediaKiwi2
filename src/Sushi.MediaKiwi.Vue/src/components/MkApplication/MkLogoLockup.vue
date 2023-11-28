@@ -8,7 +8,7 @@
   }>();
 </script>
 <template>
-  <div class="mk-logo-lockup pl-5 py-3">
+  <div class="mk-logo-lockup py-3">
     <slot v-if="slots.logo" name="logo"></slot>
   </div>
 

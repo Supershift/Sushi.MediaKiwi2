@@ -113,6 +113,6 @@
   }
 
   .breadcrumbs-container {
-    background-color: rgb(var(--v-theme-surface));
+    background-color: inherit;
   }
 </style>

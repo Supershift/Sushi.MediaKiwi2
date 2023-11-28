@@ -1,6 +1,6 @@
 {
   "name": "@supershift/mediakiwi-vue",
-  "version": "0.1.0-beta.9",
+  "version": "0.1.0-beta.10",
   "description": "Vue 3 Library for the MediaKiwi Portal Builder",
   "scripts": {
     "build": "vite build --mode development",
@@ -37,11 +37,11 @@
       "import": "./dist/mediakiwi-vue.css",
       "require": "./dist/mediakiwi-vue.css"
     },
+    "./styles/*": "./lib/styles/*",
     "./styles/abstracts": "./lib/styles/abstracts/index",
     "./styles/base": "./lib/styles/base/index",
     "./styles/components": "./lib/styles/components/index",
     "./styles/layout": "./lib/styles/layout/index",
-    "./styles/themes": "./lib/styles/themes/index",
     "./styles/views": "./lib/styles/views/index"
   },
   "types": "./dist/main.d.ts",

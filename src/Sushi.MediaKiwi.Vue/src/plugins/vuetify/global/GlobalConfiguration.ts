@@ -9,7 +9,7 @@ export const InputVariant = "outlined";
  * Global configuration for Vuetify
  * https://vuetifyjs.com/en/features/global-configuration/
  */
-export const globalConfiguration: VuetifyOptions = {
+export const GlobalConfiguration: VuetifyOptions = {
   aliases: {
     // Create an alias, so we can use <v-btn-primary> instead of <v-btn color="primary" variant="flat">
     VBtnPrimary: VBtn,
