@@ -1,20 +1,26 @@
 <script setup lang="ts">
-  import type { TableFilterItem } from "@supershift/mediakiwi-vue";
+  import { MkDialogCard } from "@supershift/mediakiwi-vue";
+  import { useI18next, type TableFilterItem } from "@supershift/mediakiwi-vue";
   import type { TableFilterValue } from "@supershift/mediakiwi-vue";
   import { reactive } from "vue";
+
+  // inject dependencies
+  const { defaultT } = await useI18next();
 
   const props = defineProps<{
     tableFilterItem: TableFilterItem;
     modelValue: TableFilterValue;
   }>();
 
-  const refFullName = reactive(props.modelValue?.value ?? { firstName: "", surName: "" });
-
   const emit = defineEmits<{
     (e: "update:modelValue", value: TableFilterValue): void;
+    (e: "click:close"): void;
   }>();
 
-  function onChange() {
+  // state
+  const refFullName = reactive(props.modelValue?.value ?? { firstName: "", surName: "" });
+
+  function applyFilter() {
     emit("update:modelValue", {
       title: refFullName.firstName + " " + refFullName.surName,
       value: refFullName,
@@ -23,7 +29,16 @@
 </script>
 
 <template>
-  <v-text-field v-model="refFullName.firstName" label="Voornaam" @update:model-value="onChange"> </v-text-field>
-  <v-spacer></v-spacer>
-  <v-text-field v-model="refFullName.surName" label="Achternaam" @update:model-value="onChange"> </v-text-field>
+  <MkDialogCard :title="tableFilterItem.title" content-classes="pa-6 pb-0" @click:close="() => emit('click:close')">
+    <template #intro> Please enter the correct name </template>
+    <template #default>
+      <v-form>
+        <v-text-field v-model="refFullName.firstName" label="Voornaam" />
+        <v-text-field v-model="refFullName.surName" label="Achternaam" />
+      </v-form>
+    </template>
+    <template #actions>
+      <v-btn @click="applyFilter">{{ defaultT("Apply") }}</v-btn>
+    </template>
+  </MkDialogCard>
 </template>
