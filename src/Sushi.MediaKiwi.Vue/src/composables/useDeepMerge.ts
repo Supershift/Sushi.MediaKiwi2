@@ -50,6 +50,7 @@ export function useDeepMerge() {
   /**
    * Utility function to recursively merge `target` and `source` into a single object.
    * Where the Spread operator {...} only performs a shallow merge, this function performs a deep merge, combining nested objects and their properties.
+   * When a property exists on both the `target` and `source` objects, the value of the `source` object will be used.
    * @param target The target object into which the `source` object will be merged. If `source` is falsy (null or undefined), the function returns the `target` object without any modifications.
    * @param source The source object whose properties will be merged into the `target` object. If `source` is falsy, the function returns the `target` object without any modifications.
    */
