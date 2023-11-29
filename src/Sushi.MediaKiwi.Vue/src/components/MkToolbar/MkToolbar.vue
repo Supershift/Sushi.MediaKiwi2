@@ -61,7 +61,7 @@
 
           <!-- Render the new button when the prop is set -->
           <template v-if="props?.new">
-            <MkNewItemButton :item-view-id="props.itemViewId" :title="props.newTitle" :new-emit="props.newEmit" @click:new="emit('click:new', $event)" />
+            <MkNewItemButton :item-view-id="props.itemViewId" :new-title="props.newTitle" :new-emit="props.newEmit" @click:new="emit('click:new', $event)" />
           </template>
 
           <MkOverflowMenuIcon v-if="slots.overflowMenuActions">
