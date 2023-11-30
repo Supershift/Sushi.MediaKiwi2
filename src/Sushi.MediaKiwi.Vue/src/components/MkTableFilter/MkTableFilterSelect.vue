@@ -18,7 +18,7 @@
   }>();
 
   // state
-  const model = ref(props.modelValue?.value);
+  const model = ref(props.modelValue);
 
   function applyFilter() {
     emit("update:modelValue", {
