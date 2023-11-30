@@ -1,4 +1,4 @@
-@use "vuetify/styles/settings/variables" as vuetifyVariables;
+@use "vuetify/settings" as vuetify;
 
 .v-toolbar {
   &--mediakiwi {
@@ -9,7 +9,7 @@
       background-color: rgb(var(--v-theme-background));
     }
 
-    @media #{map-get(vuetifyVariables.$display-breakpoints, 'md-and-up')} {
+    @media #{map-get(vuetify.$display-breakpoints, 'md-and-up')} {
       .v-toolbar__content {
         padding: 0 32px 0 16px;
       }
