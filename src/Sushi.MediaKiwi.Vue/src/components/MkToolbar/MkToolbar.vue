@@ -50,7 +50,7 @@
       <v-row v-if="slots.header" class="justify-end">
         <slot name="header"></slot>
       </v-row>
-      <v-row v-if="slots.toolbar || slots.overflowMenuActions || ($props.itemViewId && $props.newEmit)" class="pb-2 ml-0 align-center">
+      <v-row v-if="slots.toolbar || slots.overflowMenuActions || props.title || (props.itemViewId && props.new)" class="pb-2 ml-0 align-center">
         <v-card-title v-if="title" class="px-0 text-title-medium">{{ title }}</v-card-title>
         <v-spacer></v-spacer>
 
@@ -60,7 +60,7 @@
           </template>
 
           <!-- Render the new button when the prop is set -->
-          <template v-if="props?.new">
+          <template v-if="props.new">
             <MkNewItemButton :item-view-id="props.itemViewId" :new-title="props.newTitle" :new-emit="props.newEmit" @click:new="emit('click:new', $event)" />
           </template>
 

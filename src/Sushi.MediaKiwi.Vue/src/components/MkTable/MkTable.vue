@@ -175,7 +175,7 @@
     <v-progress-linear v-if="inProgress" indeterminate absolute></v-progress-linear>
     <slot name="header"></slot>
 
-    <template v-if="(slots.toolbar || slots.overflowMenuActions || props.newEmit || props.title) && props.itemViewId">
+    <template v-if="props.new || props.title || slots.toolbar || slots.overflowMenuActions">
       <MkToolbar
         :item-view-id="props.itemViewId"
         :title="props.title"
