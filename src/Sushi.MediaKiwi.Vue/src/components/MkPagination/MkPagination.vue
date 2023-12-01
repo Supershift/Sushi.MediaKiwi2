@@ -1,62 +1,134 @@
 <!-- Wrapper component for MkPaginationControls and MkInfiniteScroll -->
 <script setup lang="ts">
-  import { pageSizeOptions } from "@/constants";
+  import { defaultPageSizeOptions, defaultPageSize } from "@/constants";
   import { Paging } from "@/models/api/Paging";
   import { ITableMapPaging } from "@/models/table/TableMapPaging";
   import { useI18next } from "@/composables/useI18next";
 
   // Components
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
-  import { usePagination } from "@/composables/usePagination";
-  import { watch } from "vue";
   import { computed } from "vue";
-  import { mdiConsoleNetworkOutline } from "@mdi/js";
+  import { reactive } from "vue";
+
+  // inject dependencies
+  const { defaultT } = await useI18next();
 
   // define properties
-  const props = defineProps<{
-    modelValue: Paging;
-    pagingResult?: ITableMapPaging | null;
-    mode?: MediakiwiPaginationMode;
-  }>();
+  const props = withDefaults(
+    defineProps<{
+      modelValue: Paging;
+      pagingResult?: ITableMapPaging | null;
+      mode?: MediakiwiPaginationMode;
+      pageSizeOptions?: number[];
+    }>(),
+    {
+      modelValue: () => ({ pageIndex: 0, pageSize: defaultPageSize }),
+      pagingResult: null,
+      mode: "controls",
+      pageSizeOptions: () => [...defaultPageSizeOptions],
+    }
+  );
 
-  // define events
+  // define emits
   const emit = defineEmits<{
     (e: "update:modelValue", value: Paging): void;
   }>();
 
-  // inject dependencies
-  const { defaultT } = await useI18next();
-  const { updatePageIndex, updatePageSize, pageIndex, pageSize } = usePagination();
+  /**
+   * Reactive state
+   */
+  const state = reactive({
+    pageIndex: props.modelValue.pageIndex || 0,
+    pageSize: props.modelValue.pageSize || defaultPageSize,
+  });
 
-  watch([pageIndex, pageSize], () => {
+  /**
+   * Page sizes to display in the select
+   */
+  const sortedPageSizes = computed(() => {
+    return [...props.pageSizeOptions]?.sort((a: number, b: number) => a - b);
+  });
+
+  /**
+   * Emit the current paging values to the parent
+   */
+  function applyPaging() {
     // create new paging object
     const pagination: Paging = {
-      pageIndex: pageIndex.value,
-      pageSize: pageSize.value,
+      pageIndex: state.pageIndex,
+      pageSize: state.pageSize,
     };
 
     // emit to parent
     emit("update:modelValue", pagination);
+  }
+
+  /**
+   * Change event
+   * @param {number} value New page index
+   */
+  async function updatePageIndex(value: number) {
+    // Update local values
+    if (value !== null && value !== undefined) {
+      state.pageIndex = value - 1;
+      applyPaging();
+    }
+  }
+
+  /**
+   * Change event
+   * @param {number} value New page size
+   */
+  async function updatePageSize(value: number) {
+    // Update local values
+    if (value !== null && value !== undefined) {
+      state.pageSize = value;
+      applyPaging();
+    }
+  }
+
+  /**
+   * Zero based start index of the current paging result
+   */
+  const start = computed(() => {
+    return state.pageSize * state.pageIndex;
+  });
+
+  /**
+   * End index of the current paging result
+   */
+  const end = computed(() => {
+    let end = start.value;
+
+    // If paging result is set, calculate the end index
+    if (props.pagingResult) {
+      const { totalCount, resultCount } = props.pagingResult;
+
+      // If both totalCount and resultCount are set, calculate the end index
+      if (totalCount && resultCount) {
+        end = start.value + resultCount;
+
+        // If the end index is greater than the total count, set the end index to the total count
+        if (end > totalCount) {
+          end = totalCount;
+        }
+      }
+    }
+
+    return end;
   });
 
   /**
    * Get the start, end and total of the current paging result
    * @returns { { start: number, end: number, total: number } | null }
    */
-  const resultSet = computed(() => {
-    if (props.pagingResult) {
-      const { totalCount, resultCount } = props.pagingResult;
-      if (totalCount && resultCount) {
-        const start = pageSize.value * pageIndex.value;
-        let end = start + resultCount;
+  const resultSetLabel = computed(() => {
+    if (props.pagingResult?.totalCount) {
+      // Add 1 to start to display at 1 instead of 0
+      const startPage = start.value + 1;
 
-        if (end > totalCount) {
-          end = totalCount;
-        }
-
-        // Add 1 to start to begin at 1 instead of 0
-        return { start: start + 1, end, total: totalCount };
-      }
+      const resultSet = { start: startPage, end: end.value, total: props.pagingResult?.totalCount };
+      return defaultT.value("PagingInfo", { resultSet });
     }
     return null;
   });
@@ -73,21 +145,21 @@
         density="compact"
         class="mk-pagination__items-per-page__select"
         hide-details
-        :items="pageSizeOptions"
-        :model-value="pageSize"
+        :items="sortedPageSizes"
+        :model-value="state.pageSize"
         @update:model-value="updatePageSize"
       ></VSelect>
     </div>
     <div class="mk-pagination__info">
-      <template v-if="resultSet">
-        {{ defaultT("PagingInfo", { resultSet }) }}
+      <template v-if="resultSetLabel">
+        {{ resultSetLabel }}
       </template>
     </div>
     <div class="mk-pagination__pagination">
       <VPagination
         total-visible=""
         density="compact"
-        :model-value="pageIndex + 1"
+        :model-value="state.pageIndex + 1"
         :length="pagingResult?.pageCount"
         show-first-last-page
         @update:model-value="updatePageIndex"

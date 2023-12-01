@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import { RouteParamValueRaw } from "vue-router";
   import type { TableMap } from "@/models/table/TableMap";
-  import MkTableCell from "./MkTableCell.vue";
   import { useMediakiwiStore } from "@/stores/";
   import type { Sorting } from "@/models";
   import MkTableCheckbox from "./MkTableCheckbox.vue";
@@ -9,9 +8,6 @@
   import { watch } from "vue";
   import { useNavigation } from "@/composables/useNavigation";
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
-  import { VuetifyPaginationMode } from "@/models/pagination/VuetifyPaginationMode";
-  import { ref } from "vue";
-  import { usePagination } from "@/composables/usePagination";
   import { computed } from "vue";
 
   // define properties
@@ -103,14 +99,6 @@
 
   function clearSelection() {
     selectAll(false);
-  }
-
-  const { updatePageIndex, pageIndex } = usePagination();
-  // deconstruct the prop to get the pagination mode for the vuetify component
-  const vuetifyPaginationMode = ref<VuetifyPaginationMode>(props.paginationMode as VuetifyPaginationMode);
-
-  function loadMore() {
-    updatePageIndex(pageIndex + 1);
   }
 
   defineExpose({
