@@ -101,11 +101,10 @@
     v-model:selection="selectedTableRows"
     v-model:filters="filters"
     v-model:current-pagination="currentPagination"
-    new
     :table-map="myMap"
     :data="sampleData"
     checkbox
-    item-view-id="SampleEdit"
+    title="Customer collection"
     @click:row="$emit('clicked:customer', $event)"
   >
     <template #bulkActionBar>

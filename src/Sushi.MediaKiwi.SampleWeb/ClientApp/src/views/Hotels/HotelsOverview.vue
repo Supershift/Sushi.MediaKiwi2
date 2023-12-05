@@ -29,7 +29,10 @@
   const { formatDateTime, t } = await useI18next();
 
   // define reactive variables
-  const currentPagination = ref<Paging>({});
+  const currentPagination = ref<Paging>({
+    pageIndex: 0,
+    pageSize: 5,
+  });
   const hotels = ref<ListResult<Hotel>>();
   const countries = ref<Country[]>();
 

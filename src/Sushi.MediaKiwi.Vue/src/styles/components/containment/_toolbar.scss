@@ -1,3 +1,5 @@
+@use "vuetify/settings" as vuetify;
+
 .v-toolbar {
   &--mediakiwi {
     &.v-toolbar--sticky {
@@ -7,9 +9,13 @@
       background-color: rgb(var(--v-theme-background));
     }
 
-    .v-toolbar__content {
-      padding: 0 32px 0 16px;
+    @media #{map-get(vuetify.$display-breakpoints, 'md-and-up')} {
+      .v-toolbar__content {
+        padding: 0 32px 0 16px;
+      }
+    }
 
+    .v-toolbar__content {
       > .v-toolbar-title {
         margin-left: 16px;
       }

@@ -16,9 +16,9 @@
 
   import { ITableMapPaging } from "@/models/table/TableMapPaging";
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
-  import { pageSizeOptions } from "@/constants";
   import MkTableHead from "./MkTableHead.vue"; // Mk-Th
   import MkTableCell from "./MkTableCell.vue"; // Mk-Td
+  import { defaultPageSizeOptions, defaultPageSize } from "@/constants";
 
   // define properties
   const props = withDefaults(
@@ -57,6 +57,10 @@
       itemId?: (entity: any) => string | number;
     }>(),
     {
+      currentPagination: () => ({
+        pageIndex: 0,
+        pageSize: defaultPageSize,
+      }),
       paginationMode: "controls",
     }
   );
@@ -93,6 +97,10 @@
   // define reactive variables
   const inProgress = ref(false);
   const mkTableViewComponent = ref();
+  const pageSizes = ref([...defaultPageSizeOptions]);
+  if (props.currentPagination?.pageSize) {
+    pageSizes.value.push(props.currentPagination.pageSize);
+  }
 
   const isBooleanColumn = computed(() => {
     if (props.tableMap && props.tableMap.items && props.tableMap.items[0] && props.tableMap.items[0].value && props.data && props.data[0]) {
@@ -102,7 +110,9 @@
     return false;
   });
 
-  // Deconstruct the ApiResult or paging prop to an ITableMapPaging
+  /**
+   * Deconstruct the ApiResult or paging prop to an ITableMapPaging
+   */
   const pagingResult = computed<ITableMapPaging | undefined | null>(() => {
     const resultCount = props.apiResult?.result?.length;
 
@@ -117,8 +127,7 @@
   });
 
   const showPagination = computed(() => {
-    const lowestPagingOption = Math.min(...pageSizeOptions);
-    return props.currentPagination && pagingResult.value && pagingResult.value.totalCount && pagingResult.value.totalCount > lowestPagingOption;
+    return props.currentPagination && pagingResult.value && pagingResult.value.pageCount;
   });
 
   // event listeners
@@ -175,7 +184,7 @@
     <v-progress-linear v-if="inProgress" indeterminate absolute></v-progress-linear>
     <slot name="header"></slot>
 
-    <template v-if="(slots.toolbar || slots.overflowMenuActions || props.newEmit || props.title) && props.itemViewId">
+    <template v-if="props.new || props.title || slots.toolbar || slots.overflowMenuActions">
       <MkToolbar
         :item-view-id="props.itemViewId"
         :title="props.title"
@@ -250,6 +259,7 @@
           :model-value="currentPagination"
           :paging-result="pagingResult"
           :mode="paginationMode"
+          :page-size-options="pageSizes"
           @update:model-value="pageChanged"
         />
       </template>
