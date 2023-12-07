@@ -24,6 +24,8 @@
     checkbox?: boolean;
     /** Defines the pagination mode */
     paginationMode?: MediakiwiPaginationMode;
+    /** Defines if the table row has a hover effect */
+    showHoverEffect: boolean;
   }>();
 
   // define event
@@ -53,7 +55,7 @@
 
   const tableRowClassses = computed(() => {
     return {
-      hasItemViewId: props.itemViewId,
+      "has-hover": props.showHoverEffect,
     };
   });
 
@@ -148,7 +150,7 @@
         tbody {
           tr {
             transition: 0.2s background-color;
-            &.hasItemViewId {
+            &.has-hover {
               &:hover {
                 background: rgba(var(--v-theme-surface-variant), var(--v-hover-opacity));
                 cursor: pointer;
