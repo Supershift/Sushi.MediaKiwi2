@@ -51,6 +51,12 @@
     return props.tableMap?.itemId || props.itemId;
   });
 
+  const tableRowClassses = computed(() => {
+    return {
+      hasItemViewId: props.itemViewId,
+    };
+  });
+
   function onRowClick(event: Event, dataItem: unknown) {
     // emit event
     emit("click:row", dataItem);
@@ -118,7 +124,7 @@
     </thead>
     <tbody>
       <!-- render a row for each provided data entity -->
-      <tr v-for="(dataItem, rowIndex) in props.data" :key="rowIndex" style="cursor: pointer" @click.stop="(e) => onRowClick(e, dataItem)">
+      <tr v-for="(dataItem, rowIndex) in props.data" :key="rowIndex" :class="tableRowClassses" @click.stop="(e) => onRowClick(e, dataItem)">
         <td v-if="checkbox" @click.stop>
           <MkTableCheckbox :is-selected="isItemSelected(dataItem)" @update:selected="(e) => selectItem(dataItem, e)" />
         </td>
@@ -142,8 +148,11 @@
         tbody {
           tr {
             transition: 0.2s background-color;
-            &:hover {
-              background: rgba(var(--v-theme-surface-variant), var(--v-hover-opacity));
+            &.hasItemViewId {
+              &:hover {
+                background: rgba(var(--v-theme-surface-variant), var(--v-hover-opacity));
+                cursor: pointer;
+              }
             }
           }
         }
