@@ -31,7 +31,7 @@
     :data="roomTypes?.result"
     new
     :item-id="(item: any) => item.id"
-    item-view-id="RoomTypesEdit"
+    item-view-id="RoomTypesEditDeep"
     title="Subtitle for the hotel list"
   >
     <template #thead>

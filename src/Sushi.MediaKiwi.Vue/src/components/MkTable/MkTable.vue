@@ -19,6 +19,8 @@
   import MkTableHead from "./MkTableHead.vue"; // Mk-Th
   import MkTableCell from "./MkTableCell.vue"; // Mk-Td
   import { defaultPageSizeOptions, defaultPageSize } from "@/constants";
+  import { useComponentContext } from "@/composables/useComponentContext";
+  import { TimeHTMLAttributes } from "vue";
 
   // define properties
   const props = withDefaults(
@@ -66,14 +68,15 @@
   );
 
   // define events
-  const emit = defineEmits<{
+  type MkTableEmit = {
     (e: "update:filters", value: TableFilter): void;
     (e: "click:row", value: unknown): void;
     (e: "update:sorting", value?: Sorting): void;
     (e: "update:selection", value?: unknown[]): void;
     (e: "update:currentPagination", value: Paging): void;
     (e: "click:new", value?: string): void;
-  }>();
+  };
+  const emit = defineEmits<MkTableEmit>();
 
   // define slots
   const slots = defineSlots<{
@@ -93,6 +96,7 @@
 
   // inject dependencies
   const snackbar = useSnackbarStore();
+  const { hasDefinedEmit } = useComponentContext();
 
   // define reactive variables
   const inProgress = ref(false);
@@ -108,6 +112,14 @@
       return typeof value === "boolean";
     }
     return false;
+  });
+
+  /**
+   * Returns if the component has click implementation
+   * Either by itemViewId or click:row event
+   */
+  const hasTableRowClickAction = computed<boolean>(() => {
+    return hasDefinedEmit("click:row") || props.itemViewId !== undefined;
   });
 
   /**
@@ -225,6 +237,7 @@
       class="mk-table"
       :pagination-mode="paginationMode"
       :item-id="itemId"
+      :show-hover-effect="hasTableRowClickAction"
       @click:row="(e) => emit('click:row', e)"
       @update:sorting="sortingChanged"
       @update:selection="(e) => emit('update:selection', e)"

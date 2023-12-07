@@ -189,16 +189,35 @@ export function useNavigation() {
    *  or if the provided navigation item is the ONLY child of the current navigation item that 'has item navigation', and points to a view
    * */
   function determineIfNavigationItemIsActive(navigationItem: NavigationItem): boolean {
+    // Return false when there is no current navigation item
+    if (!currentNavigationItem.value) {
+      return false;
+    }
+
+    // get parent of current navigation item
     const currentParent = currentNavigationItem.value?.parent;
-    if (!currentNavigationItem.value) return false;
 
     // if the provided navigation item is the same as the current navigation item, then it is active
-    // or if the provided navigation item is the ONLY child of the current navigation item that 'has item navigation', and points to a view, then it is active
-    const result =
-      currentNavigationItem.value.id === navigationItem.id ||
-      (currentParent?.id === navigationItem.id && navigationItem.hasItemNavigation && navigationItem.view && navigationItem.children?.length === 1);
+    if (currentNavigationItem.value.id === navigationItem.id) {
+      return true;
+    }
 
-    return result === true;
+    // If the provided navigation item is the ONLY child of the current navigation item that 'has item navigation', and points to a view, then it is active
+    if (currentParent?.id === navigationItem.id && navigationItem.hasItemNavigation && navigationItem.view && navigationItem.children?.length === 1) {
+      return true;
+    }
+
+    // Check children recursively to see if any of them are active
+    if (navigationItem.children && navigationItem.children.length) {
+      for (const child of navigationItem.children) {
+        if (determineIfNavigationItemIsActive(child)) {
+          return true;
+        }
+      }
+    }
+
+    // If we get here then the provided navigation item is not active
+    return false;
   }
 
   function determineIfSectionIsActive(section: Section): boolean {

@@ -16,3 +16,4 @@ export * from "./useFormFields";
 export * from "./useBreadcrumbs";
 export * from "./useDatePresets";
 export * from "./useDayjs";
+export * from "./useComponentContext";
