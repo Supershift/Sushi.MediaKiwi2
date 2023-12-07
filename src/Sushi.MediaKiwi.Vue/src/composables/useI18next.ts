@@ -1,5 +1,5 @@
 import { identity } from "@/identity";
-import { MoneyValue, View } from "@/models";
+import { MediakiwiVueOptions, MoneyValue, View } from "@/models";
 import { tokenStore } from "@/plugins/i18next";
 import { i18n } from "i18next";
 import { Ref, computed, inject } from "vue";
@@ -14,6 +14,7 @@ export async function useI18next(scope?: View | string) {
   // inject dependencies
   const navigation = useNavigation();
   const i18next = inject<Ref<i18n>>("i18next");
+  const mediakiwiOptions = inject<MediakiwiVueOptions>("mediakiwi");
 
   if (!i18next) {
     throw new Error("i18next is not provided, install the plugin first");
@@ -59,20 +60,24 @@ export async function useI18next(scope?: View | string) {
   const defaultT = computed(() => i18next.value.t);
 
   // format datetime
+  const dateOptions = computed(() => mediakiwiOptions?.dateFormatOptions?.date || <Intl.DateTimeFormatOptions>{ dateStyle: "short" });
+  const timeOptions = computed(() => mediakiwiOptions?.dateFormatOptions?.time || <Intl.DateTimeFormatOptions>{ timeStyle: "short" });
+  const monthOptions = computed(() => mediakiwiOptions?.dateFormatOptions?.month || <Intl.DateTimeFormatOptions>{ month: "long" });
+
   const formatDateTimeInternal = (date: string | Date): string => {
-    return formatDateTimeGenericInternal(date, { dateStyle: "short", timeStyle: "short" });
+    return formatDateTimeGenericInternal(date, { ...dateOptions.value, ...timeOptions.value });
   };
 
   const formatDateInternal = (date: string | Date): string => {
-    return formatDateTimeGenericInternal(date, { dateStyle: "short" });
+    return formatDateTimeGenericInternal(date, { ...dateOptions.value });
   };
 
   const formatTimeInternal = (date: string | Date): string => {
-    return formatDateTimeGenericInternal(date, { timeStyle: "short" });
+    return formatDateTimeGenericInternal(date, { ...timeOptions.value });
   };
 
   const formatMonthInternal = (date: string | Date): string => {
-    return formatDateTimeGenericInternal(date, { month: "long" });
+    return formatDateTimeGenericInternal(date, { ...monthOptions.value });
   };
 
   const formatDateTimeGenericInternal = (date: string | Date, options: Intl.DateTimeFormatOptions): string => {
