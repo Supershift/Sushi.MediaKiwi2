@@ -29,7 +29,7 @@
 </script>
 
 <template>
-  <MkDialogCard :title="tableFilterItem.title" @click:close="() => emit('click:close')">
+  <MkDialogCard :title="tableFilterItem.title" class="mk-table-filter__item" @click:close="() => emit('click:close')">
     <template #intro>
       <p>{{ t("Radio Filter intro", "Please choose the correct item") }}</p>
     </template>

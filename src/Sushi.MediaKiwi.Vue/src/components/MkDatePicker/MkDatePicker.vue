@@ -61,7 +61,7 @@
 </script>
 
 <template>
-  <MkDialogCard hide-header remove-content-padding content-classes="py-2" @click:close="close">
+  <MkDialogCard hide-header remove-content-padding content-classes="py-2" v-bind="$attrs" @click:close="close">
     <template #default>
       <v-date-picker v-model="model" :multiple="multiple" :title="t('DatePickerTitle', 'Select date')" @update:model-value="validateModel">
         <template #header>

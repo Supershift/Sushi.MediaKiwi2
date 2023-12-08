@@ -97,6 +97,7 @@
   </v-list>
   <MkDatePicker
     v-else-if="state.datePicker"
+    v-bind="$attrs"
     v-model="state.model.value"
     multiple
     @click:close="closeDatePicker"
