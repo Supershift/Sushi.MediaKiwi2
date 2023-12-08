@@ -19,6 +19,7 @@
        * @example [0, 1, 2]
        */
       months?: number[];
+      datePickerClass?: string;
     }>(),
     {
       days: () => [7, 28, 90, 365],
@@ -97,8 +98,8 @@
   </v-list>
   <MkDatePicker
     v-else-if="state.datePicker"
-    v-bind="$attrs"
     v-model="state.model.value"
+    :class="datePickerClass"
     multiple
     @click:close="closeDatePicker"
     @update:model-value="updateModelValueFromDateArray"
