@@ -61,6 +61,14 @@
       title: "Date",
       type: TableFilterType.DatePicker,
     },
+    countries: {
+      title: "Landen",
+      options: [
+        { title: "Nederland", value: "NL" },
+        { title: "België", value: "BE" },
+      ],
+      type: TableFilterType.SelectMultiple,
+    },
   });
 
   // create a sorting option object with a default value

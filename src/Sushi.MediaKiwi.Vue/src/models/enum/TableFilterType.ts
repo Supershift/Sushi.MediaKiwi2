@@ -5,4 +5,6 @@ export enum TableFilterType {
   TextField,
   Custom,
   DateRange,
+  SelectMultipleCheckbox,
+  SelectMultiple,
 }

@@ -3,7 +3,14 @@
   import { TableFilter } from "@/models/table/TableFilter.js";
   import { TableFilterItem } from "@/models/table/TableFilterItem.js";
   import { TableFilterValue } from "@/models/table/TableFilterValue.js";
-  import { MkTableFilterDateRangePicker, MkTableFilterRadioGroup, MkTableFilterSelect, MkTableFilterTextField } from ".";
+  import {
+    MkTableFilterDateRangePicker,
+    MkTableFilterRadioGroup,
+    MkTableFilterSelect,
+    MkTableFilterTextField,
+    MkTableFilterSelectMultiple,
+    MkTableFilterSelectMultipleCheckbox,
+  } from ".";
   import { DefineComponent } from "vue";
   import { TableFilterType, IconsLibrary } from "@/models";
   import { MkInputChip } from "@/components/MkChip";
@@ -116,6 +123,10 @@
         return MkTableFilterTextField;
       case TableFilterType.DateRange:
         return MkTableFilterDateRangePicker;
+      case TableFilterType.SelectMultipleCheckbox:
+        return MkTableFilterSelectMultipleCheckbox;
+      case TableFilterType.SelectMultiple:
+        return MkTableFilterSelectMultiple;
       case TableFilterType.Custom:
         if (item.component) return defineAsyncComponent(item.component);
         else throw new Error(`No component found for filter type ${item.type}, add a component to the filter item.`);
