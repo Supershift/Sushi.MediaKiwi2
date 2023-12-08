@@ -5,7 +5,7 @@
   import { ref } from "vue";
 
   // inject dependencies
-  const { defaultT, t } = await useI18next();
+  const { defaultT, t } = await useI18next("MkTableFilterRadioGroup");
 
   const props = defineProps<{
     tableFilterItem: TableFilterItem;

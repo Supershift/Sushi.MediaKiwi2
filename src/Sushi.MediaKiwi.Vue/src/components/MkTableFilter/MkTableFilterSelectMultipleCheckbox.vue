@@ -2,11 +2,10 @@
   import MkDialogCard from "../MkDialog/MkDialogCard.vue";
   import { useI18next } from "@/composables/useI18next";
   import type { TableFilterItem, TableFilterValue } from "@/models/table";
-  import { computed } from "vue";
   import { ref } from "vue";
 
   // inject dependencies
-  const { defaultT, t } = await useI18next();
+  const { defaultT, t } = await useI18next("MkTableFilterSelectMultipleCheckbox");
 
   const props = defineProps<{
     tableFilterItem: TableFilterItem;

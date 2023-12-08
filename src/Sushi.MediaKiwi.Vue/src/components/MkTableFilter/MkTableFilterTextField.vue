@@ -5,7 +5,7 @@
   import { ref } from "vue";
 
   // inject dependencies
-  const { defaultT, t } = await useI18next();
+  const { defaultT, t } = await useI18next("MkTableFilterTextField");
 
   const props = defineProps<{
     tableFilterItem: TableFilterItem;
@@ -34,7 +34,7 @@
       <p>{{ t("Select Textfield intro", "Please choose the correct item") }}</p>
     </template>
     <template #default>
-      <v-text-field v-model="model" :label="defaultT('Value')" hide-details> </v-text-field>
+      <v-text-field v-model="model" :label="t('Contains')" hide-details> </v-text-field>
     </template>
     <template #actions>
       <v-btn @click="applyFilter">{{ defaultT("Apply") }}</v-btn>

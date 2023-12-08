@@ -5,7 +5,7 @@
   import { ref } from "vue";
 
   // inject dependencies
-  const { defaultT, t } = await useI18next();
+  const { defaultT, t } = await useI18next("MkTableFilterSelect");
 
   const props = defineProps<{
     tableFilterItem: TableFilterItem;
@@ -34,7 +34,7 @@
       <p>{{ t("Select Filter intro", "Please choose the correct item") }}</p>
     </template>
     <template #default>
-      <v-autocomplete v-model="model" hide-details :items="tableFilterItem.options" :label="defaultT('Choose')" return-object></v-autocomplete>
+      <v-autocomplete v-model="model" hide-details :items="tableFilterItem.options" :label="t('Choose')" return-object></v-autocomplete>
     </template>
     <template #actions>
       <v-btn @click="applyFilter">{{ defaultT("Apply") }}</v-btn>

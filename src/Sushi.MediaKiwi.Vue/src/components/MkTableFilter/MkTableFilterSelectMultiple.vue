@@ -2,11 +2,10 @@
   import MkDialogCard from "../MkDialog/MkDialogCard.vue";
   import { useI18next } from "@/composables/useI18next";
   import type { TableFilterItem, TableFilterValue } from "@/models/table";
-  import { computed } from "vue";
   import { ref } from "vue";
 
   // inject dependencies
-  const { defaultT, t } = await useI18next();
+  const { defaultT, t } = await useI18next("MkTableFilterSelectMultiple");
 
   const props = defineProps<{
     tableFilterItem: TableFilterItem;
@@ -42,7 +41,7 @@
       <p>{{ t("Select Filter intro", "Please choose the correct item") }}</p>
     </template>
     <template #default>
-      <v-autocomplete v-model="model" multiple hide-details :items="tableFilterItem.options" :label="defaultT('Choose')"></v-autocomplete>
+      <v-autocomplete v-model="model" multiple hide-details :items="tableFilterItem.options" :label="t('Choose')"></v-autocomplete>
     </template>
     <template #actions>
       <v-btn @click="applyFilter">{{ defaultT("Apply") }}</v-btn>
