@@ -30,7 +30,7 @@
     dayPresets: props.days,
     monthPresets: props.months,
   });
-  const { formatMonth, t, defaultT, formatDate } = await useI18next();
+  const { formatMonth, t, defaultT, formatDate } = await useI18next("MkDatePresetMenu");
   const defaultLastXDays = "Last {{duration}} days";
 
   const state = reactive({

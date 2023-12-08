@@ -5,7 +5,7 @@
   import { useLocale } from "vuetify";
 
   // inject dependencies
-  const { i18next, defaultT, t, formatDateTimeGeneric } = await useI18next();
+  const { i18next, defaultT, t, formatDateTimeGeneric } = await useI18next("MkDatePicker");
   const { current } = useLocale();
   // TODO There needs to be a better way to set the locale through the custom i18n plugin
   current.value = i18next.value.language;
