@@ -20,7 +20,7 @@ if (!settings) {
 }
 
 // Create the options object
-const mediakiwiOptions: MediakiwiVueOptions = { ...settings.mediaKiwi };
+const mediakiwiOptions = <MediakiwiVueOptions>{ ...settings.mediaKiwi };
 
 // import all views as models
 mediakiwiOptions.modules = import.meta.glob("./views/**/*.vue");
@@ -46,6 +46,12 @@ mediakiwiOptions.vuetifyOptions = {
       mdi,
     },
   },
+};
+
+// Change the default date and time format options across the system.
+mediakiwiOptions.dateFormatOptions = {
+  date: { year: "numeric", month: "2-digit", day: "2-digit" }, // Example "05/31/2023" or "05-31-2023"
+  time: { hour: "2-digit", minute: "2-digit" }, // Example 09:50 AM or 21:50
 };
 
 // Create the app
