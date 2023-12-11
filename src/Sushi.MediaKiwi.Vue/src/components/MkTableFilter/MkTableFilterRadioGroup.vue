@@ -5,7 +5,7 @@
   import { ref } from "vue";
 
   // inject dependencies
-  const { defaultT, t } = await useI18next();
+  const { defaultT, t } = await useI18next("MkTableFilterRadioGroup");
 
   const props = defineProps<{
     tableFilterItem: TableFilterItem;
@@ -29,7 +29,7 @@
 </script>
 
 <template>
-  <MkDialogCard :title="tableFilterItem.title" @click:close="() => emit('click:close')">
+  <MkDialogCard :title="tableFilterItem.title" class="mk-table-filter__item" @click:close="() => emit('click:close')">
     <template #intro>
       <p>{{ t("Radio Filter intro", "Please choose the correct item") }}</p>
     </template>

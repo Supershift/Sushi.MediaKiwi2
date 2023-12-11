@@ -5,7 +5,7 @@
   import { useLocale } from "vuetify";
 
   // inject dependencies
-  const { i18next, defaultT, t, formatDateTimeGeneric } = await useI18next();
+  const { i18next, defaultT, t, formatDateTimeGeneric } = await useI18next("MkDatePicker");
   const { current } = useLocale();
   // TODO There needs to be a better way to set the locale through the custom i18n plugin
   current.value = i18next.value.language;
@@ -61,7 +61,7 @@
 </script>
 
 <template>
-  <MkDialogCard hide-header remove-content-padding content-classes="py-2" @click:close="close">
+  <MkDialogCard hide-header remove-content-padding content-classes="py-2" v-bind="$attrs" @click:close="close">
     <template #default>
       <v-date-picker v-model="model" :multiple="multiple" :title="t('DatePickerTitle', 'Select date')" @update:model-value="validateModel">
         <template #header>
