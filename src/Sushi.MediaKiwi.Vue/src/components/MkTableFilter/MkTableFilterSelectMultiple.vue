@@ -5,24 +5,31 @@
   import { ref } from "vue";
 
   // inject dependencies
-  const { defaultT, t } = await useI18next("MkTableFilterTextField");
+  const { defaultT, t } = await useI18next("MkTableFilterSelectMultiple");
 
   const props = defineProps<{
     tableFilterItem: TableFilterItem;
     modelValue: TableFilterValue;
   }>();
 
-  // state
-  const model = ref(props.modelValue?.value);
-
   const emit = defineEmits<{
     (e: "update:modelValue", value: TableFilterValue): void;
     (e: "click:close"): void;
   }>();
 
+  // state
+  const model = ref<Array<string>>(props.modelValue?.value || []);
+
   function applyFilter() {
+    // Find the titles for the selected values
+    const titles =
+      props.tableFilterItem?.options
+        ?.filter((x) => model.value.includes(x.value))
+        .map((x) => x.title)
+        .join(", ") || "";
+
     emit("update:modelValue", {
-      title: model.value,
+      title: titles,
       value: model.value,
     });
   }
@@ -31,10 +38,10 @@
 <template>
   <MkDialogCard :title="tableFilterItem.title" content-classes="pa-6" class="mk-table-filter__item" @click:close="() => emit('click:close')">
     <template #intro>
-      <p>{{ t("Select Textfield intro", "Please choose the correct item") }}</p>
+      <p>{{ t("Select Filter intro", "Please choose the correct item") }}</p>
     </template>
     <template #default>
-      <v-text-field v-model="model" :label="t('Contains')" hide-details> </v-text-field>
+      <v-autocomplete v-model="model" multiple hide-details :items="tableFilterItem.options" :label="t('Choose')"></v-autocomplete>
     </template>
     <template #actions>
       <v-btn @click="applyFilter">{{ defaultT("Apply") }}</v-btn>

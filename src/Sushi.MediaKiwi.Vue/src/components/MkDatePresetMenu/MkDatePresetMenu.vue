@@ -19,6 +19,7 @@
        * @example [0, 1, 2]
        */
       months?: number[];
+      datePickerClass?: string;
     }>(),
     {
       days: () => [7, 28, 90, 365],
@@ -30,7 +31,7 @@
     dayPresets: props.days,
     monthPresets: props.months,
   });
-  const { formatMonth, defaultT, formatDate } = await useI18next();
+  const { formatMonth, t, defaultT, formatDate } = await useI18next("MkDatePresetMenu");
   const defaultLastXDays = "Last {{duration}} days";
 
   const state = reactive({
@@ -51,7 +52,7 @@
 
   function updateModelValueFromDateRange(item: DateRange) {
     state.model.value = [item.start, item.end];
-    state.model.title = defaultT.value("LastXDays", defaultLastXDays, { duration: item.duration });
+    state.model.title = t.value("LastXDays", defaultLastXDays, { duration: item.duration });
     apply();
   }
 
@@ -84,7 +85,7 @@
 <template>
   <v-list v-if="!state.datePicker">
     <v-list-item v-for="(item, i) in presets.days" :key="i" @click="updateModelValueFromDateRange(item)">
-      <v-list-item-title>{{ defaultT("LastXDays", defaultLastXDays, { duration: item.duration }) }}</v-list-item-title>
+      <v-list-item-title>{{ t("LastXDays", defaultLastXDays, { duration: item.duration }) }}</v-list-item-title>
     </v-list-item>
     <v-divider />
     <v-list-item v-for="(item, i) in presets.months" :key="i" @click="updateModelValueFromMonth(item)">
@@ -98,6 +99,7 @@
   <MkDatePicker
     v-else-if="state.datePicker"
     v-model="state.model.value"
+    :class="datePickerClass"
     multiple
     @click:close="closeDatePicker"
     @update:model-value="updateModelValueFromDateArray"

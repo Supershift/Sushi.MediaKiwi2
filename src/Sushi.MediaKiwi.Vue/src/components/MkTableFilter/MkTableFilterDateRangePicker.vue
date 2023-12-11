@@ -25,7 +25,7 @@
 </script>
 
 <template>
-  <MkDatePresetMenu v-model="model" @update:model-value="applyFilter" />
+  <MkDatePresetMenu v-model="model" date-picker-class="mk-table-filter__item" @update:model-value="applyFilter" />
 </template>
 
 <style>
