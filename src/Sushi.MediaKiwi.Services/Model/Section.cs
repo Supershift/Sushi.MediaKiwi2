@@ -36,5 +36,11 @@ namespace Sushi.MediaKiwi.Services.Model
         /// </summary>
         [StringLength(128)]
         public string? Icon { get; set; }
+
+        /// <summary>
+        /// If not empty, access to this view is restricted to these roles.
+        /// </summary>
+        [Required]
+        public List<string> Roles { get; set; } = new List<string>();
     }
 }

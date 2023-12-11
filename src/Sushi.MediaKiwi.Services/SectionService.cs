@@ -11,18 +11,22 @@ namespace Sushi.MediaKiwi.Services
     public class SectionService
     {
         private readonly ISectionRepository _sectionRepository;
+        private readonly ISectionRoleRepository _sectionRoleRepository;
         private readonly IMapper _mapper;
 
         /// <summary>
         /// Creates a new instance of <see cref="SectionService"/>.
         /// </summary>
         /// <param name="repository"></param>
+        /// <param name="sectionRoleRepository"></param>
         /// <param name="mapper"></param>
         public SectionService(
             ISectionRepository repository,
+            ISectionRoleRepository sectionRoleRepository,
             IMapper mapper)
         {
             _sectionRepository = repository;
+            _sectionRoleRepository = sectionRoleRepository;
             _mapper = mapper;
         }
 
@@ -58,12 +62,19 @@ namespace Sushi.MediaKiwi.Services
         {
             // get all sections from database
             var items = await _sectionRepository.GetAllAsync(pagingValues);
+            var sectionRoles = await _sectionRoleRepository.GetAllAsync(null);
 
             // map to result
             var itemsDto = _mapper.Map<List<Section>>(items);
 
             // create result object
-            var result = new ListResult<Section>(itemsDto, items);            
+            var result = new ListResult<Section>(itemsDto, items);
+
+            // add roles
+            foreach (var section in result.Result)
+            {
+                section.Roles = sectionRoles.Where(x => x.SectionId == section.Id).Select(x => x.Role).ToList();
+            }
 
             return new Result<ListResult<Section>>(result);
         }
@@ -76,9 +87,15 @@ namespace Sushi.MediaKiwi.Services
 
             if (section != null)
             {
+                var sectionRoles = await _sectionRoleRepository.GetAllAsync(section.Id);
+
                 // map to result
                 var result = new Section();
                 _mapper.Map(section, result);
+
+                // add roles
+                result.Roles = sectionRoles.Select(x => x.Role).ToList();
+
                 return new Result<Section>(result);
             }
             else
@@ -119,9 +136,15 @@ namespace Sushi.MediaKiwi.Services
                 // commit transaction
                 ts.Complete();
             }
-            
+
+            // return section
+            var sectionRoles = await _sectionRoleRepository.GetAllAsync(section.Id);
             var result = new Section();
             _mapper.Map(section, result);
+
+            // Add roles
+            result.Roles = sectionRoles.Select(x => x.Role).ToList();
+
             return new Result<Section>(result);
         }
     }

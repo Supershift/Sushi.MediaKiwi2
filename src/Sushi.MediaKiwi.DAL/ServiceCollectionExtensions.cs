@@ -33,6 +33,7 @@ namespace Sushi.MediaKiwi.DAL
             services.TryAddTransient<IRoleRepository, RoleRepository>();
             services.TryAddTransient<ILocaleRepository, LocaleRepository>();
             services.TryAddTransient<ITranslationRepository, TranslationRepository>();
+            services.TryAddTransient<ISectionRoleRepository, SectionRoleRepository>();
 
             return services;
         }
