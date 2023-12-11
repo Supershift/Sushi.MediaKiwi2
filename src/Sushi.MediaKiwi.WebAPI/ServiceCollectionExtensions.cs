@@ -9,10 +9,12 @@ using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using Sushi.MediaKiwi.DAL;
 using Sushi.MediaKiwi.DAL.Repository;
+using Sushi.MediaKiwi.DAL.User;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MediaKiwi.WebAPI.Paging;
 using Sushi.MediaKiwi.WebAPI.Sorting;
+using Sushi.MediaKiwi.WebAPI.User;
 using Sushi.MicroORM;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
@@ -50,6 +52,9 @@ namespace Sushi.MediaKiwi.WebAPI
             // add mk dependencies
             services.TryAddTransient<Paging.PagingRetriever>();
             services.TryAddTransient<Sorting.SortingRetriever>();
+            
+            // add user provider
+            services.TryAddTransient<IUserProvider, UserProvider>();
 
             // Define admin role policy
             if (authorizationOptions == null)
@@ -71,8 +76,8 @@ namespace Sushi.MediaKiwi.WebAPI
             var authenticationBuilder = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
             if (azureAdConfig != null)
                 authenticationBuilder.AddMicrosoftIdentityWebApi(azureAdConfig);
-            
-            return services;
+
+           return services;
         }
 
         /// <summary>

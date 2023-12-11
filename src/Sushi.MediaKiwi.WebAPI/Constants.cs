@@ -10,5 +10,6 @@ namespace Sushi.MediaKiwi.WebAPI
     {
         public const string AdminPolicyName = "MediaKiwiAdminPolicy";
         public const string AdminRoleName = "AdminPolicy";
+        public const string ApplicationIdClaim = "appid";
     }
 }
