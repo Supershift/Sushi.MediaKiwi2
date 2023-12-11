@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Sushi.MediaKiwi.DAL.Repository;
+using Sushi.MediaKiwi.DAL.User;
 
 namespace Sushi.MediaKiwi.DAL.UnitTests
 {
@@ -19,6 +20,8 @@ namespace Sushi.MediaKiwi.DAL.UnitTests
             serviceProvider.GetRequiredService<IViewRoleRepository>();
             serviceProvider.GetRequiredService<ILocaleRepository>();
             serviceProvider.GetRequiredService<ITranslationRepository>();
+            serviceProvider.GetRequiredService<ISectionRoleRepository>();
+            serviceProvider.GetRequiredService<IUserProvider>();
         }
     }
 }

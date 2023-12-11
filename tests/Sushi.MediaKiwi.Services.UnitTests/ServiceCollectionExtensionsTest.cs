@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
-
+using Sushi.MediaKiwi.DAL.User;
+using Sushi.MediaKiwi.Services.UnitTests.Mocks;
 
 namespace Sushi.MediaKiwi.Services.UnitTests
 {
@@ -10,6 +11,9 @@ namespace Sushi.MediaKiwi.Services.UnitTests
         {
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddMediaKiwiServices("");
+
+            serviceCollection.AddTransient<IUserProvider, UserProvider>();
+
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
             serviceProvider.GetRequiredService<SectionService>();

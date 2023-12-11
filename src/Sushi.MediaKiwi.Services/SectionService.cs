@@ -94,7 +94,7 @@ namespace Sushi.MediaKiwi.Services
                 _mapper.Map(section, result);
 
                 // add roles
-                result.Roles = sectionRoles.Select(x => x.Role).ToList();
+                result.Roles = sectionRoles?.Select(x => x.Role).ToList();
 
                 return new Result<Section>(result);
             }
@@ -143,7 +143,7 @@ namespace Sushi.MediaKiwi.Services
             _mapper.Map(section, result);
 
             // Add roles
-            result.Roles = sectionRoles.Select(x => x.Role).ToList();
+            result.Roles = sectionRoles?.Select(x => x.Role).ToList();
 
             return new Result<Section>(result);
         }

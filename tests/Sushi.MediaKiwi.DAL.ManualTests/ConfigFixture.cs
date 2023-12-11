@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Sushi.MediaKiwi.DAL.User;
 using Sushi.MicroORM;
 using System;
 using System.Collections.Generic;

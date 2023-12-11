@@ -48,20 +48,26 @@ namespace Sushi.MediaKiwi.Services
             {
                 // Apply role on section
                 var sectionRoles = await _sectionRoleRepository.GetAllAsync(null);
-                var allowedSections = sectionRoles.Where(x => x.Role == role);
-
-                if (allowedSections != null)
+                if (sectionRoles?.Count > 0)
                 {
-                    itemsDto = itemsDto.Where(x => allowedSections.Any(y => y.SectionId == x.SectionId)).ToList();
+                    var allowedSections = sectionRoles?.Where(x => x.Role == role);
+
+                    if (allowedSections != null)
+                    {
+                        itemsDto = itemsDto.Where(x => allowedSections.Any(y => y.SectionId == x.SectionId)).ToList();
+                    }
                 }
 
                 // Apply role on views
                 var viewRolesRoles = await _viewRoleRepository.GetAllAsync(null);
-                var allowedViews = viewRolesRoles.Where(x => x.Role == role);
-
-                if (allowedViews != null)
+                if (viewRolesRoles?.Count > 0)
                 {
-                    itemsDto = itemsDto.Where(x => allowedViews.Any(y => y.ViewId == x.ViewId)).ToList();
+                    var allowedViews = viewRolesRoles?.Where(x => x.Role == role);
+
+                    if (allowedViews != null)
+                    {
+                        itemsDto = itemsDto.Where(x => allowedViews.Any(y => y.ViewId == x.ViewId)).ToList();
+                    }
                 }
             }
 
