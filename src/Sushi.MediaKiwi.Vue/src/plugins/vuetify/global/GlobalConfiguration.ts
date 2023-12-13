@@ -44,6 +44,7 @@ export const GlobalConfiguration: VuetifyOptions = {
       color: "background",
       border: "none",
       location: "right",
+      class: "v-navigation-drawer--mediakiwi--side-sheet",
     },
     VMain: {
       color: "background",
