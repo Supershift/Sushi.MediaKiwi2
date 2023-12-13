@@ -244,4 +244,10 @@
   background-color: rgb(var(--v-theme-surface1));
   color: rgb(var(--v-theme-on-surface1));
 }
+
+.mk-table-filter__input {
+  input {
+    cursor: pointer;
+  }
+}
 </stlye>

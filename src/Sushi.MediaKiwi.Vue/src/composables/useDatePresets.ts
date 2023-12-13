@@ -43,28 +43,30 @@ export function useDatePresets(options: DatePresetOptions) {
     if (type === "day") {
       // Last x days
       for (const day of dayPresets) {
-        const current = substractDate(start, day, "day");
+        const current = substractDate.value(start, day, "day");
         result.push({
-          start: current,
-          end,
+          start: startOf.value(current, "day"),
+          end: endOf.value(end, "day"),
           duration: day,
         });
       }
     } else if (type === "month") {
       // Add current and last 2 months
       for (const month of monthPresets) {
-        const current = substractDate(start, month, "month");
-        const m = startOf(current, "month");
+        const current = substractDate.value(start, month, "month");
+        const m = startOf.value(current, "month");
 
         result.push({
           start: m,
-          end: endOf(m, "month"),
+          end: endOf.value(m, "month"),
         });
       }
     }
 
     // Sort by start date descending
     result.sort((a, b) => b.start.getTime() - a.start.getTime());
+
+    console.log(result);
 
     return result;
   }
