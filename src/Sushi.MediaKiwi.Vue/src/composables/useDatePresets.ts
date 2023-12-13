@@ -50,9 +50,6 @@ export function useDatePresets(options: DatePresetOptions) {
           duration: day,
         });
       }
-
-      // Sort by start date descending
-      result.sort((a, b) => b.start.getTime() - a.start.getTime());
     } else if (type === "month") {
       // Add current and last 2 months
       for (const month of monthPresets) {
@@ -64,10 +61,10 @@ export function useDatePresets(options: DatePresetOptions) {
           end: endOf(m, "month"),
         });
       }
-
-      // Sort by date ascending
-      result.sort((a, b) => a.start.getTime() - b.start.getTime());
     }
+
+    // Sort by start date descending
+    result.sort((a, b) => b.start.getTime() - a.start.getTime());
 
     return result;
   }
