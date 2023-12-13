@@ -20,7 +20,6 @@
   import MkTableCell from "./MkTableCell.vue"; // Mk-Td
   import { defaultPageSizeOptions, defaultPageSize } from "@/constants";
   import { useComponentContext } from "@/composables/useComponentContext";
-  import { TimeHTMLAttributes } from "vue";
 
   // define properties
   const props = withDefaults(
