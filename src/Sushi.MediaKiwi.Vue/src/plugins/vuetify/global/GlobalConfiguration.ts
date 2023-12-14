@@ -75,6 +75,11 @@ export const GlobalConfiguration: VuetifyOptions = {
       falseIcons: IconsLibrary.checkboxOff,
       indeterminateIcon: IconsLibrary.minusBox,
       class: "v-checkbox--mediakiwi",
+      VLabel: {
+        style: {
+          opacity: "1",
+        },
+      },
     },
     VDivider: {
       color: "outline-variant",

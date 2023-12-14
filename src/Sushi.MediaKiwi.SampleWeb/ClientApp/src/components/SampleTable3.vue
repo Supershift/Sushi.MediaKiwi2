@@ -67,7 +67,7 @@
         { title: "Nederland", value: "NL" },
         { title: "België", value: "BE" },
       ],
-      type: TableFilterType.SelectMultiple,
+      type: TableFilterType.SelectMultipleCheckbox,
     },
   });
 

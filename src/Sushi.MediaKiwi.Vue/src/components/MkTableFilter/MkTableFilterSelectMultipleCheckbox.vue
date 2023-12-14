@@ -36,13 +36,17 @@
 </script>
 
 <template>
-  <MkDialogCard :title="tableFilterItem.title" content-classes="pa-6" class="mk-table-filter__item" @click:close="() => emit('click:close')">
+  <MkDialogCard :title="tableFilterItem.title" content-classes="py-2" class="mk-table-filter__item" @click:close="() => emit('click:close')">
     <template #intro>
       <p>{{ t("Select Filter intro", "Please choose the correct item") }}</p>
     </template>
     <template #default>
       <template v-for="option in tableFilterItem.options" :key="option.value">
-        <v-checkbox v-model="model" :value="option.value" :label="option.title" density="comfortable" hide-details />
+        <v-checkbox v-model="model" :value="option.value" :label="option.title" density="comfortable" class="mk-table-filter__item__checkbox px-6" hide-details>
+          <template #label>
+            <span class="label__text">{{ option.title }}</span>
+          </template>
+        </v-checkbox>
       </template>
     </template>
     <template #actions>
@@ -50,3 +54,12 @@
     </template>
   </MkDialogCard>
 </template>
+<style scoped lang="scss">
+  @use "@/styles/abstracts/mixins" as mixins;
+
+  .mk-table-filter__item__checkbox {
+    &:hover {
+      @include mixins.hover-effect;
+    }
+  }
+</style>

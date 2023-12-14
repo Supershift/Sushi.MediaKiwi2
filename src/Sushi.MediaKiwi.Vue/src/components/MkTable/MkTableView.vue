@@ -144,6 +144,8 @@
 </template>
 
 <style scoped lang="scss">
+  @use "@/styles/abstracts/mixins" as mixins;
+
   .v-table {
     .v-table__wrapper {
       table {
@@ -152,8 +154,7 @@
             transition: 0.2s background-color;
             &.has-hover {
               &:hover {
-                background: rgba(var(--v-theme-surface-variant), var(--v-hover-opacity));
-                cursor: pointer;
+                @include mixins.hover-effect;
               }
             }
           }
