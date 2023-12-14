@@ -42,11 +42,14 @@
     </template>
     <template #default>
       <template v-for="option in tableFilterItem.options" :key="option.value">
-        <v-checkbox v-model="model" :value="option.value" :label="option.title" density="comfortable" class="mk-table-filter__item__checkbox px-6" hide-details>
-          <template #label>
-            <span class="label__text">{{ option.title }}</span>
-          </template>
-        </v-checkbox>
+        <v-checkbox
+          v-model="model"
+          :value="option.value"
+          :label="option.title"
+          density="comfortable"
+          class="mk-table-filter__item__checkbox px-6"
+          hide-details
+        />
       </template>
     </template>
     <template #actions>
