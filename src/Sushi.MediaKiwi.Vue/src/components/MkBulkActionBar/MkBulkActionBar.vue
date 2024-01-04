@@ -1,13 +1,7 @@
 <script setup lang="ts">
   import { IconsLibrary } from "@/models";
   import { useI18next } from "@/composables/useI18next";
-  import { reactive } from "vue";
   import { ref } from "vue";
-
-  type ConfirmState = {
-    show?: boolean;
-    callback?: () => void;
-  };
 
   // inject dependencies
   const { defaultT } = await useI18next();
@@ -20,7 +14,10 @@
     (e: "click:close"): void;
   }>();
 
-  const confirmState = ref<ConfirmState>({});
+  const confirmState = ref<{
+    show?: boolean;
+    callback?: () => void;
+  }>({});
 
   /**
    * Reset the confirm state and callback function
@@ -36,7 +33,7 @@
    * Set the confirm state and callback function to show the confirm action buttons
    * @param callback The callback function to execute when the confirm button is clicked
    */
-  function setConfirmState(callback: () => any) {
+  function setConfirmState(callback: () => void) {
     // Bind the confirm state with the callback
     confirmState.value = {
       show: true,
