@@ -41,6 +41,17 @@ jobs:
           json-summary-path: ./test/unit/coverage/coverage-summary.json
           json-final-path: ./test/unit/coverage/coverage-final.json
 
+      - name: Run Cypress tests with coverage
+        run: npm run cy:coverage:component
+        working-directory: ./src/Sushi.MediaKiwi.Vue
+
+      - name: "Report Cypress Coverage"
+        if: always() # Also generate the report if tests are failing
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage
+          path: ./test/component/coverage
+
       - name: Run Vite Build
         run: npm run build:prd
         working-directory: ./src/Sushi.MediaKiwi.Vue
