@@ -118,7 +118,7 @@
   <v-table class="mk-table-view">
     <thead>
       <tr>
-        <th v-if="checkbox">
+        <th v-if="checkbox" width="65" class="px-3">
           <MkTableCheckbox :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:selected="selectAll" />
         </th>
         <slot name="thead"></slot>
@@ -127,7 +127,7 @@
     <tbody>
       <!-- render a row for each provided data entity -->
       <tr v-for="(dataItem, rowIndex) in props.data" :key="rowIndex" :class="tableRowClassses" @click.stop="(e) => onRowClick(e, dataItem)">
-        <td v-if="checkbox" @click.stop>
+        <td v-if="checkbox" class="px-3" @click.stop>
           <MkTableCheckbox :is-selected="isItemSelected(dataItem)" @update:selected="(e) => selectItem(dataItem, e)" />
         </td>
         <slot name="tbody" v-bind="dataItem"></slot>

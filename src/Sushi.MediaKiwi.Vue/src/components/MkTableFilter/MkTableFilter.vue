@@ -42,11 +42,42 @@
     return props.modelValue && Object.keys(props.modelValue).some((key) => props.modelValue[key].selectedValue !== undefined);
   });
 
+  /** Get the searchable TableFilterItem */
+  const searchableFilterKey = computed(() => {
+    if (!props.modelValue) {
+      return null;
+    }
+
+    // Get the first searchable filter item
+    const key = Object.keys(props.modelValue).find((key) => props.modelValue[key].searchable);
+    return key;
+  });
+
+  /** Get the searchable filter item based on the {@link searchableFilterKey} */
+  const searchableFilterItem = computed<TableFilterItem | null>(() => {
+    if (!searchableFilterKey.value) {
+      return null;
+    }
+
+    // Get the corresponding filter item from the model value
+    const result: TableFilterItem = props.modelValue[searchableFilterKey.value];
+    return result;
+  });
+
+  /** Compute a bale with context menu to show while typing */
+  const searchFilterItemLabel = computed(() => {
+    return defaultT.value("searchFilterItemLabel", "{{ filterItemTitle }} with '{{ searchText }}''", {
+      filterItemTitle: searchableFilterItem.value?.title,
+      searchText: state.currentSearchText,
+    });
+  });
+
   // holds the current filter being edited and its value
   interface IState {
     currentFilterKey?: string;
     currentFilter?: TableFilterItem;
     currentFilterValue?: TableFilterValue;
+    currentSearchText?: string;
   }
 
   const state = shallowReactive<IState>({});
@@ -56,11 +87,14 @@
     state.currentFilterKey = key;
     state.currentFilter = selectedFilter;
     state.currentFilterValue = undefined;
+    state.currentSearchText = undefined;
   }
 
   /** Sets the current filter, current filter value and opens the menu */
-  function setCurrentFilter(key: string, selectedFilter: TableFilterItem) {
-    openMenu();
+  function setCurrentFilter(key: string, selectedFilter: TableFilterItem, showMenu = true) {
+    if (showMenu) {
+      openMenu();
+    }
     state.currentFilterKey = key;
     state.currentFilterValue = selectedFilter.selectedValue;
     state.currentFilter = selectedFilter;
@@ -86,6 +120,29 @@
     closeMenu();
   }
 
+  function applySearch() {
+    // if we have a searchable filter item, set it as the current filter
+    // Set value on the filter
+    if (searchableFilterKey.value && searchableFilterItem.value) {
+      // Set the current filter without opening the menu
+      setCurrentFilter(searchableFilterKey.value, searchableFilterItem.value, false);
+    }
+
+    // Set the entered text as the current filter value
+    if (state.currentFilter) {
+      state.currentFilterValue = {
+        title: state.currentSearchText || "",
+        value: state.currentSearchText,
+      };
+    }
+
+    // apply the filter
+    applyFilter();
+
+    // clear the search text
+    state.currentSearchText = undefined;
+  }
+
   /* Removed the filterItem id from the modelValue collection. */
   function removeFilter(key: string) {
     const copy = { ...props.modelValue };
@@ -107,8 +164,10 @@
 
   function closeFilter() {
     // close the filter
+    state.currentFilterKey = undefined;
     state.currentFilterValue = undefined;
     state.currentFilter = undefined;
+    state.currentSearchText = undefined;
   }
 
   function GetComponentForFilterType(item: TableFilterItem): Component | DefineComponent {
@@ -165,14 +224,18 @@
     <v-container fluid>
       <v-row class="pb-2">
         <template v-if="modelValue">
-          <v-menu v-model="menu" :close-on-content-click="false" location="end" colo>
+          <v-menu v-model="menu" :close-on-content-click="false" location="bottom" class="mk-table-filter__menu-overlay">
             <!-- Button -->
             <template #activator="args">
               <v-btn class="mt-1 ml-1" v-bind="args.props" color="on-surface1" variant="plain" :icon="IconsLibrary.filterVariant"> </v-btn>
             </template>
 
             <!-- context menu -->
-            <v-list v-if="!state.currentFilter">
+            <v-list v-if="!state.currentFilter" class="mk-table-filter__context-menu">
+              <template v-if="searchableFilterKey && state.currentSearchText">
+                <v-list-item @click="applySearch">{{ searchFilterItemLabel }}</v-list-item>
+                <v-divider></v-divider>
+              </template>
               <v-list-item v-for="key in Object.keys(modelValue)" :key="key" :value="modelValue[key]" @click="changeCurrentFilter(key, modelValue[key])">
                 <v-list-item-title>{{ modelValue[key].title }}</v-list-item-title>
               </v-list-item>
@@ -211,15 +274,17 @@
           </template>
 
           <v-text-field
+            v-model="state.currentSearchText"
             :placeholder="!containsFilterValue ? defaultT('Filter') : ''"
             variant="plain"
             :hide-details="true"
-            readonly
+            :readonly="!searchableFilterKey"
             density="compact"
             class="mk-table-filter__input mx-2"
             color="on-surface1"
             @click="openMenu"
-            @keypress.enter="openMenu"
+            @focus="openMenu"
+            @keypress.enter="applySearch"
           ></v-text-field>
         </template>
       </v-row>
@@ -227,27 +292,30 @@
   </v-card>
 </template>
 
-<stlye lang="scss" scoped>
-.v-input .v-field__input {
-  --v-field-padding-top: 4px;
-}
-
-.v-btn--icon.v-btn--density-default {
-  --v-btn-height: 28px;
-}
-
-.v-row {
-  padding-bottom: 6px;
-}
-
-.mk-table-filter {
-  background-color: rgb(var(--v-theme-surface1));
-  color: rgb(var(--v-theme-on-surface1));
-}
-
-.mk-table-filter__input {
-  input {
-    cursor: pointer;
+<style lang="scss" scoped>
+  .v-input .v-field__input {
+    --v-field-padding-top: 4px;
   }
-}
-</stlye>
+
+  .v-btn--icon.v-btn--density-default {
+    --v-btn-height: 28px;
+  }
+
+  .v-row {
+    padding-bottom: 6px;
+  }
+
+  .mk-table-filter {
+    background-color: rgb(var(--v-theme-surface1));
+    color: rgb(var(--v-theme-on-surface1));
+  }
+
+  .mk-table-filter__input {
+    .v-field__field {
+      height: 40px;
+    }
+    input {
+      cursor: pointer;
+    }
+  }
+</style>

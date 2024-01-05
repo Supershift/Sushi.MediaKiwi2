@@ -31,6 +31,7 @@
     name: {
       title: "Name",
       type: TableFilterType.TextField,
+      searchable: true,
     },
     country: {
       title: "Land",
