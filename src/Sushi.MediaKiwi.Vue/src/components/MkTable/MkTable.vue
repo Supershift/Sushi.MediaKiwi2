@@ -220,7 +220,9 @@
     <template v-if="selection">
       <v-expand-transition>
         <MkBulkActionBar v-if="selection?.length" :selection="selection" @click:close="mkTableViewComponent.clearSelection">
-          <slot name="bulkActionBar"></slot>
+          <template #default="{ confirm }">
+            <slot name="bulkActionBar" :confirm="confirm"></slot>
+          </template>
         </MkBulkActionBar>
       </v-expand-transition>
     </template>
