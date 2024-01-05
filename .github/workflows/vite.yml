@@ -42,5 +42,5 @@ jobs:
           json-final-path: ./test/unit/coverage/coverage-final.json
 
       - name: Run Vite Build
-        run: npm run build
+        run: npm run build:prd
         working-directory: ./src/Sushi.MediaKiwi.Vue
