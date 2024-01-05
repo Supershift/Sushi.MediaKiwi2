@@ -21,7 +21,8 @@ export default mergeConfig(
       },
       coverage: {
         provider: "istanbul",
-        reporter: ["text", "cobertura", "json", ["html", { subdir: "html" }]],
+        reporter: ["text", "cobertura", "json", ["html", { subdir: "html" }], "json-summary"],
+        reportOnFailure: true,
         reportsDirectory: "test/unit/coverage",
         exclude: ["**/*.vue", "**/*.test.ts", "**/*.spec.ts", "**/*.d.ts", "**/*.cy.ts"],
       },

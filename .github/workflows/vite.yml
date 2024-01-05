@@ -38,6 +38,8 @@ jobs:
         uses: davelosert/vitest-coverage-report-action@v2
         with:
           working-directory: ./src/Sushi.MediaKiwi.Vue
+          json-summary-path: ${working-directory}/test/unit/coverage/coverage-summary.json
+          json-final-path: ${working-directory}/test/unit/coverage/coverage-final.json
 
       - name: Run Vite Build
         run: npm run build
