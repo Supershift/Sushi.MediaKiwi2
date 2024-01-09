@@ -140,6 +140,7 @@
       v-if="scrolling"
       :height="scrolling.height"
       :mode="scrolling.mode"
+      :color="scrolling.color"
       tag="tbody"
       :empty-text="scrolling.emptyText"
       :load-more-text="scrolling.loadText"

@@ -1,5 +1,7 @@
 /** properties for the scrolling */
 export interface Scrolling {
+  /** Defines the color of the controls (button and spinners) */
+  color?: string;
   /** Defines the height of the table for infinite scrolling */
   height?: number;
   /** Defines the text to display when there is nothing left to load  */

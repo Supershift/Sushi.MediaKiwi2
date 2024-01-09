@@ -54,10 +54,12 @@
   ];
 
   const scrollSettings = ref<Scrolling>({
-    height: 200,
-    mode: "intersect",
-    side: "both",
-    emptyText: "No more data to load!!!",
+    height: 200, // height of the component
+    mode: "intersect", // intersect (infinite) or manual (button)
+    color: "primary", // used for the button and loader color
+    side: "both", // both, start or end
+    emptyText: "No more data to load!!!", // displayed when there is no more data to load
+    loadText: "Load more", // displayed when the component is in manual mode
   });
   /** Load more triggered, mocked api */
   function loadMore({ done }: ScrollLoad) {
