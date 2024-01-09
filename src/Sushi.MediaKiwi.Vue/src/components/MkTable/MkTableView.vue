@@ -2,7 +2,7 @@
   import { RouteParamValueRaw } from "vue-router";
   import type { TableMap } from "@/models/table/TableMap";
   import { useMediakiwiStore } from "@/stores/";
-  import type { Sorting } from "@/models";
+  import type { ScrollLoad, Scrolling, Sorting } from "@/models";
   import MkTableCheckbox from "./MkTableCheckbox.vue";
   import { useTableRowSelection } from "@/composables/useTableRowSelection";
   import { watch } from "vue";
@@ -26,6 +26,8 @@
     paginationMode?: MediakiwiPaginationMode;
     /** Defines if the table row has a hover effect */
     showHoverEffect: boolean;
+    /** Defines the table's scroll settings */
+    scrolling?: Scrolling;
   }>();
 
   // define event
@@ -33,6 +35,8 @@
     (e: "click:row", value: any): void;
     (e: "update:sorting", value?: Sorting): void;
     (e: "update:selection", value?: unknown[]): void;
+    /** Event emitted when the table is scrolled to the bottom of our list, so we can load more item */
+    (e: "update:load", value?: ScrollLoad): void;
   }>();
 
   // define slots
@@ -43,6 +47,14 @@
     thead: (props: unknown) => never;
     /** table templating */
     tbody: (props: any) => never;
+    /** table templating */
+    sempty?: (props: unknown) => any;
+    /** table templating */
+    serror?: (props: unknown) => any;
+    /** table templating */
+    sloadmore?: (props: unknown) => any;
+    /** table templating */
+    sloading?: (props: unknown) => any;
   }>();
 
   // inject dependencies
@@ -124,7 +136,36 @@
         <slot name="thead"></slot>
       </tr>
     </thead>
-    <tbody>
+    <v-infinite-scroll
+      v-if="scrolling"
+      :height="scrolling.height"
+      :mode="scrolling.mode"
+      tag="tbody"
+      :empty-text="scrolling.emptyText"
+      :load-more-text="scrolling.loadText"
+      @load="(e: ScrollLoad) => emit('update:load', e)"
+    >
+      <!-- render a row for each provided data entity -->
+      <tr v-for="(dataItem, rowIndex) in props.data" :key="rowIndex" :class="tableRowClassses" @click.stop="(e) => onRowClick(e, dataItem)">
+        <td v-if="checkbox" class="px-3" @click.stop>
+          <MkTableCheckbox :is-selected="isItemSelected(dataItem)" @update:selected="(e) => selectItem(dataItem, e)" />
+        </td>
+        <slot name="tbody" v-bind="dataItem"></slot>
+      </tr>
+      <template v-if="slots?.sempty" #empty>
+        <slot name="sempty"></slot>
+      </template>
+      <template v-if="slots?.serror" #error>
+        <slot name="serror"></slot>
+      </template>
+      <template v-if="slots?.sloadmore" #load-more>
+        <slot name="sloadmore"></slot>
+      </template>
+      <template v-if="slots?.sloading" #loading>
+        <slot name="sloading"></slot>
+      </template>
+    </v-infinite-scroll>
+    <tbody v-else>
       <!-- render a row for each provided data entity -->
       <tr v-for="(dataItem, rowIndex) in props.data" :key="rowIndex" :class="tableRowClassses" @click.stop="(e) => onRowClick(e, dataItem)">
         <td v-if="checkbox" class="px-3" @click.stop>
@@ -133,6 +174,7 @@
         <slot name="tbody" v-bind="dataItem"></slot>
       </tr>
     </tbody>
+
     <tfoot>
       <slot name="footer"></slot>
     </tfoot>
@@ -149,6 +191,9 @@
   .v-table {
     .v-table__wrapper {
       table {
+        .v-infinite-scroll--vertical {
+          display: contents;
+        }
         tbody {
           tr {
             transition: 0.2s background-color;

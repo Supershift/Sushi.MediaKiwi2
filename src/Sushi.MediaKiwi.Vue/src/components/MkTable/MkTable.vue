@@ -10,7 +10,7 @@
   import MkToolbar from "@/components/MkToolbar/MkToolbar.vue";
 
   import MkPagination from "@/components/MkPagination/MkPagination.vue";
-  import { IListResult, IPagingResult } from "@/models";
+  import { IListResult, IPagingResult, ScrollLoad, Scrolling } from "@/models";
   import { useSnackbarStore } from "@/stores/snackbar";
   import { onMounted, computed } from "vue";
 
@@ -54,6 +54,10 @@
       currentPagination: Paging;
       /** Defines the pagination mode */
       paginationMode?: MediakiwiPaginationMode;
+
+      /** Infinite scrolling */
+      scrolling?: Scrolling;
+
       /** */
       itemId?: (entity: any) => string | number;
     }>(),
@@ -74,6 +78,7 @@
     (e: "update:selection", value?: unknown[]): void;
     (e: "update:currentPagination", value: Paging): void;
     (e: "click:new", value?: string): void;
+    (e: "update:load", value?: ScrollLoad): void;
   };
   const emit = defineEmits<MkTableEmit>();
 
@@ -91,6 +96,16 @@
     thead?: (props: unknown) => never;
     /** table templating */
     tbody?: (props: any) => never;
+
+    /** scrolling */
+    /** table templating */
+    scrollEmpty?: (props: unknown) => any;
+    /** table templating */
+    scrollError?: (props: unknown) => any;
+    /** table templating */
+    scrollLoadMore?: (props: unknown) => any;
+    /** table templating */
+    scrollLoading?: (props: unknown) => any;
   }>();
 
   // inject dependencies
@@ -234,6 +249,7 @@
       :item-view-id="itemViewId"
       :sorting="sorting"
       :selection="selection"
+      :scrolling="scrolling"
       :checkbox="selection ? true : false"
       class="mk-table"
       :pagination-mode="paginationMode"
@@ -242,6 +258,7 @@
       @click:row="(e) => emit('click:row', e)"
       @update:sorting="sortingChanged"
       @update:selection="(e) => emit('update:selection', e)"
+      @update:load="(e: ScrollLoad) => emit('update:load', e)"
     >
       <template #thead>
         <slot v-if="slots.thead" name="thead"></slot>
@@ -276,6 +293,20 @@
           :page-size-options="pageSizes"
           @update:model-value="pageChanged"
         />
+      </template>
+
+      <!-- Scrolling slots -->
+      <template v-if="slots?.scrollEmpty" #sempty>
+        <slot name="scrollEmpty"></slot>
+      </template>
+      <template v-if="slots?.scrollError" #serror>
+        <slot name="scrollError"></slot>
+      </template>
+      <template v-if="slots?.scrollError" #sloadmore>
+        <slot name="scrollLoadMore"></slot>
+      </template>
+      <template v-if="slots?.scrollLoading" #sloading>
+        <slot name="scrollLoading"></slot>
       </template>
     </MkTableView>
 
