@@ -21,8 +21,14 @@ namespace Sushi.MediaKiwi.Services.Model
 
         /// <summary>
         /// Creates a new instance of <see cref="ListResult{T}"/>.
+        /// </summary>
+        /// <param name="result"></param>
+        public ListResult(QueryListResult<T> result) : this(result, result) { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="ListResult{T}"/>.
         /// </summary>        
-        public ListResult(IList<T> result, MicroORM.IPagingResult paging) : this(result, paging.TotalNumberOfRows, paging.TotalNumberOfPages) { }        
+        public ListResult(IList<T> result, MicroORM.IPagingResult paging) : this(result, paging.TotalNumberOfRows, paging.TotalNumberOfPages) { }
 
         /// <summary>
         /// Creates a new instance of <see cref="ListResult{T}"/>.
