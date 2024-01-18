@@ -1,6 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 
-
 namespace Sushi.MediaKiwi.Services.UnitTests
 {
     public class ServiceCollectionExtensionsTest
@@ -9,7 +8,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
         public void AddMediaKiwiServicesTest()
         {
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddMediaKiwiServices("");
+            serviceCollection.AddMediaKiwiServices();
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
             serviceProvider.GetRequiredService<SectionService>();

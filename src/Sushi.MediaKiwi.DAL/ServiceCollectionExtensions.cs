@@ -18,14 +18,10 @@ namespace Sushi.MediaKiwi.DAL
         /// <summary>
         /// Adds dependencies for MediaKiwi DAL to the service collection.
         /// </summary>
-        /// <param name="services"></param>
-        /// <param name="defaultConnectionString"></param>
-        /// <param name="config"></param>
+        /// <param name="services"></param>        
         /// <returns></returns>
-        public static IServiceCollection AddMediaKiwiDAL(this IServiceCollection services, string defaultConnectionString, Action<MicroOrmConfigurationBuilder>? config = null)
+        public static IServiceCollection AddMediaKiwiDAL(this IServiceCollection services)
         {
-            services.AddMicroORM(defaultConnectionString, config);
-
             services.TryAddTransient<ISectionRepository, SectionRepository>();
             services.TryAddTransient<IViewRepository, ViewRepository>();
             services.TryAddTransient<INavigationItemRepository, NavigationItemRepository>();

@@ -11,7 +11,7 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests
         {
             // build service provider
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddMediaKiwiApi("", null);
+            serviceCollection.AddMediaKiwiApi(null);
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
             // get all controllers
