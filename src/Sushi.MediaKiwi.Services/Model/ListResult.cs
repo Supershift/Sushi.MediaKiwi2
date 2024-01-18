@@ -37,7 +37,7 @@ namespace Sushi.MediaKiwi.Services.Model
         {
             Result = result.AsReadOnly();
             TotalCount = totalCount;
-            PageCount = pageCount;
+            PageCount = pageCount;            
         }
         
         /// <summary>
@@ -50,5 +50,14 @@ namespace Sushi.MediaKiwi.Services.Model
 
         /// <inheritdoc/>
         public int? PageCount { get; private set; }
+
+        /// <summary>
+        /// Creates an empty instance of <see cref="ListResult{T}"/> with paging set to 0 items and page count.
+        /// </summary>
+        /// <returns></returns>
+        public static ListResult<T> Empty()
+        {
+            return new ListResult<T>(new List<T>(), 0, 0);
+        }
     }
 }

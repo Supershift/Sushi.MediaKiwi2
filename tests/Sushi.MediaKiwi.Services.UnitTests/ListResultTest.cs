@@ -82,5 +82,18 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             Assert.Equal(totalCount, result.TotalCount);
             Assert.Equal(pageCount, result.PageCount);
         }
+
+        [Fact]
+        public void CreateEmpty()
+        {
+            // act
+            var result = ListResult<object>.Empty();
+
+            // assert
+            Assert.NotNull(result.Result);
+            Assert.Empty(result.Result);
+            Assert.Equal(0, result.TotalCount);
+            Assert.Equal(0, result.PageCount);
+        }
     }
 }
