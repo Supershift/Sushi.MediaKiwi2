@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <v-main id="main">
+  <v-main>
     <mk-breadcrumbs :sticky="true" />
     <div class="pa-4 pa-md-10 pt-md-4 mk-screen">
       <router-view v-slot="{ Component }">
