@@ -76,11 +76,7 @@ export function mergeDeep(target: any, source: any): any {
   if (isObject(target) && isObject(source)) {
     // Loop though the source keys
     for (const key in source) {
-      // Check for begin an object
-      if (Array.isArray(source[key])) {
-        console.log(`${source[key]} is array:`, Array.isArray(source[key]));
-      }
-
+      // Check for bein an array or object
       if (Array.isArray(source[key])) {
         // Bind the source array to the target array
         target[key] = [...source[key]].flat();
