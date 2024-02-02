@@ -64,12 +64,17 @@ export default {
 
     // create msal instance and install plugin
     identity.msalInstance = new PublicClientApplication(options.msalConfig);
-    // add api scope to msal instance
-    identity.scopes = [`api://${options.msalConfig.auth.clientId}/access_via_approle_assignments`];
 
     // add custom scopes to msal instance
-    if (options.identity?.scopes) {
-      identity.scopes = [...identity.scopes, ...options.identity.scopes];
+    if (options?.identity?.scopes) {
+      if (Array.isArray(options.identity?.scopes)) {
+        identity.scopes = [...options.identity.scopes];
+      } else {
+        identity.scopes = [options.identity.scopes];
+      }
+    } else {
+      // add api scope to msal instance
+      identity.scopes = [`api://${options.msalConfig.auth.clientId}/access_via_approle_assignments`];
     }
 
     // install msal plugin
