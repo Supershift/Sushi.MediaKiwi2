@@ -35,7 +35,6 @@ export function parseToNestedObject(key: string, value: string): object {
         const values = value?.split(",").map((val) => getTypedValue(val.trim()));
 
         result[propertyName] = [...values].flat();
-        // Object.assign(result, { [propertyName]: [...values].flat() });
       } else {
         // Set the value for the deepest level
         // E.g. "tenantId": "some-value"
