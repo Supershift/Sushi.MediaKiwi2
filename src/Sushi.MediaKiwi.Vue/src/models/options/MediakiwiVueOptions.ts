@@ -3,6 +3,7 @@ import { Configuration } from "@azure/msal-browser";
 import { VuetifyOptions } from "vuetify/lib/framework.mjs";
 import { IMediakiwiServiceRegistrations } from "./IMediakiwiServiceRegistrations";
 import { InitOptions, i18n } from "i18next";
+import { MediakiwiIdentity } from "./MediakiwiIdentity";
 
 export interface MediakiwiVueOptions {
   /** Base url for the MediaKiwi API, e.g. https://portal.mydomain.com/mediakiwi/api */
@@ -10,6 +11,7 @@ export interface MediakiwiVueOptions {
   modules: Record<string, RouteComponent>;
   customRoutes?: RouteRecordRaw[];
   msalConfig: Configuration;
+  identity: MediakiwiIdentity;
   /** Override default vuetify options. Provided object will be merged with default vuetify options. */
   vuetifyOptions?: VuetifyOptions;
   /** Exposes classes which can be injected. Provide your implementation for interfaces here. */
