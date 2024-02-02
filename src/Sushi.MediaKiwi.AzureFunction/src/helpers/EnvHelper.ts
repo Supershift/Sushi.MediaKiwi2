@@ -16,9 +16,12 @@ export function getSection(prefix: string): object {
 
       // parse the key to an object
       const result = parseToNestedObject(key, value);
+      console.log("result", result);
 
       // merge with the current result object
       const mergedObj = mergeDeep(cur, result);
+
+      console.log("mergedObj", mergedObj);
 
       // return the merged object
       return mergedObj;
