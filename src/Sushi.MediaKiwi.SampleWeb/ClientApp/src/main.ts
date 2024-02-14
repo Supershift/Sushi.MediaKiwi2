@@ -33,20 +33,21 @@ mediakiwiOptions.i18nextOptions = {
 mediakiwiOptions.i18nextCallback = (instance: i18n) => {};
 
 //install some additional icons (demo)
-mediakiwiOptions.vuetifyOptions = {
-  icons: {
-    defaultSet: "mdi",
-    aliases: {
-      ...aliases, // add the default aliases
-      ...mediakiwiIconAliases, // add the already known mediakiwi aliases
-      accountCheckOutline: mdiAccountCheckOutline, // add your own aliases
-      testTube: mdiTestTube, // add your own aliases
-    },
-    sets: {
-      mdi,
-    },
-  },
-};
+// DEMO: how we implement icons,removed to test symbols
+// mediakiwiOptions.vuetifyOptions = {
+//   icons: {
+//     defaultSet: "mdi",
+//     aliases: {
+//       ...aliases, // add the default aliases
+//       ...mediakiwiIconAliases, // add the already known mediakiwi aliases
+//       accountCheckOutline: mdiAccountCheckOutline, // add your own aliases
+//       testTube: mdiTestTube, // add your own aliases
+//     },
+//     sets: {
+//       mdi,
+//     },
+//   },
+// };
 
 // Change the default date and time format options across the system.
 mediakiwiOptions.dateFormatOptions = {

@@ -182,7 +182,7 @@ export const mediakiwiIconAliases: IconAliases = {
   skipNextOutline: mdiSkipNextOutline,
   // Some outline icons are part of material design outline and not icons
   bus: mdiBus, // bus outline is part of material symbols andn not icons
-  trian: mdiTrain, // train outline is part of material symbols andn not icons
+  train: mdiTrain, // train outline is part of material symbols andn not icons
   car: mdiCar, // car outline is part of material symbols andn not icons
   taxi: mdiTaxi, // taxi outline is part of material symbols andn not icons
   fileGifBox: mdiFileGifBox,

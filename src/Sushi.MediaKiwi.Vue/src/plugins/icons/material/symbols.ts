@@ -1,0 +1,179 @@
+import { h } from "vue";
+import type { IconSet, IconProps } from "vuetify";
+/**
+ * Custom icon aliases for the application using the Symbols from Google Fonts
+ * See {@link https://vuetifyjs.com/en/features/icon-fonts/#creating-a-custom-icon-set} on how to create a custom icon set
+ * See {@link https://developers.google.com/fonts/docs/material_symbols} on how to use the Material Symbols
+ * The 'symbols:' prefix is used to reference the {@link symbols} IconSet in the Vuetify configuration
+ */
+const aliases = {
+  // Navigation icons
+  schema: "symbols:schema",
+  group: "symbols:group",
+  hotel: "symbols:hotel",
+  globe: "symbols:globe",
+  signLanguage: "symbols:sign_language",
+  map: "symbols:map",
+  pinDrop: "symbols:pin_drop",
+  restaurant: "symbols:restaurant",
+  preview: "symbols:preview",
+  table: "symbols:table",
+  gridView: "symbols:grid_view",
+  assignmentInd: "symbols:assignment_ind",
+  handshake: "symbols:handshake",
+  videoGames: "symbols:stadia_controller",
+  videoGamesRetro: "symbols:videogame_asset",
+  manageAccounts: "symbols:manage_accounts",
+  personAdd: "symbols:person_add",
+  flag: "symbols:flag",
+
+  // default icon aliases (from vuetify)
+  collapse: "symbols:expand_more",
+  complete: "symbols:done",
+  cancel: "symbols:cancel",
+  close: "symbols:close",
+  delete: "symbols:delete",
+  clear: "symbols:cancel",
+  success: "symbols:check",
+  info: "symbols:info",
+  warning: "symbols:warning",
+  error: "symbols:error",
+  prev: "symbols:navigate_before",
+  next: "symbols:navigate_next",
+  checkboxOn: "symbols:check_box",
+  checkboxOff: "symbols:check_box_outline_blank",
+  checkboxIndeterminate: "symbols:indeterminate_check_box",
+  delimiter: "symbols:more_vert",
+  sort: "symbols:sort",
+  expand: "symbols:expand_more",
+  menu: "symbols:menu",
+  subgroup: "symbols:subdirectory_arrow_right",
+  dropdown: "symbols:arrow_drop_down",
+  radioOn: "symbols:radio_button_checked",
+  radioOff: "symbols:radio_button_unchecked",
+  edit: "symbols:edit",
+  ratingEmpty: "symbols:star",
+  ratingFull: "symbols:star",
+  ratingHalf: "symbols:star_half",
+  loading: "symbols:progress_activity",
+  first: "symbols:first_page",
+  last: "symbols:last_page",
+  unfold: "symbols:unfold_more",
+  closeCircleOutline: "symbols:cancel",
+  file: "symbols:note",
+  plus: "symbols:add",
+  minus: "symbols:remove",
+  sortDesc: "symbols:arrow_downward_alt",
+  sortAsc: "symbols:arrow_upward_alt",
+  chevronLeft: "symbols:chevron_left",
+  chevronRight: "symbols:chevron_right",
+  informationOutline: "symbols:info",
+
+  // Mediakiwi: Defaults (some might already be included in the above list)
+  unknown: "symbols:check_box_outline_blank", // used for blank icon placeholder
+  arrowLeft: "symbols:arrow_back",
+  arrowRight: "symbols:arrow_forward",
+  circle: "symbols:circle",
+  triangle: "symbols:change_history",
+  square: "symbols:crop_square",
+  pentagon: "symbols:pentagon",
+  hexagon: "symbols:hexagon",
+  circleOutline: "symbols:circle",
+  triangleOutline: "symbols:change_history",
+  squareOutline: "symbols:crop_square",
+  pentagonOutline: "symbols:pentagon",
+  hexagonOutline: "symbols:hexagon",
+  rewindOutline: "symbols:fast_rewind",
+  fastForwardOutline: "symbols:fast_forward",
+  playOutline: "symbols:play_arrow",
+  skipPreviousOutline: "symbols:skip_previous",
+  skipNextOutline: "symbols:skip_next",
+  bus: "symbols:directions_bus",
+  train: "symbols:train",
+  car: "symbols:directions_car",
+  taxi: "symbols:local_taxi",
+  fileGifBox: "symbols:gif_box",
+  checkSmall: "symbols:check_small",
+  mobileFirendly: "symbols:mobile_friendly",
+  magnify: "symbols:search",
+  checkboxMarked: "symbols:check_box",
+  minusBox: "symbols:indeterminate_check_box",
+  checkboxOutline: "symbols:check_box_outline_blank",
+  checkboxBlankOutline: "symbols:check_box_outline_blank",
+  minusBoxOutline: "symbols:indeterminate_check_box",
+  emailOutline: "symbols:mail",
+  bookmark: "symbols:bookmark",
+  bookmarkOutline: "symbols:bookmark",
+  accountOutline: "symbols:account_circle",
+  message: "symbols:chat",
+  messageOutline: "symbols:chat_bubble",
+  trashCanOutline: "symbols:delete",
+  folderOutline: "symbols:folder",
+  menuDown: "symbols:expand_more",
+  menuUp: "symbols:expand_less",
+  menuLeft: "symbols:arrow_left",
+  menuRight: "symbols:arrow_right",
+  paperclip: "symbols:attach_file",
+  calendarToday: "symbols:today",
+  calendar: "symbols:calendar_month",
+  shareVariantOutline: "symbols:share",
+  keyboardOutline: "symbols:keyboard",
+  cogOutline: "symbols:settings",
+  cog: "symbols:settings",
+  clockOutline: "symbols:schedule",
+  keyboardReturn: "symbols:keyboard_return",
+  stickerEmoji: "symbols:ar_stickers",
+  dotsHorizontal: "symbols:more_horiz",
+  microphone: "symbols:mic",
+  web: "symbols:web",
+  language: "symbols:language",
+  help: "symbols:help",
+  googleTranslate: "symbols:g_translate",
+  imageOutline: "symbols:image",
+  trayArrowUp: "symbols:arrow_upward",
+  trayArrowDown: "symbols:arrow_downward",
+  favorite: "symbols:favorite",
+  pallete: "symbols:palette",
+  database: "symbols:database",
+  archive: "symbols:archive",
+  beachAccess: "symbols:beach_access",
+  wc: "symbols:wc",
+  bed: "symbols:bed",
+  roomService: "symbols:room_service",
+  vpnKey: "symbols:vpn_key",
+
+  // ToolBar
+  weatherSunny: "symbols:light_mode",
+  weatherNight: "symbols:dark_mode",
+  accountCircle: "symbols:account_circle",
+
+  // Table
+  checkCircleOutline: "symbols:check_circle",
+  dotsVertical: "symbols:more_vert",
+  arrowUp: "symbols:arrow_upward",
+  arrowDown: "symbols:arrow_downward",
+  filterVariant: "symbols:filter_list",
+
+  // SignIn
+  // microsoftAzure: mdiMicrosoftAzure,
+  login: "symbols:login",
+  logout: "symbols:logout",
+
+  // Sections
+  home: "symbols:home",
+  security: "symbols:security",
+};
+
+/**
+ * Custom icon set for the application
+ * This renders the icons as span elements
+ * {@link https://developers.google.com/fonts/docs/material_symbols}
+ */
+const symbols: IconSet = {
+  component: (props: IconProps) =>
+    h("span", {
+      innerHTML: `<span class='material-symbols-outlined'>${props.icon}</strong>`,
+    }),
+};
+
+export { aliases, symbols };

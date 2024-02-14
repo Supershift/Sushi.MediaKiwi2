@@ -42,7 +42,7 @@ export enum IconsLibrary {
   chevronRight = "$chevronRight",
   informationOutline = "$informationOutline",
 
-  // Mediakiwi: Defaults (some might already be included in the above list)
+  // Mediakiwi = Defaults (some might already be included in the above list)
   unknown = "$checkboxBlankOutline", // used for blank icon placeholder
   arrowLeft = "$arrowLeft",
   arrowRight = "$arrowRight",
@@ -61,14 +61,13 @@ export enum IconsLibrary {
   playOutline = "$playOutline",
   skipPreviousOutline = "$skipPreviousOutline",
   skipNextOutline = "$skipNextOutline",
-  // Some outline icons are part of material design outline and not icons
-  bus = "$bus", // bus outline is part of material symbols andn not icons
-  trian = "$train", // train outline is part of material symbols andn not icons
-  car = "$car", // car outline is part of material symbols andn not icons
-  taxi = "$taxi", // taxi outline is part of material symbols andn not icons
+
+  bus = "$bus",
+  train = "$train",
+  car = "$car",
+  taxi = "$taxi",
   fileGifBox = "$fileGifBox",
-  // checkSmall is part of material symbols andn not icons
-  // mobileFirendly is part of material symbols andn not icons
+
   magnify = "$magnify",
   checkboxMarked = "$checkboxMarked",
   minusBox = "$minusBox",
@@ -122,4 +121,46 @@ export enum IconsLibrary {
   // Sections
   home = "$home",
   security = "$security",
+
+  // Navigation icons
+  schema = "$schema",
+  group = "$group",
+  hotel = "$hotel",
+  globe = "$globe",
+  signLanguage = "$signLanguage",
+  map = "$map",
+  pinDrop = "$pinDrop",
+  restaurant = "$restaurant",
+  preview = "$preview",
+  table = "$table",
+  gridView = "$gridView",
+  assignmentInd = "$assignmentInd",
+  handshake = "$handshake",
+  videoGames = "$videoGames",
+  videoGamesRetro = "$videoGamesRetro",
+  manageAccounts = "$manageAccounts",
+  personAdd = "$personAdd",
+  flag = "$flag",
+
+  checkSmall = "$checkSmall",
+  mobileFirendly = "$mobileFriendly",
+
+  calendar = "$calendarMonth",
+
+  language = "$language",
+  help = "$help",
+
+  favorite = "$favorite",
+  pallete = "$palette",
+  database = "$database",
+  archive = "$archive",
+  beachAccess = "$beachAccess",
+  wc = "$wc",
+  bed = "$bed",
+  roomService = "$roomService",
+  vpnKey = "$vpnKey",
+
+  // SignIn
+  login = "$login",
+  logout = "$logout",
 }

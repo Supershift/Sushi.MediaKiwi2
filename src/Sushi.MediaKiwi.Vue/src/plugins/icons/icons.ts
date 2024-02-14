@@ -2,15 +2,18 @@
 import { IconOptions } from "vuetify/lib/framework.mjs";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
 import { mediakiwiIconAliases } from "./IconAliases";
+import { symbols, aliases as symbolsAliasses } from "./material/symbols";
 
 // custom Icon options for mdi svgs
 export const MediakiwiIconOptions: IconOptions = {
-  defaultSet: "mdi", // is already default
+  defaultSet: "mdi",
   aliases: {
     ...aliases,
     ...mediakiwiIconAliases,
+    ...symbolsAliasses,
   },
   sets: {
+    symbols,
     mdi,
   },
 };
