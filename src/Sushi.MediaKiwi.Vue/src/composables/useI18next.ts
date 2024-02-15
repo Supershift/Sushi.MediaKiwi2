@@ -111,8 +111,8 @@ export async function useI18next(scope?: View | string) {
   const formatDateTimeGeneric = computed(() => formatDateTimeGenericInternal);
 
   // number formatting
-  const formatNumberInternal = (value: number): string => {
-    return Intl.NumberFormat(i18next.value.resolvedLanguage).format(value);
+  const formatNumberInternal = (value: number, options?: Intl.NumberFormatOptions): string => {
+    return Intl.NumberFormat(i18next.value.resolvedLanguage, options).format(value);
   };
 
   const formatNumber = computed(() => formatNumberInternal);
