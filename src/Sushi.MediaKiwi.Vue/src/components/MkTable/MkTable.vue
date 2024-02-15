@@ -20,7 +20,6 @@
   import MkTableCell from "./MkTableCell.vue"; // Mk-Td
   import { defaultPageSizeOptions, defaultPageSize } from "@/constants";
   import { useComponentContext } from "@/composables/useComponentContext";
-  import { TimeHTMLAttributes } from "vue";
 
   // define properties
   const props = withDefaults(
@@ -221,7 +220,9 @@
     <template v-if="selection">
       <v-expand-transition>
         <MkBulkActionBar v-if="selection?.length" :selection="selection" @click:close="mkTableViewComponent.clearSelection">
-          <slot name="bulkActionBar"></slot>
+          <template #default="{ confirm }">
+            <slot name="bulkActionBar" :confirm="confirm"></slot>
+          </template>
         </MkBulkActionBar>
       </v-expand-transition>
     </template>

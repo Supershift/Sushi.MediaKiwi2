@@ -81,6 +81,20 @@ describe("ObjectHelper", () => {
       expect(result).not.toBeUndefined();
       expect(result).toEqual({});
     });
+
+    it("Should parse array object", () => {
+      // set the keys
+      const key = "mediaKiwi.identity.scopes";
+      const value = "api://testId/access_via_approle_assignments, api://testId/user_access";
+
+      const result = <any>parseToNestedObject(key, value);
+
+      expect(result).not.toBeUndefined();
+      expect(Array.isArray(result.mediaKiwi.identity.scopes)).toBe(true);
+      expect(result.mediaKiwi.identity.scopes).toHaveLength(2);
+      expect(result.mediaKiwi.identity.scopes[0]).toBe("api://testId/access_via_approle_assignments");
+      expect(result.mediaKiwi.identity.scopes[1]).toBe("api://testId/user_access");
+    });
   });
 
   describe("mergeDeep", () => {
@@ -115,6 +129,30 @@ describe("ObjectHelper", () => {
             auth: {
               redirectUri: "/loginRedirect",
             },
+          },
+        },
+      });
+    });
+
+    it("Should merge two nested objects when one an Array", () => {
+      const target = parseToNestedObject("MediaKiwi.msalConfig.clientId", "testId");
+      const source = parseToNestedObject("mediaKiwi.identity.scopes", "api://testId/access_via_approle_assignments, api://testId/user_access");
+
+      const result = mergeDeep(target, source);
+
+      console.log("result.mediaKiwi:", result.mediaKiwi);
+
+      expect(result).not.toBeUndefined();
+      expect(Array.isArray(result.mediaKiwi.identity.scopes)).toBe(true);
+      expect(result.mediaKiwi.identity.scopes).toHaveLength(2);
+
+      expect(result).toEqual({
+        mediaKiwi: {
+          identity: {
+            scopes: ["api://testId/access_via_approle_assignments", "api://testId/user_access"],
+          },
+          msalConfig: {
+            clientId: "testId",
           },
         },
       });

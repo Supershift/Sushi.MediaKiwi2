@@ -44,6 +44,7 @@ export const GlobalConfiguration: VuetifyOptions = {
       color: "background",
       border: "none",
       location: "right",
+      class: "v-navigation-drawer--mediakiwi--side-sheet",
     },
     VMain: {
       color: "background",
@@ -74,6 +75,11 @@ export const GlobalConfiguration: VuetifyOptions = {
       falseIcons: IconsLibrary.checkboxOff,
       indeterminateIcon: IconsLibrary.minusBox,
       class: "v-checkbox--mediakiwi",
+      VLabel: {
+        style: {
+          opacity: "1",
+        },
+      },
     },
     VDivider: {
       color: "outline-variant",

@@ -35,3 +35,10 @@
     #{$name}: #{$value} !important; // Vuetify uses !important so we need to override it
   }
 }
+
+@mixin hover-effect {
+  &:hover {
+    background: rgba(var(--v-theme-surface-variant), var(--v-hover-opacity));
+    cursor: pointer;
+  }
+}

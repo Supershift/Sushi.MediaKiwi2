@@ -31,6 +31,7 @@
     name: {
       title: "Name",
       type: TableFilterType.TextField,
+      searchable: true,
     },
     country: {
       title: "Land",
@@ -67,7 +68,7 @@
         { title: "Nederland", value: "NL" },
         { title: "België", value: "BE" },
       ],
-      type: TableFilterType.SelectMultiple,
+      type: TableFilterType.SelectMultipleCheckbox,
     },
   });
 
@@ -90,7 +91,7 @@
   });
 
   function download() {
-    console.log("Download", selectedTableRows.value);
+    alert("Download: " + selectedTableRows.value.length);
   }
 
   function remove() {
@@ -98,7 +99,7 @@
   }
 
   function move() {
-    console.log("move", selectedTableRows.value);
+    alert("move: " + selectedTableRows.value.length);
   }
   defineEmits(["clicked:customer"]);
 </script>
@@ -115,9 +116,9 @@
     title="Customer collection"
     @click:row="$emit('clicked:customer', $event)"
   >
-    <template #bulkActionBar>
-      <v-btn @click="download"><v-icon :icon="IconsLibrary.trayArrowDown"></v-icon> Download</v-btn>
-      <v-btn @click="move">move</v-btn>
+    <template #bulkActionBar="{ confirm }">
+      <v-btn @click="confirm(download)"><v-icon :icon="IconsLibrary.trayArrowDown"></v-icon> Download</v-btn>
+      <v-btn @click="confirm(move)">move</v-btn>
 
       <MkOverflowMenuIcon>
         <v-list-item @click="remove">Delete</v-list-item>

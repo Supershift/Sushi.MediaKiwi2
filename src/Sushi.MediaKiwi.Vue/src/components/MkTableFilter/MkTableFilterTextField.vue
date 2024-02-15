@@ -26,18 +26,25 @@
       value: model.value,
     });
   }
+
+  function onSubmit(e: SubmitEvent) {
+    e.preventDefault();
+    applyFilter();
+  }
 </script>
 
 <template>
-  <MkDialogCard :title="tableFilterItem.title" content-classes="pa-6" class="mk-table-filter__item" @click:close="() => emit('click:close')">
-    <template #intro>
-      <p>{{ t("Select Textfield intro", "Please choose the correct item") }}</p>
-    </template>
-    <template #default>
-      <v-text-field v-model="model" :label="t('Contains')" hide-details> </v-text-field>
-    </template>
-    <template #actions>
-      <v-btn @click="applyFilter">{{ defaultT("Apply") }}</v-btn>
-    </template>
-  </MkDialogCard>
+  <v-form @submit="onSubmit">
+    <MkDialogCard :title="tableFilterItem.title" content-classes="pa-6" class="mk-table-filter__item" @click:close="() => emit('click:close')">
+      <template #intro>
+        <p>{{ t("Select Textfield intro", "Please choose the correct item") }}</p>
+      </template>
+      <template #default>
+        <v-text-field v-model="model" :label="t('Contains')" hide-details> </v-text-field>
+      </template>
+      <template #actions>
+        <v-btn @click="applyFilter">{{ defaultT("Apply") }}</v-btn>
+      </template>
+    </MkDialogCard>
+  </v-form>
 </template>
