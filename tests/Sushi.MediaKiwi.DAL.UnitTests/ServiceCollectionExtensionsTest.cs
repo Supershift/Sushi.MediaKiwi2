@@ -9,7 +9,7 @@ namespace Sushi.MediaKiwi.DAL.UnitTests
         public void AddDalServicesTest()
         {
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddMediaKiwiDAL("");
+            serviceCollection.AddMediaKiwiDAL();
             var serviceProvider = serviceCollection.BuildServiceProvider();
             
             serviceProvider.GetRequiredService<ISectionRepository>();
