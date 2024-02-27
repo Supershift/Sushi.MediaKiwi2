@@ -36,7 +36,7 @@ services.AddSwaggerGen(options =>
 });
 
 // Define admin roles
-var adminRoles = new[] { Sushi.MediaKiwi.WebAPI.Constants.AdminRoleName, "SuperAdmin" };
+var adminRoles = new[] { Sushi.MediaKiwi.WebAPI.Constants.AdminRoleName };
 
 // add mediakiwi API
 services.AddMediaKiwiApi(    

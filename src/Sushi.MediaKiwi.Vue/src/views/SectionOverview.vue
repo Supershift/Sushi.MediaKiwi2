@@ -19,6 +19,7 @@
       { headerTitle: "Name", value: (x) => x.name },
       { headerTitle: "Icon", value: (x) => x.icon },
       { headerTitle: "Sort order", value: (x) => x.sortOrder },
+      { headerTitle: "Roles", value: (x) => x.roles?.join() },
     ],
   };
 

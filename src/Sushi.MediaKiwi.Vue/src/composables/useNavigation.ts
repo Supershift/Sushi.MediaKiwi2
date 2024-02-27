@@ -3,6 +3,8 @@ import type { NavigationItem, Section } from "@/models/api";
 import { useRoute, useRouter } from "@/router";
 import { useMediakiwiStore } from "@/stores";
 import { NavigationFailure, RouteLocationOptions, RouteParamValueRaw, RouteParamsRaw } from "vue-router";
+import { identity } from "@/identity";
+import { s } from "vitest/dist/reporters-5f784f42";
 
 /** Composable for navigation related functionality
  *  Calls mediakiwistore then router, in that order
@@ -181,7 +183,15 @@ export function useNavigation() {
   const currentViewParameterNumber = computed(() => Number(currentViewParameter.value));
 
   /** Gets all sections which have navigation items. */
-  const currentSections = computed(() => store.sections.filter((section) => store.navigationItems.some((item) => item.sectionId === section.id)));
+  const currentSections = computed(() => 
+  {
+    // filter only sections to which current role has access
+    const activeAccount = identity.msalInstance.getActiveAccount();    
+    var sections = store.sections.filter((section) => !section.roles?.length ? true : false || section.roles.some((role) => activeAccount?.idTokenClaims?.roles?.includes(role)));
+    // remove sections without navigation items
+    sections = sections.filter((section) => store.navigationItems.some((item) => item.sectionId === section.id))
+    return sections;
+  });
 
   /** Determines if the provided navigation item is the current navigation item
    *  @param navigationItem The navigation item to check
