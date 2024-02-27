@@ -76,9 +76,8 @@ namespace Sushi.MediaKiwi.Services
 
             if (section != null)
             {
-                // map to result
-                var result = new Section();
-                _mapper.Map(section, result);
+                // map to result                 
+                var result = _mapper.Map<Section>(section);
                 return new Result<Section>(result);
             }
             else
@@ -119,9 +118,8 @@ namespace Sushi.MediaKiwi.Services
                 // commit transaction
                 ts.Complete();
             }
-            
-            var result = new Section();
-            _mapper.Map(section, result);
+             
+            var result = _mapper.Map<Section>(section);
             return new Result<Section>(result);
         }
     }
