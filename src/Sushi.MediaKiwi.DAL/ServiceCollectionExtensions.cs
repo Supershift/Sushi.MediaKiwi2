@@ -23,6 +23,7 @@ namespace Sushi.MediaKiwi.DAL
         public static IServiceCollection AddMediaKiwiDAL(this IServiceCollection services)
         {
             services.TryAddTransient<ISectionRepository, SectionRepository>();
+            services.TryAddTransient<ISectionRoleRepository, SectionRoleRepository>();
             services.TryAddTransient<IViewRepository, ViewRepository>();
             services.TryAddTransient<INavigationItemRepository, NavigationItemRepository>();
             services.TryAddTransient<IViewRoleRepository, ViewRoleRepository>();

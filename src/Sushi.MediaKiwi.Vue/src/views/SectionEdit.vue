@@ -8,12 +8,14 @@
   import { RouterManager } from "@/router/routerManager";
   import { useNavigation } from "@/composables/useNavigation";
   import { adminSectionId } from "@/constants";
+  import { useMediakiwiStore } from "@/stores";
 
   // inject dependencies
   const SectionConnector = container.resolve<ISectionConnector>("ISectionConnector");
   const routerManager = container.resolve<RouterManager>("RouterManager");
 
   const route = useRoute();
+  const store = useMediakiwiStore();
   const navigation = useNavigation();
 
   // get id of the section from the route
@@ -81,5 +83,15 @@
     <v-text-field v-model="state.section.name" label="Name" :disabled="isAdminSection"></v-text-field>
     <v-text-field v-model="state.section.icon" label="Icon" :disabled="isAdminSection" :placeholder="IconsLibrary.home"></v-text-field>
     <v-text-field v-model="state.section.sortOrder" label="Sort order" type="number" :disabled="isAdminSection"></v-text-field>
+    <v-autocomplete
+      v-model="state.section.roles"
+      label="Roles"
+      chips
+      multiple
+      :items="store.roles"
+      item-title="id"
+      item-value="id"
+      hint="If set, only these roles can see the section. If empty, all roles can see the section."
+    ></v-autocomplete>
   </MkForm>
 </template>
