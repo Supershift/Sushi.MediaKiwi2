@@ -4,7 +4,6 @@ import { useRoute, useRouter } from "@/router";
 import { useMediakiwiStore } from "@/stores";
 import { NavigationFailure, RouteLocationOptions, RouteParamValueRaw, RouteParamsRaw } from "vue-router";
 import { identity } from "@/identity";
-import { s } from "vitest/dist/reporters-5f784f42";
 
 /** Composable for navigation related functionality
  *  Calls mediakiwistore then router, in that order

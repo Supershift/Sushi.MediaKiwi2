@@ -6,8 +6,7 @@
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <UserSecretsId>c97dd686-97ae-4b0e-b12f-ae9c490c9f0f</UserSecretsId>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RunSettingsFilePath>C:\trunk\Sushi.MediaKiwi2\tests\Sushi.MediaKiwi.DAL.ManualTests\bin\Debug\net8.0\fine-code-coverage\coverage-tool-output\Sushi.MediaKiwi.DAL.ManualTests-fcc-mscodecoverage-generated.runsettings</RunSettingsFilePath>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>    
   </PropertyGroup>
 
   <ItemGroup>
