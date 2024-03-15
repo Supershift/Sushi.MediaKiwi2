@@ -2,10 +2,10 @@
   "compilerOptions": {
     "composite": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ES2020",
+    "target": "ES2022",
     "useDefineForClassFields": true,
     "module": "ESNext",
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
 
     /* Bundler mode */
@@ -23,7 +23,8 @@
     "noFallthroughCasesInSwitch": true,
     "paths": {
       "@/*": ["./src/*"],
-      "@cypress/*": ["./cypress/*"]
+      "@cypress/*": ["./cypress/*"],
+      "@test/*": ["./test/*"]
     },
     "types": [
       "vite/client",
@@ -33,5 +34,5 @@
     ],
     "experimentalDecorators": true // This will resolve the tsyringe errors with the decorators
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "vite.config.ts", "cypress", "types"]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "vite.config.ts", "cypress", "types", "test"]
 }

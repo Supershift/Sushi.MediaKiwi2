@@ -2,20 +2,19 @@ import "reflect-metadata";
 import { describe, it, expect, vi } from "vitest";
 import { useKeyboardShortcuts } from "../useKeyboardShortcuts";
 import { KeyboardShortcutCollection } from "../../models/keyboard/KeyboardShortcutCollection";
-import { afterEach, before, beforeEach } from "node:test";
 
 // create the test bindings
 const arrowBindings: KeyboardShortcutCollection = {
-  ArrowLeft: (e: KeyboardEvent) => {
+  ArrowLeft: (_e: KeyboardEvent) => {
     console.log("ArrowLeft tiggered");
   },
-  ArrowRight: (e: KeyboardEvent) => {
+  ArrowRight: (_e: KeyboardEvent) => {
     console.log("ArrowRight tiggered");
   },
 };
 
 const controlBindings: KeyboardShortcutCollection = {
-  "control+f": (e: KeyboardEvent) => {
+  "control+f": (_e: KeyboardEvent) => {
     console.log("control+f tiggered");
   },
 };
@@ -96,7 +95,7 @@ describe("useKeyboardShortcuts", () => {
 
       // Create a spy on the arrowleft function
       // This is in lowercase because the keys are normalized to lowercase
-      const spy = vi.spyOn(registerdKeyboardShortcuts.value, "arrowleft");
+      const spy = vi.spyOn(registerdKeyboardShortcuts.value!, "arrowLeft");
 
       // Dispatch the keydown event with Arrow Left
       window.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft" }));
@@ -116,7 +115,7 @@ describe("useKeyboardShortcuts", () => {
 
       // Create a spy on the control+f function
       // This is in lowercase because the keys are normalized to lowercase
-      const spy = vi.spyOn(registerdKeyboardShortcuts.value, "control+f");
+      const spy = vi.spyOn(registerdKeyboardShortcuts.value!, "control+f");
 
       // Dispatch the keydown event with Arrow Left
       window.dispatchEvent(new KeyboardEvent("keydown", { key: "Control" }));

@@ -1,5 +1,4 @@
 import { describe, it, expect } from "vitest";
-import type { TableMap } from "../../models/table/TableMap";
 import { useTableRowSelection } from "../useTableRowSelection";
 import { computed } from "vue";
 
@@ -10,15 +9,6 @@ interface ISampleData {
   countryName: string;
   date: Date;
 }
-
-// define a mapping between source data and desired columns in the table
-const myMap = <TableMap<ISampleData>>{
-  itemId: (item) => {
-    return item.id;
-  },
-  showSelect: true,
-  items: [{ headerTitle: "Id", value: (dataItem): number => dataItem.id }],
-};
 
 const testData = <ISampleData[]>[
   { id: 1, name: "Data A" },
