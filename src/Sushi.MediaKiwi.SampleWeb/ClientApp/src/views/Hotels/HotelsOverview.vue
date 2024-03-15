@@ -40,7 +40,7 @@
   function srpIcon(item: Hotel): TableCellIcon {
     return {
       position: item.srp ? TableIconPosition.Append : TableIconPosition.Prepend,
-      iconName: item.srp ? "$accountCheckOutline" : IconsLibrary.accountCircle,
+      iconName: item.srp ? IconsLibrary.checkCircleOutline : IconsLibrary.accountCircle,
       tooltip: item.srp ? "SRP" : "NoSRP",
       label: item.srp ? "SRP correct" : "Define SRP",
     };
@@ -112,7 +112,7 @@
     item-view-id="HotelEdit"
     new
     new-emit
-    :new-title="t('New hotel')"
+    :new-title="t('New hotel').toString()"
     title="Subtitle for the hotel list"
     @click:new="console.log('New Button Clicked: ' + $event)"
   >

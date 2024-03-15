@@ -1,32 +1,12 @@
-import { h } from "vue";
-import type { IconSet, IconProps } from "vuetify";
+import type { IconAliases } from "vuetify";
+
 /**
  * Custom icon aliases for the application using the Symbols from Google Fonts
  * See {@link https://vuetifyjs.com/en/features/icon-fonts/#creating-a-custom-icon-set} on how to create a custom icon set
  * See {@link https://developers.google.com/fonts/docs/material_symbols} on how to use the Material Symbols
  * The 'symbols:' prefix is used to reference the {@link symbols} IconSet in the Vuetify configuration
  */
-const aliases = {
-  // Navigation icons
-  schema: "symbols:schema",
-  group: "symbols:group",
-  hotel: "symbols:hotel",
-  globe: "symbols:globe",
-  signLanguage: "symbols:sign_language",
-  map: "symbols:map",
-  pinDrop: "symbols:pin_drop",
-  restaurant: "symbols:restaurant",
-  preview: "symbols:preview",
-  table: "symbols:table",
-  gridView: "symbols:grid_view",
-  assignmentInd: "symbols:assignment_ind",
-  handshake: "symbols:handshake",
-  videoGames: "symbols:stadia_controller",
-  videoGamesRetro: "symbols:videogame_asset",
-  manageAccounts: "symbols:manage_accounts",
-  personAdd: "symbols:person_add",
-  flag: "symbols:flag",
-
+export const symbolsAliases: IconAliases = {
   // default icon aliases (from vuetify)
   collapse: "symbols:expand_more",
   complete: "symbols:done",
@@ -88,11 +68,13 @@ const aliases = {
   playOutline: "symbols:play_arrow",
   skipPreviousOutline: "symbols:skip_previous",
   skipNextOutline: "symbols:skip_next",
+
   bus: "symbols:directions_bus",
   train: "symbols:train",
   car: "symbols:directions_car",
   taxi: "symbols:local_taxi",
   fileGifBox: "symbols:gif_box",
+
   checkSmall: "symbols:check_small",
   mobileFirendly: "symbols:mobile_friendly",
   magnify: "symbols:search",
@@ -141,6 +123,7 @@ const aliases = {
   bed: "symbols:bed",
   roomService: "symbols:room_service",
   vpnKey: "symbols:vpn_key",
+  eyeDropper: "symbols:colorize",
 
   // ToolBar
   weatherSunny: "symbols:light_mode",
@@ -155,7 +138,6 @@ const aliases = {
   filterVariant: "symbols:filter_list",
 
   // SignIn
-  // microsoftAzure: mdiMicrosoftAzure,
   login: "symbols:login",
   logout: "symbols:logout",
 
@@ -163,17 +145,3 @@ const aliases = {
   home: "symbols:home",
   security: "symbols:security",
 };
-
-/**
- * Custom icon set for the application
- * This renders the icons as span elements
- * {@link https://developers.google.com/fonts/docs/material_symbols}
- */
-const symbols: IconSet = {
-  component: (props: IconProps) =>
-    h("span", {
-      innerHTML: `<span class='material-symbols-outlined'>${props.icon}</strong>`,
-    }),
-};
-
-export { aliases, symbols };

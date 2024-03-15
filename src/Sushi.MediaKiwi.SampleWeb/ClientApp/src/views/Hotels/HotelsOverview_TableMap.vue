@@ -36,7 +36,7 @@
   function srpIcon(item: Hotel): TableCellIcon {
     return {
       position: item.srp ? TableIconPosition.Append : TableIconPosition.Prepend,
-      iconName: item.srp ? IconsLibrary.accountCheckOutline : IconsLibrary.accountCircle,
+      iconName: item.srp ? IconsLibrary.checkCircleOutline : IconsLibrary.accountCircle,
       tooltip: item.srp ? "SRP" : "NoSRP",
       label: item.srp ? "SRP correct" : "Define SRP",
     };

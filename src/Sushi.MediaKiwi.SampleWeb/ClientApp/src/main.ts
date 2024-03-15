@@ -1,15 +1,15 @@
 import "reflect-metadata";
 import App from "./App.vue";
 import { createApp } from "vue";
-import mediakiwi, { createAxiosClient, mediakiwiIconAliases, ConfigurationConnector, MediakiwiVueOptions } from "@supershift/mediakiwi-vue";
+import mediakiwi, { createAxiosClient, ConfigurationConnector, MediakiwiVueOptions } from "@supershift/mediakiwi-vue";
 
 // Import the mediakiwi stylesheet
 import "./styles/main.scss";
 import { container } from "tsyringe";
 import { i18n } from "i18next";
-import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
-import { mdiAccountCheckOutline, mdiTestTube } from "@mdi/js";
 import { SampleWebConfiguration } from "./models/SampleWebConfiguration";
+
+import { sampleWebAliases } from "./plugins/mediakiwi/Icons";
 
 // Fetch the settings from the function api
 const connector = new ConfigurationConnector("/api/configuration", import.meta.env.VITE_APP_SETTINGS_BASE_URL);
@@ -32,22 +32,14 @@ mediakiwiOptions.i18nextOptions = {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
 mediakiwiOptions.i18nextCallback = (instance: i18n) => {};
 
-//install some additional icons (demo)
-// DEMO: how we implement icons,removed to test symbols
-// mediakiwiOptions.vuetifyOptions = {
-//   icons: {
-//     defaultSet: "mdi",
-//     aliases: {
-//       ...aliases, // add the default aliases
-//       ...mediakiwiIconAliases, // add the already known mediakiwi aliases
-//       accountCheckOutline: mdiAccountCheckOutline, // add your own aliases
-//       testTube: mdiTestTube, // add your own aliases
-//     },
-//     sets: {
-//       mdi,
-//     },
-//   },
-// };
+// Add your own additional icons
+mediakiwiOptions.vuetifyOptions = {
+  icons: {
+    aliases: {
+      ...sampleWebAliases,
+    },
+  },
+};
 
 // Change the default date and time format options across the system.
 mediakiwiOptions.dateFormatOptions = {
