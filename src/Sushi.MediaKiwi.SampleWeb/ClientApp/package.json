@@ -16,8 +16,7 @@
     "test": "jest src",
     "test:ui": "vitest --ui",
     "reports": "vite preview --base __vitest__ --outDir ./html",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "dotnet:run:api": "cd ../../Sushi.MediaKiwi.SampleAPI && dotnet build && dotnet watch run"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.4",
