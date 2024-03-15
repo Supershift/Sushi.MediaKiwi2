@@ -6,7 +6,7 @@ import mediakiwi, { createAxiosClient, mediakiwiIconAliases, ConfigurationConnec
 // Import the mediakiwi stylesheet
 import "./styles/main.scss";
 import { container } from "tsyringe";
-import { i18n } from "i18next";
+// import { i18n } from "i18next";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
 import { mdiAccountCheckOutline, mdiTestTube } from "@mdi/js";
 import { SampleWebConfiguration } from "./models/SampleWebConfiguration";
@@ -25,12 +25,12 @@ const mediakiwiOptions = <MediakiwiVueOptions>{ ...settings.mediaKiwi };
 // import all views as models
 mediakiwiOptions.modules = import.meta.glob("./views/**/*.vue");
 
-// i18next options
-mediakiwiOptions.i18nextOptions = {
-  debug: true,
-};
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
-mediakiwiOptions.i18nextCallback = (instance: i18n) => {};
+// // i18next options
+// mediakiwiOptions.i18nextOptions = {
+//   debug: true,
+// };
+// // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
+// mediakiwiOptions.i18nextCallback = (instance: i18n) => {};
 
 //install some additional icons (demo)
 mediakiwiOptions.vuetifyOptions = {
