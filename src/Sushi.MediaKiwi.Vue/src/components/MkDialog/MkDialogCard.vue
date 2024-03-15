@@ -1,12 +1,11 @@
 <script setup lang="ts">
   import { useI18next } from "@/composables";
-  import { computed } from "vue";
 
   // inject dependencies
   const { defaultT } = await useI18next();
 
   // define properties and events
-  const props = withDefaults(
+  withDefaults(
     defineProps<{
       /** Title of the dialog */
       title?: string;

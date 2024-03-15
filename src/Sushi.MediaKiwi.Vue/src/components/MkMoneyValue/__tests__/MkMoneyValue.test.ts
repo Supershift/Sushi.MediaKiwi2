@@ -3,7 +3,7 @@ import "reflect-metadata";
 import MkMoneyValueComponent from "../MkMoneyValue.vue";
 import { describe, expect, vi, beforeEach } from "vitest";
 import { container } from "tsyringe";
-import { mountAsync } from "@test/utils/mount";
+import { mountAsync } from "./../../../../test/utils/mountAsync";
 
 // mock libraries
 vi.mock("i18next");
