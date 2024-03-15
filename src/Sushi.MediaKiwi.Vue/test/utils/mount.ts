@@ -1,5 +1,3 @@
-/* eslint-disable vue/one-component-per-file */
-/* eslint-disable no-unused-labels */
 import "reflect-metadata";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
 import type { MountingOptions } from "@vue/test-utils";
@@ -13,9 +11,7 @@ import { createRouter } from "vue-router";
 import { getDefaultRouterOptions } from "@/router/getDefaultRouterOptions";
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
-import * as directives from "vuetify/directives";
-import { globalConfiguration } from "@/plugins/vuetify/GlobalConfiguration";
-import defaultVuetifyOptions from "@/plugins/vuetify/index";
+import { defaultVuetifyOptions } from "@/plugins/vuetify/index";
 import { makeValidationProps, useValidation, ValidationProps } from "vuetify/lib/composables/validation.mjs";
 /**
  * Create the default mounting options
