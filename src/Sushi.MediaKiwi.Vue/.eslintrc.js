@@ -28,7 +28,6 @@ module.exports = {
   rules: {
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
-    "vue/valid-v-slot": ["error", { allowModifiers: true }], // added since the new vstepper does use v-slot modifiers
   },
   overrides: [
     {
@@ -43,7 +42,6 @@ module.exports = {
         "@typescript-eslint/explicit-function-return-type": "error",
         "@typescript-eslint/consistent-type-imports": "error",
         "@typescript-eslint/no-explicit-any": "off",
-        "@typescript-eslint/no-non-null-assertion": "off",
       },
     },
   ],
