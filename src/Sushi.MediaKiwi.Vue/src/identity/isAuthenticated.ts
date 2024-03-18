@@ -1,4 +1,4 @@
-import { InteractionType, PopupRequest, PublicClientApplication, RedirectRequest } from "@azure/msal-browser";
+import { InteractionType, PopupRequest, RedirectRequest } from "@azure/msal-browser";
 import { identity } from "@/identity";
 export function isAuthenticated(): boolean {
   const account = identity.msalInstance.getActiveAccount();

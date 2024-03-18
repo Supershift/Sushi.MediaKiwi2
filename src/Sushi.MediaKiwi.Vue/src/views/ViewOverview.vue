@@ -6,7 +6,7 @@
   import { ref } from "vue";
   import { container } from "tsyringe";
   import { IViewConnector } from "@/services";
-  import { TableFilterType } from "@models/enum/TableFilterType";
+  import { TableFilterType } from "@/models/enum/TableFilterType";
 
   // inject dependencies
   const viewConnector = container.resolve<IViewConnector>("IViewConnector");

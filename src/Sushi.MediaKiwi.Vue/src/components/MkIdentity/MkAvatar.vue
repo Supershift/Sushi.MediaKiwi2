@@ -5,10 +5,8 @@
   import { ref } from "vue";
   import { IconsLibrary } from "@/models";
   import { computed } from "vue";
-  import { useI18next } from "@/composables/useI18next";
 
   const { account } = useMsal();
-  const { defaultT } = await useI18next();
 
   const menu = ref(false);
 

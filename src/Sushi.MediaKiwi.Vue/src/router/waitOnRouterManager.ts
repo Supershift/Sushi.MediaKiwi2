@@ -3,7 +3,7 @@ import { container } from "tsyringe";
 import { RouterManager, RouterManagerState } from "./routerManager";
 
 /** If navigation fails and the router manager is not yet initialized routing is retried after waiting for initialization. */
-export async function waitOnRouterManager(to: RouteLocationNormalized, from: RouteLocationNormalized): Promise<string | boolean> {
+export async function waitOnRouterManager(to: RouteLocationNormalized, _from: RouteLocationNormalized): Promise<string | boolean> {
   if (to.matched.length == 0) {
     // no route matched
     // check if we finished loading routes
