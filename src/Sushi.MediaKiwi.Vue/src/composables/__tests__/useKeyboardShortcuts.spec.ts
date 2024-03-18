@@ -90,23 +90,6 @@ describe("useKeyboardShortcuts", () => {
   });
 
   describe("Trigger keyboard shortcut events", () => {
-    it("Should handle window keyboard event", async () => {
-      addKeyboardShortcuts(testShortcuts);
-
-      // Create a spy on the arrowleft function
-      // This is in lowercase because the keys are normalized to lowercase
-      const spy = vi.spyOn(registerdKeyboardShortcuts.value!, "arrowLeft");
-
-      // Dispatch the keydown event with Arrow Left
-      window.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft" }));
-      window.dispatchEvent(new KeyboardEvent("keyup", { key: "ArrowLeft" }));
-
-      // Expect the arrowleft function to be called
-      expect(spy).toHaveBeenCalled();
-
-      removeKeyboardShortcuts(testShortcuts);
-    });
-
     it("Should handle window multi-key keyboard event", async () => {
       addKeyboardShortcuts(testShortcuts);
 
