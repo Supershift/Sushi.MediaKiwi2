@@ -19,6 +19,7 @@ export default mergeConfig(
       outputFile: {
         junit: "test/unit/coverage/TEST-junit.xml",
       },
+      exclude: ["node_modules"],
       coverage: {
         provider: "istanbul",
         reporter: ["text", "cobertura", "json", ["html", { subdir: "html" }]],
