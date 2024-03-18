@@ -15,7 +15,7 @@ import { registerRouter } from "./helpers/registerRouter";
 import { addWaitOnRouterManager } from "./router/waitOnRouterManager";
 import { addCheckIsInRole } from "./router/checkIsInRole";
 import { registerAxios } from "./helpers/registerAxios";
-import i18next from "./plugins/i18next";
+import i18next, { tokenStore } from "./plugins/i18next";
 import { registerIcons } from "./helpers/registerIcons";
 import { registerDirectives } from "./helpers/registerDirectives";
 import { createVuetify } from "./plugins/vuetify";

@@ -4,6 +4,7 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
+      - ".github/workflows/vite_mediakiwi.yaml"
       - "src/Sushi.MediaKiwi.Vue/**/*"
 
 # Add "id-token" with the intended permissions.

@@ -29,6 +29,8 @@ mediakiwiOptions.modules = import.meta.glob("./views/**/*.vue");
 mediakiwiOptions.i18nextOptions = {
   debug: true,
 };
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
+mediakiwiOptions.i18nextCallback = (instance: i18n) => {};
 
 //install some additional icons (demo)
 mediakiwiOptions.vuetifyOptions = {
