@@ -3,7 +3,7 @@
     "target": "ES2022",
     "experimentalDecorators": true, 
     "emitDecoratorMetadata": true,
-    "module": "ESNext", 
+    "module": "esnext", 
     "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {
