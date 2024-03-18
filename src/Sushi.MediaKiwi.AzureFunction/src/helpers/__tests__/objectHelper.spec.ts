@@ -140,8 +140,6 @@ describe("ObjectHelper", () => {
 
       const result = mergeDeep(target, source);
 
-      console.log("result.mediaKiwi:", result.mediaKiwi);
-
       expect(result).not.toBeUndefined();
       expect(Array.isArray(result.mediaKiwi.identity.scopes)).toBe(true);
       expect(result.mediaKiwi.identity.scopes).toHaveLength(2);

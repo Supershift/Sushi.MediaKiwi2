@@ -5,18 +5,12 @@ import { KeyboardShortcutCollection } from "../../models/keyboard/KeyboardShortc
 
 // create the test bindings
 const arrowBindings: KeyboardShortcutCollection = {
-  ArrowLeft: (_e: KeyboardEvent) => {
-    console.log("ArrowLeft tiggered");
-  },
-  ArrowRight: (_e: KeyboardEvent) => {
-    console.log("ArrowRight tiggered");
-  },
+  ArrowLeft: (_e: KeyboardEvent) => {},
+  ArrowRight: (_e: KeyboardEvent) => {},
 };
 
 const controlBindings: KeyboardShortcutCollection = {
-  "control+f": (_e: KeyboardEvent) => {
-    console.log("control+f tiggered");
-  },
+  "control+f": (_e: KeyboardEvent) => {},
 };
 
 const testShortcuts = {
