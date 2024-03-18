@@ -4,7 +4,7 @@
   "description": "Vue 3 Library for the MediaKiwi Portal Builder",
   "scripts": {
     "build": "vue-tsc && vite build",
-    "build:dev": "vue-tsc && vite build --mode development",
+    "dev": "vue-tsc && vite build --mode development",
     "vi:unit": "vitest --environment jsdom --root src/",
     "vi": "vitest",
     "vi:coverage": "vitest --coverage",
