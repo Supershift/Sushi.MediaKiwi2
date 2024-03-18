@@ -1,10 +1,10 @@
-name: Vite - MediaKiwi.Vue
+name: Vite - SampleWeb
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
-      - "src/Sushi.MediaKiwi.Vue/**/*"
+      - "src/Sushi.MediaKiwi.SampleWeb/**/*"
 
 # Add "id-token" with the intended permissions.
 permissions:
@@ -27,18 +27,18 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: ./src/Sushi.MediaKiwi.Vue
+        working-directory: ./src/Sushi.MediaKiwi.SampleWeb
 
       - name: Run Vite Test
         run: npm run vi:coverage
-        working-directory: ./src/Sushi.MediaKiwi.Vue
+        working-directory: ./src/Sushi.MediaKiwi.SampleWeb
 
       - name: "Report Coverage"
         if: always() # Also generate the report if tests are failing
         uses: davelosert/vitest-coverage-report-action@v2
         with:
-          working-directory: ./src/Sushi.MediaKiwi.Vue
+          working-directory: ./src/Sushi.MediaKiwi.SampleWeb
 
       - name: Run Vite Build
         run: npm run build
-        working-directory: ./src/Sushi.MediaKiwi.Vue
+        working-directory: ./src/Sushi.MediaKiwi.SampleWeb
