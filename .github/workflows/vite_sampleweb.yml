@@ -1,4 +1,4 @@
-name: Vite - SampleWeb
+name: Vite - Sample.Web
 
 on:
   pull_request:
