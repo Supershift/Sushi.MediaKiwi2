@@ -17,7 +17,7 @@
     "lint:all": "eslint src",
     "lint:error": "eslint src --quiet",
     "stylelint:all": "stylelint src/**/*.scss",
-    "sample:dev": "cd ./sample && vite"
+    "sample": "vue-tsc && vite --config ./sample/vite.config.sample.ts"
   },
   "type": "module",
   "files": [
