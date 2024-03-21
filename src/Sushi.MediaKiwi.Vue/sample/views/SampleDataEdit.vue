@@ -1,7 +1,7 @@
 <script setup lang="ts">
-  import { MkForm, MkTableView } from "@supershift/mediakiwi-vue";
-  import { useRoute, useRouter } from "@supershift/mediakiwi-vue";
-  import type { TableMap } from "@supershift/mediakiwi-vue";
+  import { MkForm, MkTableView } from "@/framework";
+  import { useRoute, useRouter } from "@/framework";
+  import type { TableMap } from "@/framework";
   import { SampleDataService } from "../components/SampleDataService";
   import type { ISampleData } from "../components/ISampleData";
   import { reactive, ref } from "vue";
@@ -46,8 +46,8 @@
     data: candidate ? candidate : <ISampleData>{},
   });
 
-  async function onSaveAsync() : Promise<void> {
-   return await SampleDataService.SaveAsync(state.data);
+  async function onSaveAsync(): Promise<void> {
+    return await SampleDataService.SaveAsync(state.data);
   }
 
   function onUndo() {
@@ -55,7 +55,7 @@
     state.data = candidate ? candidate : <ISampleData>{};
   }
 
-  async function onDeleteAsync(event:Event) : Promise<void> {
+  async function onDeleteAsync(event: Event): Promise<void> {
     return await SampleDataService.DeleteAsync(state.data.id);
   }
 

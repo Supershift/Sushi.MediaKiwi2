@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { reactive, ref, watch } from "vue";
-  import { MkSideSheet } from "@supershift/mediakiwi-vue";
+  import { MkSideSheet } from "@/framework";
   import type { ICustomer } from "@/models/Customer";
   // import { SampleDataService } from "./SampleDataService";
 

@@ -1,5 +1,5 @@
-import type { Sorting } from "@supershift/mediakiwi-vue";
-import { SortDirection } from "@supershift/mediakiwi-vue";
+import type { Sorting } from "@/framework";
+import { SortDirection } from "@/framework";
 import type { ISampleData } from "./ISampleData";
 
 const data = <ISampleData[]>[

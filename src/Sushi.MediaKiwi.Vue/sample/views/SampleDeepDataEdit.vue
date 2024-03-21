@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { useRoute } from "@supershift/mediakiwi-vue";
+  import { useRoute } from "@/framework";
 
   const route = useRoute();
 </script>

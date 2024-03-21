@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { useI18next, MkDialogCard } from "@supershift/mediakiwi-vue";
+  import { useI18next, MkDialogCard } from "@/framework";
 
   // inject dependencies
   const { t } = await useI18next();

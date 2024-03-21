@@ -1,4 +1,4 @@
-import { MoneyValue } from "@supershift/mediakiwi-vue";
+import { MoneyValue } from "@/framework";
 
 export interface Hotel {
   countryCode: string;

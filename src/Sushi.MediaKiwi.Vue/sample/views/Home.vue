@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { useI18next } from "@supershift/mediakiwi-vue";
+  import { useI18next } from "@/framework";
 
   // inject dependecies
   const { t } = await useI18next();

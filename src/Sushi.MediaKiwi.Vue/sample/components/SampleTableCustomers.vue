@@ -4,7 +4,7 @@
   import { ICustomerRooms } from "@/models/SampleCustomerRooms";
   import { CountryConnector } from "@/services/CountryConnector";
 
-  import { ListResult, MkTable, Paging, TableFilter, TableFilterType, TableFilterValue, TableMap, useI18next } from "@supershift/mediakiwi-vue";
+  import { ListResult, MkTable, Paging, TableFilter, TableFilterType, TableFilterValue, TableMap, useI18next } from "@/framework";
 
   import { container } from "tsyringe";
   import { ref } from "vue";

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { MkForm, MkMoneyValue, useNavigation, useValidationRules, useBreadcrumbs, MkFileInput } from "@supershift/mediakiwi-vue";
+  import { MkForm, MkMoneyValue, useNavigation, useValidationRules, useBreadcrumbs, MkFileInput } from "@/framework";
   import { HotelConnector } from "@/services/HotelConnector";
   import { CountryConnector } from "@/services/CountryConnector";
   import { FileUploadConnector } from "@/services/FileUploadConnector";

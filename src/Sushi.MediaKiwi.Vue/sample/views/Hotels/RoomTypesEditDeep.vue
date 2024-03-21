@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { MkForm } from "@supershift/mediakiwi-vue";
+  import { MkForm } from "@/framework";
   import { ref } from "vue";
 
   const steps = ref(["Date Selection", "Room selection", "Customer selection", "Success"]);

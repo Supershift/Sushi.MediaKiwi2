@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { HotelConnector } from "../HotelConnector";
 import axiosMock from "axios";
-import { ListResult } from "@supershift/mediakiwi-vue";
+import { ListResult } from "@/framework";
 import { Hotel } from "./../../models/Hotel";
 
 // mock axios

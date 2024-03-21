@@ -3,7 +3,7 @@
   import { Hotel } from "@/models/Hotel";
   import { CountryConnector } from "@/services/CountryConnector";
   import { HotelConnector } from "@/services/HotelConnector";
-  import { IconsLibrary, Paging } from "@supershift/mediakiwi-vue";
+  import { IconsLibrary, Paging } from "@/framework";
 
   import {
     ListResult,
@@ -18,7 +18,7 @@
     MkTd,
     Sorting,
     SortDirection,
-  } from "@supershift/mediakiwi-vue";
+  } from "@/framework";
 
   import { container } from "tsyringe";
   import { ref } from "vue";

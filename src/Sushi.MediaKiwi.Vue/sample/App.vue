@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { MkApplication } from "@supershift/mediakiwi-vue";
+  import { MkApplication } from "@/framework";
   import { useDisplay } from "vuetify";
   const { xs } = useDisplay();
 </script>

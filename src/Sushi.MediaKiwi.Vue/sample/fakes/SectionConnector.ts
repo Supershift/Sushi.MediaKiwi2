@@ -1,4 +1,4 @@
-import { type ISectionConnector, ListResult, ISection } from "@supershift/mediakiwi-vue";
+import { type ISectionConnector, ListResult, ISection } from "@/framework";
 import { sections } from "./repository";
 
 export class SectionConnector implements ISectionConnector {

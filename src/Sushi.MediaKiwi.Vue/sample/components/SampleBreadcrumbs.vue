@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import { MkBreadcrumbs } from "@supershift/mediakiwi-vue";
-  import { IconsLibrary } from "@supershift/mediakiwi-vue";
+  import { MkBreadcrumbs } from "@/framework";
+  import { IconsLibrary } from "@/framework";
 </script>
 
 <template>

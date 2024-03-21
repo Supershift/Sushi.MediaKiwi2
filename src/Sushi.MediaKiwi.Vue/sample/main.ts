@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import App from "./App.vue";
 import { createApp } from "vue";
-import mediakiwi, { createAxiosClient, mediakiwiIconAliases, ConfigurationConnector, MediakiwiVueOptions } from "@supershift/mediakiwi-vue";
+import mediakiwi, { createAxiosClient, mediakiwiIconAliases, ConfigurationConnector, MediakiwiVueOptions } from "@/framework";
 
 // Import the mediakiwi stylesheet
 import "./styles/main.scss";

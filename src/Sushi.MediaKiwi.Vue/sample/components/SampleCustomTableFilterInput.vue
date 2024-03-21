@@ -1,7 +1,7 @@
 <script setup lang="ts">
-  import { MkDialogCard } from "@supershift/mediakiwi-vue";
-  import { useI18next, type TableFilterItem } from "@supershift/mediakiwi-vue";
-  import type { TableFilterValue } from "@supershift/mediakiwi-vue";
+  import { MkDialogCard } from "@/framework";
+  import { useI18next, type TableFilterItem } from "@/framework";
+  import type { TableFilterValue } from "@/framework";
   import { reactive } from "vue";
 
   // inject dependencies

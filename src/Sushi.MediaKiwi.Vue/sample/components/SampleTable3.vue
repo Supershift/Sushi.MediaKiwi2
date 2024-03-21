@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { computed, ref } from "vue";
-  import type { TableMap, TableFilter, Sorting, Paging } from "@supershift/mediakiwi-vue";
-  import { MkTable, TableFilterType, SortDirection, IconsLibrary, MkOverflowMenuIcon } from "@supershift/mediakiwi-vue";
+  import type { TableMap, TableFilter, Sorting, Paging } from "@/framework";
+  import { MkTable, TableFilterType, SortDirection, IconsLibrary, MkOverflowMenuIcon } from "@/framework";
   import type { ISampleData } from "./ISampleData";
   import { SampleDataService } from "./SampleDataService";
 

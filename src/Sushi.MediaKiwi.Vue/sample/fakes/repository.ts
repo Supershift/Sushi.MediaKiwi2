@@ -1,4 +1,4 @@
-import { View, ISection, INavigationItem } from "@supershift/mediakiwi-vue";
+import { View, ISection, INavigationItem } from "@/framework";
 
 export const navigationItems = <INavigationItem[]>[
   {

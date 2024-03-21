@@ -1,4 +1,4 @@
-import { type INavigationConnector, ListResult, INavigationItem } from "@supershift/mediakiwi-vue";
+import { type INavigationConnector, ListResult, INavigationItem } from "@/framework";
 import { navigationItems } from "./repository";
 
 export class NavigationConnector implements INavigationConnector {

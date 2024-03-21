@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { defineAsyncComponent } from "vue";
-  import { MkTable } from "@supershift/mediakiwi-vue";
-  import type { ITableMap } from "@supershift/mediakiwi-vue";
+  import { MkTable } from "@/framework";
+  import type { ITableMap } from "@/framework";
   import SampleCustomCell from "./SampleCustomCell.vue";
 
   interface Product {

@@ -1,4 +1,4 @@
-import { Configuration } from "@supershift/mediakiwi-vue";
+import { Configuration } from "@/framework";
 
 export type SampleWebConfiguration = Configuration & {
   sampleApi: {

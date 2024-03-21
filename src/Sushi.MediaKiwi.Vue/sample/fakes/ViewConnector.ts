@@ -1,4 +1,4 @@
-import { type IViewConnector, ListResult, View } from "@supershift/mediakiwi-vue";
+import { type IViewConnector, ListResult, View } from "@/framework";
 import { views } from "./repository";
 
 export class ViewConnector implements IViewConnector {
