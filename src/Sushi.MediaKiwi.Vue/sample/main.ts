@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import App from "./App.vue";
 import { createApp } from "vue";
-import { createAxiosClient, ConfigurationConnector } from "@/services";
+import { createAxiosClient } from "@/services";
 import { mediakiwiIconAliases } from "@/plugins/icons";
 import { MediakiwiVueOptions } from "@/models";
 import mediakiwi from "@/framework";
@@ -12,7 +12,6 @@ import { container } from "tsyringe";
 // import { i18n } from "i18next";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
 import { mdiAccountCheckOutline, mdiTestTube } from "@mdi/js";
-import { SampleWebConfiguration } from "./models/SampleWebConfiguration";
 
 // add mediakiwi
 const mediakiwiOptions = <MediakiwiVueOptions>{
@@ -47,7 +46,7 @@ const mediakiwiOptions = <MediakiwiVueOptions>{
     time: { hour: "2-digit", minute: "2-digit" }, // Example 09:50 AM or 21:50
   },
   identity: {
-    scopes: [],
+    scopes: [`api://${import.meta.env.VITE_APP_MEDIAKIWI_MSALCONFIG_AUTH_CLIENTID}/access_via_approle_assignments`],
   },
 };
 

@@ -8,9 +8,9 @@
   <mk-application>
     <template #logo>
       <picture>
-        <source srcset="@/assets/logo128.webp" media="(min-width: 600px)" />
-        <source srcset="@/assets/logoClassic.png" />
-        <img src="@/assets/logo128.webp" alt="Logo" />
+        <source srcset="./assets/logo128.webp" media="(min-width: 600px)" />
+        <source srcset="./assets/logoClassic.png" />
+        <img src="./assets/logo128.webp" alt="Logo" />
       </picture>
     </template>
     <template #title>
