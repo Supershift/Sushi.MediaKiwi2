@@ -13,6 +13,7 @@ export default defineConfig({
   },
   build: {
     target: "esnext", //browsers can handle the latest ES features
+    outDir: path.resolve(__dirname, "sampleweb"),
   },
   server: {
     open: "/",

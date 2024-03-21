@@ -6,15 +6,18 @@ import dts from "vite-plugin-dts";
 import istanbul from "vite-plugin-istanbul";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 
+// Exclude folders from the build
+const exclude = ["sample", "cypress", "test"];
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue({
-      exclude: ["node_modules", "dist", "cypress", "sample", "**/__tests__/**"],
+      exclude,
     }),
     dts({
       insertTypesEntry: true,
-      exclude: ["node_modules", "dist", "cypress", "sample", "**/__tests__/**"],
+      exclude,
     }),
     vuetify({
       autoImport: true,
@@ -25,7 +28,7 @@ export default defineConfig({
     }),
     istanbul({
       include: "src/*",
-      exclude: ["node_modules", "dist", "cypress", "**/__tests__/**"],
+      exclude: ["node_modules", "dist", "sample", "cypress", "**/__tests__/**"],
       extension: [".js", ".ts", ".vue"],
       requireEnv: false,
       cypress: true,

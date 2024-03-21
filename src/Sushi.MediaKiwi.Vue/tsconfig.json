@@ -30,7 +30,14 @@
     "skipLibCheck": true,
   },
   "include": [
-    "src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", 
-    "sample/**/*.ts", "sample/**/*.d.ts", "sample/**/*.tsx", "sample/**/*.vue", 
-    "vite.config.ts", "cypress", "types", "test", "vite.config.web.ts"]
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "cypress",
+    "types",
+    "test",
+    "sample"
+  ],
+    "exclude": ["node_modules", "**/*.spec.ts"]
 }
