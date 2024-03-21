@@ -1,23 +1,22 @@
 <script setup lang="ts">
-  import { Country } from "@sample/models/Country";
-  import { Hotel } from "@sample/models/Hotel";
-  import { CountryConnector } from "@sample/services/CountryConnector";
-  import { HotelConnector } from "@sample/services/HotelConnector";
-  import { IconsLibrary, Paging } from "@/framework";
-
+  import { Country } from "@/models/Country";
+  import { Hotel } from "@/models/Hotel";
+  import { CountryConnector } from "@/services/CountryConnector";
+  import { HotelConnector } from "@/services/HotelConnector";
   import {
     ListResult,
-    MkTable,
-    MkOverflowMenuIcon,
+    IconsLibrary,
+    Paging,
     TableCellIcon,
     TableIconPosition,
     TableFilter,
     TableFilterType,
     TableFilterValue,
     TableMap,
-    useI18next,
-    MkNewItemButton,
-  } from "@/framework";
+  } from "@mediakiwi/models";
+
+  import { MkTable } from "@mediakiwi/components";
+  import { useI18next } from "@mediakiwi/composables";
 
   import { container } from "tsyringe";
   import { ref } from "vue";

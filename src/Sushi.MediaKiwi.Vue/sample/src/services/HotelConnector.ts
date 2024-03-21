@@ -1,7 +1,7 @@
 import { injectable, inject } from "tsyringe";
 import type { AxiosInstance, AxiosResponse } from "axios";
-import { Hotel } from "@sample/models/Hotel";
-import { ListResult, Paging } from "@/framework";
+import { Hotel } from "@/models/Hotel";
+import { ListResult, Paging } from "@mediakiwi/";
 
 @injectable()
 export class HotelConnector {

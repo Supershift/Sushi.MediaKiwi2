@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { useI18next } from "@/framework";
+  import { useI18next } from "@mediakiwi/composables";
 
   // inject dependecies
   const { t } = await useI18next();

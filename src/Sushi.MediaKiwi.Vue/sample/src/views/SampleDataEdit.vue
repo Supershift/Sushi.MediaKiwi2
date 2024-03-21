@@ -1,7 +1,7 @@
 <script setup lang="ts">
-  import { MkForm, MkTable } from "@/framework";
-  import { useRoute, useRouter } from "@/framework";
-  import type { TableMap } from "@/framework";
+  import { MkForm, MkTable } from "@mediakiwi/components";
+  import { useRoute, useRouter } from "@mediakiwi/router";
+  import type { TableMap } from "@mediakiwi/models";
   import { SampleDataService } from "../components/SampleDataService";
   import type { ISampleData } from "../components/ISampleData";
   import { reactive, ref } from "vue";

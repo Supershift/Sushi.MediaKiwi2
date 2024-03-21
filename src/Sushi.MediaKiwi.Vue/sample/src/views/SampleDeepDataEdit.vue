@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { useRoute } from "@/framework";
+  import { useRoute } from "@mediakiwi/router";
 
   const route = useRoute();
 </script>

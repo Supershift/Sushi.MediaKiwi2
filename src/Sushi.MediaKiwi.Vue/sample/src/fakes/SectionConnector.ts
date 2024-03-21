@@ -1,4 +1,4 @@
-import { type ISectionConnector, ListResult, Section } from "@/framework";
+import { type ISectionConnector, ListResult, Section } from "@mediakiwi/";
 import { sections } from "./repository";
 
 export class SectionConnector implements ISectionConnector {

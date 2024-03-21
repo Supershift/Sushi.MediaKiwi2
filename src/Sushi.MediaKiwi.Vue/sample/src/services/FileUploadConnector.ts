@@ -1,7 +1,7 @@
 import { injectable, inject } from "tsyringe";
 import type { AxiosInstance } from "axios";
-import { FileUpload } from "@sample/models/FileUpload";
-import { ListResult } from "@/framework";
+import { FileUpload } from "@/models/FileUpload";
+import { ListResult } from "@mediakiwi/";
 
 @injectable()
 export class FileUploadConnector {

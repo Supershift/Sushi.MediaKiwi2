@@ -71,7 +71,6 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"), //'@': fileURLToPath(new URL('./src', import.meta.url)),
       "@test": path.resolve(__dirname, "./test"),
       "@cypress": path.resolve(__dirname, "./cypress"),
-      "@sample": path.resolve(__dirname, "./sample"),
     },
   },
 });

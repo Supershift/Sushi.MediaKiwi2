@@ -1,4 +1,4 @@
-import { View, Section, NavigationItem } from "@/framework";
+import { View, Section, NavigationItem } from "@mediakiwi/";
 
 export const navigationItems = <NavigationItem[]>[
   {

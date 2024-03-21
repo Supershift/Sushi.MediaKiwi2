@@ -1,5 +1,5 @@
-import type { Sorting } from "@/framework";
-import { SortDirection } from "@/framework";
+import type { Sorting } from "@mediakiwi/";
+import { SortDirection } from "@mediakiwi/";
 import type { ISampleData } from "./ISampleData";
 
 const data = <ISampleData[]>[

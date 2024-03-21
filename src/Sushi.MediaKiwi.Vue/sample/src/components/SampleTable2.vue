@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { reactive } from "vue";
-  import { MkTable } from "@/framework";
-  import type { TableMap } from "@/framework";
+  import { MkTable } from "@mediakiwi/components";
+  import type { TableMap } from "@mediakiwi/models";
 
   interface Customer {
     address: string;

@@ -1,12 +1,14 @@
 <script setup lang="ts">
-  import { MkForm, MkMoneyValue, useNavigation, useValidationRules, useBreadcrumbs, MkFileInput } from "@/framework";
-  import { HotelConnector } from "@sample/services/HotelConnector";
-  import { CountryConnector } from "@sample//services/CountryConnector";
-  import { FileUploadConnector } from "@sample/services/FileUploadConnector";
+  import { MkForm, MkMoneyValue, MkFileInput } from "@mediakiwi/components";
+  import { useNavigation, useValidationRules, useBreadcrumbs } from "@mediakiwi/composables";
+
+  import { HotelConnector } from "@/services/HotelConnector";
+  import { CountryConnector } from "@//services/CountryConnector";
+  import { FileUploadConnector } from "@/services/FileUploadConnector";
   import { reactive, ref } from "vue";
-  import { Hotel } from "@sample//models/Hotel";
+  import { Hotel } from "@//models/Hotel";
   import { container } from "tsyringe";
-  import { Country } from "@sample//models/Country";
+  import { Country } from "@//models/Country";
 
   // inject dependencies
   const hotelConnector = container.resolve(HotelConnector);

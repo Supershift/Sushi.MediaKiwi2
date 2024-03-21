@@ -1,5 +1,6 @@
 <script setup lang="ts">
-  import { useI18next, MkDialogCard } from "@/framework";
+  import { MkDialogCard } from "@mediakiwi/components";
+  import { useI18next } from "@mediakiwi/composables";
 
   // inject dependencies
   const { t } = await useI18next();
@@ -10,7 +11,7 @@
 </script>
 
 <template>
-  <MkDialogCard :title="t('Sunbeds')" @click:close="() => emit('click:close')">
+  <MkDialogCard :title="t('Sunbeds').toString()" @click:close="() => emit('click:close')">
     <template #intro> Sunbed Dialog, You can do whatever you like</template>
     <Suspense>
       <div class="sunbed-dialog">

@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { reactive, ref, watch } from "vue";
-  import { MkSideSheet } from "@/framework";
-  import type { ICustomer } from "@sample/models/Customer";
+  import { MkSideSheet } from "@mediakiwi/components";
+  import type { ICustomer } from "@/models/Customer";
   // import { SampleDataService } from "./SampleDataService";
 
   let toggle = ref(false);

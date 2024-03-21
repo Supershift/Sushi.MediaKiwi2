@@ -1,4 +1,4 @@
-import { Configuration } from "@/framework";
+import { Configuration } from "@mediakiwi/";
 
 export type SampleWebConfiguration = Configuration & {
   sampleApi: {

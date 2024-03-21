@@ -1,10 +1,12 @@
 <script setup lang="ts">
-  import { Country } from "@sample/models/Country";
-  import { ICustomerRooms } from "@sample/models/SampleCustomerRooms";
-  import { SampleRooms } from "@sample/models/SampleRooms";
-  import { CountryConnector } from "@sample/services/CountryConnector";
+  import { Country } from "@/models/Country";
+  import { ICustomerRooms } from "@/models/SampleCustomerRooms";
+  import { SampleRooms } from "@/models/SampleRooms";
+  import { CountryConnector } from "@/services/CountryConnector";
 
-  import { ListResult, MkTable, Paging, TableFilter, TableFilterType, TableFilterValue, TableMap, useI18next } from "@/framework";
+  import { MkTable } from "@mediakiwi/components";
+  import { Paging, TableFilter, TableFilterType, TableFilterValue, TableMap } from "@mediakiwi/models";
+  import { useI18next } from "@mediakiwi/composables";
 
   import { container } from "tsyringe";
   import { ref } from "vue";

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import { Country } from "@sample/models/Country";
-  import { Paging, MkEmptyState } from "@/framework";
-
-  import { ListResult, MkTable, useI18next, Sorting, SortDirection } from "@/framework";
+  import { Country } from "@/models/Country";
+  import { Paging, ListResult } from "@mediakiwi/models";
+  import { MkEmptyState, MkTable } from "@mediakiwi/components";
+  import { useI18next } from "@mediakiwi/composables";
 
   import { ref } from "vue";
 

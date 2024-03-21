@@ -1,4 +1,4 @@
-import { MoneyValue } from "@/framework";
+import { MoneyValue } from "@mediakiwi/";
 
 export interface Hotel {
   countryCode: string;

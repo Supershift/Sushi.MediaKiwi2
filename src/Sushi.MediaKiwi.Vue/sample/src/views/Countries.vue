@@ -1,8 +1,9 @@
 <script setup lang="ts">
-  import { Country } from "@sample/models/Country";
-  import { CountryConnector } from "@sample/services/CountryConnector";
-  import { ListResult, MkTable, TableMap, useKeyboardShortcuts } from "@/framework";
-  import type { Paging, KeyboardShortcutCollection } from "@/framework";
+  import { Country } from "@/models/Country";
+  import { CountryConnector } from "@/services/CountryConnector";
+  import { MkTable } from "@mediakiwi/components";
+  import { useKeyboardShortcuts } from "@mediakiwi/composables";
+  import { ListResult, TableMap, Paging, KeyboardShortcutCollection } from "@mediakiwi/models";
   import { container } from "tsyringe";
   import { onDeactivated } from "vue";
   import { ref } from "vue";

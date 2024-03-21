@@ -1,9 +1,7 @@
 <script setup lang="ts">
-  import { Country } from "@sample/models/Country";
-  import { Hotel } from "@sample/models/Hotel";
-  import { Paging, MkEmptyState } from "@/framework";
-
-  import { ListResult, MkTable, useI18next, Sorting, SortDirection } from "@/framework";
+  import { MkTable, MkEmptyState } from "@mediakiwi/components";
+  import { useI18next } from "@mediakiwi/composables";
+  import { ListResult, Paging } from "@mediakiwi/models";
 
   import { ref } from "vue";
 

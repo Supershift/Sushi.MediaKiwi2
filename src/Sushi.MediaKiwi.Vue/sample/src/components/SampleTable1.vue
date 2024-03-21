@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { defineAsyncComponent } from "vue";
-  import { MkTable } from "@/framework";
-  import type { TableMap } from "@/framework";
+  import { MkTable } from "@mediakiwi/components";
+  import type { TableMap } from "@mediakiwi/models";
   import SampleCustomCell from "./SampleCustomCell.vue";
 
   interface Product {
@@ -25,7 +25,7 @@
       {
         headerTitle: "Custom 2",
         value: (entity: Product) => entity.name,
-        component: defineAsyncComponent(() => import("@sample/components/SampleCustomCell.vue")),
+        component: defineAsyncComponent(() => import("@/components/SampleCustomCell.vue")),
       },
     ],
   };

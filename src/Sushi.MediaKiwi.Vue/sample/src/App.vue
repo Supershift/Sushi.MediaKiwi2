@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { MkApplication } from "@/framework";
+  import { MkApplication } from "@mediakiwi/components";
   import { useDisplay } from "vuetify";
   const { xs } = useDisplay();
 </script>

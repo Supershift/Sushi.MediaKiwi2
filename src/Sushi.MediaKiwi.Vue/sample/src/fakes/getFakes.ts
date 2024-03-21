@@ -1,5 +1,5 @@
 import { NavigationConnector, ViewConnector, SectionConnector } from "./";
-import { IMediakiwiServiceRegistrations } from "@/framework";
+import { IMediakiwiServiceRegistrations } from "@mediakiwi/";
 
 export function getFakes(): IMediakiwiServiceRegistrations {
   var result: IMediakiwiServiceRegistrations = {

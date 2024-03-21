@@ -1,6 +1,7 @@
 <script setup lang="ts">
-  import SunbedDialog from "@sample/components/SunbedDialog.vue";
-  import { MkToolbar, useI18next } from "@/framework";
+  import SunbedDialog from "@/components/SunbedDialog.vue";
+  import { MkToolbar } from "@mediakiwi/components";
+  import { useI18next } from "@mediakiwi/composables";
   import { ref } from "vue";
 
   const { t } = await useI18next();

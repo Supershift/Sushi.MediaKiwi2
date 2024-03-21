@@ -1,24 +1,23 @@
 <script setup lang="ts">
-  import { Country } from "@sample/models/Country";
-  import { Hotel } from "@sample/models/Hotel";
-  import { CountryConnector } from "@sample/services/CountryConnector";
-  import { HotelConnector } from "@sample/services/HotelConnector";
-  import { IconsLibrary, Paging } from "@/framework";
-
+  import { Country } from "@/models/Country";
+  import { Hotel } from "@/models/Hotel";
+  import { CountryConnector } from "@/services/CountryConnector";
+  import { HotelConnector } from "@/services/HotelConnector";
   import {
+    IconsLibrary,
+    Paging,
     ListResult,
-    MkTable,
+    Sorting,
+    SortDirection,
     TableCellIcon,
     TableIconPosition,
     TableFilter,
     TableFilterType,
     TableFilterValue,
-    useI18next,
-    MkTh,
-    MkTd,
-    Sorting,
-    SortDirection,
-  } from "@/framework";
+  } from "@mediakiwi/models";
+
+  import { MkTable, MkTh, MkTd } from "@mediakiwi/components";
+  import { useI18next } from "@mediakiwi/composables";
 
   import { container } from "tsyringe";
   import { ref } from "vue";
@@ -112,7 +111,7 @@
     item-view-id="HotelEdit"
     new
     new-emit
-    :new-title="t('New hotel')"
+    :new-title="t('New hotel').toString()"
     title="Subtitle for the hotel list"
     @click:new="console.log('New Button Clicked: ' + $event)"
   >

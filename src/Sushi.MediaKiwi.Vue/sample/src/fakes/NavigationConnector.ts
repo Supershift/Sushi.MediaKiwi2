@@ -1,4 +1,4 @@
-import { type INavigationConnector, ListResult, NavigationItem } from "@/framework";
+import { type INavigationConnector, ListResult, NavigationItem } from "@mediakiwi/";
 import { navigationItems } from "./repository";
 
 export class NavigationConnector implements INavigationConnector {

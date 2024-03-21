@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import { MkBreadcrumbs } from "@/framework";
-  import { IconsLibrary } from "@/framework";
+  import { MkBreadcrumbs } from "@mediakiwi/components";
+  import { IconsLibrary } from "@mediakiwi/models";
 </script>
 
 <template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { MkForm } from "@/framework";
+  import { MkForm } from "@mediakiwi/components";
   import { ref } from "vue";
   import SampleTableCustomers from "../../components/SampleTableCustomers.vue";
   import SampleTableRooms from "../../components/SampleTableRooms.vue";
