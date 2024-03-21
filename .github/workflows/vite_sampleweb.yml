@@ -1,4 +1,4 @@
-name: Vite - MediaKiwi.Vue
+name: Vite - MediaKiwi.SampleWeb
 
 on:
   pull_request:
