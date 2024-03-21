@@ -1,4 +1,4 @@
-import { NavigationConnector, ViewConnector, SectionConnector } from ".";
+import { NavigationConnector, ViewConnector, SectionConnector } from "./";
 import { IMediakiwiServiceRegistrations } from "@/framework";
 
 export function getFakes(): IMediakiwiServiceRegistrations {

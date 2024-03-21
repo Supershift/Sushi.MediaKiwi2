@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import { Country } from "@/models/Country";
-  import { Hotel } from "@/models/Hotel";
-  import { ICustomerRooms } from "@/models/SampleCustomerRooms";
-  import { CountryConnector } from "@/services/CountryConnector";
+  import { Country } from "@sample/models/Country";
+  import { Hotel } from "@sample/models/Hotel";
+  import { ICustomerRooms } from "@sample/models/SampleCustomerRooms";
+  import { CountryConnector } from "@sample/services/CountryConnector";
 
   import { ListResult, MkTable, Paging, TableFilter, TableFilterType, TableFilterValue, TableMap, useI18next } from "@/framework";
 

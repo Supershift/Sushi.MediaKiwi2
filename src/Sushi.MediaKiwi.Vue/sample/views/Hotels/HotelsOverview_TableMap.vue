@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import { Country } from "@/models/Country";
-  import { Hotel } from "@/models/Hotel";
-  import { CountryConnector } from "@/services/CountryConnector";
-  import { HotelConnector } from "@/services/HotelConnector";
+  import { Country } from "@sample/models/Country";
+  import { Hotel } from "@sample/models/Hotel";
+  import { CountryConnector } from "@sample/services/CountryConnector";
+  import { HotelConnector } from "@sample/services/HotelConnector";
   import { IconsLibrary, Paging } from "@/framework";
 
   import {
@@ -36,7 +36,7 @@
   function srpIcon(item: Hotel): TableCellIcon {
     return {
       position: item.srp ? TableIconPosition.Append : TableIconPosition.Prepend,
-      iconName: item.srp ? IconsLibrary.accountCheckOutline : IconsLibrary.accountCircle,
+      iconName: item.srp ? IconsLibrary.accountOutline : IconsLibrary.accountCircle,
       tooltip: item.srp ? "SRP" : "NoSRP",
       label: item.srp ? "SRP correct" : "Define SRP",
     };

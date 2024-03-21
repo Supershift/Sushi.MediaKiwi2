@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import { Country } from "@/models/Country";
-  import { CountryConnector } from "@/services/CountryConnector";
+  import { Country } from "@sample/models/Country";
+  import { CountryConnector } from "@sample/services/CountryConnector";
   import { ListResult, MkTable, TableMap, useKeyboardShortcuts } from "@/framework";
   import type { Paging, KeyboardShortcutCollection } from "@/framework";
   import { container } from "tsyringe";

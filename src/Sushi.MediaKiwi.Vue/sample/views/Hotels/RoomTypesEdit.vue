@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import { Country } from "@/models/Country";
-  import { Hotel } from "@/models/Hotel";
+  import { Country } from "@sample/models/Country";
+  import { Hotel } from "@sample/models/Hotel";
   import { Paging, MkEmptyState } from "@/framework";
 
   import { ListResult, MkTable, useI18next, Sorting, SortDirection } from "@/framework";

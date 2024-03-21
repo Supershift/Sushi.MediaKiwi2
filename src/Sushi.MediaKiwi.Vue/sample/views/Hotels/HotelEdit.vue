@@ -1,12 +1,12 @@
 <script setup lang="ts">
   import { MkForm, MkMoneyValue, useNavigation, useValidationRules, useBreadcrumbs, MkFileInput } from "@/framework";
-  import { HotelConnector } from "@/services/HotelConnector";
-  import { CountryConnector } from "@/services/CountryConnector";
-  import { FileUploadConnector } from "@/services/FileUploadConnector";
+  import { HotelConnector } from "@sample/services/HotelConnector";
+  import { CountryConnector } from "@sample//services/CountryConnector";
+  import { FileUploadConnector } from "@sample/services/FileUploadConnector";
   import { reactive, ref } from "vue";
-  import { Hotel } from "@/models/Hotel";
+  import { Hotel } from "@sample//models/Hotel";
   import { container } from "tsyringe";
-  import { Country } from "@/models/Country";
+  import { Country } from "@sample//models/Country";
 
   // inject dependencies
   const hotelConnector = container.resolve(HotelConnector);
@@ -136,11 +136,6 @@
     <template #toolbarHeader>
       <v-card-text class="flex-1-1 w-75"> File Upload </v-card-text>
     </template>
-    <mk-file-input
-      :uploads="state.files"
-      label="Pool blueprints"
-      :multiple="true"
-      :rules="[() => state.files?.length <= 2 || 'Multiple files only!']"
-    ></mk-file-input>
+    <mk-file-input :uploads="state.files" label="Pool blueprints" :multiple="true"></mk-file-input>
   </MkForm>
 </template>

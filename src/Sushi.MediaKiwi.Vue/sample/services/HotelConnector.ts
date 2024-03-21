@@ -1,6 +1,6 @@
 import { injectable, inject } from "tsyringe";
 import type { AxiosInstance, AxiosResponse } from "axios";
-import { Hotel } from "@/models/Hotel";
+import { Hotel } from "@sample/models/Hotel";
 import { ListResult, Paging } from "@/framework";
 
 @injectable()

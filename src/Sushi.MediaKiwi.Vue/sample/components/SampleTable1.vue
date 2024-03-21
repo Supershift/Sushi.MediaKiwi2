@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { defineAsyncComponent } from "vue";
   import { MkTable } from "@/framework";
-  import type { ITableMap } from "@/framework";
+  import type { TableMap } from "@/framework";
   import SampleCustomCell from "./SampleCustomCell.vue";
 
   interface Product {
@@ -15,17 +15,17 @@
     { id: 15, name: "Shirt", price: 75.95, inStock: false },
   ];
 
-  const myMap = <ITableMap<Product>>{
+  const myMap = <TableMap<Product>>{
     items: [
-      { headerTitle: "ID", value: (entity) => entity.id },
-      { headerTitle: "Naam", value: (entity) => entity.name },
-      { headerTitle: "Voorraad", value: (entity) => entity.inStock },
-      { headerTitle: "Prijs", value: (entity) => entity.price },
-      { headerTitle: "Custom", value: (entity) => entity.name, component: SampleCustomCell },
+      { headerTitle: "ID", value: (entity: Product) => entity.id },
+      { headerTitle: "Naam", value: (entity: Product) => entity.name },
+      { headerTitle: "Voorraad", value: (entity: Product) => entity.inStock },
+      { headerTitle: "Prijs", value: (entity: Product) => entity.price },
+      { headerTitle: "Custom", value: (entity: Product) => entity.name, component: SampleCustomCell },
       {
         headerTitle: "Custom 2",
-        value: (entity) => entity.name,
-        component: defineAsyncComponent(() => import("@/components/SampleCustomCell.vue")),
+        value: (entity: Product) => entity.name,
+        component: defineAsyncComponent(() => import("@sample/components/SampleCustomCell.vue")),
       },
     ],
   };

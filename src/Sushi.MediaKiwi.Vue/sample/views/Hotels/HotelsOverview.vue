@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import { Country } from "@/models/Country";
-  import { Hotel } from "@/models/Hotel";
-  import { CountryConnector } from "@/services/CountryConnector";
-  import { HotelConnector } from "@/services/HotelConnector";
+  import { Country } from "@sample/models/Country";
+  import { Hotel } from "@sample/models/Hotel";
+  import { CountryConnector } from "@sample/services/CountryConnector";
+  import { HotelConnector } from "@sample/services/HotelConnector";
   import { IconsLibrary, Paging } from "@/framework";
 
   import {

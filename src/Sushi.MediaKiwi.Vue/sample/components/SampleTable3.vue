@@ -116,7 +116,7 @@
     title="Customer collection"
     @click:row="$emit('clicked:customer', $event)"
   >
-    <template #bulkActionBar="{ confirm }">
+    <template #bulkActionBar="{ confirm }: any">
       <v-btn @click="confirm(download)"><v-icon :icon="IconsLibrary.trayArrowDown"></v-icon> Download</v-btn>
       <v-btn @click="confirm(move)">move</v-btn>
 

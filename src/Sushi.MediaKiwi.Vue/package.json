@@ -16,7 +16,8 @@
     "cy:coverage:component": "cypress run --component",
     "lint:all": "eslint src",
     "lint:error": "eslint src --quiet",
-    "stylelint:all": "stylelint src/**/*.scss"
+    "stylelint:all": "stylelint src/**/*.scss",
+    "sample:dev": "cd ./sample && vite"
   },
   "type": "module",
   "files": [

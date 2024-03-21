@@ -1,26 +1,29 @@
-import { View, ISection, INavigationItem } from "@/framework";
+import { View, Section, NavigationItem } from "@/framework";
 
-export const navigationItems = <INavigationItem[]>[
+export const navigationItems = <NavigationItem[]>[
   {
     id: 0,
     name: "Home",
-    viewId: 0,
+    viewId: "Home",
     sectionId: 0,
-    parentNavigationItemId: null,
+    parentNavigationItemId: undefined,
+    path: "/Home",
   },
   {
     id: 1,
     name: "Hotels",
-    viewId: 1,
+    viewId: "Hotels",
     sectionId: 1,
-    parentNavigationItemId: null,
+    parentNavigationItemId: undefined,
+    path: "/Hotels",
   },
   {
     id: 11,
     name: "Hotel-sub-1",
-    viewId: 3,
+    viewId: "Hotels",
     sectionId: 1,
     parentNavigationItemId: 1,
+    path: "/Hotel",
   },
   {
     id: 111,
@@ -28,14 +31,16 @@ export const navigationItems = <INavigationItem[]>[
     viewId: 3,
     sectionId: 1,
     parentNavigationItemId: 11,
+    path: "/HotelSub",
   },
   {
     id: 2,
     name: "Customers",
     viewId: 2,
     sectionId: 1,
-    parentNavigationItemId: null,
+    parentNavigationItemId: undefined,
     icon: "$accountCircle",
+    path: "/Customers",
   },
   {
     id: 21,
@@ -43,6 +48,7 @@ export const navigationItems = <INavigationItem[]>[
     viewId: null,
     sectionId: 1,
     parentNavigationItemId: 2,
+    path: "/Category",
   },
   {
     id: 211,
@@ -50,13 +56,15 @@ export const navigationItems = <INavigationItem[]>[
     viewId: 3,
     sectionId: 1,
     parentNavigationItemId: 21,
+    path: "/Deep-Level",
   },
   {
     id: 3,
     name: "Sample-data-overview",
     viewId: 3,
     sectionId: 1,
-    parentNavigationItemId: null,
+    parentNavigationItemId: undefined,
+    path: "/Sample-data-overview",
   },
   {
     id: 31,
@@ -64,8 +72,7 @@ export const navigationItems = <INavigationItem[]>[
     viewId: 4,
     sectionId: 1,
     parentNavigationItemId: 3,
-    isDynamicRoute: true,
-    dynamicRouteParamaterName: "sampleDataId",
+    path: "/Sample-data-edit",
   },
   {
     id: 311,
@@ -73,21 +80,20 @@ export const navigationItems = <INavigationItem[]>[
     viewId: 5,
     sectionId: 1,
     parentNavigationItemId: 31,
-    isDynamicRoute: true,
-    dynamicRouteParamaterName: "deepDataId",
+    path: "/Sample-deep-data-edit",
   },
 ];
 
 export const views = <View[]>[
-  { id: 0, componentKey: "./views/Home.vue", sectionId: 0, name: "Home", externalId: "Home" },
-  { id: 1, componentKey: "./views/Screen1.vue", sectionId: 1, name: "Screen 1", externalId: "Screen 1" },
-  { id: 2, componentKey: "./views/Hotels.vue", sectionId: 1, name: "Screen 2", externalId: "Screen 2" },
-  { id: 3, componentKey: "./views/SampleData.vue", sectionId: 1, name: "Sample data overview", externalId: "Sample data overview" },
-  { id: 4, componentKey: "./views/SampleDataEdit.vue", sectionId: 1, name: "SampleDataEdit", externalId: "SampleDataEdit" },
-  { id: 5, componentKey: "./views/SampleDeepDataEdit.vue", sectionId: 1, name: "SampleDeepDataEdit", externalId: "SampleDeepDataEdit" },
+  { id: "0", componentKey: "./views/Home.vue", sectionId: 0, name: "Home" },
+  { id: "1", componentKey: "./views/Screen1.vue", sectionId: 1, name: "Screen 1" },
+  { id: "2", componentKey: "./views/Hotels.vue", sectionId: 1, name: "Screen 2" },
+  { id: "3", componentKey: "./views/SampleData.vue", sectionId: 1, name: "Sample data overview" },
+  { id: "4", componentKey: "./views/SampleDataEdit.vue", sectionId: 1, name: "SampleDataEdit" },
+  { id: "5", componentKey: "./views/SampleDeepDataEdit.vue", sectionId: 1, name: "SampleDeepDataEdit" },
 ];
 
-const sections = Array<ISection>();
+const sections = Array<Section>();
 sections.push({
   id: 0,
   name: "Home",

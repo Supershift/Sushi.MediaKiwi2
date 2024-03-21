@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { MkForm, MkTableView } from "@/framework";
+  import { MkForm, MkTable } from "@/framework";
   import { useRoute, useRouter } from "@/framework";
   import type { TableMap } from "@/framework";
   import { SampleDataService } from "../components/SampleDataService";
@@ -74,7 +74,7 @@
       Manually go a level deeper: <v-btn @click="onButtonClick">Level deeper</v-btn>
       <v-divider></v-divider>
       Use a table to go a level deeper:
-      <MkTableView :data="deepDataItems" :table-map="myMap" item-view-id="SampleDeepEdit"></MkTableView>
+      <MkTable :data="deepDataItems" :table-map="myMap" item-view-id="SampleDeepEdit"></MkTable>
     </div>
   </v-card>
 </template>

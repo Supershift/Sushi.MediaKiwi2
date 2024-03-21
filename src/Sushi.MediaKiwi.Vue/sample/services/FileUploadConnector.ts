@@ -1,6 +1,6 @@
 import { injectable, inject } from "tsyringe";
 import type { AxiosInstance } from "axios";
-import { FileUpload } from "@/models/FileUpload";
+import { FileUpload } from "@sample/models/FileUpload";
 import { ListResult } from "@/framework";
 
 @injectable()

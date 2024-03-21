@@ -1,9 +1,9 @@
 <script setup lang="ts">
-  import SampleSideSheet from "@/components/SampleSideSheet.vue";
+  import SampleSideSheet from "@sample/components/SampleSideSheet.vue";
   import SampleTable3 from "../components/SampleTable3.vue";
 
   import { ref } from "vue";
-  import { ICustomer } from "@/models/Customer";
+  import { ICustomer } from "@sample/models/Customer";
 
   let refData = ref<ICustomer>({
     id: 1,

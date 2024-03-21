@@ -9,9 +9,12 @@ import { viteStaticCopy } from "vite-plugin-static-copy";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    vue(),
+    vue({
+      exclude: ["node_modules", "dist", "cypress", "sample", "**/__tests__/**"],
+    }),
     dts({
       insertTypesEntry: true,
+      exclude: ["node_modules", "dist", "cypress", "sample", "**/__tests__/**"],
     }),
     vuetify({
       autoImport: true,
@@ -67,11 +70,8 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "./src"), //'@': fileURLToPath(new URL('./src', import.meta.url)),
       "@test": path.resolve(__dirname, "./test"),
-      "@interfaces": path.resolve(__dirname, "./src/models/interfaces"),
-      "@services": path.resolve(__dirname, "./src/services"),
-      "@models": path.resolve(__dirname, "./src/models"),
-      "@utils": path.resolve(__dirname, "./src/utils"),
-      "@stores": path.resolve(__dirname, "./src/stores"),
+      "@cypress": path.resolve(__dirname, "./cypress"),
+      "@sample": path.resolve(__dirname, "./sample"),
     },
   },
 });

@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { reactive, ref, watch } from "vue";
   import { MkSideSheet } from "@/framework";
-  import type { ICustomer } from "@/models/Customer";
+  import type { ICustomer } from "@sample/models/Customer";
   // import { SampleDataService } from "./SampleDataService";
 
   let toggle = ref(false);
@@ -100,7 +100,7 @@
           </v-row>
           <v-row align="center">
             <v-col>
-              <v-select v-model="state.roles" :items="state.roles" label="Roles" chips></v-select>
+              <v-select v-model="state.roles" :items="state.roles" label="Roles" chips multiple></v-select>
             </v-col>
           </v-row>
           <v-row>
