@@ -1,7 +1,9 @@
 <script setup lang="ts">
-  import { MkApplication } from "@supershift/mediakiwi-vue";
+  import { MkApplication, useMsal } from "@supershift/mediakiwi-vue";
   import { useDisplay } from "vuetify";
   const { xs } = useDisplay();
+  const { account } = useMsal();
+  //
 </script>
 
 <template>
@@ -15,6 +17,9 @@
     </template>
     <template #title>
       <v-toolbar-title v-if="!xs"> MediaKiwi 2.0 - SampleWeb </v-toolbar-title>
+    </template>
+    <template v-if="account" #accountMenu>
+      <v-label> {{ account.name }}</v-label>
     </template>
   </mk-application>
 </template>
