@@ -41,4 +41,6 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish package to NPM
-        run: npm publish --access public
+        run: |
+          cd src/Sushi.MediaKiwi.Vue
+          npm publish --access public
