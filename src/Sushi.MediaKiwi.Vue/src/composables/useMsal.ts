@@ -1,10 +1,16 @@
 import { AccountInfo, InteractionStatus, PublicClientApplication } from "@azure/msal-browser";
-import { getCurrentInstance, Ref, toRefs } from "vue";
+import { computed, getCurrentInstance, Ref, toRefs } from "vue";
+
+export type AccountInfoExtension = {
+  /** Initial of the username */
+  initital: string;
+};
 
 export type MsalContext = {
   instance: PublicClientApplication;
   account: Ref<AccountInfo>;
   inProgress: Ref<InteractionStatus>;
+  extendedAccountInfo: Ref<AccountInfoExtension>;
 };
 
 export function useMsal(): MsalContext {
@@ -25,9 +31,18 @@ export function useMsal(): MsalContext {
     });
   }
 
+  const extendedAccountInfo = computed<AccountInfoExtension>(() => {
+    const initital = account.value?.username.charAt(0).toUpperCase();
+
+    return {
+      initital,
+    };
+  });
+
   return {
     instance: instance.value,
     account,
     inProgress,
+    extendedAccountInfo,
   };
 }

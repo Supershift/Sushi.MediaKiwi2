@@ -6,13 +6,9 @@
   import { computed } from "vue";
   import { IconsLibrary } from "@/models";
 
-  const { account } = useMsal();
+  const { account, extendedAccountInfo } = useMsal();
   const menu = ref(false);
   const isAuthenticated = useIsAuthenticated();
-
-  const accountInitial = computed(() => {
-    return account.value?.username.charAt(0).toUpperCase();
-  });
 
   defineProps<{
     /** Hide the avatar in the Account overflow menu */
@@ -51,8 +47,8 @@
               <div v-if="slots.avatar">
                 <slot name="avatar"></slot>
               </div>
-              <div v-else-if="!hideAvatar">
-                <v-avatar color="primary" size="small">{{ accountInitial }}</v-avatar>
+              <div v-else-if="!hideAvatar && extendedAccountInfo">
+                <v-avatar color="primary" size="small">{{ extendedAccountInfo.initital }}</v-avatar>
               </div>
               <div class="text-truncate d-flex flex-column ga-1">
                 <p class="text-title-small text-truncate" :title="account?.username">{{ account?.username }}</p>
