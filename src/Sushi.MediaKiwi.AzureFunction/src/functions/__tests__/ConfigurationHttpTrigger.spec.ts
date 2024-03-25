@@ -14,8 +14,6 @@ describe("ConfigurationHttpTrigger", () => {
     // Action
     await ConfigurationHttpTrigger(context);
 
-    console.log("context.res:", context.res);
-
     // Assertion
     expect(context.log).toBeCalledTimes(1);
     expect(context.res?.status).toEqual(200);

@@ -2,14 +2,14 @@ import "reflect-metadata";
 import { describe, it, expect, beforeEach } from "vitest";
 import { container } from "tsyringe";
 import { registerOptions } from "../registerOptions";
-import { IMediakiwiVueOptions } from "../../models/options";
+import { MediakiwiVueOptions } from "../../models/options";
 
 describe("registerOptions", () => {
   beforeEach(() => {
     container.reset();
   });
   it("Should register all options", () => {
-    const expectedMediakiwiOptions = <IMediakiwiVueOptions>{};
+    const expectedMediakiwiOptions = <MediakiwiVueOptions>{};
     registerOptions(container, expectedMediakiwiOptions);
 
     var mediakiwiOptions = container.resolve("MediakiwiOptions");

@@ -32,6 +32,7 @@ const options: MediakiwiVueOptions = {
   apiBaseUrl: "",
   modules: modules,
   msalConfig: <Configuration>{},
+  identity: <any>{},
 };
 
 describe("RouterManager", () => {
@@ -69,8 +70,8 @@ describe("RouterManager", () => {
 
     const routerManager = new RouterManager(options, router, routeGenerator);
 
-    const promise1 = routerManager.Initialize();
-    const promise2 = routerManager.Initialize();
+    routerManager.Initialize();
+    routerManager.Initialize();
     expect(initSpy).toHaveBeenCalledOnce();
   });
 

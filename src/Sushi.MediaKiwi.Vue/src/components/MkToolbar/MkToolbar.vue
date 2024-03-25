@@ -23,6 +23,10 @@
     undo?: boolean;
     /** Determines if the toolbar becomes sticky at the top of the page, default: false */
     sticky?: boolean;
+    /** */
+    onSave?: (event?: Event) => Promise<void>;
+    onUndo?: (event?: Event) => Promise<void>;
+    onDelete?: (event: Event) => Promise<void>;
   }>();
 
   // define slots
@@ -37,9 +41,6 @@
 
   // define events
   const emit = defineEmits<{
-    (e: "save"): void;
-    (e: "undo"): void;
-    (e: "delete"): void;
     (e: "click:new", value?: string): void;
   }>();
 </script>
