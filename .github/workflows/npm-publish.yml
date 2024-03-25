@@ -4,11 +4,8 @@
 name: NPM Publish - MediaKiwi.Vue
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-    paths:
-      - ".github/workflows/npm-publish.yml"
-      - "src/Sushi.MediaKiwi.Vue/**/*"
+  release:
+    types: [created]
 
 jobs:
   publish:
@@ -27,6 +24,13 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      - name: Update package.json version
+        run: |
+          cd src/Sushi.MediaKiwi.Vue
+          NEW_VERSION=$(echo "${{ github.event.release.tag_name }}" | sed 's/v//')
+          jq '.version = $new_version' --arg new_version "${NEW_VERSION}" package.json > package.json.tmp && mv package.json.tmp package.json
+          cd ../..
 
       - name: Build package
         run: |
