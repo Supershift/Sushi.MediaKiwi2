@@ -13,7 +13,8 @@
     "cy:run-e2e": "cypress run --e2e",
     "cy:run:component": "cypress run --component --env coverage=false",
     "cy:coverage:component": "cypress run --component",
-    "build:sample": "vue-tsc && vite build --config ./vite.config.sample.ts"
+    "build:sample": "vue-tsc && vite build --config ./vite.config.sample.ts",
+    "preview:sample": "npm run build:sample && vite preview --config ./vite.config.sample.ts"
   },
   "type": "module",
   "files": [
