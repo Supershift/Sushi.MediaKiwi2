@@ -4,6 +4,8 @@ import { computed, getCurrentInstance, Ref, toRefs } from "vue";
 export type AccountInfoExtension = {
   /** Initial of the username */
   initital: string;
+  /** Comma separated collection of roles */
+  roles?: string;
 };
 
 export type MsalContext = {
@@ -33,9 +35,11 @@ export function useMsal(): MsalContext {
 
   const extendedAccountInfo = computed<AccountInfoExtension>(() => {
     const initital = account.value?.username.charAt(0).toUpperCase();
+    const roles = account.value?.idTokenClaims?.roles?.join(", ");
 
     return {
       initital,
+      roles,
     };
   });
 

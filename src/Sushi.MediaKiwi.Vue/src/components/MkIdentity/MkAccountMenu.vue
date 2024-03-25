@@ -19,15 +19,16 @@
   const slots = defineSlots<{
     /** Customze the icon */
     avatar?: () => never;
-    /** Slot to inject additional markup above the language switch */
+    /** Slot to override the body contents in the account menu */
+    header?: () => never;
+    /** Slot to override the body contents in the account menu */
     default?: () => never;
-    /** Slot to inject additional buttons */
+    /** Slot to override the actions in the account menu */
     actions?: () => never;
   }>();
 
-  const roles = computed(() => {
-    return account?.value.idTokenClaims?.roles?.join(", ");
-  });
+  const roles = computed(() => extendedAccountInfo.value?.roles);
+  const initial = computed(() => extendedAccountInfo.value?.initital);
 </script>
 
 <template>
@@ -47,12 +48,15 @@
               <div v-if="slots.avatar">
                 <slot name="avatar"></slot>
               </div>
-              <div v-else-if="!hideAvatar && extendedAccountInfo">
-                <v-avatar color="primary" size="small">{{ extendedAccountInfo.initital }}</v-avatar>
+              <div v-else-if="!hideAvatar && initial">
+                <v-avatar color="primary" size="small">{{ initial }}</v-avatar>
               </div>
               <div class="text-truncate d-flex flex-column ga-1">
-                <p class="text-title-small text-truncate" :title="account?.username">{{ account?.username }}</p>
-                <p v-if="roles" class="text-body-small text-truncate" :title="roles">{{ roles }}</p>
+                <slot v-if="slots.header" name="header"></slot>
+                <template v-else>
+                  <p class="text-title-small text-truncate" :title="account?.username">{{ account?.username }}</p>
+                  <p v-if="roles" class="text-body-small text-truncate" :title="roles">{{ roles }}</p>
+                </template>
               </div>
             </div>
           </v-card-text>
@@ -63,8 +67,7 @@
         <v-card-text v-if="slots.default">
           <slot name="default"></slot>
         </v-card-text>
-
-        <v-card-text>
+        <v-card-text v-else>
           <mk-language-switch></mk-language-switch>
         </v-card-text>
 
@@ -73,8 +76,10 @@
 
           <v-card-actions class="pa-4">
             <slot v-if="slots.actions" name="actions"></slot>
-            <v-spacer v-else></v-spacer>
-            <mk-sign-out-button></mk-sign-out-button>
+            <template v-else>
+              <v-spacer></v-spacer>
+              <mk-sign-out-button></mk-sign-out-button>
+            </template>
           </v-card-actions>
         </template>
       </v-card>

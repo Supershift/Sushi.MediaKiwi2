@@ -19,12 +19,13 @@
     logo?: (props: unknown) => never;
     /** Slot to render the title the application, preferably v-toolbar-title */
     title?: (props: unknown) => never;
-
     /** Slot for a custom avatar */
     avatar?: () => never;
-    /** Slot for additional markup in the account menu */
+    /** Slot to override the body contents in the account menu */
+    accountMenuHeader?: () => never;
+    /** Slot to override the body contents in the account menu */
     accountMenu?: () => never;
-    /** Slot for additional actions in the account menu actions bar */
+    /** Slot to override the actions in the account menu */
     accountMenuActions?: () => never;
   }>();
 </script>
@@ -47,6 +48,9 @@
           <mk-account-menu :hide-avatar="hideAvatar">
             <template v-if="slots.avatar" #avatar>
               <slot name="avatar"></slot>
+            </template>
+            <template v-if="slots.accountMenuHeader" #header>
+              <slot name="accountMenuHeader"></slot>
             </template>
             <template v-if="slots.accountMenu" #default>
               <slot name="accountMenu"></slot>
