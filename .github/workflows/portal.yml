@@ -1,15 +1,13 @@
-name: DEV - Deploy portal app to Azure Static Web Apps
+name: Deploy sampleweb portal app to Azure Static Web Apps
 
 env:
   APP_LOCATION: "/src/Sushi.MediaKiwi.Vue/" # location of your client code
   OUTPUT_LOCATION: "sampleweb" # location of client code build output
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-    paths:
-      - ".github/workflows/vite_mediakiwi.yaml"
-      - "src/Sushi.MediaKiwi.Vue/**/*"
+  push:
+    tags:
+      - "v*"
 
 permissions:
   issues: write
