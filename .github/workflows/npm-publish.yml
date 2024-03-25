@@ -35,12 +35,7 @@ jobs:
           cd src/Sushi.MediaKiwi.Vue
           npm run build
 
-      - name: Authenticate with NPM registry
-        run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > ~/.npmrc
+      - name: Publish package to NPM
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Publish package to NPM
-        run: |
-          cd src/Sushi.MediaKiwi.Vue
-          npm publish --access public
+        run: npm publish --access public --token=${NPM_TOKEN}
