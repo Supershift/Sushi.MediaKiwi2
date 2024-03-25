@@ -98,6 +98,9 @@
     "vuetify": "^3.4.3",
     "webfontloader": "^1.6.28"
   },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Supershift/Sushi.MediaKiwi2.git",
