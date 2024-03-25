@@ -1,7 +1,14 @@
-# Sushi.MediaKiwi
+## MediaKiwi 2.0
 
-## Get started
+[Documentation](https://ubiquitous-adventure-4gm1zro.pages.github.io/)
 
-[Sample API](/docs/GET_STARTED_API.md)
+## Nuget
 
-[Front-end setup for this project](/docs/FRONTEND_SETUP.md)
+![NuGet Version](https://img.shields.io/nuget/vpre/Sushi.MediaKiwi.Services?label=Sushi.MediaKiwi.Services)
+![NuGet Version](https://img.shields.io/nuget/vpre/Sushi.MediaKiwi.WebAPI?label=Sushi.MediaKiwi.WebAPI)
+![NuGet Version](https://img.shields.io/nuget/vpre/Sushi.MediaKiwi.DAL?label=Sushi.MediaKiwi.DAL)
+
+## NPM
+
+![NPM Version](https://img.shields.io/npm/v/%40supershift%2Fmediakiwi-vue?label=@supershift/mediakiwi-vue)
+![NPM Version](https://img.shields.io/npm/v/%40supershift%2Fmediakiwi-azure-function?label=@supershift/mediakiwi-azure-function)

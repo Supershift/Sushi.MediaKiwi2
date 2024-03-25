@@ -4,4 +4,13 @@
 
 [Front-end setup for this project](FRONTEND_SETUP.md)
 
-[![NPM Publish - MediaKiwi.Vue](https://github.com/Supershift/Sushi.MediaKiwi2/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/Supershift/Sushi.MediaKiwi2/actions/workflows/npm-publish.yml)
+## Nuget
+
+![NuGet Version](https://img.shields.io/nuget/vpre/Sushi.MediaKiwi.Services?label=Sushi.MediaKiwi.Services)
+![NuGet Version](https://img.shields.io/nuget/vpre/Sushi.MediaKiwi.WebAPI?label=Sushi.MediaKiwi.WebAPI)
+![NuGet Version](https://img.shields.io/nuget/vpre/Sushi.MediaKiwi.DAL?label=Sushi.MediaKiwi.DAL)
+
+## NPM
+
+![NPM Version](https://img.shields.io/npm/v/%40supershift%2Fmediakiwi-vue?label=@supershift/mediakiwi-vue)
+![NPM Version](https://img.shields.io/npm/v/%40supershift%2Fmediakiwi-azure-function?label=@supershift/mediakiwi-azure-function)
