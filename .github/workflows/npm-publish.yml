@@ -29,9 +29,12 @@ jobs:
       - name: Build package
         run: |
           cd src/Sushi.MediaKiwi.Vue
-          npm run build
+          npm run build:prd
 
       - name: Publish package to NPM
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --access public --token=${NPM_TOKEN}
+
+        run: |
+          cd src/Sushi.MediaKiwi.Vue
+          npm publish --access public --token=${NPM_TOKEN}
