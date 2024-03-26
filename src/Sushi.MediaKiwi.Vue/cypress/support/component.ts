@@ -6,7 +6,7 @@ import i18next from "i18next";
 import { createRouter } from "vue-router";
 import { getDefaultRouterOptions } from "@/router/getDefaultRouterOptions";
 import { createVuetify } from "vuetify";
-import defaultVuetifyOptions from "@/plugins/vuetify/index";
+import { defaultVuetifyOptions } from "@/plugins/vuetify/index";
 import { mount } from "cypress/vue";
 import { VLayout } from "vuetify/components";
 import { identity } from "@/identity";
@@ -17,7 +17,6 @@ import { PublicClientApplication } from "@azure/msal-browser";
 import { container } from "tsyringe";
 import { registerRouter } from "@/helpers/registerRouter";
 import { VueWrapper } from "@vue/test-utils";
-import { ComponentPublicInstance } from "vue";
 
 /* eslint-disable @typescript-eslint/no-namespace */
 // ***********************************************************

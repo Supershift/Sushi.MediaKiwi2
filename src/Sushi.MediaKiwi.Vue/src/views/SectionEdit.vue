@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import { MkForm } from "@/components";
   import { reactive, computed } from "vue";
-  import { useRoute } from "@/router";
   import { container } from "tsyringe";
   import { ISectionConnector } from "@/services";
   import { Section, IconsLibrary } from "@/models";
@@ -14,7 +13,6 @@
   const SectionConnector = container.resolve<ISectionConnector>("ISectionConnector");
   const routerManager = container.resolve<RouterManager>("RouterManager");
 
-  const route = useRoute();
   const store = useMediakiwiStore();
   const navigation = useNavigation();
 
@@ -41,9 +39,8 @@
     }
   }
 
-  let onSave: ((event: Event) => Promise<void>) | undefined = undefined;
-  if (sectionId.value !== adminSectionId) {
-    onSave = async () => {
+  async function onSave(): Promise<void> {
+    if (sectionId.value !== adminSectionId) {
       if (sectionId.value > 0) {
         // update existing section
         await SectionConnector.UpdateSection(sectionId.value, state.section);
@@ -60,19 +57,18 @@
         // push user to the new section
         navigation.navigateTo(navigation.currentNavigationItem.value, newSection.id);
       }
-    };
+    }
   }
 
-  let onDelete: ((event: Event) => Promise<void>) | undefined = undefined;
-  if (sectionId.value > adminSectionId) {
-    onDelete = async () => {
+  async function onDelete(): Promise<void> {
+    if (sectionId.value > adminSectionId) {
       if (sectionId.value > 0) {
         await SectionConnector.DeleteSection(sectionId.value);
 
         // refresh store (to update the section in the navigation)
         await routerManager.ForceInitialize();
       }
-    };
+    }
   }
 </script>
 

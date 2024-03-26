@@ -5,7 +5,7 @@ import type ListResult from "@/models/api/ListResult";
 import { container } from "tsyringe";
 import { IRoleConnector } from "@/services/IRoleConnector";
 import { noPageSize } from "@/constants";
-import { VuetifyOptions } from "vuetify/lib/framework.mjs";
+import { VuetifyOptions } from "vuetify";
 
 export interface MediaKiwiState {
   navigationItems: Array<NavigationItem>;

@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { createApp, ref, App } from "vue";
+import { createApp, ref } from "vue";
 import { useI18next } from "../useI18next";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import i18next from "i18next";
@@ -13,7 +13,7 @@ vi.mock("@azure/msal-browser");
 
 describe("useI18next", () => {
   async function getComposable(ns?: string | View): ReturnType<typeof useI18next> {
-    let result;
+    let result: any = {};
     const app = createApp({
       setup() {
         result = useI18next(ns);
