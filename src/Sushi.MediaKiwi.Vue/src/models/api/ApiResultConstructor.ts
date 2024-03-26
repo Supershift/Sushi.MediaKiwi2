@@ -1,8 +1,8 @@
-import { HttpStatusCodeEnum } from "@/models/enum/HttpStatusCodeEnum";
+import { HttpStatusCode } from "axios";
 
 export default interface ApiResultConstructor<T> {
   data?: T;
-  status?: HttpStatusCodeEnum;
+  status?: HttpStatusCode;
   ex?: unknown;
   message?: string;
 }
