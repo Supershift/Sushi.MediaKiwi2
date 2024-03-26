@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import { useI18next } from "@/composables/useI18next";
   import { ref } from "vue";
-  import { IconsLibrary } from "@/models";
   import { MkOverflowMenuIcon } from "@/components";
 
   // define properties and events

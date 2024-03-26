@@ -1,6 +1,6 @@
 import { IconsLibrary } from "@/models";
 import { inject } from "vue";
-import { VuetifyOptions } from "vuetify/lib/framework.mjs";
+import { VuetifyOptions } from "vuetify";
 
 /**
  * Check if the icon is valid by asserting that it is a value of the IconsLibrary enum

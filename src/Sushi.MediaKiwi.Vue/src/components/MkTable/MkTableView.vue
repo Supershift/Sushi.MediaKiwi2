@@ -59,7 +59,7 @@
     };
   });
 
-  function onRowClick(event: Event, dataItem: unknown) {
+  function onRowClick(_event: Event, dataItem: unknown) {
     // emit event
     emit("click:row", dataItem);
 

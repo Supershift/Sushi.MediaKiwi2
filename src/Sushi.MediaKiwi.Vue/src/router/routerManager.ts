@@ -81,7 +81,7 @@ export class RouterManager {
 
   /** Gets all modules by merging default mk modules with modules provided through mediakiwi options */
   private getModules(): Record<string, RouteComponent> {
-    let result = { ...modules, ...this.options.modules };
+    const result = { ...modules, ...this.options.modules };
     return result;
   }
 }

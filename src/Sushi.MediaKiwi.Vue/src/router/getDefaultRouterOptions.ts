@@ -18,7 +18,7 @@ export function getDefaultRouterOptions(customRoutes?: RouteRecordRaw[]): Router
   routes.push({
     name: "root",
     path: "/",
-    redirect: (to) => {
+    redirect: () => {
       return "/signIn";
     },
   });
