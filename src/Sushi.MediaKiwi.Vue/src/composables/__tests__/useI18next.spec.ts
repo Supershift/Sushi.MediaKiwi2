@@ -10,6 +10,7 @@ import { View } from "../../models";
 // mock libraries
 vi.mock("i18next");
 vi.mock("@azure/msal-browser");
+vi.mock("vue-router");
 
 describe("useI18next", () => {
   async function getComposable(ns?: string | View): ReturnType<typeof useI18next> {
@@ -23,6 +24,7 @@ describe("useI18next", () => {
     });
     app.provide("i18next", ref(i18next));
     app.provide("i18initPromise", Promise.resolve());
+    app.provide("mediakiwi", {});
     app.use(createTestingPinia());
     app.mount(document.createElement("div"));
     identity.msalInstance = new PublicClientApplication({ auth: { clientId: "test" } });
