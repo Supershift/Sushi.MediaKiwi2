@@ -9,7 +9,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "@cypress/*": ["./cypress/*"],
-      "@test/*": ["./test/*"]
+      "@test/*": ["./test/*"],      
     },
     "types": [
       "vite/client",
@@ -29,5 +29,15 @@
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "vite.config.ts", "cypress", "types", "test"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "cypress",
+    "types",
+    "test",
+    "sample"
+  ],
+    "exclude": ["node_modules", "**/*.spec.ts"]
 }

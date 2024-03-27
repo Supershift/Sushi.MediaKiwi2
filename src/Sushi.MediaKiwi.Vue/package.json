@@ -4,8 +4,7 @@
   "description": "Vue 3 Library for the MediaKiwi Portal Builder",
   "scripts": {
     "build": "vue-tsc && vite build",
-    "dev": "vue-tsc && vite build --mode development",
-    "vi:unit": "vitest --environment jsdom --root src/",
+    "dev": "vue-tsc && vite --config ./vite.config.sample.ts",
     "vi": "vitest",
     "vi:coverage": "vitest --coverage",
     "vi:ui": "vitest --ui",
@@ -14,9 +13,7 @@
     "cy:run-e2e": "cypress run --e2e",
     "cy:run:component": "cypress run --component --env coverage=false",
     "cy:coverage:component": "cypress run --component",
-    "lint:all": "eslint src",
-    "lint:error": "eslint src --quiet",
-    "stylelint:all": "stylelint src/**/*.scss"
+    "build:sample": "vue-tsc && vite build --config ./vite.config.sample.ts"
   },
   "type": "module",
   "files": [
