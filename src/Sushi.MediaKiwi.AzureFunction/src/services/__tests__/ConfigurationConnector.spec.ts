@@ -5,6 +5,7 @@ import { Configuration } from "../../models/Configuration";
 
 // mock env variables
 vi.stubEnv("MediaKiwi.ApiBaseUrl", "https://mediakiwi-sample-api-dev.azurewebsites.net/mediakiwi/api");
+vi.stubEnv("MediaKiwi.identity.scopes", "api://testId/access_via_approle_assignments, api://testId/user_access");
 
 describe("ConfigurationConnector", () => {
   afterEach(() => {
@@ -15,6 +16,9 @@ describe("ConfigurationConnector", () => {
     const expectedResult: Configuration = {
       mediaKiwi: {
         apiBaseUrl: "https://mediakiwi-sample-api-dev.azurewebsites.net/mediakiwi/api",
+        identity: {
+          scopes: ["api://testId/access_via_approle_assignments", "api://testId/user_access"],
+        },
       },
     };
 

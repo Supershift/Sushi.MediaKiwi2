@@ -5,10 +5,11 @@
   import { onMounted } from "vue";
   import { container } from "tsyringe";
   import { ILocaleConnector } from "@/services";
-
+  import { useLocale } from "vuetify";
   // inject dependencies
   const { i18next } = await useI18next();
   const localeConnector = container.resolve<ILocaleConnector>("ILocaleConnector");
+  const { current } = useLocale();
 
   // define reactive variables
   const locales = ref<Locale[]>([]);
@@ -16,6 +17,9 @@
   // define events
   async function changeLanguage(value: string) {
     await i18next.value.changeLanguage(value);
+
+    // Update Vuetify locale
+    current.value = i18next.value.language;
   }
 
   // load languages from server

@@ -10,6 +10,7 @@ vi.stubEnv("MediaKiwi.MsalConfig.auth.clientId", "0aa0aaaa-a00a-0a00-aa00-000000
 vi.stubEnv("MediaKiwi.MsalConfig.auth.authority", "https://login.microsoftonline.com/00a00a00-0aa0-000a-aa0a-0aaa0a00a0a0");
 vi.stubEnv("MediaKiwi.MsalConfig.auth.redirectUri", "/loginRedirect");
 vi.stubEnv("MediaKiwi.MsalConfig.auth.postLogoutRedirectUri", "/signIn");
+vi.stubEnv("MediaKiwi.identity.scopes", "api://testId/access_via_approle_assignments, api://testId/user_access");
 
 describe("EnvHelper", () => {
   it("Should get MediaKiwi values", () => {
@@ -28,6 +29,9 @@ describe("EnvHelper", () => {
             redirectUri: "/loginRedirect",
             postLogoutRedirectUri: "/signIn",
           },
+        },
+        identity: {
+          scopes: ["api://testId/access_via_approle_assignments", "api://testId/user_access"],
         },
       },
     });

@@ -65,7 +65,7 @@
   }
 </script>
 <template>
-  <v-card v-if="breadcrumbs?.length" :class="['breadcrumbs-container ml-0 pa-10 pb-0', { 'v-breadcrumbs--sticky': props.sticky }]">
+  <v-card v-if="breadcrumbs?.length" :class="['breadcrumbs-container ml-0 pa-4 pa-md-10 pb-0', { 'v-breadcrumbs--sticky': props.sticky }]">
     <div v-if="showBackButton" class="breadcrumb-title-container">
       <mk-back-button />
       <div class="v-breadcrumbs-item text-title-large d-inline-block text-truncate">
@@ -113,6 +113,6 @@
   }
 
   .breadcrumbs-container {
-    background-color: rgb(var(--v-theme-surface));
+    background-color: inherit;
   }
 </style>

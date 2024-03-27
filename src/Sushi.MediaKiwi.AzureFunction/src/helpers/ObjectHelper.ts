@@ -13,7 +13,12 @@ export function parseToNestedObject(key: string, value: string): object {
   // Split the key by dot
   const keyParts = key.split(".");
   let index = 0;
-  let result = {};
+  // Create empty dynamic result object
+  let result = <
+    {
+      [key: string]: any;
+    }
+  >{};
 
   // Loop though the part in reverse order
   for (const keyPart of keyParts.reverse()) {
@@ -25,9 +30,16 @@ export function parseToNestedObject(key: string, value: string): object {
     }
 
     if (!index) {
-      // Set the value for the deepest level
-      // E.g. "tenantId": "some-value"
-      Object.assign(result, { [propertyName]: getTypedValue(value as any) });
+      if (value && value.indexOf(",") > -1) {
+        // Create an array of values
+        const values = value?.split(",").map((val) => getTypedValue(val.trim()));
+
+        result[propertyName] = [...values].flat();
+      } else {
+        // Set the value for the deepest level
+        // E.g. "tenantId": "some-value"
+        Object.assign(result, { [propertyName]: getTypedValue(value as any) });
+      }
     } else {
       // Set the current result object as a property on the new object
       // E.g. { "tenantId": "some-value" } to { auth: { "tenantId": "some-value"} }
@@ -64,8 +76,11 @@ export function mergeDeep(target: any, source: any): any {
   if (isObject(target) && isObject(source)) {
     // Loop though the source keys
     for (const key in source) {
-      // Check for begin an object
-      if (isObject(source[key])) {
+      // Check for bein an array or object
+      if (Array.isArray(source[key])) {
+        // Bind the source array to the target array
+        target[key] = [...source[key]].flat();
+      } else if (isObject(source[key])) {
         // Add the properry if it doesn't yet exists on the target object
         if (!target[key]) {
           Object.assign(target, { [key]: {} });
@@ -105,6 +120,7 @@ export function getTypedValue(input: any): number | boolean | string | undefined
   else if (input === "true" || input === "false") {
     return input === "true";
   }
+
   // Default back to string
   return input;
 }

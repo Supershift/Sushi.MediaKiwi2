@@ -9,7 +9,7 @@ export const InputVariant = "outlined";
  * Global configuration for Vuetify
  * https://vuetifyjs.com/en/features/global-configuration/
  */
-export const globalConfiguration: VuetifyOptions = {
+export const GlobalConfiguration: VuetifyOptions = {
   aliases: {
     // Create an alias, so we can use <v-btn-primary> instead of <v-btn color="primary" variant="flat">
     VBtnPrimary: VBtn,
@@ -44,6 +44,7 @@ export const globalConfiguration: VuetifyOptions = {
       color: "background",
       border: "none",
       location: "right",
+      class: "v-navigation-drawer--mediakiwi--side-sheet",
     },
     VMain: {
       color: "background",
@@ -74,6 +75,11 @@ export const globalConfiguration: VuetifyOptions = {
       falseIcons: IconsLibrary.checkboxOff,
       indeterminateIcon: IconsLibrary.minusBox,
       class: "v-checkbox--mediakiwi",
+      VLabel: {
+        style: {
+          opacity: "1",
+        },
+      },
     },
     VDivider: {
       color: "outline-variant",
@@ -163,6 +169,9 @@ export const globalConfiguration: VuetifyOptions = {
     },
     VForm: {
       class: "v-form--mediakiwi",
+    },
+    VDatePicker: {
+      class: "v-date-picker--mediakiwi",
     },
   },
 };

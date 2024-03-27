@@ -6,7 +6,7 @@ import mediakiwi, { createAxiosClient, mediakiwiIconAliases, ConfigurationConnec
 // Import the mediakiwi stylesheet
 import "./styles/main.scss";
 import { container } from "tsyringe";
-import { i18n } from "i18next";
+// import { i18n } from "i18next";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
 import { mdiAccountCheckOutline, mdiTestTube } from "@mdi/js";
 import { SampleWebConfiguration } from "./models/SampleWebConfiguration";
@@ -20,17 +20,17 @@ if (!settings) {
 }
 
 // Create the options object
-const mediakiwiOptions: MediakiwiVueOptions = { ...settings.mediaKiwi };
+const mediakiwiOptions = <MediakiwiVueOptions>{ ...settings.mediaKiwi };
 
 // import all views as models
 mediakiwiOptions.modules = import.meta.glob("./views/**/*.vue");
 
-// i18next options
-mediakiwiOptions.i18nextOptions = {
-  debug: true,
-};
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
-mediakiwiOptions.i18nextCallback = (instance: i18n) => {};
+// // i18next options
+// mediakiwiOptions.i18nextOptions = {
+//   debug: true,
+// };
+// // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
+// mediakiwiOptions.i18nextCallback = (instance: i18n) => {};
 
 //install some additional icons (demo)
 mediakiwiOptions.vuetifyOptions = {
@@ -46,6 +46,12 @@ mediakiwiOptions.vuetifyOptions = {
       mdi,
     },
   },
+};
+
+// Change the default date and time format options across the system.
+mediakiwiOptions.dateFormatOptions = {
+  date: { year: "numeric", month: "2-digit", day: "2-digit" }, // Example "05/31/2023" or "05-31-2023"
+  time: { hour: "2-digit", minute: "2-digit" }, // Example 09:50 AM or 21:50
 };
 
 // Create the app

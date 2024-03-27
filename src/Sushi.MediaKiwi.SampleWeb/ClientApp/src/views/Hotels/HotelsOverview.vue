@@ -29,7 +29,10 @@
   const { formatDateTime, t } = await useI18next();
 
   // define reactive variables
-  const currentPagination = ref<Paging>({});
+  const currentPagination = ref<Paging>({
+    pageIndex: 0,
+    pageSize: 5,
+  });
   const hotels = ref<ListResult<Hotel>>();
   const countries = ref<Country[]>();
 
@@ -102,13 +105,16 @@
   <mk-table
     v-model:current-pagination="currentPagination"
     v-model:filters="filters"
-    new
     :api-result="hotels"
     :on-load="LoadData"
     :data="hotels?.result"
     :item-id="(item: Hotel) => item.id"
     item-view-id="HotelEdit"
+    new
+    new-emit
+    :new-title="t('New hotel')"
     title="Subtitle for the hotel list"
+    @click:new="console.log('New Button Clicked: ' + $event)"
   >
     <template #toolbar>
       <v-btn>Knop 1</v-btn>

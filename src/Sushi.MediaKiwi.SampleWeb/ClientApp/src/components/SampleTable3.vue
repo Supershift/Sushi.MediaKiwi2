@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { computed, ref } from "vue";
-  import type { TableMap, TableFilter, Sorting } from "@supershift/mediakiwi-vue";
+  import type { TableMap, TableFilter, Sorting, Paging } from "@supershift/mediakiwi-vue";
   import { MkTable, TableFilterType, SortDirection, IconsLibrary, MkOverflowMenuIcon } from "@supershift/mediakiwi-vue";
   import type { ISampleData } from "./ISampleData";
   import { SampleDataService } from "./SampleDataService";
@@ -24,11 +24,14 @@
     ],
   };
 
+  const currentPagination = ref<Paging>({});
+
   // define filters
   const filters = ref<TableFilter>({
     name: {
       title: "Name",
       type: TableFilterType.TextField,
+      searchable: true,
     },
     country: {
       title: "Land",
@@ -51,9 +54,21 @@
       ],
       type: TableFilterType.RadioGroup,
     },
-    date: {
+    dates: {
       title: "Dates",
+      type: TableFilterType.DateRange,
+    },
+    date: {
+      title: "Date",
       type: TableFilterType.DatePicker,
+    },
+    countries: {
+      title: "Landen",
+      options: [
+        { title: "Nederland", value: "NL" },
+        { title: "België", value: "BE" },
+      ],
+      type: TableFilterType.SelectMultipleCheckbox,
     },
   });
 
@@ -76,7 +91,7 @@
   });
 
   function download() {
-    console.log("Download", selectedTableRows.value);
+    alert("Download: " + selectedTableRows.value.length);
   }
 
   function remove() {
@@ -84,7 +99,7 @@
   }
 
   function move() {
-    console.log("move", selectedTableRows.value);
+    alert("move: " + selectedTableRows.value.length);
   }
   defineEmits(["clicked:customer"]);
 </script>
@@ -94,16 +109,16 @@
     v-model:sorting="selectedSortOption"
     v-model:selection="selectedTableRows"
     v-model:filters="filters"
-    new
+    v-model:current-pagination="currentPagination"
     :table-map="myMap"
     :data="sampleData"
     checkbox
-    item-view-id="SampleEdit"
+    title="Customer collection"
     @click:row="$emit('clicked:customer', $event)"
   >
-    <template #bulkActionBar>
-      <v-btn @click="download"><v-icon :icon="IconsLibrary.trayArrowDown"></v-icon> Download</v-btn>
-      <v-btn @click="move">move</v-btn>
+    <template #bulkActionBar="{ confirm }">
+      <v-btn @click="confirm(download)"><v-icon :icon="IconsLibrary.trayArrowDown"></v-icon> Download</v-btn>
+      <v-btn @click="confirm(move)">move</v-btn>
 
       <MkOverflowMenuIcon>
         <v-list-item @click="remove">Delete</v-list-item>

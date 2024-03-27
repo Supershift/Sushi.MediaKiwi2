@@ -29,27 +29,27 @@ describe("useTableSorting.spec", () => {
   describe("Determine sort order", () => {
     it("Should toggle sort direction", () => {
       setSorting({
-        id: (x) => x.name,
+        id: (x: any) => x.name,
         sortDirection: SortDirection.Asc,
       });
 
-      expect(selectedSorting.value.sortBy === "name");
-      expect(selectedSorting.value.sortDirection === SortDirection.Asc);
+      expect(selectedSorting.value!.sortBy === "name");
+      expect(selectedSorting.value!.sortDirection === SortDirection.Asc);
     });
 
     it("Should toggle sort by", () => {
       setSorting({
-        id: (x) => x.date,
+        id: (x: any) => x.date,
         sortDirection: SortDirection.Asc,
       });
 
-      expect(selectedSorting.value.sortBy === "date");
-      expect(selectedSorting.value.sortDirection === SortDirection.Asc);
+      expect(selectedSorting.value!.sortBy === "date");
+      expect(selectedSorting.value!.sortDirection === SortDirection.Asc);
     });
 
     it("Should match asc icon", () => {
       setSorting({
-        id: (x) => x.date,
+        id: (x: any) => x.date,
         sortDirection: SortDirection.Asc,
       });
 
@@ -58,7 +58,7 @@ describe("useTableSorting.spec", () => {
 
     it("Should match desc icon", () => {
       setSorting({
-        id: (x) => x.date,
+        id: (x: any) => x.date,
         sortDirection: SortDirection.Desc,
       });
 
@@ -67,12 +67,12 @@ describe("useTableSorting.spec", () => {
 
     it("Should have active class", () => {
       setSorting({
-        id: (x) => x.date,
+        id: (x: any) => x.date,
         sortDirection: SortDirection.Asc,
       });
 
       const classes = getSortingClasses({
-        id: (x) => x.date,
+        id: (x: any) => x.date,
         sortDirection: SortDirection.Asc,
       });
 

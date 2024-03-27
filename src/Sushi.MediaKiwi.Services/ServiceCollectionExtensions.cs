@@ -14,12 +14,10 @@ namespace Sushi.MediaKiwi.Services
         /// Adds all services needed to run MediaKiwi to the <paramref name="services"/>, including Sushi.MicroOrm.
         /// </summary>        
         /// <returns></returns>
-        public static IServiceCollection AddMediaKiwiServices(this IServiceCollection services, string defaultConnectionString, 
-            Action<MicroOrmConfigurationBuilder>? microOrmConfig = null,
-            Action<IMapperConfigurationExpression>? autoMapperConfig = null)
+        public static IServiceCollection AddMediaKiwiServices(this IServiceCollection services, Action<IMapperConfigurationExpression>? autoMapperConfig = null)
         {
-            // add DAL (which includes MicroORM)
-            services.AddMediaKiwiDAL(defaultConnectionString, microOrmConfig);
+            // add DAL 
+            services.AddMediaKiwiDAL();
 
             // add automapper
             services.AddAutoMapper(c => {
