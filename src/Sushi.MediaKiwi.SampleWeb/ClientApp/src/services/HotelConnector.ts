@@ -1,5 +1,5 @@
 import { injectable, inject } from "tsyringe";
-import type { AxiosInstance } from "axios";
+import type { AxiosInstance, AxiosResponse } from "axios";
 import { Hotel } from "@/models/Hotel";
 import { ListResult, Paging } from "@supershift/mediakiwi-vue";
 
@@ -10,9 +10,9 @@ export class HotelConnector {
   async GetAllAsync(paging?: Paging, countryCode?: string, isActive?: boolean): Promise<ListResult<Hotel>> {
     // build querystring params
     const query = {
-      ...paging,
-      countryCode: countryCode,
-      isActive: isActive,
+      ...(paging && { paging }),
+      ...(countryCode && { countryCode }),
+      ...(isActive && { isActive }),
     };
     const response = await this.axios.get<ListResult<Hotel>>("/hotels", { params: query });
     return response.data;
@@ -31,7 +31,7 @@ export class HotelConnector {
     }
   }
 
-  async DeleteAsync(id: number): Promise<void> {
-    const response = await this.axios.delete<Hotel>(`/hotels${id}`);
+  async DeleteAsync(id: number): Promise<AxiosResponse> {
+    return await this.axios.delete<Hotel>(`/hotels${id}`);
   }
 }
