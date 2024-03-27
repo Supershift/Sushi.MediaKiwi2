@@ -1,13 +1,12 @@
-import axios from "axios";
+import axios, { HttpStatusCode } from "axios";
 import ApiResultConstructor from "@/models/api/ApiResultConstructor";
-import { HttpStatusCodeEnum } from "@/models/enum/HttpStatusCodeEnum";
 import IApiResult from "@/models/api/IApiResult";
 import { ResultCodeEnum } from "@/models/enum/ResultCodeEnum";
 
 export default class ApiResult<T> implements IApiResult<T> {
   data?: T;
   message?: string;
-  status?: HttpStatusCodeEnum;
+  status?: HttpStatusCode;
   /* Additional Error fields */
   title?: string;
   traceId?: string;
@@ -25,7 +24,7 @@ export default class ApiResult<T> implements IApiResult<T> {
     }
   }
 
-  private constructorDefault(data?: T, status?: HttpStatusCodeEnum) {
+  private constructorDefault(data?: T, status?: HttpStatusCode) {
     this.data = data;
     this.status = status;
   }
@@ -44,7 +43,7 @@ export default class ApiResult<T> implements IApiResult<T> {
         }
       } else {
         this.message = `${ex}`;
-        this.status = HttpStatusCodeEnum.InternalServerError;
+        this.status = HttpStatusCode.InternalServerError;
       }
     }
 
