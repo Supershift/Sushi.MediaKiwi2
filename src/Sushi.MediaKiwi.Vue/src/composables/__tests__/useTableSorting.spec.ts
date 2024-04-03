@@ -5,17 +5,17 @@ import { useTableSorting } from "../useTableSorting";
 import { IconsLibrary, SortDirection } from "../../models";
 import { nameof } from "../../helpers/UtilsHelper";
 
-interface ISampleData {
+type SampleData = {
   id: number;
   name: string;
   countryCode: string;
   countryName: string;
   date: Date;
-}
+};
 
 // create a sorting option object with a default value
 const selectedSortOption: Sorting = {
-  sortBy: nameof<ISampleData>((x) => x.name),
+  sortBy: nameof<SampleData>((x) => x.name),
   sortDirection: SortDirection.Desc,
 };
 

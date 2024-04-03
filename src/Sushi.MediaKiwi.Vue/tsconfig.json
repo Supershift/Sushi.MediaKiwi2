@@ -9,7 +9,8 @@
     "paths": {
       "@/*": ["./src/*"],
       "@cypress/*": ["./cypress/*"],
-      "@test/*": ["./test/*"],      
+      "@test/*": ["./test/*"],
+      "@sample/*": ["./sample/*"],
     },
     "types": [
       "vite/client",
