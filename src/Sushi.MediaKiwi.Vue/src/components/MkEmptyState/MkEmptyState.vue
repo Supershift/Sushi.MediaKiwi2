@@ -1,8 +1,13 @@
 <script setup lang="ts">
   import { useI18next } from "@/composables";
   import { MkNewItemButton } from "@/components";
-  const { t } = await useI18next();
+  import { useMediakiwiVueOptions } from "@/composables/useMediakiwiVueOptions";
 
+  // Inject dependencies
+  const { t } = await useI18next();
+  const { emptyState } = useMediakiwiVueOptions();
+
+  // Define props
   const props = defineProps<{
     /** The title of the empty state, otherwise default is shown */
     title?: string;
@@ -31,9 +36,10 @@
   }>();
 </script>
 <template>
-  <v-card class="align-center text-center" color="on-surface-variant">
+  <v-card class="mk-empty-state align-center text-center" color="on-surface-variant">
     <slot v-if="slots.image" name="image"></slot>
-    <img v-else src="@/assets/empty-state.svg" />
+    <img v-else-if="emptyState?.image" class="mt-6" :src="emptyState?.image" />
+    <img v-else class="mt-6" src="@/assets/empty-state.svg" />
 
     <slot v-if="slots.title" name="title"></slot>
     <v-card-title v-else>{{ title ?? t("Empty List") }}</v-card-title>
@@ -43,9 +49,15 @@
 
     <v-card-actions class="justify-center pt-5">
       <slot v-if="slots.actions" name="actions"></slot>
-      <template v-if="props.new">
+      <template v-if="props.new && (props.itemViewId || props.newEmit)">
         <MkNewItemButton :item-view-id="props.itemViewId" :new-title="props.newTitle" :new-emit="props.newEmit" @click:new="() => emit('click:new')" />
       </template>
     </v-card-actions>
   </v-card>
 </template>
+<style scoped>
+  .mk-empty-state {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+</style>

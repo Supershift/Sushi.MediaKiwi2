@@ -20,6 +20,7 @@
   import MkTableCell from "./MkTableCell.vue"; // Mk-Td
   import { defaultPageSizeOptions, defaultPageSize } from "@/constants";
   import { useComponentContext } from "@/composables/useComponentContext";
+  import MkEmptyState from "../MkEmptyState/MkEmptyState.vue";
 
   // define properties
   const props = withDefaults(
@@ -56,6 +57,12 @@
       paginationMode?: MediakiwiPaginationMode;
       /** */
       itemId?: (entity: any) => string | number;
+      /** Hides the empty state component entirely */
+      hideEmptyState?: boolean;
+      /** Title for the Empty State component */
+      emptyStateTitle?: string;
+      /** Subtitle for the Empty State component  */
+      emptyStateSubtitle?: string;
     }>(),
     {
       currentPagination: () => ({
@@ -91,6 +98,8 @@
     thead?: (props: unknown) => never;
     /** table templating */
     tbody?: (props: any) => never;
+    /** Custom component for the empty state */
+    emptyState?: () => never;
   }>();
 
   // inject dependencies
@@ -98,6 +107,7 @@
   const { hasDefinedEmit } = useComponentContext();
 
   // define reactive variables
+  const initialDataLoaded = ref(false);
   const inProgress = ref(false);
   const mkTableViewComponent = ref();
   const pageSizes = ref([...defaultPageSizeOptions]);
@@ -177,8 +187,12 @@
     if (props.onLoad) {
       // start progress indicator
       inProgress.value = true;
+
       try {
         await props.onLoad();
+
+        // When the data is loaded, set the initialDataLoaded to true
+        initialDataLoaded.value = true;
       } catch (error) {
         snackbar.showMessage("Failed to fetch data");
         throw error;
@@ -278,6 +292,19 @@
         />
       </template>
     </MkTableView>
+
+    <template v-if="!hideEmptyState && initialDataLoaded && !data?.length">
+      <slot v-if="slots.emptyState" name="emptyState"></slot>
+      <MkEmptyState
+        v-else
+        :new="props.new"
+        :item-view-id="props.itemViewId"
+        :new-title="props.newTitle"
+        :new-emit="props.newEmit"
+        :title="props.emptyStateTitle"
+        :subtitle="props.emptyStateSubtitle"
+      />
+    </template>
 
     <slot name="footer"></slot>
   </v-card>
