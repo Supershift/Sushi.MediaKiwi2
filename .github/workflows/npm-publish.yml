@@ -35,7 +35,7 @@ jobs:
       - name: Build package
         run: |
           cd src/Sushi.MediaKiwi.Vue
-          npm run build:prd
+          npm run build
 
       - name: Publish package to NPM
         run: |

@@ -182,13 +182,14 @@ export function useNavigation() {
   const currentViewParameterNumber = computed(() => Number(currentViewParameter.value));
 
   /** Gets all sections which have navigation items. */
-  const currentSections = computed(() => 
-  {
+  const currentSections = computed(() => {
     // filter only sections to which current role has access
-    const activeAccount = identity.msalInstance.getActiveAccount();    
-    var sections = store.sections.filter((section) => !section.roles?.length ? true : false || section.roles.some((role) => activeAccount?.idTokenClaims?.roles?.includes(role)));
+    const activeAccount = identity.msalInstance.getActiveAccount();
+    let sections = store.sections.filter((section) =>
+      !section.roles?.length ? true : false || section.roles.some((role) => activeAccount?.idTokenClaims?.roles?.includes(role))
+    );
     // remove sections without navigation items
-    sections = sections.filter((section) => store.navigationItems.some((item) => item.sectionId === section.id))
+    sections = sections.filter((section) => store.navigationItems.some((item) => item.sectionId === section.id));
     return sections;
   });
 
@@ -236,12 +237,34 @@ export function useNavigation() {
     return currentNavigationItem.value?.sectionId === section.id;
   }
 
+  /**
+   * Redirect to a view based on the viewId
+   * @param viewId  The view ID to navigate to
+   */
+  function navigateToView(viewId: string, itemId?: RouteParamValueRaw, options?: RouteLocationOptions) {
+    // find navigation item for the view
+    const view = store.views.find((x) => x.id == viewId);
+
+    if (!view) {
+      throw new Error(`No view found for external id ${viewId}`);
+    }
+
+    const navigationItem = store.navigationItems.find((x) => x.viewId == view.id);
+    if (!navigationItem) {
+      throw new Error(`No navigationItem found for view ${viewId}`);
+    }
+
+    // push user to target page
+    return navigateTo(navigationItem, itemId, options);
+  }
+
   return {
     currentNavigationItem,
     currentRootItem,
     navigateTo,
     navigateToParent,
     navigateToHome,
+    navigateToView,
     getChildren,
     determineCurrentRoootItem,
     getItemsBasedOnRoot,
