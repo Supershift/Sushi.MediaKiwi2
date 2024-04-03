@@ -25,4 +25,7 @@ export interface MediakiwiVueOptions {
     time?: Intl.DateTimeFormatOptions;
     month?: Intl.DateTimeFormatOptions;
   };
+  emptyState?: {
+    image?: string;
+  };
 }
