@@ -23,6 +23,7 @@ namespace Sushi.MediaKiwi.Services.Model
             CreateMap<DAL.NavigationItem, NavigationItem>();
             CreateMap<DAL.Role, Role>();
             CreateMap<DAL.Locale, Locale>();            
+            CreateMap<DAL.Translation, Translation>();
 
             // from model to DAL
             CreateMap<Section, DAL.Section>().ForMember(x => x.Id, o => o.Ignore());

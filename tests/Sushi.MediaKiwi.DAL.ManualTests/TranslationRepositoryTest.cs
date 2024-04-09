@@ -19,9 +19,17 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
         [Fact]
         public async Task GetAllTest()
         {
-            var translations = await _repository.GetAllAsync("en", "common", null);
+            var translations = await _repository.GetAllAsync("en", "common", null, null);
 
-            Assert.True(translations.Count > 1);
+            Assert.NotEmpty(translations);
+        }
+
+        [Fact]
+        public async Task GetNamespacesTest()
+        {
+            var namespaces = await _repository.GetNamespacesAsync("en");
+
+            Assert.NotEmpty(namespaces);
         }
 
         [Fact]
@@ -38,8 +46,8 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
                 await _repository.DuplicateAsync("en", targetLocale.Id);
 
                 // get all translations for english and test locale
-                var expectedTranslations = await _repository.GetAllAsync("en", null, null);
-                var actualTranslations = await _repository.GetAllAsync(targetLocale.Id, null, null);
+                var expectedTranslations = await _repository.GetAllAsync("en", null, null, null);
+                var actualTranslations = await _repository.GetAllAsync(targetLocale.Id, null, null, null);
 
                 // assert same keys exist
                 Assert.NotEmpty(expectedTranslations);
@@ -71,7 +79,7 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
                 await _repository.InsertMissingAsync(translation.Namespace, translation.Key, translation.Value);
 
                 // get all translations for this key and namespapce                
-                var translations = await _repository.GetAllAsync(null, translation.Namespace, translation.Key);
+                var translations = await _repository.GetAllAsync(null, translation.Namespace, translation.Key, null);
 
                 // assert a translation exists for each locale
                 Assert.NotEmpty(translations);

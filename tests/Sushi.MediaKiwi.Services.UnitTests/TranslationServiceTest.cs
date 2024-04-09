@@ -28,7 +28,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             string ns = "someNamespace";
 
             var translationRepositoryMock = new Mock<ITranslationRepository>();
-            translationRepositoryMock.Setup(x => x.GetAllAsync(It.Is<string>(x=>x == localeId), It.Is<string>(x=>x == ns), null)).ReturnsAsync(stubs);
+            translationRepositoryMock.Setup(x => x.GetAllAsync(localeId, ns, null, null)).ReturnsAsync(stubs);
 
             var service = new TranslationService(translationRepositoryMock.Object);
 

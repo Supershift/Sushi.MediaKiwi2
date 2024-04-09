@@ -77,12 +77,13 @@ WHERE NOT EXISTS
         }
 
         /// <inheritdoc/>
-        public async Task<QueryListResult<Translation>> GetAllAsync(string? localeId, string? @namespace, string? key)
+        public async Task<QueryListResult<Translation>> GetAllAsync(string? localeId, string? @namespace, string? key, string? value)
         {
             var query = _connector.CreateQuery();
             if (!string.IsNullOrWhiteSpace(localeId)) query.Add(x => x.LocaleId, localeId);
             if (!string.IsNullOrWhiteSpace(@namespace)) query.Add(x => x.Namespace, @namespace);
             if (!string.IsNullOrWhiteSpace(key)) query.Add(x => x.Key, key);
+            if (!string.IsNullOrWhiteSpace(value)) query.AddLike(x => x.Value, value);
             query.AddOrder(x => x.Key);
             var result = await _connector.GetAllAsync(query);
             return result;
@@ -103,6 +104,34 @@ WHERE NOT EXISTS
         public async Task InsertAsync(Translation translation)
         {
             await _connector.InsertAsync(translation);
+        }
+
+        /// <inheritdoc/>
+        public async Task UpdateAsync(Translation translation)
+        {
+            await _connector.UpdateAsync(translation);
+        }
+
+        /// <inheritdoc/>
+        public async Task DeleteAsync(Translation translation)
+        {
+            await _connector.DeleteAsync(translation);
+        }
+
+        /// <inheritdoc/>
+        public async Task<List<string?>> GetNamespacesAsync(string? localeId)
+        {
+            var query = _connector.CreateQuery();
+            query.SqlQuery = "SELECT DISTINCT(Namespace) FROM mk_Translations";
+            if(localeId != null)
+            {
+                query.SqlQuery += " WHERE LocaleId = @localeId";
+                query.AddParameter("@localeId", localeId);
+            }
+
+            var result = await _connector.ExecuteSetAsync<string>(query);
+            result = result.OrderBy(x => x).ToList();
+            return result;
         }
     }
 }
