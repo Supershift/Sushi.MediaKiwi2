@@ -1,6 +1,7 @@
 import { ListResult, NavigationItem } from "@/models";
 import { INavigationConnector } from "@/services";
 import { navigationItems } from "./repository";
+import { AxiosResponse } from "axios";
 
 export class NavigationConnector implements INavigationConnector {
   GetNavigationItems(): Promise<ListResult<NavigationItem>> {
@@ -11,5 +12,18 @@ export class NavigationConnector implements INavigationConnector {
       result.pageCount = 0;
       resolve(result);
     });
+  }
+
+  GetNavigationItem(_id: number): Promise<NavigationItem> {
+    throw new Error("Method not implemented.");
+  }
+  CreateNavigationItem(_item: NavigationItem): Promise<NavigationItem> {
+    throw new Error("Method not implemented.");
+  }
+  UpdateNavigationItem(_item: NavigationItem): Promise<NavigationItem> {
+    throw new Error("Method not implemented.");
+  }
+  DeleteNavigationItem(_id: number): Promise<AxiosResponse<any, any>> {
+    throw new Error("Method not implemented.");
   }
 }
