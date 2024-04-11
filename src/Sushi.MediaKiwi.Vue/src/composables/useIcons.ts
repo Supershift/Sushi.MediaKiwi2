@@ -1,4 +1,6 @@
 import { IconsLibrary } from "@/models";
+import { inject } from "vue";
+import { VuetifyOptions } from "vuetify";
 
 /**
  * Check if the icon is valid by asserting that it is a value of the IconsLibrary enum
@@ -21,7 +23,18 @@ export function parseIconValue(icon?: string, external?: boolean): string {
     return IconsLibrary.unknown; // when none is present we use the mdiUnknown icon (squareblank)
   }
   if (external) {
-    return icon; // when its external we don't check the validity of the icon, since we have no clue how to act....its entirely up to the developer
+    const vuetifyOptions = inject("vuetifyOptions") as VuetifyOptions;
+
+    // Parse the alias for the icon by removing the $ prefix
+    const alias = icon.replace("$", "");
+
+    // Check if the alias is present in the vuetify options
+    if (vuetifyOptions.icons?.aliases?.[alias]) {
+      return icon;
+    }
+
+    // Return the mdiUnknown icon when the alias is not present to prevent breaking the entire application
+    return IconsLibrary.unknown;
   }
   return isValidIcon(icon) == true ? icon : IconsLibrary.unknown; // only check the validity when we are not using external Icons
 }

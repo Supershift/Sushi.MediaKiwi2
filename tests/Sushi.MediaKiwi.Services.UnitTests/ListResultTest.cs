@@ -46,6 +46,26 @@ namespace Sushi.MediaKiwi.Services.UnitTests
         }
 
         [Fact]
+        public void CreateListResult_FromQueryListResult()
+        {
+            // arrange
+            int pageCount = 12;
+            int totalCount = 128;
+            var list = new QueryListResult<object>() { new object(), new object() } ;
+            list.TotalNumberOfPages = pageCount;
+            list.TotalNumberOfRows = totalCount;
+
+            // act
+            var result = new ListResult<object>(list);
+
+            // assert
+            Assert.NotNull(result.Result);
+            Assert.Equal(list, result.Result);
+            Assert.Equal(totalCount, result.TotalCount);
+            Assert.Equal(pageCount, result.PageCount);
+        }
+
+        [Fact]
         public void CreateListResult_Manual()
         {
             // arrange
@@ -61,6 +81,19 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             Assert.Equal(list, result.Result);
             Assert.Equal(totalCount, result.TotalCount);
             Assert.Equal(pageCount, result.PageCount);
+        }
+
+        [Fact]
+        public void CreateEmpty()
+        {
+            // act
+            var result = ListResult<object>.Empty();
+
+            // assert
+            Assert.NotNull(result.Result);
+            Assert.Empty(result.Result);
+            Assert.Equal(0, result.TotalCount);
+            Assert.Equal(0, result.PageCount);
         }
     }
 }

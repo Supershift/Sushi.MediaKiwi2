@@ -15,5 +15,33 @@ namespace Sushi.MediaKiwi.DAL.Repository
         /// <param name="pagingValues"></param>
         /// <returns></returns>
         Task<QueryListResult<NavigationItem>> GetAllAsync(int? sectionID, PagingValues pagingValues);
+        
+        /// <summary>
+        /// Gets a <see cref="NavigationItem"/> by id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<NavigationItem?> GetAsync(int id);
+
+        /// <summary>
+        /// Inserts a <see cref="NavigationItem"/>.
+        /// </summary>
+        /// <param name="navigationItem"></param>
+        /// <returns></returns>
+        Task InsertAsync(NavigationItem navigationItem);
+
+        /// <summary>
+        /// Updates a <see cref="NavigationItem"/>.
+        /// </summary>
+        /// <param name="navigationItem"></param>
+        /// <returns></returns>
+        Task UpdateAsync(NavigationItem navigationItem);
+
+        /// <summary>
+        /// Deletes a <see cref="NavigationItem"/> by id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task DeleteAsync(int id);
     }
 }

@@ -7,7 +7,7 @@
   "debug.internalConsoleOptions": "neverOpen",
   "dotnet.defaultSolution": "Sushi.MediaKiwi.sln",
   "editor.codeActionsOnSave": {
-    "source.fixAll.stylelint": true
+    "source.fixAll.stylelint": "explicit"
   },
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",

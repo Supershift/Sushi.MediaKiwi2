@@ -9,8 +9,8 @@
     (e: "update:selected", value: boolean): void;
   }>();
 
-  function selectChanged(selectedValue: boolean) {
-    emit("update:selected", selectedValue);
+  function selectChanged(selectedValue: boolean | null) {
+    emit("update:selected", selectedValue || false);
   }
 
   const value = ref(props.isSelected);
