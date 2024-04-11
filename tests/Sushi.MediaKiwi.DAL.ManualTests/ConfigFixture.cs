@@ -20,13 +20,16 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
             .AddEnvironmentVariables()
             .Build();
 
-            string connectionString = configuration.GetConnectionString("portal");
+            string connectionString = configuration.GetConnectionString("portal")!;
 
             // create service collection
             IServiceCollection serviceCollection = new ServiceCollection();
 
+            // add micro orm
+            serviceCollection.AddMicroORM(new SqlServerConnectionString(connectionString, true));
+
             // add mediakiwi dal
-            serviceCollection.AddMediaKiwiDAL(connectionString);
+            serviceCollection.AddMediaKiwiDAL();
 
             // build service provider
             Services = serviceCollection.BuildServiceProvider();

@@ -1,8 +1,8 @@
 import { NavigationItem, Paging } from "@/models";
 import ListResult from "@/models/api/ListResult";
-import { INavigationConnector } from "./INavigationConnector";
+import { INavigationConnector } from "./interfaces/INavigationConnector";
 import { injectable, inject } from "tsyringe";
-import type { AxiosInstance } from "axios";
+import type { AxiosInstance, AxiosResponse } from "axios";
 
 @injectable()
 export class NavigationConnector implements INavigationConnector {
@@ -15,5 +15,25 @@ export class NavigationConnector implements INavigationConnector {
     };
     const response = await this.axios.get<ListResult<NavigationItem>>("/navigationitems", { params: query });
     return response.data;
+  }
+
+  async GetNavigationItem(id: number): Promise<NavigationItem> {
+    const response = await this.axios.get<NavigationItem>(`/navigationitems/${id}`);
+    return response.data;
+  }
+
+  async CreateNavigationItem(item: NavigationItem): Promise<NavigationItem> {
+    const response = await this.axios.post<NavigationItem>(`/navigationitems/${item.id}`, item);
+    return response.data;
+  }
+
+  async UpdateNavigationItem(item: NavigationItem): Promise<NavigationItem> {
+    const response = await this.axios.put<NavigationItem>(`/navigationitems/${item.id}`, item);
+    return response.data;
+  }
+
+  async DeleteNavigationItem(id: number): Promise<AxiosResponse> {
+    const response = await this.axios.delete<NavigationItem>(`/navigationitems/${id}`);
+    return response;
   }
 }

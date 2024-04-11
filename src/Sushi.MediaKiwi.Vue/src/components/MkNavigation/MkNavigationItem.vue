@@ -3,7 +3,7 @@
   import { ref, computed } from "vue";
   import { useNavigation } from "@/composables/useNavigation";
 
-  const props = defineProps<{
+  const componentProps = defineProps<{
     navigationItem: NavigationItem;
     allItems: Array<NavigationItem>;
   }>();
@@ -11,11 +11,11 @@
   const navigation = useNavigation();
 
   const groupOpened = ref(false);
-  const children = navigation.getChildren(props.navigationItem);
+  const children = navigation.getChildren(componentProps.navigationItem);
 
   const icon = computed(() => {
-    if (props.navigationItem?.icon) {
-      return props.navigationItem.icon;
+    if (componentProps.navigationItem?.icon) {
+      return componentProps.navigationItem.icon;
     }
     return undefined;
   });
@@ -37,7 +37,7 @@
   }
 
   // determine if navigation item is active
-  const isActive = computed(() => navigation.determineIfNavigationItemIsActive(props.navigationItem));
+  const isActive = computed(() => navigation.determineIfNavigationItemIsActive(componentProps.navigationItem));
 </script>
 
 <template>

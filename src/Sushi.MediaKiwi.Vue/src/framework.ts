@@ -4,11 +4,9 @@ import { getDefaultRouterOptions } from "@/router/getDefaultRouterOptions";
 import { createRouter } from "vue-router";
 import { PublicClientApplication } from "@azure/msal-browser";
 import { type MediakiwiVueOptions } from "./models/options";
-import { createVuetify, type VuetifyOptions } from "vuetify";
 import { msalPlugin } from "./plugins/msalPlugin";
 import { CustomNavigationClient } from "./router/navigationClient";
 import { addCheckIsAuthenticated } from "./router/checkIsAuthenticated";
-import defaultVuetifyOptions from "./plugins/vuetify";
 import { identity } from "./identity";
 import { container } from "tsyringe";
 import { registerServices } from "./helpers/registerServices";
@@ -17,9 +15,10 @@ import { registerRouter } from "./helpers/registerRouter";
 import { addWaitOnRouterManager } from "./router/waitOnRouterManager";
 import { addCheckIsInRole } from "./router/checkIsInRole";
 import { registerAxios } from "./helpers/registerAxios";
-import i18next, { tokenStore } from "./plugins/i18next";
+import i18next from "./plugins/i18next";
 import { registerIcons } from "./helpers/registerIcons";
 import { registerDirectives } from "./helpers/registerDirectives";
+import { createVuetify } from "./plugins/vuetify";
 
 export default {
   install(app: App, options: MediakiwiVueOptions): void {
@@ -47,17 +46,14 @@ export default {
       options.i18nextCallback
     );
 
-    // create vuetify
-    let vuetifyOptions: VuetifyOptions;
-    if (options.vuetifyOptions !== undefined) {
-      // merge default options with custom options, if custom options is provided
-      vuetifyOptions = { ...defaultVuetifyOptions, ...options.vuetifyOptions };
-    } else {
-      vuetifyOptions = defaultVuetifyOptions;
-    }
+    // Create vuetify instance
+    const { vuetify, vuetifyOptions } = createVuetify(options.vuetifyOptions);
 
-    const vuetify = createVuetify(vuetifyOptions);
+    // add vuetify
     app.use(vuetify);
+
+    // Provide the application with the vuetify configuration
+    app.provide("vuetifyOptions", { ...vuetifyOptions });
 
     // Create an instance of Pinia
     app.use(pinia);
@@ -68,8 +64,19 @@ export default {
 
     // create msal instance and install plugin
     identity.msalInstance = new PublicClientApplication(options.msalConfig);
-    // add api scope to msal instance
-    identity.scopes = [`api://${options.msalConfig.auth.clientId}/access_via_approle_assignments`];
+
+    // add custom scopes to msal instance
+    if (options?.identity?.scopes) {
+      if (Array.isArray(options.identity?.scopes)) {
+        identity.scopes = [...options.identity.scopes];
+      } else {
+        identity.scopes = [options.identity.scopes];
+      }
+    } else {
+      // add api scope to msal instance
+      identity.scopes = [`api://${options.msalConfig.auth.clientId}/access_via_approle_assignments`];
+    }
+
     // install msal plugin
     app.use(msalPlugin, identity.msalInstance);
 
@@ -118,4 +125,6 @@ export * from "@/stores";
 
 export * from "@/router";
 
-export * from "@/plugins/icons/icons";
+export * from "@/plugins/icons";
+
+export * from "@/plugins/vuetify";

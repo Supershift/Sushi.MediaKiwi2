@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { MkSignIn, MkLanguageSwitch } from "@/components";
+  import { MkSignIn } from "@/components";
   import { useIsAuthenticated } from "@/composables/useIsAuthenticated";
   import { useNavigation } from "@/composables/useNavigation";
   import { useMsal } from "@/composables/useMsal";

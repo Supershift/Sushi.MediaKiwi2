@@ -135,7 +135,7 @@
     <div>
       <v-chip>Default</v-chip>
       <v-divider vertical style="height: 30px; margin: 0 15px -6px" />
-      <template v-for="(variant, index) in variants" :key="index">
+      <template v-for="variant in variants">
         <v-chip :variant="variant">{{ variant }}</v-chip>
         <v-chip :variant="variant" closable>{{ variant }} (closable)</v-chip>
       </template>

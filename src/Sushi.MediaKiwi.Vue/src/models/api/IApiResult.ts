@@ -1,10 +1,10 @@
-import { HttpStatusCodeEnum } from "@/models/enum/HttpStatusCodeEnum";
+import { HttpStatusCode } from "axios";
 import { ResultCodeEnum } from "@/models/enum/ResultCodeEnum";
 
 export default interface IApiResult<T> {
   data?: T;
   message?: string;
-  status?: HttpStatusCodeEnum;
+  status?: HttpStatusCode;
   /* Optional fields */
   title?: string;
   traceId?: string;

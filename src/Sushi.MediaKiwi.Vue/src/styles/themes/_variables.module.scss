@@ -1,6 +1,6 @@
 @use "sass:map";
 @use "sass:meta";
-@use "@/styles/abstracts";
+@use "../abstracts";
 @use "./variables";
 
 @include abstracts.recursive-export(variables.$states);

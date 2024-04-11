@@ -33,8 +33,9 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var sectionRepositoryMock = new Mock<ISectionRepository>();
             sectionRepositoryMock.Setup(x => x.GetAsync(sectionStub.Id)).ReturnsAsync(sectionStub);
             sectionRepositoryMock.Setup(x => x.DeleteAsync(sectionStub.Id)).Verifiable();
+            var sectionRoleRepository = new Mock<ISectionRoleRepository>();            
 
-            var service = new SectionService(sectionRepositoryMock.Object, _mapper);
+            var service = new SectionService(sectionRepositoryMock.Object, sectionRoleRepository.Object, _mapper);
 
             // act
             var result = await service.DeleteAsync(sectionStub.Id);
@@ -52,8 +53,9 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             DAL.Section? sectionStub = null;
             var sectionRepositoryMock = new Mock<ISectionRepository>();
             sectionRepositoryMock.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(sectionStub);
+            var sectionRoleRepository = new Mock<ISectionRoleRepository>();
 
-            var service = new SectionService(sectionRepositoryMock.Object, _mapper);
+            var service = new SectionService(sectionRepositoryMock.Object, sectionRoleRepository.Object, _mapper);
 
             // act
             var result = await service.DeleteAsync(17);
@@ -76,8 +78,10 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             var sectionRepositoryMock = new Mock<ISectionRepository>();
             sectionRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<PagingValues>())).ReturnsAsync(sectionStubs);
+            var sectionRoleRepository = new Mock<ISectionRoleRepository>();
+            sectionRoleRepository.Setup(x => x.GetAllAsync(null)).ReturnsAsync(new QueryListResult<DAL.SectionRole>());
 
-            var service = new SectionService(sectionRepositoryMock.Object, _mapper);
+            var service = new SectionService(sectionRepositoryMock.Object, sectionRoleRepository.Object, _mapper);
 
             // act
             var result = await service.GetAllAsync(PagingValues.Default);
@@ -102,7 +106,9 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             var sectionRepositoryMock = new Mock<ISectionRepository>();
             sectionRepositoryMock.Setup(x => x.GetAsync(It.Is<int>(x => x == sectionStub.Id))).ReturnsAsync(sectionStub);
-            var service = new SectionService(sectionRepositoryMock.Object, _mapper);
+            var sectionRoleRepository = new Mock<ISectionRoleRepository>();
+            sectionRoleRepository.Setup(x => x.GetAllAsync(sectionStub.Id)).ReturnsAsync(new QueryListResult<DAL.SectionRole>());
+            var service = new SectionService(sectionRepositoryMock.Object, sectionRoleRepository.Object, _mapper);
 
             // act
             var result = await service.GetAsync(11);
@@ -121,8 +127,10 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             DAL.Section? sectionStub = null;
             var sectionRepositoryMock = new Mock<ISectionRepository>();
             sectionRepositoryMock.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(sectionStub);
+            var sectionRoleRepository = new Mock<ISectionRoleRepository>();
+            
 
-            var service = new SectionService(sectionRepositoryMock.Object, _mapper);
+            var service = new SectionService(sectionRepositoryMock.Object, sectionRoleRepository.Object, _mapper);
 
             // act
             var result = await service.DeleteAsync(17);
@@ -139,8 +147,9 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             DAL.Section? sectionStub = null;
             var sectionRepositoryMock = new Mock<ISectionRepository>();
             sectionRepositoryMock.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(sectionStub);
+            var sectionRoleRepository = new Mock<ISectionRoleRepository>();            
 
-            var service = new SectionService(sectionRepositoryMock.Object, _mapper);
+            var service = new SectionService(sectionRepositoryMock.Object, sectionRoleRepository.Object, _mapper);
 
             // act
             var result = await service.SaveAsync(17, new Section());
@@ -158,7 +167,8 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             {
                 Name = "name",
                 Icon = "mdi-icon",
-                SortOrder = 0
+                SortOrder = 0,
+                Roles = { "Admin" }
             };
 
             int newId = 12;
@@ -166,8 +176,10 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             var sectionRepositoryMock = new Mock<ISectionRepository>();
             sectionRepositoryMock.Setup(x => x.SaveAsync(It.IsAny<DAL.Section>())).Callback<DAL.Section>(x => x.Id = newId);
+            var sectionRoleRepository = new Mock<ISectionRoleRepository>();
+            sectionRoleRepository.Setup(x => x.InsertAsync(It.IsAny<DAL.SectionRole>())).Verifiable(Times.Once);
 
-            var service = new SectionService(sectionRepositoryMock.Object, _mapper);
+            var service = new SectionService(sectionRepositoryMock.Object, sectionRoleRepository.Object, _mapper);
 
             // act
             var result = await service.SaveAsync(null, section);
@@ -176,6 +188,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             Assert.Equal(ResultCode.Success, result.Code);
             Assert.NotNull(result.Value);
             Assert.Equal(newId, result.Value.Id);
+            sectionRoleRepository.Verify();
         }
 
         [Fact]
@@ -186,7 +199,8 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             {
                 Name = "name",
                 Icon = "mdi-icon",
-                SortOrder = 0
+                SortOrder = 0,
+                Roles = { "Admin" }
             };
 
             int existingId = 17;
@@ -196,8 +210,11 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var sectionRepositoryMock = new Mock<ISectionRepository>();
             sectionRepositoryMock.Setup(x => x.GetAsync(existingId)).ReturnsAsync(dalResult).Verifiable();
             sectionRepositoryMock.Setup(x => x.SaveAsync(dalResult)).Verifiable();
+            var sectionRoleRepository = new Mock<ISectionRoleRepository>();
+            sectionRoleRepository.Setup(x=> x.DeleteForSectionAsync(existingId)).Verifiable(Times.Once);    
+            sectionRoleRepository.Setup(x => x.InsertAsync(It.IsAny<DAL.SectionRole>())).Verifiable(Times.Once);
 
-            var service = new SectionService(sectionRepositoryMock.Object, _mapper);
+            var service = new SectionService(sectionRepositoryMock.Object, sectionRoleRepository.Object, _mapper);
 
             // act
             var result = await service.SaveAsync(existingId, section);
@@ -208,6 +225,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             Assert.Equal(existingId, result.Value.Id);
             sectionRepositoryMock.Verify(x => x.GetAsync(existingId), Times.Once);
             sectionRepositoryMock.Verify(x => x.SaveAsync(dalResult), Times.Once);
+            sectionRoleRepository.Verify();
         }
     }
 }

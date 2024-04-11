@@ -3,7 +3,7 @@ import "reflect-metadata";
 import MkNavigationItemComponent from "../MkNavigationItem.vue";
 import { NavigationItem } from "@/models";
 import { createVuetify } from "vuetify";
-import defaultVuetifyOptions from "@/plugins/vuetify";
+import { defaultVuetifyOptions } from "@/plugins/vuetify";
 
 // mock libraries
 // vi.mock("i18next");
