@@ -6,13 +6,18 @@ import dts from "vite-plugin-dts";
 import istanbul from "vite-plugin-istanbul";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 
+// Exclude folders from the build
+const exclude = ["sample", "cypress", "test"];
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    vue(),
+    vue({
+      exclude,
+    }),
     dts({
       insertTypesEntry: true,
-      outputDir: "./lib",
+      exclude,
     }),
     vuetify({
       autoImport: true,
@@ -23,7 +28,7 @@ export default defineConfig({
     }),
     istanbul({
       include: "src/*",
-      exclude: ["node_modules", "dist", "cypress", "**/__tests__/**"],
+      exclude: ["node_modules", "dist", "sample", "cypress", "**/__tests__/**"],
       extension: [".js", ".ts", ".vue"],
       requireEnv: false,
       cypress: true,
@@ -68,11 +73,7 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "./src"), //'@': fileURLToPath(new URL('./src', import.meta.url)),
       "@test": path.resolve(__dirname, "./test"),
-      "@interfaces": path.resolve(__dirname, "./src/models/interfaces"),
-      "@services": path.resolve(__dirname, "./src/services"),
-      "@models": path.resolve(__dirname, "./src/models"),
-      "@utils": path.resolve(__dirname, "./src/utils"),
-      "@stores": path.resolve(__dirname, "./src/stores"),
+      "@cypress": path.resolve(__dirname, "./cypress"),
     },
   },
 });

@@ -1,4 +1,4 @@
-import { AccountInfo, InteractionRequiredAuthError, InteractionStatus, PublicClientApplication } from "@azure/msal-browser";
+import { InteractionRequiredAuthError, PublicClientApplication } from "@azure/msal-browser";
 
 export const identity = <
   {

@@ -10,7 +10,7 @@
 
   // define properties
   const props = defineProps<{
-    onSave?: (event: Event) => Promise<void>;
+    onSave?: (event?: Event) => Promise<void>;
     onDelete?: (event: Event) => Promise<void>;
     onLoad?: (event?: Event) => Promise<void>;
     sticky?: boolean;
@@ -19,7 +19,7 @@
   }>();
 
   // define slots
-  const slots = defineSlots<{
+  defineSlots<{
     toolbarHeader?: void;
     default?: void;
   }>();
@@ -32,7 +32,7 @@
   const snackbar = useSnackbarStore();
 
   // event listeners
-  async function onSave(event: Event) {
+  async function onSave(event?: Event) {
     if (!props.onSave) {
       throw new Error("No onSave handler provided");
     }

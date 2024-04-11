@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { IconsLibrary } from "@/models";
   import { useI18next } from "@/composables/useI18next";
+  import { ref } from "vue";
 
   // inject dependencies
   const { defaultT } = await useI18next();
@@ -12,6 +13,43 @@
   const emit = defineEmits<{
     (e: "click:close"): void;
   }>();
+
+  const confirmState = ref<{
+    show?: boolean;
+    callback?: () => void;
+  }>({});
+
+  /**
+   * Reset the confirm state and callback function
+   */
+  function clearConfirmState() {
+    confirmState.value = {
+      show: false,
+      callback: undefined,
+    };
+  }
+
+  /**
+   * Set the confirm state and callback function to show the confirm action buttons
+   * @param callback The callback function to execute when the confirm button is clicked
+   */
+  function setConfirmState(callback: () => void) {
+    // Bind the confirm state with the callback
+    confirmState.value = {
+      show: true,
+      callback,
+    };
+  }
+
+  /**
+   * Execute the callback function
+   */
+  function onConfirm() {
+    if (confirmState.value.show) {
+      confirmState.value?.callback?.();
+    }
+    clearConfirmState();
+  }
 </script>
 
 <template>
@@ -19,11 +57,17 @@
     <v-label class="ms-5 me-4"> {{ selection.length }} {{ defaultT("selected") }} </v-label>
     <v-divider class="mx-2" inset vertical></v-divider>
 
-    <slot></slot>
-
+    <template v-if="!confirmState?.show">
+      <slot name="default" :confirm="setConfirmState"></slot>
+    </template>
     <v-spacer></v-spacer>
 
-    <v-btn :icon="IconsLibrary.close" @click="emit('click:close')"></v-btn>
+    <template v-if="confirmState.show">
+      <v-btn @click="clearConfirmState">{{ defaultT("Cancel") }}</v-btn>
+      <v-btn-primary @click="onConfirm">{{ defaultT("Confirm") }}</v-btn-primary>
+    </template>
+
+    <v-btn v-if="!confirmState?.show" :icon="IconsLibrary.close" @click="emit('click:close')"></v-btn>
   </v-toolbar>
 </template>
 <style>

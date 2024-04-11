@@ -5,10 +5,47 @@ import { registerServices } from "../registerServices";
 import { INavigationConnector, IViewConnector, ISectionConnector } from "../../services";
 import { NavigationConnector, ViewConnector, SectionConnector } from "../../services";
 import { IMediakiwiServiceRegistrations } from "../../models/options";
+import { Paging, ListResult, NavigationItem, Sorting, View, Section } from "@/models";
 
-class MockedNavigationConnector implements INavigationConnector {}
-class MockedViewConnector implements IViewConnector {}
-class MockedSectionConnector implements ISectionConnector {}
+class MockedNavigationConnector implements INavigationConnector {
+  GetNavigationItems(_paging?: Paging | undefined): Promise<ListResult<NavigationItem>> {
+    throw new Error("Method not implemented.");
+  }
+}
+class MockedViewConnector implements IViewConnector {
+  CreateView(_id: string, _request: View): Promise<View> {
+    throw new Error("Method not implemented.");
+  }
+  DeleteView(_id: string): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  GetViews(_sectionId?: number | undefined, _paging?: Paging | undefined, _sorting?: Sorting | undefined): Promise<ListResult<View>> {
+    throw new Error("Method not implemented.");
+  }
+  GetView(_id: string): Promise<View | undefined> {
+    throw new Error("Method not implemented.");
+  }
+  UpdateView(_id: string, _request: View): Promise<View> {
+    throw new Error("Method not implemented.");
+  }
+}
+class MockedSectionConnector implements ISectionConnector {
+  CreateSection(_request: Section): Promise<Section> {
+    throw new Error("Method not implemented.");
+  }
+  DeleteSection(_id: number): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  GetSections(_paging?: Paging | undefined): Promise<ListResult<Section>> {
+    throw new Error("Method not implemented.");
+  }
+  GetSection(_id: number): Promise<Section | undefined> {
+    throw new Error("Method not implemented.");
+  }
+  UpdateSection(_id: number, _request: Section): Promise<Section> {
+    throw new Error("Method not implemented.");
+  }
+}
 
 describe("registerServices", () => {
   beforeEach(() => {

@@ -2,16 +2,20 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Sushi.MediaKiwi.SampleAPI;
 using Sushi.MediaKiwi.WebAPI;
+using Sushi.MicroORM;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // get config
 var config = builder.Configuration;
-var connectionString = config.GetConnectionString("portal");
+var connectionString = config.GetConnectionString("portal")!;
 var addCORS = config.GetValue<bool>("AddCORS");
 
 // Add services to the container.
 var services = builder.Services;
+
+// add micro orm
+services.AddMicroORM(new SqlServerConnectionString(connectionString, true));
 
 // add CORS (only useful on servers that don't add CORS headers, like kestrel)
 if (addCORS)
@@ -32,11 +36,10 @@ services.AddSwaggerGen(options =>
 });
 
 // Define admin roles
-var adminRoles = new[] { Sushi.MediaKiwi.WebAPI.Constants.AdminRoleName, "SuperAdmin" };
+var adminRoles = new[] { Sushi.MediaKiwi.WebAPI.Constants.AdminRoleName };
 
 // add mediakiwi API
-services.AddMediaKiwiApi(
-    defaultConnectionString: connectionString, 
+services.AddMediaKiwiApi(    
     azureAdConfig: config.GetSection("AzureAd"), 
     autoMapperConfig: c => c.AddProfile<Sushi.MediaKiwi.SampleAPI.Service.Model.AutoMapperProfile>(),
     authorizationOptions: options => {

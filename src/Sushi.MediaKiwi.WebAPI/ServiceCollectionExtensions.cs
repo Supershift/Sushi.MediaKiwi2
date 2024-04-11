@@ -33,16 +33,12 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <param name="adminRoles">Collection of role names which are allowed to access admin resources</param>
         /// <param name="customAuthorizationPolicies">Dictionary where the key is the name of the policy and the value is the policy builder action</param>
         /// <returns></returns>
-        public static IServiceCollection AddMediaKiwiApi(this IServiceCollection services, string defaultConnectionString,
-            IConfigurationSection? azureAdConfig,
-            Action<MicroOrmConfigurationBuilder>? microOrmConfig = null,
+        public static IServiceCollection AddMediaKiwiApi(this IServiceCollection services, IConfigurationSection? azureAdConfig,            
             Action<IMapperConfigurationExpression>? autoMapperConfig = null,
             Action<AuthorizationOptions> authorizationOptions = null)
         {
             // add mk services
-            services.AddMediaKiwiServices(defaultConnectionString,
-                microOrmConfig: microOrmConfig,
-                autoMapperConfig: autoMapperConfig);
+            services.AddMediaKiwiServices(autoMapperConfig: autoMapperConfig);
 
             // add context accessor
             services.AddHttpContextAccessor();

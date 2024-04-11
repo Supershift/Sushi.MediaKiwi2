@@ -23,10 +23,6 @@
 </template>
 
 <style lang="scss" scoped>
-  .v-main {
-    overflow: auto;
-    height: 100vh;
-  }
   .mk-screen {
     height: 100%;
 

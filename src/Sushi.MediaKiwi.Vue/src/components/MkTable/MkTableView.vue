@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import { RouteParamValueRaw } from "vue-router";
   import type { TableMap } from "@/models/table/TableMap";
-  import MkTableCell from "./MkTableCell.vue";
   import { useMediakiwiStore } from "@/stores/";
   import type { Sorting } from "@/models";
   import MkTableCheckbox from "./MkTableCheckbox.vue";
@@ -9,9 +8,6 @@
   import { watch } from "vue";
   import { useNavigation } from "@/composables/useNavigation";
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
-  import { VuetifyPaginationMode } from "@/models/pagination/VuetifyPaginationMode";
-  import { ref } from "vue";
-  import { usePagination } from "@/composables/usePagination";
   import { computed } from "vue";
 
   // define properties
@@ -28,6 +24,8 @@
     checkbox?: boolean;
     /** Defines the pagination mode */
     paginationMode?: MediakiwiPaginationMode;
+    /** Defines if the table row has a hover effect */
+    showHoverEffect: boolean;
   }>();
 
   // define event
@@ -55,7 +53,13 @@
     return props.tableMap?.itemId || props.itemId;
   });
 
-  function onRowClick(event: Event, dataItem: unknown) {
+  const tableRowClassses = computed(() => {
+    return {
+      "has-hover": props.showHoverEffect,
+    };
+  });
+
+  function onRowClick(_event: Event, dataItem: unknown) {
     // emit event
     emit("click:row", dataItem);
 
@@ -105,14 +109,6 @@
     selectAll(false);
   }
 
-  const { updatePageIndex, pageIndex } = usePagination();
-  // deconstruct the prop to get the pagination mode for the vuetify component
-  const vuetifyPaginationMode = ref<VuetifyPaginationMode>(props.paginationMode as VuetifyPaginationMode);
-
-  function loadMore() {
-    updatePageIndex(pageIndex + 1);
-  }
-
   defineExpose({
     clearSelection,
   });
@@ -122,7 +118,7 @@
   <v-table class="mk-table-view">
     <thead>
       <tr>
-        <th v-if="checkbox">
+        <th v-if="checkbox" width="65" class="px-3">
           <MkTableCheckbox :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:selected="selectAll" />
         </th>
         <slot name="thead"></slot>
@@ -130,8 +126,8 @@
     </thead>
     <tbody>
       <!-- render a row for each provided data entity -->
-      <tr v-for="(dataItem, rowIndex) in props.data" :key="rowIndex" style="cursor: pointer" @click.stop="(e) => onRowClick(e, dataItem)">
-        <td v-if="checkbox" @click.stop>
+      <tr v-for="(dataItem, rowIndex) in props.data" :key="rowIndex" :class="tableRowClassses" @click.stop="(e) => onRowClick(e, dataItem)">
+        <td v-if="checkbox" class="px-3" @click.stop>
           <MkTableCheckbox :is-selected="isItemSelected(dataItem)" @update:selected="(e) => selectItem(dataItem, e)" />
         </td>
         <slot name="tbody" v-bind="dataItem"></slot>
@@ -148,14 +144,18 @@
 </template>
 
 <style scoped lang="scss">
+  @use "@/styles/abstracts/mixins" as mixins;
+
   .v-table {
     .v-table__wrapper {
       table {
         tbody {
           tr {
             transition: 0.2s background-color;
-            &:hover {
-              background: rgba(var(--v-theme-surface-variant), var(--v-hover-opacity));
+            &.has-hover {
+              &:hover {
+                @include mixins.hover-effect;
+              }
             }
           }
         }

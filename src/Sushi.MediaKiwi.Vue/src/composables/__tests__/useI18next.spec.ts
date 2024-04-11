@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { createApp, ref, App } from "vue";
+import { createApp, ref } from "vue";
 import { useI18next } from "../useI18next";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import i18next from "i18next";
@@ -10,10 +10,11 @@ import { View } from "../../models";
 // mock libraries
 vi.mock("i18next");
 vi.mock("@azure/msal-browser");
+vi.mock("vue-router");
 
 describe("useI18next", () => {
   async function getComposable(ns?: string | View): ReturnType<typeof useI18next> {
-    let result;
+    let result: any = {};
     const app = createApp({
       setup() {
         result = useI18next(ns);
@@ -23,6 +24,7 @@ describe("useI18next", () => {
     });
     app.provide("i18next", ref(i18next));
     app.provide("i18initPromise", Promise.resolve());
+    app.provide("mediakiwi", {});
     app.use(createTestingPinia());
     app.mount(document.createElement("div"));
     identity.msalInstance = new PublicClientApplication({ auth: { clientId: "test" } });

@@ -16,9 +16,10 @@
 
   import { ITableMapPaging } from "@/models/table/TableMapPaging";
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
-  import { pageSizeOptions } from "@/constants";
   import MkTableHead from "./MkTableHead.vue"; // Mk-Th
   import MkTableCell from "./MkTableCell.vue"; // Mk-Td
+  import { defaultPageSizeOptions, defaultPageSize } from "@/constants";
+  import { useComponentContext } from "@/composables/useComponentContext";
 
   // define properties
   const props = withDefaults(
@@ -39,8 +40,12 @@
       sorting?: Sorting;
       /** */
       selection?: unknown[];
-      /** Displays new item button if set to true and itemViewId has a value */
+      /** Determines if the toolbar has a new button, default: false. */
       new?: boolean;
+      /** Determines if we only want to emit instead of navigating to the given itemViewId */
+      newEmit?: boolean;
+      /** Overrides the "new item" button title */
+      newTitle?: string;
       /** Callback invoked when the component needs new data, i.e. a filter changes, the current page changes, etc. */
       onLoad?: () => Promise<void>;
       /** Title specificly for the current table */
@@ -53,18 +58,24 @@
       itemId?: (entity: any) => string | number;
     }>(),
     {
+      currentPagination: () => ({
+        pageIndex: 0,
+        pageSize: defaultPageSize,
+      }),
       paginationMode: "controls",
     }
   );
 
   // define events
-  const emit = defineEmits<{
+  type MkTableEmit = {
     (e: "update:filters", value: TableFilter): void;
     (e: "click:row", value: unknown): void;
     (e: "update:sorting", value?: Sorting): void;
     (e: "update:selection", value?: unknown[]): void;
     (e: "update:currentPagination", value: Paging): void;
-  }>();
+    (e: "click:new", value?: string): void;
+  };
+  const emit = defineEmits<MkTableEmit>();
 
   // define slots
   const slots = defineSlots<{
@@ -84,10 +95,15 @@
 
   // inject dependencies
   const snackbar = useSnackbarStore();
+  const { hasDefinedEmit } = useComponentContext();
 
   // define reactive variables
   const inProgress = ref(false);
   const mkTableViewComponent = ref();
+  const pageSizes = ref([...defaultPageSizeOptions]);
+  if (props.currentPagination?.pageSize) {
+    pageSizes.value.push(props.currentPagination.pageSize);
+  }
 
   const isBooleanColumn = computed(() => {
     if (props.tableMap && props.tableMap.items && props.tableMap.items[0] && props.tableMap.items[0].value && props.data && props.data[0]) {
@@ -97,7 +113,17 @@
     return false;
   });
 
-  // Deconstruct the ApiResult or paging prop to an ITableMapPaging
+  /**
+   * Returns if the component has click implementation
+   * Either by itemViewId or click:row event
+   */
+  const hasTableRowClickAction = computed<boolean>(() => {
+    return hasDefinedEmit("click:row") || props.itemViewId !== undefined;
+  });
+
+  /**
+   * Deconstruct the ApiResult or paging prop to an ITableMapPaging
+   */
   const pagingResult = computed<ITableMapPaging | undefined | null>(() => {
     const resultCount = props.apiResult?.result?.length;
 
@@ -112,8 +138,7 @@
   });
 
   const showPagination = computed(() => {
-    const lowestPagingOption = Math.min(...pageSizeOptions);
-    return props.currentPagination && pagingResult.value && pagingResult.value.totalCount && pagingResult.value.totalCount > lowestPagingOption;
+    return props.currentPagination && pagingResult.value && pagingResult.value.pageCount;
   });
 
   // event listeners
@@ -170,8 +195,15 @@
     <v-progress-linear v-if="inProgress" indeterminate absolute></v-progress-linear>
     <slot name="header"></slot>
 
-    <template v-if="(slots.toolbar || slots.overflowMenuActions || props.new || props.title) && props.itemViewId">
-      <MkToolbar :item-view-id="props.itemViewId" :new="props.new" :title="props.title">
+    <template v-if="props.new || props.title || slots.toolbar || slots.overflowMenuActions">
+      <MkToolbar
+        :item-view-id="props.itemViewId"
+        :title="props.title"
+        :new="props.new"
+        :new-emit="props.newEmit"
+        :new-title="props.newTitle"
+        @click:new="emit('click:new', $event)"
+      >
         <template v-if="slots.toolbar" #toolbar>
           <slot name="toolbar"></slot>
         </template>
@@ -188,7 +220,9 @@
     <template v-if="selection">
       <v-expand-transition>
         <MkBulkActionBar v-if="selection?.length" :selection="selection" @click:close="mkTableViewComponent.clearSelection">
-          <slot name="bulkActionBar"></slot>
+          <template #default="{ confirm }">
+            <slot name="bulkActionBar" :confirm="confirm"></slot>
+          </template>
         </MkBulkActionBar>
       </v-expand-transition>
     </template>
@@ -204,6 +238,7 @@
       class="mk-table"
       :pagination-mode="paginationMode"
       :item-id="itemId"
+      :show-hover-effect="hasTableRowClickAction"
       @click:row="(e) => emit('click:row', e)"
       @update:sorting="sortingChanged"
       @update:selection="(e) => emit('update:selection', e)"
@@ -238,6 +273,7 @@
           :model-value="currentPagination"
           :paging-result="pagingResult"
           :mode="paginationMode"
+          :page-size-options="pageSizes"
           @update:model-value="pageChanged"
         />
       </template>
