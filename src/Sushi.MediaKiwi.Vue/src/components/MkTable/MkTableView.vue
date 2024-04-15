@@ -90,8 +90,6 @@
 
       // push user to target page
       navigation.navigateTo(navigationItem, itemId);
-    } else {
-      console.warn("no target view id defined on table");
     }
   }
 

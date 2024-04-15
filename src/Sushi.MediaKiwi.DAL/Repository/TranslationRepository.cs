@@ -84,6 +84,7 @@ WHERE NOT EXISTS
             if (!string.IsNullOrWhiteSpace(@namespace)) query.Add(x => x.Namespace, @namespace);
             if (!string.IsNullOrWhiteSpace(key)) query.Add(x => x.Key, key);
             if (!string.IsNullOrWhiteSpace(value)) query.AddLike(x => x.Value, value);
+            query.AddOrder(x => x.Namespace);                
             query.AddOrder(x => x.Key);
             var result = await _connector.GetAllAsync(query);
             return result;
@@ -124,6 +125,22 @@ WHERE NOT EXISTS
             var query = _connector.CreateQuery();
             query.SqlQuery = "SELECT DISTINCT(Namespace) FROM mk_Translations";
             if(localeId != null)
+            {
+                query.SqlQuery += " WHERE LocaleId = @localeId";
+                query.AddParameter("@localeId", localeId);
+            }
+
+            var result = await _connector.ExecuteSetAsync<string>(query);
+            result = result.OrderBy(x => x).ToList();
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public async Task<List<string?>> GetKeysAsync(string? localeId)
+        {
+            var query = _connector.CreateQuery();
+            query.SqlQuery = "SELECT DISTINCT(TranslationKey) FROM mk_Translations";
+            if (localeId != null)
             {
                 query.SqlQuery += " WHERE LocaleId = @localeId";
                 query.AddParameter("@localeId", localeId);

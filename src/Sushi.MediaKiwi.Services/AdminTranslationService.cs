@@ -42,6 +42,17 @@ namespace Sushi.MediaKiwi.Services
         }
 
         /// <summary>
+        /// Gets all keys.
+        /// </summary>
+        /// <param name="localeId"></param>
+        /// <returns></returns>
+        public async Task<Result<ListResult<string?>>> GetKeysAsync(string? localeId)
+        {
+            var namespaces = await _translationRepository.GetKeysAsync(localeId);
+            return new Result<ListResult<string?>>(new ListResult<string?>(namespaces));
+        }
+
+        /// <summary>
         /// Gets all <see cref="Translation"/> instances meeting the supplied filter parameters.
         /// </summary>        
         /// <returns></returns>

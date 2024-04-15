@@ -7,7 +7,7 @@ using Sushi.MediaKiwi.WebAPI.Paging;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
-    [Route($"{BaseRoute}/translations/admin")]
+    [Route($"{BaseRoute}/admin/translations/")]
     [Authorize(Policy = Constants.AdminPolicyName)]
     public class AdminTranslationController : MediaKiwiControllerBase
     {
@@ -50,9 +50,21 @@ namespace Sushi.MediaKiwi.WebAPI
         }
 
         /// <summary>
-        /// Updates the value of an existing translation.
+        /// Gets all keys for a locale.
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="localeId"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("keys")]
+        public async Task<ActionResult<ListResult<string?>>> GetKeys(string? localeId)
+        {
+            var result = await _translationService.GetKeysAsync(localeId);
+            return this.CreateResponse(result);
+        }
+
+        /// <summary>
+        /// Updates the value of an existing translation.
+        /// </summary>        
         /// <returns></returns>
         [HttpPut]
         [Route("{localeId}/{namespace}/{key}")]

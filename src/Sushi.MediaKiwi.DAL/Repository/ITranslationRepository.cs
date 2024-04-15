@@ -68,5 +68,12 @@ namespace Sushi.MediaKiwi.DAL.Repository
         /// <param name="localeId"></param>
         /// <returns></returns>
         Task<List<string?>> GetNamespacesAsync(string? localeId);
+
+        /// <summary>
+        /// Gets all distinct keys.
+        /// </summary>
+        /// <param name="localeId"></param>
+        /// <returns></returns>
+        Task<List<string?>> GetKeysAsync(string? localeId);
     }
 }
