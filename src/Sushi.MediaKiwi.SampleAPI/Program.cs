@@ -53,7 +53,7 @@ services.AddMediaKiwiApi(
         // Add custom authorization policies
         options.AddPolicy(Sushi.MediaKiwi.SampleAPI.Constants.CustomPolicyName, policy =>
         {
-            policy.RequireRole(Sushi.MediaKiwi.SampleAPI.Constants.CustomRoleName);
+            policy.RequireRole([Sushi.MediaKiwi.SampleAPI.Constants.CustomRoleName, Sushi.MediaKiwi.WebAPI.Constants.AdminRoleName ]);
         });
     });
 

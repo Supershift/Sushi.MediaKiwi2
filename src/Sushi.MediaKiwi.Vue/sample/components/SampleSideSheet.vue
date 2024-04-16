@@ -2,7 +2,6 @@
   import { reactive, ref, watch } from "vue";
   import { MkSideSheet } from "@/components";
   import type { ICustomer } from "./../models/Customer";
-  // import { SampleDataService } from "./SampleDataService";
 
   let toggle = ref(false);
 
@@ -26,19 +25,6 @@
     images: [],
     roles: ["Can view", "Can edit", "Admin"],
   });
-  // // TODO: implement the save and delete functions
-  // async function onSaveAsync(): Promise<void> {
-  //   return await SampleDataService.SaveAsync(state.data);
-  // }
-
-  // function onUndo() {
-  //   implement = props.customer ?? <ICustomer>{};
-  //   state.data = implement ?? <ICustomer>{};
-  // }
-
-  // async function onDeleteAsync(event: Event): Promise<void> {
-  //   return await SampleDataService.DeleteAsync(state.data.id);
-  // }
 
   const countries = [
     { title: "Nederland", value: "NL" },
