@@ -2,15 +2,15 @@ import { describe, it, expect } from "vitest";
 import { useTableRowSelection } from "../useTableRowSelection";
 import { computed } from "vue";
 
-interface ISampleData {
+type SampleData = {
   id: number;
   name: string;
   countryCode: string;
   countryName: string;
   date: Date;
-}
+};
 
-const testData = <ISampleData[]>[
+const testData = <SampleData[]>[
   { id: 1, name: "Data A" },
   { id: 2, name: "Data B" },
   { id: 3, name: "Data C" },
