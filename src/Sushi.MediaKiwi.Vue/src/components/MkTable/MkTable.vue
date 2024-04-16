@@ -293,7 +293,7 @@
       </template>
     </MkTableView>
 
-    <template v-if="!hideEmptyState && initialDataLoaded && !data?.length">
+    <template v-if="!hideEmptyState && initialDataLoaded && !data?.length && !apiResult?.result?.length">
       <slot v-if="slots.emptyState" name="emptyState"></slot>
       <MkEmptyState
         v-else

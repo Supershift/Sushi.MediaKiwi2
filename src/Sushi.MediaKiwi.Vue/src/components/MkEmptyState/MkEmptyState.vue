@@ -2,6 +2,7 @@
   import { useI18next } from "@/composables";
   import { MkNewItemButton } from "@/components";
   import { useMediakiwiVueOptions } from "@/composables/useMediakiwiVueOptions";
+  import { computed } from "vue";
 
   // Inject dependencies
   const { t } = await useI18next();
@@ -34,12 +35,16 @@
     subtitle?: (props: unknown) => never;
     actions?: (props: unknown) => never;
   }>();
+
+  const hideImage = computed(() => emptyState?.hideImage || false);
 </script>
 <template>
-  <v-card class="mk-empty-state align-center text-center" color="on-surface-variant">
-    <slot v-if="slots.image" name="image"></slot>
-    <img v-else-if="emptyState?.image" class="mt-6" :src="emptyState?.image" />
-    <img v-else class="mt-6" src="@/assets/empty-state.svg" />
+  <v-card class="mk-empty-state align-center text-center pt-6" color="on-surface-variant">
+    <template v-if="!hideImage">
+      <slot v-if="slots.image" name="image"></slot>
+      <img v-else-if="emptyState?.image" :src="emptyState?.image" />
+      <img v-else src="@/assets/empty-state.svg" />
+    </template>
 
     <slot v-if="slots.title" name="title"></slot>
     <v-card-title v-else>{{ title ?? t("Empty List") }}</v-card-title>

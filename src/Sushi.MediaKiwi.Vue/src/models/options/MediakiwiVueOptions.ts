@@ -27,5 +27,6 @@ export interface MediakiwiVueOptions {
   };
   emptyState?: {
     image?: string;
+    hideImage?: boolean;
   };
 }
