@@ -14,12 +14,12 @@ namespace Sushi.MediaKiwi.Services.Model
     public record Translation
     {   
         [SwaggerSchema(ReadOnly = true)]
-        public string LocaleId { get; set; }
+        public required string LocaleId { get; set; }
         [SwaggerSchema(ReadOnly = true)]
-        public string Namespace { get; set; }
+        public required string Namespace { get; set; }
         [SwaggerSchema(ReadOnly = true)]
-        public string Key { get; set; }
+        public required string Key { get; set; }
         [SwaggerSchema(ReadOnly = true)]
-        public string Value { get; set; }
+        public required string Value { get; set; }
     }
 }

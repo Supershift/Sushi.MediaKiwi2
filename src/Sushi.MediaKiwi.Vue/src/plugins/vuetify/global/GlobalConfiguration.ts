@@ -113,6 +113,11 @@ export const GlobalConfiguration: VuetifyOptions = {
       class: "v-input--mediakiwi",
       variant: InputVariant,
     },
+    VTextarea: {
+      variant: InputVariant,
+      color: "outline",
+      class: "v-field--mediakiwi",
+    },
     VTextField: {
       variant: InputVariant,
       color: "outline",

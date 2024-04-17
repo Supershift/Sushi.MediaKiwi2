@@ -4,17 +4,15 @@
   import useSideSheet from "@/composables/useSideSheet";
   import MkSideSheetContent from "./MkSideSheetContent.vue";
 
+  // model
+  const model = defineModel({ type: Boolean, default: false });
+
   // props that are used to customize the component
   const props = defineProps({
     /** name of the element the sheet teleports on, this is  used as a hook*/
     idName: {
       type: String,
       default: "mk-side-sheet-hook",
-    },
-    /** determines if the side sheet is open or not */
-    modelValue: {
-      type: Boolean,
-      default: false,
     },
     /** positioning on the z-index (drawer is 1006) */
     zIndex: {
@@ -81,7 +79,7 @@
   const { mobile } = useDisplay();
   const { state, openSideSheet, closeSideSheet, isOpen, mountTeleportContainer, unMountTeleportContainer } = useSideSheet();
   // Proxy ref for the drawer to mutate
-  const drawerModelValue = ref(props.modelValue);
+  const drawerModelValue = ref(model.value);
 
   // computed
   const width = computed(() => {
@@ -92,6 +90,7 @@
 
   // functions
   function handleClose() {
+    model.value = false;
     closeSideSheet();
     emits("closedSheet", state);
     sheetValue.value = false;
@@ -115,15 +114,15 @@
     unMountTeleportContainer();
   });
   onMounted(() => {
-    showOverlay.value = props.modelValue;
+    showOverlay.value = model.value;
     zIndex.value = props.zIndex === "auto" ? getMaxZIndex() : props.zIndex;
   });
 
   //watchers
   watch(
-    () => [props.modelValue],
+    () => [model.value],
     () => {
-      if (props.modelValue) {
+      if (model.value) {
         handleOpen();
       } else {
         handleClose();
@@ -133,7 +132,7 @@
 
   // watch the modelValue and update the drawerModelValue
   watch(
-    () => props.modelValue,
+    () => model.value,
     (value) => {
       drawerModelValue.value = value;
     }

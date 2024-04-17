@@ -6,6 +6,7 @@ import { RouterManager } from "@/router/routerManager";
 import { RouteGenerator } from "@/router/routeGenerator";
 import { RoleConnector } from "@/services/RoleConnector";
 import { LocaleConnector } from "@/services/LocaleConnector";
+import { AdminTranslationConnector } from "@/services/AdminTranslationConnector";
 
 export function registerServices(container: DependencyContainer, registations?: IMediakiwiServiceRegistrations) {
   // register helpers
@@ -18,4 +19,8 @@ export function registerServices(container: DependencyContainer, registations?: 
   container.register("ISectionConnector", registations?.sectionConnector ? registations.sectionConnector : SectionConnector);
   container.register("IRoleConnector", registations?.roleConnector ? registations.roleConnector : RoleConnector);
   container.register("ILocaleConnector", registations?.localeConnector ? registations.localeConnector : LocaleConnector);
+  container.register(
+    "IAdminTranslationConnector",
+    registations?.adminTranslationConnector ? registations.adminTranslationConnector : AdminTranslationConnector
+  );
 }
