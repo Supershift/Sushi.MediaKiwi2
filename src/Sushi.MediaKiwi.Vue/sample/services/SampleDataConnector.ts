@@ -1,8 +1,9 @@
 import type { Sorting } from "@/models";
 import { SortDirection } from "@/models";
-import type { ISampleData } from "./ISampleData";
+import type { SampleData } from "../models/SampleData";
+import { injectable } from "tsyringe";
 
-const data = <ISampleData[]>[
+const data = <SampleData[]>[
   { id: 1, name: "Data A", countryCode: "NL", countryName: "Nederland", date: new Date("2023-03-14T12:00:00") },
   { id: 2, name: "Data B", countryCode: "NL", countryName: "Nederland", date: new Date("2023-03-14T13:00:00") },
   { id: 3, name: "Data C", countryCode: "BE", countryName: "België", date: new Date("2023-03-14T14:00:00") },
@@ -15,8 +16,9 @@ const data = <ISampleData[]>[
   { id: 10, name: "Data J", countryCode: "BE", countryName: "België", date: new Date("2023-03-14T21:00:00") },
 ];
 
-export const SampleDataService = {
-  GetAll(countryCode: string, sortOrder?: Sorting): ISampleData[] {
+@injectable()
+export class SampleDataConnector {
+  async GetAll(countryCode: string, sortOrder?: Sorting): Promise<SampleData[]> {
     let result = [...data];
     if (countryCode !== undefined) {
       result = result.filter((x) => x.countryCode == countryCode);
@@ -36,16 +38,18 @@ export const SampleDataService = {
     }
 
     return result;
-  },
-  Get(id: number): ISampleData | undefined {
+  }
+
+  async Get(id: number): Promise<SampleData | undefined> {
     let result = data.find((x) => x.id == id);
     if (result !== undefined) {
       // make a copy to emulate this entry coming from an API
       result = { ...result };
     }
     return result;
-  },
-  async SaveAsync(item: ISampleData): Promise<void> {
+  }
+
+  async SaveAsync(item: SampleData): Promise<void> {
     // this would be some sort of FK in reality
     if (item.countryCode == "NL") {
       item.countryName = "Nederland";
@@ -64,11 +68,12 @@ export const SampleDataService = {
       // replace existing
       data[index] = item;
     }
-  },
+  }
+
   async DeleteAsync(id: number): Promise<void> {
     const index = data.findIndex((x) => x.id == id);
     if (index != -1) {
       data.splice(index, 1);
     }
-  },
-};
+  }
+}

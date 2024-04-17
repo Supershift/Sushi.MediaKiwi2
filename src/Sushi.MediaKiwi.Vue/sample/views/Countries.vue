@@ -5,29 +5,19 @@
   import { useKeyboardShortcuts } from "@/composables";
   import { ListResult, TableMap, Paging, KeyboardShortcutCollection } from "@/models";
   import { container } from "tsyringe";
+  import { reactive } from "vue";
   import { onDeactivated } from "vue";
   import { ref } from "vue";
 
-  const { addKeyboardShortcuts, removeKeyboardShortcuts } = useKeyboardShortcuts();
-
   // inject dependencies
+  const { addKeyboardShortcuts, removeKeyboardShortcuts } = useKeyboardShortcuts();
   const connector = container.resolve(CountryConnector);
 
   // define reactive variables
   const currentPagination = ref<Paging>({});
-  const countries = ref<ListResult<Country>>();
-
-  // define mapping
-  const tableMap: TableMap<Country> = {
-    itemId: (x) => x.code,
-    items: [
-      { headerTitle: "Code", value: (x) => x.code },
-      { headerTitle: "Name", value: (x) => x.name },
-      {
-        headerTitle: "Toggle",
-      },
-    ],
-  };
+  const state = reactive({
+    countries: <ListResult<Country>>{},
+  });
 
   /** Define Keybinding collection */
   const shortCuts: KeyboardShortcutCollection = {
@@ -45,9 +35,25 @@
 
   // load data
   async function LoadData() {
-    countries.value = await connector.GetAll(currentPagination.value);
+    state.countries = await connector.GetAll(currentPagination.value);
   }
 </script>
 <template>
-  <mk-table v-model:currentPagination="currentPagination" :api-result="countries" :table-map="tableMap" :on-load="LoadData"></mk-table>
+  <mk-table
+    v-model:currentPagination="currentPagination"
+    :api-result="state.countries"
+    :data="state.countries?.result"
+    @load="LoadData"
+    :item-id="(item: Country) => item.code"
+  >
+    <template #thead>
+      <th>Code</th>
+      <th>Name</th>
+    </template>
+
+    <template #tbody="dataItem: Country">
+      <td>{{ dataItem.code }}</td>
+      <td>{{ dataItem.name }}</td>
+    </template>
+  </mk-table>
 </template>

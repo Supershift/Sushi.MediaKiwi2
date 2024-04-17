@@ -2,10 +2,13 @@
   import { MkForm, MkTable } from "@/components";
   import { useRoute, useRouter } from "@/router";
   import type { TableMap } from "@/models";
-  import { SampleDataService } from "../components/SampleDataService";
-  import type { ISampleData } from "../components/ISampleData";
+  import { SampleDataConnector } from "@sample/services/SampleDataConnector";
+  import { container } from "tsyringe";
+  import type { SampleData } from "@sample/models/SampleData";
   import { reactive, ref } from "vue";
 
+  // inject dependencies
+  const sampleDataConnector = container.resolve(SampleDataConnector);
   const route = useRoute();
   const router = useRouter();
 
@@ -40,23 +43,23 @@
     items: [{ headerTitle: "Name", value: (dataItem) => dataItem.name }],
   };
 
-  var candidate = SampleDataService.Get(Number(route.params.sampleDataId));
+  var candidate = await sampleDataConnector.Get(Number(route.params.sampleDataId));
 
   var state = reactive({
-    data: candidate ? candidate : <ISampleData>{},
+    data: candidate ? candidate : <SampleData>{},
   });
 
   async function onSaveAsync(): Promise<void> {
-    return await SampleDataService.SaveAsync(state.data);
+    return await sampleDataConnector.SaveAsync(state.data);
   }
 
-  function onUndo() {
-    candidate = SampleDataService.Get(Number(route.params.sampleDataId));
-    state.data = candidate ? candidate : <ISampleData>{};
+  async function onUndo() {
+    candidate = await sampleDataConnector.Get(Number(route.params.sampleDataId));
+    state.data = candidate ? candidate : <SampleData>{};
   }
 
   async function onDeleteAsync(event: Event): Promise<void> {
-    return await SampleDataService.DeleteAsync(state.data.id);
+    return await sampleDataConnector.DeleteAsync(state.data.id);
   }
 
   const showMore = ref(false);
