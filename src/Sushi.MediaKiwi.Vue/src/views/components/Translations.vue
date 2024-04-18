@@ -27,6 +27,7 @@
   const inProgress = ref(false);
   const state = reactive({
     translation: {} as Translation,
+    editTranslationValue: "",
     showEditTranslation: false,
   });
 
@@ -77,15 +78,22 @@
   function onRowClick(item: any) {
     console.log(item);
     state.translation = item;
+    state.editTranslationValue = item.value;
     state.showEditTranslation = true;
   }
 
   async function onSave(): Promise<void> {
     inProgress.value = true;
     try {
-      await connector.Update(state.translation);
-      snackbar.showMessage(defaultT.value("Saved successfully"));
+      await connector.Update({
+        ...state.translation,
+        value: state.editTranslationValue,
+      });
+
+      // update model value if successful
+      state.translation.value = state.editTranslationValue;
       state.showEditTranslation = false;
+      snackbar.showMessage(defaultT.value("Saved successfully"));
     } catch (error) {
       snackbar.showMessage(defaultT.value("Failed to save"));
     } finally {
@@ -110,7 +118,7 @@
       <div class="mt-4">
         <v-text-field disabled :label="defaultT('Namespace')" v-model="state.translation.namespace"></v-text-field>
         <v-text-field disabled :label="defaultT('Key')" v-model="state.translation.key"></v-text-field>
-        <v-textarea :label="defaultT('Value')" v-model="state.translation.value"></v-textarea>
+        <v-textarea :label="defaultT('Value')" v-model="state.editTranslationValue"></v-textarea>
       </div>
     </template>
     <template #footer>
