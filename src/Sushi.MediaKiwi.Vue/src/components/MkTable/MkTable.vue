@@ -303,6 +303,7 @@
         :new-emit="props.newEmit"
         :title="props.emptyStateTitle"
         :subtitle="props.emptyStateSubtitle"
+        @click:new="emit('click:new', $event)"
       />
     </template>
 
