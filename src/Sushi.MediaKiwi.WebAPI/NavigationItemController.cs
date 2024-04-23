@@ -57,10 +57,9 @@ namespace Sushi.MediaKiwi.WebAPI
         /// </summary>        
         /// <returns></returns>
         [HttpPost]
-        [Route("{id}")]
-        public async Task<ActionResult<NavigationItem>> CreateNavigationItem(int id, NavigationItem request)
+        public async Task<ActionResult<NavigationItem>> CreateNavigationItem(NavigationItem request)
         {
-            var result = await _navigationItemService.CreateAsync(id, request);
+            var result = await _navigationItemService.CreateAsync(request);
             return this.CreateResponse(result);
         }
 

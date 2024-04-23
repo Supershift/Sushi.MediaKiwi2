@@ -56,9 +56,9 @@ namespace Sushi.MediaKiwi.Services
             }
         }
 
-        public async Task<Result<NavigationItem>> CreateAsync(int id, NavigationItem request)
+        public async Task<Result<NavigationItem>> CreateAsync(NavigationItem request)
         {
-            var navigationItem = new DAL.NavigationItem() { Id = id };
+            var navigationItem = new DAL.NavigationItem();
 
             // map from model to database
             _mapper.Map(request, navigationItem);
