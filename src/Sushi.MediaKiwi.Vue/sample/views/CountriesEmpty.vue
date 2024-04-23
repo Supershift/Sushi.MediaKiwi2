@@ -20,14 +20,6 @@
     addCountry: false,
   });
 
-  /** Define Keybinding collection */
-  const shortCuts: KeyboardShortcutCollection = {
-    "shift+c": (e: KeyboardEvent) => {
-      e.preventDefault();
-      alert("You've pressed shift+c, this is a little secret!");
-    },
-  };
-
   // load data
   async function LoadData() {
     state.countries = {
