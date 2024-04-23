@@ -34,6 +34,8 @@
     /** Visible action slot for the MkToolbar */
     toolbar?: (props: unknown) => never;
     /** Visible header for the MkToolbar */
+    title?: () => never;
+    /** Visible header for the MkToolbar */
     header?: (props: unknown) => never;
     /** Menu actions for the MkToolbar */
     overflowMenuActions?: (props: unknown) => never;
@@ -53,6 +55,8 @@
       </v-row>
       <v-row v-if="slots.toolbar || slots.overflowMenuActions || props.title || (props.itemViewId && props.new)" class="pb-2 ml-0 align-center">
         <v-card-title v-if="title" class="px-0 text-title-medium">{{ title }}</v-card-title>
+        <slot v-else-if="slots.title" name="title"></slot>
+
         <v-spacer></v-spacer>
 
         <v-card-actions>

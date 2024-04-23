@@ -100,6 +100,8 @@
     tbody?: (props: any) => never;
     /** Custom component for the empty state */
     emptyState?: () => never;
+    /*   */
+    toolbarTitle?: () => never;
   }>();
 
   // inject dependencies
@@ -218,6 +220,9 @@
         :new-title="props.newTitle"
         @click:new="emit('click:new', $event)"
       >
+        <template v-if="slots.toolbarTitle" #title>
+          <slot name="toolbarTitle"></slot>
+        </template>
         <template v-if="slots.toolbar" #toolbar>
           <slot name="toolbar"></slot>
         </template>

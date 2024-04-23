@@ -58,6 +58,10 @@
     new-emit
     @click:new="openDialog"
   >
+    <template #toolbarTitle>
+      <v-text-field label="Sample field that does nothing"></v-text-field>
+    </template>
+
     <template #thead>
       <th>Code</th>
       <th>Name</th>
