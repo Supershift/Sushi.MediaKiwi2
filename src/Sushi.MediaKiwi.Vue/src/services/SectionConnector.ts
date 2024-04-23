@@ -27,12 +27,12 @@ export class SectionConnector implements ISectionConnector {
   }
 
   async GetSection(id: number): Promise<Section | undefined> {
-    const response = await this.axios.get<Section>(`/sections/${id}`);
+    const response = await this.axios.get<Section>(`/sections/${encodeURIComponent(id)}`);
     return response.data;
   }
 
   async UpdateSection(id: number, request: Section): Promise<Section> {
-    const response = await this.axios.put<Section>(`/sections/${id}`, request);
+    const response = await this.axios.put<Section>(`/sections/${encodeURIComponent(id)}`, request);
     return response.data;
   }
 }

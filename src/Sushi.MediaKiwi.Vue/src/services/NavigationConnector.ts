@@ -18,22 +18,22 @@ export class NavigationConnector implements INavigationConnector {
   }
 
   async GetNavigationItem(id: number): Promise<NavigationItem> {
-    const response = await this.axios.get<NavigationItem>(`/navigationitems/${id}`);
+    const response = await this.axios.get<NavigationItem>(`/navigationitems/${encodeURIComponent(id)}`);
     return response.data;
   }
 
   async CreateNavigationItem(item: NavigationItem): Promise<NavigationItem> {
-    const response = await this.axios.post<NavigationItem>(`/navigationitems/${item.id}`, item);
+    const response = await this.axios.post<NavigationItem>(`/navigationitems/${encodeURIComponent(item.id)}`, item);
     return response.data;
   }
 
   async UpdateNavigationItem(item: NavigationItem): Promise<NavigationItem> {
-    const response = await this.axios.put<NavigationItem>(`/navigationitems/${item.id}`, item);
+    const response = await this.axios.put<NavigationItem>(`/navigationitems/${encodeURIComponent(item.id)}`, item);
     return response.data;
   }
 
   async DeleteNavigationItem(id: number): Promise<AxiosResponse> {
-    const response = await this.axios.delete<NavigationItem>(`/navigationitems/${id}`);
+    const response = await this.axios.delete<NavigationItem>(`/navigationitems/${encodeURIComponent(id)}`);
     return response;
   }
 }
