@@ -1,12 +1,9 @@
 <script setup lang="ts">
   import { Country } from "./../models/Country";
-  import { CountryConnector } from "./../services/CountryConnector";
   import { MkTable } from "@/components";
-  import { useI18next, useKeyboardShortcuts } from "@/composables";
-  import { ListResult, TableMap, Paging, KeyboardShortcutCollection } from "@/models";
-  import { container } from "tsyringe";
+  import { useI18next } from "@/composables";
+  import { ListResult, Paging } from "@/models";
   import { reactive } from "vue";
-  import { onDeactivated } from "vue";
   import { ref } from "vue";
   import CountryEdit from "./CountryEdit.vue";
 
