@@ -10,7 +10,10 @@ export class AdminTranslationConnector implements IAdminTranslationConnector {
   constructor(@inject("MediakiwiAxiosInstance") private axios: AxiosInstance) {}
 
   async Update(item: Translation): Promise<void> {
-    await this.axios.put<void>(`/admin/translations/${item.localeId}/${item.namespace}/${item.key}`, item);
+    await this.axios.put<void>(
+      `/admin/translations/${encodeURIComponent(item.localeId)}/${encodeURIComponent(item.namespace)}/${encodeURIComponent(item.key)}`,
+      item
+    );
   }
 
   async GetKeys(localeId?: string): Promise<ListResult<string>> {

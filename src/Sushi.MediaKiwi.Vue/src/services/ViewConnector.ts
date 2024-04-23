@@ -30,12 +30,12 @@ export class ViewConnector implements IViewConnector {
   }
 
   async GetView(id: string): Promise<View | undefined> {
-    const response = await this.axios.get<View>(`/views/${id}`);
+    const response = await this.axios.get<View>(`/views/${encodeURIComponent(id)}`);
     return response.data;
   }
 
   async UpdateView(id: string, request: View): Promise<View> {
-    const response = await this.axios.put<View>(`/views/${id}`, request);
+    const response = await this.axios.put<View>(`/views/${encodeURIComponent(id)}`, request);
     return response.data;
   }
 }
