@@ -23,7 +23,7 @@ export class NavigationConnector implements INavigationConnector {
   }
 
   async CreateNavigationItem(item: NavigationItem): Promise<NavigationItem> {
-    const response = await this.axios.post<NavigationItem>(`/navigationitems/${encodeURIComponent(item.id)}`, item);
+    const response = await this.axios.post<NavigationItem>(`/navigationitems`, item);
     return response.data;
   }
 
