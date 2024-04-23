@@ -172,7 +172,6 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             // arrange
             var navigationItem = new NavigationItem()
             {
-                Id = 3,
                 Name = "name",
                 SectionId = 2,
                 ParentNavigationItemId = 2,
@@ -183,17 +182,16 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var dalResult = new DAL.NavigationItem() { Id = newId };
 
             var navigationItemRepositoryMock = new Mock<INavigationItemRepository>();
-            navigationItemRepositoryMock.Setup(x => x.InsertAsync(It.Is<DAL.NavigationItem>(x=>x.Id == newId))).Callback<DAL.NavigationItem>(x => x.Id = newId);
+            navigationItemRepositoryMock.Setup(x => x.InsertAsync(It.Is<DAL.NavigationItem>(x => x.Id == newId)));
 
             var service = new NavigationItemService(navigationItemRepositoryMock.Object, _mapper);
 
             // act
-            var result = await service.CreateAsync(newId, navigationItem);
+            var result = await service.CreateAsync(navigationItem);
 
             Assert.NotNull(result);
             Assert.Equal(ResultCode.Success, result.Code);
             Assert.NotNull(result.Value);
-            Assert.Equal(newId, result.Value.Id);
         }
 
         [Fact]
