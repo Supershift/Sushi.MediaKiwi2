@@ -100,7 +100,7 @@
     tbody?: (props: any) => never;
     /** Custom component for the empty state */
     emptyState?: () => never;
-    /*   */
+    /* Custom title */
     toolbarTitle?: () => never;
   }>();
 
