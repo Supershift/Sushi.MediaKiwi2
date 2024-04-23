@@ -6,6 +6,7 @@ import { container } from "tsyringe";
 import { IRoleConnector } from "@/services/IRoleConnector";
 import { noPageSize } from "@/constants";
 import { VuetifyOptions } from "vuetify";
+import { watch } from "vue";
 
 export interface MediaKiwiState {
   navigationItems: Array<NavigationItem>;
@@ -140,6 +141,33 @@ export const useMediakiwiStore = defineStore({
         this.externalIcons = true;
       } else {
         this.externalIcons = false;
+      }
+    },
+    onSectionsLoaded(resolve: (sections: Section[]) => void, reject?: (error: any) => void) {
+      try {
+        // If the sections are already loaded, call the callback immediately
+        if (this.sections?.length) {
+          resolve(this.sections);
+          return;
+        }
+
+        // Create a watcher to call the callback when the sections are loaded
+        const watcher = watch(
+          () => this.sections,
+          (sections) => {
+            if (sections?.length) {
+              // Stop watching the sections
+              watcher();
+
+              // call the resolve callback
+              resolve(sections);
+            }
+          }
+        );
+      } catch (error) {
+        if (reject) {
+          reject(error);
+        }
       }
     },
   },
