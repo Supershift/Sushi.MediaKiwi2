@@ -96,9 +96,10 @@
     const result = await sampleDataConnector.GetAll(filters.value.country.selectedValue?.value, state.selectedSortOption);
     state.sampleData = result;
 
-    // Add item to the pre-selection
-    console.log("Aye, here be setting selection", state.sampleData[0]);
-    state.selectedTableRows = [state.sampleData[0]];
+    // Add item as pre-selection
+    if (state.sampleData?.length) {
+      state.selectedTableRows = [state.sampleData[0]];
+    }
   }
 
   function onCustomerClick(value: any) {
@@ -109,8 +110,6 @@
 </script>
 
 <template>
-  <pre>{{ state.selectedTableRows }}</pre>
-
   <MkTable
     v-model:sorting="state.selectedSortOption"
     v-model:selection="state.selectedTableRows"

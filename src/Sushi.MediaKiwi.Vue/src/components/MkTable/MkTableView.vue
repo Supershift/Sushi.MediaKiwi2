@@ -4,8 +4,6 @@
   import { useMediakiwiStore } from "@/stores/";
   import type { Sorting } from "@/models";
   import MkTableCheckbox from "./MkTableCheckbox.vue";
-  import { useTableRowSelection } from "@/composables/useTableRowSelection";
-  import { watch } from "vue";
   import { useNavigation } from "@/composables/useNavigation";
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
   import { computed } from "vue";
@@ -26,7 +24,7 @@
   }>();
 
   /** Use Sorting<T> for typesavety  */
-  const sorting = defineModel<Sorting | Sorting<T>>("sorting");
+  defineModel<Sorting | Sorting<T>>("sorting");
   /** Selected items */
   const selection = defineModel<Array<T>>("selection", { default: [] });
 
@@ -55,6 +53,23 @@
     return props.tableMap?.itemId || props.itemId;
   });
 
+  /** Proxy collection that contains the itemIds for the selection collection */
+  const selectionIds = computed(() => selection.value?.map((x) => getItemId.value!(x)));
+  /** Returns if 'some' items are in the selection collection */
+  const isIndeterminate = computed(() => selection.value.length > 0 && !isAllSelected.value);
+  /** Returns if all items ids are selection collection */
+  const isAllSelected = computed(() => selection.value.length === props.data?.length);
+  /** Returns if the provided item ids are selected */
+  const isItemSelected = computed(() => (dataItem: T): boolean => {
+    const itemId = getItemId.value!(dataItem);
+    if (itemId) {
+      const index = selectionIds.value?.findIndex((x) => x === itemId);
+      return index > -1;
+    }
+    return false;
+  });
+
+  /** Classes for the table row */
   const tableRowClassses = computed(() => {
     return {
       "has-hover": props.showHoverEffect,
@@ -95,18 +110,45 @@
     }
   }
 
-  /** Init selection composable for item selection with the table map and data  */
-  const { selectAll, selectItem, isItemSelected, isAllSelected, isIndeterminate, selectedItems } = useTableRowSelection<T>({
-    itemId: props.tableMap?.itemId || props.itemId,
-    data: computed(() => props.data),
-  });
+  /**
+   * Select ALL items of the data collection
+   * @param value - true to select all, false to deselect all
+   */
+  function onToggleAll(value: boolean): void {
+    if (props.data) {
+      props.data.forEach((item) => onToggleSelection(item, value));
+    }
+  }
 
-  watch(selectedItems, (value) => {
-    emit("update:selection", value);
-  });
+  /**
+   * Select or deselect an item from the data collection
+   * @param dataItem - the item to select or deselect
+   * @param value - true to select, false to deselect
+   */
+  function onToggleSelection(dataItem: T, value: boolean) {
+    // Get the item id
+    const itemId = getItemId.value!(dataItem);
+
+    if (itemId) {
+      // Find the index of the item in the selection collection
+      const index = selectionIds.value?.findIndex((x) => x === itemId);
+
+      if (value) {
+        // Add the item if not already present
+        if (index === -1) {
+          selection.value.push(dataItem);
+        }
+      } else {
+        // Remove the item if present
+        if (index > -1) {
+          selection.value.splice(index, 1);
+        }
+      }
+    }
+  }
 
   function clearSelection() {
-    selectAll(false);
+    onToggleAll(false);
   }
 
   defineExpose({
@@ -119,7 +161,7 @@
     <thead>
       <tr>
         <th v-if="checkbox" width="65" class="px-3">
-          <MkTableCheckbox :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:selected="selectAll" />
+          <MkTableCheckbox :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:selected="onToggleAll" />
         </th>
         <slot name="thead"></slot>
       </tr>
@@ -128,7 +170,7 @@
       <!-- render a row for each provided data entity -->
       <tr v-for="(dataItem, rowIndex) in props.data" :key="rowIndex" :class="tableRowClassses" @click.stop="(e) => onRowClick(e, dataItem)">
         <td v-if="checkbox" class="px-3" @click.stop>
-          <MkTableCheckbox :is-selected="isItemSelected(dataItem)" @update:selected="(e) => selectItem(dataItem, e)" />
+          <MkTableCheckbox :is-selected="isItemSelected(dataItem)" @update:selected="(e) => onToggleSelection(dataItem, e)" :item="dataItem" />
         </td>
         <slot name="tbody" v-bind="dataItem"></slot>
       </tr>
