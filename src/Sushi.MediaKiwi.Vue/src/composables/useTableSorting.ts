@@ -24,11 +24,11 @@ export function useTableSorting(options: useTableSortingOptions) {
 
   /**
    * Creates an ISorting result with a direction for the new tableMapItem
-   * @param {TableSortingOptions<unknown>} sortingOptions
+   * @param {TableSortingOptions<T>} sortingOptions
    * @param {Sorting}
    * @return {Sorting}
    */
-  function setSorting(sortingOptions: TableSortingOptions<unknown>) {
+  function setSorting<T>(sortingOptions: TableSortingOptions<T>) {
     const sortingId = invokeId(sortingOptions);
     const sortDirection = getSortingDirection(sortingId);
     currentSort.value = { sortBy: sortingId, sortDirection };
@@ -36,10 +36,10 @@ export function useTableSorting(options: useTableSortingOptions) {
 
   /**
    * Returns classes based on the sortingOptions
-   * @param {TableSortingOptions<unknown>} sortingOptions
+   * @param {TableSortingOptions<T>} sortingOptions
    * @return {Object}
    */
-  function getSortingClasses(sortingOptions: TableSortingOptions<unknown>): Record<string, boolean> {
+  function getSortingClasses<T>(sortingOptions: TableSortingOptions<T>): Record<string, boolean> {
     return {
       sortable: true,
       "sortable-active": isActiveSort(sortingOptions),
@@ -48,14 +48,14 @@ export function useTableSorting(options: useTableSortingOptions) {
 
   /**
    * Get the Id set in the sortingOptions
-   * @param {TableSortingOptions<unknown>} sortingOptions
+   * @param {TableSortingOptions<T>} sortingOptions
    * @return {string}
    */
-  function invokeId(sortingOptions: TableSortingOptions<unknown>): string {
+  function invokeId<T>(sortingOptions: TableSortingOptions<T>): string {
     if (typeof sortingOptions.id === "function") {
       return nameof(sortingOptions.id);
     } else {
-      return sortingOptions.id;
+      return sortingOptions.id?.toString() ?? "";
     }
   }
 
@@ -78,7 +78,7 @@ export function useTableSorting(options: useTableSortingOptions) {
     // Toggle the sort
     return currentSort.value?.sortDirection === SortDirection.Desc ? SortDirection.Asc : SortDirection.Desc;
   }
-  function isActiveSort(sortingOptions: TableSortingOptions<unknown>): boolean {
+  function isActiveSort<T>(sortingOptions: TableSortingOptions<T>): boolean {
     return currentSort.value?.sortBy === invokeId(sortingOptions);
   }
 

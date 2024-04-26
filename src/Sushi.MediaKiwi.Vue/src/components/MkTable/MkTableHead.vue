@@ -1,12 +1,15 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T">
   import { useTableSorting } from "@/composables/useTableSorting";
   import { Sorting, TableMapItem, TableSortingOptions } from "@/models";
   import { computed } from "vue";
 
   const props = defineProps<{
-    sorting?: Sorting;
+    /** Use Sorting<T> for typesavety s*/
+    sorting?: Sorting<T> | Sorting;
     mapItem?: TableMapItem<any>;
-    sortingOptions?: TableSortingOptions<any>;
+    /** @deprecated Use sortingKey for a more typesafe solution */
+    sortingOptions?: TableSortingOptions<T>;
+    sortingKey?: keyof T;
     truncate?: boolean;
   }>();
 
@@ -22,7 +25,7 @@
   }>();
 
   const sortingOptions = computed(() => {
-    return props.mapItem ? props.mapItem.sortingOptions : props.sortingOptions;
+    return props.mapItem ? props.mapItem.sortingOptions : props.sortingKey ? <TableSortingOptions<T>>{ id: props.sortingKey } : props.sortingOptions;
   });
 
   /** Init sorting composable */

@@ -12,7 +12,7 @@
 
   // inject dependencies
   const countriesConnector = container.resolve(CountryConnector);
-  const customerRooms = [
+  const customerRooms = <ICustomerRooms[]>[
     {
       isActive: false,
       bookingId: 1,

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T">
   import { RouteParamValueRaw } from "vue-router";
   import type { TableMap } from "@/models/table/TableMap";
   import { useMediakiwiStore } from "@/stores/";
@@ -12,14 +12,11 @@
 
   // define properties
   const props = defineProps<{
-    tableMap?: TableMap<any>;
-    itemId?: (entity: any) => any;
-    data?: any[];
+    tableMap?: TableMap<T>;
+    itemId?: (entity: T) => string | number;
+    data?: T[];
     /** ExternalId of the view instance to which the user is pushed when clicking a row. */
     itemViewId?: string;
-    /** */
-    sorting?: Sorting;
-    selection?: unknown[];
     /** Make each row in the table selectable. */
     checkbox?: boolean;
     /** Defines the pagination mode */
@@ -28,21 +25,26 @@
     showHoverEffect: boolean;
   }>();
 
+  /** Use Sorting<T> for typesavety  */
+  const sorting = defineModel<Sorting | Sorting<T>>("sorting");
+  /** Selected items */
+  const selection = defineModel<Array<T>>("selection", { default: [] });
+
   // define event
   const emit = defineEmits<{
-    (e: "click:row", value: any): void;
-    (e: "update:sorting", value?: Sorting): void;
-    (e: "update:selection", value?: unknown[]): void;
+    (e: "click:row", value: T): void;
+    (e: "update:sorting", value?: Sorting<T>): void;
+    (e: "update:selection", value?: T[]): void;
   }>();
 
   // define slots
   const slots = defineSlots<{
-    footer?: (props: unknown) => any;
-    bottom?: (props: unknown) => any;
+    footer?: () => never;
+    bottom?: () => never;
     /** table templating  */
-    thead: (props: unknown) => never;
+    thead: () => never;
     /** table templating */
-    tbody: (props: any) => never;
+    tbody: (props: T) => never;
   }>();
 
   // inject dependencies
@@ -59,7 +61,7 @@
     };
   });
 
-  function onRowClick(_event: Event, dataItem: unknown) {
+  function onRowClick(_event: Event, dataItem: T) {
     // emit event
     emit("click:row", dataItem);
 
@@ -94,7 +96,7 @@
   }
 
   /** Init selection composable for item selection with the table map and data  */
-  const { selectAll, selectItem, isItemSelected, isAllSelected, isIndeterminate, selectedItems } = useTableRowSelection({
+  const { selectAll, selectItem, isItemSelected, isAllSelected, isIndeterminate, selectedItems } = useTableRowSelection<T>({
     itemId: props.tableMap?.itemId || props.itemId,
     data: computed(() => props.data),
   });
