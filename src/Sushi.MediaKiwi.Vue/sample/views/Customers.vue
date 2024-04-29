@@ -120,6 +120,7 @@
     @load="LoadData"
     @click:row="onCustomerClick"
     hide-bulk-action-bar
+    :disable-item-selection="(item) => item.id % 2 !== 0"
   >
     <template #bulkActionBar="{ confirm }">
       <v-btn @click="confirm(download)"><v-icon :icon="IconsLibrary.trayArrowDown"></v-icon> Download</v-btn>

@@ -21,6 +21,8 @@
     paginationMode?: MediakiwiPaginationMode;
     /** Defines if the table row has a hover effect */
     showHoverEffect: boolean;
+    /** Callback to disable the selection checkbox for a row based on specific criteria */
+    disableItemSelection?: (entity: T) => boolean;
   }>();
 
   /** Use Sorting<T> for typesavety  */
@@ -116,7 +118,11 @@
    */
   function onToggleAll(value: boolean): void {
     if (props.data) {
-      props.data.forEach((item) => onToggleSelection(item, value));
+      props.data.forEach((dataItem) => {
+        if (!isDisabledItemSelection(dataItem)) {
+          onToggleSelection(dataItem, value);
+        }
+      });
     }
   }
 
@@ -147,6 +153,22 @@
     }
   }
 
+  function isDisabledItemSelection(dataItem: T) {
+    let result = false;
+
+    if (props.disableItemSelection) {
+      result = props.disableItemSelection(dataItem);
+    }
+
+    return result;
+  }
+
+  const allItemsDisabled = computed(() => {
+    const allItemsDisabled = props.data?.every((x) => isDisabledItemSelection(x)) || false;
+
+    return allItemsDisabled;
+  });
+
   function clearSelection() {
     onToggleAll(false);
   }
@@ -160,8 +182,8 @@
   <v-table class="mk-table-view">
     <thead>
       <tr>
-        <th v-if="checkbox" width="65" class="px-3">
-          <MkTableCheckbox :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:selected="onToggleAll" />
+        <th v-if="checkbox" width="65">
+          <MkTableCheckbox :disabled="allItemsDisabled" :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:selected="onToggleAll" />
         </th>
         <slot name="thead"></slot>
       </tr>
@@ -169,8 +191,13 @@
     <tbody>
       <!-- render a row for each provided data entity -->
       <tr v-for="(dataItem, rowIndex) in props.data" :key="rowIndex" :class="tableRowClassses" @click.stop="(e) => onRowClick(e, dataItem)">
-        <td v-if="checkbox" class="px-3" @click.stop>
-          <MkTableCheckbox :is-selected="isItemSelected(dataItem)" @update:selected="(e) => onToggleSelection(dataItem, e)" :item="dataItem" />
+        <td v-if="checkbox" @click.stop>
+          <MkTableCheckbox
+            :item="dataItem"
+            :is-selected="isItemSelected(dataItem)"
+            :disabled="isDisabledItemSelection(dataItem)"
+            @update:selected="(e) => onToggleSelection(dataItem, e)"
+          />
         </td>
         <slot name="tbody" v-bind="dataItem"></slot>
       </tr>

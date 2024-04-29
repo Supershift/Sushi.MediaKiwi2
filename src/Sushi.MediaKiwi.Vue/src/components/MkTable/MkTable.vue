@@ -57,6 +57,8 @@
       emptyStateSubtitle?: string;
       /** Hides the bulk action bar while keeing the checkboxes intact */
       hideBulkActionBar?: boolean;
+      /** Callback to disable the selection checkbox for a row based on specific criteria */
+      disableItemSelection?: (entity: T) => boolean;
     }>(),
     {
       paginationMode: "controls",
@@ -264,6 +266,7 @@
       @click:row="(e) => emit('click:row', e)"
       @update:sorting="sortingChanged"
       @update:selection="(e) => emit('update:selection', e)"
+      :disable-item-selection="props.disableItemSelection"
     >
       <template #thead>
         <slot v-if="slots.thead" name="thead"></slot>
