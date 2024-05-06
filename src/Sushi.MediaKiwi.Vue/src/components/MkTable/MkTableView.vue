@@ -1,48 +1,50 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T">
   import { RouteParamValueRaw } from "vue-router";
   import type { TableMap } from "@/models/table/TableMap";
   import { useMediakiwiStore } from "@/stores/";
   import type { Sorting } from "@/models";
   import MkTableCheckbox from "./MkTableCheckbox.vue";
-  import { useTableRowSelection } from "@/composables/useTableRowSelection";
-  import { watch } from "vue";
   import { useNavigation } from "@/composables/useNavigation";
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
   import { computed } from "vue";
 
   // define properties
   const props = defineProps<{
-    tableMap?: TableMap<any>;
-    itemId?: (entity: any) => any;
-    data?: any[];
+    tableMap?: TableMap<T>;
+    itemId?: (entity: T) => string | number;
+    data?: T[];
     /** ExternalId of the view instance to which the user is pushed when clicking a row. */
     itemViewId?: string;
-    /** */
-    sorting?: Sorting;
-    selection?: unknown[];
     /** Make each row in the table selectable. */
     checkbox?: boolean;
     /** Defines the pagination mode */
     paginationMode?: MediakiwiPaginationMode;
     /** Defines if the table row has a hover effect */
     showHoverEffect: boolean;
+    /** Callback to disable the selection checkbox for a row based on specific criteria */
+    disableItemSelection?: (entity: T) => boolean;
   }>();
+
+  /** Use Sorting<T> for typesafety */
+  defineModel<Sorting | Sorting<T>>("sorting");
+  /** Selected items */
+  const selection = defineModel<Array<T>>("selection", { default: [] });
 
   // define event
   const emit = defineEmits<{
-    (e: "click:row", value: any): void;
-    (e: "update:sorting", value?: Sorting): void;
-    (e: "update:selection", value?: unknown[]): void;
+    (e: "click:row", value: T): void;
+    (e: "update:sorting", value?: Sorting<T>): void;
+    (e: "update:selection", value?: T[]): void;
   }>();
 
   // define slots
   const slots = defineSlots<{
-    footer?: (props: unknown) => any;
-    bottom?: (props: unknown) => any;
+    footer?: () => never;
+    bottom?: () => never;
     /** table templating  */
-    thead: (props: unknown) => never;
+    thead: () => never;
     /** table templating */
-    tbody: (props: any) => never;
+    tbody: (props: T) => never;
   }>();
 
   // inject dependencies
@@ -53,13 +55,30 @@
     return props.tableMap?.itemId || props.itemId;
   });
 
-  const tableRowClassses = computed(() => {
-    return {
-      "has-hover": props.showHoverEffect,
-    };
+  /** Proxy collection that contains the itemIds for the selection collection */
+  const selectionIds = computed(() => selection.value?.map((x) => getItemId.value!(x)));
+  /** Returns if 'some' items are in the selection collection */
+  const isIndeterminate = computed(() => selection.value.length > 0 && !isAllSelected.value);
+  /** Returns if all items ids are selection collection */
+  const isAllSelected = computed(() => selection.value.length === props.data?.length);
+  /** Returns if the provided item ids are selected */
+  const isItemSelected = computed(() => (dataItem: T): boolean => {
+    const itemId = getItemId.value!(dataItem);
+    if (itemId) {
+      const index = selectionIds.value?.findIndex((x) => x === itemId);
+      return index > -1;
+    }
+    return false;
   });
 
-  function onRowClick(_event: Event, dataItem: unknown) {
+  /** Classes for the table row */
+  function tableRowClassses(dataItem: T) {
+    return {
+      "has-hover": props.showHoverEffect && !isDisabledItemSelection(dataItem),
+    };
+  }
+
+  function onRowClick(_event: Event, dataItem: T) {
     // emit event
     emit("click:row", dataItem);
 
@@ -93,18 +112,65 @@
     }
   }
 
-  /** Init selection composable for item selection with the table map and data  */
-  const { selectAll, selectItem, isItemSelected, isAllSelected, isIndeterminate, selectedItems } = useTableRowSelection({
-    itemId: props.tableMap?.itemId || props.itemId,
-    data: computed(() => props.data),
-  });
+  /**
+   * Select ALL items of the data collection
+   * @param value - true to select all, false to deselect all
+   */
+  function onToggleAll(value: boolean): void {
+    if (props.data) {
+      props.data.forEach((dataItem) => {
+        if (!isDisabledItemSelection(dataItem)) {
+          onToggleSelection(dataItem, value);
+        }
+      });
+    }
+  }
 
-  watch(selectedItems, (value) => {
-    emit("update:selection", value);
+  /**
+   * Select or deselect an item from the data collection
+   * @param dataItem - the item to select or deselect
+   * @param value - true to select, false to deselect
+   */
+  function onToggleSelection(dataItem: T, value: boolean) {
+    // Get the item id
+    const itemId = getItemId.value!(dataItem);
+
+    if (itemId) {
+      // Find the index of the item in the selection collection
+      const index = selectionIds.value?.findIndex((x) => x === itemId);
+
+      if (value) {
+        // Add the item if not already present
+        if (index === -1) {
+          selection.value.push(dataItem);
+        }
+      } else {
+        // Remove the item if present
+        if (index > -1) {
+          selection.value.splice(index, 1);
+        }
+      }
+    }
+  }
+
+  function isDisabledItemSelection(dataItem: T) {
+    let result = false;
+
+    if (props.disableItemSelection) {
+      result = props.disableItemSelection(dataItem);
+    }
+
+    return result;
+  }
+
+  const allItemsDisabled = computed(() => {
+    const allItemsDisabled = props.data?.every((x) => isDisabledItemSelection(x)) || false;
+
+    return allItemsDisabled;
   });
 
   function clearSelection() {
-    selectAll(false);
+    onToggleAll(false);
   }
 
   defineExpose({
@@ -116,17 +182,22 @@
   <v-table class="mk-table-view">
     <thead>
       <tr>
-        <th v-if="checkbox" width="65" class="px-3">
-          <MkTableCheckbox :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:selected="selectAll" />
+        <th v-if="checkbox" width="65">
+          <MkTableCheckbox :disabled="allItemsDisabled" :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:selected="onToggleAll" />
         </th>
         <slot name="thead"></slot>
       </tr>
     </thead>
     <tbody>
       <!-- render a row for each provided data entity -->
-      <tr v-for="(dataItem, rowIndex) in props.data" :key="rowIndex" :class="tableRowClassses" @click.stop="(e) => onRowClick(e, dataItem)">
-        <td v-if="checkbox" class="px-3" @click.stop>
-          <MkTableCheckbox :is-selected="isItemSelected(dataItem)" @update:selected="(e) => selectItem(dataItem, e)" />
+      <tr v-for="(dataItem, rowIndex) in props.data" :key="rowIndex" :class="tableRowClassses(dataItem)" @click.stop="(e) => onRowClick(e, dataItem)">
+        <td v-if="checkbox" @click.stop>
+          <MkTableCheckbox
+            :item="dataItem"
+            :is-selected="isItemSelected(dataItem)"
+            :disabled="isDisabledItemSelection(dataItem)"
+            @update:selected="(e) => onToggleSelection(dataItem, e)"
+          />
         </td>
         <slot name="tbody" v-bind="dataItem"></slot>
       </tr>

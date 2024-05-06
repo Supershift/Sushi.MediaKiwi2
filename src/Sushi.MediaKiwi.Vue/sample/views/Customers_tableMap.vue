@@ -1,28 +1,43 @@
 <script setup lang="ts">
   import SampleSideSheet from "./../components/SampleSideSheet.vue";
   import { reactive, ref } from "vue";
-  import { TableMap, TableFilter, Sorting, Paging, TableFilterType, SortDirection, IconsLibrary, TableSortingOptions } from "@/models";
-  import { MkTable, MkOverflowMenuIcon, MkTd, MkTh } from "@/components";
+  import { TableMap, TableFilter, Sorting, Paging, TableFilterType, SortDirection, IconsLibrary } from "@/models";
+  import { MkTable, MkOverflowMenuIcon } from "@/components";
   import type { SampleData } from "@sample/models/SampleData";
   import { SampleDataConnector } from "@sample/services/SampleDataConnector";
   import { container } from "tsyringe";
   import { ICustomer } from "./../models/Customer";
-  import { useI18next } from "@/composables";
-  import { watch } from "vue";
 
   // inject dependencies
   const sampleDataConnector = container.resolve(SampleDataConnector);
-  const { formatDate } = await useI18next();
 
-  // define state
+  // define a mapping between source data and desired columns in the table
+  const myMap: TableMap<SampleData> = {
+    itemId: (item) => item.id,
+    items: [
+      { headerTitle: "Id", value: (dataItem) => dataItem.id, sortingOptions: { id: (x) => x.id } },
+      { headerTitle: "Name", value: (dataItem) => dataItem.name, sortingOptions: { id: (x) => x.name } },
+      { headerTitle: "Country of origin", value: (dataItem) => dataItem.countryName, sortingOptions: { id: (x) => x.countryName } },
+      {
+        headerTitle: "Last seen",
+        value: (dataItem) => dataItem.date?.toISOString(),
+        sortingOptions: { id: (x) => x.date },
+      },
+      {
+        headerTitle: "Checked",
+        value: () => true, // MediaKiwi will render a mdi check icon if the value returns a boolean
+      },
+    ],
+  };
+
   const currentPagination = ref<Paging>({});
 
   const state = reactive({
-    selectedSortOption: <Sorting<SampleData>>{
+    selectedSortOption: {
       sortBy: "id",
       sortDirection: SortDirection.Desc,
     },
-    selectedTableRows: <SampleData[]>[],
+    selectedTableRows: [],
     sampleData: <SampleData[]>[],
     refData: <ICustomer>{
       id: 1,
@@ -95,18 +110,11 @@
     // get the data, using the sorting option
     const result = await sampleDataConnector.GetAll(filters.value.country.selectedValue?.value, state.selectedSortOption);
     state.sampleData = result;
-
-    // Add item as pre-selection
-    if (state.sampleData?.length) {
-      state.selectedTableRows = [state.sampleData[0]];
-    }
   }
 
   function onCustomerClick(value: any) {
     state.refData = value;
   }
-
-  watch(() => state.selectedSortOption, LoadData, { deep: true });
 </script>
 
 <template>
@@ -115,36 +123,20 @@
     v-model:selection="state.selectedTableRows"
     v-model:filters="filters"
     v-model:current-pagination="currentPagination"
-    :data="state.sampleData"
-    :item-id="(item) => item.id"
+    :table-map="myMap"
     @load="LoadData"
+    :data="state.sampleData"
+    checkbox
+    title="Customer collection"
     @click:row="onCustomerClick"
-    hide-bulk-action-bar
-    :disable-item-selection="(item) => item.id % 2 !== 0"
   >
-    <template #bulkActionBar="{ confirm }">
+    <template #bulkActionBar="{ confirm }: any">
       <v-btn @click="confirm(download)"><v-icon :icon="IconsLibrary.trayArrowDown"></v-icon> Download</v-btn>
       <v-btn @click="confirm(move)">move</v-btn>
 
       <MkOverflowMenuIcon>
         <v-list-item @click="remove">Delete</v-list-item>
       </MkOverflowMenuIcon>
-    </template>
-
-    <template #thead>
-      <mk-th v-model:sorting="state.selectedSortOption" sorting-key="id">Id</mk-th>
-      <mk-th v-model:sorting="state.selectedSortOption" sorting-key="name">Name</mk-th>
-      <mk-th v-model:sorting="state.selectedSortOption" sorting-key="countryName">Country of origin</mk-th>
-      <mk-th v-model:sorting="state.selectedSortOption" sorting-key="date">Last seen</mk-th>
-      <MkTh>Checked</MkTh>
-    </template>
-
-    <template #tbody="dataItem">
-      <td>{{ dataItem.id }}</td>
-      <td>{{ dataItem.name }}</td>
-      <td>{{ dataItem.countryName }}</td>
-      <td>{{ formatDate(dataItem.date) }}</td>
-      <MkTd :value="true"></MkTd>
     </template>
   </MkTable>
 
