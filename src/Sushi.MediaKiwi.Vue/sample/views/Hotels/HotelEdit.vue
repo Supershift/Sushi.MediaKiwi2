@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { MkForm, MkMoneyValue, MkFileInput } from "@/components";
-  import { useNavigation, useValidationRules, useBreadcrumbs } from "@/composables";
+  import { useNavigation, useValidationRules, useBreadcrumbs, useI18next } from "@/composables";
 
   import { HotelConnector } from "./../../services/HotelConnector";
   import { CountryConnector } from "./../../services/CountryConnector";
@@ -9,6 +9,7 @@
   import { Hotel } from "./../../models/Hotel";
   import { container } from "tsyringe";
   import { Country } from "./../../models/Country";
+  import MkNavigationDrawerInfo from "@/components/MkNavigation/MkNavigationDrawerInfo.vue";
 
   // inject dependencies
   const hotelConnector = container.resolve(HotelConnector);
@@ -16,6 +17,7 @@
   const { required } = useValidationRules();
   const fileUploadConnector = container.resolve(FileUploadConnector);
   const { setCustomPageTitle } = useBreadcrumbs();
+  const { formatDateTime } = await useI18next();
 
   const navigation = useNavigation();
   const radioModel = ref("1");
@@ -103,6 +105,18 @@
 </script>
 
 <template>
+  <MkNavigationDrawerInfo>
+    <v-card variant="flat" rounded="lg">
+      <v-card-title>{{ state.hotel.name }}</v-card-title>
+      <v-card-text>
+        <v-img
+          src="https://plus.unsplash.com/premium_photo-1678297269980-16f4be3a15a6?q=80&w=300&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        />
+      </v-card-text>
+      <v-card-text> Located in: {{ state.hotel.countryCode }} </v-card-text>
+    </v-card>
+  </MkNavigationDrawerInfo>
+
   <MkForm title="Hotel edit" @save="onSave" @undo="onUndo" @delete="onDelete" @load="onLoad">
     <template #toolbarHeader>
       <v-card-text class="flex-1-1 w-75"> Hotel edit </v-card-text>
