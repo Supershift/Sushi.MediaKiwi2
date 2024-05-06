@@ -65,7 +65,7 @@
     }
   );
 
-  /** Use Sorting<T> for typesavety  */
+  /** Use Sorting<T> for typesafety  */
   const sorting = defineModel<Sorting | Sorting<T>>("sorting");
   /** Selected items */
   const selection = defineModel<Array<T>>("selection");

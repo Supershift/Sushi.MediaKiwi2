@@ -25,7 +25,7 @@
     disableItemSelection?: (entity: T) => boolean;
   }>();
 
-  /** Use Sorting<T> for typesavety  */
+  /** Use Sorting<T> for typesafety */
   defineModel<Sorting | Sorting<T>>("sorting");
   /** Selected items */
   const selection = defineModel<Array<T>>("selection", { default: [] });

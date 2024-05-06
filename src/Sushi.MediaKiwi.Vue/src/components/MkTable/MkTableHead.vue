@@ -4,7 +4,7 @@
   import { computed } from "vue";
 
   const props = defineProps<{
-    /** Use Sorting<T> for typesavety s*/
+    /** Use Sorting<T> for typesafety*/
     sorting?: Sorting<T> | Sorting;
     mapItem?: TableMapItem<any>;
     /** @deprecated Use sortingKey for a more typesafe solution */
