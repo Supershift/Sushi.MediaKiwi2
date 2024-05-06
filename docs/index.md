@@ -1,6 +1,8 @@
 ## MediaKiwi 2.0
 
-[Documentation](https://ubiquitous-adventure-4gm1zro.pages.github.io/)
+[Sample API](GET_STARTED_API.md)
+
+[Front-end setup for this project](FRONTEND_SETUP.md)
 
 ## Nuget
 
