@@ -72,11 +72,11 @@
   });
 
   /** Classes for the table row */
-  const tableRowClassses = computed(() => {
+  function tableRowClassses(dataItem: T) {
     return {
-      "has-hover": props.showHoverEffect,
+      "has-hover": props.showHoverEffect && !isDisabledItemSelection(dataItem),
     };
-  });
+  }
 
   function onRowClick(_event: Event, dataItem: T) {
     // emit event
@@ -190,7 +190,7 @@
     </thead>
     <tbody>
       <!-- render a row for each provided data entity -->
-      <tr v-for="(dataItem, rowIndex) in props.data" :key="rowIndex" :class="tableRowClassses" @click.stop="(e) => onRowClick(e, dataItem)">
+      <tr v-for="(dataItem, rowIndex) in props.data" :key="rowIndex" :class="tableRowClassses(dataItem)" @click.stop="(e) => onRowClick(e, dataItem)">
         <td v-if="checkbox" @click.stop>
           <MkTableCheckbox
             :item="dataItem"
