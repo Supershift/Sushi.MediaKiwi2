@@ -35,3 +35,10 @@
     </v-list>
   </v-navigation-drawer>
 </template>
+<style scoped lang="scss">
+  #navigationDrawerInfo {
+    &:empty {
+      display: none;
+    }
+  }
+</style>
