@@ -24,4 +24,5 @@ export interface NavigationItem {
   icon?: string;
   /** Set to true if this is a dynamic item with its own children. */
   hasItemNavigation?: boolean;
+  sortOrder?: number;
 }
