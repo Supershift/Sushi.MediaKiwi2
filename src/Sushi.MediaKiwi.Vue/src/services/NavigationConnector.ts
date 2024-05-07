@@ -8,7 +8,7 @@ import { HttpStatusCode, type AxiosInstance, type AxiosResponse } from "axios";
 export class NavigationConnector implements INavigationConnector {
   constructor(@inject("MediakiwiAxiosInstance") private axios: AxiosInstance) {}
 
-  async GetNavigationItems(paging?: Paging, sectionId?: number, sorting?: Sorting<NavigationItem>): Promise<ListResult<NavigationItem>> {
+  async GetNavigationItems(sectionId?: number, paging?: Paging, sorting?: Sorting<NavigationItem>): Promise<ListResult<NavigationItem>> {
     const { sortBy, sortDirection } = sorting || {};
 
     // build querystring params

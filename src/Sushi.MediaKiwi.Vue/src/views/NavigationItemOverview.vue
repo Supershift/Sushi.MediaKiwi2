@@ -45,7 +45,7 @@
 
   // get data
   async function onLoad() {
-    state.navigationItems = await navigationConnector.GetNavigationItems(currentPagination.value, filters.value.section?.selectedValue?.value, sorting.value);
+    state.navigationItems = await navigationConnector.GetNavigationItems(filters.value.section?.selectedValue?.value, currentPagination.value, sorting.value);
   }
 
   // TODO; Move this to the MkTable component, it should be able to handle this itself
