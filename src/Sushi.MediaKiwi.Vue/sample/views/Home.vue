@@ -2,7 +2,7 @@
   import { useI18next } from "@/composables";
 
   // inject dependecies
-  const { t } = await useI18next();
+  const { t, defaultT } = await useI18next();
 </script>
 
 <template>
@@ -14,6 +14,8 @@
         {{ t("Main") }}
         <br />
         {{ t("A simple icon test") }} <v-icon icon="$testTube"></v-icon>
+        <br />
+        <p>Some things are still {{ defaultT("N/A") }}</p>
       </p>
     </v-card>
   </v-lazy>

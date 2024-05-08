@@ -26,13 +26,13 @@ namespace Sushi.MediaKiwi.DAL.Repository
         }
 
         /// <inheritdoc/>
-        public async Task<QueryListResult<NavigationItem>> GetAllAsync(int? sectionID, PagingValues pagingValues)
+        public async Task<QueryListResult<NavigationItem>> GetAllAsync(string? sectionID, PagingValues pagingValues)
         {
             var query = _connector.CreateQuery();
 
-            if (sectionID.HasValue)
+            if (!string.IsNullOrWhiteSpace(sectionID))
             {
-                query.Add(x => x.SectionId, sectionID.Value);
+                query.Add(x => x.SectionId, sectionID);
             }
             query.AddOrder(x => x.Name);
             query.AddPaging(pagingValues);
@@ -43,7 +43,7 @@ namespace Sushi.MediaKiwi.DAL.Repository
         }
         
         /// <inheritdoc/>
-        public async Task<NavigationItem?> GetAsync(int id)
+        public async Task<NavigationItem?> GetAsync(string id)
         {
             var query = _connector.CreateQuery();
             query.Add(x => x.Id, id);
@@ -64,7 +64,7 @@ namespace Sushi.MediaKiwi.DAL.Repository
         }
         
         /// <inheritdoc/>
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(string id)
         {
             var query = _connector.CreateQuery();
             query.Add(x => x.Id, id);

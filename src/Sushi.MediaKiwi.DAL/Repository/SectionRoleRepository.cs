@@ -21,7 +21,7 @@ namespace Sushi.MediaKiwi.DAL.Repository
         }
 
         /// <inheritdoc/>    
-        public async Task DeleteForSectionAsync(int sectionId)
+        public async Task DeleteForSectionAsync(string sectionId)
         {
             var query = _connector.CreateQuery();
 
@@ -30,7 +30,7 @@ namespace Sushi.MediaKiwi.DAL.Repository
         }
 
         /// <inheritdoc/>    
-        public async Task<QueryListResult<SectionRole>> GetAllAsync(int? sectionId)
+        public async Task<QueryListResult<SectionRole>> GetAllAsync(string? sectionId)
         {
             var query = _connector.CreateQuery();
             if (sectionId != null)

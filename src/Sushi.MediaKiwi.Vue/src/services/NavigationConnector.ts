@@ -17,13 +17,13 @@ export class NavigationConnector implements INavigationConnector {
     return response.data;
   }
 
-  async GetNavigationItem(id: number): Promise<NavigationItem> {
+  async GetNavigationItem(id: string): Promise<NavigationItem> {
     const response = await this.axios.get<NavigationItem>(`/navigationitems/${encodeURIComponent(id)}`);
     return response.data;
   }
 
   async CreateNavigationItem(item: NavigationItem): Promise<NavigationItem> {
-    const response = await this.axios.post<NavigationItem>(`/navigationitems`, item);
+    const response = await this.axios.post<NavigationItem>(`/navigationitems/${encodeURIComponent(item.id)}`, item);
     return response.data;
   }
 
@@ -32,7 +32,7 @@ export class NavigationConnector implements INavigationConnector {
     return response.data;
   }
 
-  async DeleteNavigationItem(id: number): Promise<AxiosResponse> {
+  async DeleteNavigationItem(id: string): Promise<AxiosResponse> {
     const response = await this.axios.delete<NavigationItem>(`/navigationitems/${encodeURIComponent(id)}`);
     return response;
   }

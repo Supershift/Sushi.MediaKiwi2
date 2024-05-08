@@ -31,9 +31,9 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
         [Fact]
         public async Task GetAllTest_BySectionID()
         {
-            var items = await _repository.GetAllAsync(1, PagingValues.Default);
+            var items = await _repository.GetAllAsync("Admin", PagingValues.Default);
 
-            Assert.All(items, screen => Assert.Equal(1, screen.SectionId));
+            Assert.All(items, screen => Assert.Equal("Admin", screen.SectionId));
         }
     }
 }

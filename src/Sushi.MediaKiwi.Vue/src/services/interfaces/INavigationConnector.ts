@@ -4,8 +4,8 @@ import { AxiosResponse } from "axios";
 
 export interface INavigationConnector {
   GetNavigationItems(paging?: Paging): Promise<ListResult<NavigationItem>>;
-  GetNavigationItem(id: number): Promise<NavigationItem>;
+  GetNavigationItem(id: string): Promise<NavigationItem>;
   CreateNavigationItem(item: NavigationItem): Promise<NavigationItem>;
   UpdateNavigationItem(item: NavigationItem): Promise<NavigationItem>;
-  DeleteNavigationItem(id: number): Promise<AxiosResponse>;
+  DeleteNavigationItem(id: string): Promise<AxiosResponse>;
 }

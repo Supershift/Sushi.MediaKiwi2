@@ -32,7 +32,7 @@ namespace Sushi.MediaKiwi.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<Result> DeleteAsync(int id)
+        public async Task<Result> DeleteAsync(string id)
         {
             // get item from datastore
             var section = await _sectionRepository.GetAsync(id);
@@ -76,7 +76,7 @@ namespace Sushi.MediaKiwi.Services
             return new Result<ListResult<Section>>(result);
         }
 
-        public async Task<Result<Section>> GetAsync(int id)
+        public async Task<Result<Section>> GetAsync(string id)
         {
             // get item from datastore
             var section = await _sectionRepository.GetAsync(id);
@@ -97,13 +97,13 @@ namespace Sushi.MediaKiwi.Services
             }
         }
 
-        public async Task<Result<Section>> SaveAsync(int? id, Section request)
+        public async Task<Result<Section>> SaveAsync(string? id, Section request)
         {
             // get existing or create new section, based on id
             DAL.Section section;
-            if (id.HasValue)
+            if (id != null)
             {
-                var candidate = await _sectionRepository.GetAsync(id.Value);
+                var candidate = await _sectionRepository.GetAsync(id);
                 if (candidate == null)
                 {
                     return new Result<Section>(ResultCode.NotFound);
@@ -113,7 +113,7 @@ namespace Sushi.MediaKiwi.Services
             }
             else
             {
-                section = new DAL.Section();
+                section = new DAL.Section() { Id = request.Id };
             }
 
             // map from model to database
@@ -122,12 +122,18 @@ namespace Sushi.MediaKiwi.Services
             // start transaction
             using (var ts = DAL.Utility.CreateTransactionScope())
             {
-                // delete existing roles
-                if(section.Id > 0)
-                    await _sectionRoleRepository.DeleteForSectionAsync(section.Id);
-                
-                // save section
-                await _sectionRepository.SaveAsync(section);
+                if (id != null)
+                {
+                    // existing section
+                    // delete existing roles
+                    await _sectionRoleRepository.DeleteForSectionAsync(id);
+                    await _sectionRepository.UpdateAsync(section);
+                }
+                else
+                {
+                    // new section
+                    await _sectionRepository.InsertAsync(section);
+                }
 
                 // insert roles for view
                 foreach (var role in request.Roles)

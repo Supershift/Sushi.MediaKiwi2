@@ -23,7 +23,7 @@ namespace Sushi.MediaKiwi.Services
             _mapper = mapper;
         }
 
-        public async Task<Result<ListResult<NavigationItem>>> GetAllAsync(int? sectionID, PagingValues pagingValues)
+        public async Task<Result<ListResult<NavigationItem>>> GetAllAsync(string? sectionID, PagingValues pagingValues)
         {
             // get navigationitems from datastore
             var items = await _navigationItemRepository.GetAllAsync(sectionID, pagingValues);
@@ -36,8 +36,8 @@ namespace Sushi.MediaKiwi.Services
 
             return new Result<ListResult<NavigationItem>>(result);
         }       
-
-        public async Task<Result<NavigationItem>> GetAsync(int id)
+                
+        public async Task<Result<NavigationItem>> GetAsync(string id)
         {
             // get item from datastore
             var navigationItem = await _navigationItemRepository.GetAsync(id);
@@ -55,33 +55,34 @@ namespace Sushi.MediaKiwi.Services
                 return new Result<NavigationItem>(ResultCode.NotFound);
             }
         }
-
-        public async Task<Result<NavigationItem>> CreateAsync(NavigationItem request)
+                
+        public async Task<Result<NavigationItem>> CreateAsync(string id, NavigationItem request)
         {
             var navigationItem = new DAL.NavigationItem();
 
             // map from model to database
             _mapper.Map(request, navigationItem);
 
+            // set id
+            navigationItem.Id = id;
+
             // start transaction
             using (var ts = DAL.Utility.CreateTransactionScope())
-            {
-                // save view
-                // todo: handle pk constraint fail
+            {                
                 await _navigationItemRepository.InsertAsync(navigationItem);
 
                 // commit transaction
                 ts.Complete();
             }
 
-            // return view
+            // return item
             var result = new NavigationItem();
             _mapper.Map(navigationItem, result);
 
             return new Result<NavigationItem>(result);            
         }
-
-        public async Task<Result<NavigationItem>> UpdateAsync(int id, NavigationItem request)
+                
+        public async Task<Result<NavigationItem>> UpdateAsync(string id, NavigationItem request)
         {
             // get existing view, based on id
             DAL.NavigationItem navigationItem = await _navigationItemRepository.GetAsync(id);
@@ -109,13 +110,11 @@ namespace Sushi.MediaKiwi.Services
             return new Result<NavigationItem>(result);
         }
 
-        public async Task<Result> DeleteAsync(int id)
+        public async Task<Result> DeleteAsync(string id)
         {
             // get item from datastore
             var view = await _navigationItemRepository.GetAsync(id);
-
-            // todo: check if view is used by any navigation items?
-
+                        
             if (view != null)
             {   
                 // delete item

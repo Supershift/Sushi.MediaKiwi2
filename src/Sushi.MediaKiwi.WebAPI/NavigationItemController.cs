@@ -2,6 +2,7 @@
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MediaKiwi.WebAPI.Paging;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
@@ -19,7 +20,7 @@ namespace Sushi.MediaKiwi.WebAPI
 
         [HttpGet]
         [QueryStringPaging]
-        public async Task<ActionResult<ListResult<NavigationItem>>> GetNavigationItems([FromQuery] int? sectionID)
+        public async Task<ActionResult<ListResult<NavigationItem>>> GetNavigationItems([FromQuery] string? sectionID)
         {
             var pagingValues = _pagingRetriever.GetPaging();
             var result = await _navigationItemService.GetAllAsync(sectionID, pagingValues);
@@ -33,7 +34,7 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpDelete]
         [Route("{id}")]
-        public async Task<ActionResult<NavigationItem>> DeleteNavigationItem(int id)
+        public async Task<ActionResult<NavigationItem>> DeleteNavigationItem(string id)
         {
             var result = await _navigationItemService.DeleteAsync(id);
             return this.CreateResponse(result);
@@ -46,7 +47,7 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult<NavigationItem>> GetNavigationItem(int id)
+        public async Task<ActionResult<NavigationItem>> GetNavigationItem(string id)
         {
             var result = await _navigationItemService.GetAsync(id);
             return this.CreateResponse(result);
@@ -57,9 +58,11 @@ namespace Sushi.MediaKiwi.WebAPI
         /// </summary>        
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<NavigationItem>> CreateNavigationItem(NavigationItem request)
+        [Route("{id}")]
+        public async Task<ActionResult<NavigationItem>> CreateNavigationItem(
+            [Required, StringLength(64), RegularExpression(@"[\w]*$")] string id, NavigationItem request)
         {
-            var result = await _navigationItemService.CreateAsync(request);
+            var result = await _navigationItemService.CreateAsync(id, request);
             return this.CreateResponse(result);
         }
 
@@ -69,7 +72,7 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpPut]
         [Route("{id}")]
-        public async Task<ActionResult<NavigationItem>> UpdateNavigationItem(int id, NavigationItem request)
+        public async Task<ActionResult<NavigationItem>> UpdateNavigationItem(string id, NavigationItem request)
         {
             var result = await _navigationItemService.UpdateAsync(id, request);
             return this.CreateResponse(result);

@@ -12,15 +12,16 @@ namespace Sushi.MediaKiwi.Services.Model
     public class NavigationItem
     {
         [SwaggerSchema(ReadOnly = true)]
-        public int Id { get; set; }
+        public string Id { get; set; }
         
         [Required, StringLength(128)]
         public string Name { get; set; }
         
-        [Required]
-        public int SectionId { get; set; }
-        
-        public int? ParentNavigationItemId { get; set; }
+        [Required, StringLength(64)]
+        public string SectionId { get; set; }
+
+        [StringLength(64)]
+        public string? ParentNavigationItemId { get; set; }
         
         public string? ViewId { get; set; }        
         

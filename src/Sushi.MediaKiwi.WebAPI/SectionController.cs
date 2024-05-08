@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MediaKiwi.WebAPI.Paging;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
@@ -26,7 +27,7 @@ namespace Sushi.MediaKiwi.WebAPI
         [HttpDelete]
         [Route("{id}")]
         [Authorize(Policy = Constants.AdminPolicyName)]
-        public async Task<ActionResult<Section>> DeleteSection(int id)
+        public async Task<ActionResult<Section>> DeleteSection(string id)
         {
             var result = await _sectionService.DeleteAsync(id);
             return this.CreateResponse(result);
@@ -52,7 +53,7 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult<Section>> GetSection(int id)
+        public async Task<ActionResult<Section>> GetSection(string id)
         {
             var result = await _sectionService.GetAsync(id);
             return this.CreateResponse(result);
@@ -60,13 +61,16 @@ namespace Sushi.MediaKiwi.WebAPI
 
         /// <summary>
         /// Creates a new Section.
-        /// </summary>
-        /// <param name="request"></param>
+        /// </summary>        
         /// <returns></returns>
         [HttpPost]
+        [Route("{id}")]
         [Authorize(Policy = Constants.AdminPolicyName)]
-        public async Task<ActionResult<Section>> CreateSection(Section request)
+        public async Task<ActionResult<Section>> CreateSection(
+            [Required, StringLength(64), RegularExpression(@"[\w]*$")] string id, 
+            Section request)
         {
+            request.Id = id;
             var result = await _sectionService.SaveAsync(null, request);
             return this.CreateResponse(result);
         }
@@ -78,7 +82,7 @@ namespace Sushi.MediaKiwi.WebAPI
         [HttpPut]
         [Route("{id}")]
         [Authorize(Policy = Constants.AdminPolicyName)]
-        public async Task<ActionResult<Section>> UpdateSection(int id, Section request)
+        public async Task<ActionResult<Section>> UpdateSection(string id, Section request)
         {
             var result = await _sectionService.SaveAsync(id, request);
             return this.CreateResponse(result);

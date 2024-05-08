@@ -18,17 +18,17 @@ namespace Sushi.MediaKiwi.DAL
             public SectionMap()
             {
                 Table("mk_Sections");
-                Id(x => x.Id, "SectionID");
+                Id(x => x.Id, "SectionID").Assigned().SqlType(System.Data.SqlDbType.VarChar);
                 Map(x => x.Name, "Name").SqlType(System.Data.SqlDbType.NVarChar);
                 Map(x => x.SortOrder, "SortOrder");
                 Map(x => x.Icon, "Icon").SqlType(System.Data.SqlDbType.VarChar);
             }
         }
-        
+
         /// <summary>
         /// Gets or sets the unique identifier for this section.
         /// </summary>
-        public int Id { get; set; }
+        public string Id { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets the name for this section.

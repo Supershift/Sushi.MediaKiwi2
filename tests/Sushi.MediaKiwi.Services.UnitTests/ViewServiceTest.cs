@@ -80,14 +80,14 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             };
 
             var viewRepositoryMock = new Mock<IViewRepository>();
-            viewRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<int?>(), It.IsAny<PagingValues>(), null)).ReturnsAsync(viewStubs);
+            viewRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<PagingValues>(), null)).ReturnsAsync(viewStubs);
             var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();
             viewRoleRepositoryMock.Setup(x => x.GetAllAsync(null)).ReturnsAsync(new QueryListResult<DAL.ViewRole>());
 
             var service = new ViewService(viewRepositoryMock.Object, viewRoleRepositoryMock.Object, _mapper);
 
             // act
-            var result = await service.GetAllAsync(null, PagingValues.Default);
+            var result = await service.GetAllAsync(PagingValues.Default);
 
             // assert
             Assert.NotNull(result);
@@ -97,28 +97,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             Assert.Equal(2, result.Value.Result.Count);
         }
 
-        [Fact]
-        public async Task GetAllViewsTest_Filters()
-        {
-            // arrange
-            int? actualFilterID = null;
-            int? expectedFilterID = 1;
-            
-            var repositoryMock = new Mock<IViewRepository>();
-            repositoryMock
-                .Setup(x => x.GetAllAsync(It.IsAny<int?>(), It.IsAny<PagingValues>(), null))
-                .Callback( (int? viewID, PagingValues pagingValues, DAL.Sorting.SortValues<DAL.View>? sort) => actualFilterID = viewID)
-                .ReturnsAsync(new QueryListResult<DAL.View>());
-            var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();
-
-            var service = new ViewService(repositoryMock.Object, viewRoleRepositoryMock.Object, _mapper);
-
-            // act
-            var result = await service.GetAllAsync(expectedFilterID, PagingValues.Default);
-
-            // assert
-            Assert.Equal(expectedFilterID, actualFilterID);
-        }
+        
 
         [Fact]
         public async Task GetAllViewsTest_Roles()
@@ -135,14 +114,14 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             };
 
             var viewRepositoryMock = new Mock<IViewRepository>();
-            viewRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<int?>(), It.IsAny<PagingValues>(), null)).ReturnsAsync(viewStubs);
+            viewRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<PagingValues>(), null)).ReturnsAsync(viewStubs);
             var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();
             viewRoleRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<string?>())).ReturnsAsync(roleStubs);
 
             var service = new ViewService(viewRepositoryMock.Object, viewRoleRepositoryMock.Object, _mapper);
 
             // act
-            var result = await service.GetAllAsync(null, PagingValues.Default);
+            var result = await service.GetAllAsync(PagingValues.Default);
 
             // assert            
             var view1 = result.Value.Result.First(x => x.Id == "abc");
@@ -206,8 +185,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
                 Id = "value to be ignored",
                 ComponentKey = "comp",                
                 Name = "name",
-                Roles = new List<string>() { "Admin", "User" },
-                SectionId = 2
+                Roles = new List<string>() { "Admin", "User" },                
             };
 
             string newId = "abc";
@@ -250,8 +228,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
                 Id = "value to be ignored",
                 ComponentKey = "comp",                
                 Name = "name",
-                Roles = new List<string>() { "Admin", "User" },
-                SectionId = 2
+                Roles = new List<string>() { "Admin", "User" },                
             };
 
 

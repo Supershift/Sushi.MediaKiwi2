@@ -27,7 +27,7 @@
   async function onLoad() {
     if (navigationItemId.value) {
       // get existing view from api
-      const candidate = await navigationConnector.GetNavigationItem(parseInt(navigationItemId.value));
+      const candidate = await navigationConnector.GetNavigationItem(navigationItemId.value);
       state.navigationItem = candidate!;
     }
   }
@@ -66,6 +66,12 @@
 
 <template>
   <MkForm title="" :on-save="onSave" :on-load="onLoad" :on-delete="onDelete">
+    <v-text-field
+      v-model="state.navigationItem.id"
+      label="Id"
+      :disabled="navigationItemId ? true : false"
+      :rules="[(v) => /^\w+$/.test(v) || 'Only alpha-numeric allowed']"
+    ></v-text-field>
     <v-text-field v-model="state.navigationItem.name" label="Name" :rules="[(v) => !!v]"></v-text-field>
     <v-autocomplete
       v-model="state.navigationItem.parentNavigationItemId"

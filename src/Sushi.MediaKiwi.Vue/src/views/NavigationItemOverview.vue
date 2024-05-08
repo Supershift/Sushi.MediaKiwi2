@@ -20,11 +20,11 @@
     navigationItems: <ListResult<NavigationItem>>{},
   });
 
-  function getSectionName(id: number): string | undefined {
+  function getSectionName(id: string): string | undefined {
     return sections.value.find((section) => section.id == id)?.name;
   }
 
-  function getNavigationItemName(id?: number): string | undefined {
+  function getNavigationItemName(id?: string): string | undefined {
     return navigationItems.value.find((x) => x.id == id)?.name || "-";
   }
 
@@ -43,6 +43,7 @@
     :item-id="(item) => item.id"
   >
     <template #thead>
+      <th>Id</th>
       <th>Name</th>
       <th>Section</th>
       <th>Parent</th>
@@ -50,6 +51,7 @@
       <th>Icon</th>
     </template>
     <template #tbody="item: NavigationItem">
+      <th>{{ item.id }}</th>
       <th>{{ item.name }}</th>
       <th>{{ getSectionName(item.sectionId) }}</th>
       <th>{{ getNavigationItemName(item.parentNavigationItemId) }}</th>

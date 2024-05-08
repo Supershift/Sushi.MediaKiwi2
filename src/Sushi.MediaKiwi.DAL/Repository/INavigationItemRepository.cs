@@ -14,14 +14,14 @@ namespace Sushi.MediaKiwi.DAL.Repository
         /// <param name="sectionID"></param>
         /// <param name="pagingValues"></param>
         /// <returns></returns>
-        Task<QueryListResult<NavigationItem>> GetAllAsync(int? sectionID, PagingValues pagingValues);
+        Task<QueryListResult<NavigationItem>> GetAllAsync(string? sectionID, PagingValues pagingValues);
         
         /// <summary>
         /// Gets a <see cref="NavigationItem"/> by id.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<NavigationItem?> GetAsync(int id);
+        Task<NavigationItem?> GetAsync(string id);
 
         /// <summary>
         /// Inserts a <see cref="NavigationItem"/>.
@@ -42,6 +42,6 @@ namespace Sushi.MediaKiwi.DAL.Repository
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task DeleteAsync(int id);
+        Task DeleteAsync(string id);
     }
 }
