@@ -16,4 +16,17 @@
       }
     }
   }
+
+  table {
+    thead {
+      tr {
+        th {
+          label,
+          i {
+            cursor: inherit !important;
+          }
+        }
+      }
+    }
+  }
 }
