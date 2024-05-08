@@ -104,6 +104,7 @@
   <mk-table
     v-model:current-pagination="currentPagination"
     v-model:filters="filters"
+    v-model:sorting="sorting"
     :api-result="hotels"
     :on-load="LoadData"
     :data="hotels?.result"

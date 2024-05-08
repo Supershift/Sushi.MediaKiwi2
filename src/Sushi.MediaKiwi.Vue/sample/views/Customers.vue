@@ -105,8 +105,6 @@
   function onCustomerClick(value: any) {
     state.refData = value;
   }
-
-  watch(() => state.selectedSortOption, LoadData, { deep: true });
 </script>
 
 <template>
