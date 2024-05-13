@@ -43,6 +43,7 @@ namespace Sushi.MediaKiwi.DAL.Repository
             else
             {
                 query.AddOrder(x => x.SortOrder);
+                query.AddOrder(x => x.Name);
             }
             
             query.AddPaging(pagingValues);
