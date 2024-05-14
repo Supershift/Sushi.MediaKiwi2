@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MediaKiwi.WebAPI.Paging;
@@ -7,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Sushi.MediaKiwi.WebAPI
 {
     [Route($"{BaseRoute}/navigationitems")]
+    [Authorize]
     public class NavigationItemController : MediaKiwiControllerBase
     {
         private readonly NavigationItemService _navigationItemService;
@@ -20,26 +22,14 @@ namespace Sushi.MediaKiwi.WebAPI
 
         [HttpGet]
         [QueryStringPaging]
+        [Authorize]
         public async Task<ActionResult<ListResult<NavigationItem>>> GetNavigationItems([FromQuery] string? sectionID)
         {
             var pagingValues = _pagingRetriever.GetPaging();
             var result = await _navigationItemService.GetAllAsync(sectionID, pagingValues);
             return this.CreateResponse(result);
         }
-
-        /// <summary>
-        /// Deletes a NavigationItem.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpDelete]
-        [Route("{id}")]
-        public async Task<ActionResult<NavigationItem>> DeleteNavigationItem(string id)
-        {
-            var result = await _navigationItemService.DeleteAsync(id);
-            return this.CreateResponse(result);
-        }
-
+        
         /// <summary>
         /// Gets a NavigationItem.
         /// </summary>
@@ -47,34 +37,10 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpGet]
         [Route("{id}")]
+        [Authorize]
         public async Task<ActionResult<NavigationItem>> GetNavigationItem(string id)
         {
             var result = await _navigationItemService.GetAsync(id);
-            return this.CreateResponse(result);
-        }
-
-        /// <summary>
-        /// Creates a new NavigationItem.
-        /// </summary>        
-        /// <returns></returns>
-        [HttpPost]
-        [Route("{id}")]
-        public async Task<ActionResult<NavigationItem>> CreateNavigationItem(
-            [Required, StringLength(64), RegularExpression(@"[\w]*$")] string id, NavigationItem request)
-        {
-            var result = await _navigationItemService.CreateAsync(id, request);
-            return this.CreateResponse(result);
-        }
-
-        /// <summary>
-        /// Updates an existing NavigationItem.
-        /// </summary>        
-        /// <returns></returns>
-        [HttpPut]
-        [Route("{id}")]
-        public async Task<ActionResult<NavigationItem>> UpdateNavigationItem(string id, NavigationItem request)
-        {
-            var result = await _navigationItemService.UpdateAsync(id, request);
             return this.CreateResponse(result);
         }
     }

@@ -41,5 +41,10 @@ namespace Sushi.MediaKiwi.DAL.Repository
         /// <param name="id"></param>
         /// <returns></returns>
         Task DeleteAsync(string id);
+
+        /// <summary>
+        /// Updates the primary key of a <see cref="Section"/>.
+        /// </summary>        
+        Task UpdateIdAsync(string oldId, string newId);
     }
 }

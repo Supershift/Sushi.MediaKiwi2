@@ -61,5 +61,15 @@ namespace Sushi.MediaKiwi.DAL.Repository
         {
             await _connector.UpdateAsync(section);
         }
+
+        /// <inheritdoc/>    
+        public async Task UpdateIdAsync(string oldId, string newId)
+        {
+            var query = _connector.CreateQuery();
+            query.AddParameter("@oldId", oldId);
+            query.AddParameter("@newId", newId);
+            query.SqlQuery = "UPDATE mk_Sections SET SectionId = @newId WHERE SectionId = @oldId";
+            await _connector.ExecuteNonQueryAsync(query);
+        }
     }
 }

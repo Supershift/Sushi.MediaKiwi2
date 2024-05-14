@@ -126,5 +126,22 @@ namespace Sushi.MediaKiwi.Services
                 return new Result(ResultCode.NotFound);
             }
         }
+
+        public async Task<Result<NavigationItem>> UpdateIdAsync(string oldId, string newId)
+        {
+            // get item from datastore
+            var navigationItem = await _navigationItemRepository.GetAsync(oldId);
+
+            if (navigationItem == null)
+            {
+                return new Result<NavigationItem>(ResultCode.NotFound);
+            }
+
+            // change ID
+            await _navigationItemRepository.UpdateIdAsync(oldId, newId);
+
+            // return result
+            return await GetAsync(newId);
+        }
     }
 }

@@ -53,7 +53,7 @@ namespace Sushi.MediaKiwi.WebAPI
                 // Add default admin role policy
                 services.AddAuthorization(options =>
                 {
-                    options.AddPolicy(Constants.AdminPolicyName, policy => policy.RequireRole(Constants.AdminRoleName));
+                    options.AddPolicy(Constants.AdminPolicyName, policy => policy.RequireRole(Constants.AdminRoleName));                    
                 });
             }
             else

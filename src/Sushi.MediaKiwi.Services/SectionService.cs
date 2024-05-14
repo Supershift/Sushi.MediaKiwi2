@@ -166,7 +166,7 @@ namespace Sushi.MediaKiwi.Services
         /// <param name="oldId"></param>
         /// <param name="newId"></param>
         /// <returns></returns>
-        public async Task<Result<Section>> UpdateSectionId(string oldId, string newId)
+        public async Task<Result<Section>> UpdateIdAsync(string oldId, string newId)
         {
             // sanitize input
             newId = newId.Trim();
@@ -184,14 +184,11 @@ namespace Sushi.MediaKiwi.Services
                 return new Result<Section>(ResultCode.NotFound);
             }
 
-            // change id and store section
-            section.Id = newId;
-            await _sectionRepository.UpdateAsync(section);
+            // change id             
+            await _sectionRepository.UpdateIdAsync(section.Id, newId);
 
             // return new section
             return await GetAsync(newId);
         }
-
-        
     }
 }

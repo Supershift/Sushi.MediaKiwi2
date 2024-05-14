@@ -244,5 +244,31 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             Assert.NotNull(result);
             Assert.Equal(ResultCode.NotFound, result.Code);
         }
+
+        [Fact]
+        public async Task UpdateIdTest()
+        {
+            // arrange
+            var oldId = "1";
+            var newId = "newId";
+            var oldItem = new DAL.NavigationItem() { Id = oldId };
+            var newItem = new DAL.NavigationItem() { Id = newId };
+
+            var navigationItemRepositoryMock = new Mock<INavigationItemRepository>();
+            navigationItemRepositoryMock.Setup(x => x.GetAsync(oldId)).ReturnsAsync(oldItem).Verifiable(Times.Once);
+            navigationItemRepositoryMock.Setup(x => x.GetAsync(newId)).ReturnsAsync(newItem).Verifiable(Times.Once);
+            navigationItemRepositoryMock.Setup(x => x.UpdateIdAsync(oldId, newId)).Verifiable(Times.Once);
+
+            var service = new NavigationItemService(navigationItemRepositoryMock.Object, _mapper);
+
+            // act
+            var result = await service.UpdateIdAsync(oldId, newId);
+
+            Assert.NotNull(result);
+            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.NotNull(result.Value);
+            Assert.Equal(newId, result.Value.Id);
+            navigationItemRepositoryMock.Verify();            
+        }
     }
 }

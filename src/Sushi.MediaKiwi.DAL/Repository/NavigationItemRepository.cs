@@ -70,5 +70,43 @@ namespace Sushi.MediaKiwi.DAL.Repository
             query.Add(x => x.Id, id);
             await _connector.DeleteAsync(query);
         }
+
+        /// <inheritdoc/>
+        public async Task UpdateIdAsync(string oldId, string newId)
+        {
+            var query = _connector.CreateQuery();
+            query.AddParameter("@oldId", oldId);
+            query.AddParameter("@newId", newId);
+            query.SqlQuery = @"
+BEGIN TRANSACTION
+
+DECLARE @children TABLE(id VARCHAR(64))
+
+INSERT INTO @children
+SELECT NavigationItemId
+FROM mk_NavigationItems
+WHERE ParentNavigationItemID = @oldId
+
+UPDATE mk_NavigationItems
+SET ParentNavigationItemID = NULL
+WHERE ParentNavigationItemID = @oldId
+
+UPDATE mk_NavigationItems
+SET NavigationItemID = @newId
+WHERE NavigationItemID = @oldId
+
+UPDATE mk_NavigationItems
+SET ParentNavigationItemID = @newId
+WHERE EXISTS
+(
+	SELECT *
+	FROM @children
+	WHERE id = NavigationItemID
+)
+
+COMMIT
+";
+            await _connector.ExecuteNonQueryAsync(query);
+        }
     }
 }

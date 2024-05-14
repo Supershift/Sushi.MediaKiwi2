@@ -35,5 +35,25 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
 
             Assert.All(items, screen => Assert.Equal("Admin", screen.SectionId));
         }
+
+        [Fact]
+        public async Task UpdateId()
+        {
+            using (var ts = Utility.CreateTransactionScope())
+            {
+                string oldId = "Hotels";
+                string newId = "Hotelz";
+
+                var oldItem = await _repository.GetAsync(oldId);
+
+                Assert.NotNull(oldItem);
+
+                await _repository.UpdateIdAsync(oldId, newId);
+
+                var newItem = await _repository.GetAsync(newId);
+
+                Assert.NotNull(newItem);
+            }
+        }
     }
 }
