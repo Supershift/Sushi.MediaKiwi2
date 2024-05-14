@@ -1,4 +1,5 @@
 ﻿using Sushi.MicroORM.Mapping;
+using System.Text.RegularExpressions;
 
 namespace Sushi.MediaKiwi.DAL
 {
@@ -7,6 +8,18 @@ namespace Sushi.MediaKiwi.DAL
     /// </summary>
     public class Section
     {
+        /// <summary>
+        /// Regular expression used to validate a section ID.
+        /// </summary>
+        public const string SectionIdRegex = @"^\w+$";
+
+        /// <summary>
+        /// Maximum number of characters allowed in a setion Id;
+        /// </summary>
+        public const int SectionIdMaxLength = 64;
+
+        
+
         /// <summary>
         /// Represents the mapping between a <see cref="Section"/> and the database.
         /// </summary>
@@ -44,5 +57,22 @@ namespace Sushi.MediaKiwi.DAL
         /// ID of the icon to display for this section.
         /// </summary>
         public string? Icon { get; set; }
+
+        /// <summary>
+        /// Validates if a section ID is valid.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Null if valid, error message if invalid.</returns>
+        public static string? ValidateSectionId(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+                return "New ID is empty";
+            if (id.Length > SectionIdMaxLength)
+                return "New ID is too long";
+            if (!Regex.IsMatch(id, SectionIdRegex))
+                return "New ID contains invalid characters.";
+
+            return null;
+        }
     }
 }

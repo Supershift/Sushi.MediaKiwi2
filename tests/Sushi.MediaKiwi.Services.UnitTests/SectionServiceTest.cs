@@ -226,5 +226,32 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             sectionRepositoryMock.Verify(x => x.UpdateAsync(dalResult), Times.Once);
             sectionRoleRepository.Verify();
         }
+
+        [Fact]
+        public async Task UpdateSectionIdTest()
+        {
+            // arrange
+            string oldId = "existingId";
+            string newId = "newId";
+            var dalResult = new DAL.Section() { Id = oldId };
+
+            var sectionRepositoryMock = new Mock<ISectionRepository>();
+            sectionRepositoryMock.Setup(x => x.GetAsync(oldId)).ReturnsAsync(dalResult).Verifiable(Times.Once);
+            sectionRepositoryMock.Setup(x => x.GetAsync(newId)).ReturnsAsync(dalResult).Verifiable(Times.Once);
+            sectionRepositoryMock.Setup(x => x.UpdateAsync(dalResult)).Verifiable(Times.Once);
+            var sectionRoleRepository = new Mock<ISectionRoleRepository>();
+            sectionRoleRepository.Setup(x => x.GetAllAsync(newId)).ReturnsAsync(new QueryListResult<DAL.SectionRole>());
+
+            var service = new SectionService(sectionRepositoryMock.Object, sectionRoleRepository.Object, _mapper);
+
+            // act
+            var result = await service.UpdateSectionId(oldId, newId);
+
+            Assert.NotNull(result);
+            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.NotNull(result.Value);
+            Assert.Equal(newId, result.Value.Id);            
+            sectionRoleRepository.Verify();
+        }
     }
 }

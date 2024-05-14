@@ -67,7 +67,7 @@ namespace Sushi.MediaKiwi.WebAPI
         [Route("{id}")]
         [Authorize(Policy = Constants.AdminPolicyName)]
         public async Task<ActionResult<Section>> CreateSection(
-            [Required, StringLength(64), RegularExpression(@"[\w]*$")] string id, 
+            [Required, StringLength(DAL.Section.SectionIdMaxLength), RegularExpression(DAL.Section.SectionIdRegex)] string id, 
             Section request)
         {
             request.Id = id;
@@ -85,6 +85,13 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<Section>> UpdateSection(string id, Section request)
         {
             var result = await _sectionService.SaveAsync(id, request);
+            return this.CreateResponse(result);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Section>> ChangeId(string oldId, string newId)
+        {
+            var result = await _sectionService.UpdateSectionId(oldId, newId);
             return this.CreateResponse(result);
         }
     }

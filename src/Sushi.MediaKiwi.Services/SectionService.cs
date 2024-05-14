@@ -2,6 +2,7 @@
 using Sushi.MediaKiwi.DAL.Paging;
 using Sushi.MediaKiwi.DAL.Repository;
 using Sushi.MediaKiwi.Services.Model;
+using System.Text.RegularExpressions;
 
 namespace Sushi.MediaKiwi.Services
 {
@@ -113,7 +114,16 @@ namespace Sushi.MediaKiwi.Services
             }
             else
             {
-                section = new DAL.Section() { Id = request.Id };
+                // sanitize input
+                var newId = request.Id;
+                newId = newId.Trim();
+
+                // validate new id
+                var error = DAL.Section.ValidateSectionId(newId);
+                if (error != null)
+                    return new Result<Section>(ResultCode.ValidationFailed) { ErrorMessage = error };
+
+                section = new DAL.Section() { Id = newId };
             }
 
             // map from model to database
@@ -149,5 +159,39 @@ namespace Sushi.MediaKiwi.Services
             var result = _mapper.Map<Section>(section);
             return new Result<Section>(result);
         }
+
+        /// <summary>
+        /// Changes the ID of a section.
+        /// </summary>
+        /// <param name="oldId"></param>
+        /// <param name="newId"></param>
+        /// <returns></returns>
+        public async Task<Result<Section>> UpdateSectionId(string oldId, string newId)
+        {
+            // sanitize input
+            newId = newId.Trim();
+            
+            // validate new id
+            var error = DAL.Section.ValidateSectionId(newId);
+            if (error != null)
+                return new Result<Section>(ResultCode.ValidationFailed) { ErrorMessage = error };
+
+            // get item from datastore
+            var section = await _sectionRepository.GetAsync(oldId);
+
+            if (section == null)
+            {
+                return new Result<Section>(ResultCode.NotFound);
+            }
+
+            // change id and store section
+            section.Id = newId;
+            await _sectionRepository.UpdateAsync(section);
+
+            // return new section
+            return await GetAsync(newId);
+        }
+
+        
     }
 }
