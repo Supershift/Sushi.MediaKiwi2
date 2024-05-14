@@ -90,5 +90,6 @@
     ></v-select>
     <v-text-field v-model="state.navigationItem.viewId" label="View" :rules="[(v) => !!v]"></v-text-field>
     <v-text-field v-model="state.navigationItem.icon" label="Icon"></v-text-field>
+    <v-text-field v-model="state.navigationItem.sortOrder" label="SortOrder" type="number"></v-text-field>
   </MkForm>
 </template>

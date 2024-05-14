@@ -1,6 +1,6 @@
 ## MediaKiwi 2.0
 
-[Documentation](https://ubiquitous-adventure-4gm1zro.pages.github.io/)
+[Documentation](https://special-adventure-vyweypo.pages.github.io/)
 
 ## Nuget
 

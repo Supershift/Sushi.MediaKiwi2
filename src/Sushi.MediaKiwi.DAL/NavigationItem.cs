@@ -29,6 +29,7 @@ namespace Sushi.MediaKiwi.DAL
                 Map(x => x.ParentNavigationItemId, "ParentNavigationItemID").SqlType(System.Data.SqlDbType.VarChar);
                 Map(x => x.ViewId, "ViewID").SqlType(System.Data.SqlDbType.VarChar);
                 Map(x => x.Icon, "Icon");
+                Map(x => x.SortOrder, "SortOrder");
             }
         }
 
@@ -57,5 +58,10 @@ namespace Sushi.MediaKiwi.DAL
         /// If set, adds an Icon infront of the navigation Item
         /// </summary>
         public string? Icon { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets a value used when sorting navigation items.
+        /// </summary>
+        public int SortOrder { get; set; }
     }
 }

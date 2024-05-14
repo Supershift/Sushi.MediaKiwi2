@@ -1,16 +1,21 @@
-import { NavigationItem, Paging } from "@/models";
+import { NavigationItem, Paging, Sorting } from "@/models";
 import ListResult from "@/models/api/ListResult";
 import { INavigationConnector } from "./interfaces/INavigationConnector";
 import { injectable, inject } from "tsyringe";
-import type { AxiosInstance, AxiosResponse } from "axios";
+import { HttpStatusCode, type AxiosInstance, type AxiosResponse } from "axios";
 
 @injectable()
 export class NavigationConnector implements INavigationConnector {
   constructor(@inject("MediakiwiAxiosInstance") private axios: AxiosInstance) {}
 
-  async GetNavigationItems(paging?: Paging) {
+  async GetNavigationItems(sectionId?: string, paging?: Paging, sorting?: Sorting<NavigationItem>): Promise<ListResult<NavigationItem>> {
+    const { sortBy, sortDirection } = sorting || {};
+
     // build querystring params
     const query = {
+      ...(sectionId && { sectionId }),
+      ...(sortBy && { sortBy }),
+      ...(sortDirection && { sortDirection }),
       ...paging,
     };
     const response = await this.axios.get<ListResult<NavigationItem>>("/navigationitems", { params: query });

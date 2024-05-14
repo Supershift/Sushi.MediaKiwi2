@@ -2,7 +2,7 @@
 <script setup lang="ts" generic="T">
   import { TableMap, TableFilter } from "@/models/table";
   import { Paging, Sorting } from "@/models/api";
-  import { ref } from "vue";
+  import { ref, watch } from "vue";
   import MkTableFilter from "@/components/MkTableFilter/MkTableFilter.vue";
   import MkTableView from "./MkTableView.vue";
 
@@ -78,6 +78,9 @@
       pageSize: defaultPageSize,
     },
   });
+
+  const sortBy = computed(() => sorting.value?.sortBy);
+  const sortDirection = computed(() => sorting.value?.sortDirection);
 
   // define events
   const emit = defineEmits<{
@@ -209,6 +212,9 @@
       }
     }
   }
+
+  // Watch for changes in sorting and direction
+  watch([sortBy, sortDirection], loadData);
 </script>
 
 <template>

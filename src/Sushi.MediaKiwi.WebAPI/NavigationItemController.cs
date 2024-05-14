@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MediaKiwi.WebAPI.Paging;
+using Sushi.MediaKiwi.WebAPI.Sorting;
+using static Sushi.MediaKiwi.WebAPI.ViewController;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sushi.MediaKiwi.WebAPI
@@ -13,20 +15,33 @@ namespace Sushi.MediaKiwi.WebAPI
     {
         private readonly NavigationItemService _navigationItemService;
         private readonly PagingRetriever _pagingRetriever;
+        private readonly SortingRetriever _sortingRetriever;
 
-        public NavigationItemController(NavigationItemService screenService, PagingRetriever pagingRetriever)
+        public class NavigationItemsSortMap : SortMap<NavigationItem>
+        {
+            public NavigationItemsSortMap()
+            {
+                Add(x => x.Name);
+                Add(x => x.SortOrder);
+            }
+        }
+
+        public NavigationItemController(NavigationItemService screenService, PagingRetriever pagingRetriever, SortingRetriever sortingRetriever)
         {
             _navigationItemService = screenService;
             _pagingRetriever = pagingRetriever;
+            _sortingRetriever = sortingRetriever;
         }
+
 
         [HttpGet]
         [QueryStringPaging]
-        [Authorize]
+        [QueryStringSorting<NavigationItemsSortMap>()]
         public async Task<ActionResult<ListResult<NavigationItem>>> GetNavigationItems([FromQuery] string? sectionID)
         {
             var pagingValues = _pagingRetriever.GetPaging();
-            var result = await _navigationItemService.GetAllAsync(sectionID, pagingValues);
+            var sortValues = _sortingRetriever.GetSorting<NavigationItem>();
+            var result = await _navigationItemService.GetAllAsync(sectionID, pagingValues, sortValues);
             return this.CreateResponse(result);
         }
         
@@ -36,8 +51,7 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("{id}")]
-        [Authorize]
+        [Route("{id}")]        
         public async Task<ActionResult<NavigationItem>> GetNavigationItem(string id)
         {
             var result = await _navigationItemService.GetAsync(id);

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Sushi.MediaKiwi.DAL.Paging;
 using Sushi.MediaKiwi.DAL.Repository;
+using Sushi.MediaKiwi.DAL.Sorting;
 using Sushi.MediaKiwi.Services.Model;
 using System;
 using System.Collections.Generic;
@@ -23,10 +24,13 @@ namespace Sushi.MediaKiwi.Services
             _mapper = mapper;
         }
 
-        public async Task<Result<ListResult<NavigationItem>>> GetAllAsync(string? sectionID, PagingValues pagingValues)
+        public async Task<Result<ListResult<NavigationItem>>> GetAllAsync(string? sectionID, PagingValues pagingValues, SortValues<NavigationItem>? sortValues = null)
         {
+            // map sort values to dal
+            var sortValuesDal = _mapper.MapSortValues<DAL.NavigationItem>(sortValues);
+
             // get navigationitems from datastore
-            var items = await _navigationItemRepository.GetAllAsync(sectionID, pagingValues);
+            var items = await _navigationItemRepository.GetAllAsync(sectionID, pagingValues, sortValuesDal);
 
             // map to result
             var itemsDto = _mapper.Map<List<NavigationItem>>(items);

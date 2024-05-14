@@ -26,5 +26,7 @@ namespace Sushi.MediaKiwi.Services.Model
         public string? ViewId { get; set; }        
         
         public string? Icon { get; set; }   
+
+        public int SortOrder { get; set; }
     }
 }

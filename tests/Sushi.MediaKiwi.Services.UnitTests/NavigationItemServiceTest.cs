@@ -40,7 +40,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var mapper = config.CreateMapper();
 
             var repositoryMock = new Mock<INavigationItemRepository>();
-            repositoryMock.Setup(x => x.GetAllAsync(It.IsAny<string?>(), It.IsAny<PagingValues>())).ReturnsAsync(stubs);
+            repositoryMock.Setup(x => x.GetAllAsync(It.IsAny<string?>(), It.IsAny<PagingValues>(), null)).ReturnsAsync(stubs);
 
             var service = new NavigationItemService(repositoryMock.Object, mapper);
 
@@ -71,8 +71,8 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             
             var repositoryMock = new Mock<INavigationItemRepository>();
             repositoryMock
-                .Setup(x => x.GetAllAsync(It.IsAny<string?>(), It.IsAny<PagingValues>()))
-                .Callback( (string? filterId, PagingValues pagingValues) => actualFilterID = filterId)
+                .Setup(x => x.GetAllAsync(It.IsAny<string?>(), It.IsAny<PagingValues>(), null))
+                .Callback((string? sectionId, PagingValues pagingValues, DAL.Sorting.SortValues<DAL.NavigationItem>? sort) => actualFilterID = sectionId)
                 .ReturnsAsync(new QueryListResult<DAL.NavigationItem>());
 
             var service = new NavigationItemService(repositoryMock.Object, mapper);
