@@ -150,6 +150,9 @@
           selection.value.splice(index, 1);
         }
       }
+
+      // Emit the updated selection collection
+      emit("update:selection", selection.value);
     }
   }
 
