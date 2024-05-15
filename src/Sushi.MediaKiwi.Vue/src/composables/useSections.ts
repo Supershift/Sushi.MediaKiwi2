@@ -42,9 +42,7 @@ export function useSections() {
     if (mediakiwiStore.sections && rules.value && rules.value.length) {
       // Loop through all rules and apply them to the sections
       rules.value.forEach((rule) => {
-        mediakiwiStore.sections
-          .filter((section) => rule.sectionIds.includes(section.id.toString()))
-          ?.forEach((section) => validateDisableSectionRule(section, rule));
+        mediakiwiStore.sections.filter((section) => rule.sectionIds.includes(section.id))?.forEach((section) => validateDisableSectionRule(section, rule));
       });
     }
   }
