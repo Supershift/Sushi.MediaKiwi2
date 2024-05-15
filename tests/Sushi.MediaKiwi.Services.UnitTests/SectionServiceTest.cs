@@ -140,7 +140,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
         }
 
         [Fact]
-        public async Task SaveSectionTest_NotFound()
+        public async Task UpdateSectionTest_NotFound()
         {
             // arrange
             DAL.Section? sectionStub = null;
@@ -151,7 +151,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var service = new SectionService(sectionRepositoryMock.Object, sectionRoleRepository.Object, _mapper);
 
             // act
-            var result = await service.SaveAsync("some string", new Section());
+            var result = await service.UpdateAsync("some string", new Section());
 
             // assert
             Assert.NotNull(result);
@@ -159,7 +159,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
         }
 
         [Fact]
-        public async Task SaveSectionTest_Create()
+        public async Task CreateSectionTest()
         {
             // arrange
             var section = new Section()
@@ -181,7 +181,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var service = new SectionService(sectionRepositoryMock.Object, sectionRoleRepository.Object, _mapper);
 
             // act
-            var result = await service.SaveAsync(null, section);
+            var result = await service.CreateAsync(newId, section);
 
             Assert.NotNull(result);
             Assert.Equal(ResultCode.Success, result.Code);
@@ -191,7 +191,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
         }
 
         [Fact]
-        public async Task SaveSectionTest_Update()
+        public async Task UpdateSectionTest()
         {
             // arrange
             var section = new Section()
@@ -216,7 +216,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var service = new SectionService(sectionRepositoryMock.Object, sectionRoleRepository.Object, _mapper);
 
             // act
-            var result = await service.SaveAsync(existingId, section);
+            var result = await service.UpdateAsync(existingId, section);
 
             Assert.NotNull(result);
             Assert.Equal(ResultCode.Success, result.Code);

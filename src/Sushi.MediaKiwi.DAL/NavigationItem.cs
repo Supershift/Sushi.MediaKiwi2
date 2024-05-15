@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.DAL
@@ -12,6 +13,16 @@ namespace Sushi.MediaKiwi.DAL
     /// </summary>
     public class NavigationItem
     {
+        /// <summary>
+        /// Regular expression used to validate an ID.
+        /// </summary>
+        public const string IdRegex = @"^\w+$";
+
+        /// <summary>
+        /// Maximum number of characters allowed in an Id;
+        /// </summary>
+        public const int IdMaxLength = 64;
+
         /// <summary>
         /// Represents the mapping between <see cref="NavigationItem"/> and the database
         /// </summary>
@@ -63,5 +74,22 @@ namespace Sushi.MediaKiwi.DAL
         /// Gets or sets a value used when sorting navigation items.
         /// </summary>
         public int SortOrder { get; set; }
+
+        /// <summary>
+        /// Validates if an ID is valid.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Null if valid, error message if invalid.</returns>
+        public static string? ValidateId(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+                return "New ID is empty";
+            if (id.Length > IdMaxLength)
+                return "New ID is too long";
+            if (!Regex.IsMatch(id, IdRegex))
+                return "New ID contains invalid characters.";
+
+            return null;
+        }
     }
 }

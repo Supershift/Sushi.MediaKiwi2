@@ -98,32 +98,13 @@ namespace Sushi.MediaKiwi.Services
             }
         }
 
-        public async Task<Result<Section>> SaveAsync(string? id, Section request)
+        public async Task<Result<Section>> UpdateAsync(string id, Section request)
         {
             // get existing or create new section, based on id
-            DAL.Section section;
-            if (id != null)
+            var section = await _sectionRepository.GetAsync(id);
+            if (section == null)
             {
-                var candidate = await _sectionRepository.GetAsync(id);
-                if (candidate == null)
-                {
-                    return new Result<Section>(ResultCode.NotFound);
-                }
-                section = candidate;
-
-            }
-            else
-            {
-                // sanitize input
-                var newId = request.Id;
-                newId = newId.Trim();
-
-                // validate new id
-                var error = DAL.Section.ValidateSectionId(newId);
-                if (error != null)
-                    return new Result<Section>(ResultCode.ValidationFailed) { ErrorMessage = error };
-
-                section = new DAL.Section() { Id = newId };
+                return new Result<Section>(ResultCode.NotFound);
             }
 
             // map from model to database
@@ -132,18 +113,11 @@ namespace Sushi.MediaKiwi.Services
             // start transaction
             using (var ts = DAL.Utility.CreateTransactionScope())
             {
-                if (id != null)
-                {
-                    // existing section
-                    // delete existing roles
-                    await _sectionRoleRepository.DeleteForSectionAsync(id);
-                    await _sectionRepository.UpdateAsync(section);
-                }
-                else
-                {
-                    // new section
-                    await _sectionRepository.InsertAsync(section);
-                }
+                // delete existing roles
+                await _sectionRoleRepository.DeleteForSectionAsync(id);
+
+                // update section
+                await _sectionRepository.UpdateAsync(section);
 
                 // insert roles for view
                 foreach (var role in request.Roles)
@@ -155,7 +129,45 @@ namespace Sushi.MediaKiwi.Services
                 // commit transaction
                 ts.Complete();
             }
-             
+
+            var result = _mapper.Map<Section>(section);
+            return new Result<Section>(result);
+        }
+
+        public async Task<Result<Section>> CreateAsync(string id, Section request)
+        {
+            // sanitize input
+            id = id.Trim();
+
+            // validate new id
+            var error = DAL.Section.ValidateSectionId(id);
+            if (error != null)
+                return new Result<Section>(ResultCode.ValidationFailed) { ErrorMessage = error };
+
+            var section = new DAL.Section() { Id = id };
+
+            // map from model to database
+            _mapper.Map(request, section);
+
+            // start transaction
+            using (var ts = DAL.Utility.CreateTransactionScope())
+            {
+
+                // new section
+                await _sectionRepository.InsertAsync(section);
+
+
+                // insert roles for view
+                foreach (var role in request.Roles)
+                {
+                    var sectionRole = new DAL.SectionRole() { Role = role, SectionId = section.Id };
+                    await _sectionRoleRepository.InsertAsync(sectionRole);
+                }
+
+                // commit transaction
+                ts.Complete();
+            }
+
             var result = _mapper.Map<Section>(section);
             return new Result<Section>(result);
         }

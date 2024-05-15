@@ -18,8 +18,6 @@ namespace Sushi.MediaKiwi.DAL
         /// </summary>
         public const int SectionIdMaxLength = 64;
 
-        
-
         /// <summary>
         /// Represents the mapping between a <see cref="Section"/> and the database.
         /// </summary>

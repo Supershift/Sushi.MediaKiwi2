@@ -42,9 +42,8 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<Section>> CreateSection(
             [Required, StringLength(DAL.Section.SectionIdMaxLength), RegularExpression(DAL.Section.SectionIdRegex)] string id, 
             Section request)
-        {
-            request.Id = id;
-            var result = await _sectionService.SaveAsync(null, request);
+        {   
+            var result = await _sectionService.CreateAsync(id, request);
             return this.CreateResponse(result);
         }
 
@@ -56,7 +55,7 @@ namespace Sushi.MediaKiwi.WebAPI
         [Route("{id}")]        
         public async Task<ActionResult<Section>> UpdateSection(string id, Section request)
         {
-            var result = await _sectionService.SaveAsync(id, request);
+            var result = await _sectionService.UpdateAsync(id, request);
             return this.CreateResponse(result);
         }
 

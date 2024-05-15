@@ -133,6 +133,14 @@ namespace Sushi.MediaKiwi.Services
 
         public async Task<Result<NavigationItem>> UpdateIdAsync(string oldId, string newId)
         {
+            // sanitize input
+            newId = newId.Trim();
+            
+            // validate input
+            var error = DAL.NavigationItem.ValidateId(newId);
+            if (error != null)
+                return new Result<NavigationItem>(ResultCode.ValidationFailed) { ErrorMessage = error };
+            
             // get item from datastore
             var navigationItem = await _navigationItemRepository.GetAsync(oldId);
 
