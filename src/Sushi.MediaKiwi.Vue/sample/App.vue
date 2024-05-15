@@ -1,7 +1,17 @@
 <script setup lang="ts">
   import { MkApplication } from "@/components";
   import { useDisplay } from "vuetify";
+  import { useSections } from "@/composables";
+  import { useSectionRules } from "./composables/useSectionRules";
+
+  // Inject Dependencies
   const { xs } = useDisplay();
+
+  const { addDisableSectionRule } = useSections();
+  const { HasAvailableHotels } = useSectionRules();
+
+  // Add rule to disable section if no hotels are available
+  addDisableSectionRule([3, 6, 7, 9], HasAvailableHotels, "No hotels available. Please add a hotel to enable this section.");
 </script>
 
 <template>
@@ -14,7 +24,7 @@
       </picture>
     </template>
     <template #title>
-      <v-toolbar-title v-if="!xs"> MediaKiwi 2.0 - SampleWeb - 0.1.3</v-toolbar-title>
+      <v-toolbar-title v-if="!xs">MediaKiwi 2.0 - SampleWeb</v-toolbar-title>
     </template>
   </mk-application>
 </template>

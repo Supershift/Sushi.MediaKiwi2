@@ -17,3 +17,4 @@ export * from "./useBreadcrumbs";
 export * from "./useDatePresets";
 export * from "./useDayjs";
 export * from "./useComponentContext";
+export * from "./useSections";

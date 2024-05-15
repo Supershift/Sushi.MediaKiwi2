@@ -152,12 +152,12 @@ export const useMediakiwiStore = defineStore({
         }
 
         // Create a watcher to call the callback when the sections are loaded
-        const watcher = watch(
+        const sectionsWatcher = watch(
           () => this.sections,
           (sections) => {
             if (sections?.length) {
               // Stop watching the sections
-              watcher();
+              sectionsWatcher();
 
               // call the resolve callback
               resolve(sections);
