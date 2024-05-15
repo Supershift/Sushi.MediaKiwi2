@@ -1,12 +1,7 @@
 import { Section } from "@/models";
+import { DisableSectionRule } from "@/models/sections/DisableSectionRule";
 import { useMediakiwiStore } from "@/stores";
 import { ref } from "vue";
-
-type DisableSectionRule = {
-  sectionIds: number[];
-  callback: () => Promise<boolean>;
-  tooltip?: string;
-};
 
 export function useSections() {
   // Inject depecency
@@ -21,7 +16,7 @@ export function useSections() {
    * @param callback The callback function to determine if the section should be disabled
    * @param tooltip The tooltip to show when the section is disabled
    */
-  function addDisableSectionRule(sectionIds: number[], callback: () => Promise<boolean>, tooltip?: string) {
+  function addDisableSectionRule(sectionIds: string[], callback: () => Promise<boolean>, tooltip?: string) {
     // Add the rule to the list
     rules.value.push(<DisableSectionRule>{ sectionIds, callback, tooltip });
 
@@ -47,7 +42,9 @@ export function useSections() {
     if (mediakiwiStore.sections && rules.value && rules.value.length) {
       // Loop through all rules and apply them to the sections
       rules.value.forEach((rule) => {
-        mediakiwiStore.sections.filter((section) => rule.sectionIds.includes(section.id))?.forEach((section) => validateDisableSectionRule(section, rule));
+        mediakiwiStore.sections
+          .filter((section) => rule.sectionIds.includes(section.id.toString()))
+          ?.forEach((section) => validateDisableSectionRule(section, rule));
       });
     }
   }
