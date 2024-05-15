@@ -26,8 +26,7 @@ namespace Sushi.MediaKiwi.DAL
                 Table("mk_Views");                
                 Id(x => x.Id, "ViewID").Assigned().SqlType(SqlDbType.VarChar);
                 Map(x => x.ComponentKey, "ComponentKey").SqlType(SqlDbType.VarChar);
-                Map(x => x.Name, "Name").SqlType(SqlDbType.NVarChar);                
-                Map(x => x.SectionId, "SectionID");
+                Map(x => x.Name, "Name").SqlType(SqlDbType.NVarChar);                                
                 Map(x => x.ParameterName, "ParameterName").SqlType(SqlDbType.VarChar);
             }
         }
@@ -45,11 +44,6 @@ namespace Sushi.MediaKiwi.DAL
         /// Name for this view.
         /// </summary>
         public string Name { get; set; } = null!;
-
-        /// <summary>
-        /// Section to which this view belongs.
-        /// </summary>
-        public int SectionId { get; set; }
 
         /// <summary>
         /// Name of the URL parameter required by this view.

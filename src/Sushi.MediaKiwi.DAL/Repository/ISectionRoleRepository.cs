@@ -16,14 +16,14 @@ namespace Sushi.MediaKiwi.DAL.Repository
         /// Gets all <see cref="SectionRole"/> objects for the given filters.
         /// </summary>
         /// <returns></returns>
-        Task<QueryListResult<SectionRole>> GetAllAsync(int? sectionId);
+        Task<QueryListResult<SectionRole>> GetAllAsync(string? sectionId);
 
         /// <summary>
         /// Deletes all role assignments for a section.
         /// </summary>
         /// <param name="sectionId"></param>
         /// <returns></returns>
-        Task DeleteForSectionAsync(int sectionId);
+        Task DeleteForSectionAsync(string sectionId);
 
         /// <summary>
         /// Inserts a role assignment.

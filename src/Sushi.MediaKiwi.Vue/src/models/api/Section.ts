@@ -1,5 +1,5 @@
 export interface Section {
-  id: number;
+  id: string;
   name: string;
   sortOrder: number;
   icon?: string;

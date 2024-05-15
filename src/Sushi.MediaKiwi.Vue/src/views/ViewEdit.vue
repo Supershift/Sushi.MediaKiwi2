@@ -73,7 +73,6 @@
       label="Component key"
       hint="The key of the component as set in the modules property of the mediakiwi options."
     ></v-text-field>
-    <v-select v-model="view.sectionId" label="Section" :items="store.sections" item-title="name" item-value="id"></v-select>
     <v-text-field
       v-model="view.parameterName"
       label="Parameter"

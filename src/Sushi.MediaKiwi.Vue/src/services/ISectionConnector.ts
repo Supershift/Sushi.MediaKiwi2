@@ -2,9 +2,9 @@ import { ListResult, Paging } from "@/models";
 import { Section } from "@/models";
 
 export interface ISectionConnector {
-  CreateSection(request: Section): Promise<Section>;
-  DeleteSection(id: number): Promise<void>;
+  CreateSection(id: string, request: Section): Promise<Section>;
+  DeleteSection(id: string): Promise<void>;
   GetSections(paging?: Paging): Promise<ListResult<Section>>;
-  GetSection(id: number): Promise<Section | undefined>;
-  UpdateSection(id: number, request: Section): Promise<Section>;
+  GetSection(id: string): Promise<Section | undefined>;
+  UpdateSection(id: string, request: Section): Promise<Section>;
 }

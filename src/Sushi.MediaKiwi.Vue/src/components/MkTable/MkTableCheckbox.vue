@@ -24,6 +24,7 @@
 </script>
 <template>
   <v-checkbox
+    v-bind="$attrs"
     v-model="value"
     :indeterminate="props.isIndeterminate"
     :hide-details="true"

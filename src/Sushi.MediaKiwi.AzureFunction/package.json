@@ -32,7 +32,7 @@
     "@vitest/ui": "^0.34.6",
     "azure-functions-core-tools": "^4.x",
     "typescript": "^5.0.2",
-    "vite": "^4.4.5",
+    "vite": "^4.5.3",
     "vitest": "^0.34.6"
   },
   "dependencies": {

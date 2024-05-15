@@ -10,16 +10,16 @@ export class LocaleConnector implements ILocaleConnector {
   constructor(@inject("MediakiwiAxiosInstance") private axios: AxiosInstance) {}
 
   async Create(id: string, request: Locale): Promise<Locale> {
-    const response = await this.axios.post<Locale>(`${this.path}/${id}`, request);
+    const response = await this.axios.post<Locale>(`${this.path}/${encodeURIComponent(id)}`, request);
     return response.data;
   }
 
   async Delete(id: string): Promise<void> {
-    await this.axios.delete(`${this.path}/${id}`);
+    await this.axios.delete(`${this.path}/${encodeURIComponent(id)}`);
   }
 
   async Get(id: string): Promise<Locale> {
-    const response = await this.axios.get<Locale>(`${this.path}/${id}`);
+    const response = await this.axios.get<Locale>(`${this.path}/${encodeURIComponent(id)}`);
     return response.data;
   }
 
@@ -39,7 +39,7 @@ export class LocaleConnector implements ILocaleConnector {
   }
 
   async Update(id: string, request: Locale): Promise<Locale> {
-    const response = await this.axios.put<Locale>(`${this.path}/${id}`, request);
+    const response = await this.axios.put<Locale>(`${this.path}/${encodeURIComponent(id)}`, request);
     return response.data;
   }
 }

@@ -4,6 +4,7 @@
   import { useNavigation } from "@/composables/useNavigation";
   import { useSnackbarStore } from "@/stores/snackbar";
   import { useI18next } from "@/composables/useI18next";
+  import MkOverflowMenuIcon from "../MkOverflowMenuIcon/MkOverflowMenuIcon.vue";
 
   // inject dependencies
   const { defaultT } = await useI18next();
@@ -121,6 +122,9 @@
       <v-card-actions>
         <v-btn v-if="onUndo" :disabled="false" @click="onUndo">{{ defaultT("Undo") }}</v-btn>
         <v-btn v-if="onSave" :disabled="false" @click="onSave">{{ defaultT("Save") }}</v-btn>
+        <MkOverflowMenuIcon v-if="onDelete">
+          <v-list-item v-if="onDelete" @click="onDelete"> {{ defaultT("Delete") }}</v-list-item>
+        </MkOverflowMenuIcon>
       </v-card-actions>
     </template>
   </MkToolbar>

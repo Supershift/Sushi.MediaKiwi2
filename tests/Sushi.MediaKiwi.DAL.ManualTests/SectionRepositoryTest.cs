@@ -21,5 +21,25 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
 
             Assert.True(sections.Count > 1);
         }
+
+        [Fact]
+        public async Task UpdateId()
+        {
+            using (var ts = Utility.CreateTransactionScope())
+            {
+                string oldId = "Hotels";
+                string newId = "Hotelz";
+
+                var oldItem = await _repository.GetAsync(oldId);
+
+                Assert.NotNull(oldItem);
+
+                await _repository.UpdateIdAsync(oldId, newId);
+
+                var newItem = await _repository.GetAsync(newId);
+
+                Assert.NotNull(newItem);
+            }
+        }
     }
 }
