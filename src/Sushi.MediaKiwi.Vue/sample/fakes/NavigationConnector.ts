@@ -14,7 +14,7 @@ export class NavigationConnector implements INavigationConnector {
     });
   }
 
-  GetNavigationItem(_id: number): Promise<NavigationItem> {
+  GetNavigationItem(_id: string): Promise<NavigationItem> {
     throw new Error("Method not implemented.");
   }
   CreateNavigationItem(_item: NavigationItem): Promise<NavigationItem> {
@@ -23,7 +23,7 @@ export class NavigationConnector implements INavigationConnector {
   UpdateNavigationItem(_item: NavigationItem): Promise<NavigationItem> {
     throw new Error("Method not implemented.");
   }
-  DeleteNavigationItem(_id: number): Promise<AxiosResponse<any, any>> {
+  DeleteNavigationItem(_id: string): Promise<AxiosResponse<any, any>> {
     throw new Error("Method not implemented.");
   }
 }

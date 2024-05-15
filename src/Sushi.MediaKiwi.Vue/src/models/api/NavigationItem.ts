@@ -3,13 +3,13 @@ import { View } from "./View";
 /** Represents a single item in a navigation hierarchy. */
 export interface NavigationItem {
   /** Unique identifier for this item. */
-  id: number;
+  id: string;
   /** Label to display. */
   name: string;
   /** Application section to which this item belongs. */
-  sectionId: number;
+  sectionId: string;
   /** Id of the parent of this item in the navigation hierarchy. */
-  parentNavigationItemId?: number;
+  parentNavigationItemId?: string;
   /** Identifier of the view to load when this navigation item is activated. If empty, the item is a folder. */
   viewId?: string;
   /** Path, relative to the application's root. Not provided by API, but needs to be calculated based on item's hierarchy. */

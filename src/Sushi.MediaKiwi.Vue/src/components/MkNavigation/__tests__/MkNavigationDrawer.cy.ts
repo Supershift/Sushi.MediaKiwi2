@@ -7,9 +7,9 @@ import { NavigationItem } from "@/models";
 const props = {
   listItems: [
     {
-      id: 444,
+      id: "444",
       name: "Test Item",
-      sectionId: 1,
+      sectionId: "Home",
       viewId: "home",
       path: "/home",
     },

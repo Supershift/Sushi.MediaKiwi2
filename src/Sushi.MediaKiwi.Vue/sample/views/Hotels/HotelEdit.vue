@@ -121,7 +121,7 @@
     <template #toolbarHeader>
       <v-card-text class="flex-1-1 w-75"> Hotel edit </v-card-text>
     </template>
-    <v-text-field v-model="state.hotel.name" label="Name" :rules="[...required(state.hotel.name, 'This field is required')]"></v-text-field>
+    <v-text-field v-model="state.hotel.name" label="Name" :rules="[required]"></v-text-field>
     <v-autocomplete
       v-model="state.hotel.countryCode"
       label="Country"

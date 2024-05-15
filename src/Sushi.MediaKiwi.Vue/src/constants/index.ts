@@ -1,4 +1,4 @@
-export const adminSectionId = 1;
+export const adminSectionId = "Admin";
 
 export const defaultPageSize = 10;
 export const defaultPageSizeOptions = [10, 30, 50];

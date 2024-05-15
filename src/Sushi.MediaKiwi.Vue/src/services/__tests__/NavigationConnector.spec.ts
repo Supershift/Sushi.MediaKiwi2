@@ -19,7 +19,7 @@ describe("NavigationConnector", () => {
     // Arrange
     const expectedResult = <AxiosResponse>{
       data: <ListResult<NavigationItem>>{
-        result: [<NavigationItem>{ id: 1, name: "test", sectionId: 1 }],
+        result: [<NavigationItem>{ id: "1", name: "test", sectionId: "1" }],
         totalCount: 1,
         pageCount: 1,
       },
@@ -32,13 +32,13 @@ describe("NavigationConnector", () => {
 
     // create connector and call
     const connector = new NavigationConnector(axiosMock);
-    const result = await connector.GetNavigationItems(1, paging, sorting);
+    const result = await connector.GetNavigationItems("1", paging, sorting);
 
     // assert
     expect(axiosMock.get).toHaveBeenCalledOnce();
     expect(axiosMock.get).toHaveBeenCalledWith("/navigationitems", {
       params: {
-        sectionId: 1,
+        sectionId: "1",
         pageIndex: 0,
         pageSize: 10,
         sortBy: "name",
@@ -52,9 +52,9 @@ describe("NavigationConnector", () => {
     // Arrange
     const expectedResult = <AxiosResponse>{
       data: <NavigationItem>{
-        id: 1,
+        id: "1",
         name: "test",
-        sectionId: 1,
+        sectionId: "1",
       },
     };
 
@@ -63,7 +63,7 @@ describe("NavigationConnector", () => {
 
     // create connector and call
     const connector = new NavigationConnector(axiosMock);
-    const result = await connector.GetNavigationItem(1);
+    const result = await connector.GetNavigationItem("1");
 
     // assert
     expect(axiosMock.get).toHaveBeenCalledOnce();
@@ -75,9 +75,9 @@ describe("NavigationConnector", () => {
     // Arrange
     const expectedResult = <AxiosResponse>{
       data: <NavigationItem>{
-        id: 1,
+        id: "1",
         name: "test",
-        sectionId: 1,
+        sectionId: "1",
       },
     };
 
@@ -87,12 +87,12 @@ describe("NavigationConnector", () => {
     // create connector and call
     const connector = new NavigationConnector(axiosMock);
 
-    const request = <NavigationItem>{ name: "test", sectionId: 1 };
+    const request = <NavigationItem>{ id: "1", name: "test", sectionId: "1" };
     const result = await connector.CreateNavigationItem(request);
 
     // assert
     expect(axiosMock.post).toHaveBeenCalledOnce();
-    expect(axiosMock.post).toHaveBeenCalledWith("/navigationitems", request);
+    expect(axiosMock.post).toHaveBeenCalledWith("/navigationitems/1", request);
     expect(result).toBe(expectedResult.data);
   });
 
@@ -100,9 +100,9 @@ describe("NavigationConnector", () => {
     // Arrange
     const expectedResult = <AxiosResponse>{
       data: <NavigationItem>{
-        id: 1,
+        id: "1",
         name: "test2",
-        sectionId: 1,
+        sectionId: "1",
       },
     };
 
@@ -112,7 +112,7 @@ describe("NavigationConnector", () => {
     // create connector and call
     const connector = new NavigationConnector(axiosMock);
 
-    const request = <NavigationItem>{ id: 1, name: "test2", sectionId: 1 };
+    const request = <NavigationItem>{ id: "1", name: "test2", sectionId: "1" };
     const result = await connector.UpdateNavigationItem(request);
 
     // assert

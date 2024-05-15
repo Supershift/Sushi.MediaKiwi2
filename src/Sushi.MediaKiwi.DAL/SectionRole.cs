@@ -23,7 +23,7 @@ namespace Sushi.MediaKiwi.DAL
             public SectionRoleMap()
             {
                 Table("mk_SectionsRoles");
-                Id(x => x.SectionId, "SectionID").Assigned();
+                Id(x => x.SectionId, "SectionID").Assigned().SqlType(System.Data.SqlDbType.VarChar);
                 Id(x => x.Role, "RoleID").Assigned().SqlType(System.Data.SqlDbType.VarChar);
             }
         }
@@ -31,7 +31,7 @@ namespace Sushi.MediaKiwi.DAL
         /// <summary>
         /// Section to which the role has access.
         /// </summary>
-        public int SectionId { get; set; }
+        public string SectionId { get; set; } = null!;
 
         /// <summary>
         /// Role that has access to the view.

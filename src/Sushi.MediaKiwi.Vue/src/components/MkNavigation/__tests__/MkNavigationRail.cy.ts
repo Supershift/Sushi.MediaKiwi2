@@ -6,7 +6,7 @@ import { Section } from "@/models";
 const props = {
   railItems: [
     {
-      id: 1,
+      id: "Home",
       name: "Section One",
       sortOrder: 0,
       icon: "$arrowLeft",

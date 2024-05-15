@@ -5,7 +5,6 @@ export interface View {
   name?: string;
   /** Unique key for the screen's component. Will be used to find a match in the modules provided when installing MediaKiwi */
   componentKey?: string;
-  sectionId?: number;
   /** If not empty, access to this screen is restricted to these roles. */
   roles?: string[];
   /** Name of the URL parameter required by this view, e.g. userId, itemId */

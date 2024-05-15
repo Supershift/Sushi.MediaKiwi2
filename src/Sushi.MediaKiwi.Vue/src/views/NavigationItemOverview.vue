@@ -35,11 +35,11 @@
     },
   });
 
-  function getSectionName(id: number): string | undefined {
+  function getSectionName(id: string): string | undefined {
     return sections.value.find((section) => section.id == id)?.name;
   }
 
-  function getNavigationItemName(id?: number): string | undefined {
+  function getNavigationItemName(id?: string): string | undefined {
     return navigationItems.value.find((x) => x.id == id)?.name || "-";
   }
 
@@ -64,14 +64,16 @@
   >
     <template #thead>
       <MkTh v-model:sorting="sorting" sorting-key="name">Name</MkTh>
-      <th>Section</th>
+      <th>Id</th>
+        <th>Section</th>
       <th>Parent</th>
       <th>View</th>
       <th>Icon</th>
       <MkTh v-model:sorting="sorting" sorting-key="sortOrder" width="140">Sort order</MkTh>
     </template>
     <template #tbody="item: NavigationItem">
-      <td>{{ item.name }}</td>
+      <th>{{ item.id }}</th>
+        <td>{{ item.name }}</td>
       <td>{{ getSectionName(item.sectionId) }}</td>
       <td>{{ getNavigationItemName(item.parentNavigationItemId) }}</td>
       <td>{{ item.viewId }}</td>

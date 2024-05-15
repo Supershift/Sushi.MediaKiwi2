@@ -32,13 +32,9 @@ namespace Sushi.MediaKiwi.DAL.Repository
         }
 
         /// <inheritdoc/>    
-        public async Task<QueryListResult<View>> GetAllAsync(int? sectionID, PagingValues pagingValues, SortValues<View>? sortValues = null)
+        public async Task<QueryListResult<View>> GetAllAsync(PagingValues pagingValues, SortValues<View>? sortValues = null)
         {
             var query = _connector.CreateQuery();
-            if (sectionID.HasValue)
-            {
-                query.Add(x => x.SectionId, sectionID.Value);
-            }
 
             if(sortValues != null)
             {

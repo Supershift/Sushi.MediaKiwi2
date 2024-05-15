@@ -32,12 +32,6 @@ namespace Sushi.MediaKiwi.Services.Model
         public string ComponentKey { get; set; }
 
         /// <summary>
-        /// Section to which this view belongs.
-        /// </summary>
-        [SwaggerSchema(ReadOnly = true)]
-        public int SectionId { get; set; }
-
-        /// <summary>
         /// Name of the URL parameter required by this view.
         /// </summary>
         public string? ParameterName { get; set; }

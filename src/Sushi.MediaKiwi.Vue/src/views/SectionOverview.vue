@@ -16,6 +16,7 @@
   const tableMap: TableMap<Section> = {
     itemId: (x) => x.id,
     items: [
+      { headerTitle: "Id", value: (x) => x.id },
       { headerTitle: "Name", value: (x) => x.name },
       { headerTitle: "Icon", value: (x) => x.icon },
       { headerTitle: "Sort order", value: (x) => x.sortOrder },

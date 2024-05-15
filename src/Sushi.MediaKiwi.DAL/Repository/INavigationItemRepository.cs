@@ -16,14 +16,14 @@ namespace Sushi.MediaKiwi.DAL.Repository
         /// <param name="pagingValues"></param>
         /// <param name="sortValues"></param>
         /// <returns></returns>
-        Task<QueryListResult<NavigationItem>> GetAllAsync(int? sectionID, PagingValues pagingValues, SortValues<NavigationItem>? sortValues = null);
+        Task<QueryListResult<NavigationItem>> GetAllAsync(string? sectionID, PagingValues pagingValues, SortValues<NavigationItem>? sortValues = null);
         
         /// <summary>
         /// Gets a <see cref="NavigationItem"/> by id.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<NavigationItem?> GetAsync(int id);
+        Task<NavigationItem?> GetAsync(string id);
 
         /// <summary>
         /// Inserts a <see cref="NavigationItem"/>.
@@ -44,6 +44,14 @@ namespace Sushi.MediaKiwi.DAL.Repository
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task DeleteAsync(int id);
+        Task DeleteAsync(string id);
+
+        /// <summary>
+        /// Updates the primary key of a <see cref="NavigationItem"/>, including all child navigation items' reference to it.
+        /// </summary>
+        /// <param name="oldId"></param>
+        /// <param name="newId"></param>
+        /// <returns></returns>
+        Task UpdateIdAsync(string oldId, string newId);
     }
 }

@@ -8,13 +8,13 @@ import { ISectionConnector } from "./ISectionConnector";
 export class SectionConnector implements ISectionConnector {
   constructor(@inject("MediakiwiAxiosInstance") private axios: AxiosInstance) {}
 
-  async CreateSection(request: Section): Promise<Section> {
-    const response = await this.axios.post<Section>(`/sections`, request);
+  async CreateSection(id: string, request: Section): Promise<Section> {
+    const response = await this.axios.post<Section>(`/sections/${encodeURIComponent(id)}`, request);
     return response.data;
   }
 
-  async DeleteSection(id: number): Promise<void> {
-    await this.axios.delete(`/sections/${id}`);
+  async DeleteSection(id: string): Promise<void> {
+    await this.axios.delete(`/sections/${encodeURIComponent(id)}`);
   }
 
   async GetSections(paging?: Paging): Promise<ListResult<Section>> {
@@ -26,12 +26,12 @@ export class SectionConnector implements ISectionConnector {
     return response.data;
   }
 
-  async GetSection(id: number): Promise<Section | undefined> {
+  async GetSection(id: string): Promise<Section | undefined> {
     const response = await this.axios.get<Section>(`/sections/${encodeURIComponent(id)}`);
     return response.data;
   }
 
-  async UpdateSection(id: number, request: Section): Promise<Section> {
+  async UpdateSection(id: string, request: Section): Promise<Section> {
     const response = await this.axios.put<Section>(`/sections/${encodeURIComponent(id)}`, request);
     return response.data;
   }

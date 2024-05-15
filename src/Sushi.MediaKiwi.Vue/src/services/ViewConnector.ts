@@ -18,10 +18,9 @@ export class ViewConnector implements IViewConnector {
     await this.axios.delete(`/views/${id}`);
   }
 
-  async GetViews(sectionId?: number, paging?: Paging, sorting?: Sorting): Promise<ListResult<View>> {
+  async GetViews(paging?: Paging, sorting?: Sorting): Promise<ListResult<View>> {
     // build querystring params
     const query = {
-      sectionId: sectionId,
       ...paging,
       ...sorting,
     };

@@ -23,17 +23,9 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
         [Fact]
         public async Task GetAllTest()
         {
-            var screens = await _repository.GetAllAsync(null, PagingValues.Default);
+            var screens = await _repository.GetAllAsync(PagingValues.Default);
 
             Assert.NotEqual(1, screens.Count);
-        }
-
-        [Fact]
-        public async Task GetAllTest_BySectionID()
-        {
-            var screens = await _repository.GetAllAsync(1, PagingValues.Default);
-
-            Assert.All(screens, screen => Assert.Equal(1, screen.SectionId));
         }
 
         [Fact]

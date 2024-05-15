@@ -17,7 +17,7 @@ namespace Sushi.MediaKiwi.Services.Model
         /// Unique identifier for this section.
         /// </summary>
         [SwaggerSchema(ReadOnly = true)]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Name for this section.

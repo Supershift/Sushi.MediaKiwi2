@@ -8,7 +8,7 @@ import { HttpStatusCode, type AxiosInstance, type AxiosResponse } from "axios";
 export class NavigationConnector implements INavigationConnector {
   constructor(@inject("MediakiwiAxiosInstance") private axios: AxiosInstance) {}
 
-  async GetNavigationItems(sectionId?: number, paging?: Paging, sorting?: Sorting<NavigationItem>): Promise<ListResult<NavigationItem>> {
+  async GetNavigationItems(sectionId?: string, paging?: Paging, sorting?: Sorting<NavigationItem>): Promise<ListResult<NavigationItem>> {
     const { sortBy, sortDirection } = sorting || {};
 
     // build querystring params
@@ -22,13 +22,13 @@ export class NavigationConnector implements INavigationConnector {
     return response.data;
   }
 
-  async GetNavigationItem(id: number): Promise<NavigationItem> {
+  async GetNavigationItem(id: string): Promise<NavigationItem> {
     const response = await this.axios.get<NavigationItem>(`/navigationitems/${encodeURIComponent(id)}`);
     return response.data;
   }
 
   async CreateNavigationItem(item: NavigationItem): Promise<NavigationItem> {
-    const response = await this.axios.post<NavigationItem>(`/navigationitems`, item);
+    const response = await this.axios.post<NavigationItem>(`/navigationitems/${encodeURIComponent(item.id)}`, item);
     return response.data;
   }
 
@@ -37,7 +37,7 @@ export class NavigationConnector implements INavigationConnector {
     return response.data;
   }
 
-  async DeleteNavigationItem(id: number): Promise<AxiosResponse> {
+  async DeleteNavigationItem(id: string): Promise<AxiosResponse> {
     const response = await this.axios.delete<NavigationItem>(`/navigationitems/${encodeURIComponent(id)}`);
     return response;
   }
