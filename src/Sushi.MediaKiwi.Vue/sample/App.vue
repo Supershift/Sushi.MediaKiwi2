@@ -11,7 +11,7 @@
   const { HasAvailableHotels } = useSectionRules();
 
   // Add rule to disable section if no hotels are available
-  addDisableSectionRule([3, 6, 7, 9], HasAvailableHotels, "No hotels available. Please add a hotel to enable this section.");
+  addDisableSectionRule([3], HasAvailableHotels, "No hotels available. Please add a hotel to enable this section.");
 </script>
 
 <template>
