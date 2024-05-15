@@ -18,8 +18,10 @@ export const useValidationRules = () => {
   const numeric = (value: string, message: string) => [() => /^\d+$/.test(value) || message];
   /** minimal value of number */
   const minValue = (value: number, min: number, message: string) => [() => value >= min || message];
-  /** value must be alphanumeric character */
-  const alphaNumeric = (value: string, message: string) => [() => /^[a-zA-Z0-9_\s]*$/.test(value) || message];
+  /** value must be alphanumeric character, whitespace allowed */
+  const alphaNumericWithSpace = (value: string, message: string) => [() => /^[a-zA-Z0-9_\s]*$/.test(value) || message];
+  /** value must be alphanumeric character, no whitespace allowed */
+  const alphaNumericNoSpace = (value: string, message?: string) => /^\w+$/.test(value) || (message ?? "Only alpha-numeric characters are allowed");
 
-  return { required, min, max, email, numeric, minValue, alphaNumeric };
+  return { required, min, max, email, numeric, minValue, alphaNumericWithSpace, alphaNumericNoSpace };
 };

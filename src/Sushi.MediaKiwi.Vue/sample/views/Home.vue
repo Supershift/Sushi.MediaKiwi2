@@ -15,7 +15,7 @@
         <br />
         {{ t("A simple icon test") }} <v-icon icon="$testTube"></v-icon>
         <br />
-        <p>Some things are still {{ defaultT("N/A") }}</p>
+        <p>Some things are still {{ defaultT("N-A") }}</p>
       </p>
     </v-card>
   </v-lazy>

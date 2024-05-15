@@ -5,7 +5,7 @@
   import { ISectionConnector } from "@/services";
   import { Section, IconsLibrary } from "@/models";
   import { RouterManager } from "@/router/routerManager";
-  import { useNavigation } from "@/composables/useNavigation";
+  import { useNavigation, useValidationRules } from "@/composables";
   import { adminSectionId } from "@/constants";
   import { useMediakiwiStore } from "@/stores";
 
@@ -15,6 +15,7 @@
 
   const store = useMediakiwiStore();
   const navigation = useNavigation();
+  const { alphaNumericNoSpace } = useValidationRules();
 
   // get id of the section from the route
   const sectionId = navigation.currentViewParameter;
@@ -76,12 +77,7 @@
   <v-alert v-if="isAdminSection" :icon="IconsLibrary.informationOutline" color="info" text="You cannot edit the Admin section" class="my-2"></v-alert>
 
   <MkForm title="Section" :on-save="onSave" :on-load="onLoad" :on-delete="onDelete">
-    <v-text-field
-      v-model="state.section.id"
-      label="Id"
-      :disabled="sectionId ? true : false"
-      :rules="[(v) => /^\w+$/.test(v) || 'Only alpha-numeric allowed']"
-    ></v-text-field>
+    <v-text-field v-model="state.section.id" label="Id" :disabled="sectionId ? true : false" :rules="[alphaNumericNoSpace]"></v-text-field>
     <v-text-field v-model="state.section.name" label="Name" :disabled="isAdminSection"></v-text-field>
     <v-text-field v-model="state.section.icon" label="Icon" :disabled="isAdminSection" :placeholder="IconsLibrary.home"></v-text-field>
     <v-text-field v-model="state.section.sortOrder" label="Sort order" type="number" :disabled="isAdminSection"></v-text-field>
