@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Sushi.MediaKiwi.DAL.Repository;
 using Xunit.Extensions.AssemblyFixture;
 
-namespace Sushi.MediaKiwi.DAL.ManualTests
+namespace Sushi.MediaKiwi.IntegrationTests
 {
     public class SectionRepositoryTest : IAssemblyFixture<DatabaseFixture>
     {
@@ -18,7 +18,7 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
         [Fact]
         public async Task GetAllTest()
         {
-            var sections = await _repository.GetAllAsync(new Paging.PagingValues(0, 50));
+            var sections = await _repository.GetAllAsync(new DAL.Paging.PagingValues(0, 50));
 
             Assert.True(sections.Count > 1);
         }

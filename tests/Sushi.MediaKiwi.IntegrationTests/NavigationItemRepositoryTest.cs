@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit.Extensions.AssemblyFixture;
 
-namespace Sushi.MediaKiwi.DAL.ManualTests
+namespace Sushi.MediaKiwi.IntegrationTests
 {
     public class NavigationItemRepositoryTest : IAssemblyFixture<DatabaseFixture>
     {
