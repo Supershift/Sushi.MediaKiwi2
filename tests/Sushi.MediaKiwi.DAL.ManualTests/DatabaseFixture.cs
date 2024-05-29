@@ -4,12 +4,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.SqlServer.Dac;
+using Sushi.MediaKiwi.DAL;
 using Sushi.MicroORM;
 using Testcontainers.MsSql;
 using Xunit.Extensions.AssemblyFixture;
 
 [assembly: TestFramework(AssemblyFixtureFramework.TypeName, AssemblyFixtureFramework.AssemblyName)]
-namespace Sushi.MediaKiwi.DAL.ManualTests
+namespace Sushi.MediaKiwi.IntegrationTests
 {
     public class DatabaseFixture : IAsyncLifetime
     {
@@ -74,5 +75,5 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
         }
 
         public ServiceProvider Services { get; private set; } = null!;
-    }    
+    }
 }

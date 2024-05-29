@@ -1,8 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
+using Sushi.MediaKiwi.DAL;
 using Sushi.MediaKiwi.DAL.Repository;
 using Xunit.Extensions.AssemblyFixture;
 
-namespace Sushi.MediaKiwi.DAL.ManualTests
+namespace Sushi.MediaKiwi.IntegrationTests
 {
     public class LocaleRepositoryTest : IAssemblyFixture<DatabaseFixture>
     {
@@ -18,7 +19,7 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
         [Fact]
         public async Task GetAllTest()
         {
-            var locales = await _repository.GetAllAsync(true, new Paging.PagingValues(0, 50));
+            var locales = await _repository.GetAllAsync(true, new DAL.Paging.PagingValues(0, 50));
 
             Assert.True(locales.Count > 1);
         }
@@ -52,7 +53,7 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
             using (var ts = Utility.CreateTransactionScope())
             {
                 await _repository.InsertAsync(locale);
-                
+
                 var result = await _repository.GetAsync(locale.Id);
                 Assert.NotNull(result);
                 Assert.Equal(locale, result);
@@ -94,14 +95,14 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
                     IsEnabled = true,
                     Name = "test",
                 };
-                await _repository.InsertAsync(locale);               
+                await _repository.InsertAsync(locale);
 
                 // delete it
                 await _repository.DeleteAsync(locale);
 
                 // check it doesn't exist anymore
                 var result = await _repository.GetAsync(locale.Id);
-                Assert.Null(result);                
+                Assert.Null(result);
             }
         }
     }

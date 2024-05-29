@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Sushi.MediaKiwi.DAL.Repository;
 using Xunit.Extensions.AssemblyFixture;
 
-namespace Sushi.MediaKiwi.DAL.ManualTests
+namespace Sushi.MediaKiwi.IntegrationTests
 {
     public class RoleRepositoryTest : IAssemblyFixture<DatabaseFixture>
     {
@@ -23,5 +23,5 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
             Assert.Equal(2, sections.Count);
         }
     }
-    
+
 }

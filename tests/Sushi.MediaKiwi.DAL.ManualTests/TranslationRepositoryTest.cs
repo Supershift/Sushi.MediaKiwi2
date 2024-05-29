@@ -1,8 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
+using Sushi.MediaKiwi.DAL;
 using Sushi.MediaKiwi.DAL.Repository;
 using Xunit.Extensions.AssemblyFixture;
 
-namespace Sushi.MediaKiwi.DAL.ManualTests
+namespace Sushi.MediaKiwi.IntegrationTests
 {
     public class TranslationRepositoryTest : IAssemblyFixture<DatabaseFixture>
     {
@@ -37,10 +38,10 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
         public async Task DuplicateTest()
         {
             // start transaction to prevent test changing state permanently
-            using (var ts = DAL.Utility.CreateTransactionScope())
+            using (var ts = Utility.CreateTransactionScope())
             {
                 // create a new test locale
-                var targetLocale=  new DAL.Locale() { Id = "test", IsEnabled = false, Name = "test" };
+                var targetLocale = new Locale() { Id = "test", IsEnabled = false, Name = "test" };
                 await _localeRepository.InsertAsync(targetLocale);
 
                 // duplicate from english
@@ -52,7 +53,7 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
 
                 // assert same keys exist
                 Assert.NotEmpty(expectedTranslations);
-                Assert.Equal(expectedTranslations.Select(x=>x.Key), actualTranslations.Select(x=>x.Key));
+                Assert.Equal(expectedTranslations.Select(x => x.Key), actualTranslations.Select(x => x.Key));
             }
         }
 
@@ -60,11 +61,11 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
         public async Task InsertMissingTest()
         {
             // start transaction to prevent test changing state permanently
-            using (var ts = DAL.Utility.CreateTransactionScope())
+            using (var ts = Utility.CreateTransactionScope())
             {
                 // get all locales
                 var allLocales = await _localeRepository.GetAllAsync(false, null);
-                
+
                 // create a new translation for a locale                
                 var translation = new Translation()
                 {
@@ -91,7 +92,7 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
                 {
                     var expected = translation with { IsNew = true, LocaleId = locale.Id };
                     Assert.Contains(expected, translations);
-                }                
+                }
             }
         }
     }
