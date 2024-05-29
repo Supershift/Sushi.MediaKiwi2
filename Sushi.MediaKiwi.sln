@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sushi.MediaKiwi.DAL", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sushi.MediaKiwi.DAL.UnitTests", "tests\Sushi.MediaKiwi.DAL.UnitTests\Sushi.MediaKiwi.DAL.UnitTests.csproj", "{8F19C9B3-129D-4AF3-8103-B0342104F9D4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sushi.MediaKiwi.IntegrationTests", "tests\Sushi.MediaKiwi.DAL.ManualTests\Sushi.MediaKiwi.IntegrationTests.csproj", "{2CFF3199-CFE4-4FDA-B463-56F95A7A558C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sushi.MediaKiwi.IntegrationTests", "tests\Sushi.MediaKiwi.IntegrationTests\Sushi.MediaKiwi.IntegrationTests.csproj", "{2CFF3199-CFE4-4FDA-B463-56F95A7A558C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sushi.MediaKiwi.Services", "src\Sushi.MediaKiwi.Services\Sushi.MediaKiwi.Services.csproj", "{83A2193D-7C86-46AE-9590-B63D13655A2C}"
 EndProject
