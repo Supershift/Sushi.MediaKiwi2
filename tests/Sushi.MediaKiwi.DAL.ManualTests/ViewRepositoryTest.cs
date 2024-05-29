@@ -6,15 +6,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit.Extensions.AssemblyFixture;
 
 namespace Sushi.MediaKiwi.DAL.ManualTests
 {
-    public class ViewRepositoryTest : IClassFixture<ConfigFixture>
+    public class ViewRepositoryTest : IAssemblyFixture<DatabaseFixture>
     {
-        private readonly ConfigFixture _configFixture;
+        private readonly DatabaseFixture _configFixture;
         private readonly IViewRepository _repository;
 
-        public ViewRepositoryTest(ConfigFixture configFixture)
+        public ViewRepositoryTest(DatabaseFixture configFixture)
         {
             _configFixture = configFixture;
             _repository = configFixture.Services.GetRequiredService<IViewRepository>();

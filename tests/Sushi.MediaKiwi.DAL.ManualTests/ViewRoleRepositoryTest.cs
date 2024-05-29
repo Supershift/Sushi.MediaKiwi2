@@ -1,14 +1,15 @@
 using Microsoft.Extensions.DependencyInjection;
 using Sushi.MediaKiwi.DAL.Repository;
+using Xunit.Extensions.AssemblyFixture;
 
 namespace Sushi.MediaKiwi.DAL.ManualTests
 {
-    public class ViewRoleRepositoryTest : IClassFixture<ConfigFixture>
+    public class ViewRoleRepositoryTest : IAssemblyFixture<DatabaseFixture>
     {
-        private readonly ConfigFixture _configFixture;
+        private readonly DatabaseFixture _configFixture;
         private readonly IViewRoleRepository _repository;
 
-        public ViewRoleRepositoryTest(ConfigFixture configFixture)
+        public ViewRoleRepositoryTest(DatabaseFixture configFixture)
         {
             _configFixture = configFixture;
             _repository = _configFixture.Services.GetRequiredService<IViewRoleRepository>();

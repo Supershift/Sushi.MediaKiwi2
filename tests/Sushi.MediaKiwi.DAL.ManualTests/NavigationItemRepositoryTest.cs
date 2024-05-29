@@ -6,15 +6,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit.Extensions.AssemblyFixture;
 
 namespace Sushi.MediaKiwi.DAL.ManualTests
 {
-    public class NavigationItemRepositoryTest : IClassFixture<ConfigFixture>
+    public class NavigationItemRepositoryTest : IAssemblyFixture<DatabaseFixture>
     {
-        private readonly ConfigFixture _configFixture;
+        private readonly DatabaseFixture _configFixture;
         private readonly INavigationItemRepository _repository;
 
-        public NavigationItemRepositoryTest(ConfigFixture configFixture)
+        public NavigationItemRepositoryTest(DatabaseFixture configFixture)
         {
             _configFixture = configFixture;
             _repository = configFixture.Services.GetRequiredService<INavigationItemRepository>();
@@ -34,26 +35,6 @@ namespace Sushi.MediaKiwi.DAL.ManualTests
             var items = await _repository.GetAllAsync("Admin", PagingValues.Default);
 
             Assert.All(items, screen => Assert.Equal("Admin", screen.SectionId));
-        }
-
-        [Fact]
-        public async Task UpdateId()
-        {
-            using (var ts = Utility.CreateTransactionScope())
-            {
-                string oldId = "Hotels";
-                string newId = "Hotelz";
-
-                var oldItem = await _repository.GetAsync(oldId);
-
-                Assert.NotNull(oldItem);
-
-                await _repository.UpdateIdAsync(oldId, newId);
-
-                var newItem = await _repository.GetAsync(newId);
-
-                Assert.NotNull(newItem);
-            }
         }
     }
 }

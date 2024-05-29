@@ -1,14 +1,15 @@
 using Microsoft.Extensions.DependencyInjection;
 using Sushi.MediaKiwi.DAL.Repository;
+using Xunit.Extensions.AssemblyFixture;
 
 namespace Sushi.MediaKiwi.DAL.ManualTests
 {
-    public class LocaleRepositoryTest : IClassFixture<ConfigFixture>
+    public class LocaleRepositoryTest : IAssemblyFixture<DatabaseFixture>
     {
-        private readonly ConfigFixture _configFixture;
+        private readonly DatabaseFixture _configFixture;
         private readonly ILocaleRepository _repository;
 
-        public LocaleRepositoryTest(ConfigFixture configFixture)
+        public LocaleRepositoryTest(DatabaseFixture configFixture)
         {
             _configFixture = configFixture;
             _repository = _configFixture.Services.GetRequiredService<ILocaleRepository>();

@@ -1,15 +1,16 @@
 using Microsoft.Extensions.DependencyInjection;
 using Sushi.MediaKiwi.DAL.Repository;
+using Xunit.Extensions.AssemblyFixture;
 
 namespace Sushi.MediaKiwi.DAL.ManualTests
 {
-    public class TranslationRepositoryTest : IClassFixture<ConfigFixture>
+    public class TranslationRepositoryTest : IAssemblyFixture<DatabaseFixture>
     {
-        private readonly ConfigFixture _configFixture;
+        private readonly DatabaseFixture _configFixture;
         private readonly ITranslationRepository _repository;
         private readonly ILocaleRepository _localeRepository;
 
-        public TranslationRepositoryTest(ConfigFixture configFixture)
+        public TranslationRepositoryTest(DatabaseFixture configFixture)
         {
             _configFixture = configFixture;
             _repository = _configFixture.Services.GetRequiredService<ITranslationRepository>();
