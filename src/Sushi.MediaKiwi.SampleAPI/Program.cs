@@ -87,3 +87,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// this exposes the program class for testing
+public partial class Program { }
