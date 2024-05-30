@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.6" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="Microsoft.SqlServer.DacFx" Version="162.2.111" />
+    <PackageReference Include="Testcontainers.MsSql" Version="3.8.0" />
+    <PackageReference Include="xunit" Version="2.5.3" />
+    <PackageReference Include="Xunit.Extensions.AssemblyFixture" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Sushi.LanguageExtensions\Sushi.LanguageExtensions.csproj" />
+    <ProjectReference Include="..\..\src\Sushi.MediaKiwi.SampleAPI\Sushi.MediaKiwi.SampleAPI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="TestValues\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\SqlScripts\mediakiwi.bacpac" Link="TestValues\mediakiwi.bacpac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+</Project>
