@@ -22,9 +22,7 @@ namespace Sushi.MediaKiwi.Services
 
         /// <summary>
         /// Creates a new instance of <see cref="TranslationService"/>.
-        /// </summary>
-        /// <param name="translationRepository"></param>
-        /// <param name="mapper"></param>
+        /// </summary>                
         public TranslationService(ITranslationRepository translationRepository)
         {
             _translationRepository = translationRepository;

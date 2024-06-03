@@ -7,6 +7,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
+    /// <summary>
+    /// Defines endpoints to manage Sections.
+    /// </summary>
     [Route($"{BaseRoute}/sections")]
     [Authorize(Policy = Constants.AdminPolicyName)]
     public class AdminSectionController : MediaKiwiControllerBase
@@ -14,6 +17,11 @@ namespace Sushi.MediaKiwi.WebAPI
         private readonly SectionService _sectionService;
         private readonly PagingRetriever _pagingRetriever;
 
+        /// <summary>
+        /// Creates a new instance of the AdminSectionController.
+        /// </summary>
+        /// <param name="sectionService"></param>
+        /// <param name="pagingRetriever"></param>
         public AdminSectionController(SectionService sectionService, PagingRetriever pagingRetriever)
         {
             _sectionService = sectionService;

@@ -7,10 +7,13 @@ using Sushi.MediaKiwi.WebAPI.Sorting;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
+    /// <summary>
+    /// Defines endpoints to manage Views.
+    /// </summary>
     [Route($"{BaseRoute}/views")]
     public class ViewController : MediaKiwiControllerBase
     {
-        public class ViewSortMap : SortMap<View>
+        internal class ViewSortMap : SortMap<View>
         {
             public ViewSortMap()
             {
@@ -22,6 +25,12 @@ namespace Sushi.MediaKiwi.WebAPI
         private readonly PagingRetriever _pagingRetriever;
         private readonly SortingRetriever _sortingRetriever;
 
+        /// <summary>
+        /// Creates a new instance of the ViewController.
+        /// </summary>
+        /// <param name="viewService"></param>
+        /// <param name="pagingRetriever"></param>
+        /// <param name="sortingRetriever"></param>
         public ViewController(ViewService viewService, PagingRetriever pagingRetriever, SortingRetriever sortingRetriever)
         {
             _viewService = viewService;

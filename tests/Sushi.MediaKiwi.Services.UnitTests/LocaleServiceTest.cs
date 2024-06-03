@@ -38,7 +38,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var localeRepositoryMock = new Mock<ILocaleRepository>();
             localeRepositoryMock.Setup(x => x.GetAllAsync(It.Is<bool>(x => x == true), It.IsAny<PagingValues>())).ReturnsAsync(stubs);
 
-            var service = new LocaleService(localeRepositoryMock.Object, null, _mapper);
+            var service = new LocaleService(localeRepositoryMock.Object, Mock.Of<ITranslationRepository>(), _mapper);
 
             // act
             var result = await service.GetAllAsync(true, PagingValues.Default);

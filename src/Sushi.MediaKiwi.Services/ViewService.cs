@@ -86,6 +86,11 @@ namespace Sushi.MediaKiwi.Services
             return new Result<ListResult<View>>(result);
         }
 
+        /// <summary>
+        /// Gets a single <see cref="View"/> by its ID.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<Result<View>> GetAsync(string id)
         {
             // get item from datastore
@@ -110,6 +115,12 @@ namespace Sushi.MediaKiwi.Services
             }
         }
 
+        /// <summary>
+        /// Creates a new <see cref="View"/>.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<Result<View>> CreateAsync(string id, View request)
         {
             var view = new DAL.View() { Id = id };
@@ -144,10 +155,16 @@ namespace Sushi.MediaKiwi.Services
             return new Result<View>(result);            
         }
 
+        /// <summary>
+        /// Updates a <see cref="View"/>.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<Result<View>> UpdateAsync(string id, View request)
         {
             // get existing view, based on id
-            DAL.View view = await _viewRepository.GetAsync(id);
+            var view = await _viewRepository.GetAsync(id);
             if (view == null)
             {
                 return new Result<View>(ResultCode.NotFound);

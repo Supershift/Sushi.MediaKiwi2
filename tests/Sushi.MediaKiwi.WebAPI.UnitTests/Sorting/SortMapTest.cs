@@ -61,7 +61,7 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests.Sorting
         {
             // arrange
             var map = new SortMap<TestFake>();
-            Expression<Func<TestFake, object>> expression = x => x.Name;
+            Expression<Func<TestFake, object?>> expression = x => x.Name;
 
             // act
             map.Add(x => x.Id);
@@ -78,7 +78,7 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests.Sorting
         {
             // arrange
             var map = new SortMap<TestFake>();
-            Expression<Func<TestFake, object>> expression = x => x.Name;
+            Expression<Func<TestFake, object?>> expression = x => x.Name;
 
             // act
             map.Add(x => x.Id);
@@ -95,7 +95,7 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests.Sorting
         {
             // arrange
             var map = new SortMap<TestFake>();
-            Expression<Func<TestFake, object>> expression = x => x.Name;
+            Expression<Func<TestFake, object?>> expression = x => x.Name;
 
             // act
             map.Add(x => x.Id);

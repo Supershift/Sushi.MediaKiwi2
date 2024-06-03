@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
+    /// <summary>
+    /// Defines extension methods for controllers.
+    /// </summary>
     public static class ControllerExtensions
     {
         /// <summary>
         /// Creates a response object based on the logic layer's result.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="result"></param>
-        /// <returns></returns>
+        /// </summary>        
         public static ActionResult<T> CreateResponse<T>(this ControllerBase controller, Result<T> result) where T : class
         {
             switch (result.Code)
@@ -29,9 +29,7 @@ namespace Sushi.MediaKiwi.WebAPI
 
         /// <summary>
         /// Creates a response object based on the logic layer's result.
-        /// </summary>        
-        /// <param name="result"></param>
-        /// <returns></returns>
+        /// </summary>                
         public static ActionResult CreateResponse(this ControllerBase controller, Result result) 
         {
             switch (result.Code)

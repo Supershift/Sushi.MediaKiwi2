@@ -7,6 +7,7 @@
     <IsPackable>false</IsPackable>
     <UserSecretsId>dbac43e4-432d-4728-8249-fc169db87a6a</UserSecretsId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>

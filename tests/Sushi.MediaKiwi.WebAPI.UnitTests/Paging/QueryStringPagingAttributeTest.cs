@@ -49,7 +49,7 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests.Paging
             var actionExecutingContextMock = new ActionExecutingContext(
                 actionContext,
                 Mock.Of<IList<IFilterMetadata>>(),
-                Mock.Of<IDictionary<string, object>>(),
+                Mock.Of<IDictionary<string, object?>>(),
                 new object());
 
 
@@ -95,7 +95,7 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests.Paging
             var actionExecutingContextMock = new ActionExecutingContext(
                 actionContext,
                 Mock.Of<IList<IFilterMetadata>>(),
-                Mock.Of<IDictionary<string, object>>(),
+                Mock.Of<IDictionary<string, object?>>(),
                 new object());
 
             // act

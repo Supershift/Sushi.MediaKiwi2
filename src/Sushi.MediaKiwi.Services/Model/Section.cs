@@ -17,13 +17,13 @@ namespace Sushi.MediaKiwi.Services.Model
         /// Unique identifier for this section.
         /// </summary>
         [SwaggerSchema(ReadOnly = true)]
-        public string Id { get; set; }
+        public string Id { get; set; } = null!;
 
         /// <summary>
         /// Name for this section.
         /// </summary>
         [Required, StringLength(128)]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         /// <summary>
         /// Value used when sorting sections.

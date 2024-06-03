@@ -7,12 +7,20 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
+    /// <summary>
+    /// Defines endpoints to retrieve Sections.
+    /// </summary>
     [Route($"{BaseRoute}/sections")]    
     public class SectionController : MediaKiwiControllerBase
     {
         private readonly SectionService _sectionService;
         private readonly PagingRetriever _pagingRetriever;
 
+        /// <summary>
+        /// Creates a new instance of the SectionController.
+        /// </summary>
+        /// <param name="sectionService"></param>
+        /// <param name="pagingRetriever"></param>
         public SectionController(SectionService sectionService, PagingRetriever pagingRetriever)
         {
             _sectionService = sectionService;

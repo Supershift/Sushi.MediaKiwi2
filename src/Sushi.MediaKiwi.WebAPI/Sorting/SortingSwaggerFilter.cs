@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace Sushi.MediaKiwi.WebAPI.Sorting
 {
     /// <summary>
-    /// Adds sorting parameters to Swagger docs for every operation decorated with <see cref="QueryStringSortingAttribute"/>.
+    /// Adds sorting parameters to Swagger docs for every operation decorated with QueryStringSortingAttribute.
     /// </summary>
     public class SortingSwaggerFilter : IOperationFilter
     {
