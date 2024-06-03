@@ -123,7 +123,8 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             // act
             var result = await service.GetAllAsync(PagingValues.Default);
 
-            // assert            
+            // assert
+            Assert.NotNull(result.Value);
             var view1 = result.Value.Result.First(x => x.Id == "abc");
             var view2 = result.Value.Result.First(x => x.Id == "def");
             Assert.Equal(ResultCode.Success, result.Code);

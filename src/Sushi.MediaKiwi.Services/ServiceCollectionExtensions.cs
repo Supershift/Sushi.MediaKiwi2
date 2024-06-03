@@ -8,6 +8,9 @@ using Sushi.MicroORM;
 
 namespace Sushi.MediaKiwi.Services
 {
+    /// <summary>
+    /// Contains extension methods for <see cref="IServiceCollection"/>.
+    /// </summary>
     public static class ServiceCollectionExtensions
     {
         /// <summary>

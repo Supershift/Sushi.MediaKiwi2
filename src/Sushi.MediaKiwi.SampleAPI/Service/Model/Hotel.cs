@@ -17,13 +17,13 @@ public class Hotel
     /// ISO country code
     /// </summary>
     [Required, StringLength(2, MinimumLength = 2)]
-    public string CountryCode { get; set; }
+    public string CountryCode { get; set; } = null!;
 
     /// <summary>
     /// Name of the hotel
     /// </summary>
     [Required, StringLength(256)]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     /// <summary>
     /// Is the hotel active

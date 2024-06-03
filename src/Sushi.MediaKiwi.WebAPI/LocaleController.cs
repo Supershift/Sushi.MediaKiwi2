@@ -6,6 +6,9 @@ using Sushi.MediaKiwi.WebAPI.Paging;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
+    /// <summary>
+    /// Defines endpoints to manage Locales.
+    /// </summary>
     [Route($"{BaseRoute}/locales")]
     public class LocaleController : MediaKiwiControllerBase
     {

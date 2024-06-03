@@ -16,7 +16,7 @@ namespace Sushi.MediaKiwi.Services
         /// Currency of the monetary value, e.g. EUR, USD, NOK, etc.
         /// </summary>
         [Required, StringLength(3)]
-        public string Currency { get; set; }
+        public string Currency { get; set; } = null!;
 
         /// <summary>
         /// Amount of the monetary value, e.g. 15.00, 25.50, etc.

@@ -87,14 +87,14 @@ namespace Sushi.MediaKiwi.Services.UnitTests
         public class TestSource
         {
             public int Id { get; set; }
-            public string Name { get; set; }
-            public string Unmapped { get; set; }
+            public string? Name { get; set; }
+            public string? Unmapped { get; set; }
         }
 
         public class TestDestination
         {
             public int Id { get; set; }
-            public string Name { get; set; }
+            public string? Name { get; set; }
         }
     }
 }

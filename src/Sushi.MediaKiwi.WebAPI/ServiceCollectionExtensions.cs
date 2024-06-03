@@ -25,17 +25,18 @@ using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
+    /// <summary>
+    /// Provides extension methods for <see cref="IServiceCollection"/>.
+    /// </summary>
     public static class ServiceCollectionExtensions
     {
         /// <summary>
         /// Adds all services needed to run MediaKiwi to the <paramref name="services"/>, including Sushi.MicroOrm.
-        /// </summary>
-        /// <param name="adminRoles">Collection of role names which are allowed to access admin resources</param>
-        /// <param name="customAuthorizationPolicies">Dictionary where the key is the name of the policy and the value is the policy builder action</param>
+        /// </summary>        
         /// <returns></returns>
         public static IServiceCollection AddMediaKiwiApi(this IServiceCollection services, IConfigurationSection? azureAdConfig,            
             Action<IMapperConfigurationExpression>? autoMapperConfig = null,
-            Action<AuthorizationOptions> authorizationOptions = null)
+            Action<AuthorizationOptions>? authorizationOptions = null)
         {
             // add mk services
             services.AddMediaKiwiServices(autoMapperConfig: autoMapperConfig);
@@ -128,6 +129,11 @@ namespace Sushi.MediaKiwi.WebAPI
             return options;
         }
 
+        /// <summary>
+        /// Adds MediaKiwi to Swagger.
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns></returns>
         public static SwaggerUIOptions AddMediaKiwiSwaggerUI(this SwaggerUIOptions options)
         {
             options.SwaggerEndpoint("../swagger/MediaKiwi/swagger.json", "MediaKiwi");            

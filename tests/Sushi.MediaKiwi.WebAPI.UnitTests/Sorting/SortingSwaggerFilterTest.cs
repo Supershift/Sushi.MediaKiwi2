@@ -21,7 +21,7 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests.Sorting
             // arrange
             var filter = new SortingSwaggerFilter();
 
-            var method = typeof(SortingSwaggerFilterTest).GetMethod(nameof(SampleSortingMethod), BindingFlags.NonPublic | BindingFlags.Instance);
+            var method = typeof(SortingSwaggerFilterTest).GetMethod(nameof(SampleSortingMethod), BindingFlags.NonPublic | BindingFlags.Instance)!;
 
             var actionDescriptor = new ControllerActionDescriptor();
             actionDescriptor.MethodInfo = method;
@@ -51,7 +51,7 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests.Sorting
             // arrange
             var filter = new SortingSwaggerFilter();
 
-            var method = typeof(SortingSwaggerFilterTest).GetMethod(nameof(SampleNonSortingMethod), BindingFlags.NonPublic | BindingFlags.Instance);
+            var method = typeof(SortingSwaggerFilterTest).GetMethod(nameof(SampleNonSortingMethod), BindingFlags.NonPublic | BindingFlags.Instance)!;
 
             var actionDescriptor = new ControllerActionDescriptor();
             actionDescriptor.MethodInfo = method;

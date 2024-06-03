@@ -32,7 +32,7 @@ namespace Sushi.MediaKiwi.SampleAPI.DAL.Repository
             return result;
         }
 
-        public async Task<Hotel> GetAsync(int id)
+        public async Task<Hotel?> GetAsync(int id)
         {
             var query = _connector.CreateQuery();
             query.Add(x => x.Id, id);

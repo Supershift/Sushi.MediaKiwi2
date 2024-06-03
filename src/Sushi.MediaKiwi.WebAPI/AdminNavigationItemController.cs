@@ -7,6 +7,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
+    /// <summary>
+    /// Provides endpoints for managing NavigationItems.
+    /// </summary>
     [Route($"{BaseRoute}/navigationitems")]
     [Authorize(Policy = Constants.AdminPolicyName)]
     public class AdminNavigationItemController : MediaKiwiControllerBase

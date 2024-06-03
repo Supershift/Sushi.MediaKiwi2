@@ -77,6 +77,11 @@ namespace Sushi.MediaKiwi.Services
             return new Result<ListResult<Section>>(result);
         }
 
+        /// <summary>
+        /// Gets a single <see cref="Section"/> by its ID.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<Result<Section>> GetAsync(string id)
         {
             // get item from datastore
@@ -98,6 +103,12 @@ namespace Sushi.MediaKiwi.Services
             }
         }
 
+        /// <summary>
+        /// Updates a section.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<Result<Section>> UpdateAsync(string id, Section request)
         {
             // get existing or create new section, based on id
@@ -134,6 +145,12 @@ namespace Sushi.MediaKiwi.Services
             return new Result<Section>(result);
         }
 
+        /// <summary>
+        /// Creates a new <see cref="Section"/>.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<Result<Section>> CreateAsync(string id, Section request)
         {
             // sanitize input

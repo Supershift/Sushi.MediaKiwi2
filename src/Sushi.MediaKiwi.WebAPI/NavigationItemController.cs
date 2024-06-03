@@ -4,11 +4,12 @@ using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MediaKiwi.WebAPI.Paging;
 using Sushi.MediaKiwi.WebAPI.Sorting;
-using static Sushi.MediaKiwi.WebAPI.ViewController;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
+    /// <summary>
+    /// Defines endpoints to retrieve NavigationItems.
+    /// </summary>
     [Route($"{BaseRoute}/navigationitems")]
     [Authorize]
     public class NavigationItemController : MediaKiwiControllerBase
@@ -16,8 +17,8 @@ namespace Sushi.MediaKiwi.WebAPI
         private readonly NavigationItemService _navigationItemService;
         private readonly PagingRetriever _pagingRetriever;
         private readonly SortingRetriever _sortingRetriever;
-
-        public class NavigationItemsSortMap : SortMap<NavigationItem>
+        
+        internal class NavigationItemsSortMap : SortMap<NavigationItem>
         {
             public NavigationItemsSortMap()
             {
@@ -26,6 +27,12 @@ namespace Sushi.MediaKiwi.WebAPI
             }
         }
 
+        /// <summary>
+        /// Creates a new instance of the NavigationItemController.
+        /// </summary>
+        /// <param name="screenService"></param>
+        /// <param name="pagingRetriever"></param>
+        /// <param name="sortingRetriever"></param>
         public NavigationItemController(NavigationItemService screenService, PagingRetriever pagingRetriever, SortingRetriever sortingRetriever)
         {
             _navigationItemService = screenService;
@@ -34,6 +41,11 @@ namespace Sushi.MediaKiwi.WebAPI
         }
 
 
+        /// <summary>
+        /// Gets all navigation items for the given filters.
+        /// </summary>
+        /// <param name="sectionID"></param>
+        /// <returns></returns>
         [HttpGet]
         [QueryStringPaging]
         [QueryStringSorting<NavigationItemsSortMap>()]

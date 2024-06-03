@@ -11,11 +11,19 @@ using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.Services
 {
+    /// <summary>
+    /// Provides methods to work with <see cref="NavigationItem"/> objects.
+    /// </summary>
     public class NavigationItemService
     {
         private readonly INavigationItemRepository _navigationItemRepository;
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="NavigationItemService"/>.
+        /// </summary>
+        /// <param name="navigationItemRepository"></param>
+        /// <param name="mapper"></param>
         public NavigationItemService(
             INavigationItemRepository navigationItemRepository, 
             IMapper mapper)
@@ -24,6 +32,13 @@ namespace Sushi.MediaKiwi.Services
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Gets all <see cref="NavigationItem"/> objects for the given filters.
+        /// </summary>
+        /// <param name="sectionID"></param>
+        /// <param name="pagingValues"></param>
+        /// <param name="sortValues"></param>
+        /// <returns></returns>
         public async Task<Result<ListResult<NavigationItem>>> GetAllAsync(string? sectionID, PagingValues pagingValues, SortValues<NavigationItem>? sortValues = null)
         {
             // map sort values to dal
@@ -41,6 +56,11 @@ namespace Sushi.MediaKiwi.Services
             return new Result<ListResult<NavigationItem>>(result);
         }       
                 
+        /// <summary>
+        /// Gets a single <see cref="NavigationItem"/> by its ID.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<Result<NavigationItem>> GetAsync(string id)
         {
             // get item from datastore
@@ -59,7 +79,13 @@ namespace Sushi.MediaKiwi.Services
                 return new Result<NavigationItem>(ResultCode.NotFound);
             }
         }
-                
+         
+        /// <summary>
+        /// Creates a new <see cref="NavigationItem"/>.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<Result<NavigationItem>> CreateAsync(string id, NavigationItem request)
         {
             var navigationItem = new DAL.NavigationItem();
@@ -86,10 +112,16 @@ namespace Sushi.MediaKiwi.Services
             return new Result<NavigationItem>(result);            
         }
                 
+        /// <summary>
+        /// Updates a <see cref="NavigationItem"/>.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<Result<NavigationItem>> UpdateAsync(string id, NavigationItem request)
         {
             // get existing view, based on id
-            DAL.NavigationItem navigationItem = await _navigationItemRepository.GetAsync(id);
+            var navigationItem = await _navigationItemRepository.GetAsync(id);
             if (navigationItem == null)
             {
                 return new Result<NavigationItem>(ResultCode.NotFound);
@@ -114,6 +146,11 @@ namespace Sushi.MediaKiwi.Services
             return new Result<NavigationItem>(result);
         }
 
+        /// <summary>
+        /// Deletes a <see cref="NavigationItem"/>.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<Result> DeleteAsync(string id)
         {
             // get item from datastore
@@ -131,6 +168,12 @@ namespace Sushi.MediaKiwi.Services
             }
         }
 
+        /// <summary>
+        /// Updates the ID of a <see cref="NavigationItem"/>.
+        /// </summary>
+        /// <param name="oldId"></param>
+        /// <param name="newId"></param>
+        /// <returns></returns>
         public async Task<Result<NavigationItem>> UpdateIdAsync(string oldId, string newId)
         {
             // sanitize input
