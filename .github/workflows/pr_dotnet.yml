@@ -42,7 +42,7 @@ jobs:
           options: -v ${{ github.workspace }}:/var/output
           run: |
             sleep 15;
-            /opt/sqlpackage/sqlpackage /a:Import /TargetConnectionString:"Server=mssql,1433;TrustServerCertificate=True;Database=portal;User=sa;Password=Your_password123" /sf:/var/output/tests/Sushi.MediaKiwi.IntegrationTests/TestValues/mediakiwi.bacpac
+            /opt/sqlpackage/sqlpackage /a:Import /TargetConnectionString:"Server=mssql,1433;TrustServerCertificate=True;Database=portal;User=sa;Password=Your_password123" /sf:/var/output/SqlScripts/mediakiwi.bacpac
 
       # Setup .NET
       - name: Setup .NET
