@@ -71,6 +71,7 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpPost]
         [Route("{id}")]
+        [Authorize(Policy = Constants.AdminPolicyName)]
         public async Task<ActionResult<Locale>> CreateLocale(string id, Locale request)
         {
             var result = await _localeService.CreateAsync(id, request);
@@ -83,6 +84,7 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpDelete]
         [Route("{id}")]
+        [Authorize(Policy = Constants.AdminPolicyName)]
         public async Task<ActionResult> DeleteLocale(string id)
         {
             var result = await _localeService.DeleteAsync(id);
@@ -95,6 +97,7 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpPut]
         [Route("{id}")]
+        [Authorize(Policy = Constants.AdminPolicyName)]
         public async Task<ActionResult<Locale>> UpdateLocale(string id, Locale request)
         {
             var result = await _localeService.UpdateAsync(id, request);
