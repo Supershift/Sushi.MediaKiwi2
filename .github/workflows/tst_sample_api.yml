@@ -17,6 +17,8 @@ permissions:
 jobs:
   build-sample-api:
     runs-on: ubuntu-latest
+    environment:
+      name: tst
     steps:
 
       # Checkout code
