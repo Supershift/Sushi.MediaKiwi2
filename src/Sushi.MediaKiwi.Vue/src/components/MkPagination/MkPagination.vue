@@ -20,6 +20,8 @@
       pagingResult?: ITableMapPaging | null;
       mode?: MediakiwiPaginationMode;
       pageSizeOptions?: number[];
+      /** when true the pageindex is calculated, so we 'track' which page to use based on the first item viewed  */
+      pageTracking?: boolean;
     }>(),
     {
       modelValue: () => ({ pageIndex: 0, pageSize: defaultPageSize }),
@@ -82,6 +84,13 @@
   async function updatePageSize(value: number) {
     // Update local values
     if (value !== null && value !== undefined) {
+      if (!props?.pageTracking) {
+        state.pageIndex = 0; // reset to first page
+      } else {
+        const firstItem = state.pageIndex * state.pageSize;
+        const currentPage = Math.abs(Math.floor(firstItem / value));
+        state.pageIndex = currentPage; // Use the page index and calculate the new page index based on the first item in the list
+      }
       state.pageSize = value;
       applyPaging();
     }
