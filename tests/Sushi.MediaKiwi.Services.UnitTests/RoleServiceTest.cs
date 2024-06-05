@@ -1,7 +1,7 @@
 using AutoMapper;
 using Moq;
 using NuGet.Frameworks;
-using Sushi.MediaKiwi.DAL.Repository;
+using Sushi.MediaKiwi.Services.Interfaces;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MicroORM;
 
@@ -13,10 +13,10 @@ namespace Sushi.MediaKiwi.Services.UnitTests
         public async Task GetAllRolesTest()
         {
             // arrange
-            var roleStubs = new QueryListResult<DAL.Role>
+            var roleStubs = new QueryListResult<Entities.Role>
             {
-                new DAL.Role(),
-                new DAL.Role()
+                new Entities.Role(),
+                new Entities.Role()
             };
 
             var config = new MapperConfiguration(cfg =>

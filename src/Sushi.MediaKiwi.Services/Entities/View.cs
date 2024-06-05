@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sushi.MediaKiwi.DAL
+namespace Sushi.MediaKiwi.Services.Entities
 {
     /// <summary>
     /// Represents a view in the application.

@@ -1,11 +1,4 @@
-﻿using Azure.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Sushi.MediaKiwi.DAL.Paging
+﻿namespace Sushi.LanguageExtensions
 {
     /// <summary>
     /// Represents values used when adding continuous scroll on datasets.

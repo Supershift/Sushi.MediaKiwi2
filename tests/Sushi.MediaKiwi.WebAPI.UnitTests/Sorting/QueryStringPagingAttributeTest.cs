@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Sushi.MediaKiwi.WebAPI.Sorting;
 using Sushi.MediaKiwi.Services;
-using Sushi.MediaKiwi.DAL.Sorting;
 using System.Linq.Expressions;
 
 namespace Sushi.MediaKiwi.WebAPI.UnitTests.Sorting

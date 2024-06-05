@@ -1,9 +1,4 @@
 ﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.Services.Model
 {
@@ -18,18 +13,18 @@ namespace Sushi.MediaKiwi.Services.Model
         public AutoMapperProfile()
         {
             // from DAL to Model
-            CreateMap<DAL.Section, Section>().ForMember(x => x.Roles, o => o.Ignore());
-            CreateMap<DAL.View, View>().ForMember(x=>x.Roles, o => o.Ignore());
-            CreateMap<DAL.NavigationItem, NavigationItem>();
-            CreateMap<DAL.Role, Role>();
-            CreateMap<DAL.Locale, Locale>();            
-            CreateMap<DAL.Translation, Translation>();
+            CreateMap<Entities.Section, Section>().ForMember(x => x.Roles, o => o.Ignore());
+            CreateMap<Entities.View, View>().ForMember(x=>x.Roles, o => o.Ignore());
+            CreateMap<Entities.NavigationItem, NavigationItem>();
+            CreateMap<Entities.Role, Role>();
+            CreateMap<Entities.Locale, Locale>();            
+            CreateMap<Entities.Translation, Translation>();
 
             // from model to DAL
-            CreateMap<Section, DAL.Section>().ForMember(x => x.Id, o => o.Ignore());
-            CreateMap<View, DAL.View>().ForMember(x => x.Id, o => o.Ignore());
-            CreateMap<NavigationItem, DAL.NavigationItem>().ForMember(x => x.Id, o => o.Ignore());
-            CreateMap<Locale, DAL.Locale>().ForMember(x => x.Id, o => o.Ignore()).ForMember(x => x.IsDefault, o => o.Ignore());
+            CreateMap<Section, Entities.Section>().ForMember(x => x.Id, o => o.Ignore());
+            CreateMap<View, Entities.View>().ForMember(x => x.Id, o => o.Ignore());
+            CreateMap<NavigationItem, Entities.NavigationItem>().ForMember(x => x.Id, o => o.Ignore());
+            CreateMap<Locale, Entities.Locale>().ForMember(x => x.Id, o => o.Ignore()).ForMember(x => x.IsDefault, o => o.Ignore());
         }
     }
 }

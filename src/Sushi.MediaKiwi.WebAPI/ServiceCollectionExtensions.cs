@@ -7,21 +7,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
-using Sushi.MediaKiwi.DAL;
-using Sushi.MediaKiwi.DAL.Repository;
 using Sushi.MediaKiwi.Services;
-using Sushi.MediaKiwi.Services.Model;
 using Sushi.MediaKiwi.WebAPI.Paging;
 using Sushi.MediaKiwi.WebAPI.Sorting;
-using Sushi.MicroORM;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.WebAPI
 {

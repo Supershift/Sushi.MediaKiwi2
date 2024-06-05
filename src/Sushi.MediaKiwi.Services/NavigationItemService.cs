@@ -1,13 +1,6 @@
 ﻿using AutoMapper;
-using Sushi.MediaKiwi.DAL.Paging;
-using Sushi.MediaKiwi.DAL.Repository;
-using Sushi.MediaKiwi.DAL.Sorting;
+using Sushi.MediaKiwi.Services.Interfaces;
 using Sushi.MediaKiwi.Services.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.Services
 {
@@ -42,7 +35,7 @@ namespace Sushi.MediaKiwi.Services
         public async Task<Result<ListResult<NavigationItem>>> GetAllAsync(string? sectionID, PagingValues pagingValues, SortValues<NavigationItem>? sortValues = null)
         {
             // map sort values to dal
-            var sortValuesDal = _mapper.MapSortValues<DAL.NavigationItem>(sortValues);
+            var sortValuesDal = _mapper.MapSortValues<Entities.NavigationItem>(sortValues);
 
             // get navigationitems from datastore
             var items = await _navigationItemRepository.GetAllAsync(sectionID, pagingValues, sortValuesDal);
@@ -88,7 +81,7 @@ namespace Sushi.MediaKiwi.Services
         /// <returns></returns>
         public async Task<Result<NavigationItem>> CreateAsync(string id, NavigationItem request)
         {
-            var navigationItem = new DAL.NavigationItem();
+            var navigationItem = new Entities.NavigationItem();
 
             // map from model to database
             _mapper.Map(request, navigationItem);
@@ -97,7 +90,7 @@ namespace Sushi.MediaKiwi.Services
             navigationItem.Id = id;
 
             // start transaction
-            using (var ts = DAL.Utility.CreateTransactionScope())
+            using (var ts = Utility.CreateTransactionScope())
             {                
                 await _navigationItemRepository.InsertAsync(navigationItem);
 
@@ -131,7 +124,7 @@ namespace Sushi.MediaKiwi.Services
             _mapper.Map(request, navigationItem);
 
             // start transaction
-            using (var ts = DAL.Utility.CreateTransactionScope())
+            using (var ts = Utility.CreateTransactionScope())
             {
                 // update view                
                 await _navigationItemRepository.UpdateAsync(navigationItem);
@@ -180,7 +173,7 @@ namespace Sushi.MediaKiwi.Services
             newId = newId.Trim();
             
             // validate input
-            var error = DAL.NavigationItem.ValidateId(newId);
+            var error = Entities.NavigationItem.ValidateId(newId);
             if (error != null)
                 return new Result<NavigationItem>(ResultCode.ValidationFailed) { ErrorMessage = error };
             

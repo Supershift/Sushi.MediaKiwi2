@@ -5,33 +5,33 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sushi.MediaKiwi.DAL
+namespace Sushi.MediaKiwi.Services.Entities
 {
     /// <summary>
     /// Represents the relation between a view and a role. 
     /// </summary>
-    public class SectionRole
+    public class ViewRole
     {
         /// <summary>
-        /// Represents the mapping between <see cref="SectionRole"/> and the database.
+        /// Represents the mapping between <see cref="ViewRole"/> and the database.
         /// </summary>
-        public class SectionRoleMap : DataMap<SectionRole>
+        public class ViewRoleMap : DataMap<ViewRole>
         {
             /// <summary>
-            /// Creates a new instance of <see cref="SectionRoleMap"/>.
+            /// Creates a new instance of <see cref="ViewRoleMap"/>.
             /// </summary>
-            public SectionRoleMap()
+            public ViewRoleMap()
             {
-                Table("mk_SectionsRoles");
-                Id(x => x.SectionId, "SectionID").Assigned().SqlType(System.Data.SqlDbType.VarChar);
+                Table("mk_ViewsRoles");
+                Id(x => x.ViewId, "ViewID").Assigned().SqlType(System.Data.SqlDbType.VarChar);
                 Id(x => x.Role, "RoleID").Assigned().SqlType(System.Data.SqlDbType.VarChar);
             }
         }
 
         /// <summary>
-        /// Section to which the role has access.
+        /// View to which the role has access.
         /// </summary>
-        public string SectionId { get; set; } = null!;
+        public string ViewId { get; set; } = null!;
 
         /// <summary>
         /// Role that has access to the view.

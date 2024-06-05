@@ -13,12 +13,12 @@
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Sushi.MediaKiwi.WebAPI\Sushi.MediaKiwi.WebAPI.csproj" />
-  </ItemGroup>
 	
   <ItemGroup>
 	<AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\Sushi.MediaKiwi\Sushi.MediaKiwi.csproj" />
   </ItemGroup>
 </Project>

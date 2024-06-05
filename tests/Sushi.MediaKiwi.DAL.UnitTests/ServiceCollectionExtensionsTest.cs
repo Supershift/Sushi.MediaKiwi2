@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Sushi.MediaKiwi.DAL.Repository;
+using Sushi.MediaKiwi.Services.Interfaces;
 using Sushi.MicroORM;
 
 namespace Sushi.MediaKiwi.DAL.UnitTests

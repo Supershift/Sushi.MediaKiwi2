@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sushi.MediaKiwi.DAL.Sorting
+namespace Sushi.MediaKiwi.Services
 {
     /// <summary>
     /// Represents a sort field and direction.
@@ -22,12 +22,12 @@ namespace Sushi.MediaKiwi.DAL.Sorting
             SortField = sortField;
             Direction = direction;
         }
-        
+
         /// <summary>
         /// Gets the field to sort by.
         /// </summary>
         public Expression SortField { get; }
-        
+
         /// <summary>
         /// Gets the direction to sort by.
         /// </summary>
@@ -46,7 +46,7 @@ namespace Sushi.MediaKiwi.DAL.Sorting
         /// <param name="direction"></param>
         public SortValues(Expression<Func<T, object?>> sortField, SortDirection direction) : base(sortField, direction)
         {
-            
+
         }
 
         /// <summary>
