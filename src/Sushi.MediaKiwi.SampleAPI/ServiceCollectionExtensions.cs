@@ -20,9 +20,6 @@ namespace Sushi.MediaKiwi.SampleAPI
             collection.TryAddTransient<Service.HotelService>();
             collection.TryAddTransient<Service.FileUploadService>();
 
-            // add infrastructure
-            collection.AddMediaKiwiDAL();
-
             return collection;
         }
     }
