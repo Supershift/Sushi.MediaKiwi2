@@ -1,14 +1,8 @@
 ﻿using AutoMapper;
 using Moq;
-using Sushi.MediaKiwi.DAL.Paging;
-using Sushi.MediaKiwi.DAL.Repository;
+using Sushi.MediaKiwi.Services.Interfaces;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MicroORM;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.Services.UnitTests
 {
@@ -29,10 +23,10 @@ namespace Sushi.MediaKiwi.Services.UnitTests
         public async Task GetAllLocalesTest()
         {
             // arrange
-            var stubs = new QueryListResult<DAL.Locale>
+            var stubs = new QueryListResult<Entities.Locale>
             {
-                new DAL.Locale(),
-                new DAL.Locale()
+                new Entities.Locale(),
+                new Entities.Locale()
             };
 
             var localeRepositoryMock = new Mock<ILocaleRepository>();
@@ -56,7 +50,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
         {
             // arrange
             string existingId = "abc";
-            var existingLocale = new DAL.Locale()
+            var existingLocale = new Entities.Locale()
             {
                 Id = existingId,
                 Name = "Existing",
@@ -69,7 +63,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var translationRepositoryMock = new Mock<ITranslationRepository>();
 
             var mapperMock = new Mock<IMapper>();                        
-            mapperMock.Setup(x => x.Map<Locale>(It.IsAny<DAL.Locale>())).Returns(resultLocale);
+            mapperMock.Setup(x => x.Map<Locale>(It.IsAny<Entities.Locale>())).Returns(resultLocale);
 
             var service = new LocaleService(localeRepositoryMock.Object, translationRepositoryMock.Object, mapperMock.Object);
 
@@ -86,7 +80,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
         {
             // arrange
             string existingId = "abc";
-            DAL.Locale? existingLocale = null;
+            Entities.Locale? existingLocale = null;
 
             var localeRepositoryMock = new Mock<ILocaleRepository>();
             localeRepositoryMock.Setup(x => x.GetAsync(existingId)).ReturnsAsync(existingLocale);
@@ -115,7 +109,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
                 Name = "Test",
             };
 
-            var defaultLocale = new DAL.Locale()
+            var defaultLocale = new Entities.Locale()
             {
                 Id = "def",
                 Name = "Default",
@@ -124,7 +118,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             string newId = "abc";
 
             var localeRepositoryMock = new Mock<ILocaleRepository>();
-            localeRepositoryMock.Setup(x => x.InsertAsync(It.IsAny<DAL.Locale>())).Verifiable();
+            localeRepositoryMock.Setup(x => x.InsertAsync(It.IsAny<Entities.Locale>())).Verifiable();
             localeRepositoryMock.Setup(x=>x.GetDefaultAsync()).ReturnsAsync(defaultLocale);
             var translationRepositoryMock = new Mock<ITranslationRepository>();
             translationRepositoryMock.Setup(x => x.DuplicateAsync(It.IsAny<string>(), It.IsAny<string>())).Verifiable();
@@ -138,7 +132,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             Assert.Equal(ResultCode.Success, result.Code);
             Assert.NotNull(result.Value);
             Assert.Equal(newId, result.Value.Id);
-            localeRepositoryMock.Verify(x => x.InsertAsync(It.Is<DAL.Locale>(x => x.Id == newId)), Times.Once);
+            localeRepositoryMock.Verify(x => x.InsertAsync(It.Is<Entities.Locale>(x => x.Id == newId)), Times.Once);
             translationRepositoryMock.Verify(x => x.DuplicateAsync(defaultLocale.Id, newId), Times.Once);
         }
 
@@ -152,12 +146,12 @@ namespace Sushi.MediaKiwi.Services.UnitTests
                 Name = "Test",
             };
 
-            DAL.Locale? defaultLocale = null;            
+            Entities.Locale? defaultLocale = null;            
 
             string newId = "abc";
 
             var localeRepositoryMock = new Mock<ILocaleRepository>();
-            localeRepositoryMock.Setup(x => x.InsertAsync(It.IsAny<DAL.Locale>())).Verifiable();
+            localeRepositoryMock.Setup(x => x.InsertAsync(It.IsAny<Entities.Locale>())).Verifiable();
             localeRepositoryMock.Setup(x => x.GetDefaultAsync()).ReturnsAsync(defaultLocale);
             var translationRepositoryMock = new Mock<ITranslationRepository>();
             translationRepositoryMock.Setup(x => x.DuplicateAsync(It.IsAny<string>(), It.IsAny<string>())).Verifiable();
@@ -171,7 +165,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             Assert.Equal(ResultCode.Success, result.Code);
             Assert.NotNull(result.Value);
             Assert.Equal(newId, result.Value.Id);
-            localeRepositoryMock.Verify(x => x.InsertAsync(It.Is<DAL.Locale>(x => x.Id == newId)), Times.Once);
+            localeRepositoryMock.Verify(x => x.InsertAsync(It.Is<Entities.Locale>(x => x.Id == newId)), Times.Once);
             translationRepositoryMock.Verify(x => x.DuplicateAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
@@ -180,7 +174,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
         {
             // arrange
             string existingId = "abc";
-            var existingLocale = new DAL.Locale()
+            var existingLocale = new Entities.Locale()
             {
                 Id = existingId,
                 Name = "Existing",
@@ -188,7 +182,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             var localeRepositoryMock = new Mock<ILocaleRepository>();
             localeRepositoryMock.Setup(x => x.GetAsync(existingId)).ReturnsAsync(existingLocale);
-            localeRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<DAL.Locale>())).Verifiable();
+            localeRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<Entities.Locale>())).Verifiable();
 
             var translationRepositoryMock = new Mock<ITranslationRepository>();
 
@@ -215,7 +209,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             };
 
             string existingId = "abc";
-            var existingLocale = new DAL.Locale()
+            var existingLocale = new Entities.Locale()
             {
                 Id = existingId,
                 Name = "Existing",
@@ -223,13 +217,13 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             var localeRepositoryMock = new Mock<ILocaleRepository>();
             localeRepositoryMock.Setup(x => x.GetAsync(existingId)).ReturnsAsync(existingLocale);
-            localeRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<DAL.Locale>())).Verifiable();
+            localeRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<Entities.Locale>())).Verifiable();
 
             var translationRepositoryMock = new Mock<ITranslationRepository>();
 
             var mapperMock = new Mock<IMapper>();
-            mapperMock.Setup(x => x.Map(It.IsAny<Locale>(), It.IsAny<DAL.Locale>())).Verifiable();
-            mapperMock.Setup(x => x.Map(It.IsAny<DAL.Locale>(), It.IsAny<Locale>())).Verifiable();
+            mapperMock.Setup(x => x.Map(It.IsAny<Locale>(), It.IsAny<Entities.Locale>())).Verifiable();
+            mapperMock.Setup(x => x.Map(It.IsAny<Entities.Locale>(), It.IsAny<Locale>())).Verifiable();
 
             var service = new LocaleService(localeRepositoryMock.Object, translationRepositoryMock.Object, mapperMock.Object);
 

@@ -1,7 +1,7 @@
 ﻿using Sushi.MicroORM.Mapping;
 using System.Text.RegularExpressions;
 
-namespace Sushi.MediaKiwi.DAL
+namespace Sushi.MediaKiwi.Services.Entities
 {
     /// <summary>
     /// Represents a section containing related screens within a portal.

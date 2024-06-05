@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
-using Sushi.MediaKiwi.DAL.Sorting;
+using Sushi.MediaKiwi.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;

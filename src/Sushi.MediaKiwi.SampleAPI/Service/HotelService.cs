@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Sushi.MediaKiwi.DAL.Paging;
 using Sushi.MediaKiwi.SampleAPI.DAL.Repository;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MediaKiwi.Services;
@@ -116,7 +115,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
             _mapper.Map(request, hotel);
 
             // start transaction
-            using (var ts = MediaKiwi.DAL.Utility.CreateTransactionScope())
+            using (var ts = Utility.CreateTransactionScope())
             {
                 // save hotel
                 await _hotelRepository.SaveAsync(hotel);

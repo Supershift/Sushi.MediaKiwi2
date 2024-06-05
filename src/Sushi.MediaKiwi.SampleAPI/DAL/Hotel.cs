@@ -1,4 +1,4 @@
-﻿using Sushi.MediaKiwi.DAL;
+﻿using Sushi.MediaKiwi.Services.Entities;
 using Sushi.MicroORM.Mapping;
 
 namespace Sushi.MediaKiwi.SampleAPI.DAL

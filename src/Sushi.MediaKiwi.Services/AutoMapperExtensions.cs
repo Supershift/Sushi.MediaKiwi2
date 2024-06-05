@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Sushi.MediaKiwi.DAL.Sorting;
 using System.Linq.Expressions;
 
 namespace Sushi.MediaKiwi.Services

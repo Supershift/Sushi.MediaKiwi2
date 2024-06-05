@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sushi.MediaKiwi.DAL
+namespace Sushi.MediaKiwi.Services.Entities
 {
     /// <summary>
     /// Represents a locale used in localization.
@@ -44,7 +44,7 @@ namespace Sushi.MediaKiwi.DAL
         /// If set to true, this locale can be used.
         /// </summary>
         public bool IsEnabled { get; set; }
-        
+
         /// <summary>
         /// If set to true, this is the default locale.
         /// </summary>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection.Extensions;
+using Sushi.MediaKiwi.DAL;
 
 namespace Sushi.MediaKiwi.SampleAPI
 {
@@ -18,6 +19,9 @@ namespace Sushi.MediaKiwi.SampleAPI
             collection.TryAddTransient<Service.CountryService>();
             collection.TryAddTransient<Service.HotelService>();
             collection.TryAddTransient<Service.FileUploadService>();
+
+            // add infrastructure
+            collection.AddMediaKiwiDAL();
 
             return collection;
         }

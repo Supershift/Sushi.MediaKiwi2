@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Sushi.MediaKiwi.DAL;
 using Sushi.MicroORM;
 using System.Reflection;
 
@@ -14,6 +15,7 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddMicroORM(new ConnectionString("", null));
             serviceCollection.AddMediaKiwiApi(null);
+            serviceCollection.AddMediaKiwiDAL();
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
             // get all controllers

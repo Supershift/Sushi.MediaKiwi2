@@ -1,5 +1,6 @@
-﻿using Sushi.MediaKiwi.DAL.Paging;
-using Sushi.MicroORM;
+﻿using Sushi.MicroORM;
+using Sushi.MediaKiwi.DAL;
+using Sushi.MediaKiwi.Services;
 
 namespace Sushi.MediaKiwi.SampleAPI.DAL.Repository
 {

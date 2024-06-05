@@ -1,11 +1,12 @@
-﻿using Sushi.MicroORM;
+﻿using Sushi.MediaKiwi.Services.Entities;
+using Sushi.MicroORM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sushi.MediaKiwi.DAL.Repository
+namespace Sushi.MediaKiwi.Services.Interfaces
 {
     /// <summary>
     /// Provides methods to read and write <see cref="SectionRole"/> objects.

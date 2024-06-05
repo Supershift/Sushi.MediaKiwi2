@@ -1,4 +1,6 @@
-﻿using Sushi.MicroORM;
+﻿using Sushi.MediaKiwi.Services.Entities;
+using Sushi.MediaKiwi.Services.Interfaces;
+using Sushi.MicroORM;
 using System;
 using System.Collections.Generic;
 using System.Linq;

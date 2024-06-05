@@ -1,12 +1,6 @@
 ﻿using AutoMapper;
-using Sushi.MediaKiwi.DAL.Paging;
-using Sushi.MediaKiwi.DAL.Repository;
+using Sushi.MediaKiwi.Services.Interfaces;
 using Sushi.MediaKiwi.Services.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.Services
 {
@@ -77,10 +71,10 @@ namespace Sushi.MediaKiwi.Services
             var defaultLocale = await _localeRepository.GetDefaultAsync();
 
             // start transaction
-            using (var ts = DAL.Utility.CreateTransactionScope())
+            using (var ts = Utility.CreateTransactionScope())
             {
                 // map to repository model
-                var repositoryLocale = _mapper.Map<Locale, DAL.Locale>(locale);
+                var repositoryLocale = _mapper.Map<Locale, Entities.Locale>(locale);
                 repositoryLocale.Id = id;
 
                 // insert into repository

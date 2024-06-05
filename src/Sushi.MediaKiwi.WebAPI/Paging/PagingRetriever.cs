@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Sushi.MediaKiwi.DAL.Paging;
+using Sushi.MediaKiwi.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;

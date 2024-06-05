@@ -1,6 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
-using Sushi.MediaKiwi.DAL;
 using Sushi.MediaKiwi.DAL.Repository;
+using Sushi.MediaKiwi.Services;
+using Sushi.MediaKiwi.Services.Entities;
+using Sushi.MediaKiwi.Services.Interfaces;
 using Xunit.Extensions.AssemblyFixture;
 
 namespace Sushi.MediaKiwi.IntegrationTests
