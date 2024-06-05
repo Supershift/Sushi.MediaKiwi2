@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
-using Sushi.MediaKiwi.DAL.Paging;
-using Sushi.MediaKiwi.DAL.Repository;
+using Sushi.MediaKiwi.Services.Interfaces;
 using Sushi.MediaKiwi.Services.Model;
-using System.Text.RegularExpressions;
 
 namespace Sushi.MediaKiwi.Services
 {
@@ -122,7 +120,7 @@ namespace Sushi.MediaKiwi.Services
             _mapper.Map(request, section);
 
             // start transaction
-            using (var ts = DAL.Utility.CreateTransactionScope())
+            using (var ts = Utility.CreateTransactionScope())
             {
                 // delete existing roles
                 await _sectionRoleRepository.DeleteForSectionAsync(id);
@@ -133,7 +131,7 @@ namespace Sushi.MediaKiwi.Services
                 // insert roles for view
                 foreach (var role in request.Roles)
                 {
-                    var sectionRole = new DAL.SectionRole() { Role = role, SectionId = section.Id };
+                    var sectionRole = new Entities.SectionRole() { Role = role, SectionId = section.Id };
                     await _sectionRoleRepository.InsertAsync(sectionRole);
                 }
 
@@ -157,17 +155,17 @@ namespace Sushi.MediaKiwi.Services
             id = id.Trim();
 
             // validate new id
-            var error = DAL.Section.ValidateSectionId(id);
+            var error = Entities.Section.ValidateSectionId(id);
             if (error != null)
                 return new Result<Section>(ResultCode.ValidationFailed) { ErrorMessage = error };
 
-            var section = new DAL.Section() { Id = id };
+            var section = new Entities.Section() { Id = id };
 
             // map from model to database
             _mapper.Map(request, section);
 
             // start transaction
-            using (var ts = DAL.Utility.CreateTransactionScope())
+            using (var ts = Utility.CreateTransactionScope())
             {
 
                 // new section
@@ -177,7 +175,7 @@ namespace Sushi.MediaKiwi.Services
                 // insert roles for view
                 foreach (var role in request.Roles)
                 {
-                    var sectionRole = new DAL.SectionRole() { Role = role, SectionId = section.Id };
+                    var sectionRole = new Entities.SectionRole() { Role = role, SectionId = section.Id };
                     await _sectionRoleRepository.InsertAsync(sectionRole);
                 }
 
@@ -201,7 +199,7 @@ namespace Sushi.MediaKiwi.Services
             newId = newId.Trim();
             
             // validate new id
-            var error = DAL.Section.ValidateSectionId(newId);
+            var error = Entities.Section.ValidateSectionId(newId);
             if (error != null)
                 return new Result<Section>(ResultCode.ValidationFailed) { ErrorMessage = error };
 

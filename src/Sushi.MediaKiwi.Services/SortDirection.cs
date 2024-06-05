@@ -1,4 +1,4 @@
-﻿namespace Sushi.MediaKiwi.DAL.Sorting
+﻿namespace Sushi.MediaKiwi.Services
 {
     /// <summary>
     /// Defines directions on which to sort.
@@ -13,5 +13,5 @@
         /// Descending
         /// </summary>
         DESC
-    }    
+    }
 }

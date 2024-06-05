@@ -1,7 +1,7 @@
-﻿using Sushi.MediaKiwi.DAL.Paging;
+﻿using Sushi.MediaKiwi.Services.Entities;
 using Sushi.MicroORM;
 
-namespace Sushi.MediaKiwi.DAL.Repository
+namespace Sushi.MediaKiwi.Services.Interfaces
 {
     /// <summary>
     /// Provides methods to read and write <see cref="Section"/> objects.

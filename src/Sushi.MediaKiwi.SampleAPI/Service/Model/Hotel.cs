@@ -1,4 +1,4 @@
-﻿using Sushi.MediaKiwi.DAL;
+﻿using Sushi.MediaKiwi.Services.Entities;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;

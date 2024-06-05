@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
-using Sushi.MediaKiwi.DAL.Paging;
+using Sushi.LanguageExtensions;
+using Sushi.MediaKiwi.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;

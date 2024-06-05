@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Sushi.MediaKiwi.DAL.Paging;
 using Sushi.MediaKiwi.DAL.Repository;
+using Sushi.MediaKiwi.Services;
+using Sushi.MediaKiwi.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,13 +12,11 @@ using Xunit.Extensions.AssemblyFixture;
 namespace Sushi.MediaKiwi.IntegrationTests
 {
     public class NavigationItemRepositoryTest : IAssemblyFixture<DatabaseFixture>
-    {
-        private readonly DatabaseFixture _configFixture;
+    {        
         private readonly INavigationItemRepository _repository;
 
         public NavigationItemRepositoryTest(DatabaseFixture configFixture)
-        {
-            _configFixture = configFixture;
+        {   
             _repository = configFixture.Services.GetRequiredService<INavigationItemRepository>();
         }
 

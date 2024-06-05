@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sushi.MediaKiwi.DAL
+namespace Sushi.MediaKiwi.Services.Entities
 {
     /// <summary>
     /// Represents a user role as registered in the identity provider.
@@ -26,7 +26,7 @@ namespace Sushi.MediaKiwi.DAL
                 Id(x => x.Id, "RoleID").Assigned().SqlType(System.Data.SqlDbType.VarChar);
             }
         }
-        
+
         /// <summary>
         /// Unique identifier for the role as registered in the identity provider.
         /// </summary>

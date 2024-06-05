@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Sushi.MediaKiwi.DAL.Sorting;
 using AutoMapper.Extensions.ExpressionMapping;
 
 namespace Sushi.MediaKiwi.Services.UnitTests

@@ -1,13 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Primitives;
 using Moq;
-using Sushi.MediaKiwi.DAL.Sorting;
+using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.WebAPI.Sorting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.WebAPI.UnitTests.Sorting
 {

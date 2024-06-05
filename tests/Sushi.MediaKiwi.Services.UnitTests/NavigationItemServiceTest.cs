@@ -1,10 +1,9 @@
 using AutoMapper;
 using Moq;
-using Sushi.MediaKiwi.DAL.Paging;
-using Sushi.MediaKiwi.DAL.Repository;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MicroORM;
 using AutoMapper.Extensions.ExpressionMapping;
+using Sushi.MediaKiwi.Services.Interfaces;
 
 namespace Sushi.MediaKiwi.Services.UnitTests
 {
@@ -27,10 +26,10 @@ namespace Sushi.MediaKiwi.Services.UnitTests
         public async Task GetAllNavigationItemTest()
         {
             // arrange
-            var stubs = new QueryListResult<DAL.NavigationItem>
+            var stubs = new QueryListResult<Entities.NavigationItem>
             {
-                new DAL.NavigationItem(),
-                new DAL.NavigationItem()
+                new Entities.NavigationItem(),
+                new Entities.NavigationItem()
             };
 
             var config = new MapperConfiguration(cfg =>
@@ -72,8 +71,8 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var repositoryMock = new Mock<INavigationItemRepository>();
             repositoryMock
                 .Setup(x => x.GetAllAsync(It.IsAny<string?>(), It.IsAny<PagingValues>(), null))
-                .Callback((string? sectionId, PagingValues pagingValues, DAL.Sorting.SortValues<DAL.NavigationItem>? sort) => actualFilterID = sectionId)
-                .ReturnsAsync(new QueryListResult<DAL.NavigationItem>());
+                .Callback((string? sectionId, PagingValues pagingValues, SortValues<Entities.NavigationItem>? sort) => actualFilterID = sectionId)
+                .ReturnsAsync(new QueryListResult<Entities.NavigationItem>());
 
             var service = new NavigationItemService(repositoryMock.Object, mapper);
 
@@ -88,7 +87,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
         public async Task DeleteNavigationItemTest()
         {
             // arrange
-            var navigationItemStub = new DAL.NavigationItem()
+            var navigationItemStub = new Entities.NavigationItem()
             {
                 Id = "itemId"
             };
@@ -112,7 +111,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
         public async Task DeleteNavigationItemTest_NotFound()
         {
             // arrange
-            DAL.NavigationItem? navigationItemStub = null;
+            Entities.NavigationItem? navigationItemStub = null;
             var navigationItemRepositoryMock = new Mock<INavigationItemRepository>();
             navigationItemRepositoryMock.Setup(x => x.GetAsync(It.IsAny<string>())).ReturnsAsync(navigationItemStub);
 
@@ -129,7 +128,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
         public async Task GetNavigationItemTest()
         {
             // arrange
-            var navigationItemStub = new DAL.NavigationItem()
+            var navigationItemStub = new Entities.NavigationItem()
             {
                 Id = "itemId"
             };                
@@ -152,7 +151,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
         public async Task GetNavigationItemTest_NotFound()
         {
             // arrange
-            DAL.NavigationItem? navigationItemStub = null;
+            Entities.NavigationItem? navigationItemStub = null;
             var navigationItemRepositoryMock = new Mock<INavigationItemRepository>();
             navigationItemRepositoryMock.Setup(x => x.GetAsync(It.IsAny<string>())).ReturnsAsync(navigationItemStub);
 
@@ -181,7 +180,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             string newId = "newId";            
 
             var navigationItemRepositoryMock = new Mock<INavigationItemRepository>();
-            navigationItemRepositoryMock.Setup(x => x.InsertAsync(It.Is<DAL.NavigationItem>(x => x.Id == newId)));
+            navigationItemRepositoryMock.Setup(x => x.InsertAsync(It.Is<Entities.NavigationItem>(x => x.Id == newId)));
 
             var service = new NavigationItemService(navigationItemRepositoryMock.Object, _mapper);
 
@@ -208,7 +207,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
 
             var existingId = "1";
-            var dalResult = new DAL.NavigationItem() { Id = existingId };
+            var dalResult = new Entities.NavigationItem() { Id = existingId };
 
             var navigationItemRepositoryMock = new Mock<INavigationItemRepository>();
             navigationItemRepositoryMock.Setup(x => x.GetAsync(existingId)).ReturnsAsync(dalResult).Verifiable();
@@ -231,7 +230,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
         public async Task UpdateNavigationItemTest_NotFound()
         {
             // arrange
-            DAL.NavigationItem? navigationItemStub = null;
+            Entities.NavigationItem? navigationItemStub = null;
             var navigationItemRepositoryMock = new Mock<INavigationItemRepository>();
             navigationItemRepositoryMock.Setup(x => x.GetAsync(It.IsAny<string>())).ReturnsAsync(navigationItemStub);
 
@@ -251,8 +250,8 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             // arrange
             var oldId = "1";
             var newId = "newId";
-            var oldItem = new DAL.NavigationItem() { Id = oldId };
-            var newItem = new DAL.NavigationItem() { Id = newId };
+            var oldItem = new Entities.NavigationItem() { Id = oldId };
+            var newItem = new Entities.NavigationItem() { Id = newId };
 
             var navigationItemRepositoryMock = new Mock<INavigationItemRepository>();
             navigationItemRepositoryMock.Setup(x => x.GetAsync(oldId)).ReturnsAsync(oldItem).Verifiable(Times.Once);

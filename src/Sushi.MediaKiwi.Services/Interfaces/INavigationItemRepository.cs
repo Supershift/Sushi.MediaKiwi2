@@ -1,8 +1,7 @@
-﻿using Sushi.MediaKiwi.DAL.Paging;
-using Sushi.MediaKiwi.DAL.Sorting;
+﻿using Sushi.MediaKiwi.Services.Entities;
 using Sushi.MicroORM;
 
-namespace Sushi.MediaKiwi.DAL.Repository
+namespace Sushi.MediaKiwi.Services.Interfaces
 {
     /// <summary>
     /// Provides methods to work with <see cref="NavigationItem"/>.
@@ -17,7 +16,7 @@ namespace Sushi.MediaKiwi.DAL.Repository
         /// <param name="sortValues"></param>
         /// <returns></returns>
         Task<QueryListResult<NavigationItem>> GetAllAsync(string? sectionID, PagingValues pagingValues, SortValues<NavigationItem>? sortValues = null);
-        
+
         /// <summary>
         /// Gets a <see cref="NavigationItem"/> by id.
         /// </summary>

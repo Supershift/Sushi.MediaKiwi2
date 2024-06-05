@@ -1,10 +1,7 @@
-﻿using Sushi.MediaKiwi.DAL.Paging;
+﻿using Sushi.MediaKiwi.Services;
+using Sushi.MediaKiwi.Services.Entities;
+using Sushi.MediaKiwi.Services.Interfaces;
 using Sushi.MicroORM;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.DAL.Repository
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sushi.MediaKiwi.DAL
+namespace Sushi.MediaKiwi.Services.Entities
 {
     /// <summary>
     /// Represents a monetary value, e.g. EUR 25.00, USD 10.00, etc.
@@ -19,6 +19,6 @@ namespace Sushi.MediaKiwi.DAL
         /// <summary>
         /// Amount of the monetary value, e.g. 15.00, 25.50, etc.
         /// </summary>
-        public decimal Amount { get; set; }       
+        public decimal Amount { get; set; }
     }
 }

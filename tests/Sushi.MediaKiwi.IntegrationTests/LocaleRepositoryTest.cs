@@ -1,6 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
-using Sushi.MediaKiwi.DAL;
 using Sushi.MediaKiwi.DAL.Repository;
+using Sushi.MediaKiwi.Services;
+using Sushi.MediaKiwi.Services.Entities;
+using Sushi.MediaKiwi.Services.Interfaces;
 using Xunit.Extensions.AssemblyFixture;
 
 namespace Sushi.MediaKiwi.IntegrationTests
@@ -19,7 +21,7 @@ namespace Sushi.MediaKiwi.IntegrationTests
         [Fact]
         public async Task GetAllTest()
         {
-            var locales = await _repository.GetAllAsync(true, new DAL.Paging.PagingValues(0, 50));
+            var locales = await _repository.GetAllAsync(true, new PagingValues(0, 50));
 
             Assert.True(locales.Count > 1);
         }
