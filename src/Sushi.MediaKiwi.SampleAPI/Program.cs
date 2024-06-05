@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Sushi.MediaKiwi.SampleAPI;
 using Sushi.MediaKiwi.WebAPI;
+using Sushi.MediaKiwi;
 using Sushi.MicroORM;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,7 +40,7 @@ services.AddSwaggerGen(options =>
 var adminRoles = new[] { Sushi.MediaKiwi.WebAPI.Constants.AdminRoleName };
 
 // add mediakiwi API
-services.AddMediaKiwiApi(    
+services.AddMediaKiwi(    
     azureAdConfig: config.GetSection("AzureAd"), 
     autoMapperConfig: c => c.AddProfile<Sushi.MediaKiwi.SampleAPI.Service.Model.AutoMapperProfile>(),
     authorizationOptions: options => {
