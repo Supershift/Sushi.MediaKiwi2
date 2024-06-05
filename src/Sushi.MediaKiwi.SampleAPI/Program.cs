@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // get config
 var config = builder.Configuration;
-var connectionString = config.GetConnectionString("portal")!;
+var connectionString = config.GetConnectionString("portal") ?? "";
 var addCORS = config.GetValue<bool>("AddCORS");
 
 // Add services to the container.

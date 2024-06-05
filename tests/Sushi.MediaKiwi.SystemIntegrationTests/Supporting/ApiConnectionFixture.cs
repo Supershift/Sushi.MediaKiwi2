@@ -48,8 +48,11 @@ namespace Sushi.MediaKiwi.SystemIntegrationTests.Supporting
                 dacService.ImportBacpac(package, dbName, cts.Token);
 
                 // prepare connection string to use the database
-                var connectionStringBuilder = new SqlConnectionStringBuilder(_msSqlContainer.GetConnectionString());
-                connectionStringBuilder.InitialCatalog = dbName;
+                var connectionStringBuilder = new SqlConnectionStringBuilder(_msSqlContainer.GetConnectionString())
+                {
+                    InitialCatalog = dbName
+                };
+
                 connectionString = connectionStringBuilder.ToString();
             }
 

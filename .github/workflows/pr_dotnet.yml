@@ -22,16 +22,6 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
-    environment:
-      name: tst
-    services:
-      mssql:
-        image: mcr.microsoft.com/mssql/server
-        env:
-          SA_PASSWORD: Your_password123
-          ACCEPT_EULA: "Y"
-        ports:
-          - 1433:1433
     steps:
 
       # Checkout current branch
@@ -55,8 +45,6 @@ jobs:
       # Run tests
       - name: Test
         run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --logger trx --results-directory coverage
-        env:
-          ConnectionStrings__portal: "${{ env.TST_PORTAL_CONNECTION_STRING }}"
 
       - name: Merge Coverage Reports
         run: dotnet tool install -g dotnet-reportgenerator-globaltool
