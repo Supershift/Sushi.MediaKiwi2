@@ -17,5 +17,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Sushi.MediaKiwi.WebAPI\Sushi.MediaKiwi.WebAPI.csproj" />
   </ItemGroup>
-
+	
+  <ItemGroup>
+	<AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
+  </ItemGroup>
 </Project>
