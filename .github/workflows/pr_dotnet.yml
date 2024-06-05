@@ -31,18 +31,10 @@ jobs:
         ports:
           - 1433:1433
     steps:
+
+      # Checkout current branch
       - name: Checkout
         uses: actions/checkout@v4
-
-      # Setup MSSQL
-      - name: Setup MSSQL
-        uses: addnab/docker-run-action@v3
-        with:
-          image: ormico/sqlpackage
-          options: -v ${{ github.workspace }}:/var/output
-          run: |
-            sleep 15;
-            /opt/sqlpackage/sqlpackage /a:Import /TargetConnectionString:"Server=mssql,1433;TrustServerCertificate=True;Database=portal;User=sa;Password=Your_password123" /sf:/var/output/SqlScripts/mediakiwi.bacpac
 
       # Setup .NET
       - name: Setup .NET
@@ -61,9 +53,7 @@ jobs:
       # Run tests
       - name: Test
         run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --logger trx --results-directory coverage
-        env:
-          ConnectionStrings__portal: "Server=localhost,1433;Database=portal;User Id=sa;Password=Your_password123;TrustServerCertificate=True;"
-          
+
       - name: Merge Coverage Reports
         run: dotnet tool install -g dotnet-reportgenerator-globaltool
 
