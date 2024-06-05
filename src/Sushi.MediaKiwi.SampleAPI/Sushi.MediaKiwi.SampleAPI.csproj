@@ -19,6 +19,6 @@
   </ItemGroup>
 	
   <ItemGroup>
-    <ProjectReference Include="..\Sushi.MediaKiwi\Sushi.MediaKiwi.csproj" />
+    <ProjectReference Include="..\Sushi.MediaKiwi2\Sushi.MediaKiwi2.csproj" />
   </ItemGroup>
 </Project>

@@ -33,7 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sushi.MediaKiwi.SystemInteg
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sushi.LanguageExtensions", "src\Sushi.LanguageExtensions\Sushi.LanguageExtensions.csproj", "{AF676C50-850A-48C1-B703-E75F7032B3ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sushi.MediaKiwi", "src\Sushi.MediaKiwi\Sushi.MediaKiwi.csproj", "{A3141895-470A-4184-9989-F99A19F73DA6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sushi.MediaKiwi2", "src\Sushi.MediaKiwi2\Sushi.MediaKiwi2.csproj", "{A3141895-470A-4184-9989-F99A19F73DA6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

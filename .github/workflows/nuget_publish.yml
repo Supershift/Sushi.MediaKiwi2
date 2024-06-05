@@ -29,12 +29,12 @@ jobs:
 
       # Create NuGet Package
       - name: 'Create NuGet Package'
-        working-directory: src/Sushi.MediaKiwi
+        working-directory: src/Sushi.MediaKiwi2
         run: dotnet pack --configuration Release /p:Version=${VERSION} --output .
       
       # Push NuGet Package
       - name: Push to NuGet
-        working-directory: src/Sushi.MediaKiwi
-        run: dotnet nuget push Sushi.MediaKiwi.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_TOKEN}
+        working-directory: src/Sushi.MediaKiwi2
+        run: dotnet nuget push Sushi.MediaKiwi2.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_TOKEN}
         env:
           NUGET_TOKEN: ${{ secrets.MEDIAKIWI_NUGET_2023 }}
