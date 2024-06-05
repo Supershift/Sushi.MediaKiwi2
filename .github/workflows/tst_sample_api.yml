@@ -1,7 +1,7 @@
 name: Deploy SampleAPI to TEST environment
 
 env:
-  AZURE_WEBAPP_NAME: 'SampleAPI'
+  AZURE_WEBAPP_NAME: 'mediakiwi-sample-api-tst'
   AZURE_WEBAPP_PACKAGE_PATH: '.'
 
 on:
@@ -48,5 +48,6 @@ jobs:
         uses: azure/webapps-deploy@v3
         with: 
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          slot-name: 'production'
           publish-profile: ${{ secrets.TST_SAMPLE_API_PUBLISHSETTINGS }}
           package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
