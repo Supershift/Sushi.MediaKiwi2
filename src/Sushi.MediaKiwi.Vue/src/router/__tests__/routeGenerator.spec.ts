@@ -15,8 +15,8 @@ const modules: Record<string, RouteComponent> = {
   b: <Component>{},
 };
 const navigationItems: NavigationItem[] = [
-  <NavigationItem>{ id: 1, viewId: "OrderView", path: "/orders", name: "Order", sectionId: 1 },
-  <NavigationItem>{ id: 2, viewId: "CustomerView", path: "/customers", name: "Customers", sectionId: 1 },
+  <NavigationItem>{ id: "1", viewId: "OrderView", path: "/orders", name: "Order" },
+  <NavigationItem>{ id: "2", viewId: "CustomerView", path: "/customers", name: "Customers" },
 ];
 const screens: View[] = [
   <View>{ id: "OrderView", sectionId: 1, componentKey: "a", name: "screen a" },
