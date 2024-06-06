@@ -23,7 +23,7 @@ namespace Sushi.LanguageExtensions
         /// Creates a new instance of <see cref="AggregateError"/>.
         /// </summary>
         public AggregateError(IEnumerable<Error> errors, string message)
-            : this(errors, "One or more errors occured", null) { }
+            : this(errors, message, null) { }
 
         /// <summary>
         /// Creates a new instance of <see cref="AggregateError"/>.
