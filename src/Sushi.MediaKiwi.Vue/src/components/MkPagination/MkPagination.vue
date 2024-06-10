@@ -4,6 +4,7 @@
   import { Paging } from "@/models/api/Paging";
   import { ITableMapPaging } from "@/models/table/TableMapPaging";
   import { useI18next } from "@/composables/useI18next";
+  import { useMediakiwiVueOptions } from "@/composables/useMediakiwiVueOptions";
 
   // Components
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
@@ -12,6 +13,7 @@
 
   // inject dependencies
   const { defaultT } = await useI18next();
+  const { tableOptions } = useMediakiwiVueOptions();
 
   // define properties
   const props = withDefaults(
@@ -44,6 +46,10 @@
     pageSize: props.modelValue.pageSize || defaultPageSize,
   });
 
+  /** Uses tracking from overridden value comming from props, otherwise use standard mediakiwiVueOptions */
+  const pageTrackingOption = computed(() => {
+    return (props?.pageTracking != undefined ? props?.pageTracking : tableOptions?.pageTracking) || false;
+  });
   /**
    * Page sizes to display in the select
    */
@@ -84,7 +90,7 @@
   async function updatePageSize(value: number) {
     // Update local values
     if (value !== null && value !== undefined) {
-      if (!props?.pageTracking) {
+      if (!pageTrackingOption.value) {
         state.pageIndex = 0; // reset to first page
       } else {
         const firstItem = state.pageIndex * state.pageSize;

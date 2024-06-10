@@ -307,7 +307,7 @@
           :paging-result="pagingResult"
           :mode="paginationMode"
           :page-size-options="pageSizes"
-          :page-tracking="props.pageTracking"
+          :page-tracking="props?.pageTracking"
           @update:model-value="pageChanged"
         />
       </template>
