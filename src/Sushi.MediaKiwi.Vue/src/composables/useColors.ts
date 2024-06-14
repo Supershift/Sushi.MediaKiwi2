@@ -1,34 +1,29 @@
 import { useTheme } from "vuetify";
 import { computed, ref } from "vue";
+import { ColorMap } from "@/models/color/ColorMap";
 
-type color = {
-  key: string;
-  value: string;
-};
-
-export function useColors() {
+export function useColors(themeKey?: string) {
   const theme = useTheme();
+  const currentTheme = computed(() => (themeKey ? theme.themes.value[themeKey] : theme.global.current.value));
 
   /**
    * Collection of keys from the colors object, use dark colors as default since the keys are the same
    */
   const colors = computed(() => {
-    return Object.keys(theme.global.current.value.colors)
-      .filter((color) => color.indexOf("on-") === -1)
+    return Object.keys(currentTheme.value.colors)
       .map((key) => {
         return {
           key,
-          value: theme.global.current.value.colors[key],
-          onKey: `on-${key}`,
-          onValue: theme.global.current.value.colors[`on-${key}`],
+          value: currentTheme.value.colors[key],
+          bg: `bg-${key}`,
         };
       })
-      .sort((a: color, b: color) => {
+      .sort((a: ColorMap, b: ColorMap) => {
         return a.key.localeCompare(b.key);
       });
   });
 
-  const variables = theme.global.current.value.variables;
+  const variables = currentTheme.value.variables;
 
   /**
    * Collection of keys from the colors object, use dark colors as default since the keys are the same
@@ -61,6 +56,7 @@ export function useColors() {
   }
 
   return {
+    currentTheme,
     colors,
     variants,
     variables,

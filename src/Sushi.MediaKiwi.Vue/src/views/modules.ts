@@ -8,6 +8,7 @@ import LocaleEdit from "./LocaleEdit.vue";
 import StyleGuideView from "./StyleGuideView.vue";
 import NavigationItemOverview from "./NavigationItemOverview.vue";
 import NavigationItemEdit from "./NavigationItemEdit.vue";
+import { styleGuideModules } from "./styleguide";
 
 const modules: Record<string, RouteComponent> = {
   MkViewOverview: ViewOverview,
@@ -19,6 +20,7 @@ const modules: Record<string, RouteComponent> = {
   MkStyleGuideView: StyleGuideView,
   MkNavigationItemOverview: NavigationItemOverview,
   MkNavigationItemEdit: NavigationItemEdit,
+  ...styleGuideModules,
 };
 
 export { modules };
