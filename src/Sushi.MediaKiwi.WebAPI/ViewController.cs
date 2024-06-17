@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MediaKiwi.WebAPI.Paging;
@@ -44,6 +45,7 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpDelete]
         [Route("{id}")]
+        [Authorize(Policy = Constants.AdminPolicyName)]
         public async Task<ActionResult<View>> DeleteView(string id)
         {
             var result = await _viewService.DeleteAsync(id);
@@ -86,6 +88,7 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpPost]
         [Route("{id}")]
+        [Authorize(Policy = Constants.AdminPolicyName)]
         public async Task<ActionResult<View>> CreateView(string id, View request)
         {
             var result = await _viewService.CreateAsync(id, request);
@@ -98,6 +101,7 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpPut]
         [Route("{id}")]
+        [Authorize(Policy = Constants.AdminPolicyName)]
         public async Task<ActionResult<View>> UpdateView(string id, View request)
         {
             var result = await _viewService.UpdateAsync(id, request);
