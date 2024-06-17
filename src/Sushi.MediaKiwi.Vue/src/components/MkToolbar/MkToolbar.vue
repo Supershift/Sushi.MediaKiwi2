@@ -23,12 +23,18 @@
     undo?: boolean;
     /** Determines if the toolbar becomes sticky at the top of the page, default: false */
     sticky?: boolean;
+    /** */
+    onSave?: (event?: Event) => Promise<void>;
+    onUndo?: (event?: Event) => Promise<void>;
+    onDelete?: (event: Event) => Promise<void>;
   }>();
 
   // define slots
   const slots = defineSlots<{
     /** Visible action slot for the MkToolbar */
     toolbar?: (props: unknown) => never;
+    /** Visible header for the MkToolbar */
+    title?: () => never;
     /** Visible header for the MkToolbar */
     header?: (props: unknown) => never;
     /** Menu actions for the MkToolbar */
@@ -37,9 +43,6 @@
 
   // define events
   const emit = defineEmits<{
-    (e: "save"): void;
-    (e: "undo"): void;
-    (e: "delete"): void;
     (e: "click:new", value?: string): void;
   }>();
 </script>
@@ -52,6 +55,8 @@
       </v-row>
       <v-row v-if="slots.toolbar || slots.overflowMenuActions || props.title || (props.itemViewId && props.new)" class="pb-2 ml-0 align-center">
         <v-card-title v-if="title" class="px-0 text-title-medium">{{ title }}</v-card-title>
+        <slot v-else-if="slots.title" name="title"></slot>
+
         <v-spacer></v-spacer>
 
         <v-card-actions>

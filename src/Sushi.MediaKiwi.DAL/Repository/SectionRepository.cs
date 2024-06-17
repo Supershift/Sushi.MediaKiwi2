@@ -1,10 +1,7 @@
-﻿using Sushi.MediaKiwi.DAL.Paging;
+﻿using Sushi.MediaKiwi.Services;
+using Sushi.MediaKiwi.Services.Entities;
+using Sushi.MediaKiwi.Services.Interfaces;
 using Sushi.MicroORM;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.DAL.Repository
 {
@@ -23,7 +20,7 @@ namespace Sushi.MediaKiwi.DAL.Repository
         }
 
         /// <inheritdoc/>    
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(string id)
         {
             var query = _connector.CreateQuery();
             query.Add(x => x.Id, id);
@@ -42,7 +39,7 @@ namespace Sushi.MediaKiwi.DAL.Repository
         }
 
         /// <inheritdoc/>    
-        public async Task<Section?> GetAsync(int id)
+        public async Task<Section?> GetAsync(string id)
         {
             var query = _connector.CreateQuery();
             query.Add(x => x.Id, id);
@@ -51,9 +48,25 @@ namespace Sushi.MediaKiwi.DAL.Repository
         }
 
         /// <inheritdoc/>    
-        public async Task SaveAsync(Section section)
+        public async Task InsertAsync(Section section)
         {
-            await _connector.SaveAsync(section);
+            await _connector.InsertAsync(section);
+        }
+
+        /// <inheritdoc/>    
+        public async Task UpdateAsync(Section section)
+        {
+            await _connector.UpdateAsync(section);
+        }
+
+        /// <inheritdoc/>    
+        public async Task UpdateIdAsync(string oldId, string newId)
+        {
+            var query = _connector.CreateQuery();
+            query.AddParameter("@oldId", oldId);
+            query.AddParameter("@newId", newId);
+            query.SqlQuery = "UPDATE mk_Sections SET SectionId = @newId WHERE SectionId = @oldId";
+            await _connector.ExecuteNonQueryAsync(query);
         }
     }
 }

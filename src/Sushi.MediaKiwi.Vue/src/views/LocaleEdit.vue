@@ -4,7 +4,8 @@
   import { ILocaleConnector } from "@/services";
   import { container } from "tsyringe";
   import { ref } from "vue";
-  import { MkForm } from "@/components";
+  import { MkForm, MkDialogCard } from "@/components";
+  import Translations from "./components/Translations.vue";
 
   // inject dependencies
   const localeConnector = container.resolve<ILocaleConnector>("ILocaleConnector");
@@ -57,4 +58,6 @@
     <v-text-field v-model="locale.name" :label="defaultT('Name')"></v-text-field>
     <v-checkbox v-model="locale.isEnabled" :label="defaultT('IsEnabled')"></v-checkbox>
   </mk-form>
+
+  <translations :locale-id="locale.id"></translations>
 </template>

@@ -3,7 +3,7 @@ import "reflect-metadata";
 import MkNavigationItemComponent from "../MkNavigationItem.vue";
 import { NavigationItem } from "@/models";
 import { createVuetify } from "vuetify";
-import defaultVuetifyOptions from "@/plugins/vuetify";
+import { defaultVuetifyOptions } from "@/plugins/vuetify";
 
 // mock libraries
 // vi.mock("i18next");
@@ -14,20 +14,20 @@ import defaultVuetifyOptions from "@/plugins/vuetify";
 // Declare the props to be used in all tests
 const withChildProps = {
   navigationItem: {
-    id: 123,
+    id: "123",
     name: "Test Item",
-    sectionId: 1,
+    sectionId: "Home",
     path: "/home",
     children: [
       {
-        id: 444,
+        id: "444",
         name: "Test Child Item",
-        sectionId: 1,
-        parentNavigationItemId: 123,
+        sectionId: "Home",
+        parentNavigationItemId: "123",
         parent: {
-          id: 123,
+          id: "123",
           name: "Test Item",
-          sectionId: 1,
+          sectionId: "Home",
           path: "/home",
           icon: "$ratingFull", // we use a default icon instead since we're testing the icon
         },
@@ -39,21 +39,21 @@ const withChildProps = {
   } as NavigationItem,
   allItems: [
     {
-      id: 123,
+      id: "123",
       name: "Test Item",
-      sectionId: 1,
+      sectionId: "Home",
       path: "/home",
       icon: "$home",
     },
     {
-      id: 444,
+      id: "444",
       name: "Test Child Item",
-      sectionId: 1,
-      parentNavigationItemId: 123,
+      sectionId: "Home",
+      parentNavigationItemId: "123",
       parent: {
-        id: 123,
+        id: "123",
         name: "Test Item",
-        sectionId: 1,
+        sectionId: "Home",
         path: "/home",
         icon: "$home",
       },
@@ -65,18 +65,18 @@ const withChildProps = {
 
 const withOutChildProps = {
   navigationItem: {
-    id: 123,
+    id: "123",
     name: "No Child Test Item",
-    sectionId: 1,
+    sectionId: "Home",
     path: "/ratings",
     icon: "$ratingFull", // we use a default icon instead since we're testing the icon
     children: [] as Array<NavigationItem>,
   } as NavigationItem,
   allItems: [
     {
-      id: 123,
+      id: "123",
       name: "No Child Test Item",
-      sectionId: 1,
+      sectionId: "Home",
       path: "/ratings",
       icon: "$ratingFull", // we use a default icon instead since we're testing the icon
     },

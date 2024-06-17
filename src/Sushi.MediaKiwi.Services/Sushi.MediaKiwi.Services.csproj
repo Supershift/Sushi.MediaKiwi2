@@ -1,15 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>0.1.0</Version>
+    <Version>0.1.7</Version>
     <Authors>Supershift</Authors>
     <Description>Provides a back-end for the MediaKiwi portal generator tool</Description>
     <PackageIcon>logo.png</PackageIcon>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,14 +21,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="12.0.1" />
-    <PackageReference Include="AutoMapper.Extensions.ExpressionMapping" Version="6.0.4" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />    
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.ExpressionMapping" Version="7.0.0" />
+    <PackageReference Include="Sushi.MicroORM" Version="3.1.0" />    
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Sushi.MediaKiwi.DAL\Sushi.MediaKiwi.DAL.csproj" />
+    <ProjectReference Include="..\Sushi.LanguageExtensions\Sushi.LanguageExtensions.csproj" />
   </ItemGroup>
 
 </Project>

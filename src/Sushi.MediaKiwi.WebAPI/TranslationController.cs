@@ -7,21 +7,20 @@ using Sushi.MediaKiwi.WebAPI.Paging;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
+    /// <summary>
+    /// Defines endpoints to retrieve Translations.
+    /// </summary>
     [Route($"{BaseRoute}/translations")]
     public class TranslationController : MediaKiwiControllerBase
     {
-        private readonly TranslationService _translationService;
-        private readonly PagingRetriever _pagingRetriever;
+        private readonly TranslationService _translationService;        
 
         /// <summary>
         /// Creates a new instance of <see cref="TranslationController"/>.
-        /// </summary>
-        /// <param name="translationService"></param>
-        /// <param name="pagingRetriever"></param>
-        public TranslationController(TranslationService translationService, PagingRetriever pagingRetriever)
+        /// </summary>        
+        public TranslationController(TranslationService translationService)
         {
-            _translationService = translationService;
-            _pagingRetriever = pagingRetriever;
+            _translationService = translationService;            
         }
 
         /// <summary>

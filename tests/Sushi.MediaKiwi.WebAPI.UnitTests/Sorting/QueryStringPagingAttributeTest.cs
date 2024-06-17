@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Sushi.MediaKiwi.WebAPI.Sorting;
 using Sushi.MediaKiwi.Services;
-using Sushi.MediaKiwi.DAL.Sorting;
 using System.Linq.Expressions;
 
 namespace Sushi.MediaKiwi.WebAPI.UnitTests.Sorting
@@ -50,7 +49,7 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests.Sorting
             var actionExecutingContextMock = new ActionExecutingContext(
                 actionContext,
                 Mock.Of<IList<IFilterMetadata>>(),
-                Mock.Of<IDictionary<string, object>>(),
+                Mock.Of<IDictionary<string, object?>>(),
                 new object());
 
 
@@ -102,7 +101,7 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests.Sorting
             var actionExecutingContextMock = new ActionExecutingContext(
                 actionContext,
                 Mock.Of<IList<IFilterMetadata>>(),
-                Mock.Of<IDictionary<string, object>>(),
+                Mock.Of<IDictionary<string, object?>>(),
                 new object());
 
             // act
@@ -142,7 +141,7 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests.Sorting
             var actionExecutingContextMock = new ActionExecutingContext(
                 actionContext,
                 Mock.Of<IList<IFilterMetadata>>(),
-                Mock.Of<IDictionary<string, object>>(),
+                Mock.Of<IDictionary<string, object?>>(),
                 new object());
 
 
@@ -186,7 +185,7 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests.Sorting
             var actionExecutingContextMock = new ActionExecutingContext(
                 actionContext,
                 Mock.Of<IList<IFilterMetadata>>(),
-                Mock.Of<IDictionary<string, object>>(),
+                Mock.Of<IDictionary<string, object?>>(),
                 new object());
 
 

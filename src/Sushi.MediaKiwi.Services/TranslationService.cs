@@ -1,28 +1,18 @@
-﻿using AutoMapper;
-using Microsoft.Extensions.Primitives;
-using Sushi.MediaKiwi.DAL.Paging;
-using Sushi.MediaKiwi.DAL.Repository;
+﻿using Sushi.MediaKiwi.Services.Interfaces;
 using Sushi.MediaKiwi.Services.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.Services
 {
     /// <summary>
-    /// Provides methods to interact with <see cref="Translation"/> objects.
+    /// Provides methods to interact with translations.
     /// </summary>
     public class TranslationService
     {
-        private readonly ITranslationRepository _translationRepository;        
+        private readonly ITranslationRepository _translationRepository;
 
         /// <summary>
         /// Creates a new instance of <see cref="TranslationService"/>.
-        /// </summary>
-        /// <param name="translationRepository"></param>
-        /// <param name="mapper"></param>
+        /// </summary>                
         public TranslationService(ITranslationRepository translationRepository)
         {
             _translationRepository = translationRepository;
@@ -35,11 +25,11 @@ namespace Sushi.MediaKiwi.Services
         public async Task<Result<Dictionary<string, string>>> GetAllAsync(string localeId, string @namespace)
         {
             // get translations from repository
-            var translations = await _translationRepository.GetAllAsync(localeId, @namespace, null);
+            var translations = await _translationRepository.GetAllAsync(localeId, @namespace, null, null);
 
             // map to result
             var result = new Dictionary<string, string>();
-            foreach(var translation in translations)
+            foreach (var translation in translations)
             {
                 result.Add(translation.Key, translation.Value);
             }
@@ -52,7 +42,7 @@ namespace Sushi.MediaKiwi.Services
         /// </summary>        
         /// <returns></returns>
         public async Task<Result> AddMissingAsync(string originalLocaleId, string @namespace, string key, string value)
-        {            
+        {
             await _translationRepository.InsertMissingAsync(@namespace, key, value);
 
             return new Result(ResultCode.Success);

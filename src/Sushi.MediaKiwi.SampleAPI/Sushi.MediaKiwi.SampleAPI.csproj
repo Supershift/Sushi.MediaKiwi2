@@ -1,20 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>6bf78716-c94f-4c3c-b960-bf1c201539c2</UserSecretsId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
-
+	
   <ItemGroup>
-    <ProjectReference Include="..\Sushi.MediaKiwi.WebAPI\Sushi.MediaKiwi.WebAPI.csproj" />
+	<AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
   </ItemGroup>
-
+	
+  <ItemGroup>
+    <ProjectReference Include="..\Sushi.MediaKiwi\Sushi.MediaKiwi.csproj" />
+  </ItemGroup>
 </Project>

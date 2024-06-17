@@ -11,19 +11,19 @@ namespace Sushi.MediaKiwi.Services.Model
     /// <summary>
     /// Represents a section containing related screens within a portal.
     /// </summary>
-    public class Section
+    public record Section
     {
         /// <summary>
         /// Unique identifier for this section.
         /// </summary>
         [SwaggerSchema(ReadOnly = true)]
-        public int Id { get; set; }
+        public string Id { get; set; } = null!;
 
         /// <summary>
         /// Name for this section.
         /// </summary>
         [Required, StringLength(128)]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         /// <summary>
         /// Value used when sorting sections.
@@ -36,5 +36,11 @@ namespace Sushi.MediaKiwi.Services.Model
         /// </summary>
         [StringLength(128)]
         public string? Icon { get; set; }
+
+        /// <summary>
+        /// If not empty, access to this view is restricted to these roles.
+        /// </summary>
+        [Required]
+        public List<string> Roles { get; set; } = new List<string>();
     }
 }

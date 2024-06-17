@@ -7,42 +7,30 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
-using Sushi.MediaKiwi.DAL;
-using Sushi.MediaKiwi.DAL.Repository;
 using Sushi.MediaKiwi.Services;
-using Sushi.MediaKiwi.Services.Model;
 using Sushi.MediaKiwi.WebAPI.Paging;
 using Sushi.MediaKiwi.WebAPI.Sorting;
-using Sushi.MicroORM;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
+    /// <summary>
+    /// Provides extension methods for <see cref="IServiceCollection"/>.
+    /// </summary>
     public static class ServiceCollectionExtensions
     {
         /// <summary>
         /// Adds all services needed to run MediaKiwi to the <paramref name="services"/>, including Sushi.MicroOrm.
-        /// </summary>
-        /// <param name="adminRoles">Collection of role names which are allowed to access admin resources</param>
-        /// <param name="customAuthorizationPolicies">Dictionary where the key is the name of the policy and the value is the policy builder action</param>
+        /// </summary>        
         /// <returns></returns>
-        public static IServiceCollection AddMediaKiwiApi(this IServiceCollection services, string defaultConnectionString,
-            IConfigurationSection? azureAdConfig,
-            Action<MicroOrmConfigurationBuilder>? microOrmConfig = null,
+        public static IServiceCollection AddMediaKiwiApi(this IServiceCollection services, IConfigurationSection? azureAdConfig,            
             Action<IMapperConfigurationExpression>? autoMapperConfig = null,
-            Action<AuthorizationOptions> authorizationOptions = null)
+            Action<AuthorizationOptions>? authorizationOptions = null)
         {
             // add mk services
-            services.AddMediaKiwiServices(defaultConnectionString,
-                microOrmConfig: microOrmConfig,
-                autoMapperConfig: autoMapperConfig);
+            services.AddMediaKiwiServices(autoMapperConfig: autoMapperConfig);
 
             // add context accessor
             services.AddHttpContextAccessor();
@@ -57,7 +45,7 @@ namespace Sushi.MediaKiwi.WebAPI
                 // Add default admin role policy
                 services.AddAuthorization(options =>
                 {
-                    options.AddPolicy(Constants.AdminPolicyName, policy => policy.RequireRole(Constants.AdminRoleName));
+                    options.AddPolicy(Constants.AdminPolicyName, policy => policy.RequireRole(Constants.AdminRoleName));                    
                 });
             }
             else
@@ -132,6 +120,11 @@ namespace Sushi.MediaKiwi.WebAPI
             return options;
         }
 
+        /// <summary>
+        /// Adds MediaKiwi to Swagger.
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns></returns>
         public static SwaggerUIOptions AddMediaKiwiSwaggerUI(this SwaggerUIOptions options)
         {
             options.SwaggerEndpoint("../swagger/MediaKiwi/swagger.json", "MediaKiwi");            

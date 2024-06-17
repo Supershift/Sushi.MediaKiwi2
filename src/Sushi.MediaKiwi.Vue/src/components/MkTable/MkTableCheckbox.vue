@@ -9,8 +9,8 @@
     (e: "update:selected", value: boolean): void;
   }>();
 
-  function selectChanged(selectedValue: boolean) {
-    emit("update:selected", selectedValue);
+  function selectChanged(selectedValue: boolean | null) {
+    emit("update:selected", selectedValue || false);
   }
 
   const value = ref(props.isSelected);
@@ -24,6 +24,7 @@
 </script>
 <template>
   <v-checkbox
+    v-bind="$attrs"
     v-model="value"
     :indeterminate="props.isIndeterminate"
     :hide-details="true"

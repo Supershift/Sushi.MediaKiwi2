@@ -1,7 +1,6 @@
 import "reflect-metadata";
 import TableCellIconComponent from "./../MkTableCellIcon.vue";
 import { IconsLibrary, TableIconPosition } from "@/models";
-import { VueWrapper } from "@vue/test-utils";
 
 describe("<MkTableCellIcon />", () => {
   describe("Icon", () => {

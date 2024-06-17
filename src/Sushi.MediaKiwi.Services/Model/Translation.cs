@@ -13,13 +13,25 @@ namespace Sushi.MediaKiwi.Services.Model
     /// </summary>
     public record Translation
     {   
+        /// <summary>
+        /// Id of the translation's locale.
+        /// </summary>
         [SwaggerSchema(ReadOnly = true)]
-        public string LocaleId { get; set; }
+        public required string LocaleId { get; set; }
+        /// <summary>
+        /// Id of the translation's namespace.
+        /// </summary>
         [SwaggerSchema(ReadOnly = true)]
-        public string Namespace { get; set; }
+        public required string Namespace { get; set; }
+        /// <summary>
+        /// Unique key for this translation within the namespace and locale.
+        /// </summary>
         [SwaggerSchema(ReadOnly = true)]
-        public string Key { get; set; }
+        public required string Key { get; set; }
+        /// <summary>
+        /// Value to display for this translation.
+        /// </summary>
         [SwaggerSchema(ReadOnly = true)]
-        public string Value { get; set; }
+        public required string Value { get; set; }
     }
 }

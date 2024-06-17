@@ -2,11 +2,9 @@ import "reflect-metadata";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { container } from "tsyringe";
 import { RouteGenerator } from "../routeGenerator";
-import { MediakiwiVueOptions } from "../../models/options";
-import { createRouter, RouteComponent, RouterOptions, type RouteRecordRaw, createWebHistory } from "vue-router";
+import { RouteComponent } from "vue-router";
 import { Component } from "vue";
-import { type NavigationItem, type View } from "../../models";
-import { Configuration } from "@azure/msal-browser";
+import type { NavigationItem, View } from "../../models";
 
 // mock libraries
 vi.mock("vue-router");
@@ -16,13 +14,14 @@ const modules: Record<string, RouteComponent> = {
   a: <Component>{},
   b: <Component>{},
 };
-const navigationItems: NavigationItem[] = [<NavigationItem>{ id: 1, viewId: 1, path: "/orders" }, <NavigationItem>{ id: 2, viewId: 2, path: "/customers" }];
-const screens: View[] = [<View>{ id: 1, sectionId: 1, componentKey: "a", name: "screen a" }, <View>{ id: 2, sectionId: 1, componentKey: "b", name: "screen b" }];
-const options: MediakiwiVueOptions = {
-  apiBaseUrl: "",
-  modules: modules,
-  msalConfig: <Configuration>{},
-};
+const navigationItems: NavigationItem[] = [
+  <NavigationItem>{ id: "1", viewId: "OrderView", path: "/orders", name: "Order" },
+  <NavigationItem>{ id: "2", viewId: "CustomerView", path: "/customers", name: "Customers" },
+];
+const screens: View[] = [
+  <View>{ id: "OrderView", sectionId: 1, componentKey: "a", name: "screen a" },
+  <View>{ id: "CustomerView", sectionId: 1, componentKey: "b", name: "screen b" },
+];
 
 describe("RouteGenerator", () => {
   beforeEach(() => {

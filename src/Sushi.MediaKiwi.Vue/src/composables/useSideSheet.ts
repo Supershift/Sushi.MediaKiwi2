@@ -1,4 +1,4 @@
-import { reactive, readonly, ref } from "vue";
+import { reactive, readonly } from "vue";
 import { SideSheet } from "@/models";
 
 export default function useSideSheet() {

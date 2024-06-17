@@ -6,6 +6,9 @@ using Sushi.MediaKiwi.WebAPI.Paging;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
+    /// <summary>
+    /// Defines endpoints to manage Locales.
+    /// </summary>
     [Route($"{BaseRoute}/locales")]
     public class LocaleController : MediaKiwiControllerBase
     {
@@ -32,7 +35,7 @@ namespace Sushi.MediaKiwi.WebAPI
         [AllowAnonymous]
         public async Task<ActionResult<ListResult<Locale>>> GetEnabledLocales()
         {   
-            var result = await _localeService.GetAllAsync(true, new DAL.Paging.PagingValues(0, 1000));
+            var result = await _localeService.GetAllAsync(true, new PagingValues(0, 1000));
             return this.CreateResponse(result);
         }
 

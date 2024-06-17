@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection.Extensions;
+using Sushi.MediaKiwi.DAL;
 
 namespace Sushi.MediaKiwi.SampleAPI
 {

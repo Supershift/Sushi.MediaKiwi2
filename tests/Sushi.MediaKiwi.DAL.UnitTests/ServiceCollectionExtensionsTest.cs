@@ -1,5 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Sushi.MediaKiwi.DAL.Repository;
+using Sushi.MediaKiwi.Services.Interfaces;
+using Sushi.MicroORM;
 
 namespace Sushi.MediaKiwi.DAL.UnitTests
 {
@@ -9,7 +11,8 @@ namespace Sushi.MediaKiwi.DAL.UnitTests
         public void AddDalServicesTest()
         {
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddMediaKiwiDAL("");
+            serviceCollection.AddMicroORM(new ConnectionString("", null));
+            serviceCollection.AddMediaKiwiDAL();
             var serviceProvider = serviceCollection.BuildServiceProvider();
             
             serviceProvider.GetRequiredService<ISectionRepository>();

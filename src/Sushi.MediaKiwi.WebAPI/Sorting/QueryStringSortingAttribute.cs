@@ -1,12 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
-using Sushi.MediaKiwi.DAL.Paging;
-using Sushi.MediaKiwi.DAL.Sorting;
-using System;
-using System.Collections.Generic;
-using System.Drawing.Printing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Sushi.MediaKiwi.Services;
 
 namespace Sushi.MediaKiwi.WebAPI.Sorting
 {

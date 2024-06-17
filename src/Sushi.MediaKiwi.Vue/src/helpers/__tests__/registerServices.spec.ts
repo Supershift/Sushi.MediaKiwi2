@@ -5,10 +5,64 @@ import { registerServices } from "../registerServices";
 import { INavigationConnector, IViewConnector, ISectionConnector } from "../../services";
 import { NavigationConnector, ViewConnector, SectionConnector } from "../../services";
 import { IMediakiwiServiceRegistrations } from "../../models/options";
+import { Paging, ListResult, NavigationItem, Sorting, View, Section } from "@/models";
+import { AxiosResponse } from "axios";
 
-class MockedNavigationConnector implements INavigationConnector {}
-class MockedViewConnector implements IViewConnector {}
-class MockedSectionConnector implements ISectionConnector {}
+class MockedNavigationConnector implements INavigationConnector {
+  GetNavigationItem(id: string): Promise<NavigationItem> {
+    throw new Error("Method not implemented.");
+  }
+  CreateNavigationItem(item: NavigationItem): Promise<NavigationItem> {
+    throw new Error("Method not implemented.");
+  }
+  UpdateNavigationItem(item: NavigationItem): Promise<NavigationItem> {
+    throw new Error("Method not implemented.");
+  }
+  DeleteNavigationItem(id: string): Promise<AxiosResponse<any, any>> {
+    throw new Error("Method not implemented.");
+  }
+  GetNavigationItems(
+    _sectionId?: string | undefined,
+    _paging?: Paging | undefined,
+    _sorting?: Sorting<NavigationItem> | undefined
+  ): Promise<ListResult<NavigationItem>> {
+    throw new Error("Method not implemented.");
+  }
+}
+class MockedViewConnector implements IViewConnector {
+  CreateView(_id: string, _request: View): Promise<View> {
+    throw new Error("Method not implemented.");
+  }
+  DeleteView(_id: string): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  GetViews(_paging?: Paging, _sorting?: Sorting): Promise<ListResult<View>> {
+    throw new Error("Method not implemented.");
+  }
+  GetView(_id: string): Promise<View | undefined> {
+    throw new Error("Method not implemented.");
+  }
+  UpdateView(_id: string, _request: View): Promise<View> {
+    throw new Error("Method not implemented.");
+  }
+}
+class MockedSectionConnector implements ISectionConnector {
+  CreateSection(_id: string, _request: Section): Promise<Section> {
+    throw new Error("Method not implemented.");
+  }
+  DeleteSection(_id: string): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  GetSections(_paging?: Paging | undefined): Promise<ListResult<Section>> {
+    throw new Error("Method not implemented.");
+  }
+  GetSection(_id: string): Promise<Section | undefined> {
+    throw new Error("Method not implemented.");
+  }
+  UpdateSection(_id: string, _request: Section): Promise<Section> {
+    throw new Error("Method not implemented.");
+  }
+}
 
 describe("registerServices", () => {
   beforeEach(() => {

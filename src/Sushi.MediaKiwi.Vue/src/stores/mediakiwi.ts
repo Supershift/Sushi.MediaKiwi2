@@ -5,7 +5,7 @@ import type ListResult from "@/models/api/ListResult";
 import { container } from "tsyringe";
 import { IRoleConnector } from "@/services/IRoleConnector";
 import { noPageSize } from "@/constants";
-import { VuetifyOptions } from "vuetify/lib/framework.mjs";
+import { VuetifyOptions } from "vuetify";
 
 export interface MediaKiwiState {
   navigationItems: Array<NavigationItem>;
@@ -49,12 +49,12 @@ export const useMediakiwiStore = defineStore({
       // get instance of INavigationConnector
       const connector = container.resolve<INavigationConnector>("INavigationConnector");
       // get nav items and store them
-      const navigationItems = await connector.GetNavigationItems({ pageSize: noPageSize });
+      const navigationItems = await connector.GetNavigationItems(undefined, { pageSize: noPageSize });
       this.setNavigationItems(navigationItems);
     },
     async getViews() {
       const connector = container.resolve<IViewConnector>("IViewConnector");
-      const views = await connector.GetViews(undefined, { pageSize: noPageSize });
+      const views = await connector.GetViews({ pageSize: noPageSize });
       this.setViews(views);
     },
     async getSections() {

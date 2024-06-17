@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
-using Sushi.MediaKiwi.DAL.Paging;
-using Sushi.MediaKiwi.DAL.Repository;
+using Sushi.MediaKiwi.Services.Interfaces;
 using Sushi.MediaKiwi.Services.Model;
 
 namespace Sushi.MediaKiwi.Services
@@ -11,18 +10,19 @@ namespace Sushi.MediaKiwi.Services
     public class SectionService
     {
         private readonly ISectionRepository _sectionRepository;
+        private readonly ISectionRoleRepository _sectionRoleRepository;
         private readonly IMapper _mapper;
 
         /// <summary>
         /// Creates a new instance of <see cref="SectionService"/>.
-        /// </summary>
-        /// <param name="repository"></param>
-        /// <param name="mapper"></param>
+        /// </summary>        
         public SectionService(
             ISectionRepository repository,
+            ISectionRoleRepository sectionRoleRepository,
             IMapper mapper)
         {
             _sectionRepository = repository;
+            _sectionRoleRepository = sectionRoleRepository;
             _mapper = mapper;
         }
 
@@ -31,7 +31,7 @@ namespace Sushi.MediaKiwi.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<Result> DeleteAsync(int id)
+        public async Task<Result> DeleteAsync(string id)
         {
             // get item from datastore
             var section = await _sectionRepository.GetAsync(id);
@@ -58,27 +58,41 @@ namespace Sushi.MediaKiwi.Services
         {
             // get all sections from database
             var items = await _sectionRepository.GetAllAsync(pagingValues);
+            var sectionRoles = await _sectionRoleRepository.GetAllAsync(null);
 
             // map to result
             var itemsDto = _mapper.Map<List<Section>>(items);
 
             // create result object
-            var result = new ListResult<Section>(itemsDto, items);            
+            var result = new ListResult<Section>(itemsDto, items);
+
+            // add roles
+            foreach (var section in result.Result)
+            {
+                section.Roles = sectionRoles.Where(x => x.SectionId == section.Id).Select(x => x.Role).ToList();
+            }
 
             return new Result<ListResult<Section>>(result);
         }
 
-        public async Task<Result<Section>> GetAsync(int id)
+        /// <summary>
+        /// Gets a single <see cref="Section"/> by its ID.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<Result<Section>> GetAsync(string id)
         {
             // get item from datastore
             var section = await _sectionRepository.GetAsync(id);
 
-
             if (section != null)
             {
-                // map to result
-                var result = new Section();
-                _mapper.Map(section, result);
+                var sectionRoles = await _sectionRoleRepository.GetAllAsync(section.Id);
+
+                // map to result                 
+                var result = _mapper.Map<Section>(section);
+                result.Roles = sectionRoles.Where(x => x.SectionId == section.Id).Select(x => x.Role).ToList();
+
                 return new Result<Section>(result);
             }
             else
@@ -87,42 +101,121 @@ namespace Sushi.MediaKiwi.Services
             }
         }
 
-        public async Task<Result<Section>> SaveAsync(int? id, Section request)
+        /// <summary>
+        /// Updates a section.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task<Result<Section>> UpdateAsync(string id, Section request)
         {
             // get existing or create new section, based on id
-            DAL.Section section;
-            if (id.HasValue)
+            var section = await _sectionRepository.GetAsync(id);
+            if (section == null)
             {
-                var candidate = await _sectionRepository.GetAsync(id.Value);
-                if (candidate == null)
-                {
-                    return new Result<Section>(ResultCode.NotFound);
-                }
-                section = candidate;
-
-            }
-            else
-            {
-                section = new DAL.Section();
+                return new Result<Section>(ResultCode.NotFound);
             }
 
             // map from model to database
             _mapper.Map(request, section);
 
             // start transaction
-            using (var ts = DAL.Utility.CreateTransactionScope())
+            using (var ts = Utility.CreateTransactionScope())
             {
+                // delete existing roles
+                await _sectionRoleRepository.DeleteForSectionAsync(id);
 
-                // save section
-                await _sectionRepository.SaveAsync(section);
+                // update section
+                await _sectionRepository.UpdateAsync(section);
+
+                // insert roles for view
+                foreach (var role in request.Roles)
+                {
+                    var sectionRole = new Entities.SectionRole() { Role = role, SectionId = section.Id };
+                    await _sectionRoleRepository.InsertAsync(sectionRole);
+                }
 
                 // commit transaction
                 ts.Complete();
             }
-            
-            var result = new Section();
-            _mapper.Map(section, result);
+
+            var result = _mapper.Map<Section>(section);
             return new Result<Section>(result);
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Section"/>.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task<Result<Section>> CreateAsync(string id, Section request)
+        {
+            // sanitize input
+            id = id.Trim();
+
+            // validate new id
+            var error = Entities.Section.ValidateSectionId(id);
+            if (error != null)
+                return new Result<Section>(ResultCode.ValidationFailed) { ErrorMessage = error };
+
+            var section = new Entities.Section() { Id = id };
+
+            // map from model to database
+            _mapper.Map(request, section);
+
+            // start transaction
+            using (var ts = Utility.CreateTransactionScope())
+            {
+
+                // new section
+                await _sectionRepository.InsertAsync(section);
+
+
+                // insert roles for view
+                foreach (var role in request.Roles)
+                {
+                    var sectionRole = new Entities.SectionRole() { Role = role, SectionId = section.Id };
+                    await _sectionRoleRepository.InsertAsync(sectionRole);
+                }
+
+                // commit transaction
+                ts.Complete();
+            }
+
+            var result = _mapper.Map<Section>(section);
+            return new Result<Section>(result);
+        }
+
+        /// <summary>
+        /// Changes the ID of a section.
+        /// </summary>
+        /// <param name="oldId"></param>
+        /// <param name="newId"></param>
+        /// <returns></returns>
+        public async Task<Result<Section>> UpdateIdAsync(string oldId, string newId)
+        {
+            // sanitize input
+            newId = newId.Trim();
+            
+            // validate new id
+            var error = Entities.Section.ValidateSectionId(newId);
+            if (error != null)
+                return new Result<Section>(ResultCode.ValidationFailed) { ErrorMessage = error };
+
+            // get item from datastore
+            var section = await _sectionRepository.GetAsync(oldId);
+
+            if (section == null)
+            {
+                return new Result<Section>(ResultCode.NotFound);
+            }
+
+            // change id             
+            await _sectionRepository.UpdateIdAsync(section.Id, newId);
+
+            // return new section
+            return await GetAsync(newId);
         }
     }
 }

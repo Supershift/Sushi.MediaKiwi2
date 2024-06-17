@@ -2,25 +2,21 @@
 using AutoMapper.Extensions.ExpressionMapping;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Sushi.MediaKiwi.DAL;
 using Sushi.MediaKiwi.Services.Model;
-using Sushi.MicroORM;
 
 namespace Sushi.MediaKiwi.Services
 {
+    /// <summary>
+    /// Contains extension methods for <see cref="IServiceCollection"/>.
+    /// </summary>
     public static class ServiceCollectionExtensions
     {
         /// <summary>
         /// Adds all services needed to run MediaKiwi to the <paramref name="services"/>, including Sushi.MicroOrm.
         /// </summary>        
         /// <returns></returns>
-        public static IServiceCollection AddMediaKiwiServices(this IServiceCollection services, string defaultConnectionString, 
-            Action<MicroOrmConfigurationBuilder>? microOrmConfig = null,
-            Action<IMapperConfigurationExpression>? autoMapperConfig = null)
+        public static IServiceCollection AddMediaKiwiServices(this IServiceCollection services, Action<IMapperConfigurationExpression>? autoMapperConfig = null)
         {
-            // add DAL (which includes MicroORM)
-            services.AddMediaKiwiDAL(defaultConnectionString, microOrmConfig);
-
             // add automapper
             services.AddAutoMapper(c => {
                 // add client's config if supplied
@@ -38,6 +34,7 @@ namespace Sushi.MediaKiwi.Services
             services.TryAddTransient<NavigationItemService>();
             services.TryAddTransient<RoleService>();
             services.TryAddTransient<LocaleService>();
+            services.TryAddTransient<AdminTranslationService>();
             services.TryAddTransient<TranslationService>();
 
             return services;

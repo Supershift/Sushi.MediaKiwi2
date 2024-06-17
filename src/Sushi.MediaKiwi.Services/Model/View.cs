@@ -23,19 +23,13 @@ namespace Sushi.MediaKiwi.Services.Model
         /// Name for this view.
         /// </summary>
         [Required, StringLength(128)]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         /// <summary>
         /// The key of the Vue component implementing this view, e.g. ./views/myView.vue, MyKey
         /// </summary>
         [Required, StringLength(128)]
-        public string ComponentKey { get; set; }
-
-        /// <summary>
-        /// Section to which this view belongs.
-        /// </summary>
-        [SwaggerSchema(ReadOnly = true)]
-        public int SectionId { get; set; }
+        public string ComponentKey { get; set; } = null!;
 
         /// <summary>
         /// Name of the URL parameter required by this view.

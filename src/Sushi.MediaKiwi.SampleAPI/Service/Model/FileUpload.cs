@@ -20,7 +20,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Service.Model
         /// Display name of the file.
         /// </summary>
         [Required, StringLength(256)]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         /// <summary>
         /// Size of the file.
@@ -38,18 +38,18 @@ namespace Sushi.MediaKiwi.SampleAPI.Service.Model
         /// File Type for the file in question
         /// </summary>
         [SwaggerSchema(ReadOnly = true)]
-        public string FileType { get; set; }
+        public string FileType { get; set; } = null!;
 
         /// <summary>
         /// URI to access the file
         /// </summary>
         [SwaggerSchema(ReadOnly = true)]
-        public string FileUrl { get; set; }
+        public string FileUrl { get; set; } = null!;
 
         /// <summary>
         /// Filename
         /// </summary>
         [SwaggerSchema(ReadOnly = true)]
-        public string FileName { get; set; }
+        public string FileName { get; set; } = null!;
     }
 }

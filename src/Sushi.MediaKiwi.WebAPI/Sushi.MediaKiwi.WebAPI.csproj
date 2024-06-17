@@ -1,15 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>0.1.0</Version>
+    <Version>0.1.7</Version>
     <Authors>Supershift</Authors>
     <Description>Provides a back-end for the MediaKiwi portal generator tool</Description>
     <PackageIcon>logo.png</PackageIcon>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,8 +25,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Asp.Versioning.Mvc" Version="7.1.0" />
-    <PackageReference Include="Microsoft.Identity.Web" Version="2.5.0" />
+    <PackageReference Include="Asp.Versioning.Mvc" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="2.17.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />
   </ItemGroup>
 

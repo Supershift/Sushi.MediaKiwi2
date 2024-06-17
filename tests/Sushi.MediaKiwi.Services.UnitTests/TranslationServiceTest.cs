@@ -1,14 +1,6 @@
-﻿using AutoMapper;
-using Moq;
-using Sushi.MediaKiwi.DAL.Paging;
-using Sushi.MediaKiwi.DAL.Repository;
-using Sushi.MediaKiwi.Services.Model;
+﻿using Moq;
+using Sushi.MediaKiwi.Services.Interfaces;
 using Sushi.MicroORM;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.Services.UnitTests
 {
@@ -18,17 +10,17 @@ namespace Sushi.MediaKiwi.Services.UnitTests
         public async Task GetAllTranslationsTest()
         {
             // arrange
-            var stubs = new QueryListResult<DAL.Translation>
+            var stubs = new QueryListResult<Entities.Translation>
             {
-                new DAL.Translation() { Key = "delete", Value = "verwijderen"},
-                new DAL.Translation() { Key = "edit", Value = "bewerken"}
+                new Entities.Translation() { Key = "delete", Value = "verwijderen"},
+                new Entities.Translation() { Key = "edit", Value = "bewerken"}
             };
 
             string localeId = "en-US";
             string ns = "someNamespace";
 
             var translationRepositoryMock = new Mock<ITranslationRepository>();
-            translationRepositoryMock.Setup(x => x.GetAllAsync(It.Is<string>(x=>x == localeId), It.Is<string>(x=>x == ns), null)).ReturnsAsync(stubs);
+            translationRepositoryMock.Setup(x => x.GetAllAsync(localeId, ns, null, null)).ReturnsAsync(stubs);
 
             var service = new TranslationService(translationRepositoryMock.Object);
 
