@@ -1,8 +1,8 @@
 <!-- eslint-disable vue/require-default-prop -->
-<script setup lang="ts">
-  import type { TableMap, TableFilter } from "@/models/table";
-  import type { Paging, Sorting } from "@/models/api";
-  import { ref } from "vue";
+<script setup lang="ts" generic="T">
+  import { TableMap, TableFilter } from "@/models/table";
+  import { Paging, Sorting } from "@/models/api";
+  import { ref, watch } from "vue";
   import MkTableFilter from "@/components/MkTableFilter/MkTableFilter.vue";
   import MkTableView from "./MkTableView.vue";
 
@@ -25,22 +25,16 @@
   // define properties
   const props = withDefaults(
     defineProps<{
-      /** Collection of filters to filter data. */
-      filters?: TableFilter;
       /** Defines mapping between data and the table. */
-      tableMap?: TableMap<any>;
+      tableMap?: TableMap<T>;
       /** Sets data and paging properties based on the API's result. */
-      apiResult?: IListResult<any>;
+      apiResult?: IListResult<T>;
       /** An array of objects used for automatically generating rows. */
-      data?: any[];
+      data?: T[];
       /** When set, enables paging based on provided values. */
       paging?: IPagingResult;
       /** ExternalId of the view instance to which the user is pushed when clicking a row. */
       itemViewId?: string;
-      /** */
-      sorting?: Sorting;
-      /** */
-      selection?: unknown[];
       /** Determines if the toolbar has a new button, default: false. */
       new?: boolean;
       /** Determines if we only want to emit instead of navigating to the given itemViewId */
@@ -51,55 +45,73 @@
       onLoad?: () => Promise<void>;
       /** Title specificly for the current table */
       title?: string;
-      /** Currently selected page index and optional size */
-      currentPagination: Paging;
       /** Defines the pagination mode */
       paginationMode?: MediakiwiPaginationMode;
       /** */
-      itemId?: (entity: any) => string | number;
+      itemId?: (entity: T) => string | number;
       /** Hides the empty state component entirely */
       hideEmptyState?: boolean;
       /** Title for the Empty State component */
       emptyStateTitle?: string;
       /** Subtitle for the Empty State component  */
       emptyStateSubtitle?: string;
+      /** Hides the bulk action bar while keeing the checkboxes intact */
+      hideBulkActionBar?: boolean;
+      /** 'Tracks' the item the user viewed when changing pageSize, when true calculates this instead of resetting pageIndex to 0 */
+      pageTracking?: boolean;
+      /** Callback to disable the selection checkbox for a row based on specific criteria */
+      disableItemSelection?: (entity: T) => boolean;
     }>(),
     {
-      currentPagination: () => ({
-        pageIndex: 0,
-        pageSize: defaultPageSize,
-      }),
       paginationMode: "controls",
     }
   );
 
+  /** Use Sorting<T> for typesafety  */
+  const sorting = defineModel<Sorting | Sorting<T>>("sorting");
+  /** Selected items */
+  const selection = defineModel<Array<T>>("selection");
+  /** Collection of filters to filter data. */
+  const filters = defineModel<TableFilter>("filters");
+  /** Currently selected page index and optional size */
+  const currentPagination = defineModel<Paging>("currentPagination", {
+    default: <Paging>{
+      pageIndex: 0,
+      pageSize: defaultPageSize,
+    },
+  });
+
+  const sortBy = computed(() => sorting.value?.sortBy);
+  const sortDirection = computed(() => sorting.value?.sortDirection);
+
   // define events
-  type MkTableEmit = {
+  const emit = defineEmits<{
     (e: "update:filters", value: TableFilter): void;
-    (e: "click:row", value: unknown): void;
-    (e: "update:sorting", value?: Sorting): void;
-    (e: "update:selection", value?: unknown[]): void;
+    (e: "click:row", value: T): void;
+    (e: "update:sorting", value?: Sorting<T> | Sorting): void;
+    (e: "update:selection", value?: T[]): void;
     (e: "update:currentPagination", value: Paging): void;
     (e: "click:new", value?: string): void;
-  };
-  const emit = defineEmits<MkTableEmit>();
+  }>();
 
   // define slots
   const slots = defineSlots<{
-    header?: (props: unknown) => any;
-    footer?: (props: unknown) => any;
+    header?: () => never;
+    footer?: () => never;
     /** Visible action slot for the MkToolbar */
-    toolbar?: (props: unknown) => never;
+    toolbar?: () => never;
     /** Menu actions for the MkToolbar */
-    overflowMenuActions?: (props: unknown) => never;
+    overflowMenuActions?: () => never;
     /** Action slot for the MkBulkActionBar */
-    bulkActionBar?: (props: unknown) => never;
+    bulkActionBar?: (props: { confirm: (callback: () => void) => void }) => never;
     /** table templating  */
-    thead?: (props: unknown) => never;
+    thead?: () => never;
     /** table templating */
-    tbody?: (props: any) => never;
+    tbody?: (dataItem: T) => never;
     /** Custom component for the empty state */
     emptyState?: () => never;
+    /* Custom title */
+    toolbarTitle?: () => never;
   }>();
 
   // inject dependencies
@@ -111,8 +123,8 @@
   const inProgress = ref(false);
   const mkTableViewComponent = ref();
   const pageSizes = ref([...defaultPageSizeOptions]);
-  if (props.currentPagination?.pageSize) {
-    pageSizes.value.push(props.currentPagination.pageSize);
+  if (currentPagination.value?.pageSize) {
+    pageSizes.value.push(currentPagination.value.pageSize);
   }
 
   const isBooleanColumn = computed(() => {
@@ -148,7 +160,7 @@
   });
 
   const showPagination = computed(() => {
-    return props.currentPagination && pagingResult.value && pagingResult.value.pageCount;
+    return currentPagination.value && pagingResult.value && pagingResult.value.pageCount;
   });
 
   // event listeners
@@ -166,7 +178,7 @@
     // reset paging
     emit("update:currentPagination", {
       pageIndex: 0,
-      pageSize: props.currentPagination.pageSize,
+      pageSize: currentPagination.value?.pageSize,
     });
     // update filters
     emit("update:filters", value);
@@ -202,6 +214,9 @@
       }
     }
   }
+
+  // Watch for changes in sorting and direction
+  watch([sortBy, sortDirection], loadData);
 </script>
 
 <template>
@@ -218,6 +233,9 @@
         :new-title="props.newTitle"
         @click:new="emit('click:new', $event)"
       >
+        <template v-if="slots.toolbarTitle" #title>
+          <slot name="toolbarTitle"></slot>
+        </template>
         <template v-if="slots.toolbar" #toolbar>
           <slot name="toolbar"></slot>
         </template>
@@ -231,7 +249,7 @@
       <MkTableFilter :model-value="filters" @update:model-value="filterChanged" />
     </template>
 
-    <template v-if="selection">
+    <template v-if="selection && !props.hideBulkActionBar">
       <v-expand-transition>
         <MkBulkActionBar v-if="selection?.length" :selection="selection" @click:close="mkTableViewComponent.clearSelection">
           <template #default="{ confirm }">
@@ -246,8 +264,8 @@
       :table-map="tableMap"
       :data="apiResult ? apiResult.result : data"
       :item-view-id="itemViewId"
-      :sorting="sorting"
-      :selection="selection"
+      v-model:sorting="sorting"
+      v-model:selection="selection"
       :checkbox="selection ? true : false"
       class="mk-table"
       :pagination-mode="paginationMode"
@@ -256,6 +274,7 @@
       @click:row="(e) => emit('click:row', e)"
       @update:sorting="sortingChanged"
       @update:selection="(e) => emit('update:selection', e)"
+      :disable-item-selection="props.disableItemSelection"
     >
       <template #thead>
         <slot v-if="slots.thead" name="thead"></slot>
@@ -288,6 +307,7 @@
           :paging-result="pagingResult"
           :mode="paginationMode"
           :page-size-options="pageSizes"
+          :page-tracking="props?.pageTracking"
           @update:model-value="pageChanged"
         />
       </template>

@@ -18,10 +18,9 @@ export class ViewConnector implements IViewConnector {
     await this.axios.delete(`/views/${id}`);
   }
 
-  async GetViews(sectionId?: number, paging?: Paging, sorting?: Sorting): Promise<ListResult<View>> {
+  async GetViews(paging?: Paging, sorting?: Sorting): Promise<ListResult<View>> {
     // build querystring params
     const query = {
-      sectionId: sectionId,
       ...paging,
       ...sorting,
     };
@@ -30,12 +29,12 @@ export class ViewConnector implements IViewConnector {
   }
 
   async GetView(id: string): Promise<View | undefined> {
-    const response = await this.axios.get<View>(`/views/${id}`);
+    const response = await this.axios.get<View>(`/views/${encodeURIComponent(id)}`);
     return response.data;
   }
 
   async UpdateView(id: string, request: View): Promise<View> {
-    const response = await this.axios.put<View>(`/views/${id}`, request);
+    const response = await this.axios.put<View>(`/views/${encodeURIComponent(id)}`, request);
     return response.data;
   }
 }

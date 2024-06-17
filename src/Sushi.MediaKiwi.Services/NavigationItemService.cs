@@ -1,20 +1,22 @@
 ﻿using AutoMapper;
-using Sushi.MediaKiwi.DAL.Paging;
-using Sushi.MediaKiwi.DAL.Repository;
+using Sushi.MediaKiwi.Services.Interfaces;
 using Sushi.MediaKiwi.Services.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.Services
 {
+    /// <summary>
+    /// Provides methods to work with <see cref="NavigationItem"/> objects.
+    /// </summary>
     public class NavigationItemService
     {
         private readonly INavigationItemRepository _navigationItemRepository;
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="NavigationItemService"/>.
+        /// </summary>
+        /// <param name="navigationItemRepository"></param>
+        /// <param name="mapper"></param>
         public NavigationItemService(
             INavigationItemRepository navigationItemRepository, 
             IMapper mapper)
@@ -23,10 +25,20 @@ namespace Sushi.MediaKiwi.Services
             _mapper = mapper;
         }
 
-        public async Task<Result<ListResult<NavigationItem>>> GetAllAsync(int? sectionID, PagingValues pagingValues)
+        /// <summary>
+        /// Gets all <see cref="NavigationItem"/> objects for the given filters.
+        /// </summary>
+        /// <param name="sectionID"></param>
+        /// <param name="pagingValues"></param>
+        /// <param name="sortValues"></param>
+        /// <returns></returns>
+        public async Task<Result<ListResult<NavigationItem>>> GetAllAsync(string? sectionID, PagingValues pagingValues, SortValues<NavigationItem>? sortValues = null)
         {
+            // map sort values to dal
+            var sortValuesDal = _mapper.MapSortValues<Entities.NavigationItem>(sortValues);
+
             // get navigationitems from datastore
-            var items = await _navigationItemRepository.GetAllAsync(sectionID, pagingValues);
+            var items = await _navigationItemRepository.GetAllAsync(sectionID, pagingValues, sortValuesDal);
 
             // map to result
             var itemsDto = _mapper.Map<List<NavigationItem>>(items);
@@ -36,8 +48,13 @@ namespace Sushi.MediaKiwi.Services
 
             return new Result<ListResult<NavigationItem>>(result);
         }       
-
-        public async Task<Result<NavigationItem>> GetAsync(int id)
+                
+        /// <summary>
+        /// Gets a single <see cref="NavigationItem"/> by its ID.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<Result<NavigationItem>> GetAsync(string id)
         {
             // get item from datastore
             var navigationItem = await _navigationItemRepository.GetAsync(id);
@@ -55,36 +72,49 @@ namespace Sushi.MediaKiwi.Services
                 return new Result<NavigationItem>(ResultCode.NotFound);
             }
         }
-
-        public async Task<Result<NavigationItem>> CreateAsync(NavigationItem request)
+         
+        /// <summary>
+        /// Creates a new <see cref="NavigationItem"/>.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task<Result<NavigationItem>> CreateAsync(string id, NavigationItem request)
         {
-            var navigationItem = new DAL.NavigationItem();
+            var navigationItem = new Entities.NavigationItem();
 
             // map from model to database
             _mapper.Map(request, navigationItem);
 
+            // set id
+            navigationItem.Id = id;
+
             // start transaction
-            using (var ts = DAL.Utility.CreateTransactionScope())
-            {
-                // save view
-                // todo: handle pk constraint fail
+            using (var ts = Utility.CreateTransactionScope())
+            {                
                 await _navigationItemRepository.InsertAsync(navigationItem);
 
                 // commit transaction
                 ts.Complete();
             }
 
-            // return view
+            // return item
             var result = new NavigationItem();
             _mapper.Map(navigationItem, result);
 
             return new Result<NavigationItem>(result);            
         }
-
-        public async Task<Result<NavigationItem>> UpdateAsync(int id, NavigationItem request)
+                
+        /// <summary>
+        /// Updates a <see cref="NavigationItem"/>.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task<Result<NavigationItem>> UpdateAsync(string id, NavigationItem request)
         {
             // get existing view, based on id
-            DAL.NavigationItem navigationItem = await _navigationItemRepository.GetAsync(id);
+            var navigationItem = await _navigationItemRepository.GetAsync(id);
             if (navigationItem == null)
             {
                 return new Result<NavigationItem>(ResultCode.NotFound);
@@ -94,7 +124,7 @@ namespace Sushi.MediaKiwi.Services
             _mapper.Map(request, navigationItem);
 
             // start transaction
-            using (var ts = DAL.Utility.CreateTransactionScope())
+            using (var ts = Utility.CreateTransactionScope())
             {
                 // update view                
                 await _navigationItemRepository.UpdateAsync(navigationItem);
@@ -109,13 +139,16 @@ namespace Sushi.MediaKiwi.Services
             return new Result<NavigationItem>(result);
         }
 
-        public async Task<Result> DeleteAsync(int id)
+        /// <summary>
+        /// Deletes a <see cref="NavigationItem"/>.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<Result> DeleteAsync(string id)
         {
             // get item from datastore
             var view = await _navigationItemRepository.GetAsync(id);
-
-            // todo: check if view is used by any navigation items?
-
+                        
             if (view != null)
             {   
                 // delete item
@@ -126,6 +159,37 @@ namespace Sushi.MediaKiwi.Services
             {
                 return new Result(ResultCode.NotFound);
             }
+        }
+
+        /// <summary>
+        /// Updates the ID of a <see cref="NavigationItem"/>.
+        /// </summary>
+        /// <param name="oldId"></param>
+        /// <param name="newId"></param>
+        /// <returns></returns>
+        public async Task<Result<NavigationItem>> UpdateIdAsync(string oldId, string newId)
+        {
+            // sanitize input
+            newId = newId.Trim();
+            
+            // validate input
+            var error = Entities.NavigationItem.ValidateId(newId);
+            if (error != null)
+                return new Result<NavigationItem>(ResultCode.ValidationFailed) { ErrorMessage = error };
+            
+            // get item from datastore
+            var navigationItem = await _navigationItemRepository.GetAsync(oldId);
+
+            if (navigationItem == null)
+            {
+                return new Result<NavigationItem>(ResultCode.NotFound);
+            }
+
+            // change ID
+            await _navigationItemRepository.UpdateIdAsync(oldId, newId);
+
+            // return result
+            return await GetAsync(newId);
         }
     }
 }

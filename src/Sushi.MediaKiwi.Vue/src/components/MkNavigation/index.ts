@@ -4,3 +4,4 @@ export { default as MkNavigation } from "./MkNavigation.vue";
 export { default as MkNavigationIcon } from "./MkNavigationIcon.vue";
 export { default as MkBackButton } from "./MkBackButton.vue";
 export { default as MkNavigationDrawer } from "./MkNavigationDrawer.vue";
+export { default as MkNavigationDrawerInfo } from "./MkNavigationDrawerInfo.vue";

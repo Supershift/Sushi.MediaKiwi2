@@ -7,6 +7,9 @@ using Sushi.MediaKiwi.WebAPI.Paging;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
+    /// <summary>
+    /// Defines endpoints to manage translations.
+    /// </summary>
     [Route($"{BaseRoute}/admin/translations/")]
     [Authorize(Policy = Constants.AdminPolicyName)]
     public class AdminTranslationController : MediaKiwiControllerBase

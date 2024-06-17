@@ -3,16 +3,16 @@ import { type ISectionConnector } from "@/services";
 import { sections } from "./repository";
 
 export class SectionConnector implements ISectionConnector {
-  CreateSection(request: Section): Promise<Section> {
+  CreateSection(id: string, request: Section): Promise<Section> {
     throw new Error("Method not implemented.");
   }
-  DeleteSection(id: number): Promise<void> {
+  DeleteSection(id: string): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  GetSection(id: number): Promise<Section | undefined> {
+  GetSection(id: string): Promise<Section | undefined> {
     throw new Error("Method not implemented.");
   }
-  UpdateSection(id: number, request: Section): Promise<Section> {
+  UpdateSection(id: string, request: Section): Promise<Section> {
     throw new Error("Method not implemented.");
   }
   GetSections(): Promise<ListResult<Section>> {

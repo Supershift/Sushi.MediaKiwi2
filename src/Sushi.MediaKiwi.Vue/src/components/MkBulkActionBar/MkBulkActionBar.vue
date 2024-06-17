@@ -19,6 +19,11 @@
     callback?: () => void;
   }>({});
 
+  // define slots
+  const slots = defineSlots<{
+    default?: (props: { confirm: (callback: () => void) => void }) => never;
+  }>();
+
   /**
    * Reset the confirm state and callback function
    */
@@ -63,8 +68,10 @@
     <v-spacer></v-spacer>
 
     <template v-if="confirmState.show">
-      <v-btn @click="clearConfirmState">{{ defaultT("Cancel") }}</v-btn>
-      <v-btn-primary @click="onConfirm">{{ defaultT("Confirm") }}</v-btn-primary>
+      <div class="d-flex ga-2 flex-row">
+        <v-btn @click="clearConfirmState">{{ defaultT("Cancel") }}</v-btn>
+        <v-btn color="primary" variant="flat" @click="onConfirm">{{ defaultT("Confirm") }}</v-btn>
+      </div>
     </template>
 
     <v-btn v-if="!confirmState?.show" :icon="IconsLibrary.close" @click="emit('click:close')"></v-btn>

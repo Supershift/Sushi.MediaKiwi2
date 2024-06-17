@@ -1,77 +1,72 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MediaKiwi.WebAPI.Paging;
+using Sushi.MediaKiwi.WebAPI.Sorting;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
+    /// <summary>
+    /// Defines endpoints to retrieve NavigationItems.
+    /// </summary>
     [Route($"{BaseRoute}/navigationitems")]
+    [Authorize]
     public class NavigationItemController : MediaKiwiControllerBase
     {
         private readonly NavigationItemService _navigationItemService;
         private readonly PagingRetriever _pagingRetriever;
-
-        public NavigationItemController(NavigationItemService screenService, PagingRetriever pagingRetriever)
+        private readonly SortingRetriever _sortingRetriever;
+        
+        internal class NavigationItemsSortMap : SortMap<NavigationItem>
         {
-            _navigationItemService = screenService;
-            _pagingRetriever = pagingRetriever;
-        }
-
-        [HttpGet]
-        [QueryStringPaging]
-        public async Task<ActionResult<ListResult<NavigationItem>>> GetNavigationItems([FromQuery] int? sectionID)
-        {
-            var pagingValues = _pagingRetriever.GetPaging();
-            var result = await _navigationItemService.GetAllAsync(sectionID, pagingValues);
-            return this.CreateResponse(result);
+            public NavigationItemsSortMap()
+            {
+                Add(x => x.Name);
+                Add(x => x.SortOrder);
+            }
         }
 
         /// <summary>
-        /// Deletes a NavigationItem.
+        /// Creates a new instance of the NavigationItemController.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpDelete]
-        [Route("{id}")]
-        public async Task<ActionResult<NavigationItem>> DeleteNavigationItem(int id)
+        /// <param name="screenService"></param>
+        /// <param name="pagingRetriever"></param>
+        /// <param name="sortingRetriever"></param>
+        public NavigationItemController(NavigationItemService screenService, PagingRetriever pagingRetriever, SortingRetriever sortingRetriever)
         {
-            var result = await _navigationItemService.DeleteAsync(id);
-            return this.CreateResponse(result);
+            _navigationItemService = screenService;
+            _pagingRetriever = pagingRetriever;
+            _sortingRetriever = sortingRetriever;
         }
 
+
+        /// <summary>
+        /// Gets all navigation items for the given filters.
+        /// </summary>
+        /// <param name="sectionID"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [QueryStringPaging]
+        [QueryStringSorting<NavigationItemsSortMap>()]
+        public async Task<ActionResult<ListResult<NavigationItem>>> GetNavigationItems([FromQuery] string? sectionID)
+        {
+            var pagingValues = _pagingRetriever.GetPaging();
+            var sortValues = _sortingRetriever.GetSorting<NavigationItem>();
+            var result = await _navigationItemService.GetAllAsync(sectionID, pagingValues, sortValues);
+            return this.CreateResponse(result);
+        }
+        
         /// <summary>
         /// Gets a NavigationItem.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("{id}")]
-        public async Task<ActionResult<NavigationItem>> GetNavigationItem(int id)
+        [Route("{id}")]        
+        public async Task<ActionResult<NavigationItem>> GetNavigationItem(string id)
         {
             var result = await _navigationItemService.GetAsync(id);
-            return this.CreateResponse(result);
-        }
-
-        /// <summary>
-        /// Creates a new NavigationItem.
-        /// </summary>        
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<ActionResult<NavigationItem>> CreateNavigationItem(NavigationItem request)
-        {
-            var result = await _navigationItemService.CreateAsync(request);
-            return this.CreateResponse(result);
-        }
-
-        /// <summary>
-        /// Updates an existing NavigationItem.
-        /// </summary>        
-        /// <returns></returns>
-        [HttpPut]
-        [Route("{id}")]
-        public async Task<ActionResult<NavigationItem>> UpdateNavigationItem(int id, NavigationItem request)
-        {
-            var result = await _navigationItemService.UpdateAsync(id, request);
             return this.CreateResponse(result);
         }
     }

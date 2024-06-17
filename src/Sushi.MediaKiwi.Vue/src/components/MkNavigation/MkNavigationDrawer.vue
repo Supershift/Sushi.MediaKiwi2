@@ -23,6 +23,9 @@
         :prepend-icon="IconsLibrary.arrowLeft"
         @click.stop="navigateTo(currentRootItem)"
       />
+
+      <div id="navigationDrawerInfo" class="mb-4"></div>
+
       <mk-navigation-item
         v-for="item in getItemsBasedOnRoot()"
         :key="item.id"
@@ -32,3 +35,10 @@
     </v-list>
   </v-navigation-drawer>
 </template>
+<style scoped lang="scss">
+  #navigationDrawerInfo {
+    &:empty {
+      display: none;
+    }
+  }
+</style>

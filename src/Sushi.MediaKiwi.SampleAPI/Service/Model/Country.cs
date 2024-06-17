@@ -8,12 +8,12 @@ namespace Sushi.MediaKiwi.SampleAPI.Service.Model
         /// ISO country code
         /// </summary>
         [Required, StringLength(2, MinimumLength = 2)]
-        public string Code { get; set; }
+        public string Code { get; set; } = null!;
 
         /// <summary>
         /// Name of the country
         /// </summary>
         [Required, StringLength(128)]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
     }
 }

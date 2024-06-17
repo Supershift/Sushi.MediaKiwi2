@@ -2,12 +2,13 @@
 using AutoMapper.Extensions.ExpressionMapping;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Sushi.MediaKiwi.DAL;
 using Sushi.MediaKiwi.Services.Model;
-using Sushi.MicroORM;
 
 namespace Sushi.MediaKiwi.Services
 {
+    /// <summary>
+    /// Contains extension methods for <see cref="IServiceCollection"/>.
+    /// </summary>
     public static class ServiceCollectionExtensions
     {
         /// <summary>
@@ -16,9 +17,6 @@ namespace Sushi.MediaKiwi.Services
         /// <returns></returns>
         public static IServiceCollection AddMediaKiwiServices(this IServiceCollection services, Action<IMapperConfigurationExpression>? autoMapperConfig = null)
         {
-            // add DAL 
-            services.AddMediaKiwiDAL();
-
             // add automapper
             services.AddAutoMapper(c => {
                 // add client's config if supplied

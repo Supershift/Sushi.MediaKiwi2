@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Sushi.MediaKiwi.DAL.Paging;
 using Sushi.MediaKiwi.SampleAPI.DAL.Repository;
 using Sushi.MediaKiwi.SampleAPI.Service.Model;
 using Sushi.MediaKiwi.Services;

@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Sushi.MediaKiwi.WebAPI.Paging;
 using Sushi.MediaKiwi.Services;
-using Sushi.MediaKiwi.DAL.Paging;
 
 namespace Sushi.MediaKiwi.WebAPI.UnitTests.Paging
 {
@@ -49,7 +48,7 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests.Paging
             var actionExecutingContextMock = new ActionExecutingContext(
                 actionContext,
                 Mock.Of<IList<IFilterMetadata>>(),
-                Mock.Of<IDictionary<string, object>>(),
+                Mock.Of<IDictionary<string, object?>>(),
                 new object());
 
 
@@ -95,7 +94,7 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests.Paging
             var actionExecutingContextMock = new ActionExecutingContext(
                 actionContext,
                 Mock.Of<IList<IFilterMetadata>>(),
-                Mock.Of<IDictionary<string, object>>(),
+                Mock.Of<IDictionary<string, object?>>(),
                 new object());
 
             // act

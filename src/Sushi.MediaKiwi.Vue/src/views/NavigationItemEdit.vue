@@ -1,21 +1,20 @@
 <script setup lang="ts">
   import { MkForm } from "@/components";
-  import { ref } from "vue";
   import { container } from "tsyringe";
-  import { INavigationConnector, IViewConnector } from "@/services";
-  import { NavigationItem, View } from "@/models";
+  import { INavigationConnector } from "@/services";
+  import { NavigationItem } from "@/models";
   import { useMediakiwiStore } from "@/stores";
   import { RouterManager } from "@/router/routerManager";
-  import { useNavigation } from "@/composables/useNavigation";
+  import { useNavigation, useValidationRules } from "@/composables";
   import { reactive } from "vue";
 
   // inject dependencies
   const navigationConnector = container.resolve<INavigationConnector>("INavigationConnector");
-  const viewConnector = container.resolve<IViewConnector>("IViewConnector");
   const routerManager = container.resolve<RouterManager>("RouterManager");
 
   const store = useMediakiwiStore();
   const navigation = useNavigation();
+  const { alphaNumericNoSpace } = useValidationRules();
 
   // get id of the view from the route
   const navigationItemId = navigation.currentViewParameter;
@@ -27,7 +26,7 @@
   async function onLoad() {
     if (navigationItemId.value) {
       // get existing view from api
-      const candidate = await navigationConnector.GetNavigationItem(parseInt(navigationItemId.value));
+      const candidate = await navigationConnector.GetNavigationItem(navigationItemId.value);
       state.navigationItem = candidate!;
     }
   }
@@ -66,6 +65,7 @@
 
 <template>
   <MkForm title="" :on-save="onSave" :on-load="onLoad" :on-delete="onDelete">
+    <v-text-field v-model="state.navigationItem.id" label="Id" :disabled="navigationItemId ? true : false" :rules="[alphaNumericNoSpace]"></v-text-field>
     <v-text-field v-model="state.navigationItem.name" label="Name" :rules="[(v) => !!v]"></v-text-field>
     <v-autocomplete
       v-model="state.navigationItem.parentNavigationItemId"
@@ -84,5 +84,6 @@
     ></v-select>
     <v-text-field v-model="state.navigationItem.viewId" label="View" :rules="[(v) => !!v]"></v-text-field>
     <v-text-field v-model="state.navigationItem.icon" label="Icon"></v-text-field>
+    <v-text-field v-model="state.navigationItem.sortOrder" label="SortOrder" type="number"></v-text-field>
   </MkForm>
 </template>

@@ -1,14 +1,6 @@
 ﻿using AutoMapper;
-using Sushi.MediaKiwi.DAL.Paging;
-using Sushi.MediaKiwi.DAL.Repository;
-using Sushi.MediaKiwi.DAL.Sorting;
+using Sushi.MediaKiwi.Services.Interfaces;
 using Sushi.MediaKiwi.Services.Model;
-using Sushi.MicroORM.Supporting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.Services
 {
@@ -22,7 +14,7 @@ namespace Sushi.MediaKiwi.Services
         private readonly IMapper _mapper;
 
         /// <summary>
-        /// Creates a new instance of <see cref="ViewRepository"/>.
+        /// Creates a new instance of <see cref="ViewService"/>.
         /// </summary>        
         public ViewService(
             IViewRepository viewRepository,
@@ -62,13 +54,13 @@ namespace Sushi.MediaKiwi.Services
         /// Gets all views matching the provided filter parameters.
         /// </summary>        
         /// <returns></returns>
-        public async Task<Result<ListResult<View>>> GetAllAsync(int? sectionID, PagingValues pagingValues, SortValues<View>? sortValues = null)
+        public async Task<Result<ListResult<View>>> GetAllAsync(PagingValues pagingValues, SortValues<View>? sortValues = null)
         {   
             // map sort values to dal
-            var sortValuesDal = _mapper.MapSortValues<DAL.View>(sortValues);
+            var sortValuesDal = _mapper.MapSortValues<Entities.View>(sortValues);
             
             // get items from datastore
-            var views = await _viewRepository.GetAllAsync(sectionID, pagingValues, sortValuesDal);
+            var views = await _viewRepository.GetAllAsync(pagingValues, sortValuesDal);
             var viewsRoles = await _viewRoleRepository.GetAllAsync(null);
 
             // map to result
@@ -86,6 +78,11 @@ namespace Sushi.MediaKiwi.Services
             return new Result<ListResult<View>>(result);
         }
 
+        /// <summary>
+        /// Gets a single <see cref="View"/> by its ID.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<Result<View>> GetAsync(string id)
         {
             // get item from datastore
@@ -110,15 +107,21 @@ namespace Sushi.MediaKiwi.Services
             }
         }
 
+        /// <summary>
+        /// Creates a new <see cref="View"/>.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<Result<View>> CreateAsync(string id, View request)
         {
-            var view = new DAL.View() { Id = id };
+            var view = new Entities.View() { Id = id };
 
             // map from model to database
             _mapper.Map(request, view);
 
             // start transaction
-            using (var ts = DAL.Utility.CreateTransactionScope())
+            using (var ts = Utility.CreateTransactionScope())
             {
                 // save view
                 // todo: handle pk constraint fail
@@ -127,7 +130,7 @@ namespace Sushi.MediaKiwi.Services
                 // insert roles for view
                 foreach (var role in request.Roles)
                 {
-                    var viewRole = new DAL.ViewRole() { Role = role, ViewId = view.Id };
+                    var viewRole = new Entities.ViewRole() { Role = role, ViewId = view.Id };
                     await _viewRoleRepository.InsertAsync(viewRole);
                 }
 
@@ -144,10 +147,16 @@ namespace Sushi.MediaKiwi.Services
             return new Result<View>(result);            
         }
 
+        /// <summary>
+        /// Updates a <see cref="View"/>.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<Result<View>> UpdateAsync(string id, View request)
         {
             // get existing view, based on id
-            DAL.View view = await _viewRepository.GetAsync(id);
+            var view = await _viewRepository.GetAsync(id);
             if (view == null)
             {
                 return new Result<View>(ResultCode.NotFound);
@@ -157,7 +166,7 @@ namespace Sushi.MediaKiwi.Services
             _mapper.Map(request, view);
 
             // start transaction
-            using (var ts = DAL.Utility.CreateTransactionScope())
+            using (var ts = Utility.CreateTransactionScope())
             {
                 // update view                
                 await _viewRepository.UpdateAsync(view);
@@ -169,7 +178,7 @@ namespace Sushi.MediaKiwi.Services
                 // insert roles for view
                 foreach (var role in request.Roles)
                 {
-                    var viewRole = new DAL.ViewRole() { Role = role, ViewId = view.Id };
+                    var viewRole = new Entities.ViewRole() { Role = role, ViewId = view.Id };
                     await _viewRoleRepository.InsertAsync(viewRole);
                 }
 

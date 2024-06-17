@@ -1,4 +1,6 @@
-﻿using Sushi.MicroORM;
+﻿using Sushi.MediaKiwi.Services.Entities;
+using Sushi.MediaKiwi.Services.Interfaces;
+using Sushi.MicroORM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +23,7 @@ namespace Sushi.MediaKiwi.DAL.Repository
         }
 
         /// <inheritdoc/>    
-        public async Task DeleteForSectionAsync(int sectionId)
+        public async Task DeleteForSectionAsync(string sectionId)
         {
             var query = _connector.CreateQuery();
 
@@ -30,7 +32,7 @@ namespace Sushi.MediaKiwi.DAL.Repository
         }
 
         /// <inheritdoc/>    
-        public async Task<QueryListResult<SectionRole>> GetAllAsync(int? sectionId)
+        public async Task<QueryListResult<SectionRole>> GetAllAsync(string? sectionId)
         {
             var query = _connector.CreateQuery();
             if (sectionId != null)

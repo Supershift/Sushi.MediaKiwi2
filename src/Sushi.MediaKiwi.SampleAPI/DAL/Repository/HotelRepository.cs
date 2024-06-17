@@ -1,5 +1,6 @@
-﻿using Sushi.MediaKiwi.DAL.Paging;
-using Sushi.MicroORM;
+﻿using Sushi.MicroORM;
+using Sushi.MediaKiwi.DAL;
+using Sushi.MediaKiwi.Services;
 
 namespace Sushi.MediaKiwi.SampleAPI.DAL.Repository
 {
@@ -32,7 +33,7 @@ namespace Sushi.MediaKiwi.SampleAPI.DAL.Repository
             return result;
         }
 
-        public async Task<Hotel> GetAsync(int id)
+        public async Task<Hotel?> GetAsync(int id)
         {
             var query = _connector.CreateQuery();
             query.Add(x => x.Id, id);

@@ -5,7 +5,7 @@ import { Paging } from "@/models/api/Paging";
 export interface IViewConnector {
   CreateView(id: string, request: View): Promise<View>;
   DeleteView(id: string): Promise<void>;
-  GetViews(sectionId?: number, paging?: Paging, sorting?: Sorting): Promise<ListResult<View>>;
+  GetViews(paging?: Paging, sorting?: Sorting): Promise<ListResult<View>>;
   GetView(id: string): Promise<View | undefined>;
   UpdateView(id: string, request: View): Promise<View>;
 }

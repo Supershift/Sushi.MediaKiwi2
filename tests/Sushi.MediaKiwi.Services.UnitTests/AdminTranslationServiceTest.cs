@@ -1,9 +1,7 @@
-﻿using Azure.Core;
-using Moq;
-using Sushi.MediaKiwi.DAL;
-using Sushi.MediaKiwi.DAL.Repository;
+﻿using Moq;
+using Sushi.MediaKiwi.Services.Entities;
+using Sushi.MediaKiwi.Services.Interfaces;
 using Sushi.MicroORM;
-
 
 namespace Sushi.MediaKiwi.Services.UnitTests
 {

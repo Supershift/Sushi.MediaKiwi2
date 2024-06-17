@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
-using Sushi.MediaKiwi.DAL.Sorting;
+using Sushi.MediaKiwi.Services;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace Sushi.MediaKiwi.WebAPI.Sorting
 {
     /// <summary>
-    /// Adds sorting parameters to Swagger docs for every operation decorated with <see cref="QueryStringSortingAttribute"/>.
+    /// Adds sorting parameters to Swagger docs for every operation decorated with QueryStringSortingAttribute.
     /// </summary>
     public class SortingSwaggerFilter : IOperationFilter
     {

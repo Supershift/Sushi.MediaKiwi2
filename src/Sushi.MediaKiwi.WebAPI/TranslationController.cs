@@ -7,6 +7,9 @@ using Sushi.MediaKiwi.WebAPI.Paging;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
+    /// <summary>
+    /// Defines endpoints to retrieve Translations.
+    /// </summary>
     [Route($"{BaseRoute}/translations")]
     public class TranslationController : MediaKiwiControllerBase
     {

@@ -17,11 +17,11 @@ namespace Sushi.MediaKiwi.SampleAPI.DAL
         /// <summary>
         /// Gets or sets the ISO country code
         /// </summary>
-        public string Code { get; set; }
+        public string Code { get; set; } = null!;
         
         /// <summary>
         /// Name of the country
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
     }
 }
