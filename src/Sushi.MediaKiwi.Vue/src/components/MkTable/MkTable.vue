@@ -57,6 +57,8 @@
       emptyStateSubtitle?: string;
       /** Hides the bulk action bar while keeing the checkboxes intact */
       hideBulkActionBar?: boolean;
+      /** 'Tracks' the item the user viewed when changing pageSize, when true calculates this instead of resetting pageIndex to 0 */
+      pageTracking?: boolean;
       /** Callback to disable the selection checkbox for a row based on specific criteria */
       disableItemSelection?: (entity: T) => boolean;
     }>(),
@@ -305,6 +307,7 @@
           :paging-result="pagingResult"
           :mode="paginationMode"
           :page-size-options="pageSizes"
+          :page-tracking="props?.pageTracking"
           @update:model-value="pageChanged"
         />
       </template>
