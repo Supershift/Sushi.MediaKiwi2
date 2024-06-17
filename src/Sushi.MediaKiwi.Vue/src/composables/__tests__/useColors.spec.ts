@@ -33,13 +33,14 @@ describe.skip('useColors', () => {
       useTheme: hoisted.useTheme,
     };
   });
-  const { colors, cssVariables } = useColors()
 
   beforeEach(() => {
     vi.clearAllMocks();
   })
 
   it('should return colors without on- prefix', () => {
+    const { colors } = useColors()
+
     expect(colors.value).toEqual([
       { key: 'primary', value: '#123456', onKey: 'on-primary', onValue: '#abcdef' },
       { key: 'secondary', value: '#654321', onKey: 'on-secondary', onValue: '#fedcba' },
@@ -47,6 +48,8 @@ describe.skip('useColors', () => {
   })
 
   it('should return css variables', () => {
+    const { cssVariables } = useColors()
+
     expect(cssVariables.value).toEqual({
       primary: '--v-primary-base',
       secondary: '--v-secondary-base',
