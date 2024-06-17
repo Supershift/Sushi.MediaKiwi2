@@ -23,6 +23,7 @@ export function useSectionRules() {
    * Disable or enable the hotel section based on the availability of hotels
    */
   function setHotelSectionDisplayState(value: SectionDisplayState = undefined) {
+    // Wait for the sections to load, to ensure that the section is available
     waitForSectionsToLoad(async () => {
       const section = mediakiwiStore.sections.find((x) => x.id === "TestSection");
       if (section) {
