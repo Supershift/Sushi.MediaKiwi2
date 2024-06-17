@@ -35,9 +35,11 @@ export function useSectionRules() {
           const result = await hasAvailableHotels();
           if (!result) {
             section.displayState = undefined;
+            section.tooltip = undefined;
           }
         } else {
           section.displayState = value;
+          section.tooltip = "No hotels available";
         }
       }
     });
