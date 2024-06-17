@@ -42,8 +42,6 @@
         {{ color.key }} <br />
         {{ color.value }} <br />
         <br />
-        {{ color.onKey }} <br />
-        {{ color.onValue }}
       </p>
     </div>
   </div>

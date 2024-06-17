@@ -1,0 +1,13 @@
+.v-navigation-drawer.bg-background,
+.v-app-bar.v-toolbar {
+  background-color: rgb(var(--v-theme-on-surface)) !important;
+  color: rgb(var(--v-theme-surface)) !important;
+}
+
+.v-navigation-drawer {
+  + .v-navigation-drawer {
+    border-radius: 0 !important;
+    background-color: #4e5862 !important;
+    color: rgb(var(--v-theme-surface)) !important;
+  }
+}

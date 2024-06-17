@@ -1,0 +1,6 @@
+@use "sass:map";
+@use "sass:meta";
+@use "../../abstracts";
+@use "./colors";
+
+@include abstracts.recursive-export(colors.$colors);

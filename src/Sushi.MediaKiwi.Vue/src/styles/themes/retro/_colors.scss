@@ -1,0 +1,115 @@
+@use "sass:map";
+@use "sass:color";
+
+$primary-colors: () !default;
+$primary-colors: map.deep-merge(
+  (
+    "primary": #7eb32d,
+    "on-primary": #fff,
+    "primary-container": #eaddff,
+    "on-primary-container": #7eb32d,
+  ),
+  $primary-colors
+);
+
+$secondary-colors: () !default;
+$secondary-colors: map.deep-merge(
+  (
+    "secondary": #4e5862,
+    "on-secondary": #fff,
+    "secondary-container": #262626,
+    "on-secondary-container": #d9d9d9,
+  ),
+  $secondary-colors
+);
+
+$tertiary-colors: () !default;
+$tertiary-colors: map.deep-merge(
+  (
+    "tertiary": #262626,
+    "on-tertiary": #fff,
+    "tertiary-container": #ffd8e4,
+    "on-tertiary-container": #262626,
+  ),
+  $tertiary-colors
+);
+
+$error-colors: () !default;
+$error-colors: map.deep-merge(
+  (
+    "error": #b3261e,
+    "on-error": #fff,
+    "error-container": #f9dedc,
+    "on-error-container": #410e0b,
+  ),
+  $error-colors
+);
+
+$background-colors: () !default;
+$background-colors: map.deep-merge(
+  (
+    "background": #fffbfe,
+    "on-background": #1c1b1f,
+  ),
+  $background-colors
+);
+
+$surface-colors: () !default;
+$surface-colors: map.deep-merge(
+  (
+    "surface": #fffbfe,
+    "on-surface": #1c1b1f,
+  ),
+  $surface-colors
+);
+
+$surface-variations: () !default;
+$surface-variations: map.deep-merge(
+  (
+    "surface1": #f7f2f9,
+    "surface2": #f3ecf7,
+    "surface3": #eee7f5,
+    "surface4": #ede5f3,
+    "surface5": #ebe2f1,
+  ),
+  $surface-variations
+);
+
+$surface-variant-colors: () !default;
+$surface-variant-colors: map.deep-merge(
+  (
+    "surface-variant": #e7e0ec,
+    "on-surface-variant": #262626,
+  ),
+  $surface-variant-colors
+);
+
+$outline-colors: () !default;
+$outline-colors: map.deep-merge(
+  (
+    "outline": #79747e,
+    "outline-variant": #cac4d0,
+  ),
+  $outline-colors
+);
+
+$inverse-surface-colors: () !default;
+$inverse-surface-colors: map.deep-merge(
+  (
+    "inverse-surface": #313033,
+    "inverse-on-surface": #f4eff4,
+  ),
+  $inverse-surface-colors
+);
+
+$colors: () !default;
+$colors: map.deep-merge($colors, $primary-colors);
+$colors: map.deep-merge($colors, $secondary-colors);
+$colors: map.deep-merge($colors, $tertiary-colors);
+$colors: map.deep-merge($colors, $error-colors);
+$colors: map.deep-merge($colors, $background-colors);
+$colors: map.deep-merge($colors, $surface-colors);
+$colors: map.deep-merge($colors, $surface-variations);
+$colors: map.deep-merge($colors, $surface-variant-colors);
+$colors: map.deep-merge($colors, $outline-colors);
+$colors: map.deep-merge($colors, $inverse-surface-colors);
