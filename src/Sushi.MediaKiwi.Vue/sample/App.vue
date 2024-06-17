@@ -3,15 +3,16 @@
   import { useDisplay } from "vuetify";
   import { useSections } from "@/composables";
   import { useSectionRules } from "./composables/useSectionRules";
+  import { SectionRuleType } from "@/models/sections/SectionRuleType";
 
   // Inject Dependencies
   const { xs } = useDisplay();
 
-  const { addDisableSectionRule } = useSections();
-  const { HasAvailableHotels } = useSectionRules();
+  const { addSectionRule } = useSections();
+  const { hasAvailableHotels } = useSectionRules();
 
   // Add rule to disable section if no hotels are available
-  addDisableSectionRule(["TestSection"], HasAvailableHotels, "No hotels available. Please add a hotel to enable this section.");
+  addSectionRule(["TestSection"], hasAvailableHotels, SectionRuleType.Disable, "No hotels available. Please add a hotel to enable this section.");
 </script>
 
 <template>

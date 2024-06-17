@@ -1,14 +1,12 @@
 import { Section } from "@/models";
-import { DisableSectionRule } from "@/models/sections/DisableSectionRule";
+import { SectionRule } from "@/models/sections/SectionRule";
+import { SectionRuleType } from "@/models/sections/SectionRuleType";
 import { useMediakiwiStore } from "@/stores";
-import { ref } from "vue";
+import { watch } from "vue";
 
 export function useSections() {
   // Inject depecency
   const mediakiwiStore = useMediakiwiStore();
-
-  // Define variables
-  const rules = ref<DisableSectionRule[]>([]);
 
   /**
    *  Adds a rule for the section(s) to be disabled
@@ -16,12 +14,20 @@ export function useSections() {
    * @param callback The callback function to determine if the section should be disabled
    * @param tooltip The tooltip to show when the section is disabled
    */
-  function addDisableSectionRule(sectionIds: string[], callback: () => Promise<boolean>, tooltip?: string) {
+  function addSectionRule(sectionIds: string[], callback: () => Promise<boolean>, type = SectionRuleType.Disable, tooltip?: string) {
+    // Create the Rule
+    const rule = <SectionRule>{
+      sectionIds,
+      callback,
+      tooltip,
+      type,
+    };
+
     // Add the rule to the list
-    rules.value.push(<DisableSectionRule>{ sectionIds, callback, tooltip });
+    mediakiwiStore.addSectionRules(rule);
 
     // Validate the rules
-    validateRules();
+    validateSectionRules();
   }
 
   /**
@@ -29,28 +35,64 @@ export function useSections() {
    * @param section The section to validate
    * @param rule The rule to apply
    */
-  async function validateDisableSectionRule(section: Section, rule: DisableSectionRule) {
-    // Check if the section is in the rule
-    section.disabled = await rule.callback();
+  async function validateSectionRule(section: Section, rule: SectionRule) {
+    if (rule.type === SectionRuleType.Disable) {
+      // Check if the section is in the rule
+      section.disabled = await rule.callback();
 
-    // Set the tooltip
-    section.tooltip = rule.tooltip;
-  }
-
-  /** Validate all rules agains all sections */
-  function validateRules() {
-    if (mediakiwiStore.sections && rules.value && rules.value.length) {
-      // Loop through all rules and apply them to the sections
-      rules.value.forEach((rule) => {
-        mediakiwiStore.sections.filter((section) => rule.sectionIds.includes(section.id))?.forEach((section) => validateDisableSectionRule(section, rule));
-      });
+      // Set the tooltip
+      section.tooltip = rule.tooltip;
     }
   }
 
-  // Watch for changes in the sections
-  mediakiwiStore.onSectionsLoaded(validateRules);
+  async function waitOnSectionsLoaded(resolve: (sections: Section[]) => void, reject?: (error: any) => void) {
+    try {
+      // If the sections are already loaded, call the callback immediately
+      if (mediakiwiStore.sections?.length) {
+        resolve(mediakiwiStore.sections);
+        return;
+      }
+
+      // Create a watcher to call the callback when the sections are loaded
+      const sectionsWatcher = watch(
+        () => mediakiwiStore.sections,
+        (sections) => {
+          if (sections?.length) {
+            // Stop watching the sections
+            sectionsWatcher();
+
+            // call the resolve callback
+            resolve(sections);
+          }
+        }
+      );
+    } catch (error) {
+      if (reject) {
+        reject(error);
+      }
+    }
+  }
+
+  function validateSectionRules() {
+    // Watch for changes in the sections
+    waitOnSectionsLoaded(() => {
+      if (mediakiwiStore.sections?.length && mediakiwiStore.sectionRules && mediakiwiStore.sectionRules.length) {
+        // Loop through all rules and apply them to the sections
+        mediakiwiStore.sectionRules.forEach((rule) => {
+          mediakiwiStore.sections
+            .filter((section) => rule.sectionIds.includes(section.id))
+            ?.forEach((section) => {
+              if (rule.type === SectionRuleType.Disable) {
+                validateSectionRule(section, rule);
+              }
+            });
+        });
+      }
+    });
+  }
 
   return {
-    addDisableSectionRule,
+    addSectionRule,
+    validateSectionRules,
   };
 }

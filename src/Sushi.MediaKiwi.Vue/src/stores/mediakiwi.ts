@@ -7,6 +7,8 @@ import { IRoleConnector } from "@/services/IRoleConnector";
 import { noPageSize } from "@/constants";
 import { VuetifyOptions } from "vuetify";
 import { watch } from "vue";
+import { SectionRule } from "@/models/sections/SectionRule";
+import { SectionRuleType } from "@/models/sections/SectionRuleType";
 
 export interface MediaKiwiState {
   navigationItems: Array<NavigationItem>;
@@ -16,6 +18,7 @@ export interface MediaKiwiState {
   isLocal: boolean;
   drawer: boolean;
   externalIcons: boolean;
+  sectionRules: SectionRule[];
 }
 
 export const useMediakiwiStore = defineStore({
@@ -29,6 +32,7 @@ export const useMediakiwiStore = defineStore({
       isLocal: true,
       drawer: true,
       externalIcons: false,
+      sectionRules: [],
     } as MediaKiwiState),
   getters: {
     rootNavigationItems: (state: MediaKiwiState) => state.navigationItems.filter((x) => x.parentNavigationItemId == null),
@@ -62,6 +66,9 @@ export const useMediakiwiStore = defineStore({
       const connector = container.resolve<ISectionConnector>("ISectionConnector");
       const sections = await connector.GetSections({ pageSize: noPageSize });
       this.setSections(sections);
+
+      // Disable section when there are rules specified
+      this.disableSections();
     },
     toggleDrawer() {
       this.drawer = !this.drawer;
@@ -100,6 +107,16 @@ export const useMediakiwiStore = defineStore({
       if (payload) {
         this.sections = payload.result;
       }
+    },
+    disableSections() {
+      // Disable the sections sections based on rules
+      // It's up to the rules to determine if a section should be enabled or disabled
+      this.sections.forEach((section) => {
+        const rules = this.sectionRules?.filter((x) => x.sectionIds.includes(section.id));
+        if (rules?.length > 0) {
+          section.disabled = rules.some((x) => x.type === SectionRuleType.Disable);
+        }
+      });
     },
     getParentName(navigationItem: NavigationItem): string {
       if (navigationItem.parent) {
@@ -143,31 +160,10 @@ export const useMediakiwiStore = defineStore({
         this.externalIcons = false;
       }
     },
-    onSectionsLoaded(resolve: (sections: Section[]) => void, reject?: (error: any) => void) {
-      try {
-        // If the sections are already loaded, call the callback immediately
-        if (this.sections?.length) {
-          resolve(this.sections);
-          return;
-        }
-
-        // Create a watcher to call the callback when the sections are loaded
-        const sectionsWatcher = watch(
-          () => this.sections,
-          (sections) => {
-            if (sections?.length) {
-              // Stop watching the sections
-              sectionsWatcher();
-
-              // call the resolve callback
-              resolve(sections);
-            }
-          }
-        );
-      } catch (error) {
-        if (reject) {
-          reject(error);
-        }
+    addSectionRules(payload: SectionRule) {
+      if (payload) {
+        this.sectionRules = this.sectionRules || [];
+        this.sectionRules.push(payload);
       }
     },
   },
