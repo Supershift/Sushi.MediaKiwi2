@@ -1,18 +1,14 @@
 <script setup lang="ts">
   import { MkApplication } from "@/components";
   import { useDisplay } from "vuetify";
-  import { useSections } from "@/composables";
   import { useSectionRules } from "./composables/useSectionRules";
-  import { SectionRuleType } from "@/models/sections/SectionRuleType";
 
   // Inject Dependencies
   const { xs } = useDisplay();
+  const { setHotelSectionDisplayState } = useSectionRules();
 
-  const { addSectionRule } = useSections();
-  const { hasAvailableHotels } = useSectionRules();
-
-  // Add rule to disable section if no hotels are available
-  addSectionRule(["TestSection"], hasAvailableHotels, SectionRuleType.Disable, "No hotels available. Please add a hotel to enable this section.");
+  // Force the hotel section to be disabled and the customer section to be hidden
+  setHotelSectionDisplayState("disabled");
 </script>
 
 <template>

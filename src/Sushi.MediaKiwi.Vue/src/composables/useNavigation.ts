@@ -189,7 +189,7 @@ export function useNavigation() {
       !section.roles?.length ? true : false || section.roles.some((role) => activeAccount?.idTokenClaims?.roles?.includes(role))
     );
     // remove sections without navigation items
-    sections = sections.filter((section) => store.navigationItems.some((item) => item.sectionId === section.id));
+    sections = sections.filter((section) => store.navigationItems.some((item) => item.sectionId === section.id))?.filter((x) => x.displayState !== "hidden");
     return sections;
   });
 

@@ -27,7 +27,7 @@
   <v-navigation-rail :rail-width="88" permanent>
     <v-list density="comfortable" open-strategy="list" nav class="pa-3">
       <template v-for="item in props.railItems || []">
-        <v-tooltip location="right bottom" :disabled="!item.disabled || !item.tooltip">
+        <v-tooltip location="right bottom" :disabled="!item.tooltip">
           <template #activator="{ props }">
             <span v-bind="props">
               <v-list-item
@@ -37,7 +37,7 @@
                 rounded="lg"
                 :value="item.name"
                 @click.stop="onItemClick(item)"
-                :disabled="item.disabled"
+                :disabled="item.displayState === 'disabled'"
               >
                 <template #prepend>
                   <v-icon v-if="item?.icon" @click.stop="onItemClick(item)">{{ parseIconValue(item.icon, mediakiwiStore.externalIcons) }}</v-icon>
