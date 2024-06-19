@@ -20,6 +20,7 @@
   import { useKeyboardShortcuts } from "@/composables/useKeyboardShortcuts";
   import { onDeactivated } from "vue";
   import { KeyboardShortcutCollection } from "@/models/keyboard/KeyboardShortcutCollection";
+  import { useDatePresets } from "@/composables";
 
   // define properties and events
   const props = defineProps<{
@@ -31,8 +32,9 @@
   }>();
 
   // inject dependencies
-  const { defaultT } = await useI18next();
+  const { defaultT, formatDate } = await useI18next();
   const { addKeyboardShortcuts, removeKeyboardShortcuts } = useKeyboardShortcuts();
+  const { formatPreset } = await useDatePresets();
 
   // define reactive variables
   const menu = ref(false);
@@ -72,15 +74,20 @@
     });
   });
 
-  const isDirectApplyFilter = computed(() => {
+  function isDirectApplyFilter(): boolean;
+  function isDirectApplyFilter(filterItem: TableFilterItem): boolean;
+  function isDirectApplyFilter(filterItem?: TableFilterItem): boolean {
+    if (!filterItem) {
+      filterItem = state.currentFilter;
+    }
+
     return (
-      state.currentFilter?.type === TableFilterType.Direct ||
-      (state.currentFilter?.type === TableFilterType.SingleSelect && (!state.currentFilter?.options?.length || state.currentFilter?.options?.length <= 1))
+      filterItem?.type === TableFilterType.Direct ||
+      (filterItem?.type === TableFilterType.SingleSelect && (!filterItem?.options?.length || filterItem?.options?.length <= 1))
     );
-  });
+  }
 
   // holds the current filter being edited and its value
-
   const state = shallowReactive<{
     currentFilterKey?: string;
     currentFilter?: TableFilterItem;
@@ -95,23 +102,27 @@
     state.currentFilterValue = undefined;
     state.currentSearchText = undefined;
 
-    if (isDirectApplyFilter.value) {
+    if (isDirectApplyFilter()) {
       directApplyFilter();
     }
   }
 
   function directApplyFilter() {
     const value = state.currentFilter?.options?.[0]?.value || true;
-
     state.currentFilterValue = { title: "", value };
     applyFilter();
   }
 
   /** Sets the current filter, current filter value and opens the menu */
   function setCurrentFilter(key: string, selectedFilter: TableFilterItem, showMenu = true) {
+    if (isDirectApplyFilter(selectedFilter)) {
+      return;
+    }
+
     if (showMenu) {
       openMenu();
     }
+
     state.currentFilterKey = key;
     state.currentFilterValue = selectedFilter.selectedValue;
     state.currentFilter = selectedFilter;
@@ -227,11 +238,49 @@
   function appliedFilterChip(modelValue: TableFilter, key: string) {
     const filterItem = <TableFilterItem>modelValue[key];
 
+    const getValue = () => {
+      const value = filterItem.selectedValue?.value;
+      const title = filterItem.selectedValue?.title;
+
+      if (title) {
+        return title;
+      }
+
+      switch (filterItem.type) {
+        case TableFilterType.Direct:
+          return;
+
+        case TableFilterType.SingleSelect:
+        case TableFilterType.RadioGroup:
+        case TableFilterType.Select: {
+          const selectedOption = filterItem.options?.find((o) => o.value === value);
+          return selectedOption?.title || "";
+        }
+        case TableFilterType.MultiSelect:
+        case TableFilterType.SelectMultipleCheckbox:
+        case TableFilterType.SelectMultiple: {
+          const selectedOptions = filterItem.options?.filter((o) => value.includes(o.value));
+          return selectedOptions?.map((o) => o.title).join(", ");
+        }
+        case TableFilterType.DatePicker:
+          return formatDate.value(value);
+        case TableFilterType.DateRange: {
+          // Get the start and end date
+          return formatPreset(value);
+        }
+        default:
+        case TableFilterType.Custom:
+        case TableFilterType.Contains:
+        case TableFilterType.TextField:
+          return value;
+      }
+    };
+
     switch (filterItem.type) {
       case TableFilterType.Direct:
         return filterItem.title;
       case TableFilterType.Contains:
-        return `${filterItem.title} contains ${filterItem.selectedValue?.title}`;
+        return `${filterItem.title} contains ${getValue()}`;
       case TableFilterType.DatePicker:
       case TableFilterType.DateRange:
       case TableFilterType.TextField:
@@ -242,8 +291,11 @@
       case TableFilterType.SelectMultipleCheckbox:
       case TableFilterType.SelectMultiple:
       case TableFilterType.Custom:
-      default:
-        return `${filterItem.title}: ${filterItem.selectedValue?.title}`;
+      default: {
+        const title = filterItem.title;
+        const value = getValue();
+        return `${title}${value ? ": " : ""}${value}`;
+      }
     }
   }
 

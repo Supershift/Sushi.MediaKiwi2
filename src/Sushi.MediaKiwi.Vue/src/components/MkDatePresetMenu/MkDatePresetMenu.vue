@@ -29,7 +29,7 @@
     }
   );
 
-  const { presets } = useDatePresets({
+  const { presets, formatPreset } = await useDatePresets({
     dayPresets: props.days,
     monthPresets: props.months,
   });
@@ -48,27 +48,19 @@
 
   function updateModelValueFromMonth(item: DateRange) {
     state.model.value = [item.start, item.end];
-    state.model.title = formatMonth.value(item.start);
+    state.model.title = formatPreset(item.start, item.end);
     apply();
   }
 
   function updateModelValueFromDateRange(item: DateRange) {
     state.model.value = [item.start, item.end];
-    state.model.title = t.value("LastXDays", defaultLastXDays, { duration: item.duration });
+    state.model.title = formatPreset(item.start, item.end);
     apply();
   }
 
   function updateModelValueFromDateArray(item: any[]) {
     state.model.value = [...item];
-
-    // Format the dates to a readable format
-    const result = state.model.value?.map((date) => {
-      return formatDate.value(date);
-    });
-
-    // Join the dates with a dash
-    state.model.title = result.join(" - ");
-
+    state.model.title = formatPreset(state.model.value);
     apply();
   }
 
@@ -131,11 +123,11 @@
 <template>
   <v-list v-if="!state.datePicker">
     <v-list-item v-for="(item, i) in presets.days" :key="i" :active="isSelectedPresetItem(item)" @click="updateModelValueFromDateRange(item)">
-      <v-list-item-title>{{ t("LastXDays", defaultLastXDays, { duration: item.duration }) }}</v-list-item-title>
+      <v-list-item-title>{{ formatPreset(item.start, item.end) }}</v-list-item-title>
     </v-list-item>
     <v-divider />
     <v-list-item v-for="(item, i) in presets.months" :key="i" :active="isSelectedPresetItem(item)" @click="updateModelValueFromMonth(item)">
-      <v-list-item-title>{{ formatMonth(item.start) }}</v-list-item-title>
+      <v-list-item-title> {{ formatPreset(item.start, item.end) }}</v-list-item-title>
     </v-list-item>
     <v-divider />
     <v-list-item :active="isSelectedCustomItem()" @click="openDatePicker">

@@ -3,6 +3,9 @@
   import { MkTable } from "@/components";
   import { computed, ref } from "vue";
 
+  const start = new Date("2024-05-31T22:00:00.000Z");
+  const end = new Date("2024-06-30T21:59:59.999Z");
+
   // define filters
   const filters = ref<TableFilter>({
     datePicker: {
@@ -12,9 +15,12 @@
     datePickerRange: {
       title: "Date Picker Range",
       type: TableFilterType.DateRange,
+      selectedValue: {
+        value: [start, end],
+      },
     },
     contains: {
-      title: "Contains",
+      title: "Search like",
       type: TableFilterType.Contains,
     },
     textField: {

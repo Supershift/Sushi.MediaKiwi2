@@ -28,7 +28,6 @@
 
   function applyFilter() {
     modelValue.value = {
-      title: model.value,
       value: model.value,
     };
   }

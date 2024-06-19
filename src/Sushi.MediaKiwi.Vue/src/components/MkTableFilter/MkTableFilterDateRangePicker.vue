@@ -18,7 +18,6 @@
 
   function applyFilter() {
     emit("update:modelValue", {
-      title: model.value.title,
       value: model.value.value,
     });
   }

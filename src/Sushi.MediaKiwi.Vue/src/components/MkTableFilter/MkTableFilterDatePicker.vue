@@ -24,7 +24,6 @@
     // Single select, so we only need the first item
     const value = model.value[0];
     emit("update:modelValue", {
-      title: formatDate.value(value),
       value: value,
     });
   }

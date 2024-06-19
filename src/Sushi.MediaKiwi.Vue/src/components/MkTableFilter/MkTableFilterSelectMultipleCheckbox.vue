@@ -17,15 +17,7 @@
   const model = ref<Array<string>>(modelValue.value?.value || []);
 
   function applyFilter() {
-    // Find the titles for the selected values
-    const title =
-      props.tableFilterItem?.options
-        ?.filter((x) => model.value.includes(x.value))
-        .map((x) => x.title)
-        .join(", ") || "";
-
     modelValue.value = {
-      title: title,
       value: model.value,
     };
   }
