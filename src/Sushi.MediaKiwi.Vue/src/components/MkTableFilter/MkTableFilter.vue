@@ -88,6 +88,11 @@
     state.currentFilter = selectedFilter;
     state.currentFilterValue = undefined;
     state.currentSearchText = undefined;
+
+    if (state.currentFilter.type === TableFilterType.Direct) {
+      state.currentFilterValue = { title: "", value: true };
+      applyFilter();
+    }
   }
 
   /** Sets the current filter, current filter value and opens the menu */
@@ -170,27 +175,38 @@
     state.currentSearchText = undefined;
   }
 
-  function GetComponentForFilterType(item: TableFilterItem): Component | DefineComponent {
-    switch (item.type) {
-      case TableFilterType.DatePicker:
-        return MkTableFilterDatePicker;
-      case TableFilterType.RadioGroup:
-        return MkTableFilterRadioGroup;
-      case TableFilterType.Select:
-        return MkTableFilterSelect;
-      case TableFilterType.TextField:
-        return MkTableFilterTextField;
-      case TableFilterType.DateRange:
-        return MkTableFilterDateRangePicker;
-      case TableFilterType.SelectMultipleCheckbox:
-        return MkTableFilterSelectMultipleCheckbox;
-      case TableFilterType.SelectMultiple:
-        return MkTableFilterSelectMultiple;
-      case TableFilterType.Custom:
-        if (item.component) return defineAsyncComponent(item.component);
-        else throw new Error(`No component found for filter type ${item.type}, add a component to the filter item.`);
-      default:
-        throw new Error(`No component found for filter type ${item.type}`);
+  /**
+   * Get the component for the filter type
+   * @param item
+   */
+  function getComponentForFilterType(item: TableFilterItem): Component | DefineComponent {
+    const optionsThreshold = 5;
+    const filterType = item.type;
+    const filterOptionsCount = item.options?.length || 0;
+
+    // Determine the filter type and return the corresponding component
+    if (filterType === TableFilterType.DatePicker) {
+      return MkTableFilterDatePicker;
+    } else if (filterType === TableFilterType.DateRange) {
+      return MkTableFilterDateRangePicker;
+    } else if (filterType === TableFilterType.TextField || filterType === TableFilterType.Contains) {
+      return MkTableFilterTextField;
+    } else if ((filterType === TableFilterType.SingleSelect && filterOptionsCount <= optionsThreshold) || filterType === TableFilterType.RadioGroup) {
+      return MkTableFilterRadioGroup;
+    } else if ((filterType === TableFilterType.SingleSelect && filterOptionsCount > optionsThreshold) || filterType === TableFilterType.Select) {
+      return MkTableFilterSelect;
+    } else if (
+      (filterType === TableFilterType.MultiSelect && filterOptionsCount <= optionsThreshold) ||
+      filterType === TableFilterType.SelectMultipleCheckbox
+    ) {
+      return MkTableFilterSelectMultipleCheckbox;
+    } else if ((filterType === TableFilterType.MultiSelect && filterOptionsCount > optionsThreshold) || filterType === TableFilterType.SelectMultiple) {
+      return MkTableFilterSelectMultiple;
+    } else if (filterType === TableFilterType.Custom) {
+      if (item.component) return defineAsyncComponent(item.component);
+      else throw new Error(`No component found for filter type ${item.type}, add a component to the filter item.`);
+    } else {
+      throw new Error(`No component found for filter type ${item.type}`);
     }
   }
 
@@ -245,7 +261,7 @@
             <template v-else-if="state.currentFilter">
               <Suspense>
                 <component
-                  :is="GetComponentForFilterType(state.currentFilter)"
+                  :is="getComponentForFilterType(state.currentFilter)"
                   v-model="state.currentFilterValue"
                   :table-filter-item="state.currentFilter"
                   @click:close="closeMenu"
