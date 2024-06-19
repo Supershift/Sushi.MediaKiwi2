@@ -22,8 +22,17 @@
       type: TableFilterType.TextField,
       searchable: true,
     },
+    singleSelectZero: {
+      title: "Single Select (Zero)",
+      type: TableFilterType.SingleSelect,
+    },
+    singleSelectOne: {
+      title: "Single Select (One)",
+      type: TableFilterType.SingleSelect,
+      options: [{ title: "Option 1", value: "option1" }],
+    },
     singleSelectFew: {
-      title: "Single Select: Few",
+      title: "Single Select (Few)",
       type: TableFilterType.SingleSelect,
       options: [
         { title: "Option 1", value: "option1" },
@@ -32,7 +41,7 @@
       ],
     },
     singleSelectMore: {
-      title: "Single Select: More",
+      title: "Single Select (More)",
       type: TableFilterType.SingleSelect,
       options: [
         { title: "Option 1", value: "option1" },
@@ -48,11 +57,11 @@
       ],
     },
     direct: {
-      title: "Single Select: Direct",
+      title: "Direct",
       type: TableFilterType.Direct,
     },
     multiSelectFew: {
-      title: "Multi Select: Few",
+      title: "Multi Select (Few)",
       type: TableFilterType.MultiSelect,
       options: [
         { title: "Option 1", value: "option1" },
@@ -61,7 +70,7 @@
       ],
     },
     multiSelectMore: {
-      title: "Multi Select: More",
+      title: "Multi Select (More)",
       type: TableFilterType.MultiSelect,
       options: [
         { title: "Option 1", value: "option1" },
@@ -94,11 +103,15 @@
     <template #thead>
       <th>Title</th>
       <th>Raw value</th>
+      <th>Formatted value</th>
+      <th>Type</th>
     </template>
 
     <template #tbody="dataItem">
       <td width="250">{{ dataItem.title }}</td>
       <td>{{ dataItem.selectedValue?.value || "-" }}</td>
+      <td width="250">{{ dataItem.selectedValue?.title || "-" }}</td>
+      <td>{{ TableFilterType[dataItem.type!] }}</td>
     </template>
   </mk-table>
 </template>

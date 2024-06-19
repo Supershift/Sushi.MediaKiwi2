@@ -161,6 +161,10 @@ export const GlobalConfiguration: VuetifyOptions = {
       color: "outline",
       class: "v-autocomplete--mediakiwi",
       menuIcon: IconsLibrary.menuDown,
+      VChip: {
+        variant: "outlined",
+        class: "",
+      },
     },
     VBreadcrumbs: {
       color: "primary",
