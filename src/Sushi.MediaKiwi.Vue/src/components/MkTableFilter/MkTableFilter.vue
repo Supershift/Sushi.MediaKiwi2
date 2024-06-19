@@ -236,17 +236,19 @@
 </script>
 
 <template>
-  <v-card class="mk-table-filter mb-4" variant="flat" rounded="10">
-    <v-container fluid>
-      <v-row class="pb-2">
+  <v-card class="mk-table-filter mb-4" rounded="lg" variant="flat" color="surface1">
+    <v-container>
+      <v-row class="d-flex flex-row flex-nowrap">
         <template v-if="modelValue">
           <v-menu v-model="menu" :close-on-content-click="false" location="bottom" class="mk-table-filter__menu-overlay">
-            <!-- Button -->
+            <!-- Filter Button -->
             <template #activator="args">
-              <v-btn class="mt-1 ml-1" v-bind="args.props" color="on-surface1" variant="plain" :icon="IconsLibrary.filterVariant"> </v-btn>
+              <div class="px-1">
+                <v-btn v-bind="args.props" color="on-surface1" variant="plain" :icon="IconsLibrary.filterVariant"> </v-btn>
+              </div>
             </template>
 
-            <!-- context menu -->
+            <!-- Context menu -->
             <v-list v-if="!state.currentFilter" class="mk-table-filter__context-menu">
               <template v-if="searchableFilterKey && state.currentSearchText">
                 <v-list-item @click="applySearch">{{ searchFilterItemLabel }}</v-list-item>
@@ -257,7 +259,7 @@
               </v-list-item>
             </v-list>
 
-            <!-- filter compoment -->
+            <!-- Filter compoment -->
             <template v-else-if="state.currentFilter">
               <Suspense>
                 <component
@@ -276,62 +278,31 @@
             </template>
           </v-menu>
 
-          <!-- Chips -->
-          <template v-for="key in Object.keys(modelValue)">
-            <MkInputChip
-              v-if="modelValue[key].selectedValue"
-              :key="key"
-              class="ml-2 mt-2"
-              @click="setCurrentFilter(key, modelValue[key])"
-              @click:remove="removeFilter(key)"
-            >
-              {{ modelValue[key].title }} : {{ modelValue[key].selectedValue?.title }}
-            </MkInputChip>
-          </template>
+          <div class="flex-1-1 d-flex flex-wrap ga-2 my-2">
+            <!-- Chips -->
+            <template v-for="key in Object.keys(modelValue)">
+              <MkInputChip v-if="modelValue[key].selectedValue" :key="key" @click="setCurrentFilter(key, modelValue[key])" @click:remove="removeFilter(key)">
+                {{ modelValue[key].title }} : {{ modelValue[key].selectedValue?.title }}
+              </MkInputChip>
+            </template>
 
-          <v-text-field
-            v-model="state.currentSearchText"
-            :placeholder="!containsFilterValue ? defaultT('Filter') : ''"
-            variant="plain"
-            :hide-details="true"
-            :readonly="!searchableFilterKey"
-            density="compact"
-            class="mk-table-filter__input mx-2"
-            color="on-surface1"
-            @click="openMenu"
-            @focus="openMenu"
-            @keypress.enter="applySearch"
-          ></v-text-field>
+            <!-- Search box -->
+            <v-text-field
+              v-model="state.currentSearchText"
+              :placeholder="!containsFilterValue ? defaultT('Filter') : ''"
+              variant="plain"
+              :hide-details="true"
+              :readonly="!searchableFilterKey"
+              density="compact"
+              class="mk-table-filter__input pa-0"
+              color="on-surface1"
+              @click="openMenu"
+              @focus="openMenu"
+              @keypress.enter="applySearch"
+            ></v-text-field>
+          </div>
         </template>
       </v-row>
     </v-container>
   </v-card>
 </template>
-
-<style lang="scss" scoped>
-  .v-input .v-field__input {
-    --v-field-padding-top: 4px;
-  }
-
-  .v-btn--icon.v-btn--density-default {
-    --v-btn-height: 28px;
-  }
-
-  .v-row {
-    padding-bottom: 6px;
-  }
-
-  .mk-table-filter {
-    background-color: rgb(var(--v-theme-surface1));
-    color: rgb(var(--v-theme-on-surface1));
-  }
-
-  .mk-table-filter__input {
-    .v-field__field {
-      height: 40px;
-    }
-    input {
-      cursor: pointer;
-    }
-  }
-</style>

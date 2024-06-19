@@ -2,9 +2,11 @@ import { AsyncComponentLoader } from "vue";
 import { TableFilterValue } from "./TableFilterValue";
 import { TableFilterType } from "@/models/enum/TableFilterType";
 
-export type TableFilterItem<T = any> = {
+export type TableFilterItem = {
   /** Title for the filter to be displayed to the user */
   title: string;
+  /** Intro text to be shown to the user */
+  intro?: string;
   /** Options to display in the filter, e.g. in a select */
   options?: TableFilterValue[];
   /** Gets or sets the selected value for this filter. */

@@ -20,6 +20,7 @@
     textField: {
       title: "Textfield",
       type: TableFilterType.TextField,
+      searchable: true,
     },
     singleSelectFew: {
       title: "Single Select: Few",
