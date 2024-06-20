@@ -11,6 +11,7 @@
     MkTableFilterSelectMultiple,
     MkTableFilterSelectMultipleCheckbox,
     MkTableFilterDatePicker,
+    MkTableFilterOperator,
   } from ".";
   import { DefineComponent } from "vue";
   import { TableFilterType, IconsLibrary } from "@/models";
@@ -229,6 +230,8 @@
       return MkTableFilterSelectMultipleCheckbox;
     } else if ((filterType === TableFilterType.MultiSelect && filterOptionsCount > optionsThreshold) || filterType === TableFilterType.SelectMultiple) {
       return MkTableFilterSelectMultiple;
+    } else if (filterType === TableFilterType.Operator) {
+      return MkTableFilterOperator;
     } else if (filterType === TableFilterType.Custom) {
       if (item.component) return defineAsyncComponent(item.component);
       else throw new Error(`No component found for filter type ${item.type}, add a component to the filter item.`);

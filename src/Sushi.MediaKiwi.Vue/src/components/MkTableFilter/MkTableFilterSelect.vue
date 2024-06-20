@@ -34,6 +34,7 @@
         :items="tableFilterItem.options"
         :label="tableFilterItem.inputLabel || defaultT('Value')"
         return-object
+        :rules="[(v: any) => !!v]"
       ></v-autocomplete>
     </div>
   </MkTableFilterDialog>

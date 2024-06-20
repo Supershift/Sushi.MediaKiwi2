@@ -25,4 +25,5 @@ export type TableFilterItem = {
   searchable?: boolean;
   /* Place a divider after this filter item and the next */
   divider?: boolean;
+  rules?: any[];
 };

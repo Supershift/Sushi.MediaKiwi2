@@ -24,7 +24,7 @@
 <template>
   <MkTableFilterDialog :table-filter-item="tableFilterItem" @close="emit('click:close')" @apply="applyFilter">
     <div class="pl-3 pr-4 py-4">
-      <v-radio-group v-model="model" hide-details density="default">
+      <v-radio-group v-model="model" hide-details density="default" :rules="[(v: any) => !!v]">
         <v-radio v-for="(option, index) in tableFilterItem.options" :key="index" :label="option.title" :value="option" />
       </v-radio-group>
     </div>

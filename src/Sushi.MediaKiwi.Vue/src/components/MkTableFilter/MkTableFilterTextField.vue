@@ -34,19 +34,12 @@
       value: model.value,
     };
   }
-
-  function onSubmit(e: SubmitEvent) {
-    e.preventDefault();
-    applyFilter();
-  }
 </script>
 
 <template>
-  <v-form @submit="onSubmit">
-    <MkTableFilterDialog :table-filter-item="tableFilterItem" @close="emit('click:close')" @apply="applyFilter">
-      <div class="pa-6">
-        <v-text-field v-model="model" :label="inputLabel" hide-details> </v-text-field>
-      </div>
-    </MkTableFilterDialog>
-  </v-form>
+  <MkTableFilterDialog :table-filter-item="tableFilterItem" @close="emit('click:close')" @apply="applyFilter">
+    <div class="pa-6">
+      <v-text-field v-model="model" :label="inputLabel" hide-details :rules="[(v: any) => !!v]"> </v-text-field>
+    </div>
+  </MkTableFilterDialog>
 </template>

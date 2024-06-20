@@ -95,12 +95,29 @@
         { title: "Option 9", value: "option9" },
         { title: "Option 10", value: "option10" },
       ],
+      divider: true,
+    },
+    amount: {
+      title: "Amount",
+      type: TableFilterType.Operator,
+    },
+    operator: {
+      title: "Custom Operator",
+      type: TableFilterType.Operator,
+      options: [
+        { title: "Equal", value: "eq" },
+        { title: "Not Equal", value: "ne" },
+        { title: "Greater Than", value: "gt" },
+        { title: "Greater Than or Equal", value: "ge" },
+        { title: "Less Than", value: "lt" },
+        { title: "Less Than or Equal", value: "le" },
+      ],
     },
   });
 
   const filterValues = computed<ListResult<TableFilterItem>>(() => {
     return {
-      result: Object.entries(filters.value).map(([key, value]) => {
+      result: Object.entries(filters.value).map(([_key, value]) => {
         return <TableFilterItem>{
           ...value,
         };

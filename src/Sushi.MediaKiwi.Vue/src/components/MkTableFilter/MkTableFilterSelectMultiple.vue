@@ -30,7 +30,14 @@
 <template>
   <MkTableFilterDialog :table-filter-item="tableFilterItem" @close="emit('click:close')" @apply="applyFilter">
     <div class="pa-6">
-      <v-autocomplete v-model="model" multiple hide-details :items="tableFilterItem.options" :label="tableFilterItem.inputLabel || defaultT('Value')">
+      <v-autocomplete
+        v-model="model"
+        multiple
+        hide-details
+        :items="tableFilterItem.options"
+        :label="tableFilterItem.inputLabel || defaultT('Value')"
+        :rules="[(v: any) => !!v && !!v.length]"
+      >
         <template #selection="{ item }">
           <v-chip v-if="item" v-text="item.title" />
         </template>

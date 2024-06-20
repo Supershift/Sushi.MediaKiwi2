@@ -41,4 +41,5 @@ export enum TableFilterType {
   SelectMultiple,
   /** Open your own component */
   Custom,
+  Operator,
 }

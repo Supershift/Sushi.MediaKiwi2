@@ -35,6 +35,7 @@
         density="comfortable"
         class="mk-table-filter__item__checkbox pl-3"
         hide-details
+        :rules="[(v: any) => !!v && !!v.length]"
       />
     </div>
   </MkTableFilterDialog>
