@@ -32,9 +32,9 @@
   }>();
 
   // inject dependencies
-  const { defaultT, formatDate } = await useI18next();
+  const { defaultT } = await useI18next();
   const { addKeyboardShortcuts, removeKeyboardShortcuts } = useKeyboardShortcuts();
-  const { appliedFilterChip } = await useFilters(formatDate.value);
+  const { appliedFilterChip } = await useFilters(useI18next());
 
   // define reactive variables
   const menu = ref(false);
@@ -68,9 +68,11 @@
 
   /** Compute a bale with context menu to show while typing */
   const searchFilterItemLabel = computed(() => {
-    return defaultT.value("searchFilterItemLabel", "{{ filterItemTitle }} with '{{ searchText }}''", {
-      filterItemTitle: searchableFilterItem.value?.title,
-      searchText: state.currentSearchText,
+    return defaultT.value("Filter.SearchLabel", "{{filter.title}} with '{{filter.value}}''", {
+      filter: {
+        title: searchableFilterItem.value?.title,
+        value: state.currentSearchText,
+      },
     });
   });
 

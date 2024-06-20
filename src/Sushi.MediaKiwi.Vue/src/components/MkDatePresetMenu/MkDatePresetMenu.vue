@@ -31,11 +31,11 @@
 
   // Inject dependencies
   const { isSame } = useDayjs();
+  const { defaultT } = await useI18next("MkDatePresetMenu");
   const { presets, formatPreset } = await useDatePresets({
     dayPresets: props.days,
     monthPresets: props.months,
   });
-  const { defaultT } = await useI18next("MkDatePresetMenu");
 
   const state = reactive({
     datePicker: false,

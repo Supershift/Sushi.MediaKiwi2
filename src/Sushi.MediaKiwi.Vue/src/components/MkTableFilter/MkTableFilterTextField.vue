@@ -23,7 +23,10 @@
   }>();
 
   const inputLabel = computed(() => {
-    return props.tableFilterItem.inputLabel || props.tableFilterItem.type === TableFilterType.Contains ? defaultT.value("Contains") : defaultT.value("Value");
+    if (props.tableFilterItem.inputLabel) {
+      return props.tableFilterItem.inputLabel;
+    }
+    return props.tableFilterItem.type === TableFilterType.Contains ? defaultT.value("Contains") : defaultT.value("Value");
   });
 
   function applyFilter() {

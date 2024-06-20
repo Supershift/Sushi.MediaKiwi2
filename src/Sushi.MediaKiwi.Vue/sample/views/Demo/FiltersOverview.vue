@@ -3,6 +3,7 @@
   import { MkTable } from "@/components";
   import { computed, ref } from "vue";
 
+  //
   const start = new Date("2024-05-31T22:00:00.000Z");
   const end = new Date("2024-06-30T21:59:59.999Z");
 
@@ -23,11 +24,11 @@
     contains: {
       title: "Search like",
       type: TableFilterType.Contains,
+      searchable: true,
     },
     textField: {
       title: "Textfield",
       type: TableFilterType.TextField,
-      searchable: true,
       divider: true,
     },
     singleSelectZero: {
@@ -113,14 +114,12 @@
     <template #thead>
       <th>Title</th>
       <th>Raw value</th>
-      <th>Formatted value</th>
       <th>Type</th>
     </template>
 
     <template #tbody="dataItem">
       <td width="250">{{ dataItem.title }}</td>
       <td>{{ dataItem.selectedValue?.value || "-" }}</td>
-      <td width="250">{{ dataItem.selectedValue?.title || "-" }}</td>
       <td>{{ TableFilterType[dataItem.type!] }}</td>
     </template>
   </mk-table>
