@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import type { TableFilterItem, TableFilterValue } from "@/models/table";
-  import { ref } from "vue";
+  import { computed, ref } from "vue";
   import MkTableFilterDialog from "./MkTableFilterDialog.vue";
   import { useI18next } from "@/composables";
 
@@ -20,6 +20,9 @@
   // Create proxy model to prevent direct mutation
   const model = ref<Array<string>>(modelValue.value?.value || []);
 
+  // Additional rules for the input field
+  const additionalRules = computed(() => props.tableFilterItem.rules || []);
+
   function applyFilter() {
     modelValue.value = {
       value: model.value,
@@ -33,10 +36,10 @@
       <v-autocomplete
         v-model="model"
         multiple
-        hide-details
+        hide-details="auto"
         :items="tableFilterItem.options"
         :label="tableFilterItem.inputLabel || defaultT('Value')"
-        :rules="[(v: any) => !!v && !!v.length]"
+        :rules="[(v: any) => !!v && !!v.length || defaultT(`Filter.EmptyError`, `This field is required`), ...additionalRules]"
       >
         <template #selection="{ item }">
           <v-chip v-if="item" v-text="item.title" />

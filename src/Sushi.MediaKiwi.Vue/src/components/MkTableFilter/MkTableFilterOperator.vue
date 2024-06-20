@@ -61,21 +61,21 @@
         <v-col>
           <v-select
             v-model="state.operator"
-            hide-details
+            hide-details="auto"
             :items="operators"
             :label="tableFilterItem.inputLabel || defaultT('Operator')"
             :rules="[
-                (v: any) => v != undefined && v != null,  
+                (v: any) => v != undefined && v != null || defaultT(`Filter.EmptyError`, `This field is required`),  
               ]"
           ></v-select>
         </v-col>
         <v-col>
           <v-text-field
             v-model="state.value"
-            hide-details
+            hide-details="auto"
             :type="inputType"
             :rules="[
-              (v: any) => v != undefined && v != null,
+              (v: any) => v != undefined && v != null || defaultT(`Filter.EmptyError`, `This field is required`),
               ...additionalRules
               ]"
             :label="tableFilterItem.inputLabel || defaultT('Value')"

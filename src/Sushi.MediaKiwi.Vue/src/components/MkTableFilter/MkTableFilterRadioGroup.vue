@@ -1,9 +1,13 @@
 <script setup lang="ts">
+  import { useI18next } from "@/composables";
   import MkTableFilterDialog from "./MkTableFilterDialog.vue";
   import type { TableFilterItem, TableFilterValue } from "@/models/table";
-  import { ref } from "vue";
+  import { computed, ref } from "vue";
 
-  defineProps<{
+  // inject dependencies
+  const { defaultT } = await useI18next();
+
+  const props = defineProps<{
     tableFilterItem: TableFilterItem;
   }>();
 
@@ -16,6 +20,9 @@
   // Create proxy model to prevent direct mutation
   const model = ref(modelValue.value);
 
+  // Additional rules for the input field
+  const additionalRules = computed(() => props.tableFilterItem.rules || []);
+
   function applyFilter() {
     modelValue.value = model.value;
   }
@@ -24,7 +31,12 @@
 <template>
   <MkTableFilterDialog :table-filter-item="tableFilterItem" @close="emit('click:close')" @apply="applyFilter">
     <div class="pl-3 pr-4 py-4">
-      <v-radio-group v-model="model" hide-details density="default" :rules="[(v: any) => !!v]">
+      <v-radio-group
+        v-model="model"
+        hide-details="auto"
+        density="default"
+        :rules="[(v: any) => !!v || defaultT(`Filter.EmptyError`, `This field is required`), ...additionalRules]"
+      >
         <v-radio v-for="(option, index) in tableFilterItem.options" :key="index" :label="option.title" :value="option" />
       </v-radio-group>
     </div>

@@ -18,7 +18,6 @@
   const model = ref(modelValue.value?.value || "");
 
   const emit = defineEmits<{
-    (e: "update:modelValue", value: TableFilterValue): void;
     (e: "click:close"): void;
   }>();
 
@@ -28,6 +27,9 @@
     }
     return props.tableFilterItem.type === TableFilterType.Contains ? defaultT.value("Contains") : defaultT.value("Value");
   });
+
+  // Additional rules for the input field
+  const additionalRules = computed(() => props.tableFilterItem.rules || []);
 
   function applyFilter() {
     modelValue.value = {
@@ -39,7 +41,13 @@
 <template>
   <MkTableFilterDialog :table-filter-item="tableFilterItem" @close="emit('click:close')" @apply="applyFilter">
     <div class="pa-6">
-      <v-text-field v-model="model" :label="inputLabel" hide-details :rules="[(v: any) => !!v]"> </v-text-field>
+      <v-text-field
+        v-model="model"
+        :label="inputLabel"
+        hide-details="auto"
+        :rules="[(v: any) => !!v || defaultT(`Filter.EmptyError`, `Value can't be empty`), ...additionalRules]"
+      >
+      </v-text-field>
     </div>
   </MkTableFilterDialog>
 </template>

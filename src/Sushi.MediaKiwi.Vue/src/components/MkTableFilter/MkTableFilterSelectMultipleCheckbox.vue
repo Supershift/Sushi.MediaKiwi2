@@ -1,7 +1,10 @@
 <script setup lang="ts">
   import type { TableFilterItem, TableFilterValue } from "@/models/table";
-  import { ref } from "vue";
+  import { computed, ref } from "vue";
   import MkTableFilterDialog from "./MkTableFilterDialog.vue";
+  import { useI18next } from "@/composables";
+
+  const { defaultT } = await useI18next();
 
   const props = defineProps<{
     tableFilterItem: TableFilterItem;
@@ -15,6 +18,9 @@
 
   // Create proxy model to prevent direct mutation
   const model = ref<Array<string>>(modelValue.value?.value || []);
+
+  // Additional rules for the input field
+  const additionalRules = computed(() => props.tableFilterItem.rules || []);
 
   function applyFilter() {
     modelValue.value = {
@@ -34,8 +40,8 @@
         :label="option.title"
         density="comfortable"
         class="mk-table-filter__item__checkbox pl-3"
-        hide-details
-        :rules="[(v: any) => !!v && !!v.length]"
+        hide-details="auto"
+        :rules="[(v: any) => !!v && !!v.length || defaultT(`Filter.EmptyError`, `This field is required`), ...additionalRules]"
       />
     </div>
   </MkTableFilterDialog>

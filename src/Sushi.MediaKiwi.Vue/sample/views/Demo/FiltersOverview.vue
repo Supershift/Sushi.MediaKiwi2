@@ -2,10 +2,13 @@
   import { ListResult, TableFilter, TableFilterItem, TableFilterType, TableFilterValue } from "@/models";
   import { MkTable } from "@/components";
   import { computed, ref } from "vue";
+  import { useValidationRules } from "@/composables";
 
   //
   const start = new Date("2024-05-31T22:00:00.000Z");
   const end = new Date("2024-06-30T21:59:59.999Z");
+
+  const { email } = useValidationRules();
 
   // define filters
   const filters = ref<TableFilter>({
@@ -22,14 +25,15 @@
       divider: true,
     },
     contains: {
-      title: "Search like",
+      title: "Contains",
       type: TableFilterType.Contains,
       searchable: true,
     },
-    textField: {
-      title: "Textfield",
+    email: {
+      title: "E-mail",
       type: TableFilterType.TextField,
       divider: true,
+      rules: [email],
     },
     singleSelectZero: {
       title: "Single Select (Zero)",
