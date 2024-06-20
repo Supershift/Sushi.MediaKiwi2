@@ -20,6 +20,7 @@
        */
       months?: number[];
       datePickerClass?: string;
+      datePickerTitle?: string;
     }>(),
     {
       days: () => [7, 28, 90, 365],
@@ -151,5 +152,6 @@
     multiple
     @click:close="closeDatePicker"
     @update:model-value="updateModelValue"
+    :title="datePickerTitle"
   />
 </template>

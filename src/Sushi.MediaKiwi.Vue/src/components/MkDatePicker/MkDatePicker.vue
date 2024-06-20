@@ -16,6 +16,7 @@
       multiple?: boolean;
       /** Max amount of dates that should be selected */
       multipleAmount?: number;
+      title?: string;
     }>(),
     {
       multiple: false,
@@ -63,7 +64,7 @@
 <template>
   <MkDialogCard hide-header remove-content-padding content-classes="py-2" v-bind="$attrs" @click:close="close">
     <template #default>
-      <v-date-picker v-model="model" :multiple="multiple" :title="t('DatePickerTitle', 'Select date').toString()" @update:model-value="validateModel">
+      <v-date-picker v-model="model" :multiple="multiple" :title="title || t('DatePickerTitle', 'Select date').toString()" @update:model-value="validateModel">
         <template #header>
           <div class="v-date-picker-header">
             <div class="v-date-picker-header__content">

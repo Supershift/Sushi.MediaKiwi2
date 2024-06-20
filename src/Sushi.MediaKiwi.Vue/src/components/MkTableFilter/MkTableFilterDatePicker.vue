@@ -25,7 +25,13 @@
 </script>
 
 <template>
-  <MkDatePicker v-model="model" class="mk-table-filter__item" @update:model-value="applyFilter" @click:close="() => emit('click:close')" />
+  <MkDatePicker
+    v-model="model"
+    class="mk-table-filter__item"
+    @update:model-value="applyFilter"
+    @click:close="() => emit('click:close')"
+    :title="tableFilterItem.inputLabel"
+  />
 </template>
 
 <style>
