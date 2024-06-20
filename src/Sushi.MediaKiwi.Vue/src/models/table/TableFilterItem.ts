@@ -23,4 +23,8 @@ export type TableFilterItem = {
    * Use only once in a collections of filters, otherwise the search will be applied to the occurance of a searchable filter item.
    */
   searchable?: boolean;
+  /**
+   * Place a divider after this filter item and the next
+   */
+  divider?: boolean;
 };

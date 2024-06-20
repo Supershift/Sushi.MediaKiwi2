@@ -18,6 +18,7 @@
       selectedValue: {
         value: [start, end],
       },
+      divider: true,
     },
     contains: {
       title: "Search like",
@@ -27,6 +28,7 @@
       title: "Textfield",
       type: TableFilterType.TextField,
       searchable: true,
+      divider: true,
     },
     singleSelectZero: {
       title: "Single Select (Zero)",
@@ -61,10 +63,12 @@
         { title: "Option 9", value: "option9" },
         { title: "Option 10", value: "option10" },
       ],
+      divider: true,
     },
     direct: {
       title: "Direct",
       type: TableFilterType.Direct,
+      divider: true,
     },
     multiSelectFew: {
       title: "Multi Select (Few)",

@@ -3,7 +3,7 @@ import { DateRange } from "@/models/ranges/DateRange";
 import { useDayjs } from "./useDayjs";
 import { useI18next } from "./useI18next";
 
-type DatePresetOptions = {
+export async function useDatePresets(options?: {
   /**
    * Collection of days representing days in the past
    * @example [7, 28, 90, 365]
@@ -15,9 +15,7 @@ type DatePresetOptions = {
    * @example [0, 1, 2] Current month, last month, 2 months ago
    */
   monthPresets: number[];
-};
-
-export async function useDatePresets(options?: DatePresetOptions) {
+}) {
   // refs
   const { currentDate, substractDate, startOf, endOf, getDifference, isFullMonth, isToday } = useDayjs();
   const { dayPresets, monthPresets } = options || {};

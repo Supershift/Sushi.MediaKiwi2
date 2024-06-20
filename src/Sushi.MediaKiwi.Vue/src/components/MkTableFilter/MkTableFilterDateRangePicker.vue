@@ -3,23 +3,23 @@
   import { ref } from "vue";
   import { MkDatePresetMenu } from "../MkDatePresetMenu";
 
-  const props = defineProps<{
-    modelValue: TableFilterValue;
+  defineProps<{
     tableFilterItem: TableFilterItem;
   }>();
 
+  const modelValue = defineModel<TableFilterValue>({ required: true });
+
   const emit = defineEmits<{
-    (e: "update:modelValue", value: TableFilterValue): void;
     (e: "click:close"): void;
   }>();
 
-  // state
-  const model = ref(props.modelValue);
+  // Create proxy model to prevent direct mutation
+  const model = ref(modelValue.value);
 
   function applyFilter() {
-    emit("update:modelValue", {
+    modelValue.value = {
       value: model.value.value,
-    });
+    };
   }
 </script>
 

@@ -20,7 +20,7 @@
   import { useKeyboardShortcuts } from "@/composables/useKeyboardShortcuts";
   import { onDeactivated } from "vue";
   import { KeyboardShortcutCollection } from "@/models/keyboard/KeyboardShortcutCollection";
-  import { useDatePresets } from "@/composables";
+  import { useFilters } from "@/composables/useFilters";
 
   // define properties and events
   const props = defineProps<{
@@ -34,7 +34,7 @@
   // inject dependencies
   const { defaultT, formatDate } = await useI18next();
   const { addKeyboardShortcuts, removeKeyboardShortcuts } = useKeyboardShortcuts();
-  const { formatPreset } = await useDatePresets();
+  const { appliedFilterChip } = await useFilters(formatDate.value);
 
   // define reactive variables
   const menu = ref(false);
@@ -235,70 +235,6 @@
     }
   }
 
-  function appliedFilterChip(modelValue: TableFilter, key: string) {
-    const filterItem = <TableFilterItem>modelValue[key];
-
-    const getValue = () => {
-      const value = filterItem.selectedValue?.value;
-      const title = filterItem.selectedValue?.title;
-
-      if (title) {
-        return title;
-      }
-
-      switch (filterItem.type) {
-        case TableFilterType.Direct:
-          return;
-
-        case TableFilterType.SingleSelect:
-        case TableFilterType.RadioGroup:
-        case TableFilterType.Select: {
-          const selectedOption = filterItem.options?.find((o) => o.value === value);
-          return selectedOption?.title || "";
-        }
-        case TableFilterType.MultiSelect:
-        case TableFilterType.SelectMultipleCheckbox:
-        case TableFilterType.SelectMultiple: {
-          const selectedOptions = filterItem.options?.filter((o) => value.includes(o.value));
-          return selectedOptions?.map((o) => o.title).join(", ");
-        }
-        case TableFilterType.DatePicker:
-          return formatDate.value(value);
-        case TableFilterType.DateRange: {
-          // Get the start and end date
-          return formatPreset(value);
-        }
-        default:
-        case TableFilterType.Custom:
-        case TableFilterType.Contains:
-        case TableFilterType.TextField:
-          return value;
-      }
-    };
-
-    switch (filterItem.type) {
-      case TableFilterType.Direct:
-        return filterItem.title;
-      case TableFilterType.Contains:
-        return `${filterItem.title} contains ${getValue()}`;
-      case TableFilterType.DatePicker:
-      case TableFilterType.DateRange:
-      case TableFilterType.TextField:
-      case TableFilterType.SingleSelect:
-      case TableFilterType.RadioGroup:
-      case TableFilterType.Select:
-      case TableFilterType.MultiSelect:
-      case TableFilterType.SelectMultipleCheckbox:
-      case TableFilterType.SelectMultiple:
-      case TableFilterType.Custom:
-      default: {
-        const title = filterItem.title;
-        const value = getValue();
-        return `${title}${value ? ": " : ""}${value}`;
-      }
-    }
-  }
-
   /**
    * Watch for the menu ref
    * Closes the filter when updated to false in any way (ie. click next to it)
@@ -343,9 +279,12 @@
                 <v-list-item @click="applySearch">{{ searchFilterItemLabel }}</v-list-item>
                 <v-divider></v-divider>
               </template>
-              <v-list-item v-for="key in Object.keys(modelValue)" :key="key" :value="modelValue[key]" @click="changeCurrentFilter(key, modelValue[key])">
-                <v-list-item-title>{{ modelValue[key].title }}</v-list-item-title>
-              </v-list-item>
+              <template v-for="key in Object.keys(modelValue)" :key="key">
+                <v-list-item :value="modelValue[key]" @click="changeCurrentFilter(key, modelValue[key])">
+                  <v-list-item-title>{{ modelValue[key].title }}</v-list-item-title>
+                </v-list-item>
+                <v-divider v-if="modelValue[key].divider" />
+              </template>
             </v-list>
 
             <!-- Filter compoment -->
@@ -364,7 +303,7 @@
             <!-- Chips -->
             <template v-for="key in Object.keys(modelValue)">
               <MkInputChip v-if="modelValue[key].selectedValue" :key="key" @click="setCurrentFilter(key, modelValue[key])" @click:remove="removeFilter(key)">
-                {{ appliedFilterChip(modelValue, key) }}
+                {{ appliedFilterChip(modelValue[key]) }}
               </MkInputChip>
             </template>
 

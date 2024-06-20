@@ -12,7 +12,6 @@
 
   const props = withDefaults(
     defineProps<{
-      modelValue: Array<any>;
       /** Allow the selection of multiple dates */
       multiple?: boolean;
       /** Max amount of dates that should be selected */
@@ -24,20 +23,21 @@
     }
   );
 
+  const modelValue = defineModel<Array<any>>({ required: true });
+
   const emit = defineEmits<{
-    (e: "update:modelValue", value: Array<any>): void;
     (e: "click:close"): void;
   }>();
 
-  // state
-  const model = ref(props.modelValue);
+  // Create proxy model to prevent direct mutation
+  const model = ref(modelValue.value);
 
   function close() {
     emit("click:close");
   }
 
   function apply() {
-    emit("update:modelValue", model.value);
+    modelValue.value = model.value;
     close();
   }
 
@@ -84,9 +84,3 @@
     </template>
   </MkDialogCard>
 </template>
-
-<style>
-  .mk-dialog-card__content {
-    padding: 0;
-  }
-</style>
