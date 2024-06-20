@@ -5,6 +5,8 @@ import { TableFilterType } from "@/models/enum/TableFilterType";
 export type TableFilterItem = {
   /** Title for the filter to be displayed to the user */
   title: string;
+  /** Description to be displayed to the user */
+  intro?: string;
   /** Label shown in the input */
   inputLabel?: string;
   /** Options to display in the filter, e.g. in a select */

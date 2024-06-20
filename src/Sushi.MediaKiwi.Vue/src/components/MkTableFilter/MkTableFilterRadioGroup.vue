@@ -5,7 +5,7 @@
   import { computed, ref } from "vue";
 
   // inject dependencies
-  const { defaultT } = await useI18next();
+  const { t } = await useI18next("MkFilter");
 
   const props = defineProps<{
     tableFilterItem: TableFilterItem;
@@ -35,7 +35,7 @@
         v-model="model"
         hide-details="auto"
         density="default"
-        :rules="[(v: any) => !!v || defaultT(`Filter.EmptyError`, `This field is required`), ...additionalRules]"
+        :rules="[(v: any) => !!v || t(`EmptyFilterError`, `This field is required`), ...additionalRules]"
       >
         <v-radio v-for="(option, index) in tableFilterItem.options" :key="index" :label="option.title" :value="option" />
       </v-radio-group>

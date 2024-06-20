@@ -27,10 +27,11 @@
     contains: {
       title: "Contains",
       type: TableFilterType.Contains,
+      intro: "Find Something",
       searchable: true,
     },
     email: {
-      title: "E-mail",
+      title: "Custom Text (E-mail)",
       type: TableFilterType.TextField,
       divider: true,
       rules: [email],

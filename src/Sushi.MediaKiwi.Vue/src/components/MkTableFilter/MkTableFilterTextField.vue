@@ -5,7 +5,7 @@
   import MkTableFilterDialog from "./MkTableFilterDialog.vue";
   import { TableFilterType } from "@/models";
 
-  const { defaultT } = await useI18next();
+  const { t, defaultT } = await useI18next("MkFilter");
 
   // inject dependencies
   const props = defineProps<{
@@ -45,7 +45,7 @@
         v-model="model"
         :label="inputLabel"
         hide-details="auto"
-        :rules="[(v: any) => !!v || defaultT(`Filter.EmptyError`, `Value can't be empty`), ...additionalRules]"
+        :rules="[(v: any) => !!v || t(`EmptyFilterError`, `This field is required`), ...additionalRules]"
       >
       </v-text-field>
     </div>

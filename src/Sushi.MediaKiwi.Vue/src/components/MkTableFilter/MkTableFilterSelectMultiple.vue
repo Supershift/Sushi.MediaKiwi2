@@ -5,7 +5,7 @@
   import { useI18next } from "@/composables";
 
   // inject dependencies
-  const { defaultT } = await useI18next();
+  const { t, defaultT } = await useI18next("MkFilter");
 
   const props = defineProps<{
     tableFilterItem: TableFilterItem;
@@ -39,7 +39,7 @@
         hide-details="auto"
         :items="tableFilterItem.options"
         :label="tableFilterItem.inputLabel || defaultT('Value')"
-        :rules="[(v: any) => !!v && !!v.length || defaultT(`Filter.EmptyError`, `This field is required`), ...additionalRules]"
+        :rules="[(v: any) => !!v && !!v.length || t(`EmptyFilterError`, `This field is required`), ...additionalRules]"
       >
         <template #selection="{ item }">
           <v-chip v-if="item" v-text="item.title" />

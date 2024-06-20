@@ -5,11 +5,10 @@
   import MkTableFilterDialog from "./MkTableFilterDialog.vue";
   import { useI18next } from "@/composables";
   import { useFilters } from "@/composables/useFilters";
-  import { table } from "console";
 
   // inject dependencies
-  const { defaultT } = await useI18next();
-  const { getOperatorOptions } = await useFilters(useI18next());
+  const { t, defaultT } = await useI18next("MkFilter");
+  const { getOperatorOptions } = await useFilters(useI18next("MkFilter"));
 
   const props = defineProps<{
     tableFilterItem: TableFilterItem;
@@ -65,7 +64,7 @@
             :items="operators"
             :label="tableFilterItem.inputLabel || defaultT('Operator')"
             :rules="[
-                (v: any) => v != undefined && v != null || defaultT(`Filter.EmptyError`, `This field is required`),  
+                (v: any) => v != undefined && v != null || t(`EmptyFilterError`, `This field is required`),  
               ]"
           ></v-select>
         </v-col>
@@ -75,7 +74,7 @@
             hide-details="auto"
             :type="inputType"
             :rules="[
-              (v: any) => v != undefined && v != null || defaultT(`Filter.EmptyError`, `This field is required`),
+              (v: any) => v != undefined && v != null || t(`EmptyFilterError`, `This field is required`),
               ...additionalRules
               ]"
             :label="tableFilterItem.inputLabel || defaultT('Value')"

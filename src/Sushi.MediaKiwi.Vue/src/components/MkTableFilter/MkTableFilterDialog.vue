@@ -41,6 +41,9 @@
   <v-form v-model="state.isValid" id="mkTableFilterDialogForm" @submit.prevent="onSubmitForm">
     <v-card class="mk-table-filter__item" rounded="xl" variant="elevated" width="312">
       <v-card-title tag="h6" class="text-headline-small pa-6 ma-0"> {{ tableFilterItem.title }} </v-card-title>
+      <v-card-text class="px-6" v-if="tableFilterItem.intro">
+        {{ tableFilterItem.intro }}
+      </v-card-text>
 
       <v-card-text class="px-2 py-0">
         <v-divider />

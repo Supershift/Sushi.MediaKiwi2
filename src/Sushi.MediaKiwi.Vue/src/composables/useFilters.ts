@@ -7,7 +7,7 @@ import { FilterOperatorValue } from "@/models/table/filter/FilterOperatorValue";
 /** This composable provides filters for the table. */
 export async function useFilters(useI18next: ReturnType<typeof useI18nextComposable>) {
   const { formatPreset } = await useDatePresets();
-  const { formatDate, defaultT } = await useI18next;
+  const { formatDate, t } = await useI18next;
 
   function getFormatterFilterValue(tableFilterItem: TableFilterItem) {
     const value = tableFilterItem.selectedValue?.value;
@@ -65,7 +65,7 @@ export async function useFilters(useI18next: ReturnType<typeof useI18nextComposa
       case TableFilterType.Direct:
         return tableFilterItem.title;
       case TableFilterType.Contains:
-        return defaultT.value("Filter.Contains", "{{filter.title}} contains {{filter.value}}", {
+        return t.value("FilterContains", "{{filter.title}} contains {{filter.value}}", {
           filter: { title: tableFilterItem.title, value },
         });
       case TableFilterType.Operator: {

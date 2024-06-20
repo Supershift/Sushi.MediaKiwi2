@@ -4,7 +4,7 @@
   import MkTableFilterDialog from "./MkTableFilterDialog.vue";
   import { useI18next } from "@/composables";
 
-  const { defaultT } = await useI18next();
+  const { t } = await useI18next("MkFilter");
 
   const props = defineProps<{
     tableFilterItem: TableFilterItem;
@@ -41,7 +41,7 @@
         density="comfortable"
         class="mk-table-filter__item__checkbox pl-3"
         hide-details="auto"
-        :rules="[(v: any) => !!v && !!v.length || defaultT(`Filter.EmptyError`, `This field is required`), ...additionalRules]"
+        :rules="[(v: any) => !!v && !!v.length || t(`EmptyFilterError`, `This field is required`), ...additionalRules]"
       />
     </div>
   </MkTableFilterDialog>
