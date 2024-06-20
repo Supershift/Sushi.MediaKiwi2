@@ -1,5 +1,36 @@
+import "reflect-metadata";
 import { describe, it, expect, vi } from "vitest";
 import { useDatePresets } from "@/composables/useDatePresets";
+
+vi.mock("@/composables/useI18next", async () => {
+  const mod = await import("@/composables/useI18next");
+  return {
+    ...mod,
+    // Mock the useI18next
+    useI18next: async () => ({
+      i18next: {
+        value: {
+          resolvedLanguage: "en",
+        },
+      },
+      t: {
+        value: vi.fn().mockImplementation((_key: string, fallback: string) => {
+          return fallback;
+        }),
+      },
+      defaultT: {
+        value: vi.fn().mockImplementation((_key: string, fallback: string) => {
+          return fallback;
+        }),
+      },
+      formatNumber: {
+        value: vi.fn().mockImplementation((value: number) => {
+          return value.toFixed(2);
+        }),
+      },
+    }),
+  };
+});
 
 // Mock useDayjs and its methods
 vi.mock("./useDayjs", () => ({
