@@ -2,32 +2,33 @@
 using Microsoft.AspNetCore.Mvc;
 using Sushi.MediaKiwi.SampleAPI.Service;
 using Sushi.MediaKiwi.SampleAPI.Service.Model;
+using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MediaKiwi.WebAPI;
-using Sushi.MediaKiwi.WebAPI.Paging;
 
 namespace Sushi.MediaKiwi.SampleAPI.Controllers
-{   
+{
     [Route($"{BaseRoute}/countries")]
     [Authorize(Constants.CustomPolicyName)]
     public class CountryController : SampleControllerBase
     {
         private readonly CountryService _countryService;
-        private readonly PagingRetriever _pagingRetriever;
 
-        public CountryController(CountryService countryService, PagingRetriever pagingRetriever)
+        public CountryController(CountryService countryService)
         {
             _countryService = countryService;
-            _pagingRetriever = pagingRetriever;
         }
 
-        [HttpGet]
-        [QueryStringPaging]        
-        public async Task<ActionResult<ListResult<Country>>> GetAll()
+        [HttpGet]      
+        public async Task<ActionResult<ListResult<Country>>> GetAll(GetCountryQuery query)
         {
-            var pagingValues = _pagingRetriever.GetPaging();
-            var result = await _countryService.GetAllAsync(pagingValues);
+            var result = await _countryService.GetAllAsync(query);
             return this.CreateResponse(result);
         }
+    }
+
+    public class GetCountryQuery
+    {
+        public PagingValues? Page { get; set; }
     }
 }
