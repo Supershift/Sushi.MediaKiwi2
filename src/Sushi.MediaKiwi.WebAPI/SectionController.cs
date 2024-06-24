@@ -33,10 +33,9 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpGet]
         [QueryStringPaging]        
-        public async Task<ActionResult<ListResult<Section>>> GetSections()
+        public async Task<ActionResult<ListResult<Section>>> GetSections(GetSectionsQuery query)
         {
-            var pagingValues = _pagingRetriever.GetPaging();
-            var result = await _sectionService.GetAllAsync(pagingValues);
+            var result = await _sectionService.GetAllAsync(query.Page!);
             return this.CreateResponse(result);
         }
 
@@ -51,6 +50,17 @@ namespace Sushi.MediaKiwi.WebAPI
         {
             var result = await _sectionService.GetAsync(id);
             return this.CreateResponse(result);
+        }
+
+        /// <summary>
+        /// Query for GetSections
+        /// </summary>
+        public class GetSectionsQuery
+        {
+            /// <summary>
+            /// Paging values.
+            /// </summary>
+            public PagingValues? Page { get; set; }
         }
     }
 }

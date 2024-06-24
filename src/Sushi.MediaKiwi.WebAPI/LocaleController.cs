@@ -42,14 +42,12 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <summary>
         /// Gets all locales.
         /// </summary>
-        /// <param name="onlyEnabled">If set to true, only locales with enabled set to true are returned.</param>
         /// <returns></returns>
         [HttpGet]
         [QueryStringPaging]
-        public async Task<ActionResult<ListResult<Locale>>> GetLocales(bool? onlyEnabled)
+        public async Task<ActionResult<ListResult<Locale>>> GetLocales(GetLocalesQuery query)
         {
-            var pagingValues = _pagingRetriever.GetPaging();
-            var result = await _localeService.GetAllAsync(onlyEnabled.GetValueOrDefault(), pagingValues);
+            var result = await _localeService.GetAllAsync(query.onlyEnabled.GetValueOrDefault(), query.Page!);
             return this.CreateResponse(result);
         }
 
@@ -102,6 +100,22 @@ namespace Sushi.MediaKiwi.WebAPI
         {
             var result = await _localeService.UpdateAsync(id, request);
             return this.CreateResponse(result);
+        }
+
+        /// <summary>
+        /// Query for GetLocales
+        /// </summary>
+        public class GetLocalesQuery
+        {
+            /// <summary>
+            /// Paging values.
+            /// </summary>
+            public PagingValues? Page { get; set; }
+
+            /// <summary>
+            /// If set to true, only locales with enabled set to true are returned.
+            /// </summary>
+            public bool? onlyEnabled { get; set; }
         }
     }
 }

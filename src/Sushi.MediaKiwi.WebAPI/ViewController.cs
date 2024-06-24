@@ -61,11 +61,10 @@ namespace Sushi.MediaKiwi.WebAPI
         [HttpGet]
         [QueryStringPaging]
         [QueryStringSorting<ViewSortMap>()]
-        public async Task<ActionResult<ListResult<View>>> GetViews()
+        public async Task<ActionResult<ListResult<View>>> GetViews(GetViewsQuery query)
         {
-            var pagingValues = _pagingRetriever.GetPaging();
             var sortValues = _sortingRetriever.GetSorting<View>();
-            var result = await _viewService.GetAllAsync(pagingValues, sortValues);
+            var result = await _viewService.GetAllAsync(query.Page!, sortValues);
             return this.CreateResponse(result);
         }
 
@@ -106,6 +105,17 @@ namespace Sushi.MediaKiwi.WebAPI
         {
             var result = await _viewService.UpdateAsync(id, request);
             return this.CreateResponse(result);
+        }
+
+        /// <summary>
+        /// Query for GetViews
+        /// </summary>
+        public class GetViewsQuery
+        {
+            /// <summary>
+            /// Paging values.
+            /// </summary>
+            public PagingValues? Page { get; set; }
         }
     }
 }

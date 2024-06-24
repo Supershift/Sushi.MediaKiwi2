@@ -44,16 +44,15 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <summary>
         /// Gets all navigation items for the given filters.
         /// </summary>
-        /// <param name="sectionID"></param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet]
         [QueryStringPaging]
         [QueryStringSorting<NavigationItemsSortMap>()]
-        public async Task<ActionResult<ListResult<NavigationItem>>> GetNavigationItems([FromQuery] string? sectionID)
+        public async Task<ActionResult<ListResult<NavigationItem>>> GetNavigationItems(GetNavigationItemsQuery query)
         {
-            var pagingValues = _pagingRetriever.GetPaging();
             var sortValues = _sortingRetriever.GetSorting<NavigationItem>();
-            var result = await _navigationItemService.GetAllAsync(sectionID, pagingValues, sortValues);
+            var result = await _navigationItemService.GetAllAsync(query.sectionID, query.Page!, sortValues);
             return this.CreateResponse(result);
         }
         
@@ -68,6 +67,22 @@ namespace Sushi.MediaKiwi.WebAPI
         {
             var result = await _navigationItemService.GetAsync(id);
             return this.CreateResponse(result);
+        }
+
+        /// <summary>
+        /// Query for GetNavigationItems
+        /// </summary>
+        public class GetNavigationItemsQuery
+        {
+            /// <summary>
+            /// Paging values.
+            /// </summary>
+            public PagingValues? Page { get; set; }
+
+            /// <summary>
+            /// If set to true, only locales with enabled set to true are returned.
+            /// </summary>
+            public string? sectionID { get; set; }
         }
     }
 }
