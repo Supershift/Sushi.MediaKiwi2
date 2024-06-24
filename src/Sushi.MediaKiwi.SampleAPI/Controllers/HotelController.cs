@@ -13,7 +13,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
     {
         private readonly HotelService _hotelService;
 
-        public HotelController(HotelService hotelService, PagingRetriever pagingRetriever)
+        public HotelController(HotelService hotelService)
         {
             _hotelService = hotelService;
         }
