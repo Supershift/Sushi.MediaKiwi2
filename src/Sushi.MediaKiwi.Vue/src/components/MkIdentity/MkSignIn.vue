@@ -22,9 +22,9 @@
   }>();
 </script>
 <template>
-  <v-container class="mk-signin">
-    <v-row justify="center" align="center">
-      <v-col xs="12" sm="10" md="8" lg="4" xl="3">
+  <v-container class="mk-signin fill-height">
+    <v-row class="d-flex justify-sm-space-evenly">
+      <v-col class="d-flex align-center justify-center" xs="12" sm="10" md="8" lg="4">
         <v-card class="mk-signin__card pa-5 text-center" rounded="lg" elevation="3">
           <v-card-title tag="h1" class="text-headline-large" :title="title">{{ title }}</v-card-title>
           <v-divider class="mt-5 mb-5 mx-5" />
