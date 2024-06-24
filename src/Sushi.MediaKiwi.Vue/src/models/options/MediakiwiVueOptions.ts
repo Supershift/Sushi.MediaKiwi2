@@ -30,6 +30,11 @@ export interface MediakiwiVueOptions {
     image?: string;
     hideImage?: boolean;
   };
+  /** Options for the sign in screen background*/
+  signIn?: {
+    image?: string;
+    color?: string;
+  }
   /** Global options used for MkTable */
   tableOptions?: MediakiwiTableOptions
 }
