@@ -85,7 +85,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
 
     public class GetHotelsQuery
     {
-        public PagingValues? Page { get; set; }
+        public PagingValues Page { get; set; } = null!;
         public string? CountryCode { get; set; }
         public bool? IsActive { get; set; }
     }

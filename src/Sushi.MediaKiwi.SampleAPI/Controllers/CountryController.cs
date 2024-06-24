@@ -20,15 +20,10 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
         }
 
         [HttpGet]      
-        public async Task<ActionResult<ListResult<Country>>> GetAll(GetCountryQuery query)
+        public async Task<ActionResult<ListResult<Country>>> GetAll(PagingValues paging)
         {
-            var result = await _countryService.GetAllAsync(query);
+            var result = await _countryService.GetAllAsync(paging);
             return this.CreateResponse(result);
         }
-    }
-
-    public class GetCountryQuery
-    {
-        public PagingValues? Page { get; set; }
     }
 }

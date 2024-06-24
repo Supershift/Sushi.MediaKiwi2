@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MediaKiwi.WebAPI.Paging;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
@@ -14,17 +12,14 @@ namespace Sushi.MediaKiwi.WebAPI
     public class SectionController : MediaKiwiControllerBase
     {
         private readonly SectionService _sectionService;
-        private readonly PagingRetriever _pagingRetriever;
 
         /// <summary>
         /// Creates a new instance of the SectionController.
         /// </summary>
         /// <param name="sectionService"></param>
-        /// <param name="pagingRetriever"></param>
-        public SectionController(SectionService sectionService, PagingRetriever pagingRetriever)
+        public SectionController(SectionService sectionService)
         {
             _sectionService = sectionService;
-            _pagingRetriever = pagingRetriever;
         }
         
         /// <summary>
@@ -33,9 +28,9 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpGet]
         [QueryStringPaging]        
-        public async Task<ActionResult<ListResult<Section>>> GetSections(GetSectionsQuery query)
+        public async Task<ActionResult<ListResult<Section>>> GetSections(PagingValues page)
         {
-            var result = await _sectionService.GetAllAsync(query.Page!);
+            var result = await _sectionService.GetAllAsync(page);
             return this.CreateResponse(result);
         }
 
@@ -50,17 +45,6 @@ namespace Sushi.MediaKiwi.WebAPI
         {
             var result = await _sectionService.GetAsync(id);
             return this.CreateResponse(result);
-        }
-
-        /// <summary>
-        /// Query for GetSections
-        /// </summary>
-        public class GetSectionsQuery
-        {
-            /// <summary>
-            /// Paging values.
-            /// </summary>
-            public PagingValues? Page { get; set; }
         }
     }
 }

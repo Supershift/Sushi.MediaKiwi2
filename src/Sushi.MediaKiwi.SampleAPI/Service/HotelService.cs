@@ -30,7 +30,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
         public async Task<Result<ListResult<Hotel>>> GetAllAsync(GetHotelsQuery query)
         {
             // get hotels from datastore
-            var items = await _hotelRepository.GetAllAsync(query.Page!, query.CountryCode, query.IsActive);
+            var items = await _hotelRepository.GetAllAsync(query.Page, query.CountryCode, query.IsActive);
 
             // map to result
             var itemsDto = _mapper.Map<List<Hotel>>(items);
