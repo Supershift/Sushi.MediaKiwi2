@@ -38,7 +38,7 @@
   const styles = computed(() => {
     if (isPageOnSignIn.value && signIn?.image) {
       return {
-        backgroundImage: image.value ? `url(${image.value})` : "",
+        backgroundImage: isAuthenticated.value === false && image.value ? `url(${image.value})` : "",
         height: "100%",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
