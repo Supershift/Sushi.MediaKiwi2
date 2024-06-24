@@ -28,6 +28,7 @@ namespace Sushi.MediaKiwi.WebAPI.Paging
         /// Gets <see cref="PagingValues"/> from the current <see cref="HttpContext"/>.
         /// </summary>
         /// <returns></returns>
+        [Obsolete("GetPaging is deprecated, paging can be retrieved from the query.")]
         public PagingValues GetPaging()
         {
             var context = _httpContextAccessor.HttpContext;

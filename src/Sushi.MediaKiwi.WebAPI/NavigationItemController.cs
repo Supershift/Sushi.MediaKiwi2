@@ -15,7 +15,6 @@ namespace Sushi.MediaKiwi.WebAPI
     public class NavigationItemController : MediaKiwiControllerBase
     {
         private readonly NavigationItemService _navigationItemService;
-        private readonly PagingRetriever _pagingRetriever;
         private readonly SortingRetriever _sortingRetriever;
         
         internal class NavigationItemsSortMap : SortMap<NavigationItem>
@@ -31,12 +30,10 @@ namespace Sushi.MediaKiwi.WebAPI
         /// Creates a new instance of the NavigationItemController.
         /// </summary>
         /// <param name="screenService"></param>
-        /// <param name="pagingRetriever"></param>
         /// <param name="sortingRetriever"></param>
-        public NavigationItemController(NavigationItemService screenService, PagingRetriever pagingRetriever, SortingRetriever sortingRetriever)
+        public NavigationItemController(NavigationItemService screenService, SortingRetriever sortingRetriever)
         {
             _navigationItemService = screenService;
-            _pagingRetriever = pagingRetriever;
             _sortingRetriever = sortingRetriever;
         }
 
@@ -44,16 +41,15 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <summary>
         /// Gets all navigation items for the given filters.
         /// </summary>
-        /// <param name="sectionID"></param>
+        /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet]
         [QueryStringPaging]
         [QueryStringSorting<NavigationItemsSortMap>()]
-        public async Task<ActionResult<ListResult<NavigationItem>>> GetNavigationItems([FromQuery] string? sectionID)
+        public async Task<ActionResult<ListResult<NavigationItem>>> GetNavigationItems(GetNavigationItemsQuery query)
         {
-            var pagingValues = _pagingRetriever.GetPaging();
             var sortValues = _sortingRetriever.GetSorting<NavigationItem>();
-            var result = await _navigationItemService.GetAllAsync(sectionID, pagingValues, sortValues);
+            var result = await _navigationItemService.GetAllAsync(query.sectionID, query.Page, sortValues);
             return this.CreateResponse(result);
         }
         
@@ -68,6 +64,22 @@ namespace Sushi.MediaKiwi.WebAPI
         {
             var result = await _navigationItemService.GetAsync(id);
             return this.CreateResponse(result);
+        }
+
+        /// <summary>
+        /// Query for GetNavigationItems
+        /// </summary>
+        public class GetNavigationItemsQuery
+        {
+            /// <summary>
+            /// Paging values.
+            /// </summary>
+            public PagingValues Page { get; set; } = null!;
+
+            /// <summary>
+            /// If set to true, only locales with enabled set to true are returned.
+            /// </summary>
+            public string? sectionID { get; set; }
         }
     }
 }

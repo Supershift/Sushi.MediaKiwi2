@@ -22,19 +22,16 @@ namespace Sushi.MediaKiwi.WebAPI
         }
 
         private readonly ViewService _viewService;
-        private readonly PagingRetriever _pagingRetriever;
         private readonly SortingRetriever _sortingRetriever;
 
         /// <summary>
         /// Creates a new instance of the ViewController.
         /// </summary>
         /// <param name="viewService"></param>
-        /// <param name="pagingRetriever"></param>
         /// <param name="sortingRetriever"></param>
-        public ViewController(ViewService viewService, PagingRetriever pagingRetriever, SortingRetriever sortingRetriever)
+        public ViewController(ViewService viewService, SortingRetriever sortingRetriever)
         {
             _viewService = viewService;
-            _pagingRetriever = pagingRetriever;
             _sortingRetriever = sortingRetriever;
         }
 
@@ -61,11 +58,10 @@ namespace Sushi.MediaKiwi.WebAPI
         [HttpGet]
         [QueryStringPaging]
         [QueryStringSorting<ViewSortMap>()]
-        public async Task<ActionResult<ListResult<View>>> GetViews()
+        public async Task<ActionResult<ListResult<View>>> GetViews(PagingValues page)
         {
-            var pagingValues = _pagingRetriever.GetPaging();
             var sortValues = _sortingRetriever.GetSorting<View>();
-            var result = await _viewService.GetAllAsync(pagingValues, sortValues);
+            var result = await _viewService.GetAllAsync(page, sortValues);
             return this.CreateResponse(result);
         }
 
