@@ -1,0 +1,12 @@
+@use "sass:map";
+@use "@/styles/abstracts/mixins" as *;
+
+.v-empty-state--mediakiwi {
+  .v-empty-state__headline {
+    margin-bottom: 20px;
+
+    .v-empty-state__text {
+      margin-bottom: 16px;
+    }
+  }
+}

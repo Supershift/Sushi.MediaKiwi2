@@ -178,5 +178,11 @@ export const GlobalConfiguration: VuetifyOptions = {
     VDatePicker: {
       class: "v-date-picker--mediakiwi",
     },
+    VEmptyState: {
+      class: "v-empty-state--mediakiwi",
+      headline: {
+        class: "text-display-medium",
+      },
+    },
   },
 };
