@@ -180,9 +180,6 @@ export const GlobalConfiguration: VuetifyOptions = {
     },
     VEmptyState: {
       class: "v-empty-state--mediakiwi",
-      headline: {
-        class: "text-display-medium",
-      },
     },
   },
 };
