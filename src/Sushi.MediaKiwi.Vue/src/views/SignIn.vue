@@ -10,7 +10,6 @@
   import { computed } from "vue";
 
   const { signIn } = useMediakiwiVueOptions();
-  const navigation = useNavigation();
 
   // inject dependencies
   const isAuthenticated = useIsAuthenticated();
@@ -30,25 +29,24 @@
     navigation.navigateToHome();
   }
 
+  // computed properties
   const image = computed(() => signIn?.image);
   const color = computed(() => signIn?.color);
 
-  const isPageOnSignIn = computed(() => !navigation?.currentNavigationItem.value?.view?.id);
+  // base style for if the background image configuration is set
+  const baseBgImageStyle = {
+    height: "100%",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+  };
 
+  // generate style based on the configuration
   const styles = computed(() => {
-    if (isPageOnSignIn.value && signIn?.image) {
-      return {
-        backgroundImage: isAuthenticated.value === false && image.value ? `url(${image.value})` : "",
-        height: "100%",
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-      };
-    } else if (color.value) {
-      return {
-        backgroundColor: color.value ? `${color.value}` : "",
-      };
+    if (!isAuthenticated.value) {
+      if (image.value) return { ...baseBgImageStyle, backgroundImage: `url(${image.value})` };
+      if (color.value) return { backgroundColor: `${color.value}` };
     }
-    return undefined;
+    return { height: "100%" };
   });
 </script>
 <template>
