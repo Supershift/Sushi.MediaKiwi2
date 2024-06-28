@@ -83,7 +83,7 @@
             :active="isCurrentItem(index)"
             :disabled="isCurrentItem(index)"
             class="text-title-large text-container"
-            :class="{ 'text-truncate d-inline-block': !isCurrentItem(index) }"
+            :class="{ 'text-truncate d-inline-block': !isCurrentItem(index), 'pl-0': isCurrentItem(index) && breadcrumbs?.length === 1 }"
             size="unset"
             :title="item.name"
             @click.stop="hasScreen(item) ? onItemClick(item) : {}"
