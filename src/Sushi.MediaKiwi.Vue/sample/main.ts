@@ -2,7 +2,7 @@ import "reflect-metadata";
 import App from "./App.vue";
 import { createApp } from "vue";
 import { createAxiosClient } from "@/services";
-import { mediakiwiIconAliases } from "@/plugins/icons";
+import { mdiAliases, symbolsAliases } from "@/plugins/icons";
 import { MediakiwiVueOptions } from "@/models";
 import mediakiwi from "@/framework";
 
@@ -21,7 +21,8 @@ const mediakiwiOptions = <MediakiwiVueOptions>{
       defaultSet: "mdi",
       aliases: {
         ...aliases, // add the default aliases
-        ...mediakiwiIconAliases, // add the already known mediakiwi aliases
+        ...mdiAliases,
+        ...symbolsAliases, // add the already known mediakiwi aliases
         accountCheckOutline: mdiAccountCheckOutline, // add your own aliases
         testTube: mdiTestTube, // add your own aliases
       },

@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Sushi.MediaKiwi.WebAPI\Sushi.MediaKiwi.WebAPI.csproj" />
+    <ProjectReference Include="..\..\src\Sushi.MediaKiwi\Sushi.MediaKiwi.csproj" />
   </ItemGroup>
 
 </Project>

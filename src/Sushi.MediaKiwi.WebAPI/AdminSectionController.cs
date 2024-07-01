@@ -2,22 +2,26 @@
 using Microsoft.AspNetCore.Mvc;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
-using Sushi.MediaKiwi.WebAPI.Paging;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
+    /// <summary>
+    /// Defines endpoints to manage Sections.
+    /// </summary>
     [Route($"{BaseRoute}/sections")]
     [Authorize(Policy = Constants.AdminPolicyName)]
     public class AdminSectionController : MediaKiwiControllerBase
     {
         private readonly SectionService _sectionService;
-        private readonly PagingRetriever _pagingRetriever;
 
-        public AdminSectionController(SectionService sectionService, PagingRetriever pagingRetriever)
+        /// <summary>
+        /// Creates a new instance of the AdminSectionController.
+        /// </summary>
+        /// <param name="sectionService"></param>
+        public AdminSectionController(SectionService sectionService)
         {
             _sectionService = sectionService;
-            _pagingRetriever = pagingRetriever;
         }
 
         /// <summary>
@@ -40,7 +44,7 @@ namespace Sushi.MediaKiwi.WebAPI
         [HttpPost]
         [Route("{id}")]        
         public async Task<ActionResult<Section>> CreateSection(
-            [Required, StringLength(DAL.Section.SectionIdMaxLength), RegularExpression(DAL.Section.SectionIdRegex)] string id, 
+            [Required, StringLength(Services.Entities.Section.SectionIdMaxLength), RegularExpression(Services.Entities.Section.SectionIdRegex)] string id, 
             Section request)
         {   
             var result = await _sectionService.CreateAsync(id, request);

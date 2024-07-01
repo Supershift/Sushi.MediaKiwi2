@@ -21,7 +21,7 @@
       </picture>
     </template>
     <template #title>
-      <v-toolbar-title v-if="!xs">MediaKiwi 2.0 - SampleWeb</v-toolbar-title>
+      <v-toolbar-title v-if="!xs"> MediaKiwi 2 - Sample website</v-toolbar-title>
     </template>
   </mk-application>
 </template>

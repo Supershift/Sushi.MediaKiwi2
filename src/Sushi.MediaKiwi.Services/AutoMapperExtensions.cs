@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Sushi.MediaKiwi.DAL.Sorting;
 using System.Linq.Expressions;
 
 namespace Sushi.MediaKiwi.Services
@@ -21,7 +20,7 @@ namespace Sushi.MediaKiwi.Services
             if (sortValues == null)
                 return null;
             
-            var expression = mapper.Map<Expression<Func<T, object>>>(sortValues.SortField);
+            var expression = mapper.Map<Expression<Func<T, object?>>>(sortValues.SortField);
 
             return new SortValues<T>(expression, sortValues.Direction);
         }

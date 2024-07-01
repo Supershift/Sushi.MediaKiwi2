@@ -1,28 +1,26 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Mvc;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
-using Sushi.MediaKiwi.WebAPI.Paging;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
+    /// <summary>
+    /// Defines endpoints to manage translations.
+    /// </summary>
     [Route($"{BaseRoute}/admin/translations/")]
     [Authorize(Policy = Constants.AdminPolicyName)]
     public class AdminTranslationController : MediaKiwiControllerBase
     {
         private readonly AdminTranslationService _translationService;
-        private readonly PagingRetriever _pagingRetriever;
 
         /// <summary>
         /// Creates a new instance of <see cref="TranslationController"/>.
         /// </summary>
         /// <param name="translationService"></param>
-        /// <param name="pagingRetriever"></param>
-        public AdminTranslationController(AdminTranslationService translationService, PagingRetriever pagingRetriever)
+        public AdminTranslationController(AdminTranslationService translationService)
         {
             _translationService = translationService;
-            _pagingRetriever = pagingRetriever;
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ import { IMediakiwiServiceRegistrations } from "./IMediakiwiServiceRegistrations
 import { InitOptions, i18n } from "i18next";
 import { MediakiwiIdentity } from "./MediakiwiIdentity";
 import { VuetifyOptions } from "vuetify";
+import { MediakiwiTableOptions } from "./MediakiwiTableOptions";
 
 export interface MediakiwiVueOptions {
   /** Base url for the MediaKiwi API, e.g. https://portal.mydomain.com/mediakiwi/api */
@@ -29,4 +30,6 @@ export interface MediakiwiVueOptions {
     image?: string;
     hideImage?: boolean;
   };
+  /** Global options used for MkTable */
+  tableOptions?: MediakiwiTableOptions
 }

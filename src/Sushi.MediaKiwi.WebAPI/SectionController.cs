@@ -1,22 +1,25 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MediaKiwi.WebAPI.Paging;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
+    /// <summary>
+    /// Defines endpoints to retrieve Sections.
+    /// </summary>
     [Route($"{BaseRoute}/sections")]    
     public class SectionController : MediaKiwiControllerBase
     {
         private readonly SectionService _sectionService;
-        private readonly PagingRetriever _pagingRetriever;
 
-        public SectionController(SectionService sectionService, PagingRetriever pagingRetriever)
+        /// <summary>
+        /// Creates a new instance of the SectionController.
+        /// </summary>
+        /// <param name="sectionService"></param>
+        public SectionController(SectionService sectionService)
         {
             _sectionService = sectionService;
-            _pagingRetriever = pagingRetriever;
         }
         
         /// <summary>
@@ -25,10 +28,9 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpGet]
         [QueryStringPaging]        
-        public async Task<ActionResult<ListResult<Section>>> GetSections()
+        public async Task<ActionResult<ListResult<Section>>> GetSections(PagingValues page)
         {
-            var pagingValues = _pagingRetriever.GetPaging();
-            var result = await _sectionService.GetAllAsync(pagingValues);
+            var result = await _sectionService.GetAllAsync(page);
             return this.CreateResponse(result);
         }
 

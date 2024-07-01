@@ -24,4 +24,9 @@
     <PackageReference Include="Sushi.MicroORM" Version="3.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Sushi.LanguageExtensions\Sushi.LanguageExtensions.csproj" />
+    <ProjectReference Include="..\Sushi.MediaKiwi.Services\Sushi.MediaKiwi.Services.csproj" />
+  </ItemGroup>
+
 </Project>

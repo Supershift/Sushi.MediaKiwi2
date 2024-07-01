@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Sushi.MediaKiwi.DAL.Paging;
 using Sushi.MediaKiwi.SampleAPI.DAL.Repository;
 using Sushi.MediaKiwi.SampleAPI.Service.Model;
 using Sushi.MediaKiwi.Services;
@@ -20,10 +19,10 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
             _mapper = mapper;
         }
 
-        public async Task<Result<ListResult<Country>>> GetAllAsync(PagingValues pagingValues)
+        public async Task<Result<ListResult<Country>>> GetAllAsync(PagingValues paging)
         {
             // get countries from datastore
-            var items = await _countryRepository.GetAllAsync(pagingValues);
+            var items = await _countryRepository.GetAllAsync(paging);
 
             // map to result
             var itemsDto = _mapper.Map<List<Country>>(items);

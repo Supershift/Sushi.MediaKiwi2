@@ -22,7 +22,7 @@ namespace Sushi.MediaKiwi.Services.Model
         /// Display name of the locale in its own language.
         /// </summary>
         [Required, StringLength(128)]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
         /// <summary>
         /// If set to true, this locale can be used.
         /// </summary>

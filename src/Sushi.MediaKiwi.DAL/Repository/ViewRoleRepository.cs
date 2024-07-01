@@ -1,9 +1,6 @@
-﻿using Sushi.MicroORM;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Sushi.MediaKiwi.Services.Entities;
+using Sushi.MediaKiwi.Services.Interfaces;
+using Sushi.MicroORM;
 
 namespace Sushi.MediaKiwi.DAL.Repository
 {

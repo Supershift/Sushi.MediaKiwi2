@@ -7,6 +7,9 @@ using Sushi.MediaKiwi.WebAPI.Paging;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
+    /// <summary>
+    /// Defines endpoints to retrieve Translations.
+    /// </summary>
     [Route($"{BaseRoute}/translations")]
     public class TranslationController : MediaKiwiControllerBase
     {
@@ -40,6 +43,7 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpPost]        
         [Route("{localeId}/{namespace}")]
+        [Authorize(Policy = Constants.AdminPolicyName)]
         public async Task<ActionResult> AddMissingTranslations(string localeId, string @namespace, [FromBody]Dictionary<string, string> data)
         {
             if (data.Any() == false) {

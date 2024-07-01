@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.Services.Model
@@ -13,7 +14,7 @@ namespace Sushi.MediaKiwi.Services.Model
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class ListResult<T> : IPagingResult
-    {   
+    {
         /// <summary>
         /// Creates a new instance of <see cref="ListResult{T}"/>.
         /// </summary>        
@@ -32,18 +33,24 @@ namespace Sushi.MediaKiwi.Services.Model
 
         /// <summary>
         /// Creates a new instance of <see cref="ListResult{T}"/>.
+        /// </summary>                
+        public ListResult(IList<T> result, int? totalCount, int? pageCount) : this((IReadOnlyList<T>)result.AsReadOnly(), totalCount, pageCount) { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="ListResult{T}"/>.
         /// </summary>        
-        public ListResult(IList<T> result, int? totalCount, int? pageCount)
+        [JsonConstructor]
+        private ListResult(IReadOnlyList<T> result, int? totalCount, int? pageCount)
         {
-            Result = result.AsReadOnly();
+            Result = result;
             TotalCount = totalCount;
-            PageCount = pageCount;            
+            PageCount = pageCount;
         }
-        
+
         /// <summary>
         /// The list of items.
         /// </summary>
-        public ReadOnlyCollection<T> Result { get; private set; }
+        public IReadOnlyList<T> Result { get; private set; }
         
         /// <inheritdoc/>        
         public int? TotalCount { get; private set; }
@@ -57,7 +64,7 @@ namespace Sushi.MediaKiwi.Services.Model
         /// <returns></returns>
         public static ListResult<T> Empty()
         {
-            return new ListResult<T>(new List<T>(), 0, 0);
+            return new ListResult<T>((IReadOnlyList<T>)new List<T>(), 0, 0);
         }
     }
 }

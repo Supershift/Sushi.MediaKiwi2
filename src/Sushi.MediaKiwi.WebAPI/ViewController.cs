@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Sushi.MediaKiwi.DAL.Sorting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MediaKiwi.WebAPI.Paging;
@@ -7,10 +7,13 @@ using Sushi.MediaKiwi.WebAPI.Sorting;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
+    /// <summary>
+    /// Defines endpoints to manage Views.
+    /// </summary>
     [Route($"{BaseRoute}/views")]
     public class ViewController : MediaKiwiControllerBase
     {
-        public class ViewSortMap : SortMap<View>
+        internal class ViewSortMap : SortMap<View>
         {
             public ViewSortMap()
             {
@@ -19,13 +22,16 @@ namespace Sushi.MediaKiwi.WebAPI
         }
 
         private readonly ViewService _viewService;
-        private readonly PagingRetriever _pagingRetriever;
         private readonly SortingRetriever _sortingRetriever;
 
-        public ViewController(ViewService viewService, PagingRetriever pagingRetriever, SortingRetriever sortingRetriever)
+        /// <summary>
+        /// Creates a new instance of the ViewController.
+        /// </summary>
+        /// <param name="viewService"></param>
+        /// <param name="sortingRetriever"></param>
+        public ViewController(ViewService viewService, SortingRetriever sortingRetriever)
         {
             _viewService = viewService;
-            _pagingRetriever = pagingRetriever;
             _sortingRetriever = sortingRetriever;
         }
 
@@ -36,6 +42,7 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpDelete]
         [Route("{id}")]
+        [Authorize(Policy = Constants.AdminPolicyName)]
         public async Task<ActionResult<View>> DeleteView(string id)
         {
             var result = await _viewService.DeleteAsync(id);
@@ -51,11 +58,10 @@ namespace Sushi.MediaKiwi.WebAPI
         [HttpGet]
         [QueryStringPaging]
         [QueryStringSorting<ViewSortMap>()]
-        public async Task<ActionResult<ListResult<View>>> GetViews()
+        public async Task<ActionResult<ListResult<View>>> GetViews(PagingValues page)
         {
-            var pagingValues = _pagingRetriever.GetPaging();
             var sortValues = _sortingRetriever.GetSorting<View>();
-            var result = await _viewService.GetAllAsync(pagingValues, sortValues);
+            var result = await _viewService.GetAllAsync(page, sortValues);
             return this.CreateResponse(result);
         }
 
@@ -78,6 +84,7 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpPost]
         [Route("{id}")]
+        [Authorize(Policy = Constants.AdminPolicyName)]
         public async Task<ActionResult<View>> CreateView(string id, View request)
         {
             var result = await _viewService.CreateAsync(id, request);
@@ -90,6 +97,7 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpPut]
         [Route("{id}")]
+        [Authorize(Policy = Constants.AdminPolicyName)]
         public async Task<ActionResult<View>> UpdateView(string id, View request)
         {
             var result = await _viewService.UpdateAsync(id, request);

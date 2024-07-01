@@ -56,6 +56,7 @@
     new
     :new-title="t('Add Country').toString()"
     new-emit
+    page-tracking
     @click:new="openDialog"
   >
     <template #toolbarTitle>

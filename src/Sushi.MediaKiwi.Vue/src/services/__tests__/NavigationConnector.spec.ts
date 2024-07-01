@@ -132,7 +132,7 @@ describe("NavigationConnector", () => {
 
     // create connector and call
     const connector = new NavigationConnector(axiosMock);
-    const result = await connector.DeleteNavigationItem(1);
+    const result = await connector.DeleteNavigationItem("1");
 
     // assert
     expect(axiosMock.delete).toHaveBeenCalledOnce();
