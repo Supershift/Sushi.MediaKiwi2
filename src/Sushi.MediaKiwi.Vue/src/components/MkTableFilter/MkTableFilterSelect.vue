@@ -1,13 +1,13 @@
 <script setup lang="ts">
   import { useI18next } from "@/composables/useI18next";
   import type { TableFilterItem, TableFilterValue } from "@/models/table";
-  import { ref } from "vue";
+  import { computed, ref } from "vue";
   import MkTableFilterDialog from "./MkTableFilterDialog.vue";
 
   // inject dependencies
-  const { defaultT } = await useI18next("MkTableFilterSelect");
+  const { t, defaultT } = await useI18next("MkFilter");
 
-  defineProps<{
+  const props = defineProps<{
     tableFilterItem: TableFilterItem;
   }>();
 
@@ -20,6 +20,9 @@
   // Create proxy model to prevent direct mutation
   const model = ref(modelValue.value);
 
+  // Additional rules for the input field
+  const additionalRules = computed(() => props.tableFilterItem.rules || []);
+
   function applyFilter() {
     modelValue.value = model.value;
   }
@@ -30,10 +33,11 @@
     <div class="pa-6">
       <v-autocomplete
         v-model="model"
-        hide-details
+        hide-details="auto"
         :items="tableFilterItem.options"
         :label="tableFilterItem.inputLabel || defaultT('Value')"
         return-object
+        :rules="[(v: any) => !!v || t(`EmptyFilterError`, `This field is required`), ...additionalRules]"
       ></v-autocomplete>
     </div>
   </MkTableFilterDialog>

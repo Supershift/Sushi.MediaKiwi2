@@ -2,10 +2,13 @@
   import { ListResult, TableFilter, TableFilterItem, TableFilterType, TableFilterValue } from "@/models";
   import { MkTable } from "@/components";
   import { computed, ref } from "vue";
+  import { useValidationRules } from "@/composables";
 
   //
   const start = new Date("2024-05-31T22:00:00.000Z");
   const end = new Date("2024-06-30T21:59:59.999Z");
+
+  const { email } = useValidationRules();
 
   // define filters
   const filters = ref<TableFilter>({
@@ -22,14 +25,16 @@
       divider: true,
     },
     contains: {
-      title: "Search like",
+      title: "Contains",
       type: TableFilterType.Contains,
+      intro: "Find Something",
       searchable: true,
     },
-    textField: {
-      title: "Textfield",
+    email: {
+      title: "Custom Text (E-mail)",
       type: TableFilterType.TextField,
       divider: true,
+      rules: [email],
     },
     singleSelectZero: {
       title: "Single Select (Zero)",
@@ -95,12 +100,29 @@
         { title: "Option 9", value: "option9" },
         { title: "Option 10", value: "option10" },
       ],
+      divider: true,
+    },
+    amount: {
+      title: "Amount",
+      type: TableFilterType.Operator,
+    },
+    operator: {
+      title: "Custom Operator",
+      type: TableFilterType.Operator,
+      options: [
+        { title: "Equal", value: "eq" },
+        { title: "Not Equal", value: "ne" },
+        { title: "Greater Than", value: "gt" },
+        { title: "Greater Than or Equal", value: "ge" },
+        { title: "Less Than", value: "lt" },
+        { title: "Less Than or Equal", value: "le" },
+      ],
     },
   });
 
   const filterValues = computed<ListResult<TableFilterItem>>(() => {
     return {
-      result: Object.entries(filters.value).map(([key, value]) => {
+      result: Object.entries(filters.value).map(([_key, value]) => {
         return <TableFilterItem>{
           ...value,
         };

@@ -5,7 +5,7 @@
   import MkTableFilterDialog from "./MkTableFilterDialog.vue";
   import { TableFilterType } from "@/models";
 
-  const { defaultT } = await useI18next();
+  const { t, defaultT } = await useI18next("MkFilter");
 
   // inject dependencies
   const props = defineProps<{
@@ -18,7 +18,6 @@
   const model = ref(modelValue.value?.value || "");
 
   const emit = defineEmits<{
-    (e: "update:modelValue", value: TableFilterValue): void;
     (e: "click:close"): void;
   }>();
 
@@ -29,24 +28,26 @@
     return props.tableFilterItem.type === TableFilterType.Contains ? defaultT.value("Contains") : defaultT.value("Value");
   });
 
+  // Additional rules for the input field
+  const additionalRules = computed(() => props.tableFilterItem.rules || []);
+
   function applyFilter() {
     modelValue.value = {
       value: model.value,
     };
   }
-
-  function onSubmit(e: SubmitEvent) {
-    e.preventDefault();
-    applyFilter();
-  }
 </script>
 
 <template>
-  <v-form @submit="onSubmit">
-    <MkTableFilterDialog :table-filter-item="tableFilterItem" @close="emit('click:close')" @apply="applyFilter">
-      <div class="pa-6">
-        <v-text-field v-model="model" :label="inputLabel" hide-details> </v-text-field>
-      </div>
-    </MkTableFilterDialog>
-  </v-form>
+  <MkTableFilterDialog :table-filter-item="tableFilterItem" @close="emit('click:close')" @apply="applyFilter">
+    <div class="pa-6">
+      <v-text-field
+        v-model="model"
+        :label="inputLabel"
+        hide-details="auto"
+        :rules="[(v: any) => !!v || t(`EmptyFilterError`, `This field is required`), ...additionalRules]"
+      >
+      </v-text-field>
+    </div>
+  </MkTableFilterDialog>
 </template>
