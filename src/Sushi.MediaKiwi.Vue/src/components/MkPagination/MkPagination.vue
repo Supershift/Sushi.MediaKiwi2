@@ -97,7 +97,6 @@
         const currentPage = Math.abs(Math.floor(firstItem / value));
         state.pageIndex = currentPage; // Use the page index and calculate the new page index based on the first item in the list
       }
-      console.log("updatePageSize", state.pageIndex, value);
       state.pageSize = value;
       applyPaging();
     }
