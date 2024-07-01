@@ -1,37 +1,37 @@
 <script setup lang="ts">
   import { MkDatePicker } from "../MkDatePicker";
-  import { useI18next } from "@/composables/useI18next";
   import type { TableFilterItem, TableFilterValue } from "@/models/table";
   import { ref } from "vue";
 
-  // inject dependencies
-  const { formatDate } = await useI18next();
-
-  const props = defineProps<{
+  defineProps<{
     tableFilterItem: TableFilterItem;
-    modelValue: TableFilterValue;
   }>();
 
-  // state
-  const model = ref(props.modelValue?.value);
+  const modelValue = defineModel<TableFilterValue>({ required: true });
 
   const emit = defineEmits<{
-    (e: "update:modelValue", value: TableFilterValue): void;
     (e: "click:close"): void;
   }>();
 
+  // Create proxy model to prevent direct mutation
+  const model = ref(modelValue.value?.value);
+
   function applyFilter() {
     // Single select, so we only need the first item
-    const value = model.value[0];
-    emit("update:modelValue", {
-      title: formatDate.value(value),
-      value: value,
-    });
+    modelValue.value = {
+      value: model.value[0],
+    };
   }
 </script>
 
 <template>
-  <MkDatePicker v-model="model" class="mk-table-filter__item" @update:model-value="applyFilter" @click:close="() => emit('click:close')" />
+  <MkDatePicker
+    v-model="model"
+    class="mk-table-filter__item"
+    @update:model-value="applyFilter"
+    @click:close="() => emit('click:close')"
+    :title="tableFilterItem.inputLabel"
+  />
 </template>
 
 <style>

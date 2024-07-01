@@ -10,6 +10,7 @@
     MkTableFilterTextField,
     MkTableFilterSelectMultiple,
     MkTableFilterSelectMultipleCheckbox,
+    MkTableFilterDatePicker,
   } from ".";
   import { DefineComponent } from "vue";
   import { TableFilterType, IconsLibrary } from "@/models";
@@ -19,7 +20,7 @@
   import { useKeyboardShortcuts } from "@/composables/useKeyboardShortcuts";
   import { onDeactivated } from "vue";
   import { KeyboardShortcutCollection } from "@/models/keyboard/KeyboardShortcutCollection";
-  import MkTableFilterDatePicker from "./MkTableFilterDatePicker.vue";
+  import { useFilters } from "@/composables/useFilters";
 
   // define properties and events
   const props = defineProps<{
@@ -33,6 +34,7 @@
   // inject dependencies
   const { defaultT } = await useI18next();
   const { addKeyboardShortcuts, removeKeyboardShortcuts } = useKeyboardShortcuts();
+  const { appliedFilterChip } = await useFilters(useI18next());
 
   // define reactive variables
   const menu = ref(false);
@@ -66,21 +68,34 @@
 
   /** Compute a bale with context menu to show while typing */
   const searchFilterItemLabel = computed(() => {
-    return defaultT.value("searchFilterItemLabel", "{{ filterItemTitle }} with '{{ searchText }}''", {
-      filterItemTitle: searchableFilterItem.value?.title,
-      searchText: state.currentSearchText,
+    return defaultT.value("Filter.SearchLabel", "{{filter.title}} with '{{filter.value}}''", {
+      filter: {
+        title: searchableFilterItem.value?.title,
+        value: state.currentSearchText,
+      },
     });
   });
 
+  function isDirectApplyFilter(): boolean;
+  function isDirectApplyFilter(filterItem: TableFilterItem): boolean;
+  function isDirectApplyFilter(filterItem?: TableFilterItem): boolean {
+    if (!filterItem) {
+      filterItem = state.currentFilter;
+    }
+
+    return (
+      filterItem?.type === TableFilterType.Direct ||
+      (filterItem?.type === TableFilterType.SingleSelect && (!filterItem?.options?.length || filterItem?.options?.length <= 1))
+    );
+  }
+
   // holds the current filter being edited and its value
-  interface IState {
+  const state = shallowReactive<{
     currentFilterKey?: string;
     currentFilter?: TableFilterItem;
     currentFilterValue?: TableFilterValue;
     currentSearchText?: string;
-  }
-
-  const state = shallowReactive<IState>({});
+  }>({});
 
   /* Sets the provided filter as currently selected filter */
   function changeCurrentFilter(key: string, selectedFilter: TableFilterItem) {
@@ -88,13 +103,28 @@
     state.currentFilter = selectedFilter;
     state.currentFilterValue = undefined;
     state.currentSearchText = undefined;
+
+    if (isDirectApplyFilter()) {
+      directApplyFilter();
+    }
+  }
+
+  function directApplyFilter() {
+    const value = state.currentFilter?.options?.[0]?.value || true;
+    state.currentFilterValue = { title: "", value };
+    applyFilter();
   }
 
   /** Sets the current filter, current filter value and opens the menu */
   function setCurrentFilter(key: string, selectedFilter: TableFilterItem, showMenu = true) {
+    if (isDirectApplyFilter(selectedFilter)) {
+      return;
+    }
+
     if (showMenu) {
       openMenu();
     }
+
     state.currentFilterKey = key;
     state.currentFilterValue = selectedFilter.selectedValue;
     state.currentFilter = selectedFilter;
@@ -170,27 +200,40 @@
     state.currentSearchText = undefined;
   }
 
-  function GetComponentForFilterType(item: TableFilterItem): Component | DefineComponent {
-    switch (item.type) {
-      case TableFilterType.DatePicker:
-        return MkTableFilterDatePicker;
-      case TableFilterType.RadioGroup:
-        return MkTableFilterRadioGroup;
-      case TableFilterType.Select:
-        return MkTableFilterSelect;
-      case TableFilterType.TextField:
-        return MkTableFilterTextField;
-      case TableFilterType.DateRange:
-        return MkTableFilterDateRangePicker;
-      case TableFilterType.SelectMultipleCheckbox:
-        return MkTableFilterSelectMultipleCheckbox;
-      case TableFilterType.SelectMultiple:
-        return MkTableFilterSelectMultiple;
-      case TableFilterType.Custom:
-        if (item.component) return defineAsyncComponent(item.component);
-        else throw new Error(`No component found for filter type ${item.type}, add a component to the filter item.`);
-      default:
-        throw new Error(`No component found for filter type ${item.type}`);
+  /**
+   * Get the component for the filter type
+   * @param item
+   */
+  function getComponentForFilterType(item: TableFilterItem): Component | DefineComponent {
+    const optionsThreshold = 5;
+    const filterType = item.type;
+    const filterOptionsCount = item.options?.length || 0;
+
+    // Determine the filter type and return the corresponding component
+    if (filterType === TableFilterType.DatePicker) {
+      return MkTableFilterDatePicker;
+    } else if (filterType === TableFilterType.DateRange) {
+      return MkTableFilterDateRangePicker;
+    } else if (filterType === TableFilterType.TextField || filterType === TableFilterType.Contains) {
+      return MkTableFilterTextField;
+    } else if ((filterType === TableFilterType.SingleSelect && filterOptionsCount === 1) || filterType === TableFilterType.RadioGroup) {
+      return MkTableFilterRadioGroup;
+    } else if (filterType === TableFilterType.SingleSelect && filterOptionsCount <= optionsThreshold) {
+      return MkTableFilterRadioGroup;
+    } else if ((filterType === TableFilterType.SingleSelect && filterOptionsCount > optionsThreshold) || filterType === TableFilterType.Select) {
+      return MkTableFilterSelect;
+    } else if (
+      (filterType === TableFilterType.MultiSelect && filterOptionsCount <= optionsThreshold) ||
+      filterType === TableFilterType.SelectMultipleCheckbox
+    ) {
+      return MkTableFilterSelectMultipleCheckbox;
+    } else if ((filterType === TableFilterType.MultiSelect && filterOptionsCount > optionsThreshold) || filterType === TableFilterType.SelectMultiple) {
+      return MkTableFilterSelectMultiple;
+    } else if (filterType === TableFilterType.Custom) {
+      if (item.component) return defineAsyncComponent(item.component);
+      else throw new Error(`No component found for filter type ${item.type}, add a component to the filter item.`);
+    } else {
+      throw new Error(`No component found for filter type ${item.type}`);
     }
   }
 
@@ -220,102 +263,69 @@
 </script>
 
 <template>
-  <v-card class="mk-table-filter mb-4" variant="flat" rounded="10">
-    <v-container fluid>
-      <v-row class="pb-2">
+  <v-card class="mk-table-filter mb-4" rounded="lg" variant="flat" color="surface1">
+    <v-container>
+      <v-row class="d-flex flex-row flex-nowrap">
         <template v-if="modelValue">
           <v-menu v-model="menu" :close-on-content-click="false" location="bottom" class="mk-table-filter__menu-overlay">
-            <!-- Button -->
+            <!-- Filter Button -->
             <template #activator="args">
-              <v-btn class="mt-1 ml-1" v-bind="args.props" color="on-surface1" variant="plain" :icon="IconsLibrary.filterVariant"> </v-btn>
+              <div class="px-1">
+                <v-btn v-bind="args.props" color="on-surface1" variant="plain" :icon="IconsLibrary.filterVariant"> </v-btn>
+              </div>
             </template>
 
-            <!-- context menu -->
+            <!-- Context menu -->
             <v-list v-if="!state.currentFilter" class="mk-table-filter__context-menu">
               <template v-if="searchableFilterKey && state.currentSearchText">
                 <v-list-item @click="applySearch">{{ searchFilterItemLabel }}</v-list-item>
                 <v-divider></v-divider>
               </template>
-              <v-list-item v-for="key in Object.keys(modelValue)" :key="key" :value="modelValue[key]" @click="changeCurrentFilter(key, modelValue[key])">
-                <v-list-item-title>{{ modelValue[key].title }}</v-list-item-title>
-              </v-list-item>
+              <template v-for="key in Object.keys(modelValue)" :key="key">
+                <v-list-item :value="modelValue[key]" @click="changeCurrentFilter(key, modelValue[key])">
+                  <v-list-item-title>{{ modelValue[key].title }}</v-list-item-title>
+                </v-list-item>
+                <v-divider v-if="modelValue[key].divider" />
+              </template>
             </v-list>
 
-            <!-- filter compoment -->
+            <!-- Filter compoment -->
             <template v-else-if="state.currentFilter">
-              <Suspense>
-                <component
-                  :is="GetComponentForFilterType(state.currentFilter)"
-                  v-model="state.currentFilterValue"
-                  :table-filter-item="state.currentFilter"
-                  @click:close="closeMenu"
-                  @update:model-value="applyFilter"
-                />
-                <template #fallback>
-                  <v-card>
-                    {{ defaultT("Loading filter...") }}
-                  </v-card>
-                </template>
-              </Suspense>
+              <component
+                :is="getComponentForFilterType(state.currentFilter)"
+                v-model="state.currentFilterValue"
+                :table-filter-item="state.currentFilter"
+                @click:close="closeMenu"
+                @update:model-value="applyFilter"
+              />
             </template>
           </v-menu>
 
-          <!-- Chips -->
-          <template v-for="key in Object.keys(modelValue)">
-            <MkInputChip
-              v-if="modelValue[key].selectedValue"
-              :key="key"
-              class="ml-2 mt-2"
-              @click="setCurrentFilter(key, modelValue[key])"
-              @click:remove="removeFilter(key)"
-            >
-              {{ modelValue[key].title }} : {{ modelValue[key].selectedValue?.title }}
-            </MkInputChip>
-          </template>
+          <div class="flex-1-1 d-flex flex-wrap ga-2 my-2">
+            <!-- Chips -->
+            <template v-for="key in Object.keys(modelValue)">
+              <MkInputChip v-if="modelValue[key].selectedValue" :key="key" @click="setCurrentFilter(key, modelValue[key])" @click:remove="removeFilter(key)">
+                {{ appliedFilterChip(modelValue[key]) }}
+              </MkInputChip>
+            </template>
 
-          <v-text-field
-            v-model="state.currentSearchText"
-            :placeholder="!containsFilterValue ? defaultT('Filter') : ''"
-            variant="plain"
-            :hide-details="true"
-            :readonly="!searchableFilterKey"
-            density="compact"
-            class="mk-table-filter__input mx-2"
-            color="on-surface1"
-            @click="openMenu"
-            @focus="openMenu"
-            @keypress.enter="applySearch"
-          ></v-text-field>
+            <!-- Search box -->
+            <v-text-field
+              v-model="state.currentSearchText"
+              :placeholder="!containsFilterValue ? defaultT('Filter') : ''"
+              variant="plain"
+              :hide-details="true"
+              :readonly="!searchableFilterKey"
+              density="compact"
+              class="mk-table-filter__input pa-0"
+              color="on-surface1"
+              @click="openMenu"
+              @focus="openMenu"
+              @keypress.enter="applySearch"
+            ></v-text-field>
+          </div>
         </template>
       </v-row>
     </v-container>
   </v-card>
 </template>
-
-<style lang="scss" scoped>
-  .v-input .v-field__input {
-    --v-field-padding-top: 4px;
-  }
-
-  .v-btn--icon.v-btn--density-default {
-    --v-btn-height: 28px;
-  }
-
-  .v-row {
-    padding-bottom: 6px;
-  }
-
-  .mk-table-filter {
-    background-color: rgb(var(--v-theme-surface1));
-    color: rgb(var(--v-theme-on-surface1));
-  }
-
-  .mk-table-filter__input {
-    .v-field__field {
-      height: 40px;
-    }
-    input {
-      cursor: pointer;
-    }
-  }
-</style>

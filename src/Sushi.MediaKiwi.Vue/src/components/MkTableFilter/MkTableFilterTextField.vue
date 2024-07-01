@@ -1,30 +1,38 @@
 <script setup lang="ts">
-  import MkDialogCard from "../MkDialog/MkDialogCard.vue";
   import { useI18next } from "@/composables/useI18next";
   import type { TableFilterItem, TableFilterValue } from "@/models/table";
-  import { ref } from "vue";
+  import { computed, ref } from "vue";
+  import MkTableFilterDialog from "./MkTableFilterDialog.vue";
+  import { TableFilterType } from "@/models";
+
+  const { defaultT } = await useI18next();
 
   // inject dependencies
-  const { defaultT, t } = await useI18next("MkTableFilterTextField");
-
   const props = defineProps<{
     tableFilterItem: TableFilterItem;
-    modelValue: TableFilterValue;
   }>();
 
-  // state
-  const model = ref(props.modelValue?.value);
+  const modelValue = defineModel<TableFilterValue>({ required: true });
+
+  // Create proxy model to prevent direct mutation
+  const model = ref(modelValue.value?.value || "");
 
   const emit = defineEmits<{
     (e: "update:modelValue", value: TableFilterValue): void;
     (e: "click:close"): void;
   }>();
 
+  const inputLabel = computed(() => {
+    if (props.tableFilterItem.inputLabel) {
+      return props.tableFilterItem.inputLabel;
+    }
+    return props.tableFilterItem.type === TableFilterType.Contains ? defaultT.value("Contains") : defaultT.value("Value");
+  });
+
   function applyFilter() {
-    emit("update:modelValue", {
-      title: model.value,
+    modelValue.value = {
       value: model.value,
-    });
+    };
   }
 
   function onSubmit(e: SubmitEvent) {
@@ -35,16 +43,10 @@
 
 <template>
   <v-form @submit="onSubmit">
-    <MkDialogCard :title="tableFilterItem.title" content-classes="pa-6" class="mk-table-filter__item" @click:close="() => emit('click:close')">
-      <template #intro>
-        <p>{{ t("Select Textfield intro", "Please choose the correct item") }}</p>
-      </template>
-      <template #default>
-        <v-text-field v-model="model" :label="t('Contains')" hide-details> </v-text-field>
-      </template>
-      <template #actions>
-        <v-btn @click="applyFilter">{{ defaultT("Apply") }}</v-btn>
-      </template>
-    </MkDialogCard>
+    <MkTableFilterDialog :table-filter-item="tableFilterItem" @close="emit('click:close')" @apply="applyFilter">
+      <div class="pa-6">
+        <v-text-field v-model="model" :label="inputLabel" hide-details> </v-text-field>
+      </div>
+    </MkTableFilterDialog>
   </v-form>
 </template>

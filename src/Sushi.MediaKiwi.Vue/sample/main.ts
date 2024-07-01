@@ -13,6 +13,9 @@ import { container } from "tsyringe";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
 import { mdiAccountCheckOutline, mdiTestTube } from "@mdi/js";
 
+//
+import { modules } from "./views/modules";
+
 // add mediakiwi
 const mediakiwiOptions = <MediakiwiVueOptions>{
   // configure the vuetify options with the additional icon aliases
@@ -41,7 +44,10 @@ const mediakiwiOptions = <MediakiwiVueOptions>{
     },
   },
   // import all views as models
-  modules: import.meta.glob("./views/**/*.vue"),
+  modules: {
+    ...import.meta.glob("./views/**/*.vue"),
+    ...modules,
+  },
   dateFormatOptions: {
     date: { year: "numeric", month: "2-digit", day: "2-digit" }, // Example "05/31/2023" or "05-31-2023"
     time: { hour: "2-digit", minute: "2-digit" }, // Example 09:50 AM or 21:50

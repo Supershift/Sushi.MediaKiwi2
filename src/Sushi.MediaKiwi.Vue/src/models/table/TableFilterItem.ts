@@ -1,9 +1,12 @@
 import { AsyncComponentLoader } from "vue";
 import { TableFilterValue } from "./TableFilterValue";
 import { TableFilterType } from "@/models/enum/TableFilterType";
+
 export type TableFilterItem = {
   /** Title for the filter to be displayed to the user */
   title: string;
+  /** Label shown in the input */
+  inputLabel?: string;
   /** Options to display in the filter, e.g. in a select */
   options?: TableFilterValue[];
   /** Gets or sets the selected value for this filter. */
@@ -20,4 +23,6 @@ export type TableFilterItem = {
    * Use only once in a collections of filters, otherwise the search will be applied to the occurance of a searchable filter item.
    */
   searchable?: boolean;
+  /* Place a divider after this filter item and the next */
+  divider?: boolean;
 };
