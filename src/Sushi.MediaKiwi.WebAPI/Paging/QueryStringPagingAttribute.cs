@@ -1,16 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Sushi.MediaKiwi.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.WebAPI.Paging
 {
     /// <summary>
     /// Attribute adding paging querystring parameters when applied to a WebAPI method. <see cref="PagingValues"/> can be retrieved using <see cref="PagingRetriever"/>.
     /// </summary>
+    [Obsolete("QueryStringPagingAttribute is deprecated, to get paging add PagingValues to the query.")]
     public class QueryStringPagingAttribute : ActionFilterAttribute
     {
         private readonly int _defaultPageSize;

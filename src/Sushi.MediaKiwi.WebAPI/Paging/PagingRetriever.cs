@@ -1,16 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Sushi.MediaKiwi.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.WebAPI.Paging
 {
     /// <summary>
     /// Retrieves <see cref="PagingValues"/> from <see cref="HttpContext"/>.
     /// </summary>
+    [Obsolete("PagingRetriever is deprecated, to get paging add PagingValues to the query.")]
     public class PagingRetriever
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -28,7 +24,7 @@ namespace Sushi.MediaKiwi.WebAPI.Paging
         /// Gets <see cref="PagingValues"/> from the current <see cref="HttpContext"/>.
         /// </summary>
         /// <returns></returns>
-        [Obsolete("GetPaging is deprecated, paging can be retrieved from the query.")]
+        [Obsolete("GetPaging is deprecated, to get paging add PagingValues to the query.")]
         public PagingValues GetPaging()
         {
             var context = _httpContextAccessor.HttpContext;

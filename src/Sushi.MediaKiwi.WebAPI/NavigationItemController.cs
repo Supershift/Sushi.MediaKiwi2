@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
-using Sushi.MediaKiwi.WebAPI.Paging;
 using Sushi.MediaKiwi.WebAPI.Sorting;
 
 namespace Sushi.MediaKiwi.WebAPI
@@ -44,7 +43,6 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet]
-        [QueryStringPaging]
         [QueryStringSorting<NavigationItemsSortMap>()]
         public async Task<ActionResult<ListResult<NavigationItem>>> GetNavigationItems(GetNavigationItemsQuery query)
         {
