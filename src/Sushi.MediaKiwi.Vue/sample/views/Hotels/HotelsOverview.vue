@@ -30,8 +30,8 @@
   // define reactive variables
   const currentPagination = ref<Paging>({
     pageIndex: 0,
-    pageSize: 5,
-  });
+    pageSize: 11,
+  }); // demos 11 items per page (higher than default 10), also adds to the current list
   const hotels = ref<ListResult<Hotel>>();
   const countries = ref<Country[]>();
 

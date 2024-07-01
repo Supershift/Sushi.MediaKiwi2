@@ -16,7 +16,7 @@
   const { t } = await useI18next();
 
   // define reactive variables
-  const currentPagination = ref<Paging>({});
+  const currentPagination = ref<Paging>({ pageSize: 8 }); // demos 8 items per page (lower than default 10)
   const state = reactive({
     countries: <ListResult<Country>>{},
     addCountry: false,
