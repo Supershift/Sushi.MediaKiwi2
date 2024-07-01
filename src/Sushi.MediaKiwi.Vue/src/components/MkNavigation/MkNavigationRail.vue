@@ -26,22 +26,31 @@
   <!-- VNavigationRail is an alias for VNavigationDrawer set in the GlobalConfiguration with the rail prop set to true -->
   <v-navigation-rail :rail-width="88" permanent>
     <v-list density="comfortable" open-strategy="list" nav class="pa-3">
-      <v-list-item
-        v-for="item in props.railItems || []"
-        :key="item.id"
-        class="ml-0 mr-0"
-        :active="isActive(item)"
-        rounded="lg"
-        :value="item.name"
-        @click.stop="onItemClick(item)"
-      >
-        <template #prepend>
-          <v-icon v-if="item?.icon" @click.stop="onItemClick(item)">{{ parseIconValue(item.icon, mediakiwiStore.externalIcons) }}</v-icon>
-        </template>
-        <template #title>
-          <label class="list-item-title">{{ item.name }}</label>
-        </template>
-      </v-list-item>
+      <template v-for="item in props.railItems || []">
+        <v-tooltip location="right bottom" :disabled="!item.tooltip">
+          <template #activator="{ props }">
+            <span v-bind="props">
+              <v-list-item
+                :key="item.id"
+                class="ml-0 mr-0"
+                :active="isActive(item)"
+                rounded="lg"
+                :value="item.name"
+                @click.stop="onItemClick(item)"
+                :disabled="item.displayState === 'disabled'"
+              >
+                <template #prepend>
+                  <v-icon v-if="item?.icon" @click.stop="onItemClick(item)">{{ parseIconValue(item.icon, mediakiwiStore.externalIcons) }}</v-icon>
+                </template>
+                <template #title>
+                  <label class="list-item-title">{{ item.name }}</label>
+                </template>
+              </v-list-item>
+            </span>
+          </template>
+          <span v-if="item.tooltip"> {{ item.tooltip }}</span>
+        </v-tooltip>
+      </template>
     </v-list>
   </v-navigation-rail>
 </template>
