@@ -2,14 +2,10 @@
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.OpenApi.Models;
 using Moq;
+using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.WebAPI.Paging;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.WebAPI.UnitTests.Paging
 {
@@ -28,6 +24,11 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests.Paging
 
             var apiDescription = new ApiDescription();
             apiDescription.ActionDescriptor = actionDescriptor;
+            apiDescription.ParameterDescriptions.Add(new ApiParameterDescription
+            {
+                Name = "paging",
+                Type = typeof(PagingValues)
+            });
 
             var context = new OperationFilterContext(
                 apiDescription,
@@ -75,8 +76,7 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests.Paging
             Assert.DoesNotContain(operation.Parameters, x => x.Name == "pageSize");
         }
 
-        [QueryStringPaging]
-        private void SamplePagingMethod() { }
+        private void SamplePagingMethod() { }      
 
 
         private void SampleNonPagingMethod() { }
