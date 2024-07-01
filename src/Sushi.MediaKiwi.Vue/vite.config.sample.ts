@@ -6,6 +6,7 @@ import vuetify from "vite-plugin-vuetify";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue(), vuetify()],
+  publicDir: path.resolve(__dirname, "sample/public"),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
