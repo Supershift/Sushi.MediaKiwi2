@@ -1,4 +1,6 @@
-﻿namespace Sushi.LanguageExtensions
+﻿using Sushi.LanguageExtensions.Errors;
+
+namespace Sushi.LanguageExtensions
 {
     /// <summary>
     /// Defines an interface for specifications.

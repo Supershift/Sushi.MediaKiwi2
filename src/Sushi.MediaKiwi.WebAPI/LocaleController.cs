@@ -33,7 +33,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<ListResult<Locale>>> GetEnabledLocales()
         {   
             var result = await _localeService.GetAllAsync(true, new PagingValues(0, 1000));
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<ListResult<Locale>>> GetLocales(GetLocalesQuery query)
         {
             var result = await _localeService.GetAllAsync(query.onlyEnabled.GetValueOrDefault(), query.Page);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<Locale>> GetLocale(string id)
         {
             var result = await _localeService.GetAsync(id);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<Locale>> CreateLocale(string id, Locale request)
         {
             var result = await _localeService.CreateAsync(id, request);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult> DeleteLocale(string id)
         {
             var result = await _localeService.DeleteAsync(id);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<Locale>> UpdateLocale(string id, Locale request)
         {
             var result = await _localeService.UpdateAsync(id, request);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>

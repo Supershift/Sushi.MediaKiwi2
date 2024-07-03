@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Sushi.LanguageExtensions;
+using Sushi.LanguageExtensions.Errors;
 using Sushi.MediaKiwi.SampleAPI.DAL.Repository;
 using Sushi.MediaKiwi.SampleAPI.Service.Model;
 using Sushi.MediaKiwi.Services;
@@ -19,7 +21,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
             _mapper = mapper;
         }
 
-        public async Task<Result<ListResult<Country>>> GetAllAsync(PagingValues paging)
+        public async Task<Result<ListResult<Country>, Error>> GetAllAsync(PagingValues paging)
         {
             // get countries from datastore
             var items = await _countryRepository.GetAllAsync(paging);
@@ -28,9 +30,9 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
             var itemsDto = _mapper.Map<List<Country>>(items);
 
             // create result object
-            var result = new ListResult<Country>(itemsDto, items);            
-            
-            return new Result<ListResult<Country>>(result);
+            var result = new ListResult<Country>(itemsDto, items);
+
+            return result;
         }
     }
 }

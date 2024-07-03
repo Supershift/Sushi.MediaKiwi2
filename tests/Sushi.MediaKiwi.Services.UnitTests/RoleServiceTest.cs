@@ -35,7 +35,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);            
+            Assert.Null(result.Error);            
             Assert.NotNull(result.Value);
             Assert.NotNull(result.Value.Result);
             Assert.Equal(2, result.Value.Result.Count);

@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Sushi.LanguageExtensions;
+using Sushi.LanguageExtensions.Errors;
 using Sushi.MediaKiwi.Services.Interfaces;
 using Sushi.MediaKiwi.Services.Model;
 
@@ -28,10 +30,10 @@ namespace Sushi.MediaKiwi.Services
         /// </summary>
         /// <param name="localeId"></param>
         /// <returns></returns>
-        public async Task<Result<ListResult<string?>>> GetNamespacesAsync(string? localeId)
+        public async Task<Result<ListResult<string?>, Error>> GetNamespacesAsync(string? localeId)
         {
             var namespaces = await _translationRepository.GetNamespacesAsync(localeId);
-            return new Result<ListResult<string?>>(new ListResult<string?>(namespaces));               
+            return new ListResult<string?>(namespaces);
         }
 
         /// <summary>
@@ -39,17 +41,17 @@ namespace Sushi.MediaKiwi.Services
         /// </summary>
         /// <param name="localeId"></param>
         /// <returns></returns>
-        public async Task<Result<ListResult<string?>>> GetKeysAsync(string? localeId)
+        public async Task<Result<ListResult<string?>, Error>> GetKeysAsync(string? localeId)
         {
             var namespaces = await _translationRepository.GetKeysAsync(localeId);
-            return new Result<ListResult<string?>>(new ListResult<string?>(namespaces));
+            return new ListResult<string?>(namespaces);
         }
 
         /// <summary>
         /// Gets all <see cref="Translation"/> instances meeting the supplied filter parameters.
         /// </summary>        
         /// <returns></returns>
-        public async Task<Result<ListResult<Translation>>> GetAllAsync(string? localeId, string? @namespace, string? key, string? value)
+        public async Task<Result<ListResult<Translation>, Error>> GetAllAsync(string? localeId, string? @namespace, string? key, string? value)
         {
             // get translations from repository
             var translations = await _translationRepository.GetAllAsync(localeId, @namespace, key, value);
@@ -57,25 +59,25 @@ namespace Sushi.MediaKiwi.Services
             // map to result
             var result = _mapper.Map<List<Translation>>(translations);
 
-            return new Result<ListResult<Translation>>(new ListResult<Translation>(result));
+            return new ListResult<Translation>(result);
         }
 
         /// <summary>
         /// Updates the value of a translation.
         /// </summary>
-        public async Task<Result> UpdateTranslationAsync(string localeId, string @namespace, string key, UpdateTranslationRequest request)
+        public async Task<Result<Error>> UpdateTranslationAsync(string localeId, string @namespace, string key, UpdateTranslationRequest request)
         {
             // get existing translation
             var translation = await _translationRepository.GetAsync(localeId, @namespace, key);
 
             if (translation == null)
-                return new Result(ResultCode.NotFound);
+                return new NotFoundError();
 
             // update translation
             translation.Value = request.Value;
             await _translationRepository.UpdateAsync(translation);
 
-            return new Result(ResultCode.Success);
+            return Result<Error>.Success();
         }
 
         /// <summary>
@@ -85,18 +87,18 @@ namespace Sushi.MediaKiwi.Services
         /// <param name="namespace"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public async Task<Result> DeleteTranslationAsync(string localeId, string @namespace, string key)
+        public async Task<Result<Error>> DeleteTranslationAsync(string localeId, string @namespace, string key)
         {
             // get existing translation
             var translation = await _translationRepository.GetAsync(localeId, @namespace, key);
 
             if (translation == null)
-                return new Result(ResultCode.NotFound);
+                return new NotFoundError();
 
             // delete translation            
             await _translationRepository.DeleteAsync(translation);
 
-            return new Result(ResultCode.Success);
+            return Result<Error>.Success();
         }
     }
 }

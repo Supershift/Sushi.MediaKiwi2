@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Sushi.LanguageExtensions;
+using Sushi.LanguageExtensions.Errors;
 using Sushi.MediaKiwi.SampleAPI.Controllers;
 using Sushi.MediaKiwi.SampleAPI.DAL.Repository;
+using Sushi.MediaKiwi.SampleAPI.Domain;
 using Sushi.MediaKiwi.SampleAPI.Service.Model;
-using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
 
 namespace Sushi.MediaKiwi.SampleAPI.Service
@@ -15,7 +17,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
         public HotelService(
             HotelRepository hotelRepository,
             IMapper mapper)
-        { 
+        {   
             _hotelRepository = hotelRepository;
             _mapper = mapper;
         }
@@ -27,18 +29,18 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
         /// <param name="countryCode">Limit results to supplied country codes</param>
         /// <param name="isActive">Limit results to supplied isactive state</param>
         /// <returns></returns>
-        public async Task<Result<ListResult<Hotel>>> GetAllAsync(GetHotelsQuery query)
+        public async Task<Result<ListResult<HotelDto>, Error>> GetAllAsync(GetHotelsQuery query)
         {
             // get hotels from datastore
             var items = await _hotelRepository.GetAllAsync(query.Page, query.CountryCode, query.IsActive);
 
             // map to result
-            var itemsDto = _mapper.Map<List<Hotel>>(items);
+            var itemsDto = _mapper.Map<List<HotelDto>>(items);
 
             // create result object
-            var result = new ListResult<Hotel>(itemsDto, items);
-            
-            return new Result<ListResult<Hotel>>(result);
+            var result = new ListResult<HotelDto>(itemsDto, items);
+
+            return result;
         }
 
 
@@ -47,7 +49,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
         /// </summary>
         /// <param name="id">The Id for the hotel to delete</param>
         /// <returns></returns>
-        public async Task<Result> DeleteAsync(int id)
+        public async Task<Result<Error>> DeleteAsync(int id)
         {
             // get item from datastore
             var hotel = await _hotelRepository.GetAsync(id);
@@ -56,11 +58,11 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
             {
                 // delete item
                 await _hotelRepository.DeleteAsync(hotel.Id);
-                return new Result(ResultCode.Success);
+                return Result<Error>.Success();
             }
             else
             {
-                return new Result(ResultCode.NotFound);
+                return new NotFoundError();
             }
         }
 
@@ -69,7 +71,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
         /// </summary>
         /// <param name="id">The Id of the hotel to retrieve</param>
         /// <returns></returns>
-        public async Task<Result<Hotel>> GetAsync(int id)
+        public async Task<Result<HotelDto, Error>> GetAsync(int id)
         {
             // get item from datastore
             var section = await _hotelRepository.GetAsync(id);
@@ -77,13 +79,13 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
             if (section != null)
             {
                 // map to result
-                var result = new Hotel();
+                var result = new HotelDto();
                 _mapper.Map(section, result);
-                return new Result<Hotel>(result);
+                return result;
             }
             else
             {
-                return new Result<Hotel>(ResultCode.NotFound);
+                return new NotFoundError();
             }
         }
 
@@ -93,41 +95,42 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
         /// <param name="id">The Id of the hotel to save, or NULL when creating a new one</param>
         /// <param name="request">The request containing all hotel information</param>
         /// <returns></returns>
-        public async Task<Result<Hotel>> SaveAsync(int? id, Hotel request)
+        public async Task<Result<HotelDto, Error>> UpdateAsync(int id, CreateHotelRequest request)
         {
-            // get existing or create new hotel, based on id
-            DAL.Hotel hotel;
-            if (id.HasValue)
-            {
-                var candidate = await _hotelRepository.GetAsync(id.Value);
-                if (candidate == null)
-                {
-                    return new Result<Hotel>(ResultCode.NotFound);
-                }
-                hotel = candidate;
+            // get existing 
 
+            var hotel = await _hotelRepository.GetAsync(id);
+            if (hotel == null)
+            {
+                return new NotFoundError();
+            }
+
+            // hotel.SetMetaDat();
+
+
+            // save hotel
+            await _hotelRepository.SaveAsync(hotel);
+
+            var result = new HotelDto();
+            _mapper.Map(hotel, result);
+            return result;
+        }
+
+        public async Task<Result<HotelDto, Error>> CreateAsync(CreateHotelRequest request)
+        {   
+            var createHotelResult = Domain.Hotel.Create(request);
+            if(createHotelResult.IsSuccess)
+            {
+                var hotel = createHotelResult.Value!;
+                await _hotelRepository.SaveAsync(hotel);
+                var result = new HotelDto();
+                _mapper.Map(hotel, result);
+                return result;
             }
             else
             {
-                hotel = new DAL.Hotel();
+                return createHotelResult.Error!;
             }
-
-            // map from model to database
-            _mapper.Map(request, hotel);
-
-            // start transaction
-            using (var ts = Utility.CreateTransactionScope())
-            {
-                // save hotel
-                await _hotelRepository.SaveAsync(hotel);
-
-                // commit transaction
-                ts.Complete();
-            }
-
-            var result = new Hotel();
-            _mapper.Map(hotel, result);
-            return new Result<Hotel>(result);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +31,10 @@ namespace Sushi.MediaKiwi
         {
             services.AddMediaKiwiDAL();
             services.AddMediaKiwiApi(azureAdConfig, autoMapperConfig, authorizationOptions);
+
+            // add validators
+            services.AddValidatorsFromAssemblyContaining<Services.Model.NavigationItem>(includeInternalTypes: true);
+
             return services;
         }
     }

@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Sushi.LanguageExtensions;
+using Sushi.LanguageExtensions.Errors;
 using Sushi.MediaKiwi.Services.Interfaces;
 using Sushi.MediaKiwi.Services.Model;
 
@@ -31,7 +33,7 @@ namespace Sushi.MediaKiwi.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<Result> DeleteAsync(string id)
+        public async Task<Result<Error>> DeleteAsync(string id)
         {
             // get item from datastore
             var view = await _viewRepository.GetAsync(id);
@@ -42,11 +44,11 @@ namespace Sushi.MediaKiwi.Services
             {   
                 // delete item
                 await _viewRepository.DeleteAsync(view.Id);
-                return new Result(ResultCode.Success);
+                return Result<Error>.Success();
             }
             else
             {
-                return new Result(ResultCode.NotFound);
+                return new NotFoundError();
             }
         }
 
@@ -54,7 +56,7 @@ namespace Sushi.MediaKiwi.Services
         /// Gets all views matching the provided filter parameters.
         /// </summary>        
         /// <returns></returns>
-        public async Task<Result<ListResult<View>>> GetAllAsync(PagingValues pagingValues, SortValues<View>? sortValues = null)
+        public async Task<Result<ListResult<View>, Error>> GetAllAsync(PagingValues pagingValues, SortValues<View>? sortValues = null)
         {   
             // map sort values to dal
             var sortValuesDal = _mapper.MapSortValues<Entities.View>(sortValues);
@@ -75,7 +77,7 @@ namespace Sushi.MediaKiwi.Services
                 view.Roles = viewsRoles.Where(x => x.ViewId == view.Id).Select(x=>x.Role).ToList();
             }
 
-            return new Result<ListResult<View>>(result);
+            return result;
         }
 
         /// <summary>
@@ -83,7 +85,7 @@ namespace Sushi.MediaKiwi.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<Result<View>> GetAsync(string id)
+        public async Task<Result<View, Error>> GetAsync(string id)
         {
             // get item from datastore
             var view = await _viewRepository.GetAsync(id);
@@ -98,12 +100,12 @@ namespace Sushi.MediaKiwi.Services
                 _mapper.Map(view, result);
                 // add roles                
                 result.Roles = viewsRoles.Select(x => x.Role).ToList();
-                
-                return new Result<View>(result);
+
+                return result;
             }
             else
             {
-                return new Result<View>(ResultCode.NotFound);
+                return new NotFoundError();
             }
         }
 
@@ -113,7 +115,7 @@ namespace Sushi.MediaKiwi.Services
         /// <param name="id"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<Result<View>> CreateAsync(string id, View request)
+        public async Task<Result<View, Error>> CreateAsync(string id, View request)
         {
             var view = new Entities.View() { Id = id };
 
@@ -121,7 +123,7 @@ namespace Sushi.MediaKiwi.Services
             _mapper.Map(request, view);
 
             // start transaction
-            using (var ts = Utility.CreateTransactionScope())
+            using (var ts = TransactionUtility.CreateTransactionScope())
             {
                 // save view
                 // todo: handle pk constraint fail
@@ -144,7 +146,7 @@ namespace Sushi.MediaKiwi.Services
             // add roles                
             result.Roles = viewsRoles.Select(x => x.Role).ToList();
 
-            return new Result<View>(result);            
+            return result;            
         }
 
         /// <summary>
@@ -153,20 +155,20 @@ namespace Sushi.MediaKiwi.Services
         /// <param name="id"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<Result<View>> UpdateAsync(string id, View request)
+        public async Task<Result<View, Error>> UpdateAsync(string id, View request)
         {
             // get existing view, based on id
             var view = await _viewRepository.GetAsync(id);
             if (view == null)
             {
-                return new Result<View>(ResultCode.NotFound);
+                return new NotFoundError();
             }
 
             // map from model to database
             _mapper.Map(request, view);
 
             // start transaction
-            using (var ts = Utility.CreateTransactionScope())
+            using (var ts = TransactionUtility.CreateTransactionScope())
             {
                 // update view                
                 await _viewRepository.UpdateAsync(view);
@@ -193,7 +195,7 @@ namespace Sushi.MediaKiwi.Services
             // add roles                
             result.Roles = viewsRoles.Select(x => x.Role).ToList();
 
-            return new Result<View>(result);
+            return result;
         }
     }
 }

@@ -31,4 +31,10 @@
     <ProjectReference Include="..\Sushi.LanguageExtensions\Sushi.LanguageExtensions.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>Sushi.MediaKiwi.Services.UnitTests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
 </Project>

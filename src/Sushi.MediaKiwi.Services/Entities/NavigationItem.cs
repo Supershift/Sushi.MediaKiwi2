@@ -74,22 +74,5 @@ namespace Sushi.MediaKiwi.Services.Entities
         /// Gets or sets a value used when sorting navigation items.
         /// </summary>
         public int SortOrder { get; set; }
-
-        /// <summary>
-        /// Validates if an ID is valid.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>Null if valid, error message if invalid.</returns>
-        public static string? ValidateId(string id)
-        {
-            if (string.IsNullOrWhiteSpace(id))
-                return "New ID is empty";
-            if (id.Length > IdMaxLength)
-                return "New ID is too long";
-            if (!Regex.IsMatch(id, IdRegex))
-                return "New ID contains invalid characters.";
-
-            return null;
-        }
     }
 }

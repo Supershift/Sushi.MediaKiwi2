@@ -12,13 +12,12 @@ namespace Sushi.MediaKiwi.SampleAPI.Service.Model
         /// </summary>
         public AutoMapperProfile()
         {
-            // from DAL to Model
+            // from Domain to DTO
             CreateMap<DAL.Country, Country>();
-            CreateMap<DAL.Hotel, Hotel>();
+            CreateMap<Domain.Hotel, HotelDto>();
 
             // from model to DAL
-            CreateMap<Country, DAL.Country>();
-            CreateMap<Hotel, DAL.Hotel>();
+            CreateMap<Country, DAL.Country>();            
         }
     }
 }

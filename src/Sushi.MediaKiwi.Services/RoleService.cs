@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Sushi.LanguageExtensions;
+using Sushi.LanguageExtensions.Errors;
 using Sushi.MediaKiwi.Services.Interfaces;
 using Sushi.MediaKiwi.Services.Model;
 
@@ -29,7 +31,7 @@ namespace Sushi.MediaKiwi.Services
         /// Gets all roles.
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<ListResult<Role>>> GetAllAsync()
+        public async Task<Result<ListResult<Role>, Error>> GetAllAsync()
         {
             // get all roles from database
             var items = await _repository.GetAllAsync();
@@ -38,9 +40,9 @@ namespace Sushi.MediaKiwi.Services
             var itemsDto = _mapper.Map<List<Role>>(items);
 
             // create result object
-            var result = new ListResult<Role>(itemsDto, items);            
+            var result = new ListResult<Role>(itemsDto, items);
 
-            return new Result<ListResult<Role>>(result);
+            return result;
         }
     }
 }

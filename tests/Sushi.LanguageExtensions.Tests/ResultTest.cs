@@ -1,3 +1,5 @@
+using Sushi.LanguageExtensions.Errors;
+
 namespace Sushi.LanguageExtensions.Tests
 {
     public class ResultTest
