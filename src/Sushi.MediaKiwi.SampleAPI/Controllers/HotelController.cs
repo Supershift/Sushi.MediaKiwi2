@@ -29,7 +29,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<ListResult<Hotel>>> GetHotels(GetHotelsQuery query)
+        public async Task<ActionResult<ListResult<HotelDto>>> GetHotels(GetHotelsQuery query)
         {
             var result = await _hotelService.GetAllAsync(query);
             return this.ToResponse(result);
