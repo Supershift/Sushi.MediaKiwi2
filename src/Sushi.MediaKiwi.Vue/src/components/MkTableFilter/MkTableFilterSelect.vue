@@ -1,43 +1,44 @@
 <script setup lang="ts">
-  import MkDialogCard from "../MkDialog/MkDialogCard.vue";
   import { useI18next } from "@/composables/useI18next";
   import type { TableFilterItem, TableFilterValue } from "@/models/table";
-  import { ref } from "vue";
+  import { computed, ref } from "vue";
+  import MkTableFilterDialog from "./MkTableFilterDialog.vue";
 
   // inject dependencies
-  const { defaultT, t } = await useI18next("MkTableFilterSelect");
+  const { t, defaultT } = await useI18next("MkFilter");
 
   const props = defineProps<{
     tableFilterItem: TableFilterItem;
-    modelValue: TableFilterValue;
   }>();
 
+  const modelValue = defineModel<TableFilterValue>({ required: true });
+
   const emit = defineEmits<{
-    (e: "update:modelValue", value: TableFilterValue): void;
     (e: "click:close"): void;
   }>();
 
-  // state
-  const model = ref(props.modelValue);
+  // Create proxy model to prevent direct mutation
+  const model = ref(modelValue.value);
+
+  // Additional rules for the input field
+  const additionalRules = computed(() => props.tableFilterItem.rules || []);
 
   function applyFilter() {
-    emit("update:modelValue", {
-      title: model.value.title,
-      value: model.value.value,
-    });
+    modelValue.value = model.value;
   }
 </script>
 
 <template>
-  <MkDialogCard :title="tableFilterItem.title" content-classes="pa-6" class="mk-table-filter__item" @click:close="() => emit('click:close')">
-    <template #intro>
-      <p>{{ t("Select Filter intro", "Please choose the correct item") }}</p>
-    </template>
-    <template #default>
-      <v-autocomplete v-model="model" hide-details :items="tableFilterItem.options" :label="t('Choose')" return-object></v-autocomplete>
-    </template>
-    <template #actions>
-      <v-btn @click="applyFilter">{{ defaultT("Apply") }}</v-btn>
-    </template>
-  </MkDialogCard>
+  <MkTableFilterDialog :table-filter-item="tableFilterItem" @close="emit('click:close')" @apply="applyFilter">
+    <div class="pa-6">
+      <v-autocomplete
+        v-model="model"
+        hide-details="auto"
+        :items="tableFilterItem.options"
+        :label="tableFilterItem.inputLabel || defaultT('Value')"
+        return-object
+        :rules="[(v: any) => !!v || t(`EmptyFilterError`, `This field is required`), ...additionalRules]"
+      ></v-autocomplete>
+    </div>
+  </MkTableFilterDialog>
 </template>

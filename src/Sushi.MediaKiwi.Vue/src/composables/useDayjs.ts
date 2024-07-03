@@ -77,6 +77,32 @@ export function useDayjs() {
     return d1.isAfter(d2, unit);
   }
 
+  function getDifferenceInternal(date1: string | Date, date2: string | Date, unit: dayjs.OpUnitType) {
+    // parse to dayjs
+    const d1 = dayjs(date1);
+    const d2 = dayjs(date2);
+
+    // compare
+    return d2.diff(d1, unit);
+  }
+
+  function isFullMonthInternal(date1: string | Date, date2: string | Date) {
+    // parse to dayjs
+    let d1 = dayjs(date1);
+    let d2 = dayjs(date2);
+
+    return d1.isSame(d1.startOf("month")) && d2.isSame(d2.endOf("month"));
+  }
+
+  function isTodayInternal(date1: string | Date) {
+    // parse to dayjs
+    const d1 = dayjs(date1).startOf("day");
+    const today = dayjs().startOf("day");
+
+    // compare
+    return d1.isSame(today);
+  }
+
   // Create computed to expose the internal functions
   const addDate = computed(() => addDateInternal);
   const substractDate = computed(() => substractDateInternal);
@@ -85,6 +111,9 @@ export function useDayjs() {
   const isSame = computed(() => isSameInternal);
   const isBefore = computed(() => isBeforeInternal);
   const isAfter = computed(() => isAfterInternal);
+  const getDifference = computed(() => getDifferenceInternal);
+  const isFullMonth = computed(() => isFullMonthInternal);
+  const isToday = computed(() => isTodayInternal);
 
   return {
     currentDate,
@@ -95,5 +124,8 @@ export function useDayjs() {
     isSame,
     isBefore,
     isAfter,
+    getDifference,
+    isFullMonth,
+    isToday,
   };
 }

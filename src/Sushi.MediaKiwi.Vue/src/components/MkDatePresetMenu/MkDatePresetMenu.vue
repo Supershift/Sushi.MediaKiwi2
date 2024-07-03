@@ -5,11 +5,9 @@
   import { DateRange } from "@/models/ranges";
   import { reactive } from "vue";
   import { MkDatePicker } from "../MkDatePicker";
-  const { isSame } = useDayjs();
 
   const props = withDefaults(
     defineProps<{
-      modelValue: { value: any[]; title: string };
       /**
        * Collection of days representing days in the past
        * @example [7, 28, 90, 365]
@@ -22,6 +20,7 @@
        */
       months?: number[];
       datePickerClass?: string;
+      datePickerTitle?: string;
     }>(),
     {
       days: () => [7, 28, 90, 365],
@@ -29,51 +28,55 @@
     }
   );
 
-  const { presets } = useDatePresets({
+  const modelValue = defineModel<{ value: any[]; title?: string }>({ required: true });
+
+  // Inject dependencies
+  const { isSame } = useDayjs();
+  const { defaultT } = await useI18next("MkDatePresetMenu");
+  const { presets, formatPreset } = await useDatePresets({
     dayPresets: props.days,
     monthPresets: props.months,
   });
-  const { formatMonth, t, defaultT, formatDate } = await useI18next("MkDatePresetMenu");
-  const defaultLastXDays = "Last {{duration}} days";
 
   const state = reactive({
     datePicker: false,
-    model: props.modelValue || { value: [] },
+    // Create proxy model to prevent direct mutation
+    model: modelValue.value || { value: [] },
   });
 
   const emit = defineEmits<{
-    (e: "update:modelValue", value: { value: any[]; title: string }): void;
     (e: "click:close"): void;
   }>();
 
-  function updateModelValueFromMonth(item: DateRange) {
-    state.model.value = [item.start, item.end];
-    state.model.title = formatMonth.value(item.start);
-    apply();
-  }
+  function updateModelValue(value: DateRange): void;
+  function updateModelValue(value: any[]): void;
+  function updateModelValue(value: DateRange | any[]): void {
+    let startDate, endDate;
 
-  function updateModelValueFromDateRange(item: DateRange) {
-    state.model.value = [item.start, item.end];
-    state.model.title = t.value("LastXDays", defaultLastXDays, { duration: item.duration });
-    apply();
-  }
+    if (Array.isArray(value)) {
+      // Deconstruct the array
+      const [start, end] = value;
+      startDate = start;
+      endDate = end;
+    } else {
+      // Deconstruct the DateRange
+      const { start, end } = value;
+      startDate = start;
+      endDate = end;
+    }
 
-  function updateModelValueFromDateArray(item: any[]) {
-    state.model.value = [...item];
+    // Set the value
+    state.model.value = [startDate, endDate];
 
-    // Format the dates to a readable format
-    const result = state.model.value?.map((date) => {
-      return formatDate.value(date);
-    });
+    // Set the title
+    state.model.title = formatPreset(startDate, endDate);
 
-    // Join the dates with a dash
-    state.model.title = result.join(" - ");
-
+    // Apply the changes
     apply();
   }
 
   function apply() {
-    emit("update:modelValue", state.model);
+    modelValue.value = state.model;
   }
 
   function openDatePicker() {
@@ -130,12 +133,12 @@
 
 <template>
   <v-list v-if="!state.datePicker">
-    <v-list-item v-for="(item, i) in presets.days" :key="i" :active="isSelectedPresetItem(item)" @click="updateModelValueFromDateRange(item)">
-      <v-list-item-title>{{ t("LastXDays", defaultLastXDays, { duration: item.duration }) }}</v-list-item-title>
+    <v-list-item v-for="(item, i) in presets.days" :key="i" :active="isSelectedPresetItem(item)" @click="updateModelValue(item)">
+      <v-list-item-title>{{ formatPreset(item.start, item.end) }}</v-list-item-title>
     </v-list-item>
     <v-divider />
-    <v-list-item v-for="(item, i) in presets.months" :key="i" :active="isSelectedPresetItem(item)" @click="updateModelValueFromMonth(item)">
-      <v-list-item-title>{{ formatMonth(item.start) }}</v-list-item-title>
+    <v-list-item v-for="(item, i) in presets.months" :key="i" :active="isSelectedPresetItem(item)" @click="updateModelValue(item)">
+      <v-list-item-title> {{ formatPreset(item.start, item.end) }}</v-list-item-title>
     </v-list-item>
     <v-divider />
     <v-list-item :active="isSelectedCustomItem()" @click="openDatePicker">
@@ -148,6 +151,7 @@
     :class="datePickerClass"
     multiple
     @click:close="closeDatePicker"
-    @update:model-value="updateModelValueFromDateArray"
+    @update:model-value="updateModelValue"
+    :title="datePickerTitle"
   />
 </template>

@@ -1,13 +1,8 @@
-﻿using Azure;
-using Microsoft.AspNetCore.Mvc.Controllers;
+﻿using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Sushi.MediaKiwi.Services;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.WebAPI.Paging
 {
@@ -20,8 +15,9 @@ namespace Sushi.MediaKiwi.WebAPI.Paging
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
             // check if method has PagingAttribute
-            var attributes = context.ApiDescription.CustomAttributes();
-            var hasPaging = attributes.Any(x => x is QueryStringPagingAttribute);
+            var parameters = context.ApiDescription.ParameterDescriptions;
+            var hasPaging = parameters.Any(x => x.Type == typeof(PagingValues));
+
 
             if (hasPaging)
             {

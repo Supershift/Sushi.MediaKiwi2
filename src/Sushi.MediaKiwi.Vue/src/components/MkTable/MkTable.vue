@@ -123,7 +123,8 @@
   const inProgress = ref(false);
   const mkTableViewComponent = ref();
   const pageSizes = ref([...defaultPageSizeOptions]);
-  if (currentPagination.value?.pageSize) {
+  // Add the current page size if present to the pageSizes array, only if its above the defaultPageSize (10)
+  if (currentPagination.value?.pageSize && currentPagination.value?.pageSize > defaultPageSize) {
     pageSizes.value.push(currentPagination.value.pageSize);
   }
 

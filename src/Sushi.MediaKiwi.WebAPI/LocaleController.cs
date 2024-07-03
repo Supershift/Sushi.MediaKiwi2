@@ -41,7 +41,6 @@ namespace Sushi.MediaKiwi.WebAPI
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [QueryStringPaging]
         public async Task<ActionResult<ListResult<Locale>>> GetLocales(GetLocalesQuery query)
         {
             var result = await _localeService.GetAllAsync(query.onlyEnabled.GetValueOrDefault(), query.Page);

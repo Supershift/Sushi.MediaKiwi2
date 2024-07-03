@@ -5,7 +5,7 @@ import { ListResult, Paging } from "@/models";
 
 @injectable()
 export class HotelConnector {
-  constructor(@inject("SampleApiAxiosInstance") private axios: AxiosInstance) {}
+  constructor(@inject("SampleApiAxiosInstance") private axios: AxiosInstance) { }
 
   async GetAllAsync(paging?: Paging, countryCode?: string, isActive?: boolean): Promise<ListResult<Hotel>> {
     // build querystring params

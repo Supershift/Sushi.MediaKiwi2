@@ -12,11 +12,11 @@
 
   const props = withDefaults(
     defineProps<{
-      modelValue: Array<any>;
       /** Allow the selection of multiple dates */
       multiple?: boolean;
       /** Max amount of dates that should be selected */
       multipleAmount?: number;
+      title?: string;
     }>(),
     {
       multiple: false,
@@ -24,20 +24,21 @@
     }
   );
 
+  const modelValue = defineModel<Array<any>>({ required: true });
+
   const emit = defineEmits<{
-    (e: "update:modelValue", value: Array<any>): void;
     (e: "click:close"): void;
   }>();
 
-  // state
-  const model = ref(props.modelValue);
+  // Create proxy model to prevent direct mutation
+  const model = ref(modelValue.value);
 
   function close() {
     emit("click:close");
   }
 
   function apply() {
-    emit("update:modelValue", model.value);
+    modelValue.value = model.value;
     close();
   }
 
@@ -63,7 +64,7 @@
 <template>
   <MkDialogCard hide-header remove-content-padding content-classes="py-2" v-bind="$attrs" @click:close="close">
     <template #default>
-      <v-date-picker v-model="model" :multiple="multiple" :title="t('DatePickerTitle', 'Select date').toString()" @update:model-value="validateModel">
+      <v-date-picker v-model="model" :multiple="multiple" :title="title || t('DatePickerTitle', 'Select date').toString()" @update:model-value="validateModel">
         <template #header>
           <div class="v-date-picker-header">
             <div class="v-date-picker-header__content">
@@ -84,9 +85,3 @@
     </template>
   </MkDialogCard>
 </template>
-
-<style>
-  .mk-dialog-card__content {
-    padding: 0;
-  }
-</style>

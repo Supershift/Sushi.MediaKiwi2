@@ -43,7 +43,7 @@
    */
   const state = reactive({
     pageIndex: props.modelValue.pageIndex || 0,
-    pageSize: props.modelValue.pageSize || defaultPageSize,
+    pageSize: props.modelValue.pageSize && props.modelValue.pageSize > defaultPageSize ? props.modelValue.pageSize : defaultPageSize,
   });
 
   /** Uses tracking from overridden value comming from props, otherwise use standard mediakiwiVueOptions */

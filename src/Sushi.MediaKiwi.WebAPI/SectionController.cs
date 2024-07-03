@@ -26,8 +26,7 @@ namespace Sushi.MediaKiwi.WebAPI
         /// Gets all sections.
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        [QueryStringPaging]        
+        [HttpGet]      
         public async Task<ActionResult<ListResult<Section>>> GetSections(PagingValues page)
         {
             var result = await _sectionService.GetAllAsync(page);

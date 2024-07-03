@@ -56,7 +56,6 @@ namespace Sushi.MediaKiwi.WebAPI
         /// </summary>        
         /// <returns></returns>
         [HttpGet]
-        [QueryStringPaging]
         [QueryStringSorting<ViewSortMap>()]
         public async Task<ActionResult<ListResult<View>>> GetViews(PagingValues page)
         {
