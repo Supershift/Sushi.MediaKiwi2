@@ -322,8 +322,8 @@
         :item-view-id="props.itemViewId"
         :new-title="props.newTitle"
         :new-emit="props.newEmit"
-        :title="props.emptyStateTitle"
-        :subtitle="props.emptyStateSubtitle"
+        :headline="props.emptyStateTitle"
+        :text="props.emptyStateSubtitle"
         @click:new="emit('click:new', $event)"
       />
     </template>
