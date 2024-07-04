@@ -50,7 +50,7 @@
   });
 </script>
 <template>
-  <div id="mk-bg-image d-flex align-center justify-center" :style="styles">
+  <div id="mk-bg-image" class="mk-bg-image" :style="styles">
     <MkSignIn v-if="!isAuthenticated" class="mk-view--signin">
       <template #main>
         {{ t("Main") }}
