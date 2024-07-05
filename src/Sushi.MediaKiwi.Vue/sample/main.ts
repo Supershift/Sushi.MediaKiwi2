@@ -57,6 +57,7 @@ const mediakiwiOptions = <MediakiwiVueOptions>{
   },
   signIn: {
     image: "./basic-unsplash.jpg",
+    color: "green",
   },
 };
 

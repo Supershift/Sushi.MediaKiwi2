@@ -45,6 +45,7 @@
   // generate style based on the configuration
   const styles = computed(() => {
     if (!isAuthenticated.value) {
+      if (image.value && color.value) return { backgroundColor: `${color.value}`, ...baseBgImageStyle, backgroundImage: `url(${image.value})`, height: "100%" }; // if both image and color are set, use the image as background but color beneath
       if (image.value) return { ...baseBgImageStyle, backgroundImage: `url(${image.value})` };
       if (color.value) return { backgroundColor: `${color.value}`, height: "100%" };
     }
@@ -52,14 +53,16 @@
   });
 </script>
 <template>
-  <div id="mk-signin-bg" class="mk-signin__bg" :style="styles">
-    <MkSignIn v-if="!isAuthenticated" class="mk-view--signin">
-      <template #main>
-        {{ t("Main") }}
-      </template>
-      <template #footer>
-        {{ t("Footer") }}
-      </template>
-    </MkSignIn>
-  </div>
+  <v-lazy transition="fade-transition" height="100%" :options="{ threshold: 0.5 }">
+    <div id="mk-signin-bg" class="mk-signin__bg lazy" :style="styles" v-cloak>
+      <MkSignIn v-if="!isAuthenticated" class="mk-view--signin">
+        <template #main>
+          {{ t("Main") }}
+        </template>
+        <template #footer>
+          {{ t("Footer") }}
+        </template>
+      </MkSignIn>
+    </div>
+  </v-lazy>
 </template>
