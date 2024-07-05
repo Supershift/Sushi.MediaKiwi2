@@ -38,13 +38,15 @@
     height: "100%",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundAttachment: "fixed",
   };
 
   // generate style based on the configuration
   const styles = computed(() => {
     if (!isAuthenticated.value) {
       if (image.value) return { ...baseBgImageStyle, backgroundImage: `url(${image.value})` };
-      if (color.value) return { backgroundColor: `${color.value}` };
+      if (color.value) return { backgroundColor: `${color.value}`, height: "100%" };
     }
     return { height: "100%" };
   });
