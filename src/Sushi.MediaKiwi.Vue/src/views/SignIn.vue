@@ -52,7 +52,7 @@
   });
 </script>
 <template>
-  <div id="mk-bg-image" class="mk-bg-image" :style="styles">
+  <div id="mk-signin-bg" class="mk-signin__bg" :style="styles">
     <MkSignIn v-if="!isAuthenticated" class="mk-view--signin">
       <template #main>
         {{ t("Main") }}
