@@ -56,9 +56,17 @@ const mediakiwiOptions = <MediakiwiVueOptions>{
     scopes: [`api://${import.meta.env.VITE_APP_MEDIAKIWI_MSALCONFIG_AUTH_CLIENTID}/access_via_approle_assignments`],
   },
   signIn: {
-    image: "./basic-unsplash.jpg",
     color: "green",
-  },
+    themes: {
+      light: {
+        color: "blue",
+      },
+      dark: {
+        image: "./basic-unsplash.jpg",
+        color: "purple",
+      }
+    },
+  }
 };
 
 // Create the app

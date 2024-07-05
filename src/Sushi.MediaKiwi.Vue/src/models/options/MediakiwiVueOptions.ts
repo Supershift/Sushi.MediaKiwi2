@@ -32,7 +32,9 @@ export interface MediakiwiVueOptions {
   };
   /** Options for the sign in screen background*/
   signIn?: {
+    /** @{deprecated}  use themes.dark/light mode*/
     image?: string;
+    /** @{deprecated}  use themes.dark/light mode*/
     color?: string;
     content?: {
       title?: string;

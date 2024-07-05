@@ -8,8 +8,10 @@
   import { useI18next } from "@/composables/useI18next";
   import { useMediakiwiVueOptions } from "@/composables/useMediakiwiVueOptions";
   import { computed } from "vue";
+  import { useTheme } from "vuetify";
 
   const { signIn } = useMediakiwiVueOptions();
+  const theme = useTheme();
 
   // inject dependencies
   const isAuthenticated = useIsAuthenticated();
@@ -30,8 +32,8 @@
   }
 
   // computed properties
-  const image = computed(() => signIn?.image);
-  const color = computed(() => signIn?.color);
+  const image = computed(() => (!theme.current.value?.dark ? signIn?.themes?.light?.image ?? signIn?.image : signIn?.themes?.dark?.image ?? signIn?.image)); // check if the theme is dark or light and use the appropriate image
+  const color = computed(() => (!theme.current.value?.dark ? signIn?.themes?.light?.color ?? signIn?.color : signIn?.themes?.dark?.color ?? signIn?.color)); // check if the theme is dark or light and use the appropriate color
 
   // base style for if the background image configuration is set
   const baseBgImageStyle = {
