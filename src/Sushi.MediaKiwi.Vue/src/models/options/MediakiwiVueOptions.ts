@@ -39,6 +39,16 @@ export interface MediakiwiVueOptions {
       buttonText?: string;
       icon?: string;
     };
+    themes?: {
+      light?: {
+        image?: string;
+        color?: string;
+      };
+      dark?: {
+        image?: string;
+        color?: string;
+      };
+    };
   },
   /** Global options used for MkTable */
   tableOptions?: MediakiwiTableOptions
