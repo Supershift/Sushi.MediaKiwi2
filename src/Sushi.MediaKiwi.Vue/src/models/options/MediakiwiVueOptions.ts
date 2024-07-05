@@ -34,7 +34,12 @@ export interface MediakiwiVueOptions {
   signIn?: {
     image?: string;
     color?: string;
-  }
+    content?: {
+      title?: string;
+      buttonText?: string;
+      icon?: string;
+    };
+  },
   /** Global options used for MkTable */
   tableOptions?: MediakiwiTableOptions
 }
