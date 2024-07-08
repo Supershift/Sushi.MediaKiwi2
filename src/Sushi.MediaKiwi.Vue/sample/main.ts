@@ -15,6 +15,8 @@ import { mdiAccountCheckOutline, mdiTestTube } from "@mdi/js";
 
 //
 import { modules } from "./views/modules";
+import axios from "axios";
+import { IdentityProviderConnector } from "@/services/IdentityProviderConnector";
 
 // add mediakiwi
 const mediakiwiOptions = <MediakiwiVueOptions>{
@@ -60,13 +62,31 @@ const mediakiwiOptions = <MediakiwiVueOptions>{
   },
 };
 
-// Create the app
-const app = createApp(App);
+const result = axios.create({
+  baseURL: import.meta.env.VITE_APP_MEDIAKIWI_APIBASEURL,
+  headers: { "Content-Type": "application/json" },
+});
+const identityPoolSettings = new IdentityProviderConnector(result);
+identityPoolSettings.GetEntraSettings().then((msalConfig) => {
+  const mediakiwiOptionsWithAuth = <MediakiwiVueOptions>{
+    ...mediakiwiOptions,
+    msalConfig: {
+      auth: {
+        ...mediakiwiOptions.msalConfig.auth,
+        clientId: msalConfig.clientId,
+        authority: `${msalConfig.instance}${msalConfig.tenantId}`,
+      },
+    },
+  };
 
-// install mediakiwi
-app.use(mediakiwi, mediakiwiOptions);
+  // Create the app
+  const app = createApp(App);
 
-// register dependencies
-const sampleApiAxiosInstance = createAxiosClient(import.meta.env.VITE_APP_SAMPLEAPI_APIBASEURL);
-container.register("SampleApiAxiosInstance", { useValue: sampleApiAxiosInstance });
-app.mount("#app");
+  // install mediakiwi
+  app.use(mediakiwi, mediakiwiOptionsWithAuth);
+
+  // register dependencies
+  const sampleApiAxiosInstance = createAxiosClient(import.meta.env.VITE_APP_SAMPLEAPI_APIBASEURL);
+  container.register("SampleApiAxiosInstance", { useValue: sampleApiAxiosInstance });
+  app.mount("#app");
+});
