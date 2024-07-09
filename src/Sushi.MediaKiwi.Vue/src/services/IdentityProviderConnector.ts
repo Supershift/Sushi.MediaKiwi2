@@ -5,7 +5,7 @@ import { IIdentityProviderConnector } from "./interfaces/IIdentityProviderConnec
 
 @injectable()
 export class IdentityProviderConnector implements IIdentityProviderConnector {
-  constructor(@inject("MediakiwiAxiosInstance") private axios: AxiosInstance) {}
+  constructor(private axios: AxiosInstance) {}
 
   async GetEntraSettings(): Promise<EntraSettings> {
     const response = await this.axios.get<EntraSettings>("/identityprovider/entra");

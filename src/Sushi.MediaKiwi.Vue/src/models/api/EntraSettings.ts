@@ -3,4 +3,5 @@ export type EntraSettings = {
   tenantId?: string;
   audience?: string;
   instance?: string;
+  authority?: string;
 };

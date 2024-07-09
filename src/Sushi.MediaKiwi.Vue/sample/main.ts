@@ -9,14 +9,14 @@ import mediakiwi from "@/framework";
 // Import the mediakiwi stylesheet
 import "./styles/main.scss";
 import { container } from "tsyringe";
-// import { i18n } from "i18next";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
 import { mdiAccountCheckOutline, mdiTestTube } from "@mdi/js";
-
-//
 import { modules } from "./views/modules";
-import axios from "axios";
-import { IdentityProviderConnector } from "@/services/IdentityProviderConnector";
+import { useEntraSettings } from "@/composables/useEntraSettings";
+
+// Get the entra settings
+const { getEntraSettings } = useEntraSettings();
+const entraSettings = await getEntraSettings();
 
 // add mediakiwi
 const mediakiwiOptions = <MediakiwiVueOptions>{
@@ -39,8 +39,8 @@ const mediakiwiOptions = <MediakiwiVueOptions>{
   apiBaseUrl: import.meta.env.VITE_APP_MEDIAKIWI_APIBASEURL,
   msalConfig: {
     auth: {
-      clientId: import.meta.env.VITE_APP_MEDIAKIWI_MSALCONFIG_AUTH_CLIENTID,
-      authority: import.meta.env.VITE_APP_MEDIAKIWI_MSALCONFIG_AUTH_AUTHORITY,
+      clientId: entraSettings.clientId, //import.meta.env.VITE_APP_MEDIAKIWI_MSALCONFIG_AUTH_CLIENTID,
+      authority: entraSettings.authority, //import.meta.env.VITE_APP_MEDIAKIWI_MSALCONFIG_AUTH_AUTHORITY,
       redirectUri: import.meta.env.VITE_APP_MEDIAKIWI_MSALCONFIG_AUTH_REDIRECTURI,
       postLogoutRedirectUri: import.meta.env.VITE_APP_MEDIAKIWI_MSALCONFIG_AUTH_POSTLOGOUTREDIRECTURI,
     },
@@ -55,38 +55,20 @@ const mediakiwiOptions = <MediakiwiVueOptions>{
     time: { hour: "2-digit", minute: "2-digit" }, // Example 09:50 AM or 21:50
   },
   identity: {
-    scopes: [`api://${import.meta.env.VITE_APP_MEDIAKIWI_MSALCONFIG_AUTH_CLIENTID}/access_via_approle_assignments`],
+    scopes: [`api://${entraSettings.clientId}/access_via_approle_assignments`],
   },
   signIn: {
     image: "./basic-unsplash.jpg",
   },
 };
 
-const result = axios.create({
-  baseURL: import.meta.env.VITE_APP_MEDIAKIWI_APIBASEURL,
-  headers: { "Content-Type": "application/json" },
-});
-const identityPoolSettings = new IdentityProviderConnector(result);
-identityPoolSettings.GetEntraSettings().then((msalConfig) => {
-  const mediakiwiOptionsWithAuth = <MediakiwiVueOptions>{
-    ...mediakiwiOptions,
-    msalConfig: {
-      auth: {
-        ...mediakiwiOptions.msalConfig.auth,
-        clientId: msalConfig.clientId,
-        authority: `${msalConfig.instance}${msalConfig.tenantId}`,
-      },
-    },
-  };
+// Create the app
+const app = createApp(App);
 
-  // Create the app
-  const app = createApp(App);
+// install mediakiwi
+app.use(mediakiwi, mediakiwiOptions);
 
-  // install mediakiwi
-  app.use(mediakiwi, mediakiwiOptionsWithAuth);
-
-  // register dependencies
-  const sampleApiAxiosInstance = createAxiosClient(import.meta.env.VITE_APP_SAMPLEAPI_APIBASEURL);
-  container.register("SampleApiAxiosInstance", { useValue: sampleApiAxiosInstance });
-  app.mount("#app");
-});
+// register dependencies
+const sampleApiAxiosInstance = createAxiosClient(import.meta.env.VITE_APP_SAMPLEAPI_APIBASEURL);
+container.register("SampleApiAxiosInstance", { useValue: sampleApiAxiosInstance });
+app.mount("#app");
