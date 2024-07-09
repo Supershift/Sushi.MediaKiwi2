@@ -9,9 +9,11 @@
   import { useMediakiwiVueOptions } from "@/composables/useMediakiwiVueOptions";
   import { computed, ref, watch } from "vue";
   import { useTheme } from "vuetify";
+  import { useColors } from "@/composables";
 
   const { signIn } = useMediakiwiVueOptions();
   const theme = useTheme();
+  const { isCssColor } = useColors();
 
   // inject dependencies
   const isAuthenticated = useIsAuthenticated();
@@ -51,9 +53,18 @@
       if (currentSignInImage.value && currentSignInColor.value)
         return { backgroundColor: `${currentSignInColor.value}`, ...baseBgImageStyle, backgroundImage: `url(${currentSignInImage.value})`, height: "100%" }; // if both image and color are set, use the image as background but color beneath
       if (currentSignInImage.value) return { ...baseBgImageStyle, backgroundImage: `url(${currentSignInImage.value})` };
-      if (currentSignInColor.value) return { backgroundColor: `${currentSignInColor.value}`, height: "100%" };
+      if (currentSignInColor.value && isCssColor(currentSignInColor.value)) return { backgroundColor: `${currentSignInColor.value}`, height: "100%" };
     }
     return { height: "100%" };
+  });
+
+  // css classes
+  const cssClasses = computed(() => {
+    return {
+      "mk-signin__bg": true,
+      lazy: true,
+      "bg-image": !!currentSignInImage.value,
+    };
   });
 
   // watchers
@@ -67,8 +78,8 @@
 </script>
 <template>
   <v-lazy transition="fade-transition" height="100%" :options="{ threshold: 0.5 }">
-    <div id="mk-signin-bg" class="mk-signin__bg lazy" :style="styles" v-cloak>
-      <MkSignIn v-if="!isAuthenticated" class="mk-view--signin">
+    <div id="mk-signin-bg" :class="cssClasses" :style="styles" v-cloak>
+      <MkSignIn v-if="!isAuthenticated" class="mk-view--signin" :color="!isCssColor(currentSignInColor) ? currentSignInColor : undefined">
         <template #main>
           {{ t("Main") }}
         </template>

@@ -58,7 +58,7 @@
   <v-container class="mk-signin fill-height">
     <v-row class="d-flex justify-sm-space-evenly">
       <v-col class="d-flex align-center justify-center" xs="12" sm="10" md="8" lg="4">
-        <v-card class="mk-signin__card pa-5 text-center" rounded="lg" elevation="3" :width="props.width">
+        <v-card class="mk-signin__card pa-5 text-center" rounded="lg" elevation="3" :width="props.width" v-bind="$attrs">
           <v-card-title tag="h1" class="text-headline-large" :title="state.title">{{ state.title }}</v-card-title>
           <v-divider class="mt-5 mb-5 mx-5" />
           <v-spacer></v-spacer>
@@ -69,7 +69,7 @@
           <v-card-actions flex="1">
             <slot v-if="slots?.actions" name="actions" />
             <!-- Continue with Microsoft -->
-            <v-btn v-else variant="outlined" size="x-large" :prepend-icon="state.singinIcon" width="100%" @click="onClick ?? login">
+            <v-btn v-else variant="outlined" size="x-large" :prepend-icon="state.singinIcon" width="100%" @click="onClick ?? login" v-bind="$attrs">
               {{ state.signinButtonText }}
             </v-btn>
           </v-card-actions>
