@@ -54,6 +54,8 @@
         return { backgroundColor: `${currentSignInColor.value}`, ...baseBgImageStyle, backgroundImage: `url(${currentSignInImage.value})`, height: "100%" }; // if both image and color are set, use the image as background but color beneath
       if (currentSignInImage.value) return { ...baseBgImageStyle, backgroundImage: `url(${currentSignInImage.value})` };
       if (currentSignInColor.value && isCssColor(currentSignInColor.value)) return { backgroundColor: `${currentSignInColor.value}`, height: "100%" };
+      if (currentSignInColor.value && !isCssColor(currentSignInColor.value))
+        return { backgroundColor: `rgb(var(--v-theme-${currentSignInColor.value}))`, height: "100%" };
     }
     return { height: "100%" };
   });

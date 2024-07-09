@@ -66,5 +66,6 @@ describe.skip('useColors', () => {
     const { isCssColor } = useColors()
     expect(isCssColor('#123456')).toBe(true)
     expect(isCssColor('rgba(0,0,0,0)')).toBe(false)
+    expect(isCssColor('primary')).toBe(false)
   });
 })

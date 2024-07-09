@@ -64,7 +64,6 @@ const mediakiwiOptions = <MediakiwiVueOptions>{
       color: "green",
     },
     dark: {
-      image: "./green-unsplash.jpg",
       color: "tertiary",
     },
     light: {
