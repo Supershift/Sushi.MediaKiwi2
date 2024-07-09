@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using FluentValidation;
 using Sushi.LanguageExtensions;
 using Sushi.LanguageExtensions.Errors;
 using Sushi.MediaKiwi.Services.Interfaces;
@@ -12,20 +11,17 @@ namespace Sushi.MediaKiwi.Services
     /// </summary>
     public class NavigationItemService
     {
-        private readonly INavigationItemRepository _navigationItemRepository;
-        private readonly IValidator<UpdateNavigationItemIdRequest> _validator;
+        private readonly INavigationItemRepository _navigationItemRepository;        
         private readonly IMapper _mapper;
 
         /// <summary>
         /// Creates a new instance of <see cref="NavigationItemService"/>.
         /// </summary>        
         public NavigationItemService(
-            INavigationItemRepository navigationItemRepository, 
-            IValidator<UpdateNavigationItemIdRequest> validator,
+            INavigationItemRepository navigationItemRepository,             
             IMapper mapper)
         {
-            _navigationItemRepository = navigationItemRepository;
-            _validator = validator;
+            _navigationItemRepository = navigationItemRepository;            
             _mapper = mapper;
         }
 
@@ -169,12 +165,7 @@ namespace Sushi.MediaKiwi.Services
         /// Updates the ID of a <see cref="NavigationItem"/>.
         /// </summary>
         public async Task<Result<NavigationItem, Error>> UpdateIdAsync(UpdateNavigationItemIdRequest request)
-        {
-            // validate input
-            var validationResult = await _validator.ValidateAsync(request);
-            if (validationResult.IsValid == false)
-                return Error.FromValidationResult(validationResult);
-            
+        {   
             // get item from datastore
             var navigationItem = await _navigationItemRepository.GetAsync(request.FromId);
 

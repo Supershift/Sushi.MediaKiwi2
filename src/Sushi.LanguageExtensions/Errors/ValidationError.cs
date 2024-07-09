@@ -14,22 +14,19 @@ namespace Sushi.LanguageExtensions.Errors
         /// <summary>
         /// Creates a new instance of <see cref="ValidationError"/>.
         /// </summary>
-        public ValidationError(string message) : this(message, null, null, null) { }
+        public ValidationError(string message) : this(message, null, null) { }
 
         /// <summary>
         /// Creates a new instance of <see cref="ValidationError"/>.
         /// </summary>
-        public ValidationError(string message, string? field, string? errorCode) : this(message, field, errorCode, null)
+        public ValidationError(string message, string? field, string? errorCode) : base(message, errorCode, null)
         {
-            
+            Field = field;
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="ValidationError"/>.
-        /// </summary>        
-        public ValidationError(string message, string? field, string? errorCode, Dictionary<string, object>? parameters) : base(message, field, errorCode, null, parameters)
-        {
-            
-        }
+        /// If this error is related to a specific field, this property contains the name of the field, e.g. "Username", "Title", etc.
+        /// </summary>                
+        public string? Field { get; init; }
     }
 }

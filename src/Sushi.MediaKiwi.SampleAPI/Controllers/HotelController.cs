@@ -75,7 +75,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
 
             if (validationResult.IsValid == false)
             {
-                return this.ToResponse(Error.FromValidationResult(validationResult));
+                return this.ToResponse(validationResult.ToError());
             }
 
             var result = await _hotelService.CreateAsync(request);

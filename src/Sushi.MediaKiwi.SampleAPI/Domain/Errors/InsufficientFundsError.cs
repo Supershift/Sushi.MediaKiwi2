@@ -6,8 +6,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Domain.Errors
     {
         public InsufficientFundsError(decimal orderAmount, decimal maxFunds) : base($"Order of {orderAmount} exceeds available funds of {maxFunds}.")
         {
-            Parameters["orderAmount"] = orderAmount;
-            Parameters["maxFunds"] = maxFunds;  
+            
         }
     }
 }
