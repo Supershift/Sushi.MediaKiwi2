@@ -3,13 +3,11 @@
   import { identity } from "@/identity";
   import { IconsLibrary } from "@/models";
   import { useI18next } from "@/composables/useI18next";
-  import { useMediakiwiVueOptions } from "@/composables/useMediakiwiVueOptions";
   import { computed, reactive } from "vue";
 
   // inject dependencies
   const { t } = await useI18next("MkSignIn");
   const { instance } = useMsal();
-  const { signIn } = useMediakiwiVueOptions();
 
   function login() {
     instance.loginRedirect({ scopes: identity.scopes });
@@ -34,13 +32,13 @@
   // variables
   // title
   const defaultTitle = t.value("title", "Login");
-  const title = computed(() => signIn?.content?.title ?? props.title ?? defaultTitle);
+  const title = computed(() => props.title ?? defaultTitle);
   // siginin button text
   const defaultSigninButtonText = t.value("SignInMicrosoft", "Continue with Microsoft");
-  const signinButtonText = computed(() => signIn?.content?.buttonText ?? props.signInText ?? defaultSigninButtonText);
+  const signinButtonText = computed(() => props.signInText ?? defaultSigninButtonText);
   // singinIcon
   const defaultIcon = IconsLibrary.microsoftAzure.toString();
-  const singinIcon = computed(() => signIn?.content?.icon ?? props.icon ?? defaultIcon);
+  const singinIcon = computed(() => props.icon ?? defaultIcon);
   // state
   const state = reactive({
     title: <string | undefined>title.value,

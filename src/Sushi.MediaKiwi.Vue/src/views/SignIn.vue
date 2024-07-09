@@ -7,7 +7,7 @@
   import { RouterManager } from "@/router/routerManager";
   import { useI18next } from "@/composables/useI18next";
   import { useMediakiwiVueOptions } from "@/composables/useMediakiwiVueOptions";
-  import { computed } from "vue";
+  import { computed, ref, watch } from "vue";
   import { useTheme } from "vuetify";
 
   const { signIn } = useMediakiwiVueOptions();
@@ -32,8 +32,9 @@
   }
 
   // computed properties
-  const image = computed(() => (!theme.current.value?.dark ? signIn?.themes?.light?.image ?? signIn?.image : signIn?.themes?.dark?.image ?? signIn?.image)); // check if the theme is dark or light and use the appropriate image
-  const color = computed(() => (!theme.current.value?.dark ? signIn?.themes?.light?.color ?? signIn?.color : signIn?.themes?.dark?.color ?? signIn?.color)); // check if the theme is dark or light and use the appropriate color
+  const currentThemeName = ref(theme.name.value || "");
+  const currentSignInImage = ref(signIn?.[currentThemeName.value]?.image || "");
+  const currentSignInColor = ref(signIn?.[currentThemeName.value]?.color || ""); // check if the theme is dark or light and use the appropriate color
 
   // base style for if the background image configuration is set
   const baseBgImageStyle = {
@@ -47,12 +48,22 @@
   // generate style based on the configuration
   const styles = computed(() => {
     if (!isAuthenticated.value) {
-      if (image.value && color.value) return { backgroundColor: `${color.value}`, ...baseBgImageStyle, backgroundImage: `url(${image.value})`, height: "100%" }; // if both image and color are set, use the image as background but color beneath
-      if (image.value) return { ...baseBgImageStyle, backgroundImage: `url(${image.value})` };
-      if (color.value) return { backgroundColor: `${color.value}`, height: "100%" };
+      if (currentSignInImage.value && currentSignInColor.value)
+        return { backgroundColor: `${currentSignInColor.value}`, ...baseBgImageStyle, backgroundImage: `url(${currentSignInImage.value})`, height: "100%" }; // if both image and color are set, use the image as background but color beneath
+      if (currentSignInImage.value) return { ...baseBgImageStyle, backgroundImage: `url(${currentSignInImage.value})` };
+      if (currentSignInColor.value) return { backgroundColor: `${currentSignInColor.value}`, height: "100%" };
     }
     return { height: "100%" };
   });
+
+  // watchers
+  watch(
+    () => theme.name.value,
+    (newVal) => {
+      currentSignInImage.value = signIn?.[newVal]?.image || "";
+      currentSignInColor.value = signIn?.[newVal]?.color || "";
+    }
+  );
 </script>
 <template>
   <v-lazy transition="fade-transition" height="100%" :options="{ threshold: 0.5 }">
