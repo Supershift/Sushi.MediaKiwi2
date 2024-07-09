@@ -11,14 +11,13 @@
   import { useTheme } from "vuetify";
   import { useColors } from "@/composables";
 
-  const { signIn } = useMediakiwiVueOptions();
-  const theme = useTheme();
-  const { isCssColor } = useColors();
-
   // inject dependencies
   const isAuthenticated = useIsAuthenticated();
   const { instance } = useMsal();
   const routerManager = container.resolve<RouterManager>("RouterManager");
+  const { signIn } = useMediakiwiVueOptions();
+  const theme = useTheme();
+  const { isCssColor } = useColors();
   // we need to manually set the view id, because this view is not part of the navigation
   const { t } = await useI18next("MkSignIn");
   // we could be coming back from an authentication redirect, so wait for authentication to complete
@@ -33,12 +32,7 @@
     navigation.navigateToHome();
   }
 
-  // computed properties
-  const currentThemeName = ref(theme.name.value || "");
-  const currentSignInImage = ref(signIn?.[currentThemeName.value]?.image || "");
-  const currentSignInColor = ref(signIn?.[currentThemeName.value]?.color || ""); // check if the theme is dark or light and use the appropriate color
-
-  // base style for if the background image configuration is set
+  // variables - base style for if the background image configuration is set
   const baseBgImageStyle = {
     height: "100%",
     backgroundRepeat: "no-repeat",
@@ -46,6 +40,11 @@
     backgroundPosition: "center",
     backgroundAttachment: "fixed",
   };
+
+  // computed properties
+  const currentThemeName = ref(theme.name.value || "");
+  const currentSignInImage = ref(signIn?.[currentThemeName.value]?.image || "");
+  const currentSignInColor = ref(signIn?.[currentThemeName.value]?.color || ""); // check if the theme is dark or light and use the appropriate color
 
   // generate style based on the configuration
   const styles = computed(() => {
@@ -69,7 +68,7 @@
     };
   });
 
-  // watchers
+  // watchers - for theme swapping
   watch(
     () => theme.name.value,
     (newVal) => {
