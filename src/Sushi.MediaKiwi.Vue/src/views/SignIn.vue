@@ -48,29 +48,28 @@
 
   // Generate style based on the configuration
   const styles = computed(() => {
-    // If the user is not authenticated
+    // Default style
+    let styles = {
+      height: "100%",
+    };
+
+    // If the user is not authenticated and the background color or image is set
     if (!isAuthenticated.value) {
-      return {
+      styles = {
+        ...styles,
         // Get background color
-        ...setBackgroundColor(),
+        ...getBackgroundColor(),
         // Get background image
-        ...setBackgroundImage(),
-        // Get default styles
-        ...getDefaultStyles(),
+        ...getBackgroundImage(),
       };
     }
 
-    // Default style when the user is authenticated or no conditions are met
-    return getDefaultStyles();
+    // Return the styles
+    return styles;
   });
 
-  // Function to get default styles
-  function getDefaultStyles() {
-    return { height: "100%" };
-  }
-
   // Function to set background color
-  function setBackgroundColor() {
+  function getBackgroundColor() {
     if (currentSignInColor.value) {
       if (isCssColor(currentSignInColor.value)) {
         return { backgroundColor: `${currentSignInColor.value}` };
@@ -81,7 +80,7 @@
   }
 
   // Function to set background image
-  function setBackgroundImage() {
+  function getBackgroundImage() {
     if (currentSignInImage.value) {
       return {
         ...baseBgImageStyle,
