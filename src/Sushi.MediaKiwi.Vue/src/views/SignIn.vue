@@ -42,22 +42,53 @@
   };
 
   // computed properties
-  const currentThemeName = ref(theme.name.value || "");
-  const currentSignInImage = ref(signIn?.[currentThemeName.value]?.image || "");
-  const currentSignInColor = ref(signIn?.[currentThemeName.value]?.color || ""); // check if the theme is dark or light and use the appropriate color
+  const currentThemeName = computed(() => theme.name.value || "");
+  const currentSignInImage = computed(() => signIn?.[currentThemeName.value]?.image || "");
+  const currentSignInColor = computed(() => signIn?.[currentThemeName.value]?.color || ""); // check if the theme is dark or light and use the appropriate color
 
-  // generate style based on the configuration
+  // Generate style based on the configuration
   const styles = computed(() => {
+    // If the user is not authenticated
     if (!isAuthenticated.value) {
-      if (currentSignInImage.value && currentSignInColor.value)
-        return { backgroundColor: `${currentSignInColor.value}`, ...baseBgImageStyle, backgroundImage: `url(${currentSignInImage.value})`, height: "100%" }; // if both image and color are set, use the image as background but color beneath
-      if (currentSignInImage.value) return { ...baseBgImageStyle, backgroundImage: `url(${currentSignInImage.value})` };
-      if (currentSignInColor.value && isCssColor(currentSignInColor.value)) return { backgroundColor: `${currentSignInColor.value}`, height: "100%" };
-      if (currentSignInColor.value && !isCssColor(currentSignInColor.value))
-        return { backgroundColor: `rgb(var(--v-theme-${currentSignInColor.value}))`, height: "100%" };
+      return {
+        // Get background color
+        ...setBackgroundColor(),
+        // Get background image
+        ...setBackgroundImage(),
+        // Get default styles
+        ...getDefaultStyles(),
+      };
     }
-    return { height: "100%" };
+
+    // Default style when the user is authenticated or no conditions are met
+    return getDefaultStyles();
   });
+
+  // Function to get default styles
+  function getDefaultStyles() {
+    return { height: "100%" };
+  }
+
+  // Function to set background color
+  function setBackgroundColor() {
+    if (currentSignInColor.value) {
+      if (isCssColor(currentSignInColor.value)) {
+        return { backgroundColor: `${currentSignInColor.value}` };
+      } else {
+        return { backgroundColor: `rgb(var(--v-theme-${currentSignInColor.value}))` };
+      }
+    }
+  }
+
+  // Function to set background image
+  function setBackgroundImage() {
+    if (currentSignInImage.value) {
+      return {
+        ...baseBgImageStyle,
+        backgroundImage: `url(${currentSignInImage.value})`,
+      };
+    }
+  }
 
   // css classes
   const cssClasses = computed(() => {
@@ -67,15 +98,6 @@
       "bg-image": !!currentSignInImage.value,
     };
   });
-
-  // watchers - for theme swapping
-  watch(
-    () => theme.name.value,
-    (newVal) => {
-      currentSignInImage.value = signIn?.[newVal]?.image || "";
-      currentSignInColor.value = signIn?.[newVal]?.color || "";
-    }
-  );
 </script>
 <template>
   <v-lazy transition="fade-transition" height="100%" :options="{ threshold: 0.5 }">
