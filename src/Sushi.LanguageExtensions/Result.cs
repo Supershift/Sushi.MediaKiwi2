@@ -1,4 +1,6 @@
-﻿namespace Sushi.LanguageExtensions
+﻿using Sushi.LanguageExtensions.Errors;
+
+namespace Sushi.LanguageExtensions
 {
     /// <summary>
     /// Represents a result to an operation, which either succeeds or fails with an instance of <typeparamref name="TError"/>.

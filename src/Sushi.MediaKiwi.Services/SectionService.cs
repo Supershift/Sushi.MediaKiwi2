@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Sushi.LanguageExtensions;
+using Sushi.LanguageExtensions.Errors;
 using Sushi.MediaKiwi.Services.Interfaces;
 using Sushi.MediaKiwi.Services.Model;
 
@@ -31,7 +33,7 @@ namespace Sushi.MediaKiwi.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<Result> DeleteAsync(string id)
+        public async Task<Result<Error>> DeleteAsync(string id)
         {
             // get item from datastore
             var section = await _sectionRepository.GetAsync(id);
@@ -42,11 +44,11 @@ namespace Sushi.MediaKiwi.Services
             {
                 // delete item
                 await _sectionRepository.DeleteAsync(section.Id);
-                return new Result(ResultCode.Success);
+                return Result<Error>.Success();
             }
             else
             {
-                return new Result(ResultCode.NotFound);
+                return new NotFoundError();
             }
         }
 
@@ -54,7 +56,7 @@ namespace Sushi.MediaKiwi.Services
         /// Gets all sections.
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<ListResult<Section>>> GetAllAsync(PagingValues pagingValues)
+        public async Task<Result<ListResult<Section>, Error>> GetAllAsync(PagingValues pagingValues)
         {
             // get all sections from database
             var items = await _sectionRepository.GetAllAsync(pagingValues);
@@ -72,7 +74,7 @@ namespace Sushi.MediaKiwi.Services
                 section.Roles = sectionRoles.Where(x => x.SectionId == section.Id).Select(x => x.Role).ToList();
             }
 
-            return new Result<ListResult<Section>>(result);
+            return result;
         }
 
         /// <summary>
@@ -80,7 +82,7 @@ namespace Sushi.MediaKiwi.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<Result<Section>> GetAsync(string id)
+        public async Task<Result<Section, Error>> GetAsync(string id)
         {
             // get item from datastore
             var section = await _sectionRepository.GetAsync(id);
@@ -93,11 +95,11 @@ namespace Sushi.MediaKiwi.Services
                 var result = _mapper.Map<Section>(section);
                 result.Roles = sectionRoles.Where(x => x.SectionId == section.Id).Select(x => x.Role).ToList();
 
-                return new Result<Section>(result);
+                return result;
             }
             else
             {
-                return new Result<Section>(ResultCode.NotFound);
+                return new NotFoundError();
             }
         }
 
@@ -107,20 +109,20 @@ namespace Sushi.MediaKiwi.Services
         /// <param name="id"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<Result<Section>> UpdateAsync(string id, Section request)
+        public async Task<Result<Section, Error>> UpdateAsync(string id, Section request)
         {
             // get existing or create new section, based on id
             var section = await _sectionRepository.GetAsync(id);
             if (section == null)
             {
-                return new Result<Section>(ResultCode.NotFound);
+                return new NotFoundError();
             }
 
             // map from model to database
             _mapper.Map(request, section);
 
             // start transaction
-            using (var ts = Utility.CreateTransactionScope())
+            using (var ts = TransactionUtility.CreateTransactionScope())
             {
                 // delete existing roles
                 await _sectionRoleRepository.DeleteForSectionAsync(id);
@@ -140,7 +142,7 @@ namespace Sushi.MediaKiwi.Services
             }
 
             var result = _mapper.Map<Section>(section);
-            return new Result<Section>(result);
+            return new Result<Section, Error>(result);
         }
 
         /// <summary>
@@ -149,23 +151,18 @@ namespace Sushi.MediaKiwi.Services
         /// <param name="id"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<Result<Section>> CreateAsync(string id, Section request)
+        public async Task<Result<Section, Error>> CreateAsync(string id, Section request)
         {
             // sanitize input
             id = id.Trim();
-
-            // validate new id
-            var error = Entities.Section.ValidateSectionId(id);
-            if (error != null)
-                return new Result<Section>(ResultCode.ValidationFailed) { ErrorMessage = error };
-
+            
             var section = new Entities.Section() { Id = id };
 
             // map from model to database
             _mapper.Map(request, section);
 
             // start transaction
-            using (var ts = Utility.CreateTransactionScope())
+            using (var ts = TransactionUtility.CreateTransactionScope())
             {
 
                 // new section
@@ -184,7 +181,7 @@ namespace Sushi.MediaKiwi.Services
             }
 
             var result = _mapper.Map<Section>(section);
-            return new Result<Section>(result);
+            return result;
         }
 
         /// <summary>
@@ -193,22 +190,17 @@ namespace Sushi.MediaKiwi.Services
         /// <param name="oldId"></param>
         /// <param name="newId"></param>
         /// <returns></returns>
-        public async Task<Result<Section>> UpdateIdAsync(string oldId, string newId)
+        public async Task<Result<Section, Error>> UpdateIdAsync(string oldId, string newId)
         {
             // sanitize input
             newId = newId.Trim();
-            
-            // validate new id
-            var error = Entities.Section.ValidateSectionId(newId);
-            if (error != null)
-                return new Result<Section>(ResultCode.ValidationFailed) { ErrorMessage = error };
 
             // get item from datastore
             var section = await _sectionRepository.GetAsync(oldId);
 
             if (section == null)
             {
-                return new Result<Section>(ResultCode.NotFound);
+                return new NotFoundError();
             }
 
             // change id             

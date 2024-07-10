@@ -46,7 +46,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<View>> DeleteView(string id)
         {
             var result = await _viewService.DeleteAsync(id);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         
@@ -61,7 +61,7 @@ namespace Sushi.MediaKiwi.WebAPI
         {
             var sortValues = _sortingRetriever.GetSorting<View>();
             var result = await _viewService.GetAllAsync(page, sortValues);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<View>> GetView(string id)
         {
             var result = await _viewService.GetAsync(id);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<View>> CreateView(string id, View request)
         {
             var result = await _viewService.CreateAsync(id, request);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<View>> UpdateView(string id, View request)
         {
             var result = await _viewService.UpdateAsync(id, request);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
     }
 }

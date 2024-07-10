@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using Sushi.LanguageExtensions.Errors;
 
 namespace Sushi.LanguageExtensions
 {

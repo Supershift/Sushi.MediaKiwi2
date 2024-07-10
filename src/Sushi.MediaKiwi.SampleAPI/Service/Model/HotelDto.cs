@@ -1,11 +1,11 @@
-﻿using Sushi.MediaKiwi.Services.Entities;
+﻿using Sushi.MediaKiwi.Services.Model;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sushi.MediaKiwi.SampleAPI.Service.Model;
 
-public class Hotel
+public class HotelDto
 {
     /// <summary>
     /// The hotel identifier

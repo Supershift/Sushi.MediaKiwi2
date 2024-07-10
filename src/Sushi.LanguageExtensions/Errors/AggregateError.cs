@@ -1,10 +1,11 @@
 ﻿using System.Collections.ObjectModel;
+using System.Runtime.Serialization;
 
-namespace Sushi.LanguageExtensions
+namespace Sushi.LanguageExtensions.Errors
 {
     /// <summary>
     /// Represents one or more errors that occured during execution.
-    /// </summary>
+    /// </summary>        
     public record AggregateError : Error
     {
         /// <summary>
@@ -29,14 +30,14 @@ namespace Sushi.LanguageExtensions
         /// Creates a new instance of <see cref="AggregateError"/>.
         /// </summary>
         public AggregateError(IEnumerable<Error> errors, string message, Exception? exception)
-            : base(message, exception)
+            : base(message, null, null, exception, null)
         {
-            Errors = errors.ToArray().AsReadOnly();
+            Errors = errors.ToArray();
         }
 
         /// <summary>
         /// Gets the collection of errors that caused this error.
-        /// </summary>
-        public ReadOnlyCollection<Error> Errors { get; }
+        /// </summary>           
+        public IReadOnlyCollection<Error> Errors { get; }
     }
 }

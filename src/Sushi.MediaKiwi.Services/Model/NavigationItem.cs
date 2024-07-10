@@ -16,26 +16,22 @@ namespace Sushi.MediaKiwi.Services.Model
     {
         /// <summary>
         /// Unique identifier for this navigation item.
-        /// </summary>
-        [SwaggerSchema(ReadOnly = true)]
+        /// </summary>        
         public string Id { get; set; } = null!;
 
         /// <summary>
         /// Name of this navigation item.
-        /// </summary>
-        [Required, StringLength(128)]
+        /// </summary>        
         public string Name { get; set; } = null!;
         
         /// <summary>
         /// The section to which the item belongs in the navigation tree.
-        /// </summary>
-        [Required, StringLength(64)]
+        /// </summary>        
         public string SectionId { get; set; } = null!;
 
         /// <summary>
         /// If not empty, Id of the parent navigation item.
-        /// </summary>
-        [StringLength(64)]
+        /// </summary>        
         public string? ParentNavigationItemId { get; set; }
         
         /// <summary>

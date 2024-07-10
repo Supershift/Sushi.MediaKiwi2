@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Sushi.LanguageExtensions;
 using Sushi.MediaKiwi.DAL.Repository;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Entities;
@@ -52,7 +53,7 @@ namespace Sushi.MediaKiwi.IntegrationTests
             };
 
             // start transaction to prevent test changing state permanently
-            using (var ts = Utility.CreateTransactionScope())
+            using (var ts = TransactionUtility.CreateTransactionScope())
             {
                 await _repository.InsertAsync(locale);
 
@@ -66,7 +67,7 @@ namespace Sushi.MediaKiwi.IntegrationTests
         public async Task UpdateTest()
         {
             // start transaction to prevent test changing state permanently
-            using (var ts = Utility.CreateTransactionScope())
+            using (var ts = TransactionUtility.CreateTransactionScope())
             {
                 // get existing locale
                 var locale = await _repository.GetAsync("en");
@@ -88,7 +89,7 @@ namespace Sushi.MediaKiwi.IntegrationTests
         public async Task DeleteTest()
         {
             // start transaction to prevent test changing state permanently
-            using (var ts = Utility.CreateTransactionScope())
+            using (var ts = TransactionUtility.CreateTransactionScope())
             {
                 // create a new locale
                 var locale = new Locale()
