@@ -8,12 +8,16 @@
 
   // Components
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
-  import { computed } from "vue";
-  import { reactive } from "vue";
+  import { computed, reactive } from "vue";
+  import { TableColumn } from "@/models/table/TableColumn";
+  import { useTableDisplayOptions } from "@/composables/useTableDisplayOptions";
+  import { useSnackbarStore } from "@/stores";
 
   // inject dependencies
   const { defaultT } = await useI18next();
   const { tableOptions } = useMediakiwiVueOptions();
+  const { setColumnVisibility } = useTableDisplayOptions();
+  const snackbar = useSnackbarStore();
 
   // define properties
   const props = withDefaults(
@@ -32,6 +36,14 @@
       pageSizeOptions: () => [...defaultPageSizeOptions],
     }
   );
+
+  /** Display Options */
+  const displayOptions = defineModel<TableColumn[] | boolean>("displayOptions", { required: false, default: [] });
+  const hasDisplayOptions = computed(() => displayOptions.value !== undefined && displayOptions.value !== false);
+
+  /** Define Table Reference for when multiple tables are on one view*/
+  const tableReference = defineModel<string | undefined>("tableReference", { required: false });
+  const availableColumns = computed(() => displayOptions.value as TableColumn[]);
 
   // define emits
   const emit = defineEmits<{
@@ -147,11 +159,35 @@
     }
     return null;
   });
+
+  /**
+   * Update the display columns
+   * @param column table columns to update
+   */
+  function updateDisplayColumns(column: TableColumn) {
+    setColumnVisibility(displayOptions.value as TableColumn[], column, tableReference.value);
+    // Notify the user
+    snackbar.showMessage(defaultT.value("DisplayOptionsVisibilityChanged", "The visibility of the columns has been adjusted."));
+  }
 </script>
 
 <template>
   <v-divider />
   <div class="mk-pagination">
+    <v-menu close-on-content-click v-if="hasDisplayOptions">
+      <!-- Button -->
+      <template #activator="args">
+        <v-btn v-bind="args.props" variant="text" class="mr-4">
+          {{ defaultT("DisplayOptions", "Display options") }}
+        </v-btn>
+      </template>
+      <v-list>
+        <v-list-item v-for="column in availableColumns" :key="column.index">
+          <v-checkbox v-model="column.visible" @update:modelValue="updateDisplayColumns(column)" :label="column.name"></v-checkbox>
+        </v-list-item>
+      </v-list>
+    </v-menu>
+
     <div class="mk-pagination__items-per-page">
       <span class="mk-pagination__items-per-page__label">
         {{ defaultT("Rows per page") }}

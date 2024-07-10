@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/require-default-prop -->
 <script setup lang="ts" generic="T">
-  import { TableMap, TableFilter } from "@/models/table";
+  import { TableMap, TableFilter, TableColumn } from "@/models/table";
   import { Paging, Sorting } from "@/models/api";
   import { ref, watch } from "vue";
   import MkTableFilter from "@/components/MkTableFilter/MkTableFilter.vue";
@@ -80,6 +80,10 @@
       pageSize: defaultPageSize,
     },
   });
+  /** Display options for the table */
+  const displayOptions = defineModel<TableColumn[] | boolean>("displayOptions", { required: false });
+  /** Reference for multiple tables on one view */
+  const tableReference = defineModel<string>("tableReference", { required: false, default: "Table" });
 
   const sortBy = computed(() => sorting.value?.sortBy);
   const sortDirection = computed(() => sorting.value?.sortDirection);
@@ -275,7 +279,10 @@
       @click:row="(e) => emit('click:row', e)"
       @update:sorting="sortingChanged"
       @update:selection="(e) => emit('update:selection', e)"
+      @rendered:body="(e) => console.log('Rendered body', e)"
       :disable-item-selection="props.disableItemSelection"
+      v-model:display-options="displayOptions"
+      v-model:tableReference="tableReference"
     >
       <template #thead>
         <slot v-if="slots.thead" name="thead"></slot>
@@ -310,6 +317,8 @@
           :page-size-options="pageSizes"
           :page-tracking="props?.pageTracking"
           @update:model-value="pageChanged"
+          v-model:display-options="displayOptions"
+          v-model:table-reference="tableReference"
         />
       </template>
     </MkTableView>
