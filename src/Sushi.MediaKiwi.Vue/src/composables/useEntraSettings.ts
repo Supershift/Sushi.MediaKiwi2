@@ -25,7 +25,7 @@ export function useEntraSettings(apiBaseUrl: string = import.meta.env.VITE_APP_M
       msalConfig: {
         auth: {
           clientId: clientId,
-          authority: entraSettings.clientId ?? import.meta.env.VITE_APP_MEDIAKIWI_MSALCONFIG_AUTH_AUTHORITY,
+          authority: entraSettings.authority ?? import.meta.env.VITE_APP_MEDIAKIWI_MSALCONFIG_AUTH_AUTHORITY,
           redirectUri: import.meta.env.VITE_APP_MEDIAKIWI_MSALCONFIG_AUTH_REDIRECTURI,
           postLogoutRedirectUri: import.meta.env.VITE_APP_MEDIAKIWI_MSALCONFIG_AUTH_POSTLOGOUTREDIRECTURI,
         },
