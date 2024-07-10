@@ -4,6 +4,7 @@ import { createApp } from "vue";
 import { createAxiosClient } from "@/services";
 import { mdiAliases, symbolsAliases } from "@/plugins/icons";
 import { MediakiwiVueOptions } from "@/models";
+import { MediakiwiIdentity } from "@/models/options/MediakiwiIdentity";
 import mediakiwi from "@/framework";
 
 // Import the mediakiwi stylesheet
@@ -11,12 +12,10 @@ import "./styles/main.scss";
 import { container } from "tsyringe";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
 import { mdiAccountCheckOutline, mdiTestTube } from "@mdi/js";
+
 import { modules } from "./views/modules";
 import { useEntraSettings } from "@/composables/useEntraSettings";
-
-// Get the entra settings
-const { getEntraSettings } = useEntraSettings();
-const entraSettings = await getEntraSettings();
+import { Configuration } from "@azure/msal-browser";
 
 // add mediakiwi
 const mediakiwiOptions = <MediakiwiVueOptions>{
@@ -37,14 +36,8 @@ const mediakiwiOptions = <MediakiwiVueOptions>{
     },
   },
   apiBaseUrl: import.meta.env.VITE_APP_MEDIAKIWI_APIBASEURL,
-  msalConfig: {
-    auth: {
-      clientId: entraSettings.clientId, //import.meta.env.VITE_APP_MEDIAKIWI_MSALCONFIG_AUTH_CLIENTID,
-      authority: entraSettings.authority, //import.meta.env.VITE_APP_MEDIAKIWI_MSALCONFIG_AUTH_AUTHORITY,
-      redirectUri: import.meta.env.VITE_APP_MEDIAKIWI_MSALCONFIG_AUTH_REDIRECTURI,
-      postLogoutRedirectUri: import.meta.env.VITE_APP_MEDIAKIWI_MSALCONFIG_AUTH_POSTLOGOUTREDIRECTURI,
-    },
-  },
+  msalConfig: <Configuration>{},
+  identity: <MediakiwiIdentity>{},
   // import all views as models
   modules: {
     ...import.meta.glob("./views/**/*.vue"),
@@ -54,19 +47,19 @@ const mediakiwiOptions = <MediakiwiVueOptions>{
     date: { year: "numeric", month: "2-digit", day: "2-digit" }, // Example "05/31/2023" or "05-31-2023"
     time: { hour: "2-digit", minute: "2-digit" }, // Example 09:50 AM or 21:50
   },
-  identity: {
-    scopes: [`api://${entraSettings.clientId}/access_via_approle_assignments`],
-  },
   signIn: {
     image: "./basic-unsplash.jpg",
   },
 };
 
+const { fillEntraSettings } = useEntraSettings();
+const mediakiwiOptionsWithEntra = await fillEntraSettings(mediakiwiOptions);
+
 // Create the app
 const app = createApp(App);
 
 // install mediakiwi
-app.use(mediakiwi, mediakiwiOptions);
+app.use(mediakiwi, mediakiwiOptionsWithEntra);
 
 // register dependencies
 const sampleApiAxiosInstance = createAxiosClient(import.meta.env.VITE_APP_SAMPLEAPI_APIBASEURL);
