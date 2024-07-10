@@ -18,6 +18,7 @@
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
   import MkTableHead from "./MkTableHead.vue"; // Mk-Th
   import MkTableCell from "./MkTableCell.vue"; // Mk-Td
+  import MkDisplayOptions from "@/components/MkDisplayOptions/MkDisplayOptions.vue";
   import { defaultPageSizeOptions, defaultPageSize } from "@/constants";
   import { useComponentContext } from "@/composables/useComponentContext";
   import MkEmptyState from "../MkEmptyState/MkEmptyState.vue";
@@ -82,6 +83,7 @@
   });
   /** Display options for the table */
   const displayOptions = defineModel<TableColumn[] | boolean>("displayOptions", { required: false });
+  const hasDisplayOptions = computed(() => displayOptions.value !== undefined && displayOptions.value !== false);
   /** Reference for multiple tables on one view */
   const tableReference = defineModel<string>("tableReference", { required: false, default: "Table" });
 
@@ -165,7 +167,7 @@
   });
 
   const showPagination = computed(() => {
-    return currentPagination.value && pagingResult.value && pagingResult.value.pageCount;
+    return currentPagination.value && pagingResult.value && pagingResult.value.pageCount && props.paginationMode === "controls";
   });
 
   // event listeners
@@ -308,18 +310,20 @@
       </template>
 
       <!-- Only show the controls if the pagination mode is unset or set to 'controls' -->
-      <template v-if="paginationMode === 'controls'" #bottom>
+      <template #bottom>
         <MkPagination
-          v-if="showPagination"
           :model-value="currentPagination"
           :paging-result="pagingResult"
           :mode="paginationMode"
           :page-size-options="pageSizes"
           :page-tracking="props?.pageTracking"
+          :hide-pagination="!showPagination"
           @update:model-value="pageChanged"
-          v-model:display-options="displayOptions"
-          v-model:table-reference="tableReference"
-        />
+        >
+          <template #prepend>
+            <MkDisplayOptions v-if="hasDisplayOptions" v-model:display-options="displayOptions" v-model:table-reference="tableReference" />
+          </template>
+        </MkPagination>
       </template>
     </MkTableView>
 
