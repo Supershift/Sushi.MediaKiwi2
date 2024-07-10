@@ -4,7 +4,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Domain.Errors
 {
     public record InsufficientFundsError : Error
     {
-        public InsufficientFundsError(decimal orderAmount, decimal maxFunds) : base($"Order of {orderAmount} exceeds available funds of {maxFunds}.")
+        public InsufficientFundsError(decimal amount, decimal maxAllowed) : base($"Withdrawal of {amount} exceeds max allowed {maxAllowed}.")
         {
             
         }

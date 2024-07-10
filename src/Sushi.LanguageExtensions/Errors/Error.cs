@@ -6,7 +6,7 @@ namespace Sushi.LanguageExtensions.Errors
     /// <summary>
     /// 
     /// </summary>    
-    [JsonDerivedType(typeof(AggregateError))]
+    [JsonDerivedType(typeof(AggregateError))]    
     [JsonDerivedType(typeof(ValidationError))]
     [JsonPolymorphic(UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FallBackToNearestAncestor)]
     public record Error
@@ -35,7 +35,7 @@ namespace Sushi.LanguageExtensions.Errors
         /// <summary>
         /// First level of error indication, e.g. ValidationError, AggregateError, etc.
         /// </summary>                
-        public string ErrorType { get; init; }
+        public virtual string ErrorType { get; init; }
 
         /// <summary>
         /// Optionally defines a second level of error indication, e.g. MaximumLengthValidator for ValdationErrors, etc.

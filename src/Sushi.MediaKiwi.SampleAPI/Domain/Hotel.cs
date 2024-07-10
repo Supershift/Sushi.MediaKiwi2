@@ -1,6 +1,7 @@
 ﻿using Azure.Core;
 using Sushi.LanguageExtensions;
 using Sushi.LanguageExtensions.Errors;
+using Sushi.LanguageExtensions.Validation;
 using Sushi.MediaKiwi.SampleAPI.Domain.Errors;
 using Sushi.MediaKiwi.SampleAPI.Service.Model;
 using Sushi.MediaKiwi.Services.Entities;
@@ -34,13 +35,10 @@ namespace Sushi.MediaKiwi.SampleAPI.Domain
         }
 
         public Result<Error> SetSrp(MoneyValue? srp)
-        {
-            if (srp?.Amount > 100)
-                return new InsufficientFundsError(srp.Amount, 100);
-
+        {   
             SRP = srp;
 
-            return Result<Error>.Success();
+            return Result.Success<Error>();
         }
 
         public int Id { get; private set; }

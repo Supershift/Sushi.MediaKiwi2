@@ -48,7 +48,7 @@ namespace Sushi.LanguageExtensions
             {
                 return new AggregateError(errors);
             }
-            return Result<AggregateError>.Success();
+            return Result.Success<AggregateError>();
         }
     }
 }

@@ -47,7 +47,7 @@ namespace Sushi.MediaKiwi.Services
         {
             await _translationRepository.InsertMissingAsync(@namespace, key, value);
 
-            return Result<Error>.Success();
+            return Result.Success<Error>();
         }
     }
 }

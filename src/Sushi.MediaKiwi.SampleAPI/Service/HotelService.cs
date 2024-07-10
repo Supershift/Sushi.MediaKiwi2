@@ -58,7 +58,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
             {
                 // delete item
                 await _hotelRepository.DeleteAsync(hotel.Id);
-                return Result<Error>.Success();
+                return Result.Success<Error>();
             }
             else
             {

@@ -153,7 +153,7 @@ namespace Sushi.MediaKiwi.Services
             {   
                 // delete item
                 await _navigationItemRepository.DeleteAsync(view.Id);
-                return Result<Error>.Success();
+                return Result.Success<Error>();
             }
             else
             {

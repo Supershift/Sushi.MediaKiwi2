@@ -60,8 +60,9 @@ namespace Sushi.LanguageExtensions.Validation
             if (result != null)
                 return result;
             else
-                return Result<AggregateError<ValidationError>>.Success();
+                return LanguageExtensions.Result.Success<AggregateError<ValidationError>>();
         }
+
         /// <summary>
         /// Starts a new validator for the provided value. The result of all chained validators are combined. E.g. if multiple validators fail, an <see cref="AggregateError"/> is set as result.
         /// </summary>
@@ -81,7 +82,7 @@ namespace Sushi.LanguageExtensions.Validation
         public Validator MaxLength(int maxLength)
         {
             var attribute = new MaxLengthAttribute(maxLength);
-            return ValidateAttribute(attribute, "MaxLength");
+            return ValidateAttribute(attribute, ValidationErrorCode.MaxLength);
         }
 
         /// <summary>
@@ -93,7 +94,7 @@ namespace Sushi.LanguageExtensions.Validation
         public Validator StringLength(int maxLength, int minLength = 0)
         {
             var attribute = new StringLengthAttribute(maxLength) { MinimumLength = minLength };
-            return ValidateAttribute(attribute, "StringLength");
+            return ValidateAttribute(attribute, ValidationErrorCode.StringLength);
         }
 
         /// <summary>
@@ -103,7 +104,38 @@ namespace Sushi.LanguageExtensions.Validation
         public Validator Required()
         {
             var attribute = new RequiredAttribute();
-            return ValidateAttribute(attribute, "Required");
+            return ValidateAttribute(attribute, ValidationErrorCode.Required);
+        }
+
+        /// <summary>
+        /// Checks if a string has exactly the provided length.
+        /// </summary>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public Validator ExactLength(int length)
+        {
+            var attribute = new StringLengthAttribute(length) { MinimumLength = length };
+            return ValidateAttribute(attribute, ValidationErrorCode.ExactLength);
+        }
+
+        /// <summary>
+        /// Checks if the value is within the provided range.
+        /// </summary>        
+        /// <returns></returns>
+        public Validator Range(double minimum, double maximum)
+        {
+            var attribute = new RangeAttribute(minimum, maximum);
+            return ValidateAttribute(attribute, ValidationErrorCode.Range);
+        }
+
+        /// <summary>
+        /// Checks if the value is within the provided range.
+        /// </summary>        
+        /// <returns></returns>
+        public Validator Range(int minimum, int maximum)
+        {
+            var attribute = new RangeAttribute(minimum, maximum);
+            return ValidateAttribute(attribute, ValidationErrorCode.Range);
         }
 
         /// <summary>
@@ -137,7 +169,7 @@ namespace Sushi.LanguageExtensions.Validation
                 return isValid;
             };
 
-            return ValidatePredicate(predicate, "Regex", errorMessage);
+            return ValidatePredicate(predicate, ValidationErrorCode.Regex, errorMessage);
         }
 
         /// <summary>

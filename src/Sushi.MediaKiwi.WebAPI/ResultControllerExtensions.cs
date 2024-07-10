@@ -80,9 +80,10 @@ namespace Sushi.MediaKiwi.WebAPI
             var problemDetails = new ErrorProblemDetails
             {
                 Title = error.ErrorType,
+                Type = error.ErrorType,
                 Detail = error.Message,
                 Status = (int)HttpStatusCode.BadRequest,
-                Error = error,                
+                Error = error,                          
             };
             return controller.BadRequest(problemDetails);
             

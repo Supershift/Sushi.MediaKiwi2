@@ -43,7 +43,7 @@ namespace Sushi.LanguageExtensions.Tests
         {
             public Result<Error> IsSatisfiedBy(string entity)
             {
-                return Result<Error>.Success();                
+                return Result.Success<Error>();                
             }
         }
 

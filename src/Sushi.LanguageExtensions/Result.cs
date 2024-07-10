@@ -68,11 +68,7 @@ namespace Sushi.LanguageExtensions
         public async Task<R> MatchAsync<R>(Func<Task<R>> Success, Func<TError, R> Fail) =>
             IsSuccess ? await Success() : Fail(Error!);
 
-        /// <summary>
-        /// Creates a new instance of <see cref="Result{TError}"/> if the operation succeeded.
-        /// </summary>
-        /// <returns></returns>
-        public static Result<TError> Success() => new();
+        
     }
 
     /// <summary>
@@ -175,5 +171,17 @@ namespace Sushi.LanguageExtensions
                 Success: value => new Result<TValue, TError>(value),
                 Fail: error => new Result<TValue, TError>(error));
         }
+    }
+
+    /// <summary>
+    /// Contains helper methods to work with Result objects.
+    /// </summary>
+    public static class Result
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref="Result{TError}"/> if the operation succeeded.
+        /// </summary>
+        /// <returns></returns>
+        public static Result<TError> Success<TError>() where TError : Error => new();
     }
 }
