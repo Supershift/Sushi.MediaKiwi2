@@ -244,5 +244,11 @@ export function useTableDisplayOptions() {
     initTableDisplayOptions,
     setColumnVisibility,
     createTableColumns,
+    getHeaderNodes,
+    getTextNode,
+    generateDisplayColumns,
+    registerHeaderElements,
+    registerBodyElements,
+    saveTableColumns,
   };
 }
