@@ -21,6 +21,7 @@
 
   import { container } from "tsyringe";
   import { ref } from "vue";
+  import { TableColumn } from "@/models/table/TableColumn";
 
   // inject dependencies
   const connector = container.resolve(HotelConnector);
@@ -34,6 +35,7 @@
   }); // demos 11 items per page (higher than default 10), also adds to the current list
   const hotels = ref<ListResult<Hotel>>();
   const countries = ref<Country[]>();
+  const displayOptions = ref<TableColumn[]>();
 
   // define mapping
   function srpIcon(item: Hotel): TableCellIcon {
@@ -115,6 +117,7 @@
     :new-title="t('New hotel').toString()"
     title="Subtitle for the hotel list"
     @click:new="console.log('New Button Clicked: ' + $event)"
+    v-model:display-options="displayOptions"
   >
     <template #toolbar>
       <v-btn>Knop 1</v-btn>
