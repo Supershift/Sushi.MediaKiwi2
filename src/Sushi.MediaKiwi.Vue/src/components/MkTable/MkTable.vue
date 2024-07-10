@@ -166,6 +166,7 @@
     return undefined;
   });
 
+  /** Determines if the pagination should be displayed */
   const showPagination = computed(() => {
     return currentPagination.value && pagingResult.value && pagingResult.value.pageCount && props.paginationMode === "controls";
   });

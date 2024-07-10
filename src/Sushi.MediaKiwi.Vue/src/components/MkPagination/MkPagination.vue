@@ -157,7 +157,9 @@
 
 <template>
   <div class="mk-pagination">
-    <slot v-if="slots?.prepend" name="prepend" />
+    <div class="mk-pagination__prepend" v-if="slots?.prepend">
+      <slot name="prepend" />
+    </div>
     <div class="mk-pagination__items-per-page" v-if="!props.hidePagination">
       <span class="mk-pagination__items-per-page__label">
         {{ defaultT("Rows per page") }}
@@ -186,7 +188,9 @@
         @update:model-value="updatePageIndex"
       />
     </div>
-    <slot v-if="slots?.append" name="append" />
+    <div v-if="slots?.append" class="mk-pagination__append">
+      <slot name="append" />
+    </div>
   </div>
   <v-divider />
 </template>
@@ -200,6 +204,16 @@
     // flex-wrap: wrap;
     padding: 0 8px;
     justify-content: flex-end;
+
+    &__prepend {
+      display: flex;
+      padding-inline-end: 24px;
+    }
+
+    &__append {
+      display: flex;
+      padding-inline-start: 24px;
+    }
 
     &__items-per-page {
       padding-inline-end: 24px;

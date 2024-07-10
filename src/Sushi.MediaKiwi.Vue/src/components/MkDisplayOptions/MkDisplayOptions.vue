@@ -13,7 +13,7 @@
   /** Display Options */
   const displayOptions = defineModel<TableColumn[] | boolean>("displayOptions", { required: false, default: [] });
   const hasDisplayOptions = computed(() => displayOptions.value !== undefined && displayOptions.value !== false);
-  const availableColumns = computed(() => displayOptions.value as TableColumn[]);
+  const loadedColumns = computed(() => displayOptions.value as TableColumn[]);
   /** TODO: Define Table Reference for when multiple tables are on one view */
   const tableReference = defineModel<string | undefined>("tableReference", { required: false });
 
@@ -22,6 +22,7 @@
    * @param column table columns to update
    */
   function updateDisplayColumns(column: TableColumn) {
+    // Update the visibility of the columns when the user changes the options in the list
     setColumnVisibility(displayOptions.value as TableColumn[], column, tableReference.value);
     // Notify the user
     snackbar.showMessage(defaultT.value("DisplayOptionsVisibilityChanged", "The visibility of the columns has been adjusted."));
@@ -32,22 +33,15 @@
     <v-menu close-on-content-click v-if="hasDisplayOptions">
       <!-- Button -->
       <template #activator="args">
-        <v-btn v-bind="args.props" variant="text" class="mk-display-options__button mr-4">
+        <v-btn v-bind="args.props" variant="text" class="mk-display-options__button">
           {{ defaultT("DisplayOptions", "Display options") }}
         </v-btn>
       </template>
       <v-list class="mk-display-options__list">
-        <v-list-item v-for="column in availableColumns" :key="column.index" class="mk-display-options__list-item">
+        <v-list-item v-for="column in loadedColumns" :key="column.index" class="mk-display-options__list-item">
           <v-checkbox v-model="column.visible" @update:modelValue="updateDisplayColumns(column)" :label="column.name"></v-checkbox>
         </v-list-item>
       </v-list>
     </v-menu>
   </div>
 </template>
-<style scoped lang="scss">
-  @use "@/styles/abstracts";
-
-  .mk-display-options {
-    display: flex;
-  }
-</style>
