@@ -238,7 +238,10 @@
     </tfoot>
 
     <template #bottom>
-      <slot name="bottom"></slot>
+      <div v-if="slots?.bottom" class="mk-table-view__bottom">
+        <slot name="bottom"></slot>
+      </div>
+      <v-divider v-if="slots?.bottom" />
     </template>
   </v-table>
 </template>

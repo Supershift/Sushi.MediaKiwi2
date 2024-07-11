@@ -311,19 +311,19 @@
 
       <!-- Only show the controls if the pagination mode is unset or set to 'controls' -->
       <template #bottom>
-        <MkPagination
-          :model-value="currentPagination"
-          :paging-result="pagingResult"
-          :mode="paginationMode"
-          :page-size-options="pageSizes"
-          :page-tracking="props?.pageTracking"
-          :hide-pagination="!showPagination"
-          @update:model-value="pageChanged"
-        >
-          <template #prepend>
-            <MkDisplayOptions v-if="hasDisplayOptions" v-model:display-options="displayOptions" v-model:table-reference="tableReference" />
-          </template>
-        </MkPagination>
+        <v-divider />
+        <div class="mk-table__footer">
+          <MkDisplayOptions v-if="hasDisplayOptions" v-model:display-options="displayOptions" v-model:table-reference="tableReference" />
+          <MkPagination
+            :model-value="currentPagination"
+            :paging-result="pagingResult"
+            :mode="paginationMode"
+            :page-size-options="pageSizes"
+            :page-tracking="props?.pageTracking"
+            :hide-pagination="!showPagination"
+            @update:model-value="pageChanged"
+          />
+        </div>
       </template>
     </MkTableView>
 
@@ -355,6 +355,13 @@
         justify-content: flex-end;
         width: auto;
       }
+    }
+    &__footer {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 24px;
     }
   }
 </style>
