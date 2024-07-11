@@ -19,7 +19,6 @@
       signInText?: string;
       icon?: IconsLibrary;
       width?: string;
-      onClick?: () => void;
     }>(),
     {
       title: undefined,
@@ -69,7 +68,7 @@
           <v-card-actions flex="1">
             <slot v-if="slots?.actions" name="actions" />
             <!-- Continue with Microsoft -->
-            <v-btn v-else variant="outlined" size="x-large" :prepend-icon="state.singinIcon" width="100%" @click="onClick ?? login" v-bind="$attrs">
+            <v-btn v-else variant="outlined" size="x-large" :prepend-icon="state.singinIcon" width="100%" @click="login()" v-bind="$attrs">
               {{ state.signinButtonText }}
             </v-btn>
           </v-card-actions>
