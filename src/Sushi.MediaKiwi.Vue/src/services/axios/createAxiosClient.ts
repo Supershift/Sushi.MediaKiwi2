@@ -14,3 +14,12 @@ export function createAxiosClient(baseUrl: string): AxiosInstance {
 
   return result;
 }
+
+export function createPublicAxiosClient(baseUrl: string): AxiosInstance {
+  return axios.create({
+    baseURL: baseUrl,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+}
