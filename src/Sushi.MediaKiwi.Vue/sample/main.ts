@@ -56,13 +56,6 @@ const mediakiwiOptions = <MediakiwiVueOptions>{
     scopes: [`api://${import.meta.env.VITE_APP_MEDIAKIWI_MSALCONFIG_AUTH_CLIENTID}/access_via_approle_assignments`],
   },
   signIn: {
-    retroDark: {
-      image: "./green-unsplash.jpg",
-      color: "purple",
-    },
-    retroLight: {
-      color: "green",
-    },
     dark: {
       color: "tertiary",
     },
