@@ -282,7 +282,6 @@
       @click:row="(e) => emit('click:row', e)"
       @update:sorting="sortingChanged"
       @update:selection="(e) => emit('update:selection', e)"
-      @rendered:body="(e) => console.log('Rendered body', e)"
       :disable-item-selection="props.disableItemSelection"
       v-model:display-options="displayOptions"
       v-model:tableReference="tableReference"
