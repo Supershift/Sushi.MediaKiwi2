@@ -13,7 +13,7 @@ jobs:
       
       # Set VERSION variable from Release Tag
       - name: Set VERSION variable from Release Tag
-        run: echo "VERSION=${ github.event.release.tag_name }" >> $GITHUB_ENV
+        run: echo "VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
 
       # Checkout Main branch
       - name: 'Checkout Main'
