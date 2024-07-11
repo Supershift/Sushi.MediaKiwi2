@@ -73,4 +73,3 @@ Set the following config values in your MediaKiwi API application:
 - AzureAd:Instance "https://login.microsoftonline.com/"
 - AzureAd:TenantId "Directory (tenant) ID"
 - AzureAd:ClientId "Application (client) ID"
-- AzureAd:Audience "Application (client) ID"
