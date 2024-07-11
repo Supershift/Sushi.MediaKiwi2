@@ -10,8 +10,15 @@
     <Version>0.2.0-alpha1</Version>
     <Authors>Supershift</Authors>
     <Description>MediaKiwi is a portal generator using a hybrid of backend and frontend tools. This package provides everything to run a MediaKiwi backend API using SQL.</Description>
-    <PackageIcon>logo.png</PackageIcon>
+    <PackageIcon>logo.png</PackageIcon>    
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Sushi.MediaKiwi.DAL\Sushi.MediaKiwi.DAL.csproj" />

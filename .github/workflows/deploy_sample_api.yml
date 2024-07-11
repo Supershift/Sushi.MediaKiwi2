@@ -1,0 +1,53 @@
+name: Deploy SampleAPI to demo environment
+
+env:
+  AZURE_WEBAPP_NAME: 'mediakiwi-sample-api-tst'
+  AZURE_WEBAPP_PACKAGE_PATH: '.'
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  issues: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  build-sample-api:
+    runs-on: ubuntu-latest
+    environment:
+      name: tst
+    steps:
+
+      # Checkout code
+      - name: Checkout Main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      # Setup .NET
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0"
+
+      # Restore dependencies
+      - name: 'Restore Dependencies'
+        run: dotnet restore
+
+      # Build & Publish the solution
+      - name: 'Build & Publish'
+        run: |
+            dotnet build --no-restore --configuration Release
+            dotnet publish -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
+
+      # Deploy to Azure Web apps
+      - name: 'Deploy to Azure WebApp'
+        uses: azure/webapps-deploy@v3
+        with: 
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          slot-name: 'production'
+          publish-profile: ${{ secrets.TST_SAMPLE_API_PUBLISHSETTINGS }}
+          package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'

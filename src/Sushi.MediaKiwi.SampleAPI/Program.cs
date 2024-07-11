@@ -1,7 +1,7 @@
 using Microsoft.OpenApi.Models;
 using Sushi.MediaKiwi.SampleAPI;
 using Sushi.MediaKiwi.WebAPI;
-using Sushi.MediaKiwi;
+using Sushi.MediaKiwi.Core;
 using Sushi.MicroORM;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,7 +19,7 @@ var config = builder.Configuration;
  *   "AddCORS":  true
  * }
  */
-var connectionString = config.GetConnectionString("portal")!;
+var connectionString = config.GetConnectionString("portal") ?? "";
 var addCORS = config.GetValue<bool>("AddCORS");
 
 // Add services to the container.
@@ -64,7 +64,7 @@ services.AddMediaKiwi(
         // Add custom authorization policies
         options.AddPolicy(Sushi.MediaKiwi.SampleAPI.Constants.CustomPolicyName, policy =>
         {
-            policy.RequireRole([Sushi.MediaKiwi.SampleAPI.Constants.CustomRoleName, Sushi.MediaKiwi.WebAPI.Constants.AdminRoleName ]);
+            policy.RequireRole(Sushi.MediaKiwi.SampleAPI.Constants.CustomRoleName, Sushi.MediaKiwi.WebAPI.Constants.AdminRoleName);
         });
     });
 

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Sushi.MediaKiwi.Core;
 using Sushi.MicroORM;
 using System.Reflection;
 

@@ -33,7 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sushi.MediaKiwi.SystemInteg
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sushi.LanguageExtensions", "src\Sushi.LanguageExtensions\Sushi.LanguageExtensions.csproj", "{AF676C50-850A-48C1-B703-E75F7032B3ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sushi.MediaKiwi", "src\Sushi.MediaKiwi\Sushi.MediaKiwi.csproj", "{A3141895-470A-4184-9989-F99A19F73DA6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sushi.MediaKiwi.Core", "src\Sushi.MediaKiwi.Core\Sushi.MediaKiwi.Core.csproj", "{A3141895-470A-4184-9989-F99A19F73DA6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sushi.LanguageExtensions.Tests", "tests\Sushi.LanguageExtensions.Tests\Sushi.LanguageExtensions.Tests.csproj", "{1350DC1D-B377-460C-8A90-5FC26489264E}"
 EndProject
