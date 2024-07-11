@@ -31,7 +31,7 @@ export const useTableDisplayStore = defineStore("tableDisplay", () => {
   }
 
   function getDisplayOptions(tableRef?: string) {
-    if (displayOptionsKey.value && !displayOptions.value) {
+    if (displayOptionsKey.value && !displayOptions.value?.columns) {
       fetchDisplayOptions(tableRef);
     }
 
