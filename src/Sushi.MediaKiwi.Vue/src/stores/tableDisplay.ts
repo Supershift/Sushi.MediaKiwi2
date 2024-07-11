@@ -11,11 +11,6 @@ export const useTableDisplayStore = defineStore("tableDisplay", () => {
   const displayOptionsKey = computed(() => `${DISPLAY_OPTIONS_KEY}_${viewRef.value}`);
 
   async function setDisplayOptions(options: TableDisplayOptions, tableRef?: string) {
-    // generate the display options if it doesn't exist
-    if (!displayOptions.value) {
-      displayOptions.value = {};
-    }
-
     // Set the display options
     displayOptions.value = { ...options };
 
@@ -31,12 +26,8 @@ export const useTableDisplayStore = defineStore("tableDisplay", () => {
   }
 
   function getDisplayOptions(tableRef?: string) {
-    if (displayOptionsKey.value && !displayOptions.value?.columns) {
+    if (displayOptionsKey.value) {
       fetchDisplayOptions(tableRef);
-    }
-
-    if (displayOptions.value) {
-      return displayOptions.value;
     }
 
     return displayOptions.value || {};
@@ -64,9 +55,9 @@ export const useTableDisplayStore = defineStore("tableDisplay", () => {
     displayOptions.value = tableDisplayOptions;
   }
 
-  if (!displayOptions.value) {
-    fetchDisplayOptions();
-  }
+
+  fetchDisplayOptions();
+
 
   return { displayOptions, setDisplayOptions, getDisplayOptions };
 });
