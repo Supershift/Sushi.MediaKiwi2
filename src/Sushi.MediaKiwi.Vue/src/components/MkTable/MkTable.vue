@@ -313,16 +313,20 @@
       <template #bottom>
         <v-divider />
         <div class="mk-table__footer">
-          <MkDisplayOptions v-if="hasDisplayOptions" v-model:display-options="displayOptions" v-model:table-reference="tableReference" />
-          <MkPagination
-            :model-value="currentPagination"
-            :paging-result="pagingResult"
-            :mode="paginationMode"
-            :page-size-options="pageSizes"
-            :page-tracking="props?.pageTracking"
-            :hide-pagination="!showPagination"
-            @update:model-value="pageChanged"
-          />
+          <div v-if="hasDisplayOptions" class="mk-table__footer-item">
+            <MkDisplayOptions v-model:display-options="displayOptions" v-model:table-reference="tableReference" />
+          </div>
+          <div v-if="showPagination" class="mk-table__footer-item">
+            <MkPagination
+              :model-value="currentPagination"
+              :paging-result="pagingResult"
+              :mode="paginationMode"
+              :page-size-options="pageSizes"
+              :page-tracking="props?.pageTracking"
+              :hide-pagination="!showPagination"
+              @update:model-value="pageChanged"
+            />
+          </div>
         </div>
       </template>
     </MkTableView>
