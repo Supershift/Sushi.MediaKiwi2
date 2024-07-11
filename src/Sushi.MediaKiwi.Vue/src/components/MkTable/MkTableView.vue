@@ -49,7 +49,6 @@
     (e: "click:row", value: T): void;
     (e: "update:sorting", value?: Sorting<T>): void;
     (e: "update:selection", value?: T[]): void;
-    (e: "rendered:body", value: any): void;
   }>();
 
   // define slots
@@ -202,9 +201,7 @@
   }
 
   onMounted(() => {
-    const observer = new MutationObserver((mutations: MutationRecord[]) => {
-      loadDisplayOptions();
-    });
+    const observer = new MutationObserver(loadDisplayOptions);
     observer.observe(tbodyNode.value, {
       childList: true,
       subtree: true,
