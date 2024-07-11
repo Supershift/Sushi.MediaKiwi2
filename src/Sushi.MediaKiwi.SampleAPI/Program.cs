@@ -1,7 +1,7 @@
 using Microsoft.OpenApi.Models;
 using Sushi.MediaKiwi.SampleAPI;
 using Sushi.MediaKiwi.WebAPI;
-using Sushi.MediaKiwi2;
+using Sushi.MediaKiwi.Core;
 using Sushi.MicroORM;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -2,15 +2,7 @@ name: dotnet
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
-    paths:
-      - ".github/workflows/pr_dotnet.yml"
-      - "src/Sushi.MediaKiwi.AzureFunction/**/*"
-      - "src/Sushi.MediaKiwi.DAL/**/*"
-      - "src/Sushi.MediaKiwi.SampleAPI/**/*"
-      - "src/Sushi.MediaKiwi.Services/**/*"
-      - "src/Sushi.MediaKiwi.WebAPI/**/*"
-      - "tests/**/*"
+    types: [opened, synchronize, reopened]    
 
 # Add "id-token" with the intended permissions.
 permissions:

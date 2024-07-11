@@ -1,4 +1,4 @@
-name: Deploy SampleAPI to TEST environment
+name: Deploy SampleAPI to demo environment
 
 env:
   AZURE_WEBAPP_NAME: 'mediakiwi-sample-api-tst'
