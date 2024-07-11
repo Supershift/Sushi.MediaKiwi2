@@ -16,8 +16,9 @@ on:
 permissions:
   contents: "read"
   id-token: "write"
-  # Required to put a comment into the pull-request
   pull-requests: write
+  actions: read
+  security-events: write
 
 jobs:
   test:
@@ -57,6 +58,22 @@ jobs:
       # Build the solution
       - name: Build
         run: dotnet build --no-restore
+
+      # Run Trivy vulnerability scanner
+      # - name: Run Trivy vulnerability scanner
+      #   uses: aquasecurity/trivy-action@0.21.0
+      #   with:
+      #     scan-type: 'fs'
+      #     ignore-unfixed: true
+      #     format: 'sarif'
+      #     output: 'trivy-results.sarif'
+      #     severity: 'HIGH,CRITICAL'
+
+      # # Upload Trivy scan results to GitHub Security tab
+      # - name: Upload Trivy scan results to GitHub Security tab
+      #   uses: github/codeql-action/upload-sarif@v3
+      #   with:
+      #     sarif_file: 'trivy-results.sarif'
 
       # Run tests
       - name: Test
