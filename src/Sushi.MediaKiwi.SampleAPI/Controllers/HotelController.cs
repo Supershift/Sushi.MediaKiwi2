@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Sushi.MediaKiwi.SampleAPI.Service;
 using Sushi.MediaKiwi.SampleAPI.Service.Model;
+using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MediaKiwi.WebAPI;
 using Sushi.MediaKiwi.WebAPI.Paging;
@@ -11,12 +12,10 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
     public class HotelController : SampleControllerBase
     {
         private readonly HotelService _hotelService;
-        private readonly PagingRetriever _pagingRetriever;
 
-        public HotelController(HotelService hotelService, PagingRetriever pagingRetriever)
+        public HotelController(HotelService hotelService)
         {
             _hotelService = hotelService;
-            _pagingRetriever = pagingRetriever;
         }
 
         /// <summary>
@@ -24,11 +23,9 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [QueryStringPaging]
-        public async Task<ActionResult<ListResult<Hotel>>> GetHotels([FromQuery] string? countryCode, [FromQuery] bool? isActive)
+        public async Task<ActionResult<ListResult<Hotel>>> GetHotels(GetHotelsQuery query)
         {
-            var pagingValues = _pagingRetriever.GetPaging();
-            var result = await _hotelService.GetAllAsync(pagingValues, countryCode, isActive);
+            var result = await _hotelService.GetAllAsync(query);
             return this.CreateResponse(result);
         }
 
@@ -83,5 +80,12 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
             var result = await _hotelService.SaveAsync(id, request);
             return this.CreateResponse(result);
         }
+    }
+
+    public class GetHotelsQuery
+    {
+        public PagingValues Page { get; set; } = null!;
+        public string? CountryCode { get; set; }
+        public bool? IsActive { get; set; }
     }
 }

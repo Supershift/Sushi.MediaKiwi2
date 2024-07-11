@@ -16,6 +16,7 @@ using Sushi.MediaKiwi.Services;
 
 namespace Sushi.MediaKiwi.WebAPI.UnitTests.Paging
 {
+    [Obsolete("Remove this test once QueryStringPagingAttribute is removed")]
     public class QueryStringPagingAttributeTest
     {
         [Fact]

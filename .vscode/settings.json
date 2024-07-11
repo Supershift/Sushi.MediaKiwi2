@@ -6,9 +6,7 @@
   "azureFunctions.preDeployTask": "npm prune (functions)",
   "debug.internalConsoleOptions": "neverOpen",
   "dotnet.defaultSolution": "Sushi.MediaKiwi.sln",
-  "editor.codeActionsOnSave": {
-    "source.fixAll.stylelint": "explicit"
-  },
+
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "prettier.configPath": ".prettierrc.json",

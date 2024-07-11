@@ -6,6 +6,10 @@
   import { container } from "tsyringe";
   import { RouterManager } from "@/router/routerManager";
   import { useI18next } from "@/composables/useI18next";
+  import { useMediakiwiVueOptions } from "@/composables/useMediakiwiVueOptions";
+  import { computed } from "vue";
+
+  const { signIn } = useMediakiwiVueOptions();
 
   // inject dependencies
   const isAuthenticated = useIsAuthenticated();
@@ -24,14 +28,36 @@
     const navigation = useNavigation();
     navigation.navigateToHome();
   }
+
+  // computed properties
+  const image = computed(() => signIn?.image);
+  const color = computed(() => signIn?.color);
+
+  // base style for if the background image configuration is set
+  const baseBgImageStyle = {
+    height: "100%",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+  };
+
+  // generate style based on the configuration
+  const styles = computed(() => {
+    if (!isAuthenticated.value) {
+      if (image.value) return { ...baseBgImageStyle, backgroundImage: `url(${image.value})` };
+      if (color.value) return { backgroundColor: `${color.value}` };
+    }
+    return { height: "100%" };
+  });
 </script>
 <template>
-  <MkSignIn v-if="!isAuthenticated" class="mk-view--signin">
-    <template #main>
-      {{ t("Main") }}
-    </template>
-    <template #footer>
-      {{ t("Footer") }}
-    </template>
-  </MkSignIn>
+  <div id="mk-bg-image d-flex align-center justify-center" :style="styles">
+    <MkSignIn v-if="!isAuthenticated" class="mk-view--signin">
+      <template #main>
+        {{ t("Main") }}
+      </template>
+      <template #footer>
+        {{ t("Footer") }}
+      </template>
+    </MkSignIn>
+  </div>
 </template>

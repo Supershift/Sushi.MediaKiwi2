@@ -8,6 +8,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 // get config
 var config = builder.Configuration;
+
+/*
+ * If portal in the connectionstring is null a secrets.json should be set
+ * Example:
+ * {
+ *   "ConnectionStrings": {
+ *     "portal": "Server=localhost;Initial Catalog=mediakiwi;Persist Security Info=False;Integrated Security=SSPI;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;"
+ *   },
+ *   "AddCORS":  true
+ * }
+ */
 var connectionString = config.GetConnectionString("portal") ?? "";
 var addCORS = config.GetValue<bool>("AddCORS");
 

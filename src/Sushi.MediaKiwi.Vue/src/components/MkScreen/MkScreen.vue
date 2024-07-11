@@ -1,11 +1,27 @@
 <script setup lang="ts">
   import { MkBreadcrumbs } from "@/components/MkBreadcrumbs/";
+  import { useNavigation } from "@/composables/useNavigation";
+  import { computed } from "vue";
+
+  const navigation = useNavigation();
+
+  // Extend this in the future to include more pages?
+  const isPageOnSignIn = computed(() => !navigation?.currentNavigationItem.value?.view?.id);
+
+  const mkScreenClasses = computed(() => {
+    return {
+      "mk-screen": true,
+      "pa-4": !isPageOnSignIn.value,
+      "pa-md-10": !isPageOnSignIn.value,
+      "pt-md-4": !isPageOnSignIn.value,
+    };
+  });
 </script>
 
 <template>
   <v-main>
     <mk-breadcrumbs :sticky="true" />
-    <div class="pa-4 pa-md-10 pt-md-4 mk-screen">
+    <div :class="mkScreenClasses">
       <router-view v-slot="{ Component }">
         <suspense timeout="0">
           <template #default>

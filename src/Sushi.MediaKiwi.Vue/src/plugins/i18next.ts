@@ -21,7 +21,7 @@ export default {
     // add http backend
     const httpApi = new HttpApi();
     httpApi.init(null, {
-      crossDomain: true,
+      crossDomain: true,    
       loadPath: `${mediakiwiOptions.apiBaseUrl}/translations/{{lng}}/{{ns}}`,
       addPath: `${mediakiwiOptions.apiBaseUrl}/translations/{{lng}}/{{ns}}`,
       customHeaders: () => {

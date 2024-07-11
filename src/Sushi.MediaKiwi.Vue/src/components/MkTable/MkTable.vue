@@ -57,6 +57,8 @@
       emptyStateSubtitle?: string;
       /** Hides the bulk action bar while keeing the checkboxes intact */
       hideBulkActionBar?: boolean;
+      /** 'Tracks' the item the user viewed when changing pageSize, when true calculates this instead of resetting pageIndex to 0 */
+      pageTracking?: boolean;
       /** Callback to disable the selection checkbox for a row based on specific criteria */
       disableItemSelection?: (entity: T) => boolean;
     }>(),
@@ -121,7 +123,8 @@
   const inProgress = ref(false);
   const mkTableViewComponent = ref();
   const pageSizes = ref([...defaultPageSizeOptions]);
-  if (currentPagination.value?.pageSize) {
+  // Add the current page size if present to the pageSizes array, only if its above the defaultPageSize (10)
+  if (currentPagination.value?.pageSize && currentPagination.value?.pageSize > defaultPageSize) {
     pageSizes.value.push(currentPagination.value.pageSize);
   }
 
@@ -305,6 +308,7 @@
           :paging-result="pagingResult"
           :mode="paginationMode"
           :page-size-options="pageSizes"
+          :page-tracking="props?.pageTracking"
           @update:model-value="pageChanged"
         />
       </template>
@@ -318,8 +322,8 @@
         :item-view-id="props.itemViewId"
         :new-title="props.newTitle"
         :new-emit="props.newEmit"
-        :title="props.emptyStateTitle"
-        :subtitle="props.emptyStateSubtitle"
+        :headline="props.emptyStateTitle"
+        :text="props.emptyStateSubtitle"
         @click:new="emit('click:new', $event)"
       />
     </template>

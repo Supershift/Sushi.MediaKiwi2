@@ -30,8 +30,8 @@
   // define reactive variables
   const currentPagination = ref<Paging>({
     pageIndex: 0,
-    pageSize: 5,
-  });
+    pageSize: 11,
+  }); // demos 11 items per page (higher than default 10), also adds to the current list
   const hotels = ref<ListResult<Hotel>>();
   const countries = ref<Country[]>();
 
@@ -39,7 +39,7 @@
   function srpIcon(item: Hotel): TableCellIcon {
     return {
       position: item.srp ? TableIconPosition.Append : TableIconPosition.Prepend,
-      iconName: item.srp ? "$accountCheckOutline" : IconsLibrary.accountCircle,
+      iconName: item.srp ? IconsLibrary.checkCircleOutline : IconsLibrary.accountCircle,
       tooltip: item.srp ? "SRP" : "NoSRP",
       label: item.srp ? "SRP correct" : "Define SRP",
     };

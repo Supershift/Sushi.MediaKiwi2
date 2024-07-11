@@ -3,20 +3,6 @@
 namespace Sushi.LanguageExtensions
 {
     /// <summary>
-    /// Defines an interface for composite specifications
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <typeparam name="TError"></typeparam>
-    public interface ICompositeSpecification<T, TError> : ISpecification<T, AggregateError>
-        where TError : Error
-    {
-        /// <summary>
-        /// Specifications that are combined in this composite specification.
-        /// </summary>
-        ReadOnlyCollection<ISpecification<T, TError>> Specifications { get; }
-    }
-
-    /// <summary>
     /// Represents a composite specifications, i.e. a specification which combines multiple other specifications.
     /// </summary>
     /// <typeparam name="T"></typeparam>

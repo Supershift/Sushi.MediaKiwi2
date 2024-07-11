@@ -42,7 +42,7 @@
         public static implicit operator Result<TError>(TError error) => new Result<TError>(error);
 
         /// <summary>
-        ///
+        /// Creates a <see cref="Result{Error}"/> from a <see cref="Result{TError}"/> object.
         /// </summary>
         public static implicit operator Result<Error>(Result<TError> result) =>
             result.IsSuccess ? new Result<Error>() : new Result<Error>(result.Error!);
@@ -112,7 +112,7 @@
         public static implicit operator Result<TValue, TError>(TError error) => new Result<TValue, TError>(error);
 
         /// <summary>
-        ///
+        /// Creates a <see cref="Result{TValue, Error}"/> from a <see cref="Result{TValue, TError}"/> object.
         /// </summary>
         public static implicit operator Result<TValue, Error>(Result<TValue, TError> result) =>
             result.IsSuccess ? new Result<TValue, Error>(result.Value!) : new Result<TValue, Error>(result.Error!);
@@ -120,7 +120,7 @@
         /// <summary>
         /// If the operation was successful, <paramref name="Success"/> is executed. If it failed, <paramref name="Fail"/> is executed.
         /// </summary>
-        public void Match(Action<TValue> Success, Action<TError> Fail)
+        public void Match(Action<TValue> Success, Action<TError> Fail) 
         {
             if (IsSuccess)
             {

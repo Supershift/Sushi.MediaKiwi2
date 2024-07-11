@@ -40,11 +40,11 @@ namespace Sushi.MediaKiwi.SystemIntegrationTests.Supporting
                 // start container
                 using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(5));
                 await _msSqlContainer.StartAsync();
-                connectionString = _msSqlContainer.GetConnectionString();
+                var bacpacImportConnectionString = _msSqlContainer.GetConnectionString();
 
                 // import bacpac
                 var package = BacPackage.Load("TestValues/mediakiwi.bacpac");
-                var dacService = new DacServices(connectionString);
+                var dacService = new DacServices(bacpacImportConnectionString);
                 dacService.ImportBacpac(package, dbName, cts.Token);
 
                 // prepare connection string to use the database

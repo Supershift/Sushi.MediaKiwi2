@@ -5,3 +5,5 @@ export { default as MkTableFilterRadioGroup } from "./MkTableFilterRadioGroup.vu
 export { default as MkTableFilterDateRangePicker } from "./MkTableFilterDateRangePicker.vue";
 export { default as MkTableFilterSelectMultipleCheckbox } from "./MkTableFilterSelectMultipleCheckbox.vue";
 export { default as MkTableFilterSelectMultiple } from "./MkTableFilterSelectMultiple.vue";
+export { default as MkTableFilterDatePicker } from "./MkTableFilterDatePicker.vue";
+export { default as MkTableFilterOperator } from "./MkTableFilterOperator.vue";

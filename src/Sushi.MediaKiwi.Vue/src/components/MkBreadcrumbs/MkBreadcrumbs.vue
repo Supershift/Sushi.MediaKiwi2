@@ -63,9 +63,12 @@
     }
     return false;
   }
+
+  /** Check if the breadcrumbs have any items and if all have a name */
+  const hasBreadcrumbs = computed(() => breadcrumbs.value.length && breadcrumbs.value.some((x) => x.name));
 </script>
 <template>
-  <v-card v-if="breadcrumbs?.length" :class="['breadcrumbs-container ml-0 pa-4 pa-md-10 pb-0', { 'v-breadcrumbs--sticky': props.sticky }]">
+  <v-card v-if="hasBreadcrumbs" :class="['breadcrumbs-container ml-0 pa-4 pa-md-10 pb-0', { 'v-breadcrumbs--sticky': props.sticky }]">
     <div v-if="showBackButton" class="breadcrumb-title-container">
       <mk-back-button />
       <div class="v-breadcrumbs-item text-title-large d-inline-block text-truncate">
@@ -83,7 +86,7 @@
             :active="isCurrentItem(index)"
             :disabled="isCurrentItem(index)"
             class="text-title-large text-container"
-            :class="{ 'text-truncate d-inline-block': !isCurrentItem(index) }"
+            :class="{ 'text-truncate d-inline-block': !isCurrentItem(index), 'pl-2': isCurrentItem(index) && breadcrumbs?.length === 1 }"
             size="unset"
             :title="item.name"
             @click.stop="hasScreen(item) ? onItemClick(item) : {}"

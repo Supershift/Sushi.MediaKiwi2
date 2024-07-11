@@ -21,12 +21,12 @@ const modules: Record<string, RouteComponent> = {
   b: <Component>{},
 };
 const navigationItems: NavigationItem[] = [
-  { id: 1, viewId: "a", path: "/orders", name: "", sectionId: 1 },
-  { id: 2, viewId: "b", path: "/customers", name: "", sectionId: 1 },
+  { id: "1", viewId: "a", path: "/orders", name: "", sectionId: "1" },
+  { id: "2", viewId: "b", path: "/customers", name: "", sectionId: "1" },
 ];
 const screens: View[] = [
-  { id: "a", sectionId: 1, componentKey: "a", name: "screen a" },
-  { id: "b", sectionId: 1, componentKey: "b", name: "screen b" },
+  { id: "a", componentKey: "a", name: "screen a" },
+  { id: "b", componentKey: "b", name: "screen b" },
 ];
 const options: MediakiwiVueOptions = {
   apiBaseUrl: "",

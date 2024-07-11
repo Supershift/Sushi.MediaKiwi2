@@ -1,19 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Primitives;
 using Moq;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.WebAPI.Paging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.WebAPI.UnitTests.Paging
 {
     public class PagingRetrieverTest
     {
         [Fact]
+        [Obsolete("Remove this test once GetPaging is removed.")]
         public void GetPagingTest()
         {
             // arrange
@@ -39,6 +34,7 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests.Paging
         }
 
         [Fact]
+        [Obsolete("Remove this test once GetPaging is removed.")]
         public void GetPagingTest_Default()
         {
             // arrange

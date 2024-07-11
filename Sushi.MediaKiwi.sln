@@ -35,6 +35,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sushi.LanguageExtensions", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sushi.MediaKiwi.Core", "src\Sushi.MediaKiwi.Core\Sushi.MediaKiwi.Core.csproj", "{A3141895-470A-4184-9989-F99A19F73DA6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sushi.LanguageExtensions.Tests", "tests\Sushi.LanguageExtensions.Tests\Sushi.LanguageExtensions.Tests.csproj", "{1350DC1D-B377-460C-8A90-5FC26489264E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,10 @@ Global
 		{A3141895-470A-4184-9989-F99A19F73DA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3141895-470A-4184-9989-F99A19F73DA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3141895-470A-4184-9989-F99A19F73DA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1350DC1D-B377-460C-8A90-5FC26489264E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1350DC1D-B377-460C-8A90-5FC26489264E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1350DC1D-B377-460C-8A90-5FC26489264E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1350DC1D-B377-460C-8A90-5FC26489264E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -95,6 +101,7 @@ Global
 		{3FD7C698-819F-4B34-8C38-B9DF456AC660} = {F5870DA1-CB60-40F3-83D7-C1E8C106587C}
 		{5F439C65-9412-4402-91BC-C7E90C455A84} = {F5870DA1-CB60-40F3-83D7-C1E8C106587C}
 		{498F2EA2-3C53-468B-B4E2-19C16A3472B2} = {F5870DA1-CB60-40F3-83D7-C1E8C106587C}
+		{1350DC1D-B377-460C-8A90-5FC26489264E} = {F5870DA1-CB60-40F3-83D7-C1E8C106587C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C0DA249-319F-4B70-AC2F-DD5AB1CFB211}

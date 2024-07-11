@@ -13,3 +13,4 @@ export type { Sorting } from "./Sorting";
 export type { MoneyValue } from "./MoneyValue";
 export type { Locale } from "./Locale";
 export type { Translation } from "./Translation";
+export type { EntraSettings } from "./EntraSettings";
