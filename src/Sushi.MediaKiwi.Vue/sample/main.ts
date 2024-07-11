@@ -49,7 +49,8 @@ const mediakiwiOptions = <MediakiwiVueOptions>{
   },
   signIn: {
     dark: {
-      color: "tertiary",
+      image: "./basic-unsplash.jpg",
+      color: "green",
     },
     light: {
       image: "./flowers.png",
