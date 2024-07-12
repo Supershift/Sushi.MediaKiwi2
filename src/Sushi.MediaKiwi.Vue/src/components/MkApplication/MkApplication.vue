@@ -11,8 +11,6 @@
   defineProps<{
     /** Hide the avatar in the Account overflow menu */
     hideAvatar?: boolean;
-    /** Hide the app bar */
-    hideAppBar?: boolean;
   }>();
 
   // define slots
@@ -35,7 +33,7 @@
   <v-card>
     <v-layout v-side-sheet :full-height="true" class="mk-layout">
       <mk-suspense>
-        <v-app-bar v-if="!isAuthenticated && !hideAppBar">
+        <v-app-bar>
           <mk-navigation-icon />
           <mk-logo-lockup>
             <template v-if="slots.logo" #logo>
