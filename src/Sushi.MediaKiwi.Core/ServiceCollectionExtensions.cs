@@ -4,14 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Sushi.MediaKiwi.DAL;
 using Sushi.MediaKiwi.WebAPI;
-using Sushi.MicroORM;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Sushi.MediaKiwi
+namespace Sushi.MediaKiwi.Core
 {
     /// <summary>
     /// Extends <see cref="IServiceCollection"/> with methods to add MediaKiwi.
