@@ -1,21 +1,23 @@
 <script setup lang="ts">
   import SampleSideSheet from "./../components/SampleSideSheet.vue";
   import { reactive, ref } from "vue";
-  import { TableMap, TableFilter, Sorting, Paging, TableFilterType, SortDirection, IconsLibrary, TableSortingOptions } from "@/models";
+  import { TableFilter, Sorting, Paging, TableFilterType, SortDirection, IconsLibrary, TableColumn, IListResult } from "@/models";
   import { MkTable, MkOverflowMenuIcon, MkTd, MkTh } from "@/components";
   import type { SampleData } from "@sample/models/SampleData";
   import { SampleDataConnector } from "@sample/services/SampleDataConnector";
   import { container } from "tsyringe";
   import { ICustomer } from "./../models/Customer";
   import { useI18next } from "@/composables";
-  import { watch } from "vue";
 
   // inject dependencies
   const sampleDataConnector = container.resolve(SampleDataConnector);
   const { formatDate } = await useI18next();
 
   // define state
-  const currentPagination = ref<Paging>({});
+  const currentPagination = ref<Paging>({
+    pageIndex: 0,
+  });
+  const displayOptions = ref<TableColumn[]>();
 
   const state = reactive({
     selectedSortOption: <Sorting<SampleData>>{
@@ -23,7 +25,7 @@
       sortDirection: SortDirection.Desc,
     },
     selectedTableRows: <SampleData[]>[],
-    sampleData: <SampleData[]>[],
+    sampleData: <IListResult<SampleData>>{},
     refData: <ICustomer>{
       id: 1,
       name: "Jane Doe",
@@ -94,11 +96,14 @@
   async function LoadData() {
     // get the data, using the sorting option
     const result = await sampleDataConnector.GetAll(filters.value.country.selectedValue?.value, state.selectedSortOption);
-    state.sampleData = result;
+    state.sampleData.result = result;
+    // pagination and display options will only display when pageCount is not 0 !!!
+    state.sampleData.pageCount = 1;
+    state.sampleData.totalCount = result.length;
 
     // Add item as pre-selection
-    if (state.sampleData?.length) {
-      state.selectedTableRows = [state.sampleData[0]];
+    if (state.sampleData?.result.length) {
+      state.selectedTableRows = [state.sampleData.result[0]];
     }
   }
 
@@ -113,12 +118,15 @@
     v-model:selection="state.selectedTableRows"
     v-model:filters="filters"
     v-model:current-pagination="currentPagination"
-    :data="state.sampleData"
-    :item-id="(item) => item.id"
+    :data="state.sampleData.result"
+    :api-result="state.sampleData"
+    :item-id="(item: ICustomer) => item.id"
     @load="LoadData"
     @click:row="onCustomerClick"
     hide-bulk-action-bar
     :disable-item-selection="(item) => item.id % 2 !== 0"
+    v-model:display-options="displayOptions"
+    pagination-mode="controls"
   >
     <template #bulkActionBar="{ confirm }">
       <v-btn @click="confirm(download)"><v-icon :icon="IconsLibrary.trayArrowDown"></v-icon> Download</v-btn>
