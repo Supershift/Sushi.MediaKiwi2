@@ -48,8 +48,15 @@ const mediakiwiOptions = <MediakiwiVueOptions>{
     time: { hour: "2-digit", minute: "2-digit" }, // Example 09:50 AM or 21:50
   },
   signIn: {
-    image: "./basic-unsplash.jpg",
-  },
+    dark: {
+      image: "./basic-unsplash.jpg",
+      color: "green",
+    },
+    light: {
+      image: "./flowers.png",
+      color: "rgba(100, 142, 239, 0.6)",
+    }
+  }
 };
 
 const { fillEntraSettings } = useEntraSettings();
