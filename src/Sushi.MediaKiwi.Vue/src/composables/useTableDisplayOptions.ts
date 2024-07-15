@@ -57,22 +57,20 @@ export function useTableDisplayOptions() {
   function registerBodyElements(columns: TableColumn[], tableRef?: string) {
     const rows = document.querySelectorAll(".mk-table-display-options tbody tr");
 
+    // Loop through each row and set the data-display-options attribute
     rows.forEach((row) => {
-      const tds = row.querySelectorAll("td");
-      const condition = tds.length === columns.length;
-      if (!condition) {
-        return; // the columns and the tds are not the same length
-      } else {
-        row.querySelectorAll("td").forEach((td, index) => {
-          const column = columns.find((c) => c.index === index);
-          if (column) {
-            td.setAttribute("data-display-options-id", column.id);
+      // Loop through each td and set the data-display-options attribute
+      row.querySelectorAll("td").forEach((td, index) => {
+        const column = columns.find((c) => c.index === index);
 
-            // Set the inital visibility
-            setColumnVisibility(columns, column, tableRef);
-          }
-        });
-      }
+        if (column) {
+          td.setAttribute("data-display-options-id", column.id);
+
+          // Set the inital visibility
+          setColumnVisibility(columns, column, tableRef);
+        }
+      });
+
     });
   }
 
@@ -89,9 +87,6 @@ export function useTableDisplayOptions() {
       const element = headerNodes[column.index];
       if (element) {
         element.setAttribute("data-display-options-id", column.id);
-
-        // Set the inital visibility
-        // setColumnVisibility(columns, column, tableRef);
       }
     });
   }
@@ -101,9 +96,12 @@ export function useTableDisplayOptions() {
    * @returns Array<TableColumn> an array of table columns generated from the table headers
    */
   function generateDisplayColumns(tableRef?: string): Array<TableColumn> {
-    const headerNodes = getHeaderNodes();
-
-    return Object.entries(headerNodes).map(([key, value]) => {
+    const headerNodes = getHeaderNodes(); // collect the headers
+    const entries = Object.entries(headerNodes).filter((x, idx) => {
+      const val = getTextNode(x[1])?.nodeValue || ""; // get the element value in the record
+      return val ? (idx !== 0 ? true : false) : false; // filter out the first column if its name is empty (the checkbox column)
+    });
+    return entries.map(([key, value]) => {
       const name = getTextNode(value)?.nodeValue || "";
       return <TableColumn>{
         index: parseInt(key),
@@ -227,7 +225,7 @@ export function useTableDisplayOptions() {
 
     const rows = document.querySelectorAll(`.mk-table-display-options tbody tr`);
     rows.forEach((row) => {
-      row.querySelectorAll(`td[data-display-options-id="${col.id}"]`).forEach((td, index) => {
+      row.querySelectorAll(`td[data-display-options-id="${col.id}"]`).forEach((td) => {
         if (col.visible) {
           td.removeAttribute("mk-hidden");
         } else {
