@@ -41,11 +41,13 @@ namespace Sushi.MediaKiwi.WebAPI
             // add mk dependencies
             services.TryAddTransient<Sorting.SortingRetriever>();
 
-            // Use custom authorization options
             services.AddAuthorization(options =>
             {
-                authorizationOptions?.Invoke(options);
+                // Define admin role policy
                 options.AddPolicy(Constants.AdminPolicyName, policy => policy.RequireRole(Constants.AdminRoleName));
+
+                // Use custom authorization options
+                authorizationOptions?.Invoke(options);
             });
 
             // add authentication
