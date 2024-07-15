@@ -1,4 +1,4 @@
-name: NuGet Publish - Sushi.MediaKiwi
+name: NuGet Publish - Sushi.LanguageExtensions
 
 on: workflow_dispatch
 
