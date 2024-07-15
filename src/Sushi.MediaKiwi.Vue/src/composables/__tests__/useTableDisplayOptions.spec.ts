@@ -196,7 +196,7 @@ describe('useTableDisplayOptions', () => {
       `;
 
       // act
-      const columns = generateDisplayColumns();
+      const columns = generateDisplayColumns("TetsRef");
 
       // assert
       expect(columns.length).toBe(2);
