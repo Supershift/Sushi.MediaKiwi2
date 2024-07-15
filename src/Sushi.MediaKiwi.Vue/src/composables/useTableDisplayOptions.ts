@@ -98,8 +98,11 @@ export function useTableDisplayOptions() {
   function generateDisplayColumns(tableRef?: string): Array<TableColumn> {
     const headerNodes = getHeaderNodes(); // collect the headers
     const entries = Object.entries(headerNodes).filter((headerElement) => {
-      const nodeValue = getTextNode(headerElement[1])?.nodeValue; // get the element value in the record
-      return nodeValue ?? false; // filter out the first column if its name is empty (the checkbox column)
+      if (headerElement && headerElement[1]) {
+        const nodeValue = getTextNode(headerElement[1])?.nodeValue; // get the element value in the record
+        return nodeValue ?? false; // filter out the first column if its name is empty (the checkbox column)
+      }
+      return false
     });
     return entries.map(([key, value]) => {
       const name = getTextNode(value)?.nodeValue || "";
