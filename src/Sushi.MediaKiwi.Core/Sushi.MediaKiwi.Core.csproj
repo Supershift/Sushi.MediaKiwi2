@@ -7,7 +7,7 @@
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>0.2.0-alpha1</Version>
+    <Version>1.0.0</Version>
     <Authors>Supershift</Authors>
     <Description>MediaKiwi is a portal generator using a hybrid of backend and frontend tools. This package provides everything to run a MediaKiwi backend API using SQL.</Description>
     <PackageIcon>logo.png</PackageIcon>    

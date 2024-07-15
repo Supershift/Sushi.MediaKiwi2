@@ -27,14 +27,26 @@ jobs:
         with:
           dotnet-version: "8.0"
 
-      # Create NuGet Package
-      - name: 'Create NuGet Package'
+      # Create NuGet Packages
+      - name: 'Create DAL NuGet Package'
+        working-directory: src/Sushi.MediaKiwi.DAL
+        run: dotnet pack --configuration Release /p:Version=${VERSION} --output ../nupkgs
+
+      - name: 'Create Services NuGet Package'
+        working-directory: src/Sushi.MediaKiwi.Services
+        run: dotnet pack --configuration Release /p:Version=${VERSION} --output ../nupkgs
+
+      - name: 'Create WebAPI NuGet Package'
+        working-directory: src/Sushi.MediaKiwi.WebAPI
+        run: dotnet pack --configuration Release /p:Version=${VERSION} --output ../nupkgs
+
+      - name: 'Create Core NuGet Package'
         working-directory: src/Sushi.MediaKiwi.Core
-        run: dotnet pack --configuration Release /p:Version=${VERSION} --output .
+        run: dotnet pack --configuration Release /p:Version=${VERSION} --output ../nupkgs
       
-      # Push NuGet Package
+      # Push NuGet Packages
       - name: Push to NuGet
-        working-directory: src/Sushi.MediaKiwi.Core
-        run: dotnet nuget push Sushi.MediaKiwi.Core.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_TOKEN}
+        working-directory: src/nupkgs
+        run: dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_TOKEN}
         env:
           NUGET_TOKEN: ${{ secrets.MEDIAKIWI_NUGET_2023 }}
