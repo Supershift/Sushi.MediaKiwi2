@@ -1,0 +1,33 @@
+name: NuGet Publish - Sushi.MediaKiwi
+
+on: workflow_dispatch
+
+jobs:
+  publish-mediakiwi:
+    name: 'Publish Sushi.LanguageExtensions NuGet Package'
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout Main branch
+      - name: 'Checkout Main'
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          
+      # Setup .NET
+      - name: 'Setup .NET'
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0"
+
+      # Create NuGet Package
+      - name: 'Create DAL NuGet Package'
+        working-directory: src/Sushi.LanguageExtensions
+        run: dotnet pack --configuration Release --output sushi-langext
+      
+      # Push NuGet Packages
+      - name: Push to NuGet
+        working-directory: src/Sushi.LanguageExtensions/sushi-langext
+        run: dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_TOKEN}
+        env:
+          NUGET_TOKEN: ${{ secrets.MEDIAKIWI_NUGET_2023 }}
