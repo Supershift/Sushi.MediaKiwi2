@@ -22,7 +22,7 @@ namespace Sushi.MediaKiwi.WebAPI
             {
                 ClientId = azureAdSection.GetSection("ClientId")?.Value ?? "",
                 TenantId = azureAdSection.GetSection("TenantId")?.Value ?? "",
-                Audience = azureAdSection.GetSection("Audience")?.Value ?? "",
+                Audience = azureAdSection.GetSection("Audience")?.Value,
                 Instance = azureAdSection.GetSection("Instance")?.Value ?? "",
             };
         }

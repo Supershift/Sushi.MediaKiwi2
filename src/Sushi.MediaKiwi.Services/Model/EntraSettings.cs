@@ -11,13 +11,13 @@ namespace Sushi.MediaKiwi.Services.Model
         /// The client ID for the application, as copied from the Azure portal
         /// </summary>
         [SwaggerSchema(ReadOnly = true)]
-        public required string ClientId { get; set; }
+        public required string ClientId { get; init; }
 
         /// <summary>
         /// The tenant GUID obtained from the Azure portal to sign in users in the organization. You can also use a domain name.
         /// </summary>
         [SwaggerSchema(ReadOnly = true)]
-        public required string TenantId { get; set; }
+        public required string TenantId { get; init; }
 
         /// <summary>
         /// The audience in the tenant ID. The options vary depending on whether your app is single tenant or multitenant.
@@ -26,7 +26,7 @@ namespace Sushi.MediaKiwi.Services.Model
         /// consumers to sign in users with a Microsoft personal account only
         /// </summary>
         [SwaggerSchema(ReadOnly = true)]
-        public required string Audience { get; set; }
+        public required string? Audience { get; init; }
 
         /// <summary>
         /// The cloud instance if you want your app to run in national clouds, for example. The different options include;
@@ -36,6 +36,6 @@ namespace Sushi.MediaKiwi.Services.Model
         /// https://login.partner.microsoftonline.cn/common for Microsoft Entra China operated by 21Vianet
         /// </summary>
         [SwaggerSchema(ReadOnly = true)]
-        public required string Instance { get; set; }
+        public required string Instance { get; init; }
     }
 }
