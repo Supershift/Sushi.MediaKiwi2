@@ -1,14 +1,8 @@
-﻿using FluentValidation.Results;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Sushi.LanguageExtensions;
 using Sushi.LanguageExtensions.Errors;
 using Sushi.MediaKiwi.Services.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
@@ -86,9 +80,10 @@ namespace Sushi.MediaKiwi.WebAPI
             var problemDetails = new ErrorProblemDetails
             {
                 Title = error.ErrorType,
+                Type = error.ErrorType,
                 Detail = error.Message,
                 Status = (int)HttpStatusCode.BadRequest,
-                Error = error,                
+                Error = error,                          
             };
             return controller.BadRequest(problemDetails);
             

@@ -77,7 +77,7 @@ namespace Sushi.MediaKiwi.Services
             translation.Value = request.Value;
             await _translationRepository.UpdateAsync(translation);
 
-            return Result<Error>.Success();
+            return Result.Success<Error>();
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace Sushi.MediaKiwi.Services
             // delete translation            
             await _translationRepository.DeleteAsync(translation);
 
-            return Result<Error>.Success();
+            return Result.Success<Error>();
         }
     }
 }

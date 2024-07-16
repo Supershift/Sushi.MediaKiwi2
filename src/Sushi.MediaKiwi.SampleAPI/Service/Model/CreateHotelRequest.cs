@@ -13,7 +13,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Service.Model
 
         /// <summary>
         /// Name of the hotel
-        /// </summary>        
+        /// </summary>                
         public required string Name { get; init; }
 
         /// <summary>

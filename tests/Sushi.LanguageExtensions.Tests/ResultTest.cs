@@ -7,7 +7,7 @@ namespace Sushi.LanguageExtensions.Tests
         [Fact]
         public void CreateSuccess()
         {
-            var result = Result<Error>.Success();
+            var result = Result.Success<Error>();
 
             Assert.True(result.IsSuccess);
             Assert.Null(result.Error);

@@ -114,7 +114,7 @@ namespace Sushi.MediaKiwi.Services
             // delete
             await _localeRepository.DeleteAsync(locale);
 
-            return Result<Error>.Success();
+            return Result.Success<Error>();
         }
 
         /// <summary>

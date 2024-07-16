@@ -44,7 +44,7 @@ namespace Sushi.MediaKiwi.Services
             {   
                 // delete item
                 await _viewRepository.DeleteAsync(view.Id);
-                return Result<Error>.Success();
+                return Result.Success<Error>();
             }
             else
             {
