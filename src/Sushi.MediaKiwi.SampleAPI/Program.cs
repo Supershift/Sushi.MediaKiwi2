@@ -46,21 +46,12 @@ services.AddSwaggerGen(options =>
     options.SwaggerDoc("SampleApi", new OpenApiInfo { Title = "SampleApi" });
 });
 
-// Define admin roles
-var adminRoles = new[] { Sushi.MediaKiwi.WebAPI.Constants.AdminRoleName };
-
 // add mediakiwi API
 services.AddMediaKiwi(    
     azureAdConfig: config.GetSection("AzureAd"), 
     autoMapperConfig: c => c.AddProfile<Sushi.MediaKiwi.SampleAPI.Service.Model.AutoMapperProfile>(),
     authorizationOptions: options => {
         
-        // Add authorization policies for admin roles
-        options.AddPolicy(Sushi.MediaKiwi.WebAPI.Constants.AdminPolicyName, policy =>
-        {
-            policy.RequireRole(adminRoles);
-        });
-
         // Add custom authorization policies
         options.AddPolicy(Sushi.MediaKiwi.SampleAPI.Constants.CustomPolicyName, policy =>
         {

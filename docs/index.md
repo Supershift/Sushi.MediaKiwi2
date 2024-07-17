@@ -4,6 +4,8 @@
 
 [Front-end setup for this project](FRONTEND_SETUP.md)
 
+[How to setup authentication](SETUP_AUTH.md)
+
 ## Nuget
 
 ![NuGet Version](https://img.shields.io/nuget/vpre/Sushi.MediaKiwi.DAL?label=Sushi.MediaKiwi.DAL&link=https%3A%2F%2Fwww.nuget.org%2Fpackages%2FSushi.MediaKiwi.DAL)
