@@ -59,5 +59,5 @@ export const useTableDisplayStore = defineStore("tableDisplay", () => {
   fetchDisplayOptions();
 
 
-  return { displayOptions, setDisplayOptions, getDisplayOptions };
+  return { displayOptions, setDisplayOptions, getDisplayOptions, fetchDisplayOptions, displayOptionsKey, viewRef };
 });
