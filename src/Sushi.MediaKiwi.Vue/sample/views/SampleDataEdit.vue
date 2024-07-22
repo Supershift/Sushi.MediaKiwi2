@@ -58,7 +58,7 @@
     state.data = candidate ? candidate : <SampleData>{};
   }
 
-  async function onDeleteAsync(event: Event): Promise<void> {
+  async function onDeleteAsync(event?: Event): Promise<void> {
     return await sampleDataConnector.DeleteAsync(state.data.id);
   }
 

@@ -43,7 +43,7 @@
     }
   }
 
-  let onDelete: ((event: Event) => Promise<void>) | undefined = undefined;
+  let onDelete: ((event?: Event) => Promise<void>) | undefined = undefined;
   if (localeId.value) {
     onDelete = async () => {
       if (localeId.value) {

@@ -12,6 +12,7 @@ import { container } from "tsyringe";
 // import { i18n } from "i18next";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
 import { mdiAccountCheckOutline, mdiTestTube } from "@mdi/js";
+import { symbols } from "@sample/plugin/material/symbols"; // import the symbols from the plugin
 
 //
 import { modules } from "./views/modules";
@@ -31,6 +32,7 @@ const mediakiwiOptions = <MediakiwiVueOptions>{
       },
       sets: {
         mdi,
+        symbols,
       },
     },
   },

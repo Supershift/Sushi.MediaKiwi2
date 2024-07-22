@@ -50,7 +50,7 @@
     }
   }
 
-  let onDelete: ((event: Event) => Promise<void>) | undefined = undefined;
+  let onDelete: ((event?: Event) => Promise<void>) | undefined = undefined;
   if (navigationItemId.value) {
     onDelete = async () => {
       if (navigationItemId.value) {
