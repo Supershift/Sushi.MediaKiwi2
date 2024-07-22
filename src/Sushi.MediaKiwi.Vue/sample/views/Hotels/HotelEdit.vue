@@ -77,7 +77,7 @@
     }
   }
 
-  let onDelete: ((event: Event) => Promise<void>) | undefined = undefined;
+  let onDelete: ((event?: Event) => Promise<void>) | undefined = undefined;
 
   onDelete = async () => {
     if (navigation.currentViewParameterNumber.value > 0) {
@@ -101,7 +101,7 @@
     }
   }
 
-  let onFilesDelete: ((event: Event) => Promise<void>) | undefined = undefined;
+  let onFilesDelete: ((event?: Event) => Promise<void>) | undefined = undefined;
 </script>
 
 <template>
