@@ -184,18 +184,36 @@
   async function onLoad(event?: Event) {
     if (props.onLoad) {
       inProgress.value = true;
-      try {
-        // Load the data
-        await props.onLoad(event);
-      } catch (error: ProblemDetails | any) {
-        // Show a message that the load failed
-        snackbar.showMessage(loadFailedSnackbarMessage.value);
+      // Load the data
+      props
+        .onLoad(event)
+        .then((data) => {
+          console.log(data);
+        })
+        .then(() => {
+          console.log("done");
+        })
+        .catch((error: ProblemDetails | any) => {
+          // Set the error
+          error.value = error;
 
-        // Set the error
-        error.value = error;
-      } finally {
-        inProgress.value = false;
-      }
+          // Show a message that the load failed
+          snackbar.showMessage(loadFailedSnackbarMessage.value);
+        })
+        .finally(() => {
+          inProgress.value = false;
+        });
+      // try {
+
+      // } catch (error: ProblemDetails | any) {
+      //   // Set the error
+      //   error.value = error;
+
+      //   // Show a message that the load failed
+      //   snackbar.showMessage(loadFailedSnackbarMessage.value);
+      // } finally {
+      //   inProgress.value = false;
+      // }
     }
   }
 

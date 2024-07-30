@@ -15,5 +15,12 @@ export type ProblemDetails = {
   instance?: string;
 
   /** Additional details about the problem. */
-  errors?: { [key: string]: string[] };
+  error?: ProblemDetailsError | Array<ProblemDetailsError>;
+
 };
+
+export type ProblemDetailsError = {
+  errorType?: string;
+  errorCode?: string;
+  message?: string;
+}

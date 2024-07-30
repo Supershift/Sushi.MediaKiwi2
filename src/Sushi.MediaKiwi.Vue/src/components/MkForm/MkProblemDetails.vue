@@ -1,11 +1,15 @@
 <script setup lang="ts">
   import { ProblemDetails } from "@/models/errors/ProblemDetails";
   import { computed } from "vue";
+  import { useProblemDetails } from "@/composables/useProblemDetails";
+
+  // inject dependencies
+  const { getProblemDetailMessages } = useProblemDetails();
 
   const props = withDefaults(
     defineProps<{
       /** Problem Details received from the server */
-      problemDetails?: ProblemDetails;
+      problemDetails?: ProblemDetails | null;
       /** Show the {@link ProblemDetails} detail value */
       showDetails?: boolean;
       /** Type proxy from the Vuetify alert types  */
@@ -30,15 +34,7 @@
     }
   });
 
-  const message = computed(() => {
-    if (props.showDetails) {
-      const messsage = props.problemDetails?.detail;
-      if (messsage) {
-        return messsage;
-      }
-    }
-    // return getMessageByStatusCode(props.problemDetails?.status);
-  });
+  const message = computed(() => getProblemDetailMessages(props.problemDetails, props.showDetails));
 </script>
 <template>
   <v-alert v-if="props.problemDetails" v-bind="$attrs" type="error">

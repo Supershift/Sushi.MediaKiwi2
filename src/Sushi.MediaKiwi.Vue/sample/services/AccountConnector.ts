@@ -1,5 +1,5 @@
 import { injectable, inject } from "tsyringe";
-import type { AxiosInstance } from "axios";
+import type { AxiosError, AxiosInstance } from "axios";
 import { Account } from "./../models/Account/Account";
 import { CreateAccountRequest } from "@sample/models/Account/CreateAccountRequest";
 import { TransferMoneyRequest } from "@sample/models/Account/TransferMoneyRequest";
@@ -8,7 +8,7 @@ import { WithdrawMoneyRequest } from "@sample/models/Account/WithdrawMoneyReques
 
 @injectable()
 export class AccountConnector {
-  constructor(@inject("SampleApiAxiosInstance") private axios: AxiosInstance) {}
+  constructor(@inject("SampleApiAxiosInstance") private axios: AxiosInstance) { }
 
   async GetAccountAsync(number: string): Promise<Account> {
     const response = await this.axios.get<Account>(`/Account/${number}`);
