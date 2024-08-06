@@ -117,7 +117,7 @@
     </v-card>
   </MkNavigationDrawerInfo>
 
-  <MkForm title="Hotel edit" @save="onSave" @undo="onUndo" @delete="onDelete" @load="onLoad">
+  <MkForm title="Hotel edit" submit="onSave" @undo="onUndo" @delete="onDelete" @load="onLoad">
     <template #toolbarHeader>
       <v-card-text class="flex-1-1 w-75"> Hotel edit </v-card-text>
     </template>
@@ -148,7 +148,7 @@
       clearable
     ></v-select>
   </MkForm>
-  <MkForm title="Hotel files" @save="onFilesSave" @undo="onFilesUndo" @delete="onFilesDelete" @load="onFilesLoad">
+  <MkForm title="Hotel files" @submit="onFilesSave" @undo="onFilesUndo" @delete="onFilesDelete" @load="onFilesLoad">
     <template #toolbarHeader>
       <v-card-text class="flex-1-1 w-75"> File Upload </v-card-text>
     </template>

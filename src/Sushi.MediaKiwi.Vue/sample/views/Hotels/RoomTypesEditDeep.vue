@@ -21,7 +21,7 @@
   }
 </script>
 <template>
-  <mk-form sticky @load="onLoad" @delete="onDelete" @save="onSave" @undo="onUndo">
+  <mk-form sticky @load="onLoad" @delete="onDelete" @submit="onSave" @undo="onUndo">
     <template #default>
       <h3>{{ steps[0] }}</h3>
       <v-container>

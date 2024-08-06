@@ -1,3 +1,8 @@
+import { Error } from "./Error";
+
+/**
+ * Microsoft.AspNetCore.Mvc.ProblemDetails
+ */
 export type ProblemDetails = {
   /** A URI reference that identifies the problem type. */
   type?: string;
@@ -15,12 +20,8 @@ export type ProblemDetails = {
   instance?: string;
 
   /** Additional details about the problem. */
-  error?: ProblemDetailsError | Array<ProblemDetailsError>;
+  error?: Error | Error[] | Record<string, string[]>;
 
+  /** Additional details about the problem. */
+  errors?: Error | Error[] | Record<string, string[]>;
 };
-
-export type ProblemDetailsError = {
-  errorType?: string;
-  errorCode?: string;
-  message?: string;
-}

@@ -8,7 +8,7 @@ import { WithdrawMoneyRequest } from "@sample/models/Account/WithdrawMoneyReques
 
 @injectable()
 export class AccountConnector {
-  constructor(@inject("SampleApiAxiosInstance") private axios: AxiosInstance) { }
+  constructor(@inject("SampleApiAxiosInstance") private axios: AxiosInstance) {}
 
   async GetAccountAsync(number: string): Promise<Account> {
     const response = await this.axios.get<Account>(`/Account/${number}`);
@@ -37,6 +37,16 @@ export class AccountConnector {
 
   async WithdrawAsync(number: string, request: WithdrawMoneyRequest): Promise<Account> {
     const response = await this.axios.post<Account>(`/Account/${number}/Withdraw`, request);
+    return response.data;
+  }
+
+  async GetGenericErrorAsync(): Promise<Account> {
+    const response = await this.axios.get(`/Error/genericError`);
+    return response.data;
+  }
+
+  async GetAggregateError(): Promise<Account> {
+    const response = await this.axios.get(`/Error/aggregateError`);
     return response.data;
   }
 }

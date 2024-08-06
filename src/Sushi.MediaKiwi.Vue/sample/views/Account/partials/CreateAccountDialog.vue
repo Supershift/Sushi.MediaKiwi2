@@ -1,18 +1,18 @@
 <script setup lang="ts">
-  import { MkForm } from "@/components";
   import { reactive, ref } from "vue";
   import { AccountConnector } from "@sample/services/AccountConnector";
   import { container } from "tsyringe";
   import { CreateAccountRequest } from "@sample/models/Account/CreateAccountRequest";
   import { useValidationRules } from "@/composables";
+  import MkFormDialog from "@/components/MkForm/MkFormDialog.vue";
 
   const connector = container.resolve(AccountConnector);
   const { required } = useValidationRules();
-  const form = ref();
 
   const state = reactive({
+    title: "Create Account",
     account: <CreateAccountRequest>{
-      number: <string | undefined>"3",
+      number: <string | undefined>undefined,
       holderName: <string | undefined>undefined,
     },
     isSuccessful: false,
@@ -27,11 +27,8 @@
   }
 </script>
 <template>
-  <MkForm @submit="onSave" ref="form" v-if="!state.isSuccessful">
+  <MkFormDialog @submit="onSave" title="Create Account">
     <v-text-field label="Account Number" v-model="state.account.number" :rules="[required]" />
     <v-text-field label="Holder Name" v-model="state.account.holderName" />
-  </MkForm>
-  <v-sheet v-else>
-    <v-alert type="success">Account created successfully! </v-alert>
-  </v-sheet>
+  </MkFormDialog>
 </template>

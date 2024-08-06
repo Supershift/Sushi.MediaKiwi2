@@ -1,5 +1,5 @@
 import Qs from "qs";
-import { AxiosError, AxiosInstance, HttpStatusCode } from "axios";
+import { AxiosError, AxiosInstance, HttpStatusCode, isAxiosError } from "axios";
 import { ProblemDetails } from "@/models/errors/ProblemDetails";
 import { useProblemDetails } from "./useProblemDetails";
 
@@ -28,31 +28,30 @@ export function useAxiosExtensions() {
     // We can handle the response globally in the store
     axiosInstance.interceptors.response.use(
       (response) => response,
-      (error: AxiosError) => {
-        // Create the result object
-        let problemDetails: ProblemDetails | undefined;
+      async (error: AxiosError) => {
+        if (isAxiosError(error)) {
+          // Create the result object
+          let problemDetails = await parseProblemDetails(error);
 
-        // If there's a response, try to parse it as a problem details
-        if (error?.response?.data) {
-          problemDetails = parseProblemDetails(error);
+          // If we couldn't parse the problem details, create a default one
+          if (!problemDetails) {
+            problemDetails = <ProblemDetails>{
+              type: "Unknown",
+              title: "Unknown error",
+              status: error?.response?.status || HttpStatusCode.InternalServerError,
+              detail: "An unknown error occurred. Please try again later.",
+            };
+          }
+
+          // Return the problem details
+          return Promise.reject(problemDetails);
+        } else {
+          console.error("Unexpected error:", error);
+          return Promise.reject(error);
         }
-
-        // If we couldn't parse the problem details, create a default one
-        if (!problemDetails) {
-          problemDetails = {
-            type: "Unknown",
-            title: "Unknown error",
-            status: error?.response?.status || HttpStatusCode.InternalServerError,
-            detail: "An unknown error occurred. Please try again later.",
-          };
-        }
-
-        // Return the problem details
-        return Promise.reject(problemDetails);
       }
     );
   }
-
 
   return {
     addParamSerializer,

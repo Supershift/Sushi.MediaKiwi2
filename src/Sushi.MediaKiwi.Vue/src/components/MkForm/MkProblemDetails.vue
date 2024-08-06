@@ -8,8 +8,6 @@
 
   const props = withDefaults(
     defineProps<{
-      /** Problem Details received from the server */
-      problemDetails?: ProblemDetails | null;
       /** Show the {@link ProblemDetails} detail value */
       showDetails?: boolean;
       /** Type proxy from the Vuetify alert types  */
@@ -19,6 +17,9 @@
       type: "error",
     }
   );
+
+  /** Problem Details received from the server */
+  const problemDetails = defineModel<ProblemDetails>("problemDetails", { required: false });
 
   const slots = defineSlots<{
     /** Default body slot for the dialog */
@@ -34,12 +35,19 @@
     }
   });
 
-  const message = computed(() => getProblemDetailMessages(props.problemDetails, props.showDetails));
+  function onClose() {
+    problemDetails.value = undefined;
+  }
+
+  const messages = computed(() => getProblemDetailMessages(problemDetails.value, props.showDetails));
 </script>
 <template>
-  <v-alert v-if="props.problemDetails" v-bind="$attrs" type="error">
+  <v-alert v-if="problemDetails" v-bind="$attrs" type="error" closable @click:close="onClose">
     <template #text>
-      <span v-html="message"></span>
+      <p class="text-body-large" v-for="message in messages">{{ message }}</p>
+    </template>
+    <template #close="{ props }">
+      <v-btn icon="symbols:close" color="neutral" v-bind="props" />
     </template>
   </v-alert>
   <v-alert v-else-if="slots.default" :type="props.type" :color="alertColor" v-bind="$attrs">

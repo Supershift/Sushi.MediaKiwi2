@@ -53,7 +53,7 @@
   }
 </script>
 <template>
-  <mk-form :on-load="onLoad" :on-save="onSave" :on-delete="onDelete">
+  <mk-form :on-load="onLoad" :onSubmit="onSave" :on-delete="onDelete">
     <v-text-field v-model="locale.id" label="Id" hint="Unique human-readable id for the locale." :disabled="localeId ? true : false"></v-text-field>
     <v-text-field v-model="locale.name" :label="defaultT('Name')"></v-text-field>
     <v-checkbox v-model="locale.isEnabled" :label="defaultT('IsEnabled')"></v-checkbox>
