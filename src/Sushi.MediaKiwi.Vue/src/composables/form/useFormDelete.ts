@@ -1,15 +1,14 @@
-// import { computed } from "vue";
-
 import { ProblemDetails } from "@/models/errors/ProblemDetails";
-import { ModelRef, computed } from "vue";
-import { useI18next as useI18nextComposable } from "./../useI18next";
+import { ComputedRef, ModelRef, computed } from "vue";
+import { useI18next as useI18nextComposable } from "@/composables/useI18next";
 import { useSnackbarStore } from "@/stores";
-import { useNavigation } from "./../useNavigation";
+import { useNavigation } from "@/composables/useNavigation";
 import { DeleteProps } from "@/models/form";
+import { TResult } from "@/models/form/TResult";
 
 export async function useFormDelete(
   useI18next: ReturnType<typeof useI18nextComposable>,
-  formProps: () => DeleteProps,
+  props: ComputedRef<DeleteProps>,
   inProgress: ModelRef<boolean, string>,
   problemDetails: ModelRef<ProblemDetails | null | undefined, string>
 ) {
@@ -18,10 +17,7 @@ export async function useFormDelete(
   const snackbar = useSnackbarStore();
   const navigation = useNavigation();
 
-  // Reactive Model
-  const props = computed(() => formProps());
-
-  // Delete button label
+  // Delete button labels
   const deleteButtonLabel = computed(() => props.value.deleteButtonLabel || defaultT.value("Delete"));
   const deleteConfirmationTitle = computed(
     () => props.value.deleteConfirmationTitle || props.value.deleteButtonLabel || defaultT.value("DeleteConfirmTitle", "Delete this entry")
@@ -34,12 +30,19 @@ export async function useFormDelete(
   );
   const deleteFailedMessage = computed(() => props.value.deleteFailedSnackbarMessage || defaultT.value("DeleteFailed", "Failed to delete").toString());
 
+  // Computed
   const hasDeleteHandler = computed(() => (props.value.onDelete ? true : false));
 
-  async function onDelete(event?: Event) {
+  async function onDelete(event?: Event): Promise<TResult> {
+    // Define the result
+    let result: TResult = TResult.success();
+
     if (!props.value.onDelete) {
-      throw new Error("No onDelete handler provided");
+      console.error("No onDelete handler provided");
+      return TResult.failure();
     }
+
+    // Set the progress indicator
     inProgress.value = true;
 
     try {
@@ -51,19 +54,30 @@ export async function useFormDelete(
         snackbar.showMessage(deleteSuccessfulMessage.value);
       }
 
+      console.log(navigation);
+
       if (props.value.redirectAfterDelete && navigation.currentNavigationItem.value?.parent) {
         // Redirect to the top list
+        console.log("should be here!");
         navigation.navigateToParent();
       }
+
+      // Set the result
+      result = TResult.success();
     } catch (error: ProblemDetails | any) {
       // Set the error
       problemDetails.value = error;
 
       // Show a message that the delete failed
       snackbar.showMessage(deleteFailedMessage.value);
+
+      // Set the result
+      result = TResult.failure(error);
     } finally {
       inProgress.value = false;
     }
+
+    return result;
   }
 
   return {

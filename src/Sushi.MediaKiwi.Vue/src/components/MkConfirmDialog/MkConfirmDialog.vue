@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { useI18next } from "@/composables";
+  import { TResult } from "@/models/form/TResult";
   import { computed, ref } from "vue";
 
   // Inject dependencies
@@ -15,8 +16,8 @@
 
   const props = withDefaults(
     defineProps<{
-      onConfirm: (event?: Event) => Promise<void>;
-      onCancel?: (event?: Event) => Promise<void>;
+      onConfirm: (event?: Event) => Promise<any>;
+      onCancel?: (event?: Event) => Promise<any>;
       title?: string;
       body?: string;
       width?: string;
@@ -28,6 +29,8 @@
       width: "312",
     }
   );
+
+  const state = defineModel<boolean>("modelValue", { required: false, default: false });
 
   const activatorProps = <ConfirmDialogActivatorProps>{
     props: {
@@ -43,7 +46,6 @@
   }>();
 
   /** State object for the open and closed state */
-  const state = ref(false);
   const openButtonLabel = computed(() => props.openButtonOpen ?? defaultT.value("Open"));
   const cancelButtonLabel = computed(() => props.cancelButtonLabel ?? defaultT.value("Cancel"));
   const confirmButtonLabel = computed(() => props.confirmButtonLabel ?? defaultT.value("Confirm"));

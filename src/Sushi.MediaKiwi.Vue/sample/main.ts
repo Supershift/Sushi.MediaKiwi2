@@ -60,6 +60,15 @@ const mediakiwiOptions = <MediakiwiVueOptions>{
   signIn: {
     image: "./basic-unsplash.jpg",
   },
+  formOptions: {
+    dialog: {
+      closeOnSubmit: true,
+      resetOnSubmit: true,
+    },
+    sideSheet: {
+      resetOnSubmit: true,
+    },
+  },
 };
 
 // Create the app

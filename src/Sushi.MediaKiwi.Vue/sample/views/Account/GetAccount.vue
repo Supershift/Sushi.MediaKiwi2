@@ -3,7 +3,7 @@
   import { Account } from "@sample/models/Account/Account";
   import { AccountConnector } from "@sample/services/AccountConnector";
   import { container } from "tsyringe";
-  import { reactive } from "vue";
+  import { reactive, ref } from "vue";
   import { useValidationRules } from "@/composables";
   import CreateAccountDialog from "./partials/CreateAccountDialog.vue";
   import AccountDetailsSheet from "./partials/AccountDetailsSheet.vue";
@@ -12,7 +12,7 @@
   const { required } = useValidationRules();
 
   const state = reactive({
-    accountNumber: <string | undefined>"1",
+    accountNumber: <string | undefined>undefined,
     account: <Account | undefined>undefined,
     createAccountDialog: false,
     accountDetailsSheet: false,
@@ -27,7 +27,7 @@
 </script>
 
 <template>
-  <MkForm @submit="onGet" submit-button-label="Show Account" submit-successful-snackbar-message="Account was found!">
+  <MkForm @submit="onGet" submit-button-label="Show Account" hide-submit-snackbar>
     <template #toolbar>
       <v-btn @click="state.createAccountDialog = true">Create Account</v-btn>
     </template>

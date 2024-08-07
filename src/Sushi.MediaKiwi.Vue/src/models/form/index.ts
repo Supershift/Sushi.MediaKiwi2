@@ -1,3 +1,6 @@
+import { promises } from "dns";
+import { TResult } from "./TResult";
+
 export type FormViewProps = FormProps & {
   /** If true, the toolbar will be sticky on top of the page. */
   sticky?: boolean;
@@ -12,6 +15,8 @@ export type FormDialogProps = FormProps & {
   height?: string;
   /** Intro text of the dialog */
   intro?: string;
+  /** Close the dialog after submit was succesful */
+  closeOnSubmit?: boolean;
 };
 
 export type FormSideSheetProps = FormProps & {
@@ -39,10 +44,6 @@ export type LoadProps = {
   validateOnLoad?: boolean;
   /** Snackbar message when {@link onLoad} failed */
   loadFailedSnackbarMessage?: string;
-  /** Snackbar message when undo was sucessfull */
-  undoSuccessSnackbarMessage?: string;
-  /** Snackbar message when undo failed */
-  undoFailedSnackbarMessage?: string;
 };
 
 export type SubmitProps = {
@@ -62,6 +63,8 @@ export type SubmitProps = {
   submitSuccessfulSnackbarMessage?: string;
   /** Snackbar message when {@link onSubmit} failed */
   submitFailedSnackbarMessage?: string;
+  /** reset the form after a successfull submit */
+  resetOnSubmit?: boolean;
 };
 
 export type DeleteProps = {
@@ -86,4 +89,17 @@ export type DeleteProps = {
 export type UndoProps = {
   /** Hides the undo button */
   hideUndo?: boolean;
+  /** Custom label for the default undo button */
+  undoButtonLabel?: string;
+  /** Snackbar message when undo was sucessfull */
+  undoSuccessSnackbarMessage?: string;
+  /** Snackbar message when undo failed */
+  undoFailedSnackbarMessage?: string;
+};
+
+export type FormSlotProps = {
+  /** Id of the form */
+  form: string;
+  /** Click event for custom buttons, handling errors and loading states. */
+  onClick: (callback: () => Promise<any>) => Promise<any>;
 };

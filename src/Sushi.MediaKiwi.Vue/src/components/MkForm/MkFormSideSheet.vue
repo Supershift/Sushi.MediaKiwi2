@@ -1,21 +1,18 @@
 <script setup lang="ts" generic="T extends Object">
-  import ProblemDetailsComponent from "./MkProblemDetails.vue";
+  import ProblemDetailsComponent from "@/components/MkProblemDetails/MkProblemDetails.vue";
   import { ProblemDetails } from "@/models/errors/ProblemDetails";
-  import { ref, onMounted, watch, computed } from "vue";
+  import { ref, watch, getCurrentInstance } from "vue";
   import { useI18next } from "@/composables";
   import { useForm } from "@/composables/form/useForm";
-  import { FormSideSheetProps } from "@/models/form";
+  import { FormSideSheetProps, FormSlotProps } from "@/models/form";
   import MkSideSheet from "../MkSideSheet/MkSideSheet.vue";
   import { useMediakiwiVueOptions } from "@/composables/useMediakiwiVueOptions";
+  import MkConfirmDialog from "../MkConfirmDialog/MkConfirmDialog.vue";
 
   // Inject dependencies
   const { defaultT } = await useI18next();
   const { formOptions } = useMediakiwiVueOptions();
-  const formDialogOptions = computed<Partial<FormSideSheetProps>>(() => {
-    return {
-      ...formOptions?.sideSheet,
-    };
-  });
+  const instance = getCurrentInstance();
 
   // Define props with defaults
   const props = defineProps<FormSideSheetProps>();
@@ -29,7 +26,7 @@
   };
 
   /** Model to open the dialog  */
-  const modelValue = defineModel<boolean>("modelValue", { required: true });
+  const modelValue = defineModel<boolean>("modelValue", { required: false, default: false });
   /** The value representing if the form is processing a request. */
   const inProgress = defineModel<boolean>("inProgress", { required: false, default: false });
   /** The value representing the validity of the form. If the value is null then no validation has taken place yet, or the form has been reset. Otherwise the value will be a boolean that indicates if validation has passed or not. */
@@ -39,28 +36,22 @@
 
   // Form
   const formRef = ref();
+  const formId = `mk-form-side-sheet__${instance?.uid}`;
 
-  const { onLoad, onSubmitForm, submitButtonLabel, computedProps } = await useForm(
-    useI18next(),
-    () => props,
-    inProgress,
-    isValid,
-    problemDetails,
-    formRef,
-    propDefaults
-  );
+  const { onLoad, onSubmit, computedProps, submitConfirmDialog, submitConfirmationTitle, submitButtonLabel, submitConfirmationBody, formSlotProps } =
+    await useForm(useI18next(), () => props, inProgress, isValid, problemDetails, formRef, propDefaults, formId);
 
   const slots = defineSlots<{
     /** Default Slot for your form fields */
     intro?: () => never;
     /** Default Slot for your form fields */
-    default?: () => never;
-    /** Provide the Dialog with additional actions if the default Submit is not enough */
-    actions?: () => never;
+    default?: (props: FormSlotProps) => never;
+    /** Provide the sheet with actions instead of the default */
+    actions?: (props: FormSlotProps) => never;
   }>();
 
-  /** Update sheet state */
-  function updateSheet(value: boolean) {
+  /** Close the  sheet state */
+  async function onClose() {
     // https://vuetifyjs.com/en/components/forms/#exposed-properties
     formRef.value?.resetValidation();
 
@@ -68,55 +59,50 @@
     problemDetails.value = undefined;
 
     // Update the dialog state
-    modelValue.value = value;
-  }
-
-  async function onClose() {
-    // Emit the dialog
-    updateSheet(false);
+    modelValue.value = false;
   }
 
   /**
    * Exposes refs to the parent component.
    * @example <Form ref="mkFormRef" ... />
    */
+  /** Exposes refs to the parent component. */
   defineExpose({
-    /** Reference to the Vuetify Form */
-    formRef,
+    validate: () => {
+      formRef.value?.validate();
+    },
     /** Clear the form */
     reset: () => {
       formRef.value?.reset();
     },
-  });
-
-  onMounted(() => {
-    if (computedProps.value.validateOnLoad) {
-      // https://vuetifyjs.com/en/components/forms/#exposed-properties
-      formRef.value?.validate();
-    }
+    resetValidation() {
+      formRef.value?.resetValidation();
+    },
   });
 
   watch(
     () => modelValue.value,
-    (value) => {
+    async (value) => {
       if (!value) {
         // Clear the state
         formRef.value?.reset();
       }
+
+      if (value) {
+        // load data async on created
+        await onLoad();
+      }
     }
   );
-
-  // load data async on created
-  await onLoad();
 </script>
 <template>
   <v-form
     v-if="modelValue"
-    id="form-side-sheet"
+    :id="formId"
     data-cy="form-side-sheet"
     v-model="isValid"
     :validate-on="computedProps.validateOn"
-    @submit.prevent="onSubmitForm"
+    @submit.prevent="onSubmit"
     ref="formRef"
   >
     <MkSideSheet v-model="modelValue" v-bind="$attrs" @closed-sheet="onClose" :loading="inProgress" close-button>
@@ -135,18 +121,23 @@
             data-cy="form-side-sheet__alert"
           />
 
-          <slot name="default"></slot>
+          <slot name="default" v-bind="formSlotProps"></slot>
         </div>
       </template>
       <template #footer>
-        <slot v-if="slots.actions" name="actions"></slot>
+        <slot v-if="slots.actions" name="actions" v-bind="formSlotProps"></slot>
         <template v-else>
-          <v-btn variant="text" @click="onClose" :disabled="inProgress"> {{ defaultT("Cancel") }}</v-btn>
-          <v-btn variant="flat" type="submit" form="form-side-sheet" :disabled="inProgress" data-cy="form-side-sheet__submit">{{
-            submitButtonLabel || defaultT("Save")
-          }}</v-btn>
+          <v-btn variant="text" @click="onClose"> {{ defaultT("Cancel") }}</v-btn>
+          <v-btn variant="flat" type="submit" :form="formId" :disabled="inProgress" data-cy="form-side-sheet__submit">{{ submitButtonLabel }}</v-btn>
         </template>
       </template>
     </MkSideSheet>
+    <MkConfirmDialog
+      v-model="submitConfirmDialog"
+      :title="submitConfirmationTitle"
+      :confirm-button-label="submitButtonLabel"
+      :body="submitConfirmationBody"
+      @confirm="(event) => onSubmit(event, true)"
+    />
   </v-form>
 </template>

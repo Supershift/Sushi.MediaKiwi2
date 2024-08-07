@@ -1,5 +1,5 @@
 import { ProblemDetails } from "@/models/errors/ProblemDetails";
-import { ModelRef, Ref, computed } from "vue";
+import { ModelRef, Ref, computed, onMounted } from "vue";
 import { useI18next as useI18nextComposable } from "./../useI18next";
 import { FormDialogProps, FormViewProps, FormSideSheetProps } from "@/models/form";
 import { useFormLoad } from "./useFormLoad";
@@ -13,10 +13,11 @@ export async function useForm<T extends FormViewProps | FormDialogProps | FormSi
   isValid: ModelRef<any, string>,
   problemDetails: ModelRef<ProblemDetails | null | undefined, string>,
   formRef: Ref<any>,
-  defaultProps: T
+  defaultProps: T,
+  formId: string
 ) {
   // Helper function to filter out undefined properties
-  const definedProps = (obj: Partial<T>) => Object.fromEntries(Object.entries(obj).filter(([_k, v]) => v !== undefined));
+  const definedProps = (obj: Partial<T>) => Object.fromEntries(Object.entries(obj).filter(([_k, v]) => !!v));
 
   // Reactive Model
   const computedProps = computed<T>(() => {
@@ -24,12 +25,13 @@ export async function useForm<T extends FormViewProps | FormDialogProps | FormSi
     const props = componentProps();
 
     // Merge the defaultProps with the form props
-    return { ...defaultProps, ...definedProps(props) };
+    const computedProps = { ...defaultProps, ...definedProps(props) };
+    return computedProps;
   });
 
-  const formLoad = await useFormLoad(useI18next, componentProps, inProgress, problemDetails, formRef);
-  const formSubmit = await useFormSubmit(useI18next, componentProps, inProgress, isValid, problemDetails);
-  const formDelete = await useFormDelete(useI18next, componentProps, inProgress, problemDetails);
+  const formLoad = await useFormLoad(useI18next, computedProps, inProgress, problemDetails, formRef);
+  const formSubmit = await useFormSubmit(useI18next, computedProps, inProgress, isValid, problemDetails, formRef, formId);
+  const formDelete = await useFormDelete(useI18next, computedProps, inProgress, problemDetails);
 
   return {
     ...formLoad,

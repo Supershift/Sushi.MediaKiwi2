@@ -1,16 +1,17 @@
 <script setup lang="ts" generic="T extends Object">
-  import ProblemDetailsComponent from "./MkProblemDetails.vue";
+  import ProblemDetailsComponent from "@/components/MkProblemDetails/MkProblemDetails.vue";
   import { ProblemDetails } from "@/models/errors/ProblemDetails";
-  import { ref, onMounted, watch } from "vue";
+  import { ref, watch, getCurrentInstance } from "vue";
   import { useI18next } from "@/composables";
   import { useForm } from "@/composables/form/useForm";
   import MkDialogCard from "../MkDialog/MkDialogCard.vue";
-  import { FormDialogProps } from "@/models/form";
+  import { FormDialogProps, FormSlotProps } from "@/models/form";
   import { useMediakiwiVueOptions } from "@/composables/useMediakiwiVueOptions";
+  import MkConfirmDialog from "../MkConfirmDialog/MkConfirmDialog.vue";
 
   // Inject dependencies
-  const { defaultT } = await useI18next();
   const { formOptions } = useMediakiwiVueOptions();
+  const instance = getCurrentInstance();
 
   // Define props
   const props = defineProps<FormDialogProps>();
@@ -34,20 +35,15 @@
 
   // Form
   const formRef = ref();
+  const formId = `mk-form-dialog__${instance?.uid}`;
 
-  const { onLoad, onSubmitForm, submitButtonLabel, computedProps } = await useForm(
-    useI18next(),
-    () => props,
-    inProgress,
-    isValid,
-    problemDetails,
-    formRef,
-    propDefaults
-  );
+  const { onLoad, onSubmit, computedProps, submitConfirmDialog, submitConfirmationTitle, submitButtonLabel, submitConfirmationBody, formSlotProps } =
+    await useForm(useI18next(), () => props, inProgress, isValid, problemDetails, formRef, propDefaults, formId);
 
   const slots = defineSlots<{
     default: void;
-    actions?: void;
+    /** Provide the dialog with actions instead of the default */
+    actions?: (props: FormSlotProps) => never;
     prependBody?: void;
   }>();
 
@@ -68,46 +64,58 @@
     updateDialog(false);
   }
 
+  async function onSubmitAndClose() {
+    // Submit the form
+    const result = await onSubmit();
+
+    if (result.isSuccess) {
+      if (computedProps.value.closeOnSubmit) {
+        onClose();
+      }
+    }
+  }
+
   /**
    * Exposes refs to the parent component.
    * @example <Form ref="mkFormRef" ... />
    */
+  /** Exposes refs to the parent component. */
   defineExpose({
-    /** Reference to the Vuetify Form */
-    formRef,
+    validate: () => {
+      formRef.value?.validate();
+    },
     /** Clear the form */
     reset: () => {
       formRef.value?.reset();
     },
-  });
-
-  onMounted(() => {
-    if (props.validateOnLoad) {
-      // https://vuetifyjs.com/en/components/forms/#exposed-properties
-      formRef.value?.validate();
-    }
+    resetValidation() {
+      formRef.value?.resetValidation();
+    },
   });
 
   watch(
     () => modelValue.value,
-    (value) => {
+    async (value) => {
       if (!value) {
         // Clear the state
         formRef.value?.reset();
       }
+      if (value) {
+        // load data async on created
+        await onLoad();
+      }
     }
   );
-
-  // load data async on created
-  await onLoad();
 </script>
 <template>
   <v-dialog v-model="modelValue" :width="computedProps.width" close-on-back @update:model-value="updateDialog" @close="onClose">
     <template #default>
-      <v-form v-model="isValid" :validate-on="computedProps.validateOn" ref="formRef" @submit.prevent="onSubmitForm">
+      <v-form :id="formId" v-model="isValid" :validate-on="computedProps.validateOn" ref="formRef" @submit.prevent="onSubmitAndClose">
         <MkDialogCard @click:close="onClose" :loading="inProgress" :height="height">
           <template #intro v-if="computedProps.intro || computedProps.title">
-            <p v-if="computedProps.title" class="text-headline-small text-sentence-case">{{ computedProps.title }}</p>
+            <p v-if="computedProps.title" class="text-headline-small text-sentence-case">
+              {{ computedProps.title }}
+            </p>
             <p v-if="computedProps.intro" class="mt-2">{{ computedProps.intro }}</p>
           </template>
 
@@ -124,12 +132,20 @@
             <slot name="default"></slot>
           </div>
           <template #actions>
-            <slot v-if="slots.actions" name="actions"></slot>
+            <slot v-if="slots.actions" name="actions" v-bind="formSlotProps"></slot>
 
-            <v-btn v-else type="submit">{{ submitButtonLabel || defaultT("Save") }}</v-btn>
+            <v-btn v-else type="submit" :form="formId">{{ submitButtonLabel }}</v-btn>
           </template>
         </MkDialogCard>
       </v-form>
+
+      <MkConfirmDialog
+        v-model="submitConfirmDialog"
+        :title="submitConfirmationTitle"
+        :confirm-button-label="submitButtonLabel"
+        :body="submitConfirmationBody"
+        @confirm="(event) => onSubmit(event, true)"
+      />
     </template>
   </v-dialog>
 </template>

@@ -1,19 +1,21 @@
 <script setup lang="ts" generic="T extends Object">
-  import ProblemDetailsComponent from "./MkProblemDetails.vue";
+  import ProblemDetailsComponent from "@/components/MkProblemDetails/MkProblemDetails.vue";
   import { ProblemDetails } from "@/models/errors/ProblemDetails";
   import MkConfirmDialog from "@/components/MkConfirmDialog/MkConfirmDialog.vue";
-  import { ref, onMounted } from "vue";
-  import { useI18next, useNavigation } from "@/composables";
+  import { ref, getCurrentInstance } from "vue";
   import MkToolbar from "../MkToolbar/MkToolbar.vue";
   import MkOverflowMenuIcon from "../MkOverflowMenuIcon/MkOverflowMenuIcon.vue";
-  import { useForm } from "@/composables/form/useForm";
-  import { FormViewProps } from "@/models/form";
+  import { FormSlotProps, FormViewProps } from "@/models/form";
+  //
   import { useMediakiwiVueOptions } from "@/composables/useMediakiwiVueOptions";
+  import { useForm } from "@/composables/form/useForm";
+  import { useNavigation } from "@/composables/useNavigation";
+  import { useI18next } from "@/composables/useI18next";
 
   // Inject dependencies
-  const { defaultT } = await useI18next();
   const navigation = useNavigation();
   const { formOptions } = useMediakiwiVueOptions();
+  const instance = getCurrentInstance();
 
   // Define props
   const props = defineProps<FormViewProps>();
@@ -32,63 +34,69 @@
   const isValid = defineModel<boolean>("isValid", { required: false, default: false });
   /** The value representing the error that occurred during the last request. */
   const problemDetails = defineModel<ProblemDetails | null | undefined>("error", { required: false });
-
   // Define refs
   const formRef = ref();
+  const formId = `mk-form-view__${instance?.uid}`;
 
   // Define the form
   const {
     onLoad,
     onDelete,
-    closeConfirmDialog,
     onSubmit,
-    onSubmitForm,
     onUndo,
-    state,
+    submitConfirmDialog,
     hasSubmitHandler,
     hasUndoHanlder,
     submitButtonColor,
     hasDeleteHandler,
     isSubmitDisabled,
     computedProps,
-  } = await useForm(useI18next(), () => props, inProgress, isValid, problemDetails, formRef, propDefaults);
+    submitConfirmationTitle,
+    submitButtonLabel,
+    submitConfirmationBody,
+    undoButtonLabel,
+    formSlotProps,
+  } = await useForm(useI18next(), () => props, inProgress, isValid, problemDetails, formRef, propDefaults, formId);
 
   // Define slots
   const slots = defineSlots<{
     /** Additional toolbar items */
-    toolbar?: void;
+    toolbar?: (props: FormSlotProps) => never;
     /** Additional toolbar header */
-    toolbarHeader?: void;
+    toolbarHeader?: (props: FormSlotProps) => never;
     /** Default body slot */
-    default: void;
+    default?: (props: FormSlotProps) => never;
     /** Additional list items for the overflow menu */
-    overflowIconItems?: void;
+    overflowIconItems?: (props: FormSlotProps) => never;
     /** slots for the title */
     title?: void;
+    /** Provide the form with actions instead of the default */
+    actions?: (props: FormSlotProps) => never;
   }>();
 
+  /**
+   * Exposes refs to the parent component.
+   * @example <Form ref="mkFormRef" ... />
+   */
   /** Exposes refs to the parent component. */
   defineExpose({
-    /** Reference to the Vuetify Form */
-    formRef,
+    validate: () => {
+      formRef.value?.validate();
+    },
     /** Clear the form */
     reset: () => {
       formRef.value?.reset();
     },
-  });
-
-  onMounted(() => {
-    if (computedProps.value.validateOnLoad) {
-      // https://vuetifyjs.com/en/components/forms/#exposed-properties
-      formRef.value?.validate();
-    }
+    resetValidation() {
+      formRef.value?.resetValidation();
+    },
   });
 
   // load data async on created
   await onLoad();
 </script>
 <template>
-  <v-form v-model="isValid" :validate-on="computedProps.validateOn" ref="formRef" @submit.prevent="onSubmitForm">
+  <v-form :id="formId" v-model="isValid" :validate-on="computedProps.validateOn" ref="formRef" @submit.prevent="onSubmit">
     <MkToolbar
       v-if="!hideToolbar"
       :loading="inProgress"
@@ -102,43 +110,47 @@
       @undo="onUndo"
     >
       <template v-if="slots.title" #title>
-        <slot name="title"></slot>
+        <slot name="title" v-bind="formSlotProps"></slot>
       </template>
 
       <template v-if="slots.toolbarHeader" #header>
-        <slot name="toolbarHeader"></slot>
+        <slot name="toolbarHeader" v-bind="formSlotProps"></slot>
       </template>
 
       <template #toolbar>
-        <v-btn v-if="hasUndoHanlder" color="primary" @click="onUndo()">{{ defaultT("Undo Changes") }}</v-btn>
-        <v-btn type="submit" v-if="hasSubmitHandler" variant="flat" :color="submitButtonColor" :disabled="isSubmitDisabled">{{ submitButtonLabel }}</v-btn>
+        <slot v-if="slots.actions" name="actions" v-bind="formSlotProps"></slot>
+        <template v-else>
+          <slot v-if="slots.toolbar" name="toolbar" v-bind="formSlotProps"></slot>
+          <v-btn v-if="hasUndoHanlder" color="primary" @click="onUndo()">{{ undoButtonLabel }}</v-btn>
+          <v-btn type="submit" v-if="hasSubmitHandler" variant="flat" :color="submitButtonColor" :disabled="isSubmitDisabled" :form="formId">{{
+            submitButtonLabel
+          }}</v-btn>
 
-        <slot v-if="slots.toolbar" name="toolbar"></slot>
-        <MkOverflowMenuIcon v-if="hasDeleteHandler || slots.overflowIconItems">
-          <MkConfirmDialog v-if="hasDeleteHandler" @confirm="onDelete" :title="deleteConfirmationTitle" :confirm-button-label="deleteButtonLabel">
-            <template #activator="{ props }">
-              <v-list-item v-bind="props" :title="deleteButtonLabel" />
-            </template>
-            <template #default>
-              <p>{{ deleteConfirmationBody }}</p>
-            </template>
-          </MkConfirmDialog>
-          <slot v-if="slots.overflowIconItems" name="overflowIconItems"></slot>
-        </MkOverflowMenuIcon>
+          <MkOverflowMenuIcon v-if="hasDeleteHandler || slots.overflowIconItems">
+            <MkConfirmDialog v-if="hasDeleteHandler" @confirm="onDelete" :title="deleteConfirmationTitle" :confirm-button-label="deleteButtonLabel">
+              <template #activator="{ props }">
+                <v-list-item v-bind="props" :title="deleteButtonLabel" />
+              </template>
+              <template #default>
+                <p>{{ deleteConfirmationBody }}</p>
+              </template>
+            </MkConfirmDialog>
+            <slot v-if="slots.overflowIconItems" name="overflowIconItems" v-bind="formSlotProps"></slot>
+          </MkOverflowMenuIcon>
+        </template>
       </template>
     </MkToolbar>
 
     <ProblemDetailsComponent v-if="problemDetails" v-model:problem-details="problemDetails" class="mb-4" :show-details="showProblemDetailsDetailField" />
 
     <MkConfirmDialog
-      v-model="state.submitConfirmDialog"
+      v-model="submitConfirmDialog"
       :title="submitConfirmationTitle"
       :confirm-button-label="submitButtonLabel"
       :body="submitConfirmationBody"
-      @confirm="onSubmit"
-      @cancel="closeConfirmDialog"
+      @confirm="(event) => onSubmit(event, true)"
     />
 
-    <slot></slot>
+    <slot name="default" v-bind="formSlotProps"></slot>
   </v-form>
 </template>

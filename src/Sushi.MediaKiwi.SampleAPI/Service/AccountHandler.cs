@@ -34,16 +34,16 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
             {
                 await _accountRepository.InsertAsync(account);
             }
-            catch(UniqueConstraintViolationException)
+            catch (UniqueConstraintViolationException)
             {
                 return new AlreadyExistsError();
             }
 
             // map to result
             var result = new AccountDto()
-            { 
-                Balance = account.Balance, 
-                HolderName = account.HolderName, 
+            {
+                Balance = account.Balance,
+                HolderName = account.HolderName,
                 Number = account.Number,
                 Status = account.Status
             };
@@ -81,7 +81,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
             // close account
             var closeAccountResult = account.CloseAccount();
 
-            if(closeAccountResult.Error != null)
+            if (closeAccountResult.Error != null)
                 return closeAccountResult.Error;
 
             // update account
@@ -126,8 +126,8 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
             // open transaction
             using (var ts = TransactionUtility.CreateTransactionScope())
             {
-                // withdraw money
-                var withdrawResult = account.Withdraw(request.Amount);
+                // Deposit money
+                var withdrawResult = account.Deposit(request.Amount);
 
                 if (withdrawResult.Error != null)
                     return withdrawResult.Error;
@@ -139,7 +139,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
                 ts.Complete();
             }
 
-            return Result.Success<Error>();     
+            return Result.Success<Error>();
         }
 
         public async Task<Result<Error>> TransferMoneyAsync(TransferMoneyRequest request)
@@ -159,9 +159,13 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
                 // perform transfer
                 var service = new MoneyTransferService();
                 var transferResult = service.TransferMoney(sourceAccount, targetAccount, request.Amount);
-                if(transferResult.Error != null)
+                if (transferResult.Error != null)
                     return transferResult.Error;
-                
+
+                // update the accounts
+                await _accountRepository.UpdateAsync(sourceAccount);
+                await _accountRepository.UpdateAsync(targetAccount);
+
                 // commit
                 ts.Complete();
 

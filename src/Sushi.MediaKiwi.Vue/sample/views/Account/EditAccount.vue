@@ -8,40 +8,63 @@
   import { ProblemDetails } from "@/models/errors/ProblemDetails";
   import MkConfirmDialog from "@/components/MkConfirmDialog/MkConfirmDialog.vue";
   import { DepositMoneyRequest } from "@sample/models/Account/DepositMoneyRequest";
+  import { useValidationRules } from "@/composables";
+  import { WithdrawMoneyRequest } from "@sample/models/Account/WithdrawMoneyRequest";
+  import MkFormSideSheet from "@/components/MkForm/MkFormSideSheet.vue";
+  import TransferMoneyDialog from "./partials/TransferMoneyDialog.vue";
 
   const connector = container.resolve(AccountConnector);
   const navigation = useNavigation();
+  const { required } = useValidationRules();
+  const accountNumber = computed<string>(() => navigation.currentViewParameter.value as string);
 
   const state = reactive({
     account: <Account>{},
-    problemDetails: <ProblemDetails | undefined>undefined,
+    amount: <number | undefined>undefined,
+    depositSheet: false,
+    withdrawSheet: false,
+    transferMoneyDialog: false,
   });
 
-  const accountNumber = computed<string>(() => navigation.currentViewParameter.value as string);
-
   async function onClose() {
-    try {
-      state.account = await connector.CloseAccountAsync(state.account.number!)!;
-    } catch (error: ProblemDetails | any) {
-      state.problemDetails = error;
-    }
+    state.account = await connector.CloseAccountAsync(state.account.number!)!;
   }
 
-  async function onGet() {
+  async function onLoad() {
     state.account = await connector.GetAccountAsync(accountNumber.value!)!;
   }
 
-  async function onSubmit() {
+  async function onDeposit() {
     const request = <DepositMoneyRequest>{
-      amount: state.account.balance!,
+      amount: state.amount || 0,
     };
+
     await connector.DepositAsync(state.account.number!, request);
+
+    // Reload the account
+    onLoad();
+  }
+
+  async function onWithdraw() {
+    const request = <WithdrawMoneyRequest>{
+      amount: state.amount || 0,
+    };
+
+    await connector.WithdrawAsync(state.account.number!, request);
+
+    // Reload the account
+    onLoad();
   }
 </script>
 <template>
-  <MkForm title="Close Account" @load="onGet" @submit="onSubmit" hide-submit-snackbar hide-undo submit-button-label="Deposit">
-    <template #overflowIconItems>
-      <MkConfirmDialog @confirm="onClose">
+  <MkForm title="Close Account" @load="onLoad" hide-undo>
+    <template #toolbar>
+      <v-btn @click="state.depositSheet = true">Deposit</v-btn>
+      <v-btn @click="state.withdrawSheet = true">Withdraw</v-btn>
+      <v-btn variant="flat" @click="state.transferMoneyDialog = true">Transfer</v-btn>
+    </template>
+    <template #overflowIconItems="{ onClick }">
+      <MkConfirmDialog @confirm="() => onClick(onClose)">
         <template #activator="{ props }">
           <v-list-item v-bind="props" color="primary"> Close Account </v-list-item>
         </template>
@@ -50,8 +73,20 @@
         </template>
       </MkConfirmDialog>
     </template>
+
+    <v-alert type="warning" v-if="state.account?.status === 'Closed'" class="mb-6" closable>This account is closed</v-alert>
     <v-text-field readonly label="Account Number" v-model="state.account.number" :rules="[(v: any) => !!v || 'Required']" />
     <v-text-field readonly label="Holder Name" v-model="state.account.holderName" :rules="[(v: any) => !!v || 'Required']" />
-    <v-text-field label="Balance" v-model="state.account.balance" />
+    <v-text-field readonly label="Current Balance" v-model="state.account.balance" />
   </MkForm>
+
+  <MkFormSideSheet v-model="state.depositSheet" confirm-before-submit title="Deposit" @submit="onDeposit">
+    <v-text-field label="Amount" v-model="state.amount" :rules="[required]" type="number" />
+  </MkFormSideSheet>
+
+  <MkFormSideSheet v-model="state.withdrawSheet" confirm-before-submit title="Withdraw" @submit="onWithdraw">
+    <v-text-field label="Amount" v-model="state.amount" :rules="[required]" type="number" />
+  </MkFormSideSheet>
+
+  <TransferMoneyDialog v-model="state.transferMoneyDialog" @update:model-value="onLoad" />
 </template>

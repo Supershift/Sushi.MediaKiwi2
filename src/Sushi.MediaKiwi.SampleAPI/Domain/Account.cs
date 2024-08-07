@@ -85,7 +85,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Domain
             if (validationResult.Error != null)
                 return validationResult.Error;
 
-            Balance += amount;
+            Balance -= amount;
 
             return Result.Success<Error>();
         }

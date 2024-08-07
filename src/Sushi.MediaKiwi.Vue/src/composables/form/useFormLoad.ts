@@ -1,14 +1,15 @@
 // import { computed } from "vue";
 
 import { ProblemDetails } from "@/models/errors/ProblemDetails";
-import { ModelRef, Ref, computed } from "vue";
+import { ComputedRef, ModelRef, Ref, computed, watch } from "vue";
 import { useI18next as useI18nextComposable } from "./../useI18next";
 import { useSnackbarStore } from "@/stores";
 import { LoadProps, UndoProps } from "@/models/form";
+import { TResult } from "@/models/form/TResult";
 
 export async function useFormLoad(
   useI18next: ReturnType<typeof useI18nextComposable>,
-  formProps: () => LoadProps & UndoProps,
+  props: ComputedRef<LoadProps & UndoProps>,
   inProgress: ModelRef<boolean, string>,
   problemDetails: ModelRef<ProblemDetails | null | undefined, string>,
   formRef: Ref<any>
@@ -16,9 +17,6 @@ export async function useFormLoad(
   // Inject Dependencies
   const { defaultT } = await useI18next;
   const snackbar = useSnackbarStore();
-
-  // Reactive Model
-  const props = computed(() => formProps());
 
   // Load Labels
   const loadFailedSnackbarMessage = computed(() => props.value.loadFailedSnackbarMessage || defaultT.value("LoadFailed", "Failed to load data").toString());
@@ -28,32 +26,52 @@ export async function useFormLoad(
   const undoFailedSnackbarMessage = computed(
     () => props.value.undoFailedSnackbarMessage || defaultT.value("UndoFailed", "Failed to revert changes").toString()
   );
+  const undoButtonLabel = computed(() => props.value.undoButtonLabel || defaultT.value("UndoChanges", "Undo changes"));
 
   const hasLoadHandler = computed(() => (props.value.onLoad ? true : false));
   const hasUndoHanlder = computed(() => !props.value.hideUndo && hasLoadHandler.value && hasLoadHandler.value);
 
-  async function onLoad(event?: Event) {
+  function validateOnLoad() {
+    if (props.value.validateOnLoad && formRef.value && formRef.value.validate) {
+      formRef.value.validate();
+    }
+  }
+
+  async function onLoad(event?: Event): Promise<TResult> {
+    let result: TResult = TResult.success();
+
     if (props.value.onLoad) {
       inProgress.value = true;
 
       try {
         // Load the data
         await props.value.onLoad(event);
+        validateOnLoad();
       } catch (error: ProblemDetails | any) {
         // Set the error
         problemDetails.value = error;
 
+        // Show a message
         snackbar.showMessage(loadFailedSnackbarMessage.value);
+
+        // Set the result
+        result = TResult.failure(error);
       } finally {
         inProgress.value = false;
       }
+    } else {
+      validateOnLoad();
     }
+
+    return result;
   }
 
-  async function onUndo(event?: Event) {
+  async function onUndo(event?: Event): Promise<TResult> {
     if (!props.value.onLoad) {
       throw new Error("No onLoad handler provided");
     }
+
+    let result: TResult = TResult.success();
 
     inProgress.value = true;
 
@@ -63,17 +81,26 @@ export async function useFormLoad(
       // Show a message
       snackbar.showMessage(undoSuccessSnackbarMessage.value);
 
-      // https://vuetifyjs.com/en/components/forms/#exposed-properties
-      formRef.value?.resetValidation();
+      if (formRef.value && formRef.value.resetValidation) {
+        formRef.value.resetValidation();
+      }
+
+      // Set the result
+      result = TResult.success();
     } catch (error: ProblemDetails | any) {
       // Set the error
       problemDetails.value = error;
 
       // Show a message
       snackbar.showMessage(undoFailedSnackbarMessage.value);
+
+      // Set the result
+      result = TResult.failure(error);
     } finally {
       inProgress.value = false;
     }
+
+    return result;
   }
 
   return {
@@ -86,5 +113,6 @@ export async function useFormLoad(
     // labels
     loadFailedSnackbarMessage,
     undoSuccessSnackbarMessage,
+    undoButtonLabel,
   };
 }
