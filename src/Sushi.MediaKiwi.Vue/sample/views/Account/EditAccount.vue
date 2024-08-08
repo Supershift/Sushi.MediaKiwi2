@@ -5,7 +5,6 @@
   import { container } from "tsyringe";
   import { useNavigation } from "@/composables/useNavigation";
   import { Account } from "@sample/models/Account/Account";
-  import { ProblemDetails } from "@/models/errors/ProblemDetails";
   import MkConfirmDialog from "@/components/MkConfirmDialog/MkConfirmDialog.vue";
   import { DepositMoneyRequest } from "@sample/models/Account/DepositMoneyRequest";
   import { useValidationRules } from "@/composables";
