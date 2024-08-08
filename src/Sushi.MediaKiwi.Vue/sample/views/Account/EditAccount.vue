@@ -80,11 +80,11 @@
     <v-text-field readonly label="Current Balance" v-model="state.account.balance" />
   </MkForm>
 
-  <MkFormSideSheet v-model="state.depositSheet" confirm-before-submit title="Deposit" @submit="onDeposit">
+  <MkFormSideSheet v-model="state.depositSheet" title="Deposit" @submit="onDeposit">
     <v-text-field label="Amount" v-model="state.amount" :rules="[required]" type="number" />
   </MkFormSideSheet>
 
-  <MkFormSideSheet v-model="state.withdrawSheet" confirm-before-submit title="Withdraw" @submit="onWithdraw">
+  <MkFormSideSheet v-model="state.withdrawSheet" title="Withdraw" @submit="onWithdraw">
     <v-text-field label="Amount" v-model="state.amount" :rules="[required]" type="number" />
   </MkFormSideSheet>
 

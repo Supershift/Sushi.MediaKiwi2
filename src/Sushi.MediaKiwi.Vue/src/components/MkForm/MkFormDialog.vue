@@ -64,9 +64,9 @@
     updateDialog(false);
   }
 
-  async function onSubmitAndClose() {
+  async function onSubmitAndClose(event?: Event, confirm?: boolean) {
     // Submit the form
-    const result = await onSubmit();
+    const result = await onSubmit(event, confirm);
 
     if (result.isSuccess) {
       if (computedProps.value.closeOnSubmit) {
@@ -108,7 +108,7 @@
   );
 </script>
 <template>
-  <v-dialog v-model="modelValue" :width="computedProps.width" close-on-back @update:model-value="updateDialog" @close="onClose">
+  <v-dialog v-model="modelValue" :width="computedProps?.width" close-on-back @update:model-value="updateDialog" @close="onClose">
     <template #default>
       <v-form :id="formId" v-model="isValid" :validate-on="computedProps.validateOn" ref="formRef" @submit.prevent="onSubmitAndClose">
         <MkDialogCard @click:close="onClose" :loading="inProgress" :height="height">
@@ -144,7 +144,7 @@
         :title="submitConfirmationTitle"
         :confirm-button-label="submitButtonLabel"
         :body="submitConfirmationBody"
-        @confirm="(event) => onSubmit(event, true)"
+        @confirm="(event) => onSubmitAndClose(event, true)"
       />
     </template>
   </v-dialog>

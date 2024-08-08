@@ -1,8 +1,38 @@
-import { ProblemDetails } from "@/models/errors/ProblemDetails";
-import { AxiosError, HttpStatusCode } from "axios";
-import { Error } from "@/models/errors/Error";
+import { ProblemDetails, UnknownProblemDetails } from "@/models/errors/ProblemDetails";
+import { AxiosError, AxiosInstance, isAxiosError } from "axios";
+import { ApiError } from "@/models/errors/ApiError";
 
 export function useProblemDetails() {
+  /**
+   * Add a problem details interceptor
+   * This will handle the problem details response and return a problem details object
+   * If the response is not a problem details, it will return a default problem details object
+   * @param axiosInstance
+   */
+  function registerProblemDetailsInterceptor(axiosInstance: AxiosInstance) {
+    // We can handle the response globally in the store
+    axiosInstance.interceptors.response.use(
+      (response) => response,
+      async (error: any) => {
+        if (isAxiosError(error)) {
+          // Create the result object
+          const problemDetails = await parseProblemDetails(error);
+
+          // Return the problem details
+          return Promise.reject(problemDetails);
+        } else {
+          console.error("Unexpected error:", error);
+          return Promise.reject(new UnknownProblemDetails(error?.status));
+        }
+      }
+    );
+  }
+
+  /**
+   * Parse the problem details from the error response
+   * @param error
+   * @returns
+   */
   async function parseProblemDetails(error?: ProblemDetails | any) {
     let problemDetails: ProblemDetails | undefined;
 
@@ -15,22 +45,25 @@ export function useProblemDetails() {
         problemDetails = errorResult as ProblemDetails;
       } else if (typeof error?.response?.data === "string") {
         // We go a string as a response, so we can't use the result as is, so we'll create a problem details object
-        problemDetails = <ProblemDetails>{
-          type: "Unknown",
-          title: "Unknown error",
-          status: error?.response?.status || HttpStatusCode.InternalServerError,
-          detail: "An unknown error occurred. Please try again later.",
-          error: error.response.data,
-        };
+        problemDetails = problemDetails = new UnknownProblemDetails(error?.response?.status);
       } else {
         // If the problem details are already parsed, return them
-        problemDetails = error.response.data as ProblemDetails;
+        problemDetails = ProblemDetails.fromResponse(error.response.data);
       }
+    }
+
+    if (!problemDetails) {
+      problemDetails = new UnknownProblemDetails(error?.response?.status);
     }
 
     return problemDetails;
   }
 
+  /**
+   * Check if the response is a blob response
+   * @param error
+   * @returns
+   */
   function isBlobResponse(error?: AxiosError): boolean {
     if (!error) return false;
 
@@ -47,16 +80,21 @@ export function useProblemDetails() {
   }
 
   /** Type guard for Error */
-  function isError(error?: Error | Error[] | Record<string, string[]>): error is Error {
-    return (error as Error).message !== undefined;
+  function isError(error?: ApiError | ApiError[] | Record<string, string[]>): error is ApiError {
+    return (error as ApiError).message !== undefined;
   }
 
   /** Type guard for Error[] */
-  function isErrorArray(error?: Error | Error[] | Record<string, string[]>): error is Error[] {
+  function isErrorArray(error?: ApiError | ApiError[] | Record<string, string[]>): error is ApiError[] {
     return Array.isArray(error);
   }
 
-  function parseError(error: Error | Error[] | Record<string, string[]>): string[] {
+  /**
+   * Parse the error object to a string array
+   * @param error
+   * @returns
+   */
+  function parseError(error: ApiError | ApiError[] | Record<string, string[]>): string[] {
     if (!error) {
       return [];
     }
@@ -70,6 +108,12 @@ export function useProblemDetails() {
     }
   }
 
+  /**
+   * Get the problem detail messages
+   * @param problemDetails
+   * @param showDetails
+   * @returns
+   */
   function getProblemDetailMessages(problemDetails?: ProblemDetails | null, showDetails?: boolean): string[] | undefined {
     if (!problemDetails) {
       return;
@@ -87,6 +131,7 @@ export function useProblemDetails() {
   }
 
   return {
+    registerProblemDetailsInterceptor,
     parseProblemDetails,
     getProblemDetailMessages,
   };

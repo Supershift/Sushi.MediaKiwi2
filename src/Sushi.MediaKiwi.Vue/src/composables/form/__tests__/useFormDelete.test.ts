@@ -105,7 +105,9 @@ describe("useFormDelete", async () => {
       };
 
       hoists.onDelete.mockRejectedValue(<AxiosResponse>{
-        ...propblemDetails,
+        data: {
+          ...propblemDetails,
+        },
       });
 
       // Act

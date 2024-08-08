@@ -13,7 +13,6 @@ import Screen1 from "./Screen1.vue";
 
 import { modules as HotelsModules } from "./Hotels/modules";
 import { modules as DemoModules } from "./Demo/modules";
-import CreateAccount from "./Account/CreateAccount.vue";
 
 const modules: Record<string, RouteComponent> = {
   Countries,
@@ -29,7 +28,6 @@ const modules: Record<string, RouteComponent> = {
   Screen1,
   ...HotelsModules,
   ...DemoModules,
-  CreateAccount,
 };
 
 export { modules };

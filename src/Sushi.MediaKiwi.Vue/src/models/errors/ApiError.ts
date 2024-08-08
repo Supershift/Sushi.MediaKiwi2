@@ -1,4 +1,4 @@
-export type Error = {
+export type ApiError = {
   field?: string;
 
   /**

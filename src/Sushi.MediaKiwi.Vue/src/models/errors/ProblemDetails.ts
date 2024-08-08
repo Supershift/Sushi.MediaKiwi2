@@ -1,27 +1,54 @@
-import { Error } from "./Error";
+import { ApiError } from "./ApiError";
+import { IProblemDetails } from "./IProblemDetails";
 
 /**
  * Microsoft.AspNetCore.Mvc.ProblemDetails
  */
-export type ProblemDetails = {
-  /** A URI reference that identifies the problem type. */
+export class ProblemDetails extends Error implements IProblemDetails {
   type?: string;
-
-  /** A short, human-readable summary of the problem. */
   title?: string;
-
-  /** The HTTP status code for this occurrence of the problem. */
   status?: number;
-
-  /** A human-readable explanation of the problem. */
   detail?: string;
-
-  /** A URI reference for more information about the problem. */
   instance?: string;
+  error?: ApiError | ApiError[] | Record<string, string[]>;
+  errors?: ApiError | ApiError[] | Record<string, string[]>;
 
-  /** Additional details about the problem. */
-  error?: Error | Error[] | Record<string, string[]>;
+  constructor(type?: string, title?: string, status?: number, detail?: string) {
+    super();
 
-  /** Additional details about the problem. */
-  errors?: Error | Error[] | Record<string, string[]>;
-};
+    this.type = type;
+    this.title = title;
+    this.status = status;
+    this.detail = detail;
+
+    if (detail) {
+      this.error = <ApiError>{ message: detail };
+    }
+  }
+
+  static fromResponse(response: any): ProblemDetails {
+    let result = new ProblemDetails();
+
+    if (response) {
+      result.type = response.type;
+      result.title = response.title;
+      result.status = response.status;
+      result.detail = response.detail;
+      result.instance = response.instance;
+      result.error = response.error;
+      result.errors = response.errors;
+
+      if (!result.error && !result.errors && result.detail) {
+        result.error = <ApiError>{ message: result.detail };
+      }
+    }
+
+    return result;
+  }
+}
+
+export class UnknownProblemDetails extends ProblemDetails {
+  constructor(status?: number) {
+    super("Unknown", "Unknown error", status || 418, "An unknown error occurred. Please try again later.");
+  }
+}
