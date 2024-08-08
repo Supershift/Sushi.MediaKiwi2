@@ -43,6 +43,10 @@ jobs:
       - name: 'Create Core NuGet Package'
         working-directory: src/Sushi.MediaKiwi.Core
         run: dotnet pack --configuration Release /p:Version=${VERSION} --output ../nupkgs
+        
+      - name: 'Create LanguageExtensions NuGet Package'
+        working-directory: src/Sushi.LanguageExtensions
+        run: dotnet pack --configuration Release /p:Version=${VERSION} --output ../nupkgs
       
       # Push NuGet Packages
       - name: Push to NuGet
