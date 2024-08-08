@@ -1,10 +1,9 @@
 import { ApiError } from "./ApiError";
-import { IProblemDetails } from "./IProblemDetails";
 
 /**
  * Microsoft.AspNetCore.Mvc.ProblemDetails
  */
-export class ProblemDetails extends Error implements IProblemDetails {
+export class ProblemDetails extends Error {
   type?: string;
   title?: string;
   status?: number;
