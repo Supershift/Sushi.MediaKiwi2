@@ -1,37 +1,45 @@
 import { ProblemDetails } from "@/models/errors/ProblemDetails";
-import { ModelRef, Ref, computed, onMounted } from "vue";
-import { useI18next as useI18nextComposable } from "./../useI18next";
+import { ModelRef, Ref, computed } from "vue";
 import { FormDialogProps, FormViewProps, FormSideSheetProps } from "@/models/form";
 import { useFormLoad } from "./useFormLoad";
 import { useFormSubmit } from "./useFormSubmit";
 import { useFormDelete } from "./useFormDelete";
 
 export async function useForm<T extends FormViewProps | FormDialogProps | FormSideSheetProps>(
-  useI18next: ReturnType<typeof useI18nextComposable>,
+  /** Props set on the implementing component */
   componentProps: () => Partial<T>,
-  inProgress: ModelRef<boolean, string>,
-  isValid: ModelRef<any, string>,
-  problemDetails: ModelRef<ProblemDetails | null | undefined, string>,
-  formRef: Ref<any>,
+  /** Default props set on the Form Component(s) or through the main configuration */
   defaultProps: T,
-  formId: string
+  /** Ref to the Form element */
+  formRef: Ref<any>,
+  /** Custom id for the Form Element */
+  formId: string,
+  /** Model for the Progress state of the component */
+  inProgress: ModelRef<boolean, string>,
+  /** Model for the Valid state of the component */
+  isValid: ModelRef<any, string>,
+  /** Model for the ProblemDetails state of the component */
+  problemDetails: ModelRef<ProblemDetails | null | undefined, string>
 ) {
   // Helper function to filter out undefined properties
   const definedProps = (obj: Partial<T>) => Object.fromEntries(Object.entries(obj).filter(([_k, v]) => !!v));
 
-  // Reactive Model
+  /** Computed properties for the Form, merging the defaultProps with the form props */
   const computedProps = computed<T>(() => {
-    // Get the computedProps
+    // Get the props from the component
     const props = componentProps();
 
-    // Merge the defaultProps with the form props
+    // Merge the defaultProps with the form props, overriding the defaults with the component props
     const computedProps = { ...defaultProps, ...definedProps(props) };
+
+    // Return the computed props
     return computedProps;
   });
 
-  const formLoad = await useFormLoad(useI18next, computedProps, inProgress, problemDetails, formRef);
-  const formSubmit = await useFormSubmit(useI18next, computedProps, inProgress, isValid, problemDetails, formRef, formId);
-  const formDelete = await useFormDelete(useI18next, computedProps, inProgress, problemDetails);
+  // Init the form load, submit and delete functions
+  const formLoad = await useFormLoad(computedProps, formRef, inProgress, problemDetails);
+  const formSubmit = await useFormSubmit(computedProps, formRef, formId, inProgress, isValid, problemDetails);
+  const formDelete = await useFormDelete(computedProps, inProgress, problemDetails);
 
   return {
     ...formLoad,

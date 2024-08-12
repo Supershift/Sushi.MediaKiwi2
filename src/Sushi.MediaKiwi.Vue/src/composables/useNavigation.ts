@@ -11,7 +11,7 @@ import { identity } from "@/identity";
 export function useNavigation() {
   const route = useRoute();
   const currentNavigationItem = computed(() => {
-    const result = route.meta.navigationItem as NavigationItem;
+    const result = route?.meta.navigationItem as NavigationItem;
     return result;
   });
 

@@ -17,7 +17,7 @@
   const props = defineProps<FormDialogProps>();
 
   // Define props defaults
-  const propDefaults = <FormDialogProps>{
+  const defaultProps = <FormDialogProps>{
     validateOn: "blur",
     width: "600",
     ...formOptions?.general,
@@ -38,7 +38,7 @@
   const formId = `mk-form-dialog__${instance?.uid}`;
 
   const { onLoad, onSubmit, computedProps, submitConfirmDialog, submitConfirmationTitle, submitButtonLabel, submitConfirmationBody, formSlotProps } =
-    await useForm(useI18next(), () => props, inProgress, isValid, problemDetails, formRef, propDefaults, formId);
+    await useForm(() => props, defaultProps, formRef, formId, inProgress, isValid, problemDetails);
 
   const slots = defineSlots<{
     default: void;

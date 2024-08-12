@@ -1,21 +1,26 @@
 import { ProblemDetails } from "@/models/errors/ProblemDetails";
 import { ComputedRef, ModelRef, Ref, computed, reactive, ref } from "vue";
-import { useI18next as useI18nextComposable } from "./../useI18next";
+import { useI18next } from "./../useI18next";
 import { useSnackbarStore } from "@/stores";
 import { FormSlotProps, SubmitProps } from "@/models/form";
 import { TResult } from "@/models/form/TResult";
 
 export async function useFormSubmit(
-  useI18next: ReturnType<typeof useI18nextComposable>,
+  /** Props determining the configuration and labels */
   props: ComputedRef<SubmitProps>,
-  inProgress: ModelRef<boolean, string>,
-  isValid: ModelRef<any, string>,
-  problemDetails: ModelRef<ProblemDetails | null | undefined, string>,
+  /** Ref to the Form element */
   formRef: Ref<any>,
-  formId: string
+  /** Custom id for the Form Element */
+  formId: string,
+  /** Model for the Progress state of the component */
+  inProgress: ModelRef<boolean, string>,
+  /** Model for the Valid state of the component */
+  isValid: ModelRef<any, string>,
+  /** Model for the ProblemDetails state of the component */
+  problemDetails: ModelRef<ProblemDetails | null | undefined, string>
 ) {
   // Inject Dependencies
-  const { defaultT } = await useI18next;
+  const { defaultT } = await useI18next();
   const snackbar = useSnackbarStore();
 
   // Submit button label
@@ -36,12 +41,19 @@ export async function useFormSubmit(
   // Confirmation Dialog state
   const submitConfirmDialog = ref(false);
 
+  /**
+   * Private function to handle the submit
+   * @param event
+   * @returns
+   */
   async function handleSubmit(event?: Event): Promise<TResult> {
     if (!props.value.onSubmit) {
       throw new Error("No onSubmit handler provided");
     }
 
+    // Define the result
     let result: TResult = TResult.failure();
+
     if (isValid.value) {
       // Set the progress indicator
       inProgress.value = true;
@@ -53,8 +65,8 @@ export async function useFormSubmit(
         // Submit the data
         await props.value.onSubmit(event);
 
+        // Show a message that the submit was successful if not hidden
         if (!props.value.hideSubmitSnackbar) {
-          // Show a message that the submit was successful
           snackbar.showMessage(submitSuccessMessage.value);
         }
 
@@ -68,7 +80,9 @@ export async function useFormSubmit(
       } catch (error: ProblemDetails | any) {
         // Set the error
         problemDetails.value = error as ProblemDetails;
-        result = TResult.failure(problemDetails.value);
+
+        // Set the result
+        result = TResult.failure(error);
       } finally {
         inProgress.value = false;
       }
@@ -78,15 +92,22 @@ export async function useFormSubmit(
   }
 
   /**
-   * Prompt the user for confirmation before submitting the form   *
+   * Event to submit the data for the form
    */
   async function onSubmit(event?: Event, confirmed?: boolean): Promise<TResult> {
+    // Define the result
     let result: TResult = TResult.failure();
 
+    // Check if the form is valid
     if (isValid.value) {
+      // Check if the form should be confirmed and is confirmed before submitting
+      // If not, prompt the user for confirmation
+      // If confirmed, submit the form
       if (props.value.confirmBeforeSubmit && !confirmed) {
         // prompt configrm
         submitConfirmDialog.value = true;
+
+        // set the result
         result = TResult.failure();
       } else {
         // handle the submit
@@ -94,13 +115,12 @@ export async function useFormSubmit(
       }
     }
 
+    // return the result
     return result;
   }
 
   /**
    * Handle a click event, call a callback
-   * @param callback
-   * @returns
    */
   async function onClick(callback: () => Promise<any>) {
     let result: TResult = TResult.failure();
@@ -124,6 +144,9 @@ export async function useFormSubmit(
     return result;
   }
 
+  /**
+   * Slot props for the form, to be passed to a component implementing a Form
+   */
   const formSlotProps = computed<FormSlotProps>(() => {
     return <FormSlotProps>{
       form: formId,
@@ -132,19 +155,15 @@ export async function useFormSubmit(
   });
 
   return {
-    // state
+    onSubmit,
     submitConfirmDialog,
     isSubmitDisabled,
     submitButtonColor,
     hasSubmitHandler,
-    // functions
-    onSubmit,
-    // computed labls
     submitButtonLabel,
     submitConfirmationTitle,
     submitConfirmationBody,
     submitSuccessMessage,
-    // Slot props
     formSlotProps,
   };
 }

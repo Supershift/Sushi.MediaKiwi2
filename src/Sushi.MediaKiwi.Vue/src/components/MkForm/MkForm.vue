@@ -21,7 +21,7 @@
   const props = defineProps<FormViewProps>();
 
   // Define computedProps defaults
-  const propDefaults = <FormViewProps>{
+  const defaultProps = <FormViewProps>{
     redirectAfterDelete: true,
     validateOn: "blur",
     ...formOptions?.general,
@@ -56,7 +56,7 @@
     submitConfirmationBody,
     undoButtonLabel,
     formSlotProps,
-  } = await useForm(useI18next(), () => props, inProgress, isValid, problemDetails, formRef, propDefaults, formId);
+  } = await useForm(() => props, defaultProps, formRef, formId, inProgress, isValid, problemDetails);
 
   // Define slots
   const slots = defineSlots<{

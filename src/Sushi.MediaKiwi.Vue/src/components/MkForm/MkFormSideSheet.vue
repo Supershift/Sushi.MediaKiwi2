@@ -18,7 +18,7 @@
   const props = defineProps<FormSideSheetProps>();
 
   // Define computedProps defaults
-  const propDefaults = <FormSideSheetProps>{
+  const defaultProps = <FormSideSheetProps>{
     validateOn: "blur",
     width: "600",
     ...formOptions?.general,
@@ -39,7 +39,7 @@
   const formId = `mk-form-side-sheet__${instance?.uid}`;
 
   const { onLoad, onSubmit, computedProps, submitConfirmDialog, submitConfirmationTitle, submitButtonLabel, submitConfirmationBody, formSlotProps } =
-    await useForm(useI18next(), () => props, inProgress, isValid, problemDetails, formRef, propDefaults, formId);
+    await useForm(() => props, defaultProps, formRef, formId, inProgress, isValid, problemDetails);
 
   const slots = defineSlots<{
     /** Default Slot for your form fields */

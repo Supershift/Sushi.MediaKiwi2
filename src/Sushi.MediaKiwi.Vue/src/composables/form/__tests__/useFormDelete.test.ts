@@ -3,7 +3,6 @@ import { describe, it, expect, vi } from "vitest";
 import { useFormDelete } from "../useFormDelete";
 import { computed, ModelRef, ref } from "vue";
 import { ProblemDetails } from "@/models/errors/ProblemDetails";
-import { useI18next } from "@/composables/useI18next";
 import { createTestingPinia } from "@pinia/testing";
 import { DeleteProps } from "@/models/form";
 import { AxiosResponse, HttpStatusCode } from "axios";
@@ -72,7 +71,7 @@ describe("useFormDelete", async () => {
       redirectAfterDelete: hoists.redirectAfterDelete,
     }));
 
-    const useFormDeleteInstance = await useFormDelete(useI18next(), props, inProgress, error);
+    const useFormDeleteInstance = await useFormDelete(props, inProgress, error);
 
     it("should have delete handler", async () => {
       // Assert
@@ -146,7 +145,7 @@ describe("useFormDelete", async () => {
   describe("Form without DeleteHandler", async () => {
     const props = computed<DeleteProps>(() => ({}));
 
-    const useFormDeleteInstance = await useFormDelete(useI18next(), props, inProgress, error);
+    const useFormDeleteInstance = await useFormDelete(props, inProgress, error);
 
     it("should throw error", async () => {
       // Act

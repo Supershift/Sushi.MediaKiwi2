@@ -4,6 +4,7 @@ import { tokenStore } from "@/plugins/i18next";
 import { i18n } from "i18next";
 import { Ref, computed, inject } from "vue";
 import { useNavigation } from "@/composables/useNavigation";
+import { container } from "tsyringe";
 
 /**
  * Adds i18next to the component.
@@ -13,14 +14,15 @@ import { useNavigation } from "@/composables/useNavigation";
 export async function useI18next(scope?: View | string) {
   // inject dependencies
   const navigation = useNavigation();
-  const i18next = inject<Ref<i18n>>("i18next");
+  const i18next = container.resolve<Ref<i18n>>("i18next");
+
   const mediakiwiOptions = inject<MediakiwiVueOptions>("mediakiwi");
 
   if (!i18next) {
     throw new Error("i18next is not provided, install the plugin first");
   }
 
-  const i18nInitPromise = inject<Promise<any>>("i18initPromise");
+  const i18nInitPromise = container.resolve<Promise<any>>("i18initPromise");
 
   // check if i18next is initialized
   await i18nInitPromise;

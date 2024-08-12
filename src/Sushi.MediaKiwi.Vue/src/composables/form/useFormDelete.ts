@@ -1,19 +1,21 @@
 import { ProblemDetails } from "@/models/errors/ProblemDetails";
 import { ComputedRef, ModelRef, computed } from "vue";
-import { useI18next as useI18nextComposable } from "@/composables/useI18next";
+import { useI18next } from "@/composables/useI18next";
 import { useSnackbarStore } from "@/stores";
 import { useNavigation } from "@/composables/useNavigation";
 import { DeleteProps } from "@/models/form";
 import { TResult } from "@/models/form/TResult";
 
 export async function useFormDelete(
-  useI18next: ReturnType<typeof useI18nextComposable>,
+  /** Props determining the configuration and labels */
   props: ComputedRef<DeleteProps>,
+  /** Model for the Valid state of the component */
   inProgress: ModelRef<boolean, string>,
+  /** Model for the ProblemDetails state of the component */
   problemDetails: ModelRef<ProblemDetails | null | undefined, string>
 ) {
   // Inject Dependencies
-  const { defaultT } = await useI18next;
+  const { defaultT } = await useI18next();
   const snackbar = useSnackbarStore();
   const navigation = useNavigation();
 
@@ -33,10 +35,16 @@ export async function useFormDelete(
   // Computed
   const hasDeleteHandler = computed(() => (props.value.onDelete ? true : false));
 
+  /**
+   * Event to delete the data for the form
+   * @param event
+   * @returns
+   */
   async function onDelete(event?: Event): Promise<TResult> {
     // Define the result
     let result: TResult = TResult.success();
 
+    // Check if a handler is provided
     if (!props.value.onDelete) {
       console.error("No onDelete handler provided");
       return TResult.failure();
@@ -49,16 +57,15 @@ export async function useFormDelete(
       // Delete the data
       await props.value.onDelete(event);
 
+      // Show a message that the delete was successful
       if (!props.value.hideDeleteSnackbar) {
         // Show a message that the delete was successful
         snackbar.showMessage(deleteSuccessfulMessage.value);
       }
 
-      console.log(navigation);
-
+      // Redirect to the parent if the flag is set
       if (props.value.redirectAfterDelete && navigation.currentNavigationItem.value?.parent) {
         // Redirect to the top list
-        console.log("should be here!");
         navigation.navigateToParent();
       }
 
@@ -74,15 +81,16 @@ export async function useFormDelete(
       // Set the result
       result = TResult.failure(error);
     } finally {
+      // Set the progress indicator
       inProgress.value = false;
     }
 
+    // Return
     return result;
   }
 
   return {
     onDelete,
-    // computed
     deleteButtonLabel,
     deleteConfirmationTitle,
     deleteConfirmationBody,

@@ -3,6 +3,7 @@ import { App, ref, triggerRef } from "vue";
 import LanguageDetector from "i18next-browser-languagedetector";
 import HttpApi from "i18next-http-backend";
 import { MediakiwiVueOptions } from "@/models";
+import { container } from "tsyringe";
 
 export const tokenStore = <
   {
@@ -21,7 +22,7 @@ export default {
     // add http backend
     const httpApi = new HttpApi();
     httpApi.init(null, {
-      crossDomain: true,    
+      crossDomain: true,
       loadPath: `${mediakiwiOptions.apiBaseUrl}/translations/{{lng}}/{{ns}}`,
       addPath: `${mediakiwiOptions.apiBaseUrl}/translations/{{lng}}/{{ns}}`,
       customHeaders: () => {
@@ -57,5 +58,8 @@ export default {
     // add i18next to the app
     app.provide("i18next", instance);
     app.provide("i18initPromise", i18initPromise);
+
+    container.registerInstance("i18next", instance);
+    container.registerInstance("i18initPromise", i18initPromise);
   },
 };

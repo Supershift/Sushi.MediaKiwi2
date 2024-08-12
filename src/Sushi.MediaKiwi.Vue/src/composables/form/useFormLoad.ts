@@ -1,21 +1,24 @@
 // import { computed } from "vue";
 
 import { ProblemDetails } from "@/models/errors/ProblemDetails";
-import { ComputedRef, ModelRef, Ref, computed, watch } from "vue";
-import { useI18next as useI18nextComposable } from "./../useI18next";
+import { ComputedRef, ModelRef, Ref, computed } from "vue";
+import { useI18next } from "./../useI18next";
 import { useSnackbarStore } from "@/stores";
 import { LoadProps, UndoProps } from "@/models/form";
 import { TResult } from "@/models/form/TResult";
 
 export async function useFormLoad(
-  useI18next: ReturnType<typeof useI18nextComposable>,
+  /** Props determining the configuration and labels */
   props: ComputedRef<LoadProps & UndoProps>,
+  /** Ref to the Form element */
+  formRef: Ref<any>,
+  /** Model for the Progress state of the component */
   inProgress: ModelRef<boolean, string>,
-  problemDetails: ModelRef<ProblemDetails | null | undefined, string>,
-  formRef: Ref<any>
+  /** Model for the ProblemDetails state of the component */
+  problemDetails: ModelRef<ProblemDetails | null | undefined, string>
 ) {
   // Inject Dependencies
-  const { defaultT } = await useI18next;
+  const { defaultT } = await useI18next();
   const snackbar = useSnackbarStore();
 
   // Load Labels
@@ -28,25 +31,34 @@ export async function useFormLoad(
   );
   const undoButtonLabel = computed(() => props.value.undoButtonLabel || defaultT.value("UndoChanges", "Undo changes"));
 
+  // Computed properties for the handlers
   const hasLoadHandler = computed(() => (props.value.onLoad ? true : false));
   const hasUndoHanlder = computed(() => !props.value.hideUndo && hasLoadHandler.value && hasLoadHandler.value);
 
+  /**
+   * Validates the form on load if the {@link LoadProps.validateOnLoad} flag is set
+   */
   function validateOnLoad() {
     if (props.value.validateOnLoad && formRef.value && formRef.value.validate) {
       formRef.value.validate();
     }
   }
 
+  /**
+   * Event to load the data for the form
+   */
   async function onLoad(event?: Event): Promise<TResult> {
+    // Define the result
     let result: TResult = TResult.success();
 
+    // Check if a handler is provided
     if (props.value.onLoad) {
+      // Set the progress indicator
       inProgress.value = true;
 
       try {
         // Load the data
         await props.value.onLoad(event);
-        validateOnLoad();
       } catch (error: ProblemDetails | any) {
         // Set the error
         problemDetails.value = error;
@@ -57,30 +69,40 @@ export async function useFormLoad(
         // Set the result
         result = TResult.failure(error);
       } finally {
+        // Set the progress indicator
         inProgress.value = false;
       }
-    } else {
-      validateOnLoad();
     }
 
+    // validate the form if the flag is set
+    validateOnLoad();
+
+    // Return the result
     return result;
   }
 
+  /**
+   * Event to undo the changes made to the form
+   */
   async function onUndo(event?: Event): Promise<TResult> {
     if (!props.value.onLoad) {
       throw new Error("No onLoad handler provided");
     }
 
+    // Define the result
     let result: TResult = TResult.success();
 
+    // Set the progress indicator
     inProgress.value = true;
 
     try {
+      // Load the data
       await props.value.onLoad(event);
 
       // Show a message
       snackbar.showMessage(undoSuccessSnackbarMessage.value);
 
+      // Reset the validation
       if (formRef.value && formRef.value.resetValidation) {
         formRef.value.resetValidation();
       }
@@ -97,20 +119,19 @@ export async function useFormLoad(
       // Set the result
       result = TResult.failure(error);
     } finally {
+      // Set the progress indicator
       inProgress.value = false;
     }
 
+    // Return the result
     return result;
   }
 
   return {
-    // functions
     onLoad,
     onUndo,
-    // computed
     hasLoadHandler,
     hasUndoHanlder,
-    // labels
     loadFailedSnackbarMessage,
     undoSuccessSnackbarMessage,
     undoButtonLabel,

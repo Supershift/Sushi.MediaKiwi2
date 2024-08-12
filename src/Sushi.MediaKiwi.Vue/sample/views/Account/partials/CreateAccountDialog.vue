@@ -27,7 +27,7 @@
   }
 </script>
 <template>
-  <MkFormDialog confirm-before-submit @submit="onSubmit" title="Create Account">
+  <MkFormDialog width="800" confirm-before-submit @submit="onSubmit" title="Create Account">
     <v-text-field label="Account Number" v-model="state.account.number" :rules="[required]" />
     <v-text-field label="Holder Name" v-model="state.account.holderName" :rules="[required]" />
   </MkFormDialog>
