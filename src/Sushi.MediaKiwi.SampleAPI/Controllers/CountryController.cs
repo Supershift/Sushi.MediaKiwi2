@@ -5,6 +5,7 @@ using Sushi.MediaKiwi.SampleAPI.Service.Model;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MediaKiwi.WebAPI;
+using Sushi.MediaKiwi.WebAPI.Sorting;
 
 namespace Sushi.MediaKiwi.SampleAPI.Controllers
 {
@@ -19,11 +20,23 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
             _countryService = countryService;
         }
 
-        [HttpGet]      
-        public async Task<ActionResult<ListResult<Country>>> GetAll(PagingValues paging)
+        [HttpGet]
+        public async Task<ActionResult<ListResult<Country>>> GetAll(
+            [FromQuery] PagingValues? paging,
+            [FromQuery] SortingStrings? sortingStrings)
         {
-            var result = await _countryService.GetAllAsync(paging);
+            var sorting = sortingStrings?.GetSorting<SortMap, Country>();
+            var result = await _countryService.GetAllAsync(paging, sorting);
             return this.CreateResponse(result);
+        }
+
+        private class SortMap : SortMap<Country>
+        {
+            public SortMap()
+            {
+                Add(x => x.Name);
+                Add(x => x.Code);
+            }
         }
     }
 }

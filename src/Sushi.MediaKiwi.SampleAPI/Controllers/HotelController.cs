@@ -4,7 +4,7 @@ using Sushi.MediaKiwi.SampleAPI.Service.Model;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MediaKiwi.WebAPI;
-using Sushi.MediaKiwi.WebAPI.Paging;
+using Sushi.MediaKiwi.WebAPI.Sorting;
 
 namespace Sushi.MediaKiwi.SampleAPI.Controllers
 {
@@ -85,7 +85,17 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
     public class GetHotelsQuery
     {
         public PagingValues Page { get; set; } = null!;
+        public SortingStrings Sort { get; set; } = null!;
         public string? CountryCode { get; set; }
         public bool? IsActive { get; set; }
+    }
+
+    public class HotelsSortMap : SortMap<Hotel>
+    {
+        public HotelsSortMap()
+        {
+            Add(x => x.Name);
+            Add(x => x.SRP);
+        }
     }
 }

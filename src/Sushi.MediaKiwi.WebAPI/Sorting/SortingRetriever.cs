@@ -13,6 +13,7 @@ namespace Sushi.MediaKiwi.WebAPI.Sorting
     /// <summary>
     /// Retrieves <see cref="SortValues"/> from <see cref="HttpContext"/>.
     /// </summary>
+    [Obsolete("SortingRetriever is deprecated, to get paging add SortingStrings to the query.")]
     public class SortingRetriever
     {
         private readonly IHttpContextAccessor _httpContextAccessor;

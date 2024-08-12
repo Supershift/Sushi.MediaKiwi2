@@ -15,7 +15,7 @@ namespace Sushi.MediaKiwi.Services.Interfaces
         /// <param name="pagingValues"></param>
         /// <param name="sortValues"></param>
         /// <returns></returns>
-        Task<QueryListResult<NavigationItem>> GetAllAsync(string? sectionID, PagingValues pagingValues, SortValues<NavigationItem>? sortValues = null);
+        Task<QueryListResult<NavigationItem>> GetAllAsync(string? sectionID, PagingValues? pagingValues, SortValues<NavigationItem>? sortValues = null);
 
         /// <summary>
         /// Gets a <see cref="NavigationItem"/> by id.

@@ -17,22 +17,19 @@ namespace Sushi.MediaKiwi.WebAPI
         {
             public ViewSortMap()
             {
-                Add(x => x.Name);                
+                Add(x => x.Name);
             }
         }
 
         private readonly ViewService _viewService;
-        private readonly SortingRetriever _sortingRetriever;
 
         /// <summary>
         /// Creates a new instance of the ViewController.
         /// </summary>
         /// <param name="viewService"></param>
-        /// <param name="sortingRetriever"></param>
-        public ViewController(ViewService viewService, SortingRetriever sortingRetriever)
+        public ViewController(ViewService viewService)
         {
             _viewService = viewService;
-            _sortingRetriever = sortingRetriever;
         }
 
         /// <summary>
@@ -49,17 +46,16 @@ namespace Sushi.MediaKiwi.WebAPI
             return this.CreateResponse(result);
         }
 
-        
+
 
         /// <summary>
         /// Gets all views.
         /// </summary>        
         /// <returns></returns>
         [HttpGet]
-        [QueryStringSorting<ViewSortMap>()]
-        public async Task<ActionResult<ListResult<View>>> GetViews(PagingValues page)
+        public async Task<ActionResult<ListResult<View>>> GetViews([FromQuery] PagingValues page, [FromQuery] SortingStrings sort)
         {
-            var sortValues = _sortingRetriever.GetSorting<View>();
+            var sortValues = sort.GetSorting<ViewSortMap, View>();
             var result = await _viewService.GetAllAsync(page, sortValues);
             return this.CreateResponse(result);
         }

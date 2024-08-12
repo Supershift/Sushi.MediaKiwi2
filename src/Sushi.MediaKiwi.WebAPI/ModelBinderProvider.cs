@@ -48,7 +48,7 @@ namespace Sushi.MediaKiwi.WebAPI
 
             if (context.Metadata.ModelType == typeof(SortValues))
             {
-                return new BinderTypeModelBinder(typeof(SortingBinder<>));
+                return new BinderTypeModelBinder(typeof(SortingBinder));
             }
 
 

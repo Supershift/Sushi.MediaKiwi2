@@ -36,7 +36,10 @@ namespace Sushi.MediaKiwi.WebAPI
             services.AddHttpContextAccessor();
 
             // add mk dependencies
-            services.TryAddTransient<Sorting.SortingRetriever>();
+#pragma warning disable CS0618 // Type or member is obsolete
+            services.TryAddTransient<PagingRetriever>();
+            services.TryAddTransient<SortingRetriever>();
+#pragma warning restore CS0618 // Type or member is obsolete
 
             // Define admin role policy
             if (authorizationOptions == null)
@@ -78,12 +81,12 @@ namespace Sushi.MediaKiwi.WebAPI
             if (File.Exists(webModelFilename))
                 options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, webModelFilename));
 
-            // add paging parameters
+            //add paging parameters
             options.OperationFilter<PagingSwaggerFilter>();
             options.OperationFilter<ContinuationSwaggerFilter>();
 
             // add sorting parameters
-            options.OperationFilter<SortingSwaggerFilter>();
+            //options.OperationFilter<SortingSwaggerFilter>();
 
             // add docs for mediakiw
             options.SwaggerDoc("MediaKiwi", new OpenApiInfo { Title = "MediaKiwi" });

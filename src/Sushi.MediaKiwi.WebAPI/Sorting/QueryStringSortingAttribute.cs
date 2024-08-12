@@ -17,6 +17,7 @@ namespace Sushi.MediaKiwi.WebAPI.Sorting
     /// <summary>
     /// Attribute adding sorting querystring parameters when applied to a WebAPI method. Adds 'sortBy' and 'sortDirection' querystring parameters.
     /// </summary>    
+    [Obsolete("QueryStringSortingAttribute is deprecated, to get paging add SortingStrings to the query.")]
     public class QueryStringSortingAttribute<TSortMap> : ActionFilterAttribute, IQueryStringSortingAttribute where TSortMap : ISortMap, new()
     {
         /// <summary>

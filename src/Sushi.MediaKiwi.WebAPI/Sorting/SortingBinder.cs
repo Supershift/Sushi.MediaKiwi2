@@ -3,23 +3,11 @@ using Sushi.MediaKiwi.Services;
 
 namespace Sushi.MediaKiwi.WebAPI.Sorting
 {
-
     /// <summary>
     /// Represents values used when sorting datasets.
     /// </summary>
-    public class SortingBinder<TSortMap> : IModelBinder where TSortMap : ISortMap, new()
+    public class SortingBinder : IModelBinder
     {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public SortingBinder()
-        {
-            SortMap = new TSortMap();
-        }
-
-        /// <inheritdoc/>        
-        public ISortMap SortMap { get; }
-
         /// <summary>
         /// Binds sortingvalue to <see cref="SortValues"/>.
         /// </summary>
@@ -34,30 +22,15 @@ namespace Sushi.MediaKiwi.WebAPI.Sorting
             }
 
             // get default values
-            SortDirection sortDirection = SortDirection.ASC;
+            string? sortExpression = bindingContext.ValueProvider.GetValue("sortBy").FirstValue;
+            string? sortDirection = bindingContext.ValueProvider.GetValue("sortDirection").FirstValue;
 
-            // Try to fetch the value of the argument by name
-            var sortByValue = bindingContext.ValueProvider.GetValue("sortBy");
+            // Create the model
+            var model = new SortingStrings(sortExpression, sortDirection);
 
-            if (!string.IsNullOrWhiteSpace(sortByValue.FirstValue))
-            {
-                // get sort expression
-                var sortExpression = SortMap.GetItem(sortByValue.FirstValue!)!;
+            // Set the model as the result of the model binding
+            bindingContext.Result = ModelBindingResult.Success(model);
 
-                if (!string.IsNullOrWhiteSpace(sortByValue.FirstValue))
-                {
-                    if (sortByValue.FirstValue.Equals(SortDirection.DESC.ToString(), StringComparison.OrdinalIgnoreCase))
-                    {
-                        sortDirection = SortDirection.DESC;
-                    }
-                }
-
-                // Create the model
-                var model = new SortValues(sortExpression, sortDirection);
-
-                // Set the model as the result of the model binding
-                bindingContext.Result = ModelBindingResult.Success(model);
-            }
 
             return Task.CompletedTask;
         }

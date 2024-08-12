@@ -13,11 +13,23 @@ namespace Sushi.MediaKiwi.SampleAPI.DAL.Repository
             _connector = connector;
         }
 
-        public async Task<QueryListResult<Country>> GetAllAsync(PagingValues pagingValues)
+        public async Task<QueryListResult<Country>> GetAllAsync(PagingValues? pagingValues, SortValues<Country>? sorting)
         {
             var query = _connector.CreateQuery();
-            query.AddPaging(pagingValues);
+
+            if (pagingValues is not null)
+            {
+                query.AddPaging(pagingValues);
+            }
+
+            if (sorting is not null)
+            {
+                query.AddOrder(sorting);
+            }
+            else
+            {
             query.AddOrder(x => x.Name);
+            }
             var result = await _connector.GetAllAsync(query);
             return result;
         }

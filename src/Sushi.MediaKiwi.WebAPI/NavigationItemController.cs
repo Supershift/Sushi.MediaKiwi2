@@ -16,7 +16,6 @@ namespace Sushi.MediaKiwi.WebAPI
     public class NavigationItemController : MediaKiwiControllerBase
     {
         private readonly NavigationItemService _navigationItemService;
-        private readonly SortingRetriever _sortingRetriever;
         
         internal class NavigationItemsSortMap : SortMap<NavigationItem>
         {
@@ -31,11 +30,9 @@ namespace Sushi.MediaKiwi.WebAPI
         /// Creates a new instance of the NavigationItemController.
         /// </summary>
         /// <param name="screenService"></param>
-        /// <param name="sortingRetriever"></param>
-        public NavigationItemController(NavigationItemService screenService, SortingRetriever sortingRetriever)
+        public NavigationItemController(NavigationItemService screenService)
         {
             _navigationItemService = screenService;
-            _sortingRetriever = sortingRetriever;
         }
 
 
@@ -45,10 +42,9 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet]
-        [QueryStringSorting<NavigationItemsSortMap>()]
         public async Task<ActionResult<ListResult<NavigationItem>>> GetNavigationItems([FromQuery] GetNavigationItemsQuery query)
         {
-            var sortValues = _sortingRetriever.GetSorting<NavigationItem>();
+            var sortValues = query.Sort?.GetSorting<NavigationItemsSortMap, NavigationItem>();
             var result = await _navigationItemService.GetAllAsync(query.sectionID, query.Page, sortValues);
             return this.CreateResponse(result);
         }
@@ -74,12 +70,12 @@ namespace Sushi.MediaKiwi.WebAPI
             /// <summary>
             /// Paging values.
             /// </summary>
-            public PagingValues Page { get; set; } = null!;
+            public PagingValues? Page { get; set; }
 
             /// <summary>
             /// 
             /// </summary>
-            public SortValues Sort { get; set; } = null!;
+            public SortingStrings? Sort { get; set; }
 
             /// <summary>
             /// If set to true, only locales with enabled set to true are returned.

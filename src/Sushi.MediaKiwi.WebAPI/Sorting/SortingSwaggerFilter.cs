@@ -45,8 +45,8 @@ namespace Sushi.MediaKiwi.WebAPI.Sorting
                         Required = false,
                         Schema = new OpenApiSchema()
                         {
-                            Type = "string",                            
-                            Enum = sortingAttribute.SortMap.GetSortFields().Select(x=> new OpenApiString(x)).ToList<IOpenApiAny>()
+                            Type = "string",
+                            Enum = sortingAttribute.SortMap.GetSortFields().Select(x => new OpenApiString(x)).ToList<IOpenApiAny>()
                         }
                     });
 
@@ -58,8 +58,8 @@ namespace Sushi.MediaKiwi.WebAPI.Sorting
                         Required = false,
                         Schema = new OpenApiSchema()
                         {
-                            Type = "string",                            
-                            Enum = Enum.GetValues<SortDirection>().Select(x=> new OpenApiString(x.ToString())).ToList<IOpenApiAny>()
+                            Type = "string",
+                            Enum = Enum.GetValues<SortDirection>().Select(x => new OpenApiString(x.ToString())).ToList<IOpenApiAny>()
                         }
                     });
                 }

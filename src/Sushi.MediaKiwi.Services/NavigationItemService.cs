@@ -32,7 +32,7 @@ namespace Sushi.MediaKiwi.Services
         /// <param name="pagingValues"></param>
         /// <param name="sortValues"></param>
         /// <returns></returns>
-        public async Task<Result<ListResult<NavigationItem>>> GetAllAsync(string? sectionID, PagingValues pagingValues, SortValues<NavigationItem>? sortValues = null)
+        public async Task<Result<ListResult<NavigationItem>>> GetAllAsync(string? sectionID, PagingValues? pagingValues, SortValues<NavigationItem>? sortValues = null)
         {
             // map sort values to dal
             var sortValuesDal = _mapper.MapSortValues<Entities.NavigationItem>(sortValues);
