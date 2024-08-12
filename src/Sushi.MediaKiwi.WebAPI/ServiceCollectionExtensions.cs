@@ -129,5 +129,21 @@ namespace Sushi.MediaKiwi.WebAPI
             options.SwaggerEndpoint("../swagger/MediaKiwi/swagger.json", "MediaKiwi");
             return options;
         }
+
+        /// <summary>
+        /// Adds all modelbinders to the <paramref name="services"/>.
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddModelBinders(this IServiceCollection services)
+        {
+            services.AddMvc(options =>
+            {
+                options.ModelBinderProviders.Insert(0, new ModelBinderProvider());
+            });
+
+            return services;
+        }
+
     }
 }

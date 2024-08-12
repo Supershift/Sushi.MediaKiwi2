@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
+using Sushi.MediaKiwi.WebAPI.Paging;
 using Sushi.MediaKiwi.WebAPI.Sorting;
 
 namespace Sushi.MediaKiwi.WebAPI
@@ -44,7 +46,7 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpGet]
         [QueryStringSorting<NavigationItemsSortMap>()]
-        public async Task<ActionResult<ListResult<NavigationItem>>> GetNavigationItems(GetNavigationItemsQuery query)
+        public async Task<ActionResult<ListResult<NavigationItem>>> GetNavigationItems([FromQuery] GetNavigationItemsQuery query)
         {
             var sortValues = _sortingRetriever.GetSorting<NavigationItem>();
             var result = await _navigationItemService.GetAllAsync(query.sectionID, query.Page, sortValues);
@@ -73,6 +75,11 @@ namespace Sushi.MediaKiwi.WebAPI
             /// Paging values.
             /// </summary>
             public PagingValues Page { get; set; } = null!;
+
+            /// <summary>
+            /// 
+            /// </summary>
+            public SortValues Sort { get; set; } = null!;
 
             /// <summary>
             /// If set to true, only locales with enabled set to true are returned.

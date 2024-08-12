@@ -6,7 +6,6 @@ namespace Sushi.MediaKiwi.Services
     /// <summary>
     /// Represents values used when paging datasets.
     /// </summary>
-    [ModelBinder(BinderType = typeof(PagingBinder))]
     public record PagingValues
     {
         /// <summary>
