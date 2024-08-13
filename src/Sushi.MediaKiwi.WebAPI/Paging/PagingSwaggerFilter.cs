@@ -31,6 +31,12 @@ namespace Sushi.MediaKiwi.WebAPI.Paging
                         operation.Parameters = new List<OpenApiParameter>();
                     }
 
+                    var pagingParameter = operation.Parameters.FirstOrDefault(x => x.Schema.Reference?.Id == nameof(PagingValues));
+                    if (pagingParameter is not null)
+                    {
+                        operation.Parameters.Remove(pagingParameter);
+                    }
+
                     // add paging parameters
                     operation.Parameters.Add(new OpenApiParameter()
                     {
