@@ -23,14 +23,14 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<ListResult<Country>>> GetAll(
             [FromQuery] PagingValues? paging,
-            [FromQuery] SortingStrings? sortingStrings)
+            [FromQuery] SortQuery<SortMap, Country>? sortingStrings)
         {
-            var sorting = sortingStrings?.GetSorting<SortMap, Country>();
+            var sorting = sortingStrings?.GetSorting();
             var result = await _countryService.GetAllAsync(paging, sorting);
             return this.CreateResponse(result);
         }
 
-        private class SortMap : SortMap<Country>
+        public class SortMap : SortMap<Country>
         {
             public SortMap()
             {

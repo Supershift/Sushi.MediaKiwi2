@@ -86,7 +86,7 @@ namespace Sushi.MediaKiwi.WebAPI
             options.OperationFilter<ContinuationSwaggerFilter>();
 
             // add sorting parameters
-            //options.OperationFilter<SortingSwaggerFilter>();
+            options.OperationFilter<SortingSwaggerFilter>();
 
             // add docs for mediakiw
             options.SwaggerDoc("MediaKiwi", new OpenApiInfo { Title = "MediaKiwi" });

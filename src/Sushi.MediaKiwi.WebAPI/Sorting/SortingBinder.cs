@@ -1,37 +1,28 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Sushi.MediaKiwi.Services;
 
 namespace Sushi.MediaKiwi.WebAPI.Sorting
 {
     /// <summary>
-    /// Represents values used when sorting datasets.
+    /// Binds to context to extract a <see cref="SortQuery{TMap, TType}"/>.
     /// </summary>
-    public class SortingBinder : IModelBinder
+    public class SortingBinder<TMap, TType> : IModelBinder where TMap : ISortMap, new()
     {
         /// <summary>
-        /// Binds sortingvalue to <see cref="SortValues"/>.
+        /// Binds
         /// </summary>
         /// <param name="bindingContext"></param>
-        /// <returns></returns>
+        /// <returns>A sort query</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
-            if (bindingContext == null)
-            {
-                throw new ArgumentNullException(nameof(bindingContext));
-            }
+            ArgumentNullException.ThrowIfNull(nameof(bindingContext));
 
-            // get default values
             string? sortExpression = bindingContext.ValueProvider.GetValue("sortBy").FirstValue;
             string? sortDirection = bindingContext.ValueProvider.GetValue("sortDirection").FirstValue;
 
-            // Create the model
-            var model = new SortingStrings(sortExpression, sortDirection);
+            var model = new SortQuery<TMap, TType>(sortExpression, sortDirection);
 
-            // Set the model as the result of the model binding
             bindingContext.Result = ModelBindingResult.Success(model);
-
-
             return Task.CompletedTask;
         }
     }

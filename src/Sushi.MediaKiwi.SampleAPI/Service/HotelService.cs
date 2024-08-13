@@ -32,7 +32,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
             // get hotels from datastore
             var items = await _hotelRepository.GetAllAsync(
                 query.Page,
-                _mapper.MapSortValues<DAL.Hotel>(query.Sort.GetSorting<HotelsSortMap, Hotel>()),
+                _mapper.MapSortValues<DAL.Hotel>(query.Sort.GetSorting()),
                 query.CountryCode, 
                 query.IsActive);
 

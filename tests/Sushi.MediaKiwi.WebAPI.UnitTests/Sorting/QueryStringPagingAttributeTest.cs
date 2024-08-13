@@ -15,6 +15,7 @@ using Sushi.MediaKiwi.WebAPI.Sorting;
 using Sushi.MediaKiwi.Services;
 using System.Linq.Expressions;
 
+#pragma warning disable CS0618 // Type or member is obsolete
 namespace Sushi.MediaKiwi.WebAPI.UnitTests.Sorting
 {
     public class QueryStringSortingAttributeTest
@@ -203,3 +204,4 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests.Sorting
         }
     }
 }
+#pragma warning restore CS0618 // Type or member is obsolete

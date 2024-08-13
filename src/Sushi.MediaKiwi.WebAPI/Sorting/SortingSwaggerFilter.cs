@@ -1,14 +1,9 @@
-﻿using Azure;
-using Microsoft.AspNetCore.Mvc.Controllers;
+﻿using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Sushi.MediaKiwi.Services;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Sushi.MediaKiwi.WebAPI.Sorting
 {
@@ -22,9 +17,19 @@ namespace Sushi.MediaKiwi.WebAPI.Sorting
         {
             // check if method has sorting attribute
             var attributes = context.ApiDescription.CustomAttributes();
-            var sortingAttribute = attributes.FirstOrDefault(x => x is IQueryStringSortingAttribute) as IQueryStringSortingAttribute;
+            var sortMap = (attributes.FirstOrDefault(x => x is IQueryStringSortingAttribute) as IQueryStringSortingAttribute)?.SortMap;
 
-            if (sortingAttribute != null)
+            if (sortMap is null)
+            {
+                var parameters = context.MethodInfo.GetParameters();
+                var sortable = parameters.FirstOrDefault(p => p.ParameterType.IsGenericType && p.ParameterType.GetGenericTypeDefinition() == typeof(SortQuery<,>));
+                if (sortable is not null)
+                {
+                    sortMap = (ISortMap?)Activator.CreateInstance(sortable.ParameterType.GetGenericArguments()[0]);
+                }
+            }
+
+            if (sortMap != null)
             {
                 var descriptor = context.ApiDescription.ActionDescriptor as ControllerActionDescriptor;
 
@@ -34,6 +39,18 @@ namespace Sushi.MediaKiwi.WebAPI.Sorting
                     if (operation.Parameters == null)
                     {
                         operation.Parameters = new List<OpenApiParameter>();
+                    }
+
+                    var sortByParameter = operation.Parameters.FirstOrDefault(x => x.Name == "SortBy");
+                    if (sortByParameter is not null)
+                    {
+                        operation.Parameters.Remove(sortByParameter);
+                    }
+
+                    var sortDirectionParameter = operation.Parameters.FirstOrDefault(x => x.Name == "SortDirection");
+                    if (sortDirectionParameter is not null)
+                    {
+                        operation.Parameters.Remove(sortDirectionParameter);
                     }
 
                     // add sorting parameters
@@ -46,7 +63,7 @@ namespace Sushi.MediaKiwi.WebAPI.Sorting
                         Schema = new OpenApiSchema()
                         {
                             Type = "string",
-                            Enum = sortingAttribute.SortMap.GetSortFields().Select(x => new OpenApiString(x)).ToList<IOpenApiAny>()
+                            Enum = sortMap.GetSortFields().Select(x => new OpenApiString(x)).ToList<IOpenApiAny>()
                         }
                     });
 

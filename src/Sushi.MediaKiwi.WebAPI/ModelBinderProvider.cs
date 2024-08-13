@@ -4,6 +4,7 @@ using Microsoft.OpenApi.Writers;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MediaKiwi.WebAPI.Sorting;
+using System.Diagnostics;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
@@ -27,30 +28,25 @@ namespace Sushi.MediaKiwi.WebAPI
             
             // Get the model type from the context
             Type modelType = context.Metadata.ModelType;
-            //if (modelType.IsGenericType && modelType.GetGenericTypeDefinition() == typeof(SortValues<>))
-            //{
-            //    // Get the generic type argument (e.g., T in SortValues<T>)
-            //    Type genericTypeArgument = context.Metadata.ModelType.GetGenericArguments()[0];
 
-            //    // Construct the SortValues<T> type
-            //    Type sortValuesType = typeof(SortValues<>).MakeGenericType(genericTypeArgument);
+            Trace.WriteLine($"t:{modelType}");
+            if (modelType.IsGenericType && modelType.GetGenericTypeDefinition() == typeof(SortQuery<,>))
+            {
+                Type genericTypeArgument = context.Metadata.ModelType.GetGenericArguments()[0];
+                Type genericTypeArgument2 = context.Metadata.ModelType.GetGenericArguments()[1];
 
-            //    // Construct the SortingBinder<SortValues<T>> type
-            //    //Type binderType = typeof(SortingBinder<>).MakeGenericType(sortValuesType);
+                Type? genericTypeArgumentsub = genericTypeArgument.BaseType?.GetGenericArguments()[0];
+                Trace.WriteLine($"t:{genericTypeArgumentsub}");
 
-            //    return new BinderTypeModelBinder(typeof(SortingBinder<>));
-            //}
+                Type binderType = typeof(SortingBinder<,>).MakeGenericType(genericTypeArgument, genericTypeArgument2);
+
+                return new BinderTypeModelBinder(binderType);
+            }
+
             if (context.Metadata.ModelType == typeof(PagingValues))
             {
                 return new BinderTypeModelBinder(typeof(PagingBinder));
             }
-
-
-            if (context.Metadata.ModelType == typeof(SortValues))
-            {
-                return new BinderTypeModelBinder(typeof(SortingBinder));
-            }
-
 
             return null!;
         }

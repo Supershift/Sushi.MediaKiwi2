@@ -13,8 +13,14 @@ namespace Sushi.MediaKiwi.WebAPI
     [Route($"{BaseRoute}/views")]
     public class ViewController : MediaKiwiControllerBase
     {
-        internal class ViewSortMap : SortMap<View>
+        /// <summary>
+        /// 
+        /// </summary>
+        public class ViewSortMap : SortMap<View>
         {
+            /// <summary>
+            /// 
+            /// </summary>
             public ViewSortMap()
             {
                 Add(x => x.Name);
@@ -53,9 +59,9 @@ namespace Sushi.MediaKiwi.WebAPI
         /// </summary>        
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<ListResult<View>>> GetViews([FromQuery] PagingValues page, [FromQuery] SortingStrings sort)
+        public async Task<ActionResult<ListResult<View>>> GetViews([FromQuery] PagingValues page, [FromQuery] SortQuery<ViewSortMap, View> sort)
         {
-            var sortValues = sort.GetSorting<ViewSortMap, View>();
+            var sortValues = sort.GetSorting();
             var result = await _viewService.GetAllAsync(page, sortValues);
             return this.CreateResponse(result);
         }

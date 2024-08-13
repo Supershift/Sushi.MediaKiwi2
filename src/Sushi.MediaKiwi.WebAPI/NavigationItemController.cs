@@ -17,8 +17,14 @@ namespace Sushi.MediaKiwi.WebAPI
     {
         private readonly NavigationItemService _navigationItemService;
         
-        internal class NavigationItemsSortMap : SortMap<NavigationItem>
+        /// <summary>
+        /// 
+        /// </summary>
+        public class NavigationItemsSortMap : SortMap<NavigationItem>
         {
+            /// <summary>
+            /// 
+            /// </summary>
             public NavigationItemsSortMap()
             {
                 Add(x => x.Name);
@@ -44,7 +50,7 @@ namespace Sushi.MediaKiwi.WebAPI
         [HttpGet]
         public async Task<ActionResult<ListResult<NavigationItem>>> GetNavigationItems([FromQuery] GetNavigationItemsQuery query)
         {
-            var sortValues = query.Sort?.GetSorting<NavigationItemsSortMap, NavigationItem>();
+            var sortValues = query.Sort?.GetSorting();
             var result = await _navigationItemService.GetAllAsync(query.sectionID, query.Page, sortValues);
             return this.CreateResponse(result);
         }
@@ -75,7 +81,7 @@ namespace Sushi.MediaKiwi.WebAPI
             /// <summary>
             /// 
             /// </summary>
-            public SortingStrings? Sort { get; set; }
+            public SortQuery<NavigationItemsSortMap, NavigationItem>? Sort { get; set; }
 
             /// <summary>
             /// If set to true, only locales with enabled set to true are returned.

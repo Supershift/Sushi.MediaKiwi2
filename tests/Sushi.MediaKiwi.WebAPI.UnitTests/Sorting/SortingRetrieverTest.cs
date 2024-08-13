@@ -3,6 +3,7 @@ using Moq;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.WebAPI.Sorting;
 
+#pragma warning disable CS0618 // Type or member is obsolete
 namespace Sushi.MediaKiwi.WebAPI.UnitTests.Sorting
 {
     public class SortingRetrieverTest
@@ -157,6 +158,5 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests.Sorting
             Assert.Null(result);
         }
     }
-
-
 }
+#pragma warning restore CS0618 // Type or member is obsolete
