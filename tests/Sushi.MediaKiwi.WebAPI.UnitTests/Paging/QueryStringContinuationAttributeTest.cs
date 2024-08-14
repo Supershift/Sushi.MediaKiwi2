@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.WebAPI.Paging;
-using Sushi.LanguageExtensions;
 
 namespace Sushi.MediaKiwi.WebAPI.UnitTests.Paging
 {
