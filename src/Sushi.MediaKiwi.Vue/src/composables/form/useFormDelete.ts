@@ -1,5 +1,5 @@
 import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
-import { ComputedRef, ModelRef, computed } from "vue";
+import { ComputedRef, ModelRef, Ref, computed } from "vue";
 import { useI18next } from "@/composables/useI18next";
 import { useSnackbarStore } from "@/stores";
 import { useNavigation } from "@/composables/useNavigation";
@@ -10,10 +10,12 @@ import { useErrorProblemDetails } from "../useErrorProblemDetails";
 export async function useFormDelete(
   /** Props determining the configuration and labels */
   props: ComputedRef<DeleteProps>,
-  /** Model for the Valid state of the component */
-  inProgress: ModelRef<boolean, string>,
+  /** Ref to the Form element */
+  formRef: Ref<any>,
   /** Model for the ErrorProblemDetails state of the component */
   errorProblemDetails: ModelRef<ErrorProblemDetails | null | undefined, string>
+  /** Model for the Valid state of the component */
+  inProgress: ModelRef<boolean, string>,
 ) {
   // Inject Dependencies
   const { defaultT } = await useI18next();
@@ -86,6 +88,10 @@ export async function useFormDelete(
 
       // Show a message that the delete failed
       snackbar.showMessage(deleteFailedMessage.value);
+
+      if (formRef.value && formRef.value.reset) {
+        formRef.value.reset();
+      }
 
       // Set the result
       result = TResult.failure(error);

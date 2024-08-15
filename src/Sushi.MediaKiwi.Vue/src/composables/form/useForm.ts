@@ -38,8 +38,8 @@ export async function useForm<T extends FormViewProps | FormDialogProps | FormSi
 
   // Init the form load, submit and delete functions
   const formLoad = await useFormLoad(computedProps, formRef, inProgress, errorProblemDetails);
-  const formSubmit = await useFormSubmit(computedProps, formRef, formId, inProgress, isValid, errorProblemDetails);
-  const formDelete = await useFormDelete(computedProps, inProgress, errorProblemDetails);
+  const formSubmit = await useFormSubmit(computedProps, formRef, inProgress, errorProblemDetails, isValid);
+  const formDelete = await useFormDelete(computedProps, formRef, inProgress, errorProblemDetails);
 
   /**
    * Slot props for the form, to be passed to a component implementing a Form

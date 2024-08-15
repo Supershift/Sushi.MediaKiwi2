@@ -11,14 +11,12 @@ export async function useFormSubmit(
   props: ComputedRef<SubmitProps>,
   /** Ref to the Form element */
   formRef: Ref<any>,
-  /** Custom id for the Form Element */
-  formId: string,
   /** Model for the Progress state of the component */
   inProgress: ModelRef<boolean, string>,
-  /** Model for the Valid state of the component */
-  isValid: ModelRef<any, string>,
   /** Model for the ErrorProblemDetails state of the component */
-  errorProblemDetails: ModelRef<ErrorProblemDetails | null | undefined, string>
+  errorProblemDetails: ModelRef<ErrorProblemDetails | null | undefined, string>,
+  /** Model for the Valid state of the component */
+  isValid: ModelRef<any, string>
 ) {
   // Inject Dependencies
   const { defaultT } = await useI18next();
