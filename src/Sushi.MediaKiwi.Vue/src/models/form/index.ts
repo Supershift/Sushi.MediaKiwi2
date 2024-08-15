@@ -1,5 +1,4 @@
-import { promises } from "dns";
-import { TResult } from "./TResult";
+import { ErrorProblemDetails } from "../errors/ErrorProblemDetails";
 
 export type FormViewProps = FormProps & {
   /** If true, the toolbar will be sticky on top of the page. */
@@ -31,7 +30,7 @@ export type FormProps = LoadProps &
   DeleteProps &
   UndoProps & {
     validateOn?: "blur" | "submit" | "input" | "input lazy" | "blur lazy" | "submit lazy" | "lazy input" | "lazy blur" | "lazy submit" | "lazy";
-    /** Show the {@link ProblemDetails} detail value */
+    /** Show the {@link ErrorProblemDetails} detail value */
     showProblemDetailsDetailField?: boolean;
     /** Title of the form */
     title?: string;
@@ -100,6 +99,4 @@ export type UndoProps = {
 export type FormSlotProps = {
   /** Id of the form */
   form: string;
-  /** Click event for custom buttons, handling errors and loading states. */
-  onClick: (callback: () => Promise<any>) => Promise<any>;
 };

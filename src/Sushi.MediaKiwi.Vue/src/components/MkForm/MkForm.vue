@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T extends Object">
-  import ProblemDetailsComponent from "@/components/MkProblemDetails/MkProblemDetails.vue";
-  import { ProblemDetails } from "@/models/errors/ProblemDetails";
+  import MkErrorProblemDetails from "@/components/MkErrorProblemDetails/MkErrorProblemDetails.vue";
+  import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
   import MkConfirmDialog from "@/components/MkConfirmDialog/MkConfirmDialog.vue";
   import { ref, getCurrentInstance } from "vue";
   import MkToolbar from "../MkToolbar/MkToolbar.vue";
@@ -10,7 +10,6 @@
   import { useMediakiwiVueOptions } from "@/composables/useMediakiwiVueOptions";
   import { useForm } from "@/composables/form/useForm";
   import { useNavigation } from "@/composables/useNavigation";
-  import { useI18next } from "@/composables/useI18next";
 
   // Inject dependencies
   const navigation = useNavigation();
@@ -33,7 +32,7 @@
   /** The value representing the validity of the form. If the value is null then no validation has taken place yet, or the form has been reset. Otherwise the value will be a boolean that indicates if validation has passed or not. */
   const isValid = defineModel<boolean>("isValid", { required: false, default: false });
   /** The value representing the error that occurred during the last request. */
-  const problemDetails = defineModel<ProblemDetails | null | undefined>("error", { required: false });
+  const errorProblemDetails = defineModel<ErrorProblemDetails | null | undefined>("error", { required: false });
   // Define refs
   const formRef = ref();
   const formId = `mk-form-view__${instance?.uid}`;
@@ -56,7 +55,7 @@
     submitConfirmationBody,
     undoButtonLabel,
     formSlotProps,
-  } = await useForm(() => props, defaultProps, formRef, formId, inProgress, isValid, problemDetails);
+  } = await useForm(() => props, defaultProps, formRef, formId, inProgress, isValid, errorProblemDetails);
 
   // Define slots
   const slots = defineSlots<{
@@ -141,7 +140,12 @@
       </template>
     </MkToolbar>
 
-    <ProblemDetailsComponent v-if="problemDetails" v-model:problem-details="problemDetails" class="mb-4" :show-details="showProblemDetailsDetailField" />
+    <MkErrorProblemDetails
+      v-if="errorProblemDetails"
+      v-model:problem-details="errorProblemDetails"
+      class="mb-4"
+      :show-details="showProblemDetailsDetailField"
+    />
 
     <MkConfirmDialog
       v-model="submitConfirmDialog"

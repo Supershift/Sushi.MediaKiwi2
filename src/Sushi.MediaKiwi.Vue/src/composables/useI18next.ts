@@ -15,8 +15,7 @@ export async function useI18next(scope?: View | string) {
   // inject dependencies
   const navigation = useNavigation();
   const i18next = container.resolve<Ref<i18n>>("i18next");
-
-  const mediakiwiOptions = inject<MediakiwiVueOptions>("mediakiwi");
+  const mediakiwiOptions = container.resolve<MediakiwiVueOptions>("MediakiwiOptions");
 
   if (!i18next) {
     throw new Error("i18next is not provided, install the plugin first");

@@ -1,8 +1,8 @@
-import { ProblemDetails } from "@/models/errors/ProblemDetails";
+import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
 import { ComputedRef, ModelRef, Ref, computed, reactive, ref } from "vue";
 import { useI18next } from "./../useI18next";
 import { useSnackbarStore } from "@/stores";
-import { FormSlotProps, SubmitProps } from "@/models/form";
+import { SubmitProps } from "@/models/form";
 import { TResult } from "@/models/form/TResult";
 
 export async function useFormSubmit(
@@ -16,8 +16,8 @@ export async function useFormSubmit(
   inProgress: ModelRef<boolean, string>,
   /** Model for the Valid state of the component */
   isValid: ModelRef<any, string>,
-  /** Model for the ProblemDetails state of the component */
-  problemDetails: ModelRef<ProblemDetails | null | undefined, string>
+  /** Model for the ErrorProblemDetails state of the component */
+  errorProblemDetails: ModelRef<ErrorProblemDetails | null | undefined, string>
 ) {
   // Inject Dependencies
   const { defaultT } = await useI18next();
@@ -59,7 +59,7 @@ export async function useFormSubmit(
       inProgress.value = true;
 
       // Clear error
-      problemDetails.value = null;
+      errorProblemDetails.value = null;
 
       try {
         // Submit the data
@@ -77,9 +77,9 @@ export async function useFormSubmit(
         if (props.value.resetOnSubmit && formRef.value && formRef.value.reset) {
           formRef.value.reset();
         }
-      } catch (error: ProblemDetails | any) {
+      } catch (error: ErrorProblemDetails | any) {
         // Set the error
-        problemDetails.value = error as ProblemDetails;
+        errorProblemDetails.value = error as ErrorProblemDetails;
 
         // Set the result
         result = TResult.failure(error);
@@ -119,41 +119,6 @@ export async function useFormSubmit(
     return result;
   }
 
-  /**
-   * Handle a click event, call a callback
-   */
-  async function onClick(callback: () => Promise<any>) {
-    let result: TResult = TResult.failure();
-
-    try {
-      // Set the progress indicator
-      inProgress.value = true;
-
-      // Trigger the callback
-      await callback();
-
-      // set the result
-      result = TResult.success();
-    } catch (error: ProblemDetails | any) {
-      problemDetails.value = error as ProblemDetails;
-      result = TResult.failure(problemDetails.value);
-    } finally {
-      inProgress.value = false;
-    }
-
-    return result;
-  }
-
-  /**
-   * Slot props for the form, to be passed to a component implementing a Form
-   */
-  const formSlotProps = computed<FormSlotProps>(() => {
-    return <FormSlotProps>{
-      form: formId,
-      onClick,
-    };
-  });
-
   return {
     onSubmit,
     submitConfirmDialog,
@@ -164,6 +129,5 @@ export async function useFormSubmit(
     submitConfirmationTitle,
     submitConfirmationBody,
     submitSuccessMessage,
-    formSlotProps,
   };
 }

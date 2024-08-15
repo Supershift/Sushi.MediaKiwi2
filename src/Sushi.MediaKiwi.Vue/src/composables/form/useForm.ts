@@ -1,6 +1,6 @@
-import { ProblemDetails } from "@/models/errors/ProblemDetails";
+import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
 import { ModelRef, Ref, computed } from "vue";
-import { FormDialogProps, FormViewProps, FormSideSheetProps } from "@/models/form";
+import { FormDialogProps, FormViewProps, FormSideSheetProps, FormSlotProps } from "@/models/form";
 import { useFormLoad } from "./useFormLoad";
 import { useFormSubmit } from "./useFormSubmit";
 import { useFormDelete } from "./useFormDelete";
@@ -18,8 +18,8 @@ export async function useForm<T extends FormViewProps | FormDialogProps | FormSi
   inProgress: ModelRef<boolean, string>,
   /** Model for the Valid state of the component */
   isValid: ModelRef<any, string>,
-  /** Model for the ProblemDetails state of the component */
-  problemDetails: ModelRef<ProblemDetails | null | undefined, string>
+  /** Model for the errorProblemDetails state of the component */
+  errorProblemDetails: ModelRef<ErrorProblemDetails | null | undefined, string>
 ) {
   // Helper function to filter out undefined properties
   const definedProps = (obj: Partial<T>) => Object.fromEntries(Object.entries(obj).filter(([_k, v]) => !!v));
@@ -36,15 +36,25 @@ export async function useForm<T extends FormViewProps | FormDialogProps | FormSi
     return computedProps;
   });
 
+  /**
+   * Slot props for the form, to be passed to a component implementing a Form
+   */
+  const formSlotProps = computed<FormSlotProps>(() => {
+    return <FormSlotProps>{
+      form: formId,
+    };
+  });
+
   // Init the form load, submit and delete functions
-  const formLoad = await useFormLoad(computedProps, formRef, inProgress, problemDetails);
-  const formSubmit = await useFormSubmit(computedProps, formRef, formId, inProgress, isValid, problemDetails);
-  const formDelete = await useFormDelete(computedProps, inProgress, problemDetails);
+  const formLoad = await useFormLoad(computedProps, formRef, inProgress, errorProblemDetails);
+  const formSubmit = await useFormSubmit(computedProps, formRef, formId, inProgress, isValid, errorProblemDetails);
+  const formDelete = await useFormDelete(computedProps, inProgress, errorProblemDetails);
 
   return {
     ...formLoad,
     ...formSubmit,
     ...formDelete,
     computedProps,
+    formSlotProps,
   };
 }

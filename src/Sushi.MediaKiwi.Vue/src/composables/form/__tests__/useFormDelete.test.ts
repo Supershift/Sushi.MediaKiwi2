@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { describe, it, expect, vi } from "vitest";
 import { useFormDelete } from "../useFormDelete";
 import { computed, ModelRef, ref } from "vue";
-import { ProblemDetails } from "@/models/errors/ProblemDetails";
+import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
 import { createTestingPinia } from "@pinia/testing";
 import { DeleteProps } from "@/models/form";
 import { AxiosResponse, HttpStatusCode } from "axios";
@@ -57,7 +57,7 @@ describe("useFormDelete", async () => {
 
   // Mock the models
   const inProgress = { value: false } as ModelRef<boolean>;
-  const error = { value: null } as ModelRef<ProblemDetails | null | undefined>;
+  const error = { value: null } as ModelRef<ErrorProblemDetails | null | undefined>;
 
   describe("Form has DeleteHandler", async () => {
     const props = computed<DeleteProps>(() => ({
@@ -96,7 +96,7 @@ describe("useFormDelete", async () => {
       // Arrange
       const spy = vi.spyOn(error, "value", "set");
 
-      const propblemDetails = <ProblemDetails>{
+      const propblemDetails = <ErrorProblemDetails>{
         title: "Internal Server Error",
         status: 500,
         detail: "An error occurred while deleting the data",

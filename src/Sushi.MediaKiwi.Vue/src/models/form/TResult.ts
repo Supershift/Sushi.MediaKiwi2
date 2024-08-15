@@ -1,11 +1,11 @@
-import { ProblemDetails } from "../errors/ProblemDetails";
+import { ErrorProblemDetails } from "../errors/ErrorProblemDetails";
 
 /**
- * Represents a result to an operation, which either succeeds with an instance of <typeparamref name="TValue"/> or fails with an instance of {@link ProblemDetails}
+ * Represents a result to an operation, which either succeeds with an instance of <typeparamref name="TValue"/> or fails with an instance of {@link ErrorProblemDetails}
  */
 export class TResult<TValue = void> {
   value?: TValue;
-  error?: ProblemDetails;
+  error?: ErrorProblemDetails;
   isSuccess: boolean;
 
   /**
@@ -13,7 +13,7 @@ export class TResult<TValue = void> {
    * @param value The value of the result.
    * @param error The error of the result.
    */
-  constructor(isSuccess: boolean, value?: TValue, error?: ProblemDetails) {
+  constructor(isSuccess: boolean, value?: TValue, error?: ErrorProblemDetails) {
     this.value = value;
     this.error = error;
     this.isSuccess = isSuccess;
@@ -33,7 +33,7 @@ export class TResult<TValue = void> {
    * @param error
    * @returns
    */
-  static failure(error?: ProblemDetails): TResult {
+  static failure(error?: ErrorProblemDetails): TResult {
     return new TResult(false, undefined, error);
   }
 }

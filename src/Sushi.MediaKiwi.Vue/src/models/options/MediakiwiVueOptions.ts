@@ -39,4 +39,6 @@ export interface MediakiwiVueOptions {
   /** Global options used for MkTable */
   tableOptions?: MediakiwiTableOptions;
   formOptions?: MediaKiwiFormOptions;
+  /** Global errorhandler, see {@link https://vuejs.org/api/application.html#app-config-errorhandler} */
+  globalErrorHandler?: (err: unknown, instance: unknown, info: string) => void;
 }

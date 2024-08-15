@@ -1,14 +1,14 @@
 <script setup lang="ts">
-  import { ProblemDetails } from "@/models/errors/ProblemDetails";
+  import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
   import { computed } from "vue";
-  import { useProblemDetails } from "@/composables/useProblemDetails";
+  import { useErrorProblemDetails } from "@/composables/useErrorProblemDetails";
 
   // inject dependencies
-  const { getProblemDetailMessages } = useProblemDetails();
+  const { getErrorMessages } = useErrorProblemDetails();
 
   const props = withDefaults(
     defineProps<{
-      /** Show the {@link ProblemDetails} detail value */
+      /** Show the {@link ErrorProblemDetails} detail value */
       showDetails?: boolean;
       /** Type proxy from the Vuetify alert types  */
       type: "error" | "warning" | "info" | "success";
@@ -19,7 +19,7 @@
   );
 
   /** Problem Details received from the server */
-  const problemDetails = defineModel<ProblemDetails>("problemDetails", { required: false });
+  const errorProblemDetails = defineModel<ErrorProblemDetails>("problemDetails", { required: false });
 
   const slots = defineSlots<{
     /** Default body slot for the dialog */
@@ -36,13 +36,13 @@
   });
 
   function onClose() {
-    problemDetails.value = undefined;
+    errorProblemDetails.value = undefined;
   }
 
-  const messages = computed(() => getProblemDetailMessages(problemDetails.value, props.showDetails));
+  const messages = computed(() => getErrorMessages(errorProblemDetails.value));
 </script>
 <template>
-  <v-alert v-if="problemDetails" v-bind="$attrs" type="error" closable @click:close="onClose">
+  <v-alert v-if="errorProblemDetails" v-bind="$attrs" type="error" closable @click:close="onClose">
     <template #text>
       <p class="text-body-large" v-for="message in messages">{{ message }}</p>
     </template>

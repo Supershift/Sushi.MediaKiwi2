@@ -1,4 +1,4 @@
-import { ProblemDetails } from "@/models/errors/ProblemDetails";
+import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
 import { ComputedRef, ModelRef, computed } from "vue";
 import { useI18next } from "@/composables/useI18next";
 import { useSnackbarStore } from "@/stores";
@@ -11,8 +11,8 @@ export async function useFormDelete(
   props: ComputedRef<DeleteProps>,
   /** Model for the Valid state of the component */
   inProgress: ModelRef<boolean, string>,
-  /** Model for the ProblemDetails state of the component */
-  problemDetails: ModelRef<ProblemDetails | null | undefined, string>
+  /** Model for the ErrorProblemDetails state of the component */
+  errorProblemDetails: ModelRef<ErrorProblemDetails | null | undefined, string>
 ) {
   // Inject Dependencies
   const { defaultT } = await useI18next();
@@ -71,9 +71,9 @@ export async function useFormDelete(
 
       // Set the result
       result = TResult.success();
-    } catch (error: ProblemDetails | any) {
+    } catch (error: ErrorProblemDetails | any) {
       // Set the error
-      problemDetails.value = error;
+      errorProblemDetails.value = error;
 
       // Show a message that the delete failed
       snackbar.showMessage(deleteFailedMessage.value);

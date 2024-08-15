@@ -19,17 +19,24 @@ import i18next from "./plugins/i18next";
 import { registerIcons } from "./helpers/registerIcons";
 import { registerDirectives } from "./helpers/registerDirectives";
 import { createVuetify } from "./plugins/vuetify";
+import { useErrorProblemDetails } from "@/composables";
 
 export default {
   install(app: App, options: MediakiwiVueOptions): void {
+    // Inject dependencies
+    const { registerGlobalErrorHandler } = useErrorProblemDetails();
+
     // register options
-    registerOptions(container, options);
+    registerOptions(container, app, options);
 
     // register dependencies
     registerServices(container, options.serviceRegistrations);
 
     // register axios
     registerAxios(container, options);
+
+    // register global error handler
+    registerGlobalErrorHandler(app, options.globalErrorHandler);
 
     // add i18n
     app.use(
@@ -57,7 +64,6 @@ export default {
 
     // Create an instance of Pinia
     app.use(pinia);
-    console.log("pinia created");
 
     // register icons after pinia and vuetify are created
     registerIcons(options);
@@ -107,9 +113,6 @@ export default {
 
     // used for registering directives
     registerDirectives(app);
-
-    // provide the application with the mediakiwi configuration
-    app.provide("mediakiwi", { ...options });
   },
 };
 

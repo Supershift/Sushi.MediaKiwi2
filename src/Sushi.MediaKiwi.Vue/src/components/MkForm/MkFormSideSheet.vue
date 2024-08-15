@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T extends Object">
-  import ProblemDetailsComponent from "@/components/MkProblemDetails/MkProblemDetails.vue";
-  import { ProblemDetails } from "@/models/errors/ProblemDetails";
+  import MkErrorProblemDetails from "@/components/MkErrorProblemDetails/MkErrorProblemDetails.vue";
+  import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
   import { ref, watch, getCurrentInstance } from "vue";
   import { useI18next } from "@/composables";
   import { useForm } from "@/composables/form/useForm";
@@ -32,14 +32,14 @@
   /** The value representing the validity of the form. If the value is null then no validation has taken place yet, or the form has been reset. Otherwise the value will be a boolean that indicates if validation has passed or not. */
   const isValid = defineModel<boolean>("isValid", { required: false, default: false });
   /** The value representing the error that occurred during the last request. */
-  const problemDetails = defineModel<ProblemDetails | null | undefined>("error", { required: false });
+  const errorProblemDetails = defineModel<ErrorProblemDetails | null | undefined>("error", { required: false });
 
   // Form
   const formRef = ref();
   const formId = `mk-form-side-sheet__${instance?.uid}`;
 
   const { onLoad, onSubmit, computedProps, submitConfirmDialog, submitConfirmationTitle, submitButtonLabel, submitConfirmationBody, formSlotProps } =
-    await useForm(() => props, defaultProps, formRef, formId, inProgress, isValid, problemDetails);
+    await useForm(() => props, defaultProps, formRef, formId, inProgress, isValid, errorProblemDetails);
 
   const slots = defineSlots<{
     /** Default Slot for your form fields */
@@ -56,7 +56,7 @@
     formRef.value?.resetValidation();
 
     // Clear the error
-    problemDetails.value = undefined;
+    errorProblemDetails.value = undefined;
 
     // Update the dialog state
     modelValue.value = false;
@@ -113,9 +113,9 @@
       <template #default v-if="modelValue">
         <div class="py-6">
           <slot name="intro"></slot>
-          <ProblemDetailsComponent
-            v-if="problemDetails"
-            :problem-details="problemDetails"
+          <MkErrorProblemDetails
+            v-if="errorProblemDetails"
+            v-model:problem-details="errorProblemDetails"
             class="mb-6"
             :show-details="computedProps.showProblemDetailsDetailField"
             data-cy="form-side-sheet__alert"

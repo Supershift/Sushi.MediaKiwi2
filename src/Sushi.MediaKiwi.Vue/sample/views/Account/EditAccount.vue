@@ -11,6 +11,7 @@
   import { WithdrawMoneyRequest } from "@sample/models/Account/WithdrawMoneyRequest";
   import MkFormSideSheet from "@/components/MkForm/MkFormSideSheet.vue";
   import TransferMoneyDialog from "./partials/TransferMoneyDialog.vue";
+  import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
 
   const connector = container.resolve(AccountConnector);
   const navigation = useNavigation();
@@ -23,10 +24,20 @@
     depositSheet: false,
     withdrawSheet: false,
     transferMoneyDialog: false,
+    //
+    error: <ErrorProblemDetails | null | undefined>undefined,
   });
 
   async function onClose() {
     state.account = await connector.CloseAccountAsync(state.account.number!)!;
+
+    // Reload the account
+    onLoad();
+  }
+
+  async function onCloseWithError() {
+    // Let it break!
+    state.account = await connector.CloseAccountAsync("123456789");
   }
 
   async function onLoad() {
@@ -56,19 +67,21 @@
   }
 </script>
 <template>
-  <MkForm title="Close Account" @load="onLoad" hide-undo>
+  <MkForm title="Close Account" @load="onLoad" hide-undo v-model:error="state.error">
     <template #toolbar>
       <v-btn @click="state.depositSheet = true">Deposit</v-btn>
       <v-btn @click="state.withdrawSheet = true">Withdraw</v-btn>
       <v-btn variant="flat" @click="state.transferMoneyDialog = true">Transfer</v-btn>
     </template>
-    <template #overflowIconItems="{ onClick }">
-      <MkConfirmDialog @confirm="() => onClick(onClose)">
+    <template #overflowIconItems>
+      <MkConfirmDialog @confirm="onCloseWithError" body="Are you sure you wan't de close this account" v-model:error="state.error">
         <template #activator="{ props }">
-          <v-list-item v-bind="props" color="primary"> Close Account </v-list-item>
+          <v-list-item v-bind="props" color="primary"> Close Account With Error </v-list-item>
         </template>
-        <template #default>
-          <p>Are you sure you wan't de close this account</p>
+      </MkConfirmDialog>
+      <MkConfirmDialog @confirm="onClose" body="Are you sure you wan't de close this account">
+        <template #activator="{ props }">
+          <v-list-item v-bind="props" color="primary"> Close Account {{}} </v-list-item>
         </template>
       </MkConfirmDialog>
     </template>
