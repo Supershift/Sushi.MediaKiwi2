@@ -42,6 +42,4 @@
       <td>{{ dataItem.active }}</td>
     </template>
   </mk-table>
-
-  <MkEmptyState v-else new item-view-id="RoomTypesEdit" new-title="New" title="Test empty list title"></MkEmptyState>
 </template>
