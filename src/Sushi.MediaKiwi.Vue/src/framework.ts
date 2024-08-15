@@ -27,7 +27,7 @@ export default {
     const { registerGlobalErrorHandler } = useErrorProblemDetails();
 
     // register options
-    registerOptions(container, app, options);
+    registerOptions(container, options);
 
     // register dependencies
     registerServices(container, options.serviceRegistrations);
@@ -64,6 +64,7 @@ export default {
 
     // Create an instance of Pinia
     app.use(pinia);
+    console.log("pinia created");
 
     // register icons after pinia and vuetify are created
     registerIcons(options);
@@ -113,6 +114,9 @@ export default {
 
     // used for registering directives
     registerDirectives(app);
+
+    // provide the application with the mediakiwi configuration
+    app.provide("mediakiwi", { ...options });
   },
 };
 
