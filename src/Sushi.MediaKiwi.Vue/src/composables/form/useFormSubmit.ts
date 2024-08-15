@@ -1,16 +1,18 @@
 import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
-import { ComputedRef, ModelRef, Ref, computed, reactive, ref } from "vue";
-import { useI18next } from "./../useI18next";
+import { ComputedRef, ModelRef, Ref, computed, ref } from "vue";
 import { useSnackbarStore } from "@/stores";
 import { SubmitProps } from "@/models/form";
 import { TResult } from "@/models/form/TResult";
 import { useErrorProblemDetails } from "../useErrorProblemDetails";
+import { useFormMessages } from "./useFormMessages";
 
 export async function useFormSubmit(
   /** Props determining the configuration and labels */
   props: ComputedRef<SubmitProps>,
   /** Ref to the Form element */
   formRef: Ref<any>,
+  /** Name of the entity that is being used in the form. Used in the snackbar feedback  */
+  entitiyName: ComputedRef<string | undefined>,
   /** Model for the Progress state of the component */
   inProgress: ModelRef<boolean, string>,
   /** Model for the ErrorProblemDetails state of the component */
@@ -19,19 +21,57 @@ export async function useFormSubmit(
   isValid: ModelRef<any, string>
 ) {
   // Inject Dependencies
-  const { defaultT } = await useI18next();
   const snackbar = useSnackbarStore();
   const { toErrorProblemDetails } = useErrorProblemDetails();
+  const formMessages = await useFormMessages();
+
+  // Entity name, used in the feedback
+  const entityLabel = computed(() => entitiyName.value || "entry");
 
   // Submit button label
-  const submitButtonLabel = computed(() => props.value.submitButtonLabel || defaultT.value("Submit"));
-  const submitConfirmationTitle = computed(() => props.value.submitConfirmationTitle || defaultT.value("SubmitConfirmTitle", "Submit this entry"));
-  const submitConfirmationBody = computed(
-    () => props.value.submitConfirmationBody || defaultT.value("SubmitConfirmBody", "Are you sure you want to submit the changes?")
-  );
-  const submitSuccessMessage = computed(
-    () => props.value.submitSuccessfulSnackbarMessage || defaultT.value("SubmitSuccessful", "Submitted successfully").toString()
-  );
+  const submitButtonLabel = computed(() => {
+    if (props.value.submitButtonLabel) {
+      return props.value.submitButtonLabel;
+    } else if (props.value.saveLabels || props.value.editLabels) {
+      return formMessages.saveButtonLabel();
+    }
+    return formMessages.submitButtonLabel();
+  });
+
+  const submitConfirmationTitle = computed(() => {
+    if (props.value.submitConfirmationTitle) {
+      return props.value.submitConfirmationTitle;
+    } else if (props.value.saveLabels) {
+      return formMessages.saveConfirmationTitle(entityLabel.value);
+    } else if (props.value.editLabels) {
+      return formMessages.editConfirmationTitle(entityLabel.value);
+    }
+    return formMessages.submitConfirmationTitle(entityLabel.value);
+  });
+
+  const submitConfirmationBody = computed(() => {
+    if (props.value.submitConfirmationBody) {
+      return props.value.submitConfirmationBody;
+    } else if (props.value.saveLabels) {
+      return formMessages.saveConfirmationBody(entityLabel.value);
+    } else if (props.value.editLabels) {
+      return formMessages.editConfirmationBody(entityLabel.value);
+    }
+
+    return formMessages.submitConfirmationBody(entityLabel.value);
+  });
+
+  const submitSuccessMessage = computed(() => {
+    if (props.value.submitSuccessfulSnackbarMessage) {
+      return props.value.submitSuccessfulSnackbarMessage;
+    } else if (props.value.saveLabels) {
+      return formMessages.saveSuccessMessage(entityLabel.value);
+    } else if (props.value.editLabels) {
+      return formMessages.editSuccessMessage(entityLabel.value);
+    }
+
+    return formMessages.submitSuccessMessage(entityLabel.value);
+  });
 
   // submit button State
   const isSubmitDisabled = computed(() => inProgress.value);

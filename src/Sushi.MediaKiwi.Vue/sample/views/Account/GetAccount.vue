@@ -31,7 +31,7 @@
 </script>
 
 <template>
-  <MkForm @submit="onGet" submit-button-label="Show Account" hide-submit-snackbar>
+  <MkForm @submit="onGet" hide-submit-snackbar>
     <template #toolbar>
       <v-btn @click="openCreateAccountDialog()">Create Account</v-btn>
     </template>

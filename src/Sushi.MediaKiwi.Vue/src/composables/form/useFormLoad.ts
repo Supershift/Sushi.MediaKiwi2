@@ -7,31 +7,35 @@ import { useSnackbarStore } from "@/stores";
 import { LoadProps, UndoProps } from "@/models/form";
 import { TResult } from "@/models/form/TResult";
 import { useErrorProblemDetails } from "../useErrorProblemDetails";
+import { useFormMessages } from "./useFormMessages";
 
 export async function useFormLoad(
   /** Props determining the configuration and labels */
   props: ComputedRef<LoadProps & UndoProps>,
   /** Ref to the Form element */
   formRef: Ref<any>,
+  /** Name of the entity that is being used in the form. Used in the snackbar feedback  */
+  entitiyName: ComputedRef<string | undefined>,
   /** Model for the Progress state of the component */
   inProgress: ModelRef<boolean, string>,
   /** Model for the ErrorProblemDetails state of the component */
   errorProblemDetails: ModelRef<ErrorProblemDetails | null | undefined, string>
 ) {
   // Inject Dependencies
-  const { defaultT } = await useI18next();
+  const { t } = await useI18next("FormLoad");
   const snackbar = useSnackbarStore();
   const { toErrorProblemDetails } = useErrorProblemDetails();
+  const formMessages = await useFormMessages();
+
+  const entitiyLabel = computed(() => entitiyName.value || "data");
 
   // Load Labels
-  const loadFailedSnackbarMessage = computed(() => props.value.loadFailedSnackbarMessage || defaultT.value("LoadFailed", "Failed to load data").toString());
+  const loadFailedSnackbarMessage = computed(() => props.value.loadFailedSnackbarMessage || formMessages.loadFailedSnackbarMessage(entitiyLabel.value));
 
   // Undo Labels
-  const undoSuccessSnackbarMessage = computed(() => props.value.undoSuccessSnackbarMessage || defaultT.value("UndoSuccessful", "Changes reverted").toString());
-  const undoFailedSnackbarMessage = computed(
-    () => props.value.undoFailedSnackbarMessage || defaultT.value("UndoFailed", "Failed to revert changes").toString()
-  );
-  const undoButtonLabel = computed(() => props.value.undoButtonLabel || defaultT.value("UndoChanges", "Undo changes"));
+  const undoButtonLabel = computed(() => props.value.undoButtonLabel || formMessages.undoButtonLabel());
+  const undoSuccessSnackbarMessage = computed(() => props.value.undoSuccessSnackbarMessage || formMessages.undoSuccessSnackbarMessage());
+  const undoFailedSnackbarMessage = computed(() => props.value.undoFailedSnackbarMessage || formMessages.undoFailedSnackbarMessage());
 
   // Computed properties for the handlers
   const hasLoadHandler = computed(() => (props.value.onLoad ? true : false));

@@ -36,10 +36,12 @@ export async function useForm<T extends FormViewProps | FormDialogProps | FormSi
     return computedProps;
   });
 
+  const entitiyName = computed(() => computedProps.value.entityName);
+
   // Init the form load, submit and delete functions
-  const formLoad = await useFormLoad(computedProps, formRef, inProgress, errorProblemDetails);
-  const formSubmit = await useFormSubmit(computedProps, formRef, inProgress, errorProblemDetails, isValid);
-  const formDelete = await useFormDelete(computedProps, formRef, inProgress, errorProblemDetails);
+  const formLoad = await useFormLoad(computedProps, formRef, entitiyName, inProgress, errorProblemDetails);
+  const formSubmit = await useFormSubmit(computedProps, formRef, entitiyName, inProgress, errorProblemDetails, isValid);
+  const formDelete = await useFormDelete(computedProps, formRef, entitiyName, inProgress, errorProblemDetails);
 
   /**
    * Slot props for the form, to be passed to a component implementing a Form

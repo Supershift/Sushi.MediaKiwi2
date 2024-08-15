@@ -1,5 +1,8 @@
 import { AxiosResponse, HttpStatusCode } from "axios";
 import { ApiError } from "./ApiError";
+import { useI18next } from "@/composables";
+import { useErrorMessages } from "@/composables/useErrorMessages";
+import { error } from "console";
 
 /**
  * Implements Sushi.MediaKiwi.Services.Model.ErrorProblemDetails
@@ -50,29 +53,23 @@ export class ErrorProblemDetails extends Error {
 
     return result;
   }
-}
 
-export class UnknownProblemDetails extends ErrorProblemDetails {
-  constructor(status?: number | HttpStatusCode) {
+  static async fromStatus(status?: number | HttpStatusCode): Promise<ErrorProblemDetails> {
+    const errorMessages = await useErrorMessages();
+
     switch (status) {
       case HttpStatusCode.NotFound:
-        super("NotFound", "Not found", status, "The requested resource was not found.");
-        break;
+        return new ErrorProblemDetails("NotFound", "Not found", status, errorMessages.notFoundErrorMessage);
       case HttpStatusCode.BadRequest:
-        super("BadRequest", "Bad request", status, "The request was invalid.");
-        break;
+        return new ErrorProblemDetails("BadRequest", "Bad request", status, errorMessages.badRequestErrorMessage);
       case HttpStatusCode.Unauthorized:
-        super("Unauthorized", "Unauthorized", status, "You are not authorized to access this resource.");
-        break;
+        return new ErrorProblemDetails("Unauthorized", "Unauthorized", status, errorMessages.unauthorizedErrorMessage);
       case HttpStatusCode.Forbidden:
-        super("Forbidden", "Forbidden", status, "You are not allowed to access this resource.");
-        break;
+        return new ErrorProblemDetails("Forbidden", "Forbidden", status, errorMessages.forbiddenErrorMessage);
       case HttpStatusCode.InternalServerError:
-        super("InternalServerError", "Internal server error", status, "An internal server error occurred. Please try again later.");
-        break;
+        return new ErrorProblemDetails("InternalServerError", "Internal server error", status, errorMessages.internalServerErrorErrorMessage);
       default:
-        super("Unknown", "Unknown error", status || 418, "An unknown error occurred. Please try again later.");
-        break;
+        return new ErrorProblemDetails("Unknown", "Unknown error", status || 418, errorMessages.unexpectedErrorMessage);
     }
   }
 }

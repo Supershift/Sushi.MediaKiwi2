@@ -1,5 +1,4 @@
 import { ErrorProblemDetails } from "../errors/ErrorProblemDetails";
-import { TResult } from "./TResult";
 
 export type FormViewProps = FormProps & {
   /** If true, the toolbar will be sticky on top of the page. */
@@ -35,6 +34,8 @@ export type FormProps = LoadProps &
     showProblemDetailsDetailField?: boolean;
     /** Title of the form */
     title?: string;
+    /** Name of the entity that is being used in the form. Used in the snackbar feedback  */
+    entityName?: string;
   };
 
 export type LoadProps = {
@@ -65,6 +66,10 @@ export type SubmitProps = {
   submitFailedSnackbarMessage?: string;
   /** reset the form after a successfull submit */
   resetOnSubmit?: boolean;
+  /** Use the save labels, instead of the default Submit labels */
+  saveLabels?: boolean;
+  /** Use the edit labels, instead of the default Submit labels */
+  editLabels?: boolean;
 };
 
 export type DeleteProps = {

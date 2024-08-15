@@ -92,11 +92,11 @@
     <v-text-field readonly label="Current Balance" v-model="state.account.balance" />
   </MkForm>
 
-  <MkFormSideSheet v-model="state.depositSheet" title="Deposit" @submit="onDeposit">
+  <MkFormSideSheet v-model="state.depositSheet" title="Deposit" @submit="onDeposit" edit-labels entity-name="amount">
     <v-text-field label="Amount" v-model="state.amount" :rules="[required]" type="number" />
   </MkFormSideSheet>
 
-  <MkFormSideSheet v-model="state.withdrawSheet" title="Withdraw" @submit="onWithdraw">
+  <MkFormSideSheet v-model="state.withdrawSheet" title="Withdraw" @submit="onWithdraw" edit-labels entity-name="amount">
     <v-text-field label="Amount" v-model="state.amount" :rules="[required]" type="number" />
   </MkFormSideSheet>
 

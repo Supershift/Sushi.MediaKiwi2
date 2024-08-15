@@ -1,10 +1,10 @@
-import { ErrorProblemDetails, UnknownProblemDetails } from "@/models/errors/ErrorProblemDetails";
+import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
 import { AxiosInstance, isAxiosError } from "axios";
 import { ComponentPublicInstance, type App } from "vue";
 import { ApiError } from "@/models/errors/ApiError";
 import { useSnackbarStore } from "@/stores";
-import { useI18next } from "./useI18next";
 import { useAxiosExtensions } from "./useAxiosExtensions";
+import { useErrorMessages } from "./useErrorMessages";
 
 export function useErrorProblemDetails() {
   /** Type guard for Error */
@@ -59,7 +59,7 @@ export function useErrorProblemDetails() {
    */
   async function setErrorSnackbar(err: ErrorProblemDetails | Error) {
     // Inject dependencies
-    const { defaultT } = await useI18next();
+    const { unexpectedErrorMessage } = await useErrorMessages();
     const snackbar = useSnackbarStore();
 
     // define the messages
@@ -74,7 +74,7 @@ export function useErrorProblemDetails() {
 
     // If we don't have a message, set the default message
     if (!message) {
-      message = defaultT.value("UnexpectedError", "An unexpected error occurred. Please try again later.");
+      message = unexpectedErrorMessage;
     }
 
     // Show a snackbar message to the user
@@ -140,9 +140,6 @@ export function useErrorProblemDetails() {
         const responseText = await error.response.data.text();
         const errorResult = JSON.parse(responseText);
         result = errorResult as ErrorProblemDetails;
-      } else if (typeof error?.response?.data === "string") {
-        // We go a string as a response, so we can't use the result as is, so we'll create a error problem details object
-        result = new UnknownProblemDetails(error?.response?.status);
       } else {
         // We got an object, so we can parse it to an error problem details object
         result = ErrorProblemDetails.fromResponse(error.response);
@@ -154,7 +151,7 @@ export function useErrorProblemDetails() {
 
     // If we don't have a result, create a default error problem details object
     if (!result) {
-      result = new UnknownProblemDetails(error?.response?.status);
+      result = await ErrorProblemDetails.fromStatus(error?.response?.status);
     }
 
     return result;

@@ -6,35 +6,35 @@ import { useNavigation } from "@/composables/useNavigation";
 import { DeleteProps } from "@/models/form";
 import { TResult } from "@/models/form/TResult";
 import { useErrorProblemDetails } from "../useErrorProblemDetails";
+import { useFormMessages } from "./useFormMessages";
 
 export async function useFormDelete(
   /** Props determining the configuration and labels */
   props: ComputedRef<DeleteProps>,
   /** Ref to the Form element */
   formRef: Ref<any>,
+  /** Name of the entity that is being used in the form. Used in the snackbar feedback  */
+  entitiyName: ComputedRef<string | undefined>,
   /** Model for the Valid state of the component */
   inProgress: ModelRef<boolean, string>,
   /** Model for the ErrorProblemDetails state of the component */
   errorProblemDetails: ModelRef<ErrorProblemDetails | null | undefined, string>
 ) {
   // Inject Dependencies
-  const { defaultT } = await useI18next();
+  const { defaultT, t } = await useI18next("FormDelete");
   const snackbar = useSnackbarStore();
   const navigation = useNavigation();
   const { toErrorProblemDetails } = useErrorProblemDetails();
+  const formMessages = await useFormMessages();
+
+  const entityLabel = computed(() => entitiyName.value || "entry");
 
   // Delete button labels
-  const deleteButtonLabel = computed(() => props.value.deleteButtonLabel || defaultT.value("Delete"));
-  const deleteConfirmationTitle = computed(
-    () => props.value.deleteConfirmationTitle || props.value.deleteButtonLabel || defaultT.value("DeleteConfirmTitle", "Delete this entry")
-  );
-  const deleteConfirmationBody = computed(
-    () => props.value.deleteConfirmationBody || defaultT.value("DeleteConfirmBody", "Are you sure you want to delete this entry permanently?")
-  );
-  const deleteSuccessfulMessage = computed(
-    () => props.value.deleteSuccessfullSnackbarMessage || defaultT.value("DeleteSuccessful", "Deleted successfully").toString()
-  );
-  const deleteFailedMessage = computed(() => props.value.deleteFailedSnackbarMessage || defaultT.value("DeleteFailed", "Failed to delete").toString());
+  const deleteButtonLabel = computed(() => props.value.deleteButtonLabel || formMessages.deleteButtonLabel());
+  const deleteConfirmationTitle = computed(() => props.value.deleteConfirmationTitle || props.value.deleteButtonLabel || formMessages.deleteButtonLabel());
+  const deleteConfirmationBody = computed(() => props.value.deleteConfirmationBody || formMessages.deleteConfirmationBody(entityLabel.value));
+  const deleteSuccessfulMessage = computed(() => props.value.deleteSuccessfullSnackbarMessage || formMessages.deleteSuccessfulMessage(entityLabel.value));
+  const deleteFailedMessage = computed(() => props.value.deleteFailedSnackbarMessage || formMessages.deleteFailedMessage(entityLabel.value));
 
   // Computed
   const hasDeleteHandler = computed(() => (props.value.onDelete ? true : false));
