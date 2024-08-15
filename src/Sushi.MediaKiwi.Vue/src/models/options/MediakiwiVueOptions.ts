@@ -5,6 +5,7 @@ import { InitOptions, i18n } from "i18next";
 import { MediakiwiIdentity } from "./MediakiwiIdentity";
 import { VuetifyOptions } from "vuetify";
 import { MediakiwiTableOptions } from "./MediakiwiTableOptions";
+import { MediakiwiSigninConfigurations } from "./MediakiwiSignInConfigurations";
 
 export interface MediakiwiVueOptions {
   /** Base url for the MediaKiwi API, e.g. https://portal.mydomain.com/mediakiwi/api */
@@ -32,9 +33,8 @@ export interface MediakiwiVueOptions {
   };
   /** Options for the sign in screen background*/
   signIn?: {
-    image?: string;
-    color?: string;
-  }
+    [key: string]: MediakiwiSigninConfigurations;
+  };
   /** Global options used for MkTable */
   tableOptions?: MediakiwiTableOptions
 }

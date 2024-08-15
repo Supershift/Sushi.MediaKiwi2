@@ -61,4 +61,11 @@ describe.skip('useColors', () => {
     expect(getColorBackgroundClasses('primary')).toBe('bg-primary')
     expect(getColorBackgroundClasses('on-primary')).toBe('mk-bg-on-primary')
   })
+
+  it('should return true if color is css color', () => {
+    const { isCssColor } = useColors()
+    expect(isCssColor('#123456')).toBe(true)
+    expect(isCssColor('rgba(0,0,0,0)')).toBe(false)
+    expect(isCssColor('primary')).toBe(false)
+  });
 })

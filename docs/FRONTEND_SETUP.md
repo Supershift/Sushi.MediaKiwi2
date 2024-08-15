@@ -72,6 +72,8 @@ The Sushi.Mediakiwi.SampleWeb is an Azure Static Web App and therefore has a Cli
 ### Azure Function
 
 Add a `local.settings.json` file in the root of the Function folder. Here you can add application settings to use in the Client App. This file is excluded from source control.
+The required MSAL properties can be automaticaly filled when the service uses Mediakiwi >0.1.7 (TODO: add actual version when released).
+The `config = fillEntraSettings(config)` will get the required values from the service and will update the config. The `local.settings.json` will be used as backup.
 
 Example:
 
@@ -85,6 +87,29 @@ Example:
     "SampleApi.ApiBaseUrl": "[your_url]"
   }
 }
+```
+
+```
+import { useEntraSettings } from "@/composables/useEntraSettings";
+
+const mediakiwiOptions = <MediakiwiVueOptions>{
+  vuetifyOptions: ...,
+  apiBaseUrl: import.meta.env.VITE_APP_MEDIAKIWI_APIBASEURL,
+  msalConfig: <Configuration>{},
+  identity: <MediakiwiIdentity>{},
+  modules: ...,
+  dateFormatOptions: ...,
+  signIn: ...,
+};
+
+const { fillEntraSettings } = useEntraSettings();
+const mediakiwiOptionsWithEntra = await fillEntraSettings(mediakiwiOptions);
+
+// Create the app
+const app = createApp(App);
+
+// install mediakiwi
+app.use(mediakiwi, mediakiwiOptionsWithEntra);
 ```
 
 You can now start hosting the Azure Function. See the [Client App](#client-app) section to host both the Azure Function and the Client App.

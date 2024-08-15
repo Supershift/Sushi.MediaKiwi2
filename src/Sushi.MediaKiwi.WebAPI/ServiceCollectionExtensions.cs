@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using Sushi.MediaKiwi.Services;
@@ -25,7 +26,9 @@ namespace Sushi.MediaKiwi.WebAPI
         /// Adds all services needed to run MediaKiwi to the <paramref name="services"/>, including Sushi.MicroOrm.
         /// </summary>        
         /// <returns></returns>
-        public static IServiceCollection AddMediaKiwiApi(this IServiceCollection services, IConfigurationSection? azureAdConfig,
+        public static IServiceCollection AddMediaKiwiApi(
+            this IServiceCollection services, 
+            IConfigurationSection? azureAdConfig,
             Action<IMapperConfigurationExpression>? autoMapperConfig = null,
             Action<AuthorizationOptions>? authorizationOptions = null)
         {
@@ -38,21 +41,14 @@ namespace Sushi.MediaKiwi.WebAPI
             // add mk dependencies
             services.TryAddTransient<Sorting.SortingRetriever>();
 
-            // Define admin role policy
-            if (authorizationOptions == null)
+            services.AddAuthorization(options =>
             {
-                // Add default admin role policy
-                services.AddAuthorization(options =>
-                {
-                    options.AddPolicy(Constants.AdminPolicyName, policy => policy.RequireRole(Constants.AdminRoleName));
-                });
-            }
-            else
-            {
-                // Use custom authorization options
-                services.AddAuthorization(authorizationOptions);
+                // Define admin role policy
+                options.AddPolicy(Constants.AdminPolicyName, policy => policy.RequireRole(Constants.AdminRoleName));
 
-            }
+                // Use custom authorization options
+                authorizationOptions?.Invoke(options);
+            });
 
             // add authentication
             var authenticationBuilder = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
