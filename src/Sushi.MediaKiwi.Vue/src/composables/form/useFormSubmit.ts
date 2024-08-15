@@ -4,6 +4,7 @@ import { useI18next } from "./../useI18next";
 import { useSnackbarStore } from "@/stores";
 import { SubmitProps } from "@/models/form";
 import { TResult } from "@/models/form/TResult";
+import { useErrorProblemDetails } from "../useErrorProblemDetails";
 
 export async function useFormSubmit(
   /** Props determining the configuration and labels */
@@ -22,6 +23,7 @@ export async function useFormSubmit(
   // Inject Dependencies
   const { defaultT } = await useI18next();
   const snackbar = useSnackbarStore();
+  const { toErrorProblemDetails } = useErrorProblemDetails();
 
   // Submit button label
   const submitButtonLabel = computed(() => props.value.submitButtonLabel || defaultT.value("Submit"));
@@ -77,9 +79,16 @@ export async function useFormSubmit(
         if (props.value.resetOnSubmit && formRef.value && formRef.value.reset) {
           formRef.value.reset();
         }
-      } catch (error: ErrorProblemDetails | any) {
-        // Set the error
-        errorProblemDetails.value = error as ErrorProblemDetails;
+      } catch (error: any) {
+        let errorResult: ErrorProblemDetails;
+        if (error instanceof ErrorProblemDetails) {
+          errorResult = error as ErrorProblemDetails;
+        } else {
+          errorResult = await toErrorProblemDetails(error);
+        }
+
+        // Show a message that the submit failed
+        errorProblemDetails.value = errorResult;
 
         // Set the result
         result = TResult.failure(error);

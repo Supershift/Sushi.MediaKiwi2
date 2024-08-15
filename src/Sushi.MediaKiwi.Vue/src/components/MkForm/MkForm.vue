@@ -89,6 +89,9 @@
     resetValidation() {
       formRef.value?.resetValidation();
     },
+    setError(error: ErrorProblemDetails) {
+      errorProblemDetails.value = error;
+    },
   });
 
   // load data async on created

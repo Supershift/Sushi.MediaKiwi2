@@ -1,4 +1,5 @@
 import { ErrorProblemDetails } from "../errors/ErrorProblemDetails";
+import { TResult } from "./TResult";
 
 export type FormViewProps = FormProps & {
   /** If true, the toolbar will be sticky on top of the page. */

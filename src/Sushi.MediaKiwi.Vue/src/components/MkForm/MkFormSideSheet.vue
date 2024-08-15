@@ -78,6 +78,9 @@
     resetValidation() {
       formRef.value?.resetValidation();
     },
+    setError(error: ErrorProblemDetails) {
+      errorProblemDetails.value = error;
+    },
   });
 
   watch(

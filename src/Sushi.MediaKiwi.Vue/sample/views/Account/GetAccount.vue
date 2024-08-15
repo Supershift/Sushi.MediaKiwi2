@@ -8,7 +8,7 @@
   import CreateAccountDialog from "./partials/CreateAccountDialog.vue";
   import AccountDetailsSheet from "./partials/AccountDetailsSheet.vue";
 
-  const connector = container.resolve(AccountConnector);
+  const accountConnector = container.resolve(AccountConnector);
   const { required } = useValidationRules();
 
   const state = reactive({
@@ -19,7 +19,7 @@
   });
 
   async function onGet() {
-    state.account = await connector.GetAccountAsync(state.accountNumber!)!;
+    state.account = await accountConnector.GetAccountAsync(state.accountNumber!)!;
     if (state.account) {
       state.accountDetailsSheet = true;
     }
@@ -28,22 +28,11 @@
   function openCreateAccountDialog() {
     state.createAccountDialog = true;
   }
-
-  async function fakeOnLoad() {
-    // CALL ERROR TO DEMONSTRATE ERROR HANDLING
-    state.account = await connector.GetAccountAsync("");
-  }
-
-  function throwError() {
-    throw new Error("This is a test error");
-  }
 </script>
 
 <template>
   <MkForm @submit="onGet" submit-button-label="Show Account" hide-submit-snackbar>
     <template #toolbar>
-      <v-btn @click="throwError()">Throw unexpected Error</v-btn>
-      <v-btn @click="fakeOnLoad()">Throw API error outside form</v-btn>
       <v-btn @click="openCreateAccountDialog()">Create Account</v-btn>
     </template>
 

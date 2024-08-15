@@ -1,6 +1,6 @@
 import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
 import { ModelRef, Ref, computed } from "vue";
-import { FormDialogProps, FormViewProps, FormSideSheetProps, FormSlotProps } from "@/models/form";
+import { FormDialogProps, FormViewProps, FormSideSheetProps, FormSlotProps, SubmitProps } from "@/models/form";
 import { useFormLoad } from "./useFormLoad";
 import { useFormSubmit } from "./useFormSubmit";
 import { useFormDelete } from "./useFormDelete";
@@ -36,6 +36,11 @@ export async function useForm<T extends FormViewProps | FormDialogProps | FormSi
     return computedProps;
   });
 
+  // Init the form load, submit and delete functions
+  const formLoad = await useFormLoad(computedProps, formRef, inProgress, errorProblemDetails);
+  const formSubmit = await useFormSubmit(computedProps, formRef, formId, inProgress, isValid, errorProblemDetails);
+  const formDelete = await useFormDelete(computedProps, inProgress, errorProblemDetails);
+
   /**
    * Slot props for the form, to be passed to a component implementing a Form
    */
@@ -44,11 +49,6 @@ export async function useForm<T extends FormViewProps | FormDialogProps | FormSi
       form: formId,
     };
   });
-
-  // Init the form load, submit and delete functions
-  const formLoad = await useFormLoad(computedProps, formRef, inProgress, errorProblemDetails);
-  const formSubmit = await useFormSubmit(computedProps, formRef, formId, inProgress, isValid, errorProblemDetails);
-  const formDelete = await useFormDelete(computedProps, inProgress, errorProblemDetails);
 
   return {
     ...formLoad,

@@ -5,6 +5,7 @@ import { useSnackbarStore } from "@/stores";
 import { useNavigation } from "@/composables/useNavigation";
 import { DeleteProps } from "@/models/form";
 import { TResult } from "@/models/form/TResult";
+import { useErrorProblemDetails } from "../useErrorProblemDetails";
 
 export async function useFormDelete(
   /** Props determining the configuration and labels */
@@ -18,6 +19,7 @@ export async function useFormDelete(
   const { defaultT } = await useI18next();
   const snackbar = useSnackbarStore();
   const navigation = useNavigation();
+  const { toErrorProblemDetails } = useErrorProblemDetails();
 
   // Delete button labels
   const deleteButtonLabel = computed(() => props.value.deleteButtonLabel || defaultT.value("Delete"));
@@ -71,9 +73,16 @@ export async function useFormDelete(
 
       // Set the result
       result = TResult.success();
-    } catch (error: ErrorProblemDetails | any) {
-      // Set the error
-      errorProblemDetails.value = error;
+    } catch (error: any) {
+      let errorResult: ErrorProblemDetails;
+      if (error instanceof ErrorProblemDetails) {
+        errorResult = error as ErrorProblemDetails;
+      } else {
+        errorResult = await toErrorProblemDetails(error);
+      }
+
+      // Show a message that the submit failed
+      errorProblemDetails.value = errorResult;
 
       // Show a message that the delete failed
       snackbar.showMessage(deleteFailedMessage.value);

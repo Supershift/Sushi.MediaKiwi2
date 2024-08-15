@@ -7,6 +7,21 @@ import { useI18next } from "./useI18next";
 import { useAxiosExtensions } from "./useAxiosExtensions";
 
 export function useErrorProblemDetails() {
+  /** Type guard for Error */
+  function isError(error?: Error | Error[]): error is Error {
+    return (error as Error).message !== undefined && (error as Error).message !== null && (error as Error).message !== "";
+  }
+
+  /** Type guard for Api Error */
+  function isApiError(error?: ApiError | ApiError[] | Record<string, string[]>): error is ApiError {
+    return (error as ApiError).message !== undefined;
+  }
+
+  /** Type guard for Error[] */
+  function isApiErrorArray(error?: ApiError | ApiError[] | Record<string, string[]>): error is ApiError[] {
+    return Array.isArray(error);
+  }
+
   /**
    * Register an interceptor for the axios instance. This will handle the response and tries to parse them to an object {@link ErrorProblemDetails}
    */
@@ -24,26 +39,42 @@ export function useErrorProblemDetails() {
   }
 
   /**
-   * Vue global error handler, can be overridden by the user
-   * @param err The error that was thrown
-   * @param instance Component instance where the error was thrown
-   * @param info This is a Vue-specific error info, e.g. which lifecycle hook the error was thrown in
-   * @returns
+   * Find a parent MkForm, MkFormDialog or MkSideSheet component for the given instance
+   * const vm = instance.$parent?.$parent?.$parent?.$parent?.$parent?.$parent?.$parent || (instance as any);
    */
-  async function globalErrorHandler(err: any, instance: ComponentPublicInstance | null, info: string) {
+  function findParentMkForm(instance: ComponentPublicInstance): any {
+    let vm = instance;
+
+    if (vm.$options.__name === "MkForm" || vm.$options.__name === "MkFormDialog" || vm.$options.__name === "MkFormSideSheet") {
+      return vm;
+    } else if (vm.$parent) {
+      vm = findParentMkForm(vm.$parent);
+    }
+
+    return vm;
+  }
+
+  /**
+   * Set the error on the form or show a snackbar message
+   */
+  async function setErrorSnackbar(err: ErrorProblemDetails | Error) {
     // Inject dependencies
     const { defaultT } = await useI18next();
     const snackbar = useSnackbarStore();
 
-    // Log the error to the console
-    console.error(err, instance, info);
-
-    // Get the default error message
-    let message = defaultT.value("UnexpectedError", "An unexpected error occurred. Please try again later.");
+    // define the messages
+    let message: string = "";
 
     // Check if the error has a message put by the ErrorProblemDetails
-    if (err?.error?.message) {
-      message = err.error.message;
+    if (err instanceof ErrorProblemDetails) {
+      message = getErrorMessages(err)?.join(", ") || message;
+    } else if (isError(err)) {
+      message = err.message;
+    }
+
+    // If we don't have a message, set the default message
+    if (!message) {
+      message = defaultT.value("UnexpectedError", "An unexpected error occurred. Please try again later.");
     }
 
     // Show a snackbar message to the user
@@ -51,9 +82,43 @@ export function useErrorProblemDetails() {
   }
 
   /**
+   * Vue global error handler, can be overridden by the user
+   * @param err The error that was thrown
+   * @param instance Component instance where the error was thrown
+   * @param info This is a Vue-specific error info, e.g. which lifecycle hook the error was thrown in
+   * @returns
+   */
+  async function globalErrorHandler(err: any, instance?: ComponentPublicInstance | null, info?: string) {
+    // Log the error to the console
+    console.error(err, instance, info);
+
+    // If we have an instance, try to find the closest form, and set the error
+    if (instance) {
+      // find the closest form
+      const mkForm = findParentMkForm(instance);
+
+      // If we have a form, set the error on the form
+      if (mkForm && mkForm.setError) {
+        // Set the error on the form
+        let errorProblemDetails: ErrorProblemDetails | undefined;
+        if (err instanceof ErrorProblemDetails) {
+          errorProblemDetails = err;
+        } else {
+          errorProblemDetails = await toErrorProblemDetails(err);
+        }
+
+        mkForm.setError(errorProblemDetails);
+        // We set the error on the form, so we can leave
+        return;
+      }
+    }
+
+    // If we don't have a form, show a snackbar message
+    setErrorSnackbar(err);
+  }
+
+  /**
    * Set the global error handler for the uncaught errors
-   * @param app
-   * @param customGlobalErrorHandler
    */
   function registerGlobalErrorHandler(app: App, customGlobalErrorHandler?: (err: unknown, instance: ComponentPublicInstance | null, info: string) => void) {
     app.config.errorHandler = customGlobalErrorHandler || globalErrorHandler;
@@ -61,8 +126,6 @@ export function useErrorProblemDetails() {
 
   /**
    * Parse the problem details from the error response
-   * @param error
-   * @returns
    */
   async function toErrorProblemDetails(error?: any) {
     // inject dependencies
@@ -71,7 +134,6 @@ export function useErrorProblemDetails() {
     // Create a result
     let result: ErrorProblemDetails | undefined;
 
-    // Check if the error is an Axios error
     if (isAxiosError(error) && error?.response?.data) {
       // If the response is a blob and the type is json, parse the error problem details
       if (isAxiosBlobResponse(error)) {
@@ -85,6 +147,9 @@ export function useErrorProblemDetails() {
         // We got an object, so we can parse it to an error problem details object
         result = ErrorProblemDetails.fromResponse(error.response);
       }
+    } else if (isError(error)) {
+      // If we have an error object, create a default error problem details object
+      result = new ErrorProblemDetails(undefined, undefined, undefined, error.message);
     }
 
     // If we don't have a result, create a default error problem details object
@@ -95,21 +160,8 @@ export function useErrorProblemDetails() {
     return result;
   }
 
-  /** Type guard for Error */
-  function isError(error?: ApiError | ApiError[] | Record<string, string[]>): error is ApiError {
-    return (error as ApiError).message !== undefined;
-  }
-
-  /** Type guard for Error[] */
-  function isErrorArray(error?: ApiError | ApiError[] | Record<string, string[]>): error is ApiError[] {
-    return Array.isArray(error);
-  }
-
   /**
    * Get the problem detail messages
-   * @param errorProblemDetails
-   * @param showDetails
-   * @returns
    */
   function getErrorMessages(errorProblemDetails?: ErrorProblemDetails | null): string[] | undefined {
     // If we don't have an error, return undefined
@@ -142,11 +194,11 @@ export function useErrorProblemDetails() {
       return [];
     }
 
-    if (isErrorArray(error)) {
+    if (isApiErrorArray(error)) {
       // Check if we have an array of errors
       // Flatten the array and return the messages
       return Array.from(error).flatMap((error) => `${error.message}`);
-    } else if (isError(error)) {
+    } else if (isApiError(error)) {
       // If we have a single error, return the message as an array
       return [error.message];
     } else {

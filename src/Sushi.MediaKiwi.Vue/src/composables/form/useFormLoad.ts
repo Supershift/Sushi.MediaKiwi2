@@ -6,6 +6,7 @@ import { useI18next } from "./../useI18next";
 import { useSnackbarStore } from "@/stores";
 import { LoadProps, UndoProps } from "@/models/form";
 import { TResult } from "@/models/form/TResult";
+import { useErrorProblemDetails } from "../useErrorProblemDetails";
 
 export async function useFormLoad(
   /** Props determining the configuration and labels */
@@ -20,6 +21,7 @@ export async function useFormLoad(
   // Inject Dependencies
   const { defaultT } = await useI18next();
   const snackbar = useSnackbarStore();
+  const { toErrorProblemDetails } = useErrorProblemDetails();
 
   // Load Labels
   const loadFailedSnackbarMessage = computed(() => props.value.loadFailedSnackbarMessage || defaultT.value("LoadFailed", "Failed to load data").toString());
@@ -59,9 +61,16 @@ export async function useFormLoad(
       try {
         // Load the data
         await props.value.onLoad(event);
-      } catch (error: ErrorProblemDetails | any) {
-        // Set the error
-        errorProblemDetails.value = error;
+      } catch (error: any) {
+        let errorResult: ErrorProblemDetails;
+        if (error instanceof ErrorProblemDetails) {
+          errorResult = error as ErrorProblemDetails;
+        } else {
+          errorResult = await toErrorProblemDetails(error);
+        }
+
+        // Show a message that the submit failed
+        errorProblemDetails.value = errorResult;
 
         // Show a message
         snackbar.showMessage(loadFailedSnackbarMessage.value);
@@ -109,10 +118,16 @@ export async function useFormLoad(
 
       // Set the result
       result = TResult.success();
-    } catch (error: ErrorProblemDetails | any) {
-      // Set the error
-      errorProblemDetails.value = error;
+    } catch (error: any) {
+      let errorResult: ErrorProblemDetails;
+      if (error instanceof ErrorProblemDetails) {
+        errorResult = error as ErrorProblemDetails;
+      } else {
+        errorResult = await toErrorProblemDetails(error);
+      }
 
+      // Show a message that the submit failed
+      errorProblemDetails.value = errorResult;
       // Show a message
       snackbar.showMessage(undoFailedSnackbarMessage.value);
 

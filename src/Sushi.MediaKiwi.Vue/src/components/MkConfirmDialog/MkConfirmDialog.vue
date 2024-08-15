@@ -1,8 +1,6 @@
 <script setup lang="ts">
-  import { useI18next } from "@/composables";
-  import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
-  import { TResult } from "@/models/form/TResult";
-  import { computed, ModelRef, ref } from "vue";
+  import { useErrorProblemDetails, useI18next } from "@/composables";
+  import { computed } from "vue";
 
   // Inject dependencies
   const { defaultT } = await useI18next();
@@ -32,7 +30,6 @@
   );
 
   const state = defineModel<boolean>("modelValue", { required: false, default: false });
-  const errorProblemDetails = defineModel<ErrorProblemDetails | null | undefined>("error", { required: false });
 
   const activatorProps = <ConfirmDialogActivatorProps>{
     props: {
@@ -79,16 +76,11 @@
       throw new Error("No onConfirm handler provided");
     }
 
-    try {
-      // Call the onConfirm handler
-      await props.onConfirm(event);
-    } catch (error: ErrorProblemDetails | any) {
-      // Set the error
-      errorProblemDetails.value = error;
-    } finally {
-      // Close the dialog
-      state.value = false;
-    }
+    // Close the dialog
+    state.value = false;
+
+    // Call the onConfirm handler
+    await props.onConfirm(event);
   }
 </script>
 <template>

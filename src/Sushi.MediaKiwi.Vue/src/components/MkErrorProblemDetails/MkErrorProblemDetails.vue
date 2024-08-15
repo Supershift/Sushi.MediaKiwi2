@@ -11,7 +11,7 @@
       /** Show the {@link ErrorProblemDetails} detail value */
       showDetails?: boolean;
       /** Type proxy from the Vuetify alert types  */
-      type: "error" | "warning" | "info" | "success";
+      type?: "error" | "warning" | "info" | "success";
     }>(),
     {
       type: "error",
