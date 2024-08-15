@@ -12,10 +12,10 @@ export async function useFormDelete(
   props: ComputedRef<DeleteProps>,
   /** Ref to the Form element */
   formRef: Ref<any>,
-  /** Model for the ErrorProblemDetails state of the component */
-  errorProblemDetails: ModelRef<ErrorProblemDetails | null | undefined, string>
   /** Model for the Valid state of the component */
   inProgress: ModelRef<boolean, string>,
+  /** Model for the ErrorProblemDetails state of the component */
+  errorProblemDetails: ModelRef<ErrorProblemDetails | null | undefined, string>
 ) {
   // Inject Dependencies
   const { defaultT } = await useI18next();
