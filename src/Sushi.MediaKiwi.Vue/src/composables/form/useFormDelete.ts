@@ -21,7 +21,6 @@ export async function useFormDelete(
   errorProblemDetails: ModelRef<ErrorProblemDetails | null | undefined, string>
 ) {
   // Inject Dependencies
-  const { defaultT, t } = await useI18next("FormDelete");
   const snackbar = useSnackbarStore();
   const navigation = useNavigation();
   const { toErrorProblemDetails } = useErrorProblemDetails();

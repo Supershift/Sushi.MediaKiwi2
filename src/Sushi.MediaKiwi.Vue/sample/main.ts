@@ -67,6 +67,7 @@ const mediakiwiOptions = <MediakiwiVueOptions>{
     },
     sideSheet: {
       resetOnSubmit: true,
+      closeOnSubmit: true,
     },
   },
 };

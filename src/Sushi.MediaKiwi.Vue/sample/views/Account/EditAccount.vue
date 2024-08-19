@@ -24,8 +24,6 @@
     depositSheet: false,
     withdrawSheet: false,
     transferMoneyDialog: false,
-    //
-    error: <ErrorProblemDetails | null | undefined>undefined,
   });
 
   async function onClose() {
@@ -67,21 +65,21 @@
   }
 </script>
 <template>
-  <MkForm title="Close Account" @load="onLoad" hide-undo v-model:error="state.error">
+  <MkForm title="Close Account" @load="onLoad" hide-undo>
     <template #toolbar>
       <v-btn @click="state.depositSheet = true">Deposit</v-btn>
       <v-btn @click="state.withdrawSheet = true">Withdraw</v-btn>
       <v-btn variant="flat" @click="state.transferMoneyDialog = true">Transfer</v-btn>
     </template>
     <template #overflowIconItems>
-      <MkConfirmDialog @confirm="onCloseWithError" body="Are you sure you wan't de close this account" v-model:error="state.error">
+      <MkConfirmDialog @confirm="onCloseWithError" body="Are you sure you wan't de close this account">
         <template #activator="{ props }">
           <v-list-item v-bind="props" color="primary"> Close Account With Error </v-list-item>
         </template>
       </MkConfirmDialog>
       <MkConfirmDialog @confirm="onClose" body="Are you sure you wan't de close this account">
         <template #activator="{ props }">
-          <v-list-item v-bind="props" color="primary"> Close Account {{}} </v-list-item>
+          <v-list-item v-bind="props" color="primary"> Close Account </v-list-item>
         </template>
       </MkConfirmDialog>
     </template>

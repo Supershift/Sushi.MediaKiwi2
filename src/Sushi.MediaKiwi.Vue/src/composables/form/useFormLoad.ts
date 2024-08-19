@@ -22,7 +22,6 @@ export async function useFormLoad(
   errorProblemDetails: ModelRef<ErrorProblemDetails | null | undefined, string>
 ) {
   // Inject Dependencies
-  const { t } = await useI18next("FormLoad");
   const snackbar = useSnackbarStore();
   const { toErrorProblemDetails } = useErrorProblemDetails();
   const formMessages = await useFormMessages();

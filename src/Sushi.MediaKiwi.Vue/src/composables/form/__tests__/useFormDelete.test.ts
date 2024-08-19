@@ -58,6 +58,8 @@ describe("useFormDelete", async () => {
   // Mock the models
   const inProgress = { value: false } as ModelRef<boolean>;
   const error = { value: null } as ModelRef<ErrorProblemDetails | null | undefined>;
+  const formRef = ref();
+  const entitiyName = computed(() => "Entity");
 
   describe("Form has DeleteHandler", async () => {
     const props = computed<DeleteProps>(() => ({
@@ -71,7 +73,7 @@ describe("useFormDelete", async () => {
       redirectAfterDelete: hoists.redirectAfterDelete,
     }));
 
-    const useFormDeleteInstance = await useFormDelete(props, inProgress, error);
+    const useFormDeleteInstance = await useFormDelete(props, formRef, entitiyName, inProgress, error);
 
     it("should have delete handler", async () => {
       // Assert
@@ -145,7 +147,7 @@ describe("useFormDelete", async () => {
   describe("Form without DeleteHandler", async () => {
     const props = computed<DeleteProps>(() => ({}));
 
-    const useFormDeleteInstance = await useFormDelete(props, inProgress, error);
+    const useFormDeleteInstance = await useFormDelete(props, formRef, entitiyName, inProgress, error);
 
     it("should throw error", async () => {
       // Act

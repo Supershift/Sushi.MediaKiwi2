@@ -4,12 +4,12 @@
   import { AccountConnector } from "@sample/services/AccountConnector";
   import { container } from "tsyringe";
   import { reactive } from "vue";
-  import { useValidationRules } from "@/composables";
+  import { useNavigation, useValidationRules } from "@/composables";
   import CreateAccountDialog from "./partials/CreateAccountDialog.vue";
-  import AccountDetailsSheet from "./partials/AccountDetailsSheet.vue";
 
   const accountConnector = container.resolve(AccountConnector);
   const { required } = useValidationRules();
+  const navigation = useNavigation();
 
   const state = reactive({
     accountNumber: <string | undefined>undefined,
@@ -21,7 +21,7 @@
   async function onGet() {
     state.account = await accountConnector.GetAccountAsync(state.accountNumber!)!;
     if (state.account) {
-      state.accountDetailsSheet = true;
+      navigation.navigateToView("EditAccount", state.account.number);
     }
   }
 
@@ -40,5 +40,4 @@
   </MkForm>
 
   <CreateAccountDialog v-model="state.createAccountDialog" />
-  <AccountDetailsSheet v-if="state.account" v-model="state.accountDetailsSheet" :account="state.account" />
 </template>

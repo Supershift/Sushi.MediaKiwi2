@@ -1,12 +1,10 @@
 <script setup lang="ts">
   import { MkForm } from "@/components";
   import { Account } from "@sample/models/Account/Account";
-  import { AccountConnector } from "@sample/services/AccountConnector";
   import { container } from "tsyringe";
   import { reactive } from "vue";
   import { useValidationRules } from "@/composables";
   import { ErrorConnector } from "@sample/services/ErrorConnector";
-  import {} from "@/models/errors/ErrorProblemDetails";
 
   const errorConnector = container.resolve(ErrorConnector);
   const { required } = useValidationRules();
@@ -35,10 +33,7 @@
 </script>
 
 <template>
-  <MkForm @submit="getGenericErrorFromApi" confirm-before-submit>
-    <template #title>
-      <h2>Errors within the Form</h2>
-    </template>
+  <MkForm @submit="getGenericErrorFromApi">
     <template #toolbar>
       <v-btn @click="throwCustomError()">Throw custom error</v-btn>
       <v-btn @click="throwError()">Throw unexpected error</v-btn>
@@ -47,7 +42,7 @@
     <v-text-field label="Account Number" v-model="state.accountNumber" :rules="[required]" />
   </MkForm>
 
-  <v-divider class="my-6"></v-divider>
+  <v-divider class="my-10"></v-divider>
 
   <v-card>
     <v-card-title>Errors outside the form actions</v-card-title>

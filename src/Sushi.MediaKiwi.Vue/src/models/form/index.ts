@@ -23,6 +23,8 @@ export type FormSideSheetProps = FormProps & {
   width?: string;
   /** Intro text of the dialog */
   intro?: string;
+  /** Close the sidesheet after submit was succesful */
+  closeOnSubmit?: boolean;
 };
 
 export type FormProps = LoadProps &

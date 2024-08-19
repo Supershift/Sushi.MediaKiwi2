@@ -62,6 +62,18 @@
     modelValue.value = false;
   }
 
+  // Submit the form and close the sheet
+  async function onSubmitAndClose(event?: Event, confirm?: boolean) {
+    // Submit the form
+    const result = await onSubmit(event, confirm);
+
+    if (result.isSuccess) {
+      if (computedProps.value.closeOnSubmit) {
+        onClose();
+      }
+    }
+  }
+
   /**
    * Exposes refs to the parent component.
    * @example <Form ref="mkFormRef" ... />
@@ -105,7 +117,7 @@
     data-cy="form-side-sheet"
     v-model="isValid"
     :validate-on="computedProps.validateOn"
-    @submit.prevent="onSubmit"
+    @submit.prevent="onSubmitAndClose"
     ref="formRef"
   >
     <MkSideSheet v-model="modelValue" v-bind="$attrs" @closed-sheet="onClose" :loading="inProgress" close-button>
@@ -140,7 +152,7 @@
       :title="submitConfirmationTitle"
       :confirm-button-label="submitButtonLabel"
       :body="submitConfirmationBody"
-      @confirm="(event) => onSubmit(event, true)"
+      @confirm="(event) => onSubmitAndClose(event, true)"
     />
   </v-form>
 </template>
