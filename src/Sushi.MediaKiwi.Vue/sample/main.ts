@@ -12,7 +12,6 @@ import "./styles/main.scss";
 import { container } from "tsyringe";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
 import { mdiAccountCheckOutline, mdiTestTube } from "@mdi/js";
-import { symbols } from "@sample/plugin/material/symbols"; // import the symbols from the plugin
 
 import { modules } from "./views/modules";
 import { useEntraSettings } from "@/composables/useEntraSettings";
@@ -33,7 +32,6 @@ const mediakiwiOptions = <MediakiwiVueOptions>{
       },
       sets: {
         mdi,
-        symbols,
       },
     },
   },
@@ -50,15 +48,14 @@ const mediakiwiOptions = <MediakiwiVueOptions>{
     time: { hour: "2-digit", minute: "2-digit" }, // Example 09:50 AM or 21:50
   },
   signIn: {
-    image: "./basic-unsplash.jpg",
-  },
-  dark: {
-    image: "./basic-unsplash.jpg",
-    color: "green",
-  },
-  light: {
-    image: "./flowers.png",
-    color: "rgba(100, 142, 239, 0.6)",
+    dark: {
+      image: "./basic-unsplash.jpg",
+      color: "green",
+    },
+    light: {
+      image: "./flowers.png",
+      color: "rgba(100, 142, 239, 0.6)",
+    },
   },
   formOptions: {
     dialog: {
