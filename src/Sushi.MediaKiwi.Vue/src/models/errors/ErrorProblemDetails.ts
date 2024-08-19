@@ -1,8 +1,6 @@
 import { AxiosResponse, HttpStatusCode } from "axios";
 import { ApiError } from "./ApiError";
-import { useI18next } from "@/composables";
 import { useErrorMessages } from "@/composables/useErrorMessages";
-import { error } from "console";
 
 /**
  * Implements Sushi.MediaKiwi.Services.Model.ErrorProblemDetails

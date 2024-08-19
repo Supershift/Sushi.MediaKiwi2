@@ -1,4 +1,4 @@
-import { FormDialogProps, FormProps, FormSideSheetProps, FormViewProps } from "../form";
+import { FormDialogProps, FormProps, FormSideSheetProps, FormViewProps } from "../form/FormProps";
 
 export type MediaKiwiFormOptions = {
   /** General Form options, applicable on all forms (MkForm, MkFormDialog, MkFormSideSheet) */

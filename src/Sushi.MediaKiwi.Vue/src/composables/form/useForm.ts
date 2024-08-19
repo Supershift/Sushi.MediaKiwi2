@@ -1,6 +1,6 @@
 import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
 import { ModelRef, Ref, computed } from "vue";
-import { FormDialogProps, FormViewProps, FormSideSheetProps, FormSlotProps, SubmitProps } from "@/models/form";
+import { FormDialogProps, FormViewProps, FormSideSheetProps, FormSlotProps, SubmitProps } from "@/models/form/FormProps";
 import { useFormLoad } from "./useFormLoad";
 import { useFormSubmit } from "./useFormSubmit";
 import { useFormDelete } from "./useFormDelete";

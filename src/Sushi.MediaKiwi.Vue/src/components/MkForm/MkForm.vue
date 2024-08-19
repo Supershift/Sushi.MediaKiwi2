@@ -5,7 +5,7 @@
   import { ref, getCurrentInstance } from "vue";
   import MkToolbar from "../MkToolbar/MkToolbar.vue";
   import MkOverflowMenuIcon from "../MkOverflowMenuIcon/MkOverflowMenuIcon.vue";
-  import { FormSlotProps, FormViewProps } from "@/models/form";
+  import { FormSlotProps, FormViewProps } from "@/models/form/FormProps";
   //
   import { useMediakiwiVueOptions } from "@/composables/useMediakiwiVueOptions";
   import { useForm } from "@/composables/form/useForm";

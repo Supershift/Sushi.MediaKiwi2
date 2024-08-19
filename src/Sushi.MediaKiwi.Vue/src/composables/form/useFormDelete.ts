@@ -1,9 +1,8 @@
 import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
 import { ComputedRef, ModelRef, Ref, computed } from "vue";
-import { useI18next } from "@/composables/useI18next";
 import { useSnackbarStore } from "@/stores";
 import { useNavigation } from "@/composables/useNavigation";
-import { DeleteProps } from "@/models/form";
+import { DeleteProps } from "@/models/form/FormProps";
 import { TResult } from "@/models/form/TResult";
 import { useErrorProblemDetails } from "../useErrorProblemDetails";
 import { useFormMessages } from "./useFormMessages";

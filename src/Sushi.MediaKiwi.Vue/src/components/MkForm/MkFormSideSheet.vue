@@ -4,7 +4,7 @@
   import { ref, watch, getCurrentInstance } from "vue";
   import { useI18next } from "@/composables";
   import { useForm } from "@/composables/form/useForm";
-  import { FormSideSheetProps, FormSlotProps } from "@/models/form";
+  import { FormSideSheetProps, FormSlotProps } from "@/models/form/FormProps";
   import MkSideSheet from "../MkSideSheet/MkSideSheet.vue";
   import { useMediakiwiVueOptions } from "@/composables/useMediakiwiVueOptions";
   import MkConfirmDialog from "../MkConfirmDialog/MkConfirmDialog.vue";

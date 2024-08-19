@@ -4,7 +4,7 @@ import { useFormDelete } from "../useFormDelete";
 import { computed, ModelRef, ref } from "vue";
 import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
 import { createTestingPinia } from "@pinia/testing";
-import { DeleteProps } from "@/models/form";
+import { DeleteProps } from "@/models/form/FormProps";
 import { AxiosResponse, HttpStatusCode } from "axios";
 
 const hoists = vi.hoisted(() => {

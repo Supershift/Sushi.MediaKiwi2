@@ -4,7 +4,7 @@
   import { ref, watch, getCurrentInstance } from "vue";
   import { useForm } from "@/composables/form/useForm";
   import MkDialogCard from "../MkDialog/MkDialogCard.vue";
-  import { FormDialogProps, FormSlotProps } from "@/models/form";
+  import { FormDialogProps, FormSlotProps } from "@/models/form/FormProps";
   import { useMediakiwiVueOptions } from "@/composables/useMediakiwiVueOptions";
   import MkConfirmDialog from "../MkConfirmDialog/MkConfirmDialog.vue";
 

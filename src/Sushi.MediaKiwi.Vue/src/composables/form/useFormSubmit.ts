@@ -1,7 +1,7 @@
 import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
 import { ComputedRef, ModelRef, Ref, computed, ref } from "vue";
 import { useSnackbarStore } from "@/stores";
-import { SubmitProps } from "@/models/form";
+import { SubmitProps } from "@/models/form/FormProps";
 import { TResult } from "@/models/form/TResult";
 import { useErrorProblemDetails } from "../useErrorProblemDetails";
 import { useFormMessages } from "./useFormMessages";
