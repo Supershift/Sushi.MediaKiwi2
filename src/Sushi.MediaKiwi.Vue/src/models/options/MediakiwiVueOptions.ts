@@ -34,8 +34,6 @@ export interface MediakiwiVueOptions {
   };
   /** Options for the sign in screen background*/
   signIn?: {
-    image?: string;
-    color?: string;
     [key: string]: MediakiwiSigninConfigurations;
   };
   /** Global options used for MkTable */
