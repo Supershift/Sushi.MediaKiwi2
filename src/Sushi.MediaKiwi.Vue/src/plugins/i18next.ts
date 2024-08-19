@@ -59,6 +59,7 @@ export default {
     app.provide("i18next", instance);
     app.provide("i18initPromise", i18initPromise);
 
+    // register i18next with tsyringe
     container.registerInstance("i18next", instance);
     container.registerInstance("i18initPromise", i18initPromise);
   },
