@@ -8,8 +8,7 @@
 
   // Components
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
-  import { computed } from "vue";
-  import { reactive } from "vue";
+  import { computed, reactive } from "vue";
 
   // inject dependencies
   const { defaultT } = await useI18next();
@@ -22,6 +21,7 @@
       pagingResult?: ITableMapPaging | null;
       mode?: MediakiwiPaginationMode;
       pageSizeOptions?: number[];
+      hidePagination?: boolean;
       /** when true the pageindex is calculated, so we 'track' which page to use based on the first item viewed  */
       pageTracking?: boolean;
     }>(),
@@ -150,9 +150,8 @@
 </script>
 
 <template>
-  <v-divider />
   <div class="mk-pagination">
-    <div class="mk-pagination__items-per-page">
+    <div class="mk-pagination__items-per-page" v-if="!props.hidePagination">
       <span class="mk-pagination__items-per-page__label">
         {{ defaultT("Rows per page") }}
       </span>
@@ -165,12 +164,12 @@
         @update:model-value="updatePageSize"
       ></VSelect>
     </div>
-    <div class="mk-pagination__info">
+    <div class="mk-pagination__info" v-if="!props.hidePagination">
       <template v-if="resultSetLabel">
         {{ resultSetLabel }}
       </template>
     </div>
-    <div class="mk-pagination__pagination">
+    <div class="mk-pagination__pagination" v-if="!props.hidePagination">
       <VPagination
         total-visible=""
         density="compact"
@@ -181,7 +180,6 @@
       />
     </div>
   </div>
-  <v-divider />
 </template>
 <style scoped lang="scss">
   @use "@/styles/abstracts";

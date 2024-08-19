@@ -20,6 +20,6 @@
   </ItemGroup>
 	
   <ItemGroup>
-    <ProjectReference Include="..\Sushi.MediaKiwi\Sushi.MediaKiwi.csproj" />
+    <ProjectReference Include="..\Sushi.MediaKiwi.Core\Sushi.MediaKiwi.Core.csproj" />
   </ItemGroup>
 </Project>

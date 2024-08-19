@@ -2,47 +2,24 @@ name: dotnet
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
-    paths:
-      - ".github/workflows/pr_dotnet.yml"
-      - "src/Sushi.MediaKiwi.AzureFunction/**/*"
-      - "src/Sushi.MediaKiwi.DAL/**/*"
-      - "src/Sushi.MediaKiwi.SampleAPI/**/*"
-      - "src/Sushi.MediaKiwi.Services/**/*"
-      - "src/Sushi.MediaKiwi.WebAPI/**/*"
-      - "tests/**/*"
+    types: [opened, synchronize, reopened]    
 
 # Add "id-token" with the intended permissions.
 permissions:
   contents: "read"
   id-token: "write"
-  # Required to put a comment into the pull-request
   pull-requests: write
+  actions: read
+  security-events: write
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    services:
-      mssql:
-        image: mcr.microsoft.com/mssql/server
-        env:
-          SA_PASSWORD: Your_password123
-          ACCEPT_EULA: "Y"
-        ports:
-          - 1433:1433
     steps:
+
+      # Checkout current branch
       - name: Checkout
         uses: actions/checkout@v4
-
-      # Setup MSSQL
-      - name: Setup MSSQL
-        uses: addnab/docker-run-action@v3
-        with:
-          image: ormico/sqlpackage
-          options: -v ${{ github.workspace }}:/var/output
-          run: |
-            sleep 15;
-            /opt/sqlpackage/sqlpackage /a:Import /TargetConnectionString:"Server=mssql,1433;TrustServerCertificate=True;Database=portal;User=sa;Password=Your_password123" /sf:/var/output/SqlScripts/mediakiwi.bacpac
 
       # Setup .NET
       - name: Setup .NET
@@ -58,12 +35,26 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
 
+      # Run Trivy vulnerability scanner
+      # - name: Run Trivy vulnerability scanner
+      #   uses: aquasecurity/trivy-action@0.21.0
+      #   with:
+      #     scan-type: 'fs'
+      #     ignore-unfixed: true
+      #     format: 'sarif'
+      #     output: 'trivy-results.sarif'
+      #     severity: 'HIGH,CRITICAL'
+
+      # # Upload Trivy scan results to GitHub Security tab
+      # - name: Upload Trivy scan results to GitHub Security tab
+      #   uses: github/codeql-action/upload-sarif@v3
+      #   with:
+      #     sarif_file: 'trivy-results.sarif'
+
       # Run tests
       - name: Test
         run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --logger trx --results-directory coverage
-        env:
-          ConnectionStrings__portal: "Server=localhost,1433;Database=portal;User Id=sa;Password=Your_password123;TrustServerCertificate=True;"
-          
+
       - name: Merge Coverage Reports
         run: dotnet tool install -g dotnet-reportgenerator-globaltool
 

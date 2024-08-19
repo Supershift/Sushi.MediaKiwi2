@@ -51,10 +51,10 @@ namespace Sushi.MediaKiwi.IntegrationTests
                 connectionString = connectionStringBuilder.ToString();
             }
 
-            InitializeServices(configuration, connectionString);
+            InitializeServices(connectionString);
         }
 
-        private void InitializeServices(IConfigurationRoot configuration, string connectionString)
+        private void InitializeServices(string connectionString)
         {
             // create service collection
             IServiceCollection serviceCollection = new ServiceCollection();

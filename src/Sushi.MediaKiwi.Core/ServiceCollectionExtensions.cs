@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Sushi.MediaKiwi.DAL;
 using Sushi.MediaKiwi.WebAPI;
 
-namespace Sushi.MediaKiwi
+namespace Sushi.MediaKiwi.Core
 {
     /// <summary>
     /// Extends <see cref="IServiceCollection"/> with methods to add MediaKiwi.

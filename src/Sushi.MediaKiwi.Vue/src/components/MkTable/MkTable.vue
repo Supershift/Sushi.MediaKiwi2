@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/require-default-prop -->
 <script setup lang="ts" generic="T">
-  import { TableMap, TableFilter } from "@/models/table";
+  import { TableMap, TableFilter, TableColumn } from "@/models/table";
   import { Paging, Sorting } from "@/models/api";
   import { ref, watch } from "vue";
   import MkTableFilter from "@/components/MkTableFilter/MkTableFilter.vue";
@@ -18,6 +18,7 @@
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
   import MkTableHead from "./MkTableHead.vue"; // Mk-Th
   import MkTableCell from "./MkTableCell.vue"; // Mk-Td
+  import MkDisplayOptions from "@/components/MkDisplayOptions/MkDisplayOptions.vue";
   import { defaultPageSizeOptions, defaultPageSize } from "@/constants";
   import { useComponentContext } from "@/composables/useComponentContext";
   import MkEmptyState from "../MkEmptyState/MkEmptyState.vue";
@@ -80,6 +81,11 @@
       pageSize: defaultPageSize,
     },
   });
+  /** Display options for the table */
+  const displayOptions = defineModel<TableColumn[] | boolean>("displayOptions", { required: false });
+  const hasDisplayOptions = computed(() => displayOptions.value !== undefined && displayOptions.value !== false);
+  /** Reference for multiple tables on one view */
+  const tableReference = defineModel<string>("tableReference", { required: false, default: "Table" });
 
   const sortBy = computed(() => sorting.value?.sortBy);
   const sortDirection = computed(() => sorting.value?.sortDirection);
@@ -160,8 +166,9 @@
     return undefined;
   });
 
+  /** Determines if the pagination should be displayed */
   const showPagination = computed(() => {
-    return currentPagination.value && pagingResult.value && pagingResult.value.pageCount;
+    return currentPagination.value && pagingResult.value && pagingResult.value.pageCount && props.paginationMode === "controls";
   });
 
   // event listeners
@@ -275,6 +282,8 @@
       @update:sorting="sortingChanged"
       @update:selection="(e) => emit('update:selection', e)"
       :disable-item-selection="props.disableItemSelection"
+      v-model:display-options="displayOptions"
+      v-model:tableReference="tableReference"
     >
       <template #thead>
         <slot v-if="slots.thead" name="thead"></slot>
@@ -300,16 +309,24 @@
       </template>
 
       <!-- Only show the controls if the pagination mode is unset or set to 'controls' -->
-      <template v-if="paginationMode === 'controls'" #bottom>
-        <MkPagination
-          v-if="showPagination"
-          :model-value="currentPagination"
-          :paging-result="pagingResult"
-          :mode="paginationMode"
-          :page-size-options="pageSizes"
-          :page-tracking="props?.pageTracking"
-          @update:model-value="pageChanged"
-        />
+      <template #bottom>
+        <v-divider />
+        <div class="mk-table__footer">
+          <div v-if="hasDisplayOptions" class="mk-table__footer-item">
+            <MkDisplayOptions v-model:display-options="displayOptions" v-model:table-reference="tableReference" />
+          </div>
+          <div v-if="showPagination" class="mk-table__footer-item">
+            <MkPagination
+              :model-value="currentPagination"
+              :paging-result="pagingResult"
+              :mode="paginationMode"
+              :page-size-options="pageSizes"
+              :page-tracking="props?.pageTracking"
+              :hide-pagination="!showPagination"
+              @update:model-value="pageChanged"
+            />
+          </div>
+        </div>
       </template>
     </MkTableView>
 
@@ -321,8 +338,8 @@
         :item-view-id="props.itemViewId"
         :new-title="props.newTitle"
         :new-emit="props.newEmit"
-        :title="props.emptyStateTitle"
-        :subtitle="props.emptyStateSubtitle"
+        :headline="props.emptyStateTitle"
+        :text="props.emptyStateSubtitle"
         @click:new="emit('click:new', $event)"
       />
     </template>
@@ -341,6 +358,13 @@
         justify-content: flex-end;
         width: auto;
       }
+    }
+    &__footer {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 24px;
     }
   }
 </style>

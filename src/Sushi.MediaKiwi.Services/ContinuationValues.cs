@@ -1,4 +1,4 @@
-﻿namespace Sushi.LanguageExtensions
+﻿namespace Sushi.MediaKiwi.Services
 {
     /// <summary>
     /// Represents values used when adding continuous scroll on datasets.

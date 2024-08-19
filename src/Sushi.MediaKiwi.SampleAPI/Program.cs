@@ -1,8 +1,7 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Sushi.MediaKiwi.SampleAPI;
 using Sushi.MediaKiwi.WebAPI;
-using Sushi.MediaKiwi;
+using Sushi.MediaKiwi.Core;
 using Sushi.MicroORM;
 using Sushi.MediaKiwi.SampleAPI.Service.Model;
 using FluentValidation;
@@ -11,7 +10,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 // get config
 var config = builder.Configuration;
-var connectionString = config.GetConnectionString("portal")!;
+
+/*
+ * If portal in the connectionstring is null a secrets.json should be set
+ * Example:
+ * {
+ *   "ConnectionStrings": {
+ *     "portal": "Server=localhost;Initial Catalog=mediakiwi;Persist Security Info=False;Integrated Security=SSPI;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;"
+ *   },
+ *   "AddCORS":  true
+ * }
+ */
+var connectionString = config.GetConnectionString("portal") ?? "";
 var addCORS = config.GetValue<bool>("AddCORS");
 
 // Add services to the container.
@@ -44,25 +54,16 @@ services.AddSwaggerGen(options =>
     options.SwaggerDoc("SampleApi", new OpenApiInfo { Title = "SampleApi" });
 });
 
-// Define admin roles
-var adminRoles = new[] { Sushi.MediaKiwi.WebAPI.Constants.AdminRoleName };
-
 // add mediakiwi API
 services.AddMediaKiwi(    
     azureAdConfig: config.GetSection("AzureAd"), 
     autoMapperConfig: c => c.AddProfile<Sushi.MediaKiwi.SampleAPI.Service.Model.AutoMapperProfile>(),
     authorizationOptions: options => {
         
-        // Add authorization policies for admin roles
-        options.AddPolicy(Sushi.MediaKiwi.WebAPI.Constants.AdminPolicyName, policy =>
-        {
-            policy.RequireRole(adminRoles);
-        });
-
         // Add custom authorization policies
         options.AddPolicy(Sushi.MediaKiwi.SampleAPI.Constants.CustomPolicyName, policy =>
         {
-            policy.RequireRole([Sushi.MediaKiwi.SampleAPI.Constants.CustomRoleName, Sushi.MediaKiwi.WebAPI.Constants.AdminRoleName ]);
+            policy.RequireRole(Sushi.MediaKiwi.SampleAPI.Constants.CustomRoleName, Sushi.MediaKiwi.WebAPI.Constants.AdminRoleName);
         });
     });
 

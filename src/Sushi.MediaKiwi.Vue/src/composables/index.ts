@@ -18,3 +18,5 @@ export * from "./useDayjs";
 export * from "./useComponentContext";
 export * from "./useSections";
 export * from "./useErrorProblemDetails";
+export * from "./useTableDisplayOptions";
+export * from "./useEntraSettings";
