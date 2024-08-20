@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Sushi.LanguageExtensions;
+using Sushi.MediaKiwi.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +11,7 @@ namespace Sushi.MediaKiwi.WebAPI.Paging
     /// <summary>
     /// Retrieves <see cref="ContinuationValues"/> from <see cref="HttpContext"/>.
     /// </summary>
+    [Obsolete("To get continuation add ContinuationValues to the query.")]
     public class ContinuationRetriever
     {
         private readonly IHttpContextAccessor _httpContextAccessor;

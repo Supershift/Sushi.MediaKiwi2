@@ -74,10 +74,6 @@ namespace Sushi.MediaKiwi.WebAPI
             if (File.Exists(webModelFilename))
                 options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, webModelFilename));
 
-            // add paging parameters
-            options.OperationFilter<PagingSwaggerFilter>();
-            options.OperationFilter<ContinuationSwaggerFilter>();
-
             // add sorting parameters
             options.OperationFilter<SortingSwaggerFilter>();
 

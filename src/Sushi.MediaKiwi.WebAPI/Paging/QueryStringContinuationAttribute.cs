@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
-using Sushi.LanguageExtensions;
 using Sushi.MediaKiwi.Services;
 using System;
 using System.Collections.Generic;
@@ -12,6 +11,7 @@ namespace Sushi.MediaKiwi.WebAPI.Paging
     /// <summary>
     /// Attribute adding continuation querystring parameters when applied to a WebAPI method. <see cref="PagingValues"/> can be retrieved using <see cref="PagingRetriever"/>.
     /// </summary>
+    [Obsolete("Add ContinuationValues with [FromQuery] to method's parameters.")]
     public class QueryStringContinuationAttribute : ActionFilterAttribute
     {
         private readonly int _defaultMaxItems;

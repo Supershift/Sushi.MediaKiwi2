@@ -6,7 +6,7 @@ namespace Sushi.MediaKiwi.WebAPI.Paging
     /// <summary>
     /// Attribute adding paging querystring parameters when applied to a WebAPI method. <see cref="PagingValues"/> can be retrieved using <see cref="PagingRetriever"/>.
     /// </summary>
-    [Obsolete("QueryStringPagingAttribute is deprecated, to get paging add PagingValues to the query.")]
+    [Obsolete("QueryStringPagingAttribute is deprecated, to get paging add PagingValues with [FromQuery] to method's parameters.")]
     public class QueryStringPagingAttribute : ActionFilterAttribute
     {
         private readonly int _defaultPageSize;
