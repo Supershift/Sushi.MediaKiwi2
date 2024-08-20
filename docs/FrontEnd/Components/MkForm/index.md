@@ -11,9 +11,9 @@ There are multiple Form component variants.
 ## Error handling and feedback
 
 By default all errors within the Form are handled by the global error handler.
-Errors thrown within the context of the Form are rendered as a v-alert component atop the form. [Read more](./../Feedback/ErrorHandling.md).
+Errors thrown within the context of the Form are rendered as a v-alert component atop the form. [Read more](./../../Feedback/ErrorHandling.md).
 
-All feedback is given using the default labels. [Read more](./../Feedback/FormMessages.md).
+All feedback is given using the default labels. [Read more](./../../Feedback/FormMessages.md).
 
 ## Customization
 
