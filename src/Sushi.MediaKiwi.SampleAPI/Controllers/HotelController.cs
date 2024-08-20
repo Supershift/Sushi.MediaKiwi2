@@ -4,7 +4,6 @@ using Sushi.MediaKiwi.SampleAPI.Service.Model;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MediaKiwi.WebAPI;
-using Sushi.MediaKiwi.WebAPI.Paging;
 
 namespace Sushi.MediaKiwi.SampleAPI.Controllers
 {
@@ -23,9 +22,9 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<ListResult<Hotel>>> GetHotels(GetHotelsQuery query)
+        public async Task<ActionResult<ListResult<Hotel>>> GetHotels(string? countryCode, bool? isActive, PagingValues pagingValues)
         {
-            var result = await _hotelService.GetAllAsync(query);
+            var result = await _hotelService.GetAllAsync(countryCode, isActive, pagingValues);
             return this.CreateResponse(result);
         }
 
@@ -80,12 +79,5 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
             var result = await _hotelService.SaveAsync(id, request);
             return this.CreateResponse(result);
         }
-    }
-
-    public class GetHotelsQuery
-    {
-        public PagingValues Page { get; set; } = null!;
-        public string? CountryCode { get; set; }
-        public bool? IsActive { get; set; }
     }
 }
