@@ -17,7 +17,9 @@ All feedback is given using the default labels. [Read more](./../../Feedback/For
 
 ## Customization
 
-There are multiple ways of customizing the MkForms. You can define the props on the component or define them globally in the [MediaKiwiFormOptions](./MediaKiwiFormOptions.md)
+There are multiple ways of customizing the MkForms. You can define the props on the component or define them globally in the [MediaKiwiFormOptions](./MediaKiwiFormOptions.md).
+
+For a full list of the options, see the [component props](./../../../../src/Sushi.MediaKiwi.Vue/src/models/form/FormProps.ts)
 
 ## Event handlers
 
