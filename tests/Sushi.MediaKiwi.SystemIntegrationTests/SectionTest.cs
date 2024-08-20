@@ -18,15 +18,9 @@ namespace Sushi.MediaKiwi.SystemIntegrationTests
             var connector = _fixture.GetConnector();
             var response = await connector.GetSectionsAsync();
 
-            response.Match(result =>
-            {
-                Assert.NotEmpty(result.Result);
-            },
-            error =>
-            {
-                Assert.Fail(error.Message);
-            });
-            
+            Assert.Null(response.Error);
+            Assert.NotNull(response.Value);
+            Assert.NotEmpty(response.Value.Result);
         }
     }
 }
