@@ -37,7 +37,7 @@ export type FormProps = LoadProps &
     /** Title of the form */
     title?: string;
     /** Name of the entity that is being used in the form. Used in the snackbar feedback  */
-    entityName?: string;
+    entryName?: string;
   };
 
 export type LoadProps = {
@@ -64,8 +64,6 @@ export type SubmitProps = {
   hideSubmitSnackbar?: boolean;
   /** Snackbar message when {@link onSubmit} was sucessfull */
   submitSuccessfulSnackbarMessage?: string;
-  /** Snackbar message when {@link onSubmit} failed */
-  submitFailedSnackbarMessage?: string;
   /** reset the form after a successfull submit */
   resetOnSubmit?: boolean;
   /** Use the save labels, instead of the default Submit labels */

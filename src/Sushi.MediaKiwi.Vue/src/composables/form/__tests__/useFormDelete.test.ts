@@ -16,35 +16,7 @@ const hoists = vi.hoisted(() => {
 });
 
 // Mock the useI18next composable
-vi.mock("@/composables/useI18next", async () => {
-  const mod = await import("@/composables/useI18next");
-  return {
-    ...mod,
-    // Mock the useI18next
-    useI18next: async () => ({
-      i18next: {
-        value: {
-          resolvedLanguage: "en",
-        },
-      },
-      t: {
-        value: vi.fn().mockImplementation((_key: string, value: string) => {
-          return value;
-        }),
-      },
-      defaultT: {
-        value: vi.fn().mockImplementation((_key: string, value: string) => {
-          return value;
-        }),
-      },
-      formatNumber: {
-        value: vi.fn().mockImplementation((value: number) => {
-          return value.toFixed(2);
-        }),
-      },
-    }),
-  };
-});
+vi.mock("@/composables/useI18next");
 
 describe("useFormDelete", async () => {
   beforeEach(() => {
@@ -59,7 +31,7 @@ describe("useFormDelete", async () => {
   const inProgress = { value: false } as ModelRef<boolean>;
   const error = { value: null } as ModelRef<ErrorProblemDetails | null | undefined>;
   const formRef = ref();
-  const entitiyName = computed(() => "Entity");
+  const entityName = computed(() => "entry");
 
   describe("Form has DeleteHandler", async () => {
     const props = computed<DeleteProps>(() => ({
@@ -73,7 +45,7 @@ describe("useFormDelete", async () => {
       redirectAfterDelete: hoists.redirectAfterDelete,
     }));
 
-    const useFormDeleteInstance = await useFormDelete(props, formRef, entitiyName, inProgress, error);
+    const useFormDeleteInstance = await useFormDelete(props, formRef, entityName, inProgress, error);
 
     it("should have delete handler", async () => {
       // Assert
@@ -147,7 +119,7 @@ describe("useFormDelete", async () => {
   describe("Form without DeleteHandler", async () => {
     const props = computed<DeleteProps>(() => ({}));
 
-    const useFormDeleteInstance = await useFormDelete(props, formRef, entitiyName, inProgress, error);
+    const useFormDeleteInstance = await useFormDelete(props, formRef, entityName, inProgress, error);
 
     it("should throw error", async () => {
       // Act
@@ -157,6 +129,75 @@ describe("useFormDelete", async () => {
       expect(props.value.onDelete).toBeUndefined();
       expect(useFormDeleteInstance.hasDeleteHandler.value).toBeFalsy();
       expect(result.isSuccess).toBeFalsy();
+    });
+  });
+
+  describe("Computed labels", () => {
+    it("should return default delete labels", async () => {
+      const customProps = computed<DeleteProps>(() => ({}));
+
+      const { deleteButtonLabel, deleteConfirmationTitle, deleteConfirmationBody, deleteSuccessfulMessage, deleteFailedMessage } = await useFormDelete(
+        customProps,
+        formRef,
+        entityName,
+        inProgress,
+        error
+      );
+
+      // Assert
+      expect(deleteButtonLabel.value).toEqual("Delete");
+      expect(deleteConfirmationTitle.value).toEqual("Delete this entry");
+      expect(deleteConfirmationBody.value).toEqual("Are you sure you want to delete this entry?");
+      expect(deleteSuccessfulMessage.value).toEqual("Successfully deleted the entry");
+      expect(deleteFailedMessage.value).toEqual("Failed to delete the entry");
+    });
+
+    it("should return the submit labels set on the props", async () => {
+      // Arrage
+      const customProps = computed<DeleteProps>(() => ({
+        deleteButtonLabel: "Remove",
+        deleteConfirmationTitle: "Remove this item",
+        deleteConfirmationBody: "Are you sure you want to remove this item",
+        deleteSuccessfullSnackbarMessage: "Successfully removed the item",
+        deleteFailedSnackbarMessage: "Failed to remove the item",
+      }));
+
+      // Act
+      const { deleteButtonLabel, deleteConfirmationTitle, deleteConfirmationBody, deleteSuccessfulMessage, deleteFailedMessage } = await useFormDelete(
+        customProps,
+        formRef,
+        entityName,
+        inProgress,
+        error
+      );
+
+      // Assert
+      expect(deleteButtonLabel.value).toEqual("Remove");
+      expect(deleteConfirmationTitle.value).toEqual("Remove this item");
+      expect(deleteConfirmationBody.value).toEqual("Are you sure you want to remove this item");
+      expect(deleteSuccessfulMessage.value).toEqual("Successfully removed the item");
+      expect(deleteFailedMessage.value).toEqual("Failed to remove the item");
+    });
+
+    it("should return the submit labels with custom entry name", async () => {
+      // Arrage
+      const entityName = computed(() => "Market");
+      const customProps = computed<DeleteProps>(() => ({}));
+
+      const { deleteButtonLabel, deleteConfirmationTitle, deleteConfirmationBody, deleteSuccessfulMessage, deleteFailedMessage } = await useFormDelete(
+        customProps,
+        formRef,
+        entityName,
+        inProgress,
+        error
+      );
+
+      // Assert
+      expect(deleteButtonLabel.value).toEqual("Delete");
+      expect(deleteConfirmationTitle.value).toEqual("Delete this Market");
+      expect(deleteConfirmationBody.value).toEqual("Are you sure you want to delete this Market?");
+      expect(deleteSuccessfulMessage.value).toEqual("Successfully deleted the Market");
+      expect(deleteFailedMessage.value).toEqual("Failed to delete the Market");
     });
   });
 });

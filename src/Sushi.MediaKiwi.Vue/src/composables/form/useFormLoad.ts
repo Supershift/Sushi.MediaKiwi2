@@ -12,7 +12,7 @@ export async function useFormLoad(
   /** Ref to the Form element */
   formRef: Ref<any>,
   /** Name of the entity that is being used in the form. Used in the snackbar feedback  */
-  entitiyName: ComputedRef<string | undefined>,
+  entryName: ComputedRef<string | undefined>,
   /** Model for the Progress state of the component */
   inProgress: ModelRef<boolean, string>,
   /** Model for the ErrorProblemDetails state of the component */
@@ -23,10 +23,10 @@ export async function useFormLoad(
   const { toErrorProblemDetails } = useErrorProblemDetails();
   const formMessages = await useFormMessages();
 
-  const entitiyLabel = computed(() => entitiyName.value || "data");
+  const entryLabel = computed(() => entryName.value || "data");
 
   // Load Labels
-  const loadFailedSnackbarMessage = computed(() => props.value.loadFailedSnackbarMessage || formMessages.loadFailedSnackbarMessage(entitiyLabel.value));
+  const loadFailedSnackbarMessage = computed(() => props.value.loadFailedSnackbarMessage || formMessages.loadFailedSnackbarMessage(entryLabel.value));
 
   // Undo Labels
   const undoButtonLabel = computed(() => props.value.undoButtonLabel || formMessages.undoButtonLabel());
@@ -35,7 +35,7 @@ export async function useFormLoad(
 
   // Computed properties for the handlers
   const hasLoadHandler = computed(() => (props.value.onLoad ? true : false));
-  const hasUndoHanlder = computed(() => !props.value.hideUndo && hasLoadHandler.value && hasLoadHandler.value);
+  const hasUndoHanlder = computed(() => !props.value.hideUndo && hasLoadHandler.value);
 
   /**
    * Validates the form on load if the {@link LoadProps.validateOnLoad} flag is set
@@ -94,7 +94,7 @@ export async function useFormLoad(
    * Event to undo the changes made to the form
    */
   async function onUndo(event?: Event): Promise<TResult> {
-    if (!props.value.onLoad) {
+    if (!hasLoadHandler.value) {
       throw new Error("No onLoad handler provided");
     }
 
@@ -106,7 +106,7 @@ export async function useFormLoad(
 
     try {
       // Load the data
-      await props.value.onLoad(event);
+      await props.value.onLoad!(event);
 
       // Show a message
       snackbar.showMessage(undoSuccessSnackbarMessage.value);

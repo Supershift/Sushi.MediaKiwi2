@@ -33,7 +33,13 @@ export class TResult<TValue = void> {
    * @param error
    * @returns
    */
-  static failure(error?: ErrorProblemDetails): TResult {
+  static failure(error?: string): TResult;
+  static failure(error?: ErrorProblemDetails): TResult;
+  static failure(error?: string | ErrorProblemDetails): TResult {
+    if (typeof error === "string") {
+      return new TResult(false, undefined, new ErrorProblemDetails(error));
+    }
+
     return new TResult(false, undefined, error);
   }
 }

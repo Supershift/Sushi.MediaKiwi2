@@ -12,7 +12,7 @@ export async function useFormSubmit(
   /** Ref to the Form element */
   formRef: Ref<any>,
   /** Name of the entity that is being used in the form. Used in the snackbar feedback  */
-  entitiyName: ComputedRef<string | undefined>,
+  entryName: ComputedRef<string | undefined>,
   /** Model for the Progress state of the component */
   inProgress: ModelRef<boolean, string>,
   /** Model for the ErrorProblemDetails state of the component */
@@ -26,7 +26,7 @@ export async function useFormSubmit(
   const formMessages = await useFormMessages();
 
   // Entity name, used in the feedback
-  const entityLabel = computed(() => entitiyName.value || "entry");
+  const entryLabel = computed(() => entryName.value || "entry");
 
   // Submit button label
   const submitButtonLabel = computed(() => {
@@ -42,35 +42,35 @@ export async function useFormSubmit(
     if (props.value.submitConfirmationTitle) {
       return props.value.submitConfirmationTitle;
     } else if (props.value.saveLabels) {
-      return formMessages.saveConfirmationTitle(entityLabel.value);
+      return formMessages.saveConfirmationTitle(entryLabel.value);
     } else if (props.value.editLabels) {
-      return formMessages.editConfirmationTitle(entityLabel.value);
+      return formMessages.editConfirmationTitle(entryLabel.value);
     }
-    return formMessages.submitConfirmationTitle(entityLabel.value);
+    return formMessages.submitConfirmationTitle(entryLabel.value);
   });
 
   const submitConfirmationBody = computed(() => {
     if (props.value.submitConfirmationBody) {
       return props.value.submitConfirmationBody;
     } else if (props.value.saveLabels) {
-      return formMessages.saveConfirmationBody(entityLabel.value);
+      return formMessages.saveConfirmationBody(entryLabel.value);
     } else if (props.value.editLabels) {
-      return formMessages.editConfirmationBody(entityLabel.value);
+      return formMessages.editConfirmationBody(entryLabel.value);
     }
 
-    return formMessages.submitConfirmationBody(entityLabel.value);
+    return formMessages.submitConfirmationBody(entryLabel.value);
   });
 
   const submitSuccessMessage = computed(() => {
     if (props.value.submitSuccessfulSnackbarMessage) {
       return props.value.submitSuccessfulSnackbarMessage;
     } else if (props.value.saveLabels) {
-      return formMessages.saveSuccessMessage(entityLabel.value);
+      return formMessages.saveSuccessMessage(entryLabel.value);
     } else if (props.value.editLabels) {
-      return formMessages.editSuccessMessage(entityLabel.value);
+      return formMessages.editSuccessMessage(entryLabel.value);
     }
 
-    return formMessages.submitSuccessMessage(entityLabel.value);
+    return formMessages.submitSuccessMessage(entryLabel.value);
   });
 
   // submit button State

@@ -13,7 +13,7 @@ export async function useFormDelete(
   /** Ref to the Form element */
   formRef: Ref<any>,
   /** Name of the entity that is being used in the form. Used in the snackbar feedback  */
-  entitiyName: ComputedRef<string | undefined>,
+  entryName: ComputedRef<string | undefined>,
   /** Model for the Valid state of the component */
   inProgress: ModelRef<boolean, string>,
   /** Model for the ErrorProblemDetails state of the component */
@@ -25,14 +25,14 @@ export async function useFormDelete(
   const { toErrorProblemDetails } = useErrorProblemDetails();
   const formMessages = await useFormMessages();
 
-  const entityLabel = computed(() => entitiyName.value || "entry");
+  const entryLabel = computed(() => entryName.value || "entry");
 
   // Delete button labels
   const deleteButtonLabel = computed(() => props.value.deleteButtonLabel || formMessages.deleteButtonLabel());
-  const deleteConfirmationTitle = computed(() => props.value.deleteConfirmationTitle || props.value.deleteButtonLabel || formMessages.deleteButtonLabel());
-  const deleteConfirmationBody = computed(() => props.value.deleteConfirmationBody || formMessages.deleteConfirmationBody(entityLabel.value));
-  const deleteSuccessfulMessage = computed(() => props.value.deleteSuccessfullSnackbarMessage || formMessages.deleteSuccessfulMessage(entityLabel.value));
-  const deleteFailedMessage = computed(() => props.value.deleteFailedSnackbarMessage || formMessages.deleteFailedMessage(entityLabel.value));
+  const deleteConfirmationTitle = computed(() => props.value.deleteConfirmationTitle || formMessages.deleteConfirmationTitle(entryLabel.value));
+  const deleteConfirmationBody = computed(() => props.value.deleteConfirmationBody || formMessages.deleteConfirmationBody(entryLabel.value));
+  const deleteSuccessfulMessage = computed(() => props.value.deleteSuccessfullSnackbarMessage || formMessages.deleteSuccessfulMessage(entryLabel.value));
+  const deleteFailedMessage = computed(() => props.value.deleteFailedSnackbarMessage || formMessages.deleteFailedMessage(entryLabel.value));
 
   // Computed
   const hasDeleteHandler = computed(() => (props.value.onDelete ? true : false));
