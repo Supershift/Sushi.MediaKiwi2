@@ -9,12 +9,12 @@ import { useErrorMessages } from "./useErrorMessages";
 export function useErrorProblemDetails() {
   /** Type guard for Error */
   function isError(error?: Error | Error[]): error is Error {
-    return (error as Error).message !== undefined && (error as Error).message !== null && (error as Error).message !== "";
+    return (error as Error)?.message !== undefined && (error as Error)?.message !== null && (error as Error)?.message !== "";
   }
 
   /** Type guard for Api Error */
   function isApiError(error?: ApiError | ApiError[] | Record<string, string[]>): error is ApiError {
-    return (error as ApiError).message !== undefined;
+    return (error as ApiError)?.message !== undefined;
   }
 
   /** Type guard for Error[] */
@@ -43,12 +43,12 @@ export function useErrorProblemDetails() {
    * const vm = instance.$parent?.$parent?.$parent?.$parent?.$parent?.$parent?.$parent || (instance as any);
    */
   function findParentMkForm(instance: ComponentPublicInstance): any {
-    let vm = instance;
+    let vm;
 
-    if (vm.$options.__name === "MkForm" || vm.$options.__name === "MkFormDialog" || vm.$options.__name === "MkFormSideSheet") {
-      return vm;
-    } else if (vm.$parent) {
-      vm = findParentMkForm(vm.$parent);
+    if (instance?.$options?.__name === "MkForm" || instance?.$options?.__name === "MkFormDialog" || instance?.$options?.__name === "MkFormSideSheet") {
+      vm = instance;
+    } else if (instance.$parent) {
+      vm = findParentMkForm(instance.$parent);
     }
 
     return vm;
@@ -134,7 +134,7 @@ export function useErrorProblemDetails() {
     // Create a result
     let result: ErrorProblemDetails | undefined;
 
-    if (isAxiosError(error) && error?.response?.data) {
+    if (isAxiosError(error) && error.response?.data) {
       // If the response is a blob and the type is json, parse the error problem details
       if (isAxiosBlobResponse(error)) {
         const responseText = await error.response.data.text();
@@ -146,7 +146,7 @@ export function useErrorProblemDetails() {
       }
     } else if (isError(error)) {
       // If we have an error object, create a default error problem details object
-      result = new ErrorProblemDetails(undefined, undefined, undefined, error.message);
+      result = new ErrorProblemDetails(undefined, undefined, undefined, error?.message);
     }
 
     // If we don't have a result, create a default error problem details object
@@ -209,5 +209,9 @@ export function useErrorProblemDetails() {
     registerGlobalErrorHandler,
     toErrorProblemDetails,
     getErrorMessages,
+    //
+    globalErrorHandler,
+    setErrorSnackbar,
+    findParentMkForm,
   };
 }

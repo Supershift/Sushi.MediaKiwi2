@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import axios from "axios";
 import { describe, it, expect } from "vitest";
-import { computed, ModelRef, ref } from "vue";
+import { ModelRef, ref } from "vue";
 import { ErrorProblemDetails, FormProps, useForm } from "@/framework";
 import { FormViewProps } from "@/models/form/FormProps";
 import { createTestingPinia } from "@pinia/testing";
