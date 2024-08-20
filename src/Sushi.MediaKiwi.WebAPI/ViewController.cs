@@ -56,7 +56,7 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpGet]
         [QueryStringSorting<ViewSortMap>()]
-        public async Task<ActionResult<ListResult<View>>> GetViews(PagingValues page)
+        public async Task<ActionResult<ListResult<View>>> GetViews([FromQuery] PagingValues page)
         {
             var sortValues = _sortingRetriever.GetSorting<View>();
             var result = await _viewService.GetAllAsync(page, sortValues);
