@@ -22,7 +22,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<ListResult<Hotel>>> GetHotels(string? countryCode, bool? isActive, PagingValues pagingValues)
+        public async Task<ActionResult<ListResult<Hotel>>> GetHotels(string? countryCode, bool? isActive, [FromQuery] PagingValues pagingValues)
         {
             var result = await _hotelService.GetAllAsync(countryCode, isActive, pagingValues);
             return this.CreateResponse(result);
