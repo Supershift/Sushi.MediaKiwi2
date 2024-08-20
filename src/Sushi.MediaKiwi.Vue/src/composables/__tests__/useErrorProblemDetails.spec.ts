@@ -194,6 +194,7 @@ describe("useErrorProblemDetails", async () => {
 
   describe("findParentMkForm", () => {
     it("should return the parent MkForm component", () => {
+      // Arrange
       const component = <ComponentPublicInstance>{
         $parent: <ComponentPublicInstance>{
           $parent: <ComponentPublicInstance>{
@@ -205,7 +206,6 @@ describe("useErrorProblemDetails", async () => {
           },
         },
       };
-
       const { findParentMkForm } = useErrorProblemDetails();
 
       // Act
@@ -217,6 +217,7 @@ describe("useErrorProblemDetails", async () => {
     });
 
     it("should return the parent MkFormDialog component", () => {
+      // Arrange
       const component = <ComponentPublicInstance>{
         $parent: <ComponentPublicInstance>{
           $parent: <ComponentPublicInstance>{
@@ -228,7 +229,6 @@ describe("useErrorProblemDetails", async () => {
           },
         },
       };
-
       const { findParentMkForm } = useErrorProblemDetails();
 
       // Act
@@ -240,6 +240,7 @@ describe("useErrorProblemDetails", async () => {
     });
 
     it("should return the parent MkFormSideSheet component", () => {
+      // Arrange
       const component = <ComponentPublicInstance>{
         $parent: <ComponentPublicInstance>{
           $parent: <ComponentPublicInstance>{
@@ -251,7 +252,6 @@ describe("useErrorProblemDetails", async () => {
           },
         },
       };
-
       const { findParentMkForm } = useErrorProblemDetails();
 
       // Act
