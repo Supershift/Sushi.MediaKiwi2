@@ -11,8 +11,7 @@ export class ErrorProblemDetails extends Error {
   status?: number;
   detail?: string;
   instance?: string;
-  error?: ApiError | ApiError[] | Record<string, string[]>;
-  errors?: ApiError | ApiError[] | Record<string, string[]>;
+  error?: ApiError | Record<string, string[]>;
 
   constructor(type?: string, title?: string, status?: number, detail?: string) {
     super();
@@ -42,9 +41,8 @@ export class ErrorProblemDetails extends Error {
       result.detail = response.data.detail;
       result.instance = response.data.instance;
       result.error = response.data.error;
-      result.errors = response.data.errors;
 
-      if (!result.error && !result.errors && result.detail) {
+      if (!result.error && result.detail) {
         result.error = <ApiError>{ message: result.detail };
       }
     }

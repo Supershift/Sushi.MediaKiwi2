@@ -1,4 +1,7 @@
 export type ApiError = {
+  /**
+   * The field that the error is related to.
+   */
   field?: string;
 
   /**
@@ -15,4 +18,9 @@ export type ApiError = {
    * A human-readable message describing the error.
    */
   message: string;
+
+  /**
+   * Collection of errors when the its an AggregateError.
+   */
+  errors?: ApiError[] | string[];
 };

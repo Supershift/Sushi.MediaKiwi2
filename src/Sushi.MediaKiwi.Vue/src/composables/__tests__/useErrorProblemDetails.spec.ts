@@ -60,18 +60,28 @@ describe("useErrorProblemDetails", async () => {
 
     it("should return an array with the error message if errorProblemDetails has an error Array", () => {
       // Arrange
-      const errorProblemDetails = <ErrorProblemDetails>{ error: [{ message: "Some error message" }, { message: "Some other message" }] };
+      const aggregateErrorProblemDetails = <ErrorProblemDetails>{
+        type: "AggregateError",
+        error: {
+          errors: [{ message: "Some error message" }, { message: "Some other message" }],
+        },
+      };
       const { getErrorMessages } = useErrorProblemDetails();
 
       // Act
-      const result = getErrorMessages(errorProblemDetails);
+      const result = getErrorMessages(aggregateErrorProblemDetails);
 
       expect(result).toEqual(["Some error message", "Some other message"]);
     });
 
-    it("should return an array with the error message if errorProblemDetails has an errors Array", () => {
+    it("should return an array with the error message if errorProblemDetails has an errors Record", () => {
       // Arrange
-      const errorProblemDetails = <ErrorProblemDetails>{ errors: [{ message: "Some error message" }, { message: "Some other message" }] };
+      const errorProblemDetails = <ErrorProblemDetails>{
+        error: <Record<string, string[]>>{
+          field1: ["Some error message"],
+          field2: ["Some other message"],
+        },
+      };
       const { getErrorMessages } = useErrorProblemDetails();
 
       // Act
@@ -83,9 +93,8 @@ describe("useErrorProblemDetails", async () => {
     it("should return an array with the error message if errorProblemDetails has an errors Record", () => {
       // Arrange
       const errorProblemDetails = <ErrorProblemDetails>{
-        error: <Record<string, string[]>>{
-          field1: ["Some error message"],
-          field2: ["Some other message"],
+        error: {
+          errors: ["Some error message", "Some other message"],
         },
       };
       const { getErrorMessages } = useErrorProblemDetails();

@@ -8,18 +8,23 @@ import { useErrorMessages } from "./useErrorMessages";
 
 export function useErrorProblemDetails() {
   /** Type guard for Error */
-  function isError(error?: Error | Error[]): error is Error {
+  function isError(error?: Error | Error[] | string[]): error is Error {
     return (error as Error)?.message !== undefined && (error as Error)?.message !== null && (error as Error)?.message !== "";
   }
 
   /** Type guard for Api Error */
-  function isApiError(error?: ApiError | ApiError[] | Record<string, string[]>): error is ApiError {
+  function isApiError(error?: ApiError | ApiError[] | Record<string, string[]> | string[]): error is ApiError {
     return (error as ApiError)?.message !== undefined;
   }
 
   /** Type guard for Error[] */
-  function isApiErrorArray(error?: ApiError | ApiError[] | Record<string, string[]>): error is ApiError[] {
-    return Array.isArray(error);
+  function isApiErrorArray(error?: ApiError | ApiError[] | Record<string, string[]> | string[]): error is ApiError[] {
+    return Array.isArray(error) && error.length > 0 && (error as ApiError[])[0]?.message !== undefined;
+  }
+
+  /** Type guard for Error[] */
+  function isStringArray(error?: ApiError | ApiError[] | Record<string, string[]> | string[]): error is string[] {
+    return Array.isArray(error) && error.length > 0 && typeof (error as string[])[0] === "string";
   }
 
   /**
@@ -171,9 +176,11 @@ export function useErrorProblemDetails() {
 
     // Check if we have an error or errors object
     if (errorProblemDetails.error) {
-      result = getErrorMessageFromApiError(errorProblemDetails.error);
-    } else if (errorProblemDetails.errors) {
-      result = getErrorMessageFromApiError(errorProblemDetails.errors);
+      if (errorProblemDetails.error.errors && errorProblemDetails.error.errors.length) {
+        result = getErrorMessageFromApiError(errorProblemDetails.error.errors);
+      } else {
+        result = getErrorMessageFromApiError(errorProblemDetails.error);
+      }
     } else if (errorProblemDetails.detail) {
       // If we have a detail and nothing else, return the detail
       result = [errorProblemDetails?.detail];
@@ -185,13 +192,16 @@ export function useErrorProblemDetails() {
   /**
    * Parse the error object to a string array
    */
-  function getErrorMessageFromApiError(error: ApiError | ApiError[] | Record<string, string[]>): string[] {
+  function getErrorMessageFromApiError(error: ApiError | ApiError[] | Record<string, string[]> | string[]): string[] {
     // If we don't have an error, return an empty array
     if (!error) {
       return [];
     }
 
-    if (isApiErrorArray(error)) {
+    if (isStringArray(error)) {
+      // If we have an array of strings, return the array
+      return error;
+    } else if (isApiErrorArray(error)) {
       // Check if we have an array of errors
       // Flatten the array and return the messages
       return Array.from(error).flatMap((error) => `${error.message}`);
