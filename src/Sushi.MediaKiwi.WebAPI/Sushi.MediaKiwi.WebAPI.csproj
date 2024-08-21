@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>0.1.7</Version>
+    <Version>1.0.0</Version>
     <Authors>Supershift</Authors>
     <Description>Provides a back-end for the MediaKiwi portal generator tool</Description>
     <PackageIcon>logo.png</PackageIcon>

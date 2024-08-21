@@ -1,16 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Sushi.MediaKiwi.SampleAPI.Controllers;
+﻿using Microsoft.AspNetCore.Mvc;
 using Sushi.MediaKiwi.SampleAPI.Service;
 using Sushi.MediaKiwi.SampleAPI.Service.Model;
-using Sushi.MediaKiwi.Services;
-using Sushi.MediaKiwi.WebAPI.Paging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
 namespace Sushi.MediaKiwi.SampleAPI.Controllers

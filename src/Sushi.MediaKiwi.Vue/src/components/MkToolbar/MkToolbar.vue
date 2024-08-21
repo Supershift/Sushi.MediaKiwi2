@@ -53,7 +53,7 @@
       <v-row v-if="slots.header" class="justify-end">
         <slot name="header"></slot>
       </v-row>
-      <v-row v-if="slots.toolbar || slots.overflowMenuActions || props.title || (props.itemViewId && props.new)" class="pb-2 ml-0 align-center">
+      <v-row v-if="slots.toolbar || slots.overflowMenuActions || props.title || props.new" class="pb-2 ml-0 align-center">
         <v-card-title v-if="title" class="px-0 text-title-medium">{{ title }}</v-card-title>
         <slot v-else-if="slots.title" name="title"></slot>
 

@@ -24,19 +24,16 @@
   const additionalRules = computed(() => props.tableFilterItem.rules || []);
 
   function applyFilter() {
-    modelValue.value = model.value;
+    if (model.value) {
+      modelValue.value = model.value;
+    }
   }
 </script>
 
 <template>
   <MkTableFilterDialog :table-filter-item="tableFilterItem" @close="emit('click:close')" @apply="applyFilter">
     <div class="pl-3 pr-4 py-4">
-      <v-radio-group
-        v-model="model"
-        hide-details="auto"
-        density="default"
-        :rules="[(v: any) => !!v || t(`EmptyFilterError`, `This field is required`), ...additionalRules]"
-      >
+      <v-radio-group v-model="model" hide-details="auto" density="default" :rules="[...additionalRules]">
         <v-radio v-for="(option, index) in tableFilterItem.options" :key="index" :label="option.title" :value="option" />
       </v-radio-group>
     </div>

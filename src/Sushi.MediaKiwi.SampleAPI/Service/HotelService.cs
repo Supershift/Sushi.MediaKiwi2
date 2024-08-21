@@ -5,6 +5,7 @@ using Sushi.MediaKiwi.SampleAPI.Controllers;
 using Sushi.MediaKiwi.SampleAPI.DAL.Repository;
 using Sushi.MediaKiwi.SampleAPI.Domain;
 using Sushi.MediaKiwi.SampleAPI.Service.Model;
+using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
 
 namespace Sushi.MediaKiwi.SampleAPI.Service
@@ -29,10 +30,10 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
         /// <param name="countryCode">Limit results to supplied country codes</param>
         /// <param name="isActive">Limit results to supplied isactive state</param>
         /// <returns></returns>
-        public async Task<Result<ListResult<HotelDto>, Error>> GetAllAsync(GetHotelsQuery query)
+        public async Task<Result<ListResult<HotelDto>, Error>> GetAllAsync(string? countryCode, bool? isActive, PagingValues pagingValues)
         {
             // get hotels from datastore
-            var items = await _hotelRepository.GetAllAsync(query.Page, query.CountryCode, query.IsActive);
+            var items = await _hotelRepository.GetAllAsync(pagingValues, countryCode, isActive);
 
             // map to result
             var itemsDto = _mapper.Map<List<HotelDto>>(items);

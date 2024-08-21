@@ -1,32 +1,15 @@
-﻿namespace Sushi.MediaKiwi.Services
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace Sushi.MediaKiwi.Services
 {
     /// <summary>
     /// Represents values used when adding continuous scroll on datasets.
     /// </summary>
-    public record ContinuationValues
+    public record ContinuationValues([property: FromQuery(Name = "token")] string? Token = null, [property: FromQuery(Name = "maxItems")] int MaxItems = 10)
     {
         /// <summary>
         /// Gets a <see cref="ContinuationValues"/> instance with default values (maxItems = 10, token = NULL).
         /// </summary>
-        public static readonly ContinuationValues Default = new ContinuationValues(null, 10);
-
-        /// <summary>
-        /// Creates a new instance of <see cref="ContinuationValues"/>.
-        /// </summary>        
-        public ContinuationValues(string? token, int pageSize)
-        {
-            Token = token;
-            MaxItems = pageSize;
-        }
-
-        /// <summary>
-        /// Gets the continuation token.
-        /// </summary>
-        public string? Token { get; }
-
-        /// <summary>
-        /// Gets the maximum number of items returned per call.
-        /// </summary>
-        public int MaxItems { get; }
+        public static readonly ContinuationValues Default = new ContinuationValues();        
     }
 }

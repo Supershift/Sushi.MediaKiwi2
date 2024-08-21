@@ -5,11 +5,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using Sushi.MediaKiwi.Services;
-using Sushi.MediaKiwi.WebAPI.Paging;
 using Sushi.MediaKiwi.WebAPI.Sorting;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
@@ -73,10 +71,6 @@ namespace Sushi.MediaKiwi.WebAPI
             var webModelFilename = $"{Assembly.GetAssembly(typeof(SectionService))?.GetName().Name}.xml";
             if (File.Exists(webModelFilename))
                 options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, webModelFilename));
-
-            // add paging parameters
-            options.OperationFilter<PagingSwaggerFilter>();
-            options.OperationFilter<ContinuationSwaggerFilter>();
 
             // add sorting parameters
             options.OperationFilter<SortingSwaggerFilter>();

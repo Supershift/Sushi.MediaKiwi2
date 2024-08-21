@@ -1,18 +1,13 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Validations;
-using Sushi.LanguageExtensions;
-using Sushi.LanguageExtensions.Errors;
 using Sushi.MediaKiwi.SampleAPI.Service;
 using Sushi.MediaKiwi.SampleAPI.Service.Model;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MediaKiwi.WebAPI;
-using Sushi.MediaKiwi.WebAPI.Paging;
-using System.Globalization;
 
 namespace Sushi.MediaKiwi.SampleAPI.Controllers
-{   
+{
     public class HotelController : SampleControllerBase
     {
         private readonly HotelService _hotelService;
@@ -29,9 +24,9 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<ListResult<HotelDto>>> GetHotels(GetHotelsQuery query)
+        public async Task<ActionResult<ListResult<HotelDto>>> GetHotels(string? countryCode, bool? isActive, [FromQuery] PagingValues pagingValues)
         {
-            var result = await _hotelService.GetAllAsync(query);
+            var result = await _hotelService.GetAllAsync(countryCode, isActive, pagingValues);
             return this.ToResponse(result);
         }
 
@@ -93,12 +88,5 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
             var result = await _hotelService.UpdateAsync(id, request);
             return this.ToResponse(result);
         }
-    }
-
-    public class GetHotelsQuery
-    {
-        public PagingValues Page { get; set; } = null!;
-        public string? CountryCode { get; set; }
-        public bool? IsActive { get; set; }
     }
 }

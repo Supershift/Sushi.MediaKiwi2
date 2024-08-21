@@ -12,6 +12,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Set VERSION variable from Release Tag
+      - name: Set VERSION variable from Release Tag
+        run: |
+          TAG=${{ github.event.release.tag_name }}
+          echo "VERSION=${TAG#v}" >> $GITHUB_ENV
+
+      # Checkout
       - name: Checkout repository
         uses: actions/checkout@v2
 
@@ -27,9 +34,8 @@ jobs:
 
       - name: Update package.json version
         run: |
-          cd src/Sushi.MediaKiwi.Vue
-          NEW_VERSION=$(echo "${{ github.event.release.tag_name }}" | sed 's/v//')
-          jq '.version = $new_version' --arg new_version "${NEW_VERSION}" package.json > package.json.tmp && mv package.json.tmp package.json
+          cd src/Sushi.MediaKiwi.Vue          
+          jq '.version = $new_version' --arg new_version "${VERSION}" package.json > package.json.tmp && mv package.json.tmp package.json
           cd ../..
 
       - name: Build package
@@ -48,6 +54,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Set VERSION variable from Release Tag
+      - name: Set VERSION variable from Release Tag
+        run: |
+          TAG=${{ github.event.release.tag_name }}
+          echo "VERSION=${TAG#v}" >> $GITHUB_ENV
+      
       - name: Checkout repository
         uses: actions/checkout@v2
 
@@ -63,9 +75,8 @@ jobs:
 
       - name: Update package.json version
         run: |
-          cd src/Sushi.MediaKiwi.AzureFunction
-          NEW_VERSION=$(echo "${{ github.event.release.tag_name }}" | sed 's/v//')
-          jq '.version = $new_version' --arg new_version "${NEW_VERSION}" package.json > package.json.tmp && mv package.json.tmp package.json
+          cd src/Sushi.MediaKiwi.AzureFunction          
+          jq '.version = $new_version' --arg new_version "${VERSION}" package.json > package.json.tmp && mv package.json.tmp package.json
           cd ../..
 
       - name: Build package
