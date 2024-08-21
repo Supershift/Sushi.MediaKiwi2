@@ -6,7 +6,7 @@ using Moq;
 using Sushi.MediaKiwi.Services;
 using System.Net;
 
-namespace Sushi.MediaKiwi.WebAPI.UnitTests.Paging
+namespace Sushi.MediaKiwi.WebAPI.UnitTests
 {
     public class ControllerExtensionsTest
     {

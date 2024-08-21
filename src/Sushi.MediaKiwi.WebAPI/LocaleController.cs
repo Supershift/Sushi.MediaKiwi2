@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
-using Sushi.MediaKiwi.WebAPI.Paging;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
@@ -41,9 +40,9 @@ namespace Sushi.MediaKiwi.WebAPI
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<ListResult<Locale>>> GetLocales(GetLocalesQuery query)
+        public async Task<ActionResult<ListResult<Locale>>> GetLocales([FromQuery] PagingValues paging, bool onlyEnabled = false)
         {
-            var result = await _localeService.GetAllAsync(query.onlyEnabled.GetValueOrDefault(), query.Page);
+            var result = await _localeService.GetAllAsync(onlyEnabled, paging);
             return this.CreateResponse(result);
         }
 
@@ -96,22 +95,6 @@ namespace Sushi.MediaKiwi.WebAPI
         {
             var result = await _localeService.UpdateAsync(id, request);
             return this.CreateResponse(result);
-        }
-
-        /// <summary>
-        /// Query for GetLocales
-        /// </summary>
-        public class GetLocalesQuery
-        {
-            /// <summary>
-            /// Paging values.
-            /// </summary>
-            public PagingValues Page { get; set; } = null!;
-
-            /// <summary>
-            /// If set to true, only locales with enabled set to true are returned.
-            /// </summary>
-            public bool? onlyEnabled { get; set; }
         }
     }
 }
