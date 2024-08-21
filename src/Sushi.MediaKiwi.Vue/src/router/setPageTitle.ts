@@ -44,6 +44,9 @@ export function setPageTitle(router: Router): void {
           document.title = pageTitle;
         }
       }
+    } else if (to.meta?.title) {
+      // Set the document title
+      document.title = to.meta.title.toString();
     }
   });
 }
