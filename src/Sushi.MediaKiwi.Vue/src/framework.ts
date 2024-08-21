@@ -20,6 +20,7 @@ import { registerIcons } from "./helpers/registerIcons";
 import { registerDirectives } from "./helpers/registerDirectives";
 import { createVuetify } from "./plugins/vuetify";
 import { useErrorProblemDetails } from "@/composables";
+import { addCheckCanResolve } from "./router/checkCanResolve";
 
 export default {
   install(app: App, options: MediakiwiVueOptions): void {
@@ -108,6 +109,9 @@ export default {
 
     // adds a guard to all routes with the meta property 'isInRole' to check role
     addCheckIsInRole(router);
+
+    // adds a guard to check if the route can be resolved
+    addCheckCanResolve(router);
 
     // use the router instance
     app.use(router);
