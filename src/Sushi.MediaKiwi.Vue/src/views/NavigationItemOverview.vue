@@ -47,9 +47,6 @@
   async function onLoad() {
     state.navigationItems = await navigationConnector.GetNavigationItems(filters.value.section?.selectedValue?.value, currentPagination.value, sorting.value);
   }
-
-  // TODO; Move this to the MkTable component, it should be able to handle this itself
-  watch(() => sorting.value, onLoad, { deep: true });
 </script>
 <template>
   <mk-table
@@ -63,17 +60,17 @@
     :item-id="(item) => item.id"
   >
     <template #thead>
+      <MkTh v-model:sorting="sorting" sorting-key="id">Id</MkTh>
       <MkTh v-model:sorting="sorting" sorting-key="name">Name</MkTh>
-      <th>Id</th>
-        <th>Section</th>
-      <th>Parent</th>
+      <MkTh v-model:sorting="sorting" sorting-key="sectionId">Section</MkTh>
+      <MkTh v-model:sorting="sorting" sorting-key="parentNavigationItemId">Parent</MkTh>
       <th>View</th>
       <th>Icon</th>
       <MkTh v-model:sorting="sorting" sorting-key="sortOrder" width="140">Sort order</MkTh>
     </template>
     <template #tbody="item: NavigationItem">
       <th>{{ item.id }}</th>
-        <td>{{ item.name }}</td>
+      <td>{{ item.name }}</td>
       <td>{{ getSectionName(item.sectionId) }}</td>
       <td>{{ getNavigationItemName(item.parentNavigationItemId) }}</td>
       <td>{{ item.viewId }}</td>

@@ -23,9 +23,11 @@
   const additionalRules = computed(() => props.tableFilterItem.rules || []);
 
   function applyFilter() {
-    modelValue.value = {
-      value: model.value,
-    };
+    if (model.value) {
+      modelValue.value = {
+        value: model.value,
+      };
+    }
   }
 </script>
 
@@ -41,7 +43,7 @@
         density="comfortable"
         class="mk-table-filter__item__checkbox pl-3"
         hide-details="auto"
-        :rules="[(v: any) => !!v && !!v.length || t(`EmptyFilterError`, `This field is required`), ...additionalRules]"
+        :rules="[...additionalRules]"
       />
     </div>
   </MkTableFilterDialog>
