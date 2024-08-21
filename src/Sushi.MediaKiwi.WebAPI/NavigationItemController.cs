@@ -50,7 +50,7 @@ namespace Sushi.MediaKiwi.WebAPI
         {
             var sortValues = _sortingRetriever.GetSorting<NavigationItem>();
             var result = await _navigationItemService.GetAllAsync(sectionId, pagingValues, sortValues);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
         
         /// <summary>
@@ -63,7 +63,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<NavigationItem>> GetNavigationItem(string id)
         {
             var result = await _navigationItemService.GetAsync(id);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
     }
 }
