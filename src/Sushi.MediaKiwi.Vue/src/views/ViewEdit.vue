@@ -51,7 +51,7 @@
     }
   }
 
-  let onDelete: ((event: Event) => Promise<void>) | undefined = undefined;
+  let onDelete: ((event?: Event) => Promise<void>) | undefined = undefined;
   if (viewId.value) {
     onDelete = async () => {
       if (viewId.value) {
@@ -65,7 +65,7 @@
 </script>
 
 <template>
-  <MkForm title="View" :on-save="onSave" :on-load="onLoad" :on-delete="onDelete">
+  <MkForm title="View" :onSubmit="onSave" :on-delete="onDelete" @load="onLoad">
     <v-text-field v-model="view.id" label="Id" hint="Unique human-readable id for the view." :disabled="viewId ? true : false"></v-text-field>
     <v-text-field v-model="view.name" label="Name"></v-text-field>
     <v-text-field

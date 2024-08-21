@@ -19,9 +19,13 @@ import i18next from "./plugins/i18next";
 import { registerIcons } from "./helpers/registerIcons";
 import { registerDirectives } from "./helpers/registerDirectives";
 import { createVuetify } from "./plugins/vuetify";
+import { useErrorProblemDetails } from "@/composables";
 
 export default {
   install(app: App, options: MediakiwiVueOptions): void {
+    // Inject dependencies
+    const { registerGlobalErrorHandler } = useErrorProblemDetails();
+
     // register options
     registerOptions(container, options);
 
@@ -30,6 +34,9 @@ export default {
 
     // register axios
     registerAxios(container, options);
+
+    // register global error handler
+    registerGlobalErrorHandler(app, options.globalErrorHandler);
 
     // add i18n
     app.use(

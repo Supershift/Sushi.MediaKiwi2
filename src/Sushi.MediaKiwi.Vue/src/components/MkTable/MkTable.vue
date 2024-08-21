@@ -215,7 +215,6 @@
         initialDataLoaded.value = true;
       } catch (error) {
         snackbar.showMessage("Failed to fetch data");
-        throw error;
       } finally {
         // stop progress indicator
         inProgress.value = false;

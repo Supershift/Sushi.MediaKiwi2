@@ -24,9 +24,9 @@
     /** Determines if the toolbar becomes sticky at the top of the page, default: false */
     sticky?: boolean;
     /** */
-    onSave?: (event?: Event) => Promise<void>;
-    onUndo?: (event?: Event) => Promise<void>;
-    onDelete?: (event: Event) => Promise<void>;
+    onSave?: (event?: Event) => Promise<any>;
+    onUndo?: (event?: Event) => Promise<any>;
+    onDelete?: (event: Event) => Promise<any>;
   }>();
 
   // define slots

@@ -55,8 +55,18 @@ const mediakiwiOptions = <MediakiwiVueOptions>{
     light: {
       image: "./flowers.png",
       color: "rgba(100, 142, 239, 0.6)",
-    }
-  }
+    },
+  },
+  formOptions: {
+    dialog: {
+      closeOnSubmit: true,
+      resetOnSubmit: true,
+    },
+    sideSheet: {
+      resetOnSubmit: true,
+      closeOnSubmit: true,
+    },
+  },
 };
 
 const { fillEntraSettings } = useEntraSettings();
