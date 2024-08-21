@@ -143,7 +143,7 @@
       const startPage = start.value + 1;
 
       const resultSet = { start: startPage, end: end.value, total: props.pagingResult?.totalCount };
-      return defaultT.value("PagingInfo", { resultSet });
+      return defaultT.value("PagingInfo", "{{resultSet.start}}-{{resultSet.end}} of {{resultSet.total}}", { resultSet });
     }
     return null;
   });

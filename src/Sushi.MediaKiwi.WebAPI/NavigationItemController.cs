@@ -22,6 +22,9 @@ namespace Sushi.MediaKiwi.WebAPI
             {
                 Add(x => x.Name);
                 Add(x => x.SortOrder);
+                Add(x => x.Id);
+                Add(x => x.SectionId);
+                Add(x => x.ParentNavigationItemId);
             }
         }
 
