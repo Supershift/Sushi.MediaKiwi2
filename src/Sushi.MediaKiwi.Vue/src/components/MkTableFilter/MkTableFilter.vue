@@ -267,7 +267,7 @@
 
 <template>
   <v-card class="mk-table-filter mb-4" rounded="lg" variant="flat" color="surface1">
-    <v-container>
+    <div class="pa-4 mx-auto">
       <v-row class="d-flex flex-row flex-nowrap">
         <template v-if="modelValue">
           <v-menu v-model="menu" :close-on-content-click="false" location="bottom" class="mk-table-filter__menu-overlay">
@@ -329,6 +329,6 @@
           </div>
         </template>
       </v-row>
-    </v-container>
+    </div>
   </v-card>
 </template>

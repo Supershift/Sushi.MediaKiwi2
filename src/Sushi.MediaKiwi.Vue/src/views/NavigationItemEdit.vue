@@ -6,7 +6,7 @@
   import { useMediakiwiStore } from "@/stores";
   import { RouterManager } from "@/router/routerManager";
   import { useNavigation, useValidationRules } from "@/composables";
-  import { reactive } from "vue";
+  import { computed, reactive } from "vue";
 
   // inject dependencies
   const navigationConnector = container.resolve<INavigationConnector>("INavigationConnector");
@@ -22,6 +22,8 @@
   const state = reactive({
     navigationItem: <NavigationItem>{},
   });
+
+  const viewOptions = computed(() => store.views);
 
   async function onLoad() {
     if (navigationItemId.value) {
@@ -82,7 +84,14 @@
       item-value="id"
       :rules="[(v) => !!v]"
     ></v-select>
-    <v-text-field v-model="state.navigationItem.viewId" label="View" :rules="[(v) => !!v]"></v-text-field>
+    <v-autocomplete
+      v-model="state.navigationItem.viewId"
+      label="View"
+      :items="viewOptions"
+      item-title="name"
+      item-value="id"
+      :rules="[(v) => !!v]"
+    ></v-autocomplete>
     <v-text-field v-model="state.navigationItem.icon" label="Icon"></v-text-field>
     <v-text-field v-model="state.navigationItem.sortOrder" label="SortOrder" type="number"></v-text-field>
   </MkForm>

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
-using Sushi.MediaKiwi.WebAPI.Paging;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sushi.MediaKiwi.WebAPI

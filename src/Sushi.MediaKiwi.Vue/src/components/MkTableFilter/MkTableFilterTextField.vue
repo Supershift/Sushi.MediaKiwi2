@@ -32,22 +32,18 @@
   const additionalRules = computed(() => props.tableFilterItem.rules || []);
 
   function applyFilter() {
-    modelValue.value = {
-      value: model.value,
-    };
+    if (model.value) {
+      modelValue.value = {
+        value: model.value,
+      };
+    }
   }
 </script>
 
 <template>
   <MkTableFilterDialog :table-filter-item="tableFilterItem" @close="emit('click:close')" @apply="applyFilter">
     <div class="pa-6">
-      <v-text-field
-        v-model="model"
-        :label="inputLabel"
-        hide-details="auto"
-        :rules="[(v: any) => !!v || t(`EmptyFilterError`, `This field is required`), ...additionalRules]"
-      >
-      </v-text-field>
+      <v-text-field v-model="model" :label="inputLabel" hide-details="auto" :rules="[...additionalRules]"> </v-text-field>
     </div>
   </MkTableFilterDialog>
 </template>

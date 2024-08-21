@@ -22,6 +22,9 @@ namespace Sushi.MediaKiwi.WebAPI
             {
                 Add(x => x.Name);
                 Add(x => x.SortOrder);
+                Add(x => x.Id);
+                Add(x => x.SectionId);
+                Add(x => x.ParentNavigationItemId);
             }
         }
 
@@ -39,16 +42,15 @@ namespace Sushi.MediaKiwi.WebAPI
 
         /// <summary>
         /// Gets all navigation items for the given filters.
-        /// </summary>
-        /// <param name="query"></param>
+        /// </summary>        
         /// <returns></returns>
         [HttpGet]
         [QueryStringSorting<NavigationItemsSortMap>()]
-        public async Task<ActionResult<ListResult<NavigationItem>>> GetNavigationItems(GetNavigationItemsQuery query)
+        public async Task<ActionResult<ListResult<NavigationItem>>> GetNavigationItems(string? sectionId, [FromQuery] PagingValues pagingValues)
         {
             var sortValues = _sortingRetriever.GetSorting<NavigationItem>();
-            var result = await _navigationItemService.GetAllAsync(query.sectionID, query.Page, sortValues);
-            return this.ToResponse(result);
+            var result = await _navigationItemService.GetAllAsync(sectionId, pagingValues, sortValues);
+            return this.CreateResponse(result);
         }
         
         /// <summary>
@@ -61,23 +63,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<NavigationItem>> GetNavigationItem(string id)
         {
             var result = await _navigationItemService.GetAsync(id);
-            return this.ToResponse(result);
-        }
-
-        /// <summary>
-        /// Query for GetNavigationItems
-        /// </summary>
-        public class GetNavigationItemsQuery
-        {
-            /// <summary>
-            /// Paging values.
-            /// </summary>
-            public PagingValues Page { get; set; } = null!;
-
-            /// <summary>
-            /// If set to true, only locales with enabled set to true are returned.
-            /// </summary>
-            public string? sectionID { get; set; }
+            return this.CreateResponse(result);
         }
     }
 }

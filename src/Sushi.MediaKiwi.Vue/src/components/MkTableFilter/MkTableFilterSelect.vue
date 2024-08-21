@@ -24,7 +24,9 @@
   const additionalRules = computed(() => props.tableFilterItem.rules || []);
 
   function applyFilter() {
-    modelValue.value = model.value;
+    if (model.value) {
+      modelValue.value = model.value;
+    }
   }
 </script>
 
@@ -37,7 +39,7 @@
         :items="tableFilterItem.options"
         :label="tableFilterItem.inputLabel || defaultT('Value')"
         return-object
-        :rules="[(v: any) => !!v || t(`EmptyFilterError`, `This field is required`), ...additionalRules]"
+        :rules="[...additionalRules]"
       ></v-autocomplete>
     </div>
   </MkTableFilterDialog>

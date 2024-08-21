@@ -24,9 +24,11 @@
   const additionalRules = computed(() => props.tableFilterItem.rules || []);
 
   function applyFilter() {
-    modelValue.value = {
-      value: model.value,
-    };
+    if (model.value) {
+      modelValue.value = {
+        value: model.value,
+      };
+    }
   }
 </script>
 
@@ -39,7 +41,7 @@
         hide-details="auto"
         :items="tableFilterItem.options"
         :label="tableFilterItem.inputLabel || defaultT('Value')"
-        :rules="[(v: any) => !!v && !!v.length || t(`EmptyFilterError`, `This field is required`), ...additionalRules]"
+        :rules="[...additionalRules]"
       >
         <template #selection="{ item }">
           <v-chip v-if="item" v-text="item.title" />
