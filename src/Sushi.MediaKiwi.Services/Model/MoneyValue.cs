@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sushi.MediaKiwi.Services
+namespace Sushi.MediaKiwi.Services.Model
 {
     /// <summary>
     /// Represents a monetary value, e.g. EUR 25.00, USD 10.00, etc.

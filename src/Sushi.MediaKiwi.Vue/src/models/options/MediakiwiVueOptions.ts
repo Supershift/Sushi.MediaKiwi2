@@ -5,6 +5,7 @@ import { InitOptions, i18n } from "i18next";
 import { MediakiwiIdentity } from "./MediakiwiIdentity";
 import { VuetifyOptions } from "vuetify";
 import { MediakiwiTableOptions } from "./MediakiwiTableOptions";
+import { MediaKiwiFormOptions } from "./MediaKiwiFormOptions";
 import { MediakiwiSigninConfigurations } from "./MediakiwiSignInConfigurations";
 
 export interface MediakiwiVueOptions {
@@ -36,5 +37,8 @@ export interface MediakiwiVueOptions {
     [key: string]: MediakiwiSigninConfigurations;
   };
   /** Global options used for MkTable */
-  tableOptions?: MediakiwiTableOptions
+  tableOptions?: MediakiwiTableOptions;
+  formOptions?: MediaKiwiFormOptions;
+  /** Global errorhandler, see {@link https://vuejs.org/api/application.html#app-config-errorhandler} */
+  globalErrorHandler?: (err: unknown, instance: unknown, info: string) => void;
 }

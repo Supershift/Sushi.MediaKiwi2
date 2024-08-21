@@ -22,3 +22,5 @@ export * from "./MkDialog";
 export * from "./MkEmptyState";
 export * from "./MkDatePresetMenu";
 export * from "./MkDatePicker";
+export * from "./MkConfirmDialog";
+export * from "./MkErrorProblemDetails";

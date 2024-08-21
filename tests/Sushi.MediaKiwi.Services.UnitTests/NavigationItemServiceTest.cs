@@ -4,13 +4,14 @@ using Sushi.MediaKiwi.Services.Model;
 using Sushi.MicroORM;
 using AutoMapper.Extensions.ExpressionMapping;
 using Sushi.MediaKiwi.Services.Interfaces;
+using Sushi.LanguageExtensions.Errors;
 
 namespace Sushi.MediaKiwi.Services.UnitTests
 {
     public class NavigationItemServiceTest
     {   
         
-        private readonly IMapper _mapper;     
+        private readonly IMapper _mapper;        
 
         public NavigationItemServiceTest()
         {
@@ -48,7 +49,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);            
+            Assert.Null(result.Error);
             Assert.NotNull(result.Value);
             Assert.NotNull(result.Value.Result);
             Assert.Equal(2, result.Value.Result.Count);
@@ -103,7 +104,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             navigationItemRepositoryMock.Verify(x=>x.DeleteAsync(navigationItemStub.Id), Times.Once);
         }
 
@@ -122,7 +123,8 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.NotFound, result.Code);
+            Assert.NotNull(result.Error);
+            Assert.IsType<NotFoundError>(result.Error);
             
         }[Fact]
         public async Task GetNavigationItemTest()
@@ -142,7 +144,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             Assert.NotNull(result.Value);
             Assert.Equal(navigationItemStub.Id, result.Value.Id);
         }
@@ -162,7 +164,8 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.NotFound, result.Code);
+            Assert.NotNull(result.Error);
+            Assert.IsType<NotFoundError>(result.Error);
         }
 
         [Fact]
@@ -188,7 +191,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var result = await service.CreateAsync(newId, navigationItem);
 
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             Assert.NotNull(result.Value);
         }
 
@@ -219,7 +222,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var result = await service.UpdateAsync(existingId, navigationItem);
 
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             Assert.NotNull(result.Value);
             Assert.Equal(existingId, result.Value.Id);
             navigationItemRepositoryMock.Verify(x=>x.GetAsync(existingId), Times.Once);
@@ -241,7 +244,8 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.NotFound, result.Code);
+            Assert.NotNull(result.Error);
+            Assert.IsType<NotFoundError>(result.Error);
         }
 
         [Fact]
@@ -252,6 +256,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var newId = "newId";
             var oldItem = new Entities.NavigationItem() { Id = oldId };
             var newItem = new Entities.NavigationItem() { Id = newId };
+            var request = new UpdateNavigationItemIdRequest() { FromId = oldId, ToId = newId };
 
             var navigationItemRepositoryMock = new Mock<INavigationItemRepository>();
             navigationItemRepositoryMock.Setup(x => x.GetAsync(oldId)).ReturnsAsync(oldItem).Verifiable(Times.Once);
@@ -261,10 +266,10 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var service = new NavigationItemService(navigationItemRepositoryMock.Object, _mapper);
 
             // act
-            var result = await service.UpdateIdAsync(oldId, newId);
+            var result = await service.UpdateIdAsync(request);
 
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             Assert.NotNull(result.Value);
             Assert.Equal(newId, result.Value.Id);
             navigationItemRepositoryMock.Verify();            

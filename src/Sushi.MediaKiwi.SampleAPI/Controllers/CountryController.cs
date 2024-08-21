@@ -23,7 +23,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
         public async Task<ActionResult<ListResult<Country>>> GetAll([FromQuery] PagingValues paging)
         {   
             var result = await _countryService.GetAllAsync(paging);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
     }
 }

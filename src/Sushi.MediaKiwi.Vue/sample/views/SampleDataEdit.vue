@@ -58,7 +58,7 @@
     state.data = candidate ? candidate : <SampleData>{};
   }
 
-  async function onDeleteAsync(event: Event): Promise<void> {
+  async function onDeleteAsync(event?: Event): Promise<void> {
     return await sampleDataConnector.DeleteAsync(state.data.id);
   }
 
@@ -67,7 +67,7 @@
 
 <template>
   <v-card>
-    <MkForm title="Sample data edit" @save="onSaveAsync" @undo="onUndo" @delete="onDeleteAsync">
+    <MkForm title="Sample data edit" @submit="onSaveAsync" @undo="onUndo" @delete="onDeleteAsync">
       <v-text-field label="Name" v-model="state.data.name"></v-text-field>
       <v-select label="Country Code" v-model="state.data.countryCode" :items="countries"></v-select>
     </MkForm>

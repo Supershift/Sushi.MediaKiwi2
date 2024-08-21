@@ -1,4 +1,6 @@
-﻿using Sushi.MediaKiwi.Services.Interfaces;
+﻿using Sushi.LanguageExtensions;
+using Sushi.LanguageExtensions.Errors;
+using Sushi.MediaKiwi.Services.Interfaces;
 using Sushi.MediaKiwi.Services.Model;
 
 namespace Sushi.MediaKiwi.Services
@@ -22,7 +24,7 @@ namespace Sushi.MediaKiwi.Services
         /// Gets all <see cref="Translation"/> instances.
         /// </summary>        
         /// <returns></returns>
-        public async Task<Result<Dictionary<string, string>>> GetAllAsync(string localeId, string @namespace)
+        public async Task<Result<Dictionary<string, string>, Error>> GetAllAsync(string localeId, string @namespace)
         {
             // get translations from repository
             var translations = await _translationRepository.GetAllAsync(localeId, @namespace, null, null);
@@ -34,18 +36,18 @@ namespace Sushi.MediaKiwi.Services
                 result.Add(translation.Key, translation.Value);
             }
 
-            return new Result<Dictionary<string, string>>(result);
+            return result;
         }
 
         /// <summary>
         /// Adds a missing <see cref="Translation"/> instances.
         /// </summary>        
         /// <returns></returns>
-        public async Task<Result> AddMissingAsync(string originalLocaleId, string @namespace, string key, string value)
+        public async Task<Result<Error>> AddMissingAsync(string originalLocaleId, string @namespace, string key, string value)
         {
             await _translationRepository.InsertMissingAsync(@namespace, key, value);
 
-            return new Result(ResultCode.Success);
+            return Result.Success<Error>();
         }
     }
 }

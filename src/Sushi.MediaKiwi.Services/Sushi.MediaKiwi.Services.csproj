@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>0.1.7</Version>
+    <Version>1.0.0</Version>
     <Authors>Supershift</Authors>
     <Description>Provides a back-end for the MediaKiwi portal generator tool</Description>
     <PackageIcon>logo.png</PackageIcon>
@@ -23,12 +23,15 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="AutoMapper.Extensions.ExpressionMapping" Version="7.0.0" />
+    <PackageReference Include="Sushi.LanguageExtensions" Version="0.3.0-rc.3" />
     <PackageReference Include="Sushi.MicroORM" Version="3.1.0" />    
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Sushi.LanguageExtensions\Sushi.LanguageExtensions.csproj" />
-  </ItemGroup>
 
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>Sushi.MediaKiwi.Services.UnitTests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
 </Project>

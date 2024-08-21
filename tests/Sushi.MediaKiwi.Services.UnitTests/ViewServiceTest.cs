@@ -1,6 +1,7 @@
 using AutoMapper;
 using AutoMapper.Extensions.ExpressionMapping;
 using Moq;
+using Sushi.LanguageExtensions.Errors;
 using Sushi.MediaKiwi.Services.Interfaces;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MicroORM;
@@ -42,7 +43,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             viewRepositoryMock.Verify(x=>x.DeleteAsync(viewStub.Id), Times.Once);
         }
 
@@ -62,7 +63,8 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.NotFound, result.Code);
+            Assert.NotNull(result.Error);
+            Assert.IsType<NotFoundError>(result.Error);
             
         }
 
@@ -88,7 +90,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);            
+            Assert.Null(result.Error);            
             Assert.NotNull(result.Value);
             Assert.NotNull(result.Value.Result);
             Assert.Equal(2, result.Value.Result.Count);
@@ -124,7 +126,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             Assert.NotNull(result.Value);
             var view1 = result.Value.Result.First(x => x.Id == "abc");
             var view2 = result.Value.Result.First(x => x.Id == "def");
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             Assert.Single(view1.Roles);
             Assert.Empty(view2.Roles);
             Assert.Equal("Admin", view1.Roles[0]);
@@ -150,7 +152,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             Assert.NotNull(result.Value);
             Assert.Equal(viewStub.Id, result.Value.Id);
         }
@@ -171,7 +173,8 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.NotFound, result.Code);
+            Assert.NotNull(result.Error);
+            Assert.IsType<NotFoundError>(result.Error);
         }
 
         [Fact]
@@ -208,7 +211,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var result = await service.CreateAsync(newId, view);
 
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             Assert.NotNull(result.Value);
             Assert.Equal(newId, result.Value.Id);
             viewRoleRepositoryMock.Verify(x => x.DeleteForViewAsync(It.IsAny<string>()), Times.Never);
@@ -253,7 +256,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var result = await service.UpdateAsync(existingId, view);
 
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             Assert.NotNull(result.Value);
             Assert.Equal(existingId, result.Value.Id);
             viewRepositoryMock.Verify(x=>x.GetAsync(existingId), Times.Once);
@@ -278,7 +281,8 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.NotFound, result.Code);
+            Assert.NotNull(result.Error);
+            Assert.IsType<NotFoundError>(result.Error);
         }
     }
 }

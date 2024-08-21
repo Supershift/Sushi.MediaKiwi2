@@ -6,6 +6,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
     [ApiController]
     [ApiExplorerSettings(GroupName = "SampleApi")]
     [Authorize]
+    [Route("sample/[controller]")]
     public abstract class SampleControllerBase : ControllerBase
     {
         /// <summary>

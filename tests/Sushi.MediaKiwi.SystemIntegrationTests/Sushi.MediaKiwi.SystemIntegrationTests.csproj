@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Sushi.LanguageExtensions\Sushi.LanguageExtensions.csproj" />
     <ProjectReference Include="..\..\src\Sushi.MediaKiwi.SampleAPI\Sushi.MediaKiwi.SampleAPI.csproj" />
   </ItemGroup>
 

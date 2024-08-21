@@ -29,7 +29,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<ListResult<Section>>> GetSections([FromQuery] PagingValues page)
         {
             var result = await _sectionService.GetAllAsync(page);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<Section>> GetSection(string id)
         {
             var result = await _sectionService.GetAsync(id);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
     }
 }

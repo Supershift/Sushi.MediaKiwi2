@@ -111,17 +111,15 @@
     <!-- Start header -->
     <v-card-item ref="side-sheet__header" :class="[headerClass, 'side-sheet__header']">
       <div :class="['side-sheet__header__content']">
-        <v-card-title v-if="slots.title">
+        <v-card-title v-if="slots.title" class="d-flex">
           <slot name="title"></slot>
+          <v-spacer />
+          <v-icon v-if="props.closeButton" :aria-hidden="!props.closeButton" aria-label="close" :icon="IconsLibrary.close" @click="emits('closed')"></v-icon>
         </v-card-title>
         <v-card-subtitle v-if="slots.subtitle">
           <slot name="subtitle"></slot>
         </v-card-subtitle>
       </div>
-
-      <template #append>
-        <v-icon v-if="props.closeButton" :aria-hidden="!props.closeButton" aria-label="close" :icon="IconsLibrary.close" @click="emits('closed')"></v-icon>
-      </template>
 
       <div :class="['side-sheet__header__footer']">
         <v-progress-linear v-if="loading" absolute indeterminate></v-progress-linear>

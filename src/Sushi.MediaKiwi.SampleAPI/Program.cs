@@ -3,6 +3,8 @@ using Sushi.MediaKiwi.SampleAPI;
 using Sushi.MediaKiwi.WebAPI;
 using Sushi.MediaKiwi.Core;
 using Sushi.MicroORM;
+using Sushi.MediaKiwi.SampleAPI.Service.Model;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +28,13 @@ var addCORS = config.GetValue<bool>("AddCORS");
 var services = builder.Services;
 
 // add micro orm
-services.AddMicroORM(new SqlServerConnectionString(connectionString, true));
+services.AddMicroORM(new SqlServerConnectionString(connectionString, true), typeof(Program).Assembly);
+
+// add fluent validators
+services.AddValidatorsFromAssemblyContaining<CreateHotelRequestValidator>();
+
+// add localization
+services.AddLocalization();
 
 // add CORS (only useful on servers that don't add CORS headers, like kestrel)
 if (addCORS)
@@ -63,6 +71,14 @@ services.AddMediaKiwi(
 services.AddSampleApiServices();
 
 var app = builder.Build();
+
+// add localization
+var supportedCultures = new[] { "en-US", "nl" };
+var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(supportedCultures[0])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+
+app.UseRequestLocalization(localizationOptions);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

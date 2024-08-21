@@ -34,7 +34,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<NavigationItem>> DeleteNavigationItem(string id)
         {
             var result = await _navigationItemService.DeleteAsync(id);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }        
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Sushi.MediaKiwi.WebAPI
             [Required, StringLength(64), RegularExpression(@"[\w]*$")] string id, NavigationItem request)
         {
             var result = await _navigationItemService.CreateAsync(id, request);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<NavigationItem>> UpdateNavigationItem(string id, NavigationItem request)
         {
             var result = await _navigationItemService.UpdateAsync(id, request);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -72,8 +72,9 @@ namespace Sushi.MediaKiwi.WebAPI
         [Route("{id}/updateId")]        
         public async Task<ActionResult<NavigationItem>> UpdateId(string id, [FromBody] string newId)
         {
-            var result = await _navigationItemService.UpdateIdAsync(id, newId);
-            return this.CreateResponse(result);
+            var request = new UpdateNavigationItemIdRequest() { FromId = id, ToId = newId };
+            var result = await _navigationItemService.UpdateIdAsync(request);
+            return this.ToResponse(result);
         }
     }
 }

@@ -1,11 +1,11 @@
 import "pinia";
-import type { Ref } from "vue";
+import { Ref } from "vue";
 import type { Router } from "vue-router";
 import type { MediaKiwiState } from "../../stores/index";
 
 declare module "pinia" {
   export interface PiniaCustomProperties {
-    // by using a setter we can allow both strings and refs
+    // // by using a setter we can allow both strings and refs
     set hello(value: string | Ref<string>);
     get hello(): string;
 

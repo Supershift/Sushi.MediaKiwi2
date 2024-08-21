@@ -52,7 +52,7 @@
     }
   }
 
-  let onDelete: ((event: Event) => Promise<void>) | undefined = undefined;
+  let onDelete: ((event?: Event) => Promise<void>) | undefined = undefined;
   if (navigationItemId.value) {
     onDelete = async () => {
       if (navigationItemId.value) {
@@ -66,7 +66,7 @@
 </script>
 
 <template>
-  <MkForm title="" :on-save="onSave" :on-load="onLoad" :on-delete="onDelete">
+  <MkForm title="" :onSubmit="onSave" :on-load="onLoad" :on-delete="onDelete">
     <v-text-field v-model="state.navigationItem.id" label="Id" :disabled="navigationItemId ? true : false" :rules="[alphaNumericNoSpace]"></v-text-field>
     <v-text-field v-model="state.navigationItem.name" label="Name" :rules="[(v) => !!v]"></v-text-field>
     <v-autocomplete

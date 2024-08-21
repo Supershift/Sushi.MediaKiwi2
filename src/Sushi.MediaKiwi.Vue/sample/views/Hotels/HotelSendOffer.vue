@@ -23,7 +23,7 @@
   }
 </script>
 <template>
-  <mk-form sticky @load="onLoad" @delete="onDelete" @save="onSave" @undo="onUndo">
+  <mk-form sticky @load="onLoad" @delete="onDelete" @submit="onSave" @undo="onUndo">
     <template #toolbarHeader>
       <v-card-text class="flex-1-1 w-75">
         Personal details, also known as personal information or personal data, refer to specific pieces of information that are associated with an individual
