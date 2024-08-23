@@ -24,7 +24,9 @@ export async function useForm<T extends FormViewProps | FormDialogProps | FormSi
   isLoaded: Ref<boolean>
 ) {
   // Helper function to filter out undefined properties
-  const definedProps = (obj: Partial<T>) => Object.fromEntries(Object.entries(obj).filter(([_k, v]) => !!v));
+  // const definedProps = (obj: Partial<T>) => Object.fromEntries(Object.entries(obj).filter(([_k, v]) => !!v));
+  const definedProps = (obj: Partial<T>) =>
+    Object.fromEntries(Object.entries(obj).filter(([_k, v]) => (v !== null && v !== undefined) || (typeof v === "boolean" && v === false)));
 
   /** Computed properties for the Form, merging the defaultProps with the form props */
   const computedProps = computed<T>(() => {

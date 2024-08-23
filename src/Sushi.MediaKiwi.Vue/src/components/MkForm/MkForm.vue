@@ -17,7 +17,21 @@
   const instance = getCurrentInstance();
 
   // Define props
-  const props = defineProps<FormViewProps>();
+  const props = withDefaults(defineProps<FormViewProps>(), {
+    sticky: undefined,
+    hideToolbar: undefined,
+    closeOnSubmit: undefined,
+    showProblemDetailsDetailField: undefined,
+    validateOnLoad: undefined,
+    confirmBeforeSubmit: undefined,
+    hideSubmitSnackbar: undefined,
+    resetOnSubmit: undefined,
+    saveLabels: undefined,
+    editLabels: undefined,
+    redirectAfterDelete: undefined,
+    hideDeleteSnackbar: undefined,
+    hideUndo: undefined,
+  });
 
   // Define computedProps defaults
   const defaultProps = <FormViewProps>{
@@ -33,7 +47,7 @@
   const isValid = defineModel<boolean>("isValid", { required: false, default: false });
   /** The value representing the error that occurred during the last request. */
   const errorProblemDetails = defineModel<ErrorProblemDetails | null | undefined>("error", { required: false });
-  /** Indicator that   */
+  /** Indicator that the forms onLoad event has been completed  */
   const isLoaded = ref<boolean>(false);
 
   // Define refs

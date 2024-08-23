@@ -90,7 +90,16 @@
     <v-text-field readonly label="Current Balance" v-model="state.account.balance" />
   </MkForm>
 
-  <MkFormSideSheet v-model="state.depositSheet" title="Deposit" @submit="onDeposit" edit-labels entryName="amount">
+  <MkFormSideSheet
+    v-model="state.depositSheet"
+    title="Deposit"
+    @submit="onDeposit"
+    edit-labels
+    entryName="amount"
+    @close="CleanUp"
+    :close-on-submit="false"
+    :reset-on-submit="false"
+  >
     <v-text-field label="Amount" v-model="state.amount" :rules="[required]" type="number" />
   </MkFormSideSheet>
 

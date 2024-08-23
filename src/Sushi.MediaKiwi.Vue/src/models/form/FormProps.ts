@@ -16,7 +16,9 @@ export type FormDialogProps = FormProps & {
   /** Intro text of the dialog */
   intro?: string;
   /** Close the dialog after submit was succesful */
-  closeOnSubmit?: boolean;
+  closeOnSubmit?: boolean | undefined;
+  /** Close event */
+  onClose?: () => void;
 };
 
 export type FormSideSheetProps = FormProps & {
@@ -26,6 +28,8 @@ export type FormSideSheetProps = FormProps & {
   intro?: string;
   /** Close the sidesheet after submit was succesful */
   closeOnSubmit?: boolean;
+  /** Close event */
+  onClose?: () => void;
 };
 
 export type FormProps = LoadProps &
