@@ -43,6 +43,8 @@ export type FormProps = LoadProps &
 export type LoadProps = {
   /** Callback invoked when the component needs data. */
   onLoad?: (event?: Event) => Promise<void>;
+  /** Callback invoked when the component needs data. */
+  onUndo?: (event?: Event) => Promise<void>;
   /** Perform formvalidation as soon as the form loads */
   validateOnLoad?: boolean;
   /** Snackbar message when {@link onLoad} failed */

@@ -33,6 +33,9 @@
   const isValid = defineModel<boolean>("isValid", { required: false, default: false });
   /** The value representing the error that occurred during the last request. */
   const errorProblemDetails = defineModel<ErrorProblemDetails | null | undefined>("error", { required: false });
+  /** Indicator that   */
+  const isLoaded = ref<boolean>(false);
+
   // Define refs
   const formRef = ref();
   const formId = `mk-form-view__${instance?.uid}`;
@@ -58,7 +61,8 @@
     deleteButtonLabel,
     deleteConfirmationTitle,
     deleteConfirmationBody,
-  } = await useForm(() => props, defaultProps, formRef, formId, inProgress, isValid, errorProblemDetails);
+    hasLoadHandler,
+  } = await useForm(() => props, defaultProps, formRef, formId, inProgress, isValid, errorProblemDetails, isLoaded);
 
   // Define slots
   const slots = defineSlots<{
@@ -98,21 +102,19 @@
   });
 
   // load data async on created
-  await onLoad();
+  onLoad();
 </script>
 <template>
-  <v-form :id="formId" v-model="isValid" :validate-on="computedProps.validateOn" ref="formRef" @submit.prevent="onSubmit">
+  <v-progress-linear v-if="inProgress" indeterminate></v-progress-linear>
+
+  <v-form v-if="isLoaded" :id="formId" v-model="isValid" :validate-on="computedProps.validateOn" ref="formRef" @submit.prevent="onSubmit">
     <MkToolbar
       v-if="!computedProps.hideToolbar"
-      :loading="inProgress"
       v-bind="$attrs"
       :item-view-id="navigation.currentNavigationItem.value.viewId"
       :title="computedProps.title"
       :new="false"
-      :submit="hasSubmitHandler"
-      :undo="hasUndoHanlder"
       :sticky="computedProps.sticky ? true : false"
-      @undo="onUndo"
     >
       <template v-if="slots.title" #title>
         <slot name="title" v-bind="formSlotProps"></slot>

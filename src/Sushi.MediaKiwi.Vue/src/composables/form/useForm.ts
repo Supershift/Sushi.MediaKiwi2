@@ -19,7 +19,9 @@ export async function useForm<T extends FormViewProps | FormDialogProps | FormSi
   /** Model for the Valid state of the component */
   isValid: ModelRef<any, string>,
   /** Model for the errorProblemDetails state of the component */
-  errorProblemDetails: ModelRef<ErrorProblemDetails | null | undefined, string>
+  errorProblemDetails: ModelRef<ErrorProblemDetails | null | undefined, string>,
+  /** Model for the Progress state of the component */
+  isLoaded: Ref<boolean>
 ) {
   // Helper function to filter out undefined properties
   const definedProps = (obj: Partial<T>) => Object.fromEntries(Object.entries(obj).filter(([_k, v]) => !!v));
@@ -39,7 +41,7 @@ export async function useForm<T extends FormViewProps | FormDialogProps | FormSi
   const entryName = computed(() => computedProps.value.entryName);
 
   // Init the form load, submit and delete functions
-  const formLoad = await useFormLoad(computedProps, formRef, entryName, inProgress, errorProblemDetails);
+  const formLoad = await useFormLoad(computedProps, formRef, entryName, inProgress, errorProblemDetails, isLoaded);
   const formSubmit = await useFormSubmit(computedProps, formRef, entryName, inProgress, errorProblemDetails, isValid);
   const formDelete = await useFormDelete(computedProps, formRef, entryName, inProgress, errorProblemDetails);
 
