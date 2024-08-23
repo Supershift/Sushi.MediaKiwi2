@@ -37,7 +37,7 @@ export async function useFormLoad(
 
   // Computed properties for the handlers
   const hasLoadHandler = computed(() => (props.value.onLoad ? true : false));
-  const hasUndoHanlder = computed(() => !props.value.hideUndo && (props.value.onUndo || hasLoadHandler.value));
+  const hasUndoHandler = computed(() => !props.value.hideUndo && (props.value.onUndo || hasLoadHandler.value));
 
   const isUndoDisabled = computed(() => inProgress.value);
 
@@ -114,7 +114,7 @@ export async function useFormLoad(
    * Event to undo the changes made to the form
    */
   async function onUndo(event?: Event): Promise<TResult> {
-    if (!hasLoadHandler.value && !hasUndoHanlder.value) {
+    if (!hasLoadHandler.value && !hasUndoHandler.value) {
       throw new Error("No onLoad or onUndo handler provided");
     }
 
@@ -180,7 +180,7 @@ export async function useFormLoad(
     onLoad,
     onUndo,
     hasLoadHandler,
-    hasUndoHanlder,
+    hasUndoHandler,
     loadFailedSnackbarMessage,
     undoSuccessSnackbarMessage,
     undoButtonLabel,

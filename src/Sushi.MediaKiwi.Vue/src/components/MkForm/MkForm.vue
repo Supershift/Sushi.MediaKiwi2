@@ -62,7 +62,7 @@
     onUndo,
     submitConfirmDialog,
     hasSubmitHandler,
-    hasUndoHanlder,
+    hasUndoHandler,
     submitButtonColor,
     hasDeleteHandler,
     isSubmitDisabled,
@@ -154,7 +154,7 @@
         <slot v-if="slots.actions" name="actions" v-bind="formSlotProps"></slot>
         <template v-else>
           <slot v-if="slots.toolbar" name="toolbar" v-bind="formSlotProps"></slot>
-          <v-btn v-if="hasUndoHanlder" color="primary" @click="onUndo()" :disabled="isUndoDisabled">{{ undoButtonLabel }}</v-btn>
+          <v-btn v-if="hasUndoHandler" color="primary" @click="onUndo()" :disabled="isUndoDisabled">{{ undoButtonLabel }}</v-btn>
           <v-btn type="submit" v-if="hasSubmitHandler" variant="flat" :color="submitButtonColor" :disabled="isSubmitDisabled" :form="formId">{{
             submitButtonLabel
           }}</v-btn>

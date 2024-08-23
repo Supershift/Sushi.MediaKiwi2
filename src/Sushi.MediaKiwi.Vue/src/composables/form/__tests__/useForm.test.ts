@@ -26,6 +26,7 @@ describe("useForm", () => {
   const inProgress = ref<boolean>(false) as ModelRef<boolean>;
   const error = ref<ErrorProblemDetails | null | undefined>() as ModelRef<ErrorProblemDetails | null | undefined>;
   const isValid = ref<boolean>(false) as ModelRef<boolean>;
+  const isLoaded = ref<boolean>(false);
 
   describe("Computed Props", () => {
     it("should return the component prop vaues", async () => {
@@ -38,7 +39,7 @@ describe("useForm", () => {
       };
 
       // Act
-      const { computedProps } = await useForm(() => componentProps, defaultProps, formRef, "formId", inProgress, isValid, error);
+      const { computedProps } = await useForm(() => componentProps, defaultProps, formRef, "formId", inProgress, isValid, error, isLoaded);
 
       // Assert
       expect(computedProps.value.hideUndo).toBeTruthy();
@@ -52,7 +53,7 @@ describe("useForm", () => {
       };
 
       // Act
-      const { computedProps } = await useForm(() => componentProps, defaultProps, formRef, "formId", inProgress, isValid, error);
+      const { computedProps } = await useForm(() => componentProps, defaultProps, formRef, "formId", inProgress, isValid, error, isLoaded);
 
       // Assert the expected values
       expect(computedProps.value.hideUndo).toBeTruthy();
@@ -66,7 +67,16 @@ describe("useForm", () => {
       const defaultProps = <FormViewProps>{};
 
       // Act
-      const { computedProps, submitSuccessMessage } = await useForm(() => componentProps, defaultProps, formRef, "formId", inProgress, isValid, error);
+      const { computedProps, submitSuccessMessage } = await useForm(
+        () => componentProps,
+        defaultProps,
+        formRef,
+        "formId",
+        inProgress,
+        isValid,
+        error,
+        isLoaded
+      );
 
       // Assert
       expect(computedProps.value.entryName).toBe("Market");
@@ -81,7 +91,7 @@ describe("useForm", () => {
       const defaultProps = <FormViewProps>{};
 
       // Act
-      const { formSlotProps } = await useForm(() => componentProps, defaultProps, formRef, "formId", inProgress, isValid, error);
+      const { formSlotProps } = await useForm(() => componentProps, defaultProps, formRef, "formId", inProgress, isValid, error, isLoaded);
 
       // Assert the expected values
       expect(formSlotProps.value.form).toBe("formId");
