@@ -155,10 +155,10 @@ export function useErrorProblemDetails() {
       } else if (isNavigationFailure(error)) {
         // If we have a navigation failure, get the error message
         const message = await getRouterErrorMessage(error);
-        result = new ErrorProblemDetails(undefined, undefined, undefined, message);
+        result = new ErrorProblemDetails(message);
       } else if (isError(error)) {
         // If we have an error object, create a default error problem details object
-        result = new ErrorProblemDetails(undefined, undefined, undefined, error?.message);
+        result = new ErrorProblemDetails(error?.message);
       }
     }
 

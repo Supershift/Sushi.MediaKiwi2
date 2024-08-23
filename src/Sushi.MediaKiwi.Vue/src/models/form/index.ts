@@ -1,2 +1,2 @@
 export type { FormProps } from "./FormProps";
-export type { TResult } from "./TResult";
+export { TResult } from "./TResult";

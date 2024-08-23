@@ -5,6 +5,7 @@
   import { reactive } from "vue";
   import { useValidationRules } from "@/composables";
   import { ErrorConnector } from "@sample/services/ErrorConnector";
+  import { ErrorProblemDetails, TResult } from "@/models";
 
   const errorConnector = container.resolve(ErrorConnector);
   const { required } = useValidationRules();
@@ -12,7 +13,7 @@
   const state = reactive({
     accountNumber: <string | undefined>"1",
     account: <Account | undefined>undefined,
-    errorType: <string | undefined>undefined,
+    error: <ErrorProblemDetails | undefined>undefined,
   });
 
   function throwCustomError() {
@@ -34,14 +35,20 @@
   async function getInternalServerError() {
     await errorConnector.getInternalServerError();
   }
+
+  async function onSubmit() {
+    // Assume a 200 API call with but with a custom error
+    return TResult.failure(new ErrorProblemDetails("This is an expected error"));
+  }
 </script>
 
 <template>
-  <MkForm @submit="getGenericErrorFromApi">
+  <MkForm @submit="onSubmit" v-moodel:error="state.error">
     <template #toolbar>
       <v-btn @click="throwCustomError()">Throw custom error</v-btn>
       <v-btn @click="throwError()">Throw unexpected error</v-btn>
       <v-btn @click="getAggregateError()">Aggregate API Error</v-btn>
+      <v-btn @click="getGenericErrorFromApi()">Generic API Error</v-btn>
       <v-btn @click="getInternalServerError()">Internal Server Error</v-btn>
     </template>
     <v-text-field label="Account Number" v-model="state.accountNumber" :rules="[required]" />

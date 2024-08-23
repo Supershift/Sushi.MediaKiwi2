@@ -72,7 +72,12 @@ export async function useFormLoad(
 
       try {
         // Load the data
-        await props.value.onLoad(event);
+        const eventResult = await props.value.onLoad(event);
+
+        // Check if the result is a TResult and if it is a failure
+        if (eventResult && eventResult instanceof TResult && !eventResult.isSuccess) {
+          throw eventResult.error;
+        }
       } catch (error: any) {
         let errorResult: ErrorProblemDetails;
         if (error instanceof ErrorProblemDetails) {
@@ -123,11 +128,18 @@ export async function useFormLoad(
     errorProblemDetails.value = null;
 
     try {
-      // Load the data
+      // Undo or load the data
+      let eventResult: TResult<any> | void = undefined;
+
       if (props.value.onUndo) {
-        await props.value.onUndo(event);
+        eventResult = await props.value.onUndo(event);
       } else if (props.value.onLoad) {
-        await props.value.onLoad(event);
+        eventResult = await props.value.onLoad(event);
+      }
+
+      // Check if the result is a TResult and if it is a failure
+      if (eventResult && eventResult instanceof TResult && !eventResult.isSuccess) {
+        throw eventResult.error;
       }
 
       // Show a message
@@ -139,7 +151,7 @@ export async function useFormLoad(
       }
 
       // Set the result
-      result = TResult.success();
+      eventResult = TResult.success();
     } catch (error: any) {
       let errorResult: ErrorProblemDetails;
       if (error instanceof ErrorProblemDetails) {

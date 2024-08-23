@@ -63,7 +63,12 @@ export async function useFormDelete(
 
     try {
       // Delete the data
-      await props.value.onDelete(event);
+      const eventResult = await props.value.onDelete(event);
+
+      // Check if the result is a TResult and if it is a failure
+      if (eventResult && eventResult instanceof TResult && !eventResult.isSuccess) {
+        throw eventResult.error;
+      }
 
       // Show a message that the delete was successful
       if (!props.value.hideDeleteSnackbar) {

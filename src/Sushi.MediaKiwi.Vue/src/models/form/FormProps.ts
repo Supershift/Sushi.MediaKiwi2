@@ -1,4 +1,5 @@
 import { ErrorProblemDetails } from "../errors/ErrorProblemDetails";
+import { TResult } from "./TResult";
 
 export type FormViewProps = FormProps & {
   /** If true, the toolbar will be sticky on top of the page. */
@@ -42,9 +43,9 @@ export type FormProps = LoadProps &
 
 export type LoadProps = {
   /** Callback invoked when the component needs data. */
-  onLoad?: (event?: Event) => Promise<void>;
+  onLoad?: (event?: Event) => Promise<TResult<any> | void>;
   /** Callback invoked when the component needs data. */
-  onUndo?: (event?: Event) => Promise<void>;
+  onUndo?: (event?: Event) => Promise<TResult<any> | void>;
   /** Perform formvalidation as soon as the form loads */
   validateOnLoad?: boolean;
   /** Snackbar message when {@link onLoad} failed */
@@ -53,7 +54,7 @@ export type LoadProps = {
 
 export type SubmitProps = {
   /** Callback invoked when the submit button is pressed, giving the user feedback on submit */
-  onSubmit?: (event?: Event) => Promise<void>;
+  onSubmit?: (event?: Event) => Promise<TResult<any> | void>;
   /** Custom label for the default submit button */
   submitButtonLabel?: string;
   /** Title for the confirmation dialog */
@@ -76,7 +77,7 @@ export type SubmitProps = {
 
 export type DeleteProps = {
   /** Callback invoked when the delete button is pressed. */
-  onDelete?: (event?: Event) => Promise<boolean> | Promise<void>;
+  onDelete?: (event?: Event) => Promise<TResult<any> | void>;
   /** Custom label for the default delete button */
   deleteButtonLabel?: string;
   /** Title for the confirmation dialog */
