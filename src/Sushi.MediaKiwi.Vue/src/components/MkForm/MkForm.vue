@@ -55,6 +55,9 @@
     submitConfirmationBody,
     undoButtonLabel,
     formSlotProps,
+    deleteButtonLabel,
+    deleteConfirmationTitle,
+    deleteConfirmationBody,
   } = await useForm(() => props, defaultProps, formRef, formId, inProgress, isValid, errorProblemDetails);
 
   // Define slots
@@ -100,7 +103,7 @@
 <template>
   <v-form :id="formId" v-model="isValid" :validate-on="computedProps.validateOn" ref="formRef" @submit.prevent="onSubmit">
     <MkToolbar
-      v-if="!hideToolbar"
+      v-if="!computedProps.hideToolbar"
       :loading="inProgress"
       v-bind="$attrs"
       :item-view-id="navigation.currentNavigationItem.value.viewId"
@@ -147,7 +150,7 @@
       v-if="errorProblemDetails"
       v-model:problem-details="errorProblemDetails"
       class="mb-4"
-      :show-details="showProblemDetailsDetailField"
+      :show-details="computedProps.showProblemDetailsDetailField"
     />
 
     <MkConfirmDialog
