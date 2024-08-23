@@ -13,6 +13,7 @@
   const state = reactive({
     accountNumber: <string | undefined>"1",
     account: <Account | undefined>undefined,
+    inProgress: <boolean | undefined>false,
     error: <ErrorProblemDetails | undefined>undefined,
   });
 
@@ -25,7 +26,15 @@
   }
 
   async function getGenericErrorFromApi() {
-    await errorConnector.getGenericError();
+    return new Promise<void>(async (resolve, reject) => {
+      state.inProgress = true;
+      setTimeout(() => {
+        errorConnector.getGenericError().catch((error) => {
+          state.inProgress = false;
+          reject(error);
+        });
+      }, 2000);
+    });
   }
 
   async function getAggregateError() {
@@ -43,7 +52,7 @@
 </script>
 
 <template>
-  <MkForm @submit="onSubmit" v-moodel:error="state.error">
+  <MkForm @submit="onSubmit" v-moodel:error="state.error" v-model:in-progress="state.inProgress">
     <template #toolbar>
       <v-btn @click="throwCustomError()">Throw custom error</v-btn>
       <v-btn @click="throwError()">Throw unexpected error</v-btn>
