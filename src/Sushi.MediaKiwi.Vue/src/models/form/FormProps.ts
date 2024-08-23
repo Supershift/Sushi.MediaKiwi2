@@ -48,8 +48,6 @@ export type FormProps = LoadProps &
 export type LoadProps = {
   /** Callback invoked when the component needs data. */
   onLoad?: (event?: Event) => Promise<TResult<any> | void>;
-  /** Callback invoked when the component needs data. */
-  onUndo?: (event?: Event) => Promise<TResult<any> | void>;
   /** Perform formvalidation as soon as the form loads */
   validateOnLoad?: boolean;
   /** Snackbar message when {@link onLoad} failed */
@@ -99,6 +97,8 @@ export type DeleteProps = {
 };
 
 export type UndoProps = {
+  /** Callback invoked when the component needs data. */
+  onUndo?: (event?: Event) => Promise<TResult<any> | void>;
   /** Hides the undo button */
   hideUndo?: boolean;
   /** Custom label for the default undo button */
