@@ -45,6 +45,10 @@
     await errorConnector.getInternalServerError();
   }
 
+  async function getTimeoutError() {
+    await errorConnector.getTimeoutError();
+  }
+
   async function onSubmit() {
     // Assume a 200 API call with but with a custom error
     return TResult.failure(new ErrorProblemDetails("This is an expected error"));
@@ -54,11 +58,12 @@
 <template>
   <MkForm @submit="onSubmit" v-moodel:error="state.error" v-model:in-progress="state.inProgress">
     <template #toolbar>
-      <v-btn @click="throwCustomError()">Throw custom error</v-btn>
-      <v-btn @click="throwError()">Throw unexpected error</v-btn>
-      <v-btn @click="getAggregateError()">Aggregate API Error</v-btn>
-      <v-btn @click="getGenericErrorFromApi()">Generic API Error</v-btn>
+      <v-btn @click="throwCustomError()">Custom error</v-btn>
+      <v-btn @click="throwError()">Unexpected error</v-btn>
+      <v-btn @click="getAggregateError()">Aggregate Error</v-btn>
+      <v-btn @click="getGenericErrorFromApi()">Generic Error</v-btn>
       <v-btn @click="getInternalServerError()">Internal Server Error</v-btn>
+      <v-btn @click="getTimeoutError()">Timeout</v-btn>
     </template>
     <v-text-field label="Account Number" v-model="state.accountNumber" :rules="[required]" />
   </MkForm>
@@ -67,9 +72,11 @@
 
   <v-card>
     <v-card-title>Errors outside the form actions</v-card-title>
-    <v-btn @click="throwCustomError()">Throw custom error</v-btn>
-    <v-btn @click="throwError()">Throw unexpected error</v-btn>
-    <v-btn @click="getGenericErrorFromApi()">Get Generic API error</v-btn>
-    <v-btn @click="getAggregateError()">Get Aggregate API Error</v-btn>
+    <v-btn @click="throwCustomError()">Custom error</v-btn>
+    <v-btn @click="throwError()">Unexpected error</v-btn>
+    <v-btn @click="getAggregateError()">Aggregate Error</v-btn>
+    <v-btn @click="getGenericErrorFromApi()">Generic Error</v-btn>
+    <v-btn @click="getInternalServerError()">Internal Server Error</v-btn>
+    <v-btn @click="getTimeoutError()">Timeout</v-btn>
   </v-card>
 </template>

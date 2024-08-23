@@ -16,7 +16,12 @@ export class ErrorConnector {
   }
 
   async getInternalServerError(): Promise<AxiosResponse> {
-    const response = await this.axios.post(`/Error/internalServerError`);
-    return response.data;
+    const response = await this.axios.get(`/Error/internalServerError`);
+    return response;
+  }
+
+  async getTimeoutError(): Promise<AxiosResponse> {
+    const response = await this.axios.get(`/Error/timeoutError`, { timeout: 1 });
+    return response;
   }
 }

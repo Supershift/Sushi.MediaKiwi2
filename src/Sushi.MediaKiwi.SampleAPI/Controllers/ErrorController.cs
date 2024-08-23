@@ -39,7 +39,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
             return this.ToResponse(result);
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route($"internalServerError")]
         public ActionResult GenerateInternalServerError()
         {
