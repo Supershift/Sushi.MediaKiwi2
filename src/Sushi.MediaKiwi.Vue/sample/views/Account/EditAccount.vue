@@ -96,7 +96,6 @@
     @submit="onDeposit"
     edit-labels
     entryName="amount"
-    @close="CleanUp"
     :close-on-submit="false"
     :reset-on-submit="false"
   >
