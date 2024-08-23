@@ -52,6 +52,7 @@
     submitButtonColor,
     hasDeleteHandler,
     isSubmitDisabled,
+    isUndoDisabled,
     computedProps,
     submitConfirmationTitle,
     submitButtonLabel,
@@ -61,7 +62,6 @@
     deleteButtonLabel,
     deleteConfirmationTitle,
     deleteConfirmationBody,
-    hasLoadHandler,
   } = await useForm(() => props, defaultProps, formRef, formId, inProgress, isValid, errorProblemDetails, isLoaded);
 
   // Define slots
@@ -101,6 +101,18 @@
     },
   });
 
+  async function onDeleteWithRedirect() {
+    const result = await onDelete();
+
+    if (result.isSuccess) {
+      // Redirect to the parent if the flag is set
+      if (computedProps.value.redirectAfterDelete && navigation.currentNavigationItem.value?.parent) {
+        // Redirect to the top list
+        navigation.navigateToParent();
+      }
+    }
+  }
+
   // load data async on created
   onLoad();
 </script>
@@ -128,13 +140,13 @@
         <slot v-if="slots.actions" name="actions" v-bind="formSlotProps"></slot>
         <template v-else>
           <slot v-if="slots.toolbar" name="toolbar" v-bind="formSlotProps"></slot>
-          <v-btn v-if="hasUndoHanlder" color="primary" @click="onUndo()">{{ undoButtonLabel }}</v-btn>
+          <v-btn v-if="hasUndoHanlder" color="primary" @click="onUndo()" :disabled="isUndoDisabled">{{ undoButtonLabel }}</v-btn>
           <v-btn type="submit" v-if="hasSubmitHandler" variant="flat" :color="submitButtonColor" :disabled="isSubmitDisabled" :form="formId">{{
             submitButtonLabel
           }}</v-btn>
 
           <MkOverflowMenuIcon v-if="hasDeleteHandler || slots.overflowIconItems">
-            <MkConfirmDialog v-if="hasDeleteHandler" @confirm="onDelete" :title="deleteConfirmationTitle" :confirm-button-label="deleteButtonLabel">
+            <MkConfirmDialog v-if="hasDeleteHandler" @confirm="onDeleteWithRedirect" :title="deleteConfirmationTitle" :confirm-button-label="deleteButtonLabel">
               <template #activator="{ props }">
                 <v-list-item v-bind="props" :title="deleteButtonLabel" />
               </template>

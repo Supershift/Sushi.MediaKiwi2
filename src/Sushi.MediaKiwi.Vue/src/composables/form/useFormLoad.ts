@@ -37,7 +37,9 @@ export async function useFormLoad(
 
   // Computed properties for the handlers
   const hasLoadHandler = computed(() => (props.value.onLoad ? true : false));
-  const hasUndoHanlder = computed(() => !props.value.hideUndo && hasLoadHandler.value);
+  const hasUndoHanlder = computed(() => !props.value.hideUndo && (props.value.onUndo || hasLoadHandler.value));
+
+  const isUndoDisabled = computed(() => inProgress.value);
 
   /**
    * Validates the form on load if the {@link LoadProps.validateOnLoad} flag is set
@@ -64,6 +66,9 @@ export async function useFormLoad(
     if (props.value.onLoad) {
       // Set the progress indicator
       inProgress.value = true;
+
+      // Clear error
+      errorProblemDetails.value = null;
 
       try {
         // Load the data
@@ -113,6 +118,9 @@ export async function useFormLoad(
 
     // Set the progress indicator
     inProgress.value = true;
+
+    // Clear error
+    errorProblemDetails.value = null;
 
     try {
       // Load the data
@@ -164,5 +172,6 @@ export async function useFormLoad(
     loadFailedSnackbarMessage,
     undoSuccessSnackbarMessage,
     undoButtonLabel,
+    isUndoDisabled,
   };
 }

@@ -58,6 +58,9 @@ const mediakiwiOptions = <MediakiwiVueOptions>{
     },
   },
   formOptions: {
+    view: {
+      redirectAfterDelete: true,
+    },
     dialog: {
       closeOnSubmit: true,
       resetOnSubmit: true,

@@ -6,6 +6,7 @@ import { DeleteProps } from "@/models/form/FormProps";
 import { TResult } from "@/models/form/TResult";
 import { useErrorProblemDetails } from "../useErrorProblemDetails";
 import { useFormMessages } from "./useFormMessages";
+import { useRoute, useRouter } from "vue-router";
 
 export async function useFormDelete(
   /** Props determining the configuration and labels */
@@ -22,6 +23,8 @@ export async function useFormDelete(
   // Inject Dependencies
   const snackbar = useSnackbarStore();
   const navigation = useNavigation();
+  const router = useRouter();
+
   const { toErrorProblemDetails } = useErrorProblemDetails();
   const formMessages = await useFormMessages();
 
@@ -55,6 +58,9 @@ export async function useFormDelete(
     // Set the progress indicator
     inProgress.value = true;
 
+    // Clear error
+    errorProblemDetails.value = null;
+
     try {
       // Delete the data
       await props.value.onDelete(event);
@@ -63,12 +69,6 @@ export async function useFormDelete(
       if (!props.value.hideDeleteSnackbar) {
         // Show a message that the delete was successful
         snackbar.showMessage(deleteSuccessfulMessage.value);
-      }
-
-      // Redirect to the parent if the flag is set
-      if (props.value.redirectAfterDelete && navigation.currentNavigationItem.value?.parent) {
-        // Redirect to the top list
-        navigation.navigateToParent();
       }
 
       // Set the result
