@@ -38,5 +38,12 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
             var result = new Result<Error>(aggregateError);
             return this.ToResponse(result);
         }
+
+        [HttpPost]
+        [Route($"internalServerError")]
+        public ActionResult GenerateInternalServerError()
+        {
+            throw new System.Exception("This is an internal server error");
+        }
     }
 }

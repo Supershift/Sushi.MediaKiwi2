@@ -30,6 +30,10 @@
   async function getAggregateError() {
     await errorConnector.getAggregateError();
   }
+
+  async function getInternalServerError() {
+    await errorConnector.getInternalServerError();
+  }
 </script>
 
 <template>
@@ -38,6 +42,7 @@
       <v-btn @click="throwCustomError()">Throw custom error</v-btn>
       <v-btn @click="throwError()">Throw unexpected error</v-btn>
       <v-btn @click="getAggregateError()">Aggregate API Error</v-btn>
+      <v-btn @click="getInternalServerError()">Internal Server Error</v-btn>
     </template>
     <v-text-field label="Account Number" v-model="state.accountNumber" :rules="[required]" />
   </MkForm>

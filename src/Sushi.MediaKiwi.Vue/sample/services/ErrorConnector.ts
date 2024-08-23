@@ -14,4 +14,9 @@ export class ErrorConnector {
     const response = await this.axios.get("/Error/aggregateError");
     return response;
   }
+
+  async getInternalServerError(): Promise<AxiosResponse> {
+    const response = await this.axios.post(`/Error/internalServerError`);
+    return response.data;
+  }
 }
