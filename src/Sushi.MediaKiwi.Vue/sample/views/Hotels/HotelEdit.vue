@@ -35,12 +35,7 @@
   // Load countries for selection at dropdown
   async function LoadCountries() {
     const countries = await countriesConnector.GetAll({ pageIndex: 0, pageSize: 9999 });
-    if (!countries) {
-      console.log("No countries could be loaded.");
-    } else {
-      console.log(countries);
-      state.countries = countries.result!;
-    }
+    state.countries = countries.result!;
   }
 
   async function onLoad() {
@@ -49,9 +44,6 @@
     if (navigation.currentViewParameterNumber.value > 0) {
       // get existing hotel from api
       const candidate = await hotelConnector.GetAsync(navigation.currentViewParameterNumber.value);
-      if (!candidate) {
-        alert("No hotel found!");
-      }
       state.hotel = candidate!;
       setCustomPageTitle(state.hotel.name);
     } else {
@@ -108,20 +100,18 @@
   <MkNavigationDrawerInfo>
     <v-card variant="flat" rounded="lg">
       <v-card-title>{{ state.hotel.name }}</v-card-title>
-      <v-card-text>
-        <v-img
-          src="https://plus.unsplash.com/premium_photo-1678297269980-16f4be3a15a6?q=80&w=300&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        />
-      </v-card-text>
+      <v-card-text> </v-card-text>
       <v-card-text> Located in: {{ state.hotel.countryCode }} </v-card-text>
     </v-card>
   </MkNavigationDrawerInfo>
 
-  <MkForm title="Hotel edit" submit="onSave" @undo="onUndo" @delete="onDelete" @load="onLoad">
+  <MkForm title="Hotel edit" @submit="onSave" @delete="onDelete" @undo="onUndo" @load="onLoad">
     <template #toolbarHeader>
       <v-card-text class="flex-1-1 w-75"> Hotel edit </v-card-text>
     </template>
+
     <v-text-field v-model="state.hotel.name" label="Name" :rules="[required]"></v-text-field>
+
     <v-autocomplete
       v-model="state.hotel.countryCode"
       label="Country"
@@ -131,22 +121,18 @@
       item-value="code"
     ></v-autocomplete>
     <v-checkbox v-model="state.hotel.isActive" label="Is Active"></v-checkbox>
+
     <mk-money-value v-model="state.hotel.srp" label="SRP"></mk-money-value>
+
     <v-slider v-model="slider" show-ticks step="10" thumb-label="always"></v-slider>
+
     <v-radio-group v-model="radioModel" :rules="[() => radioModel === '2' || 'Show is the only option']">
       <v-radio label="Hide" value="1" disabled></v-radio>
       <v-radio label="Show" value="2"></v-radio>
       <v-radio label="Is Featured" value="3"></v-radio>
     </v-radio-group>
-    <v-select
-      v-model:model-value="selectHotelType"
-      multiple
-      :items="['City', 'Hostel', 'Resort', 'Motel']"
-      label="Hotel Type"
-      chips
-      closable-chips
-      clearable
-    ></v-select>
+
+    <v-select v-model:model-value="selectHotelType" multiple :items="['City', 'Hostel', 'Resort', 'Motel']" label="Hotel Type" chips closable-chips clearable />
   </MkForm>
   <MkForm title="Hotel files" @submit="onFilesSave" @undo="onFilesUndo" @delete="onFilesDelete" @load="onFilesLoad">
     <template #toolbarHeader>

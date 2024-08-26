@@ -28,6 +28,14 @@ export function useErrorProblemDetails() {
     return Array.isArray(error) && error.length > 0 && typeof (error as string[])[0] === "string";
   }
 
+  /** Type guard for ErrorProblemDetails */
+  function IsErrorProblemDetails(error?: any): error is ErrorProblemDetails {
+    return (
+      ((error as ErrorProblemDetails).detail !== undefined && (error as ErrorProblemDetails).detail !== null) ||
+      ((error as ErrorProblemDetails).error !== undefined && (error as ErrorProblemDetails).error !== null)
+    );
+  }
+
   /**
    * Register an interceptor for the axios instance. This will handle the response and tries to parse them to an object {@link ErrorProblemDetails}
    */
@@ -63,23 +71,13 @@ export function useErrorProblemDetails() {
   /**
    * Set the error on the form or show a snackbar message
    */
-  async function setErrorSnackbar(err: Error) {
+  async function setErrorSnackbar(error: ErrorProblemDetails) {
     // Inject dependencies
     const { unexpectedErrorMessage } = await useErrorMessages();
     const snackbar = useSnackbarStore();
 
     // define the messages
-    let message: string = "";
-
-    // Check if the error has a message put by the ErrorProblemDetails
-    // If we have a navigation failure, handle the route error
-    if (isNavigationFailure(err)) {
-      message = await getRouterErrorMessage(err);
-    } else if (err instanceof ErrorProblemDetails) {
-      message = getErrorMessages(err)?.join(", ") || message;
-    } else if (isError(err)) {
-      message = err.message;
-    }
+    let message = getErrorMessages(error)?.join(", ") || "";
 
     // If we don't have a message, set the default message
     if (!message) {
@@ -101,6 +99,14 @@ export function useErrorProblemDetails() {
     // Log the error to the console
     console.error(err, instance, info);
 
+    // Check if we need to parse the error
+    let errorProblemDetails: ErrorProblemDetails | undefined;
+    if (err instanceof ErrorProblemDetails) {
+      errorProblemDetails = err;
+    } else {
+      errorProblemDetails = await toErrorProblemDetails(err);
+    }
+
     // If we have an instance, try to find the closest form, and set the error
     if (instance) {
       // find the closest form
@@ -108,14 +114,6 @@ export function useErrorProblemDetails() {
 
       // If we have a form, set the error on the form
       if (mkForm && mkForm.setError) {
-        // Set the error on the form
-        let errorProblemDetails: ErrorProblemDetails | undefined;
-        if (err instanceof ErrorProblemDetails) {
-          errorProblemDetails = err;
-        } else {
-          errorProblemDetails = await toErrorProblemDetails(err);
-        }
-
         mkForm.setError(errorProblemDetails);
         // We set the error on the form, so we can leave
         return;
@@ -123,7 +121,7 @@ export function useErrorProblemDetails() {
     }
 
     // If we don't have a form, show a snackbar message
-    setErrorSnackbar(err);
+    setErrorSnackbar(errorProblemDetails);
   }
 
   /**
@@ -143,19 +141,25 @@ export function useErrorProblemDetails() {
     // Create a result
     let result: ErrorProblemDetails | undefined;
 
-    if (isAxiosError(error) && error.response?.data) {
-      // If the response is a blob and the type is json, parse the error problem details
-      if (isAxiosBlobResponse(error)) {
-        const responseText = await error.response.data.text();
-        const errorResult = JSON.parse(responseText);
-        result = errorResult as ErrorProblemDetails;
-      } else {
-        // We got an object, so we can parse it to an error problem details object
-        result = ErrorProblemDetails.fromResponse(error.response);
+    if (error) {
+      if (isAxiosError(error) && error.response?.data) {
+        // If the response is a blob and the type is json, parse the error problem details
+        if (isAxiosBlobResponse(error)) {
+          const responseText = await error.response.data.text();
+          const errorResult = JSON.parse(responseText);
+          result = errorResult as ErrorProblemDetails;
+        } else if (IsErrorProblemDetails(error.response.data)) {
+          // We got an object, so we can parse it to an error problem details object
+          result = ErrorProblemDetails.fromResponse(error.response);
+        }
+      } else if (isNavigationFailure(error)) {
+        // If we have a navigation failure, get the error message
+        const message = await getRouterErrorMessage(error);
+        result = new ErrorProblemDetails(message);
+      } else if (isError(error)) {
+        // If we have an error object, create a default error problem details object
+        result = new ErrorProblemDetails(error?.message);
       }
-    } else if (isError(error)) {
-      // If we have an error object, create a default error problem details object
-      result = new ErrorProblemDetails(undefined, undefined, undefined, error?.message);
     }
 
     // If we don't have a result, create a default error problem details object

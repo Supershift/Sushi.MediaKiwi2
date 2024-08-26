@@ -68,7 +68,7 @@ describe("useFormDelete", async () => {
 
     it("should update error model", async () => {
       // Arrange
-      const spy = vi.spyOn(error, "value", "set");
+      const errorSpy = vi.spyOn(error, "value", "set");
 
       const propblemDetails = <ErrorProblemDetails>{
         title: "Internal Server Error",
@@ -87,7 +87,7 @@ describe("useFormDelete", async () => {
       await useFormDeleteInstance.onDelete();
       // Assert
       expect(props.value.onDelete).toHaveBeenCalled();
-      expect(spy).toHaveBeenCalledOnce();
+      expect(errorSpy).toHaveBeenCalledTimes(2); // One to clear the error and one to set the error
     });
 
     it("should have correct labels", async () => {

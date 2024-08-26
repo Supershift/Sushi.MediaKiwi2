@@ -17,16 +17,8 @@
     newEmit?: boolean;
     /** Overrides the "new item" button title */
     newTitle?: string;
-    /** Determines if the save button is shown, default: false */
-    save?: boolean;
-    /** Determines if the undo button is shown, default: false */
-    undo?: boolean;
     /** Determines if the toolbar becomes sticky at the top of the page, default: false */
     sticky?: boolean;
-    /** */
-    onSave?: (event?: Event) => Promise<any>;
-    onUndo?: (event?: Event) => Promise<any>;
-    onDelete?: (event: Event) => Promise<any>;
   }>();
 
   // define slots

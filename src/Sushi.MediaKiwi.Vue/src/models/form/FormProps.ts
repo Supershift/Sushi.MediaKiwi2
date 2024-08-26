@@ -1,4 +1,5 @@
 import { ErrorProblemDetails } from "../errors/ErrorProblemDetails";
+import { TResult } from "./TResult";
 
 export type FormViewProps = FormProps & {
   /** If true, the toolbar will be sticky on top of the page. */
@@ -15,7 +16,9 @@ export type FormDialogProps = FormProps & {
   /** Intro text of the dialog */
   intro?: string;
   /** Close the dialog after submit was succesful */
-  closeOnSubmit?: boolean;
+  closeOnSubmit?: boolean | undefined;
+  /** Close event */
+  onClose?: () => void;
 };
 
 export type FormSideSheetProps = FormProps & {
@@ -25,6 +28,8 @@ export type FormSideSheetProps = FormProps & {
   intro?: string;
   /** Close the sidesheet after submit was succesful */
   closeOnSubmit?: boolean;
+  /** Close event */
+  onClose?: () => void;
 };
 
 export type FormProps = LoadProps &
@@ -42,7 +47,7 @@ export type FormProps = LoadProps &
 
 export type LoadProps = {
   /** Callback invoked when the component needs data. */
-  onLoad?: (event?: Event) => Promise<void>;
+  onLoad?: (event?: Event) => Promise<TResult<any> | void>;
   /** Perform formvalidation as soon as the form loads */
   validateOnLoad?: boolean;
   /** Snackbar message when {@link onLoad} failed */
@@ -51,7 +56,7 @@ export type LoadProps = {
 
 export type SubmitProps = {
   /** Callback invoked when the submit button is pressed, giving the user feedback on submit */
-  onSubmit?: (event?: Event) => Promise<void>;
+  onSubmit?: (event?: Event) => Promise<TResult<any> | void>;
   /** Custom label for the default submit button */
   submitButtonLabel?: string;
   /** Title for the confirmation dialog */
@@ -74,7 +79,7 @@ export type SubmitProps = {
 
 export type DeleteProps = {
   /** Callback invoked when the delete button is pressed. */
-  onDelete?: (event?: Event) => Promise<boolean> | Promise<void>;
+  onDelete?: (event?: Event) => Promise<TResult<any> | void>;
   /** Custom label for the default delete button */
   deleteButtonLabel?: string;
   /** Title for the confirmation dialog */
@@ -92,6 +97,8 @@ export type DeleteProps = {
 };
 
 export type UndoProps = {
+  /** Callback invoked when the component needs data. */
+  onUndo?: (event?: Event) => Promise<TResult<any> | void>;
   /** Hides the undo button */
   hideUndo?: boolean;
   /** Custom label for the default undo button */

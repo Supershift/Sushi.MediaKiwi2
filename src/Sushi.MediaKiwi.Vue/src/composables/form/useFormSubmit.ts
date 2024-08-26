@@ -103,7 +103,12 @@ export async function useFormSubmit(
 
       try {
         // Submit the data
-        await props.value.onSubmit(event);
+        const eventResult = await props.value.onSubmit(event);
+
+        // Check if the result is a TResult and if it is a failure
+        if (eventResult && eventResult instanceof TResult && !eventResult.isSuccess) {
+          throw eventResult.error;
+        }
 
         // Show a message that the submit was successful if not hidden
         if (!props.value.hideSubmitSnackbar) {

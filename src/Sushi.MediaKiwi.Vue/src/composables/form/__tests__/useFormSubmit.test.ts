@@ -4,7 +4,7 @@ import { vi, describe, it, expect, afterEach } from "vitest";
 import { ref, computed, ModelRef } from "vue";
 import { useFormSubmit } from "../useFormSubmit";
 import { createTestingPinia } from "@pinia/testing";
-import { ErrorProblemDetails, useErrorProblemDetails, useSnackbarStore } from "@/framework";
+import { ErrorProblemDetails, TResult, useErrorProblemDetails, useSnackbarStore } from "@/framework";
 import { SubmitProps } from "@/models/form/FormProps";
 
 // Mock the axios instance
@@ -42,10 +42,10 @@ describe("useFormSubmit", async () => {
   const showMessageSpy = vi.spyOn(snackbar, "showMessage");
 
   // Act
-  const useFormSubmitComposable = await useFormSubmit(props, formRef, entityLabel, inProgress, error, isValid);
+  const useFormSubmitInstance = await useFormSubmit(props, formRef, entityLabel, inProgress, error, isValid);
 
   // Spy on the composable functions
-  const confirmSpy = vi.spyOn(useFormSubmitComposable.submitConfirmDialog, "value", "set");
+  const confirmSpy = vi.spyOn(useFormSubmitInstance.submitConfirmDialog, "value", "set");
 
   beforeEach(() => {
     // reset all defined mock functions
@@ -73,10 +73,10 @@ describe("useFormSubmit", async () => {
       isValid.value = true;
 
       // Act
-      await useFormSubmitComposable.onSubmit(undefined, true);
+      await useFormSubmitInstance.onSubmit(undefined, true);
 
       // Assert the function calls
-      expect(useFormSubmitComposable.hasSubmitHandler).toBeTruthy();
+      expect(useFormSubmitInstance.hasSubmitHandler).toBeTruthy();
       expect(props.value.onSubmit).toHaveBeenCalled();
       expect(progressSpy).toHaveBeenCalledTimes(2);
       expect(errorSpy).toHaveBeenCalledWith(null);
@@ -87,7 +87,7 @@ describe("useFormSubmit", async () => {
       isValid.value = false;
 
       // Act
-      await useFormSubmitComposable.onSubmit(undefined, true);
+      await useFormSubmitInstance.onSubmit(undefined, true);
 
       // Assert the function calls
       expect(props.value.onSubmit).not.toHaveBeenCalled();
@@ -99,7 +99,7 @@ describe("useFormSubmit", async () => {
       props.value.confirmBeforeSubmit = true;
 
       // Act
-      await useFormSubmitComposable.onSubmit();
+      await useFormSubmitInstance.onSubmit();
 
       // Assert the function calls
       expect(confirmSpy).toHaveBeenCalledWith(true);
@@ -113,7 +113,7 @@ describe("useFormSubmit", async () => {
       isValid.value = true;
 
       // Act
-      await useFormSubmitComposable.onSubmit(undefined, true);
+      await useFormSubmitInstance.onSubmit(undefined, true);
 
       // Assert the function calls
       expect(props.value.onSubmit).toHaveBeenCalled();
@@ -127,7 +127,7 @@ describe("useFormSubmit", async () => {
       props.value.resetOnSubmit = true;
 
       // Act
-      await useFormSubmitComposable.onSubmit(undefined, true);
+      await useFormSubmitInstance.onSubmit(undefined, true);
 
       // Assert the function calls
       expect(formResetSpy).toHaveBeenCalled();
@@ -141,7 +141,7 @@ describe("useFormSubmit", async () => {
       isValid.value = true;
 
       // Act
-      await useFormSubmitComposable.onSubmit(undefined, true);
+      await useFormSubmitInstance.onSubmit(undefined, true);
 
       // Assert the function calls
       expect(showMessageSpy).toHaveBeenCalledWith("Successfully submitted the entry");
@@ -160,7 +160,7 @@ describe("useFormSubmit", async () => {
       });
 
       // Act
-      await useFormSubmitComposable.onSubmit(undefined, true);
+      await useFormSubmitInstance.onSubmit(undefined, true);
 
       // Assert the function calls
       expect(showMessageSpy).not.toHaveBeenCalled();
@@ -169,16 +169,37 @@ describe("useFormSubmit", async () => {
       expect(errorSpy).toHaveBeenCalled();
       expect(error.value).not.toBeNull();
     });
+
+    it("should handle and show an error message after successful submission", async () => {
+      // Arrange
+      isValid.value = true;
+
+      // Mock the onSubmit function to throw an error
+      props.value.onSubmit = vi.fn().mockImplementationOnce(async () => {
+        return TResult.failure(new ErrorProblemDetails("Submit succeeded, but there was an expected sub error"));
+      });
+
+      // Act
+      await useFormSubmitInstance.onSubmit(undefined, true);
+
+      // Assert the function calls
+      expect(showMessageSpy).not.toHaveBeenCalled();
+      expect(props.value.onSubmit).toHaveBeenCalled();
+      expect(progressSpy).toHaveBeenCalledTimes(2);
+      expect(errorSpy).toHaveBeenCalled();
+      expect(error.value).not.toBeNull();
+      expect(error.value?.detail).toBe("Submit succeeded, but there was an expected sub error");
+    });
   });
 
   describe("Computed labels", () => {
     describe("Sumbit labels", () => {
       it("should return default submit labels", async () => {
         // Assert
-        expect(useFormSubmitComposable.submitButtonLabel.value).toEqual("Submit");
-        expect(useFormSubmitComposable.submitConfirmationTitle.value).toEqual("Submit this entry");
-        expect(useFormSubmitComposable.submitSuccessMessage.value).toEqual("Successfully submitted the entry");
-        expect(useFormSubmitComposable.submitConfirmationBody.value).toEqual("Are you sure you want to submit this entry?");
+        expect(useFormSubmitInstance.submitButtonLabel.value).toEqual("Submit");
+        expect(useFormSubmitInstance.submitConfirmationTitle.value).toEqual("Submit this entry");
+        expect(useFormSubmitInstance.submitSuccessMessage.value).toEqual("Successfully submitted the entry");
+        expect(useFormSubmitInstance.submitConfirmationBody.value).toEqual("Are you sure you want to submit this entry?");
       });
 
       it("should return the submit labels set on the props", async () => {
@@ -212,10 +233,10 @@ describe("useFormSubmit", async () => {
         entityName.value = "Market";
 
         // Assert
-        expect(useFormSubmitComposable.submitButtonLabel.value).toEqual("Submit");
-        expect(useFormSubmitComposable.submitConfirmationTitle.value).toEqual("Submit this Market");
-        expect(useFormSubmitComposable.submitSuccessMessage.value).toEqual("Successfully submitted the Market");
-        expect(useFormSubmitComposable.submitConfirmationBody.value).toEqual("Are you sure you want to submit this Market?");
+        expect(useFormSubmitInstance.submitButtonLabel.value).toEqual("Submit");
+        expect(useFormSubmitInstance.submitConfirmationTitle.value).toEqual("Submit this Market");
+        expect(useFormSubmitInstance.submitSuccessMessage.value).toEqual("Successfully submitted the Market");
+        expect(useFormSubmitInstance.submitConfirmationBody.value).toEqual("Are you sure you want to submit this Market?");
       });
     });
 
@@ -327,8 +348,8 @@ describe("useFormSubmit", async () => {
       inProgress.value = true;
 
       // Assert
-      expect(useFormSubmitComposable.submitButtonColor.value).toEqual("neutral");
-      expect(useFormSubmitComposable.isSubmitDisabled.value).toEqual(true);
+      expect(useFormSubmitInstance.submitButtonColor.value).toEqual("neutral");
+      expect(useFormSubmitInstance.isSubmitDisabled.value).toEqual(true);
     });
 
     it("should return that there is no submit hanlder present ", async () => {

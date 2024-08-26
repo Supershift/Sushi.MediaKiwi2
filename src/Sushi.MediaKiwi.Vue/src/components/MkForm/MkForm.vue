@@ -17,7 +17,21 @@
   const instance = getCurrentInstance();
 
   // Define props
-  const props = defineProps<FormViewProps>();
+  const props = withDefaults(defineProps<FormViewProps>(), {
+    sticky: undefined,
+    hideToolbar: undefined,
+    closeOnSubmit: undefined,
+    showProblemDetailsDetailField: undefined,
+    validateOnLoad: undefined,
+    confirmBeforeSubmit: undefined,
+    hideSubmitSnackbar: undefined,
+    resetOnSubmit: undefined,
+    saveLabels: undefined,
+    editLabels: undefined,
+    redirectAfterDelete: undefined,
+    hideDeleteSnackbar: undefined,
+    hideUndo: undefined,
+  });
 
   // Define computedProps defaults
   const defaultProps = <FormViewProps>{
@@ -33,6 +47,9 @@
   const isValid = defineModel<boolean>("isValid", { required: false, default: false });
   /** The value representing the error that occurred during the last request. */
   const errorProblemDetails = defineModel<ErrorProblemDetails | null | undefined>("error", { required: false });
+  /** Indicator that the forms onLoad event has been completed  */
+  const isLoaded = ref<boolean>(false);
+
   // Define refs
   const formRef = ref();
   const formId = `mk-form-view__${instance?.uid}`;
@@ -45,17 +62,21 @@
     onUndo,
     submitConfirmDialog,
     hasSubmitHandler,
-    hasUndoHanlder,
+    hasUndoHandler,
     submitButtonColor,
     hasDeleteHandler,
     isSubmitDisabled,
+    isUndoDisabled,
     computedProps,
     submitConfirmationTitle,
     submitButtonLabel,
     submitConfirmationBody,
     undoButtonLabel,
     formSlotProps,
-  } = await useForm(() => props, defaultProps, formRef, formId, inProgress, isValid, errorProblemDetails);
+    deleteButtonLabel,
+    deleteConfirmationTitle,
+    deleteConfirmationBody,
+  } = await useForm(() => props, defaultProps, formRef, formId, inProgress, isValid, errorProblemDetails, isLoaded);
 
   // Define slots
   const slots = defineSlots<{
@@ -94,22 +115,32 @@
     },
   });
 
+  async function onDeleteWithRedirect() {
+    const result = await onDelete();
+
+    if (result.isSuccess) {
+      // Redirect to the parent if the flag is set
+      if (computedProps.value.redirectAfterDelete && navigation.currentNavigationItem.value?.parent) {
+        // Redirect to the top list
+        navigation.navigateToParent();
+      }
+    }
+  }
+
   // load data async on created
-  await onLoad();
+  onLoad();
 </script>
 <template>
-  <v-form :id="formId" v-model="isValid" :validate-on="computedProps.validateOn" ref="formRef" @submit.prevent="onSubmit">
+  <v-progress-linear v-if="inProgress" indeterminate></v-progress-linear>
+
+  <v-form v-if="isLoaded" :id="formId" v-model="isValid" :validate-on="computedProps.validateOn" ref="formRef" @submit.prevent="onSubmit">
     <MkToolbar
-      v-if="!hideToolbar"
-      :loading="inProgress"
+      v-if="!computedProps.hideToolbar"
       v-bind="$attrs"
       :item-view-id="navigation.currentNavigationItem.value.viewId"
       :title="computedProps.title"
       :new="false"
-      :submit="hasSubmitHandler"
-      :undo="hasUndoHanlder"
       :sticky="computedProps.sticky ? true : false"
-      @undo="onUndo"
     >
       <template v-if="slots.title" #title>
         <slot name="title" v-bind="formSlotProps"></slot>
@@ -123,13 +154,13 @@
         <slot v-if="slots.actions" name="actions" v-bind="formSlotProps"></slot>
         <template v-else>
           <slot v-if="slots.toolbar" name="toolbar" v-bind="formSlotProps"></slot>
-          <v-btn v-if="hasUndoHanlder" color="primary" @click="onUndo()">{{ undoButtonLabel }}</v-btn>
+          <v-btn v-if="hasUndoHandler" color="primary" @click="onUndo()" :disabled="isUndoDisabled">{{ undoButtonLabel }}</v-btn>
           <v-btn type="submit" v-if="hasSubmitHandler" variant="flat" :color="submitButtonColor" :disabled="isSubmitDisabled" :form="formId">{{
             submitButtonLabel
           }}</v-btn>
 
           <MkOverflowMenuIcon v-if="hasDeleteHandler || slots.overflowIconItems">
-            <MkConfirmDialog v-if="hasDeleteHandler" @confirm="onDelete" :title="deleteConfirmationTitle" :confirm-button-label="deleteButtonLabel">
+            <MkConfirmDialog v-if="hasDeleteHandler" @confirm="onDeleteWithRedirect" :title="deleteConfirmationTitle" :confirm-button-label="deleteButtonLabel">
               <template #activator="{ props }">
                 <v-list-item v-bind="props" :title="deleteButtonLabel" />
               </template>
@@ -147,7 +178,7 @@
       v-if="errorProblemDetails"
       v-model:problem-details="errorProblemDetails"
       class="mb-4"
-      :show-details="showProblemDetailsDetailField"
+      :show-details="computedProps.showProblemDetailsDetailField"
     />
 
     <MkConfirmDialog

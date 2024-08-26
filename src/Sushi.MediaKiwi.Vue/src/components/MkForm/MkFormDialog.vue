@@ -13,7 +13,19 @@
   const instance = getCurrentInstance();
 
   // Define props
-  const props = defineProps<FormDialogProps>();
+  const props = withDefaults(defineProps<FormDialogProps>(), {
+    closeOnSubmit: undefined,
+    showProblemDetailsDetailField: undefined,
+    validateOnLoad: undefined,
+    confirmBeforeSubmit: undefined,
+    hideSubmitSnackbar: undefined,
+    resetOnSubmit: undefined,
+    saveLabels: undefined,
+    editLabels: undefined,
+    redirectAfterDelete: undefined,
+    hideDeleteSnackbar: undefined,
+    hideUndo: undefined,
+  });
 
   // Define props defaults
   const defaultProps = <FormDialogProps>{
@@ -31,13 +43,15 @@
   const isValid = defineModel<boolean>("isValid", { required: false, default: false });
   /** The value representing the error that occurred during the last request. */
   const errorProblemDetails = defineModel<ErrorProblemDetails | null | undefined>("error", { required: false });
+  /** Indicator that the forms onLoad event has been completed  */
+  const isLoaded = ref<boolean>(false);
 
   // Form
   const formRef = ref();
   const formId = `mk-form-dialog__${instance?.uid}`;
 
   const { onLoad, onSubmit, computedProps, submitConfirmDialog, submitConfirmationTitle, submitButtonLabel, submitConfirmationBody, formSlotProps } =
-    await useForm(() => props, defaultProps, formRef, formId, inProgress, isValid, errorProblemDetails);
+    await useForm(() => props, defaultProps, formRef, formId, inProgress, isValid, errorProblemDetails, isLoaded);
 
   const slots = defineSlots<{
     default: void;
@@ -61,6 +75,9 @@
   async function onClose() {
     // Emit the dialog
     updateDialog(false);
+
+    // Trigger the onClose
+    computedProps.value?.onClose?.();
   }
 
   async function onSubmitAndClose(event?: Event, confirm?: boolean) {

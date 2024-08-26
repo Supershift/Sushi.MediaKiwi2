@@ -14,4 +14,14 @@ export class ErrorConnector {
     const response = await this.axios.get("/Error/aggregateError");
     return response;
   }
+
+  async getInternalServerError(): Promise<AxiosResponse> {
+    const response = await this.axios.get(`/Error/internalServerError`);
+    return response;
+  }
+
+  async getTimeoutError(): Promise<AxiosResponse> {
+    const response = await this.axios.get(`/Error/timeoutError`, { timeout: 1 });
+    return response;
+  }
 }

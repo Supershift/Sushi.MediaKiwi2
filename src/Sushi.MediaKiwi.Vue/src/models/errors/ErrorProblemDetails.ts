@@ -13,7 +13,7 @@ export class ErrorProblemDetails extends Error {
   instance?: string;
   error?: ApiError | Record<string, string[]>;
 
-  constructor(type?: string, title?: string, status?: number, detail?: string) {
+  constructor(detail?: string, type?: string, title?: string, status?: number) {
     super();
 
     this.type = type;
@@ -55,17 +55,17 @@ export class ErrorProblemDetails extends Error {
 
     switch (status) {
       case HttpStatusCode.NotFound:
-        return new ErrorProblemDetails("NotFound", "Not found", status, errorMessages.notFoundErrorMessage);
+        return new ErrorProblemDetails(errorMessages.notFoundErrorMessage, "NotFound", "Not found", status);
       case HttpStatusCode.BadRequest:
-        return new ErrorProblemDetails("BadRequest", "Bad request", status, errorMessages.badRequestErrorMessage);
+        return new ErrorProblemDetails(errorMessages.badRequestErrorMessage, "BadRequest", "Bad request", status);
       case HttpStatusCode.Unauthorized:
-        return new ErrorProblemDetails("Unauthorized", "Unauthorized", status, errorMessages.unauthorizedErrorMessage);
+        return new ErrorProblemDetails(errorMessages.unauthorizedErrorMessage, "Unauthorized", "Unauthorized", status);
       case HttpStatusCode.Forbidden:
-        return new ErrorProblemDetails("Forbidden", "Forbidden", status, errorMessages.forbiddenErrorMessage);
+        return new ErrorProblemDetails(errorMessages.forbiddenErrorMessage, "Forbidden", "Forbidden", status);
       case HttpStatusCode.InternalServerError:
-        return new ErrorProblemDetails("InternalServerError", "Internal server error", status, errorMessages.internalServerErrorErrorMessage);
+        return new ErrorProblemDetails(errorMessages.internalServerErrorErrorMessage, "InternalServerError", "Internal server error", status);
       default:
-        return new ErrorProblemDetails("Unknown", "Unknown error", status || 418, errorMessages.unexpectedErrorMessage);
+        return new ErrorProblemDetails(errorMessages.unexpectedErrorMessage, "Unknown", "Unknown error", status || 418);
     }
   }
 }

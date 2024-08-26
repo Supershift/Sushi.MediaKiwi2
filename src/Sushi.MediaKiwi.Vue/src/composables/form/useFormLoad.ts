@@ -16,7 +16,9 @@ export async function useFormLoad(
   /** Model for the Progress state of the component */
   inProgress: ModelRef<boolean, string>,
   /** Model for the ErrorProblemDetails state of the component */
-  errorProblemDetails: ModelRef<ErrorProblemDetails | null | undefined, string>
+  errorProblemDetails: ModelRef<ErrorProblemDetails | null | undefined, string>,
+  /** Model for the Progress state of the component */
+  isLoaded: Ref<boolean>
 ) {
   // Inject Dependencies
   const snackbar = useSnackbarStore();
@@ -35,7 +37,9 @@ export async function useFormLoad(
 
   // Computed properties for the handlers
   const hasLoadHandler = computed(() => (props.value.onLoad ? true : false));
-  const hasUndoHanlder = computed(() => !props.value.hideUndo && hasLoadHandler.value);
+  const hasUndoHandler = computed(() => !props.value.hideUndo && (props.value.onUndo || hasLoadHandler.value));
+
+  const isUndoDisabled = computed(() => inProgress.value);
 
   /**
    * Validates the form on load if the {@link LoadProps.validateOnLoad} flag is set
@@ -53,14 +57,27 @@ export async function useFormLoad(
     // Define the result
     let result: TResult = TResult.success();
 
+    if (!hasLoadHandler.value) {
+      // Set the loaded flag
+      isLoaded.value = true;
+    }
+
     // Check if a handler is provided
     if (props.value.onLoad) {
       // Set the progress indicator
       inProgress.value = true;
 
+      // Clear error
+      errorProblemDetails.value = null;
+
       try {
         // Load the data
-        await props.value.onLoad(event);
+        const eventResult = await props.value.onLoad(event);
+
+        // Check if the result is a TResult and if it is a failure
+        if (eventResult && eventResult instanceof TResult && !eventResult.isSuccess) {
+          throw eventResult.error;
+        }
       } catch (error: any) {
         let errorResult: ErrorProblemDetails;
         if (error instanceof ErrorProblemDetails) {
@@ -80,6 +97,9 @@ export async function useFormLoad(
       } finally {
         // Set the progress indicator
         inProgress.value = false;
+
+        // Set the loaded flag
+        isLoaded.value = true;
       }
     }
 
@@ -94,8 +114,8 @@ export async function useFormLoad(
    * Event to undo the changes made to the form
    */
   async function onUndo(event?: Event): Promise<TResult> {
-    if (!hasLoadHandler.value) {
-      throw new Error("No onLoad handler provided");
+    if (!hasLoadHandler.value && !hasUndoHandler.value) {
+      throw new Error("No onLoad or onUndo handler provided");
     }
 
     // Define the result
@@ -104,9 +124,23 @@ export async function useFormLoad(
     // Set the progress indicator
     inProgress.value = true;
 
+    // Clear error
+    errorProblemDetails.value = null;
+
     try {
-      // Load the data
-      await props.value.onLoad!(event);
+      // Undo or load the data
+      let eventResult: TResult<any> | void = undefined;
+
+      if (props.value.onUndo) {
+        eventResult = await props.value.onUndo(event);
+      } else if (props.value.onLoad) {
+        eventResult = await props.value.onLoad(event);
+      }
+
+      // Check if the result is a TResult and if it is a failure
+      if (eventResult && eventResult instanceof TResult && !eventResult.isSuccess) {
+        throw eventResult.error;
+      }
 
       // Show a message
       snackbar.showMessage(undoSuccessSnackbarMessage.value);
@@ -117,7 +151,7 @@ export async function useFormLoad(
       }
 
       // Set the result
-      result = TResult.success();
+      eventResult = TResult.success();
     } catch (error: any) {
       let errorResult: ErrorProblemDetails;
       if (error instanceof ErrorProblemDetails) {
@@ -146,9 +180,10 @@ export async function useFormLoad(
     onLoad,
     onUndo,
     hasLoadHandler,
-    hasUndoHanlder,
+    hasUndoHandler,
     loadFailedSnackbarMessage,
     undoSuccessSnackbarMessage,
     undoButtonLabel,
+    isUndoDisabled,
   };
 }
