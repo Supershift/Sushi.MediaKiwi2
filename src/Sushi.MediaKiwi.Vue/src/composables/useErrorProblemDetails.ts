@@ -5,6 +5,7 @@ import { ApiError } from "@/models/errors/ApiError";
 import { useSnackbarStore } from "@/stores";
 import { useAxiosExtensions } from "./useAxiosExtensions";
 import { useErrorMessages } from "./useErrorMessages";
+import { ErrorTypes, isNavigationFailure, NavigationFailure } from "vue-router";
 
 export function useErrorProblemDetails() {
   /** Type guard for Error */
@@ -62,7 +63,7 @@ export function useErrorProblemDetails() {
   /**
    * Set the error on the form or show a snackbar message
    */
-  async function setErrorSnackbar(err: ErrorProblemDetails | Error) {
+  async function setErrorSnackbar(err: Error) {
     // Inject dependencies
     const { unexpectedErrorMessage } = await useErrorMessages();
     const snackbar = useSnackbarStore();
@@ -71,7 +72,10 @@ export function useErrorProblemDetails() {
     let message: string = "";
 
     // Check if the error has a message put by the ErrorProblemDetails
-    if (err instanceof ErrorProblemDetails) {
+    // If we have a navigation failure, handle the route error
+    if (isNavigationFailure(err)) {
+      message = await getRouterErrorMessage(err);
+    } else if (err instanceof ErrorProblemDetails) {
       message = getErrorMessages(err)?.join(", ") || message;
     } else if (isError(err)) {
       message = err.message;
@@ -214,6 +218,25 @@ export function useErrorProblemDetails() {
     }
   }
 
+  async function getRouterErrorMessage(t: ErrorTypes): Promise<string>;
+  async function getRouterErrorMessage(error: NavigationFailure | any): Promise<string>;
+  async function getRouterErrorMessage(error: NavigationFailure | ErrorTypes): Promise<string> {
+    const { routerErrorMessage, routeCouldNotBeResolvedErrorMessage } = await useErrorMessages();
+
+    if (isNavigationFailure(error)) {
+      if (error.type) {
+        return getRouterErrorMessage(error.type);
+      }
+    } else {
+      switch (error) {
+        case 1:
+          return routeCouldNotBeResolvedErrorMessage;
+      }
+    }
+
+    return routerErrorMessage;
+  }
+
   return {
     registerInterceptor,
     registerGlobalErrorHandler,
@@ -223,5 +246,7 @@ export function useErrorProblemDetails() {
     globalErrorHandler,
     setErrorSnackbar,
     findParentMkForm,
+    //
+    getRouterErrorMessage,
   };
 }

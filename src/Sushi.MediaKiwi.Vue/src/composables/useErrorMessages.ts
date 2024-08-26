@@ -11,6 +11,10 @@ export async function useErrorMessages() {
   const forbiddenErrorMessage = t.value("Forbidden", "You are not allowed to access this resource.").toString();
   const internalServerErrorErrorMessage = t.value("InternalServerError", "An internal server error occurred. Please try again later.").toString();
 
+  // Router errors
+  const routerErrorMessage = t.value("RouterError", "An error occurred while navigating to the requested route.").toString();
+  const routeCouldNotBeResolvedErrorMessage = t.value("RouteCouldNotBeResolved", "The route could not be resolved.").toString();
+
   return {
     unexpectedErrorMessage,
     notFoundErrorMessage,
@@ -18,5 +22,7 @@ export async function useErrorMessages() {
     unauthorizedErrorMessage,
     forbiddenErrorMessage,
     internalServerErrorErrorMessage,
+    routerErrorMessage,
+    routeCouldNotBeResolvedErrorMessage,
   };
 }
