@@ -35,7 +35,7 @@ describe("RouteGenerator", () => {
     const routes = routeManager.generateRoutes(modules, navigationItems, screens);
 
     // assert
-    expect(routes).toHaveLength(2);
+    expect(routes).toHaveLength(3); // 2 navigation items + 1 default catchall route
     expect(routes.every((x) => x.meta?.requiresAuth));
   });
   it("Should add authentication to all routes", () => {

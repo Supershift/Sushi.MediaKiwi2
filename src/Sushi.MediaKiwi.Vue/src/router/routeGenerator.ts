@@ -42,6 +42,16 @@ export class RouteGenerator {
       }
     });
 
+    // add a catch-all route to redirect to the home page
+    result.push(<RouteRecordRaw>{
+      path: "/:catchAll(.*)",
+      name: "PageNotFound",
+      component: modules.MkPageNotFound,
+      meta: {
+        title: "404 - Page not found",
+      },
+    });
+
     return result;
   }
 }
