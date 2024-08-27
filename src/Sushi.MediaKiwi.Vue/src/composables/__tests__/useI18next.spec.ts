@@ -179,4 +179,44 @@ describe("useI18next", () => {
       });
     });
   });
+  describe("formatBytes", () => {
+    it("Should format bytes to KB", async () => {
+      // arrange
+      const language = "en";
+      i18next.resolvedLanguage = language;
+      const composable = await getComposable("myNamespace");
+
+      // act
+      const result = composable.formatBytes.value(1024);
+
+      // assert
+      expect(result).toBe("1.02 KB");
+    });
+
+    it("Should format bytes to MB", async () => {
+      // arrange
+      const language = "en";
+      i18next.resolvedLanguage = language;
+      const composable = await getComposable("myNamespace");
+
+      // act
+      const result = composable.formatBytes.value(1240000);
+
+      // assert
+      expect(result).toBe("1.24 MB");
+    });
+
+    it("Should format bytes to GB", async () => {
+      // arrange
+      const language = "en";
+      i18next.resolvedLanguage = language;
+      const composable = await getComposable("myNamespace");
+
+      // act
+      const result = composable.formatBytes.value(1.24e9);
+
+      // assert
+      expect(result).toBe("1.24 GB");
+    });
+  });
 });

@@ -7,8 +7,9 @@ export async function useI18next() {
       },
     },
     t: {
-      value: vi.fn().mockImplementation((key: string, fallback?: string, options?: any) => {
-        const text = fallback || key;
+      value: vi.fn().mockImplementation((key: string, defaultValue?: string, options?: any) => {
+        const text = defaultValue || key;
+
         if (options) {
           return replaceTemplateWithObjectValues(text, options);
         }
@@ -16,8 +17,9 @@ export async function useI18next() {
       }),
     },
     defaultT: {
-      value: vi.fn().mockImplementation((key: string, fallback?: string, options?: any) => {
-        const text = fallback || key;
+      value: vi.fn().mockImplementation((key: string, defaultValue?: string, options?: any) => {
+        const text = defaultValue || key;
+
         if (options) {
           return replaceTemplateWithObjectValues(text, options);
         }

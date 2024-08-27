@@ -146,6 +146,33 @@ export async function useI18next(scope?: View | string) {
   };
   const formatMoneyValue = computed(() => formatMoneyValueInternal);
 
+  /**
+   * Converts bytes to a human-readable format.
+   * @param bytes The size in bytes to be converted.
+   * @param decimals (Optional) The number of decimal places to round to. Defaults to 2.
+   * @returns A string representing the size in a human-readable format.
+   */
+  const formatBytesInteral = (bytes: number, decimals: number = 2) => {
+    // Define the base for conversion (1000 bytes = 1 kilobyte)
+    const base = 1000;
+
+    // Define the units for display
+    const units = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+
+    // Calculate the index of the appropriate unit
+    const unitIndex = Math.floor(Math.log(bytes) / Math.log(base));
+
+    // Calculate the size in the chosen unit
+    const size = bytes / Math.pow(base, unitIndex);
+
+    // Return the size formatted with the appropriate unit
+    return `${formatNumber.value(size, {
+      maximumFractionDigits: decimals,
+    })} ${units[unitIndex]}`;
+  };
+
+  const formatBytes = computed(() => formatBytesInteral);
+
   return {
     i18next,
     /** T function scoped to the namespace provided when adding composable. If non provided, scoped to default. */
@@ -163,5 +190,6 @@ export async function useI18next(scope?: View | string) {
     /**  */
     formatMonth,
     formatDateTimeGeneric,
+    formatBytes,
   };
 }

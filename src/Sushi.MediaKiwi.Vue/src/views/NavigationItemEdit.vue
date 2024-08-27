@@ -14,7 +14,7 @@
 
   const store = useMediakiwiStore();
   const navigation = useNavigation();
-  const { alphaNumericNoSpace } = useValidationRules();
+  const { alphaNumericNoSpace } = await useValidationRules();
 
   // get id of the view from the route
   const navigationItemId = navigation.currentViewParameter;

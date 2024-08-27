@@ -7,7 +7,7 @@
   import MkFormDialog from "@/components/MkForm/MkFormDialog.vue";
 
   const connector = container.resolve(AccountConnector);
-  const { required } = useValidationRules();
+  const { required, minLength } = await useValidationRules();
 
   const state = reactive({
     title: "Create Account",
@@ -28,7 +28,7 @@
 </script>
 <template>
   <MkFormDialog width="800" confirm-before-submit @submit="onSubmit" title="Create Account">
-    <v-text-field label="Account Number" v-model="state.account.number" :rules="[required]" />
+    <v-text-field label="Account Number" v-model="state.account.number" :rules="[required, minLength(3)]" />
     <v-text-field label="Holder Name" v-model="state.account.holderName" :rules="[required]" />
   </MkFormDialog>
 </template>
