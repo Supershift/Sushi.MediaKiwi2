@@ -15,7 +15,7 @@
 
   const connector = container.resolve(AccountConnector);
   const navigation = useNavigation();
-  const { required } = useValidationRules();
+  const { required } = await useValidationRules();
   const accountNumber = computed<string>(() => navigation.currentViewParameter.value as string);
 
   const state = reactive({

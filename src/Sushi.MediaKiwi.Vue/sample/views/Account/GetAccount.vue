@@ -8,7 +8,7 @@
   import CreateAccountDialog from "./partials/CreateAccountDialog.vue";
 
   const accountConnector = container.resolve(AccountConnector);
-  const { required } = useValidationRules();
+  const { required } = await useValidationRules();
   const navigation = useNavigation();
 
   const state = reactive({

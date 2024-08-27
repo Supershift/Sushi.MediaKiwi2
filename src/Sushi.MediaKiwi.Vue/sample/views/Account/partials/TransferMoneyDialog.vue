@@ -7,7 +7,7 @@
   import { TransferMoneyRequest } from "@sample/models/Account/TransferMoneyRequest";
 
   const connector = container.resolve(AccountConnector);
-  const { required } = useValidationRules();
+  const { required } = await useValidationRules();
 
   const state = reactive({
     form: {
