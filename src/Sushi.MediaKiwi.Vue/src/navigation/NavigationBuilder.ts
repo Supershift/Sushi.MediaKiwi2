@@ -8,8 +8,8 @@ type ViewDefinition = { componentKey: string; parameterName?: string };
 /** Either a view or the definition to create a view */
 type ViewParameter = View | ViewDefinition | string;
 
-function isViewDefinition(viewParameter: ViewParameter): viewParameter is ViewDefinition {
-  return (viewParameter as ViewDefinition).componentKey !== undefined;
+function isView(viewParameter: ViewParameter): viewParameter is View {
+  return (viewParameter as View).id !== undefined;
 }
 
 function toView(view: ViewParameter, id: string, name: string): View {
@@ -17,10 +17,10 @@ function toView(view: ViewParameter, id: string, name: string): View {
   if(typeof view === "string") {
     result = { id: id, name: name, componentKey: view };
   }
-  else if (isViewDefinition(view)) {
-    result = { id: id, name: name, componentKey: view.componentKey, parameterName: view.parameterName };
-  } else {
+  else if (isView(view)) {
     result = view as View;
+  } else {    
+    result = { id: id, name: name, componentKey: view.componentKey, parameterName: view.parameterName };
   }
   return result;
 }
