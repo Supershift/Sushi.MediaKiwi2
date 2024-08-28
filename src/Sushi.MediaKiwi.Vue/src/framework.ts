@@ -21,6 +21,7 @@ import { registerDirectives } from "./helpers/registerDirectives";
 import { createVuetify } from "./plugins/vuetify";
 import { useErrorProblemDetails } from "@/composables";
 import { addCheckCanResolve } from "./router/checkCanResolve";
+import { ApiNavigationProvider } from "./navigation";
 
 export default {
   install(app: App, options: MediakiwiVueOptions): void {
@@ -32,6 +33,10 @@ export default {
 
     // register dependencies
     registerServices(container, options.serviceRegistrations);
+
+    // register navigation provdider
+    const navigationProvider = options.navigationProvider ?? new ApiNavigationProvider();
+    container.registerInstance("INavigationProvider", navigationProvider);
 
     // register axios
     registerAxios(container, options);

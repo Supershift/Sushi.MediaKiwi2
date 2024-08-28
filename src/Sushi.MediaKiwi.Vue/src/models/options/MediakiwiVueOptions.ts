@@ -7,10 +7,13 @@ import { VuetifyOptions } from "vuetify";
 import { MediakiwiTableOptions } from "./MediakiwiTableOptions";
 import { MediaKiwiFormOptions } from "./MediaKiwiFormOptions";
 import { MediakiwiSigninConfigurations } from "./MediakiwiSignInConfigurations";
+import { INavigationProvider } from "@/navigation/INavigationProvider";
 
 export interface MediakiwiVueOptions {
   /** Base url for the MediaKiwi API, e.g. https://portal.mydomain.com/mediakiwi/api */
   apiBaseUrl: string;
+  /** Which provider to use for retrieving navigation. By default, API connectors are used */
+  navigationProvider?: INavigationProvider;
   modules: Record<string, RouteComponent>;
   customRoutes?: RouteRecordRaw[];
   msalConfig: Configuration;

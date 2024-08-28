@@ -6,6 +6,7 @@ import { container } from "tsyringe";
 import { IRoleConnector } from "@/services/IRoleConnector";
 import { noPageSize } from "@/constants";
 import { VuetifyOptions } from "vuetify";
+import { INavigationProvider } from "@/navigation";
 
 export interface MediaKiwiState {
   navigationItems: Array<NavigationItem>;
@@ -20,84 +21,59 @@ export interface MediaKiwiState {
 export const useMediakiwiStore = defineStore({
   id: "mediaKiwiStore",
   state: () =>
-    ({
-      navigationItems: [],
-      views: [],
-      sections: [],
-      roles: [],
-      isLocal: true,
-      drawer: true,
-      externalIcons: false,
-    } as MediaKiwiState),
+  ({
+    navigationItems: [],
+    views: [],
+    sections: [],
+    roles: [],
+    isLocal: true,
+    drawer: true,
+    externalIcons: false,
+  } as MediaKiwiState),
   getters: {
     rootNavigationItems: (state: MediaKiwiState) => state.navigationItems.filter((x) => x.parentNavigationItemId == null),
   },
   actions: {
     async init() {
-      // load new data from API (positioning matters => section, screens, navigationItems)
-      await this.getSections();
-      await this.getViews();
-      await this.getNavigationItems();
       await this.getRoles();
+      const provider = container.resolve<INavigationProvider>("INavigationProvider");
+      this.sections = await provider.GetSectionsAsync();
+      this.views = await provider.GetViewsAsync();
+      this.navigationItems = await provider.GetNavigationItemsAsync();
+      this.resolveNavigationItems();
     },
     async getRoles() {
       const connector = container.resolve<IRoleConnector>("IRoleConnector");
       const roles = await connector.GetRoles();
       this.setRoles(roles);
     },
-    async getNavigationItems() {
-      // get instance of INavigationConnector
-      const connector = container.resolve<INavigationConnector>("INavigationConnector");
-      // get nav items and store them
-      const navigationItems = await connector.GetNavigationItems(undefined, { pageSize: noPageSize });
-      this.setNavigationItems(navigationItems);
-    },
-    async getViews() {
-      const connector = container.resolve<IViewConnector>("IViewConnector");
-      const views = await connector.GetViews({ pageSize: noPageSize });
-      this.setViews(views);
-    },
-    async getSections() {
-      const connector = container.resolve<ISectionConnector>("ISectionConnector");
-      const sections = await connector.GetSections({ pageSize: noPageSize });
-      this.setSections(sections);
-    },
     toggleDrawer() {
       this.drawer = !this.drawer;
     },
-    setNavigationItems(payload: ListResult<NavigationItem>) {
-      if (payload) {
-        this.navigationItems = payload.result;
-        // add view to items
-        this.setNavigationItemsView(this.navigationItems);
-        // add parent/child relations
-        this.navigationItems.forEach((item) => {
-          // add parent
-          item.parent = this.navigationItems.find((x) => x.id == item.parentNavigationItemId);
-          // add children
-          item.children = this.navigationItems.filter((x) => x.parentNavigationItemId == item.id);
-        });
-        // add path to all items
-        this.navigationItems.forEach((item) => {
-          item.path = this.getParentPath(item);
-        });
-        // set 'has item navigation'
-        this.setHasItemNavigation(this.navigationItems);
-      }
+    resolveNavigationItems() {
+      // add view to items
+      this.navigationItems.forEach((item) => {
+        item.view = this.views.find((x) => x.id === item.viewId);
+      });
+      // add parent/child relations
+      this.navigationItems.forEach((item) => {
+        // add parent
+        item.parent = this.navigationItems.find((x) => x.id == item.parentNavigationItemId);
+        // add children
+        item.children = this.navigationItems.filter((x) => x.parentNavigationItemId == item.id);
+      });
+      // add path to all items
+      this.navigationItems.forEach((item) => {
+        item.path = this.getParentPath(item);
+      });
+      // if an item has dynamic children, it has 'item navigation'
+      this.navigationItems.forEach((item) => {
+        if (item?.children?.some((x) => x.view?.parameterName)) item.hasItemNavigation = true;
+      });
     },
     setRoles(payload: ListResult<Role>) {
       if (payload) {
         this.roles = payload.result;
-      }
-    },
-    setViews(payload: ListResult<View>) {
-      if (payload) {
-        this.views = payload.result;
-      }
-    },
-    setSections(payload: ListResult<Section>) {
-      if (payload) {
-        this.sections = payload.result;
       }
     },
     getParentName(navigationItem: NavigationItem): string {
@@ -123,17 +99,6 @@ export const useMediakiwiStore = defineStore({
         result += `/:${navigationItem.view.parameterName}?`;
       }
       return result;
-    },
-    setNavigationItemsView(navigationItems: Array<NavigationItem>) {
-      navigationItems.forEach((item) => {
-        item.view = this.views.find((x) => x.id === item.viewId);
-      });
-    },
-    setHasItemNavigation(navigationItems: Array<NavigationItem>) {
-      // if an item has dynamic children, it has 'item navigation'
-      navigationItems.forEach((item) => {
-        if (item?.children?.some((x) => x.view?.parameterName)) item.hasItemNavigation = true;
-      });
     },
     registerIcons(options: VuetifyOptions) {
       if (options && options.icons !== undefined) {
