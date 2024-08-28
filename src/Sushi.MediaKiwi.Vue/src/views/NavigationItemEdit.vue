@@ -11,6 +11,7 @@
   // inject dependencies
   const navigationConnector = container.resolve<INavigationConnector>("INavigationConnector");
   const routerManager = container.resolve<RouterManager>("RouterManager");
+  const { required } = await useValidationRules();
 
   const store = useMediakiwiStore();
   const navigation = useNavigation();
@@ -67,8 +68,13 @@
 
 <template>
   <MkForm title="" :onSubmit="onSave" :on-load="onLoad" :on-delete="onDelete">
-    <v-text-field v-model="state.navigationItem.id" label="Id" :disabled="navigationItemId ? true : false" :rules="[alphaNumericNoSpace]"></v-text-field>
-    <v-text-field v-model="state.navigationItem.name" label="Name" :rules="[(v) => !!v]"></v-text-field>
+    <v-text-field
+      v-model="state.navigationItem.id"
+      label="Id"
+      :disabled="navigationItemId ? true : false"
+      :rules="[required, alphaNumericNoSpace]"
+    ></v-text-field>
+    <v-text-field v-model="state.navigationItem.name" label="Name" :rules="[required]"></v-text-field>
     <v-autocomplete
       v-model="state.navigationItem.parentNavigationItemId"
       label="Parent"
@@ -76,22 +82,8 @@
       item-title="name"
       item-value="id"
     ></v-autocomplete>
-    <v-select
-      v-model="state.navigationItem.sectionId"
-      label="Section"
-      :items="store.sections"
-      item-title="name"
-      item-value="id"
-      :rules="[(v) => !!v]"
-    ></v-select>
-    <v-autocomplete
-      v-model="state.navigationItem.viewId"
-      label="View"
-      :items="viewOptions"
-      item-title="name"
-      item-value="id"
-      :rules="[(v) => !!v]"
-    ></v-autocomplete>
+    <v-select v-model="state.navigationItem.sectionId" label="Section" :items="store.sections" item-title="name" item-value="id" :rules="[required]"></v-select>
+    <v-autocomplete v-model="state.navigationItem.viewId" label="View" :items="viewOptions" item-title="name" item-value="id"></v-autocomplete>
     <v-text-field v-model="state.navigationItem.icon" label="Icon"></v-text-field>
     <v-text-field v-model="state.navigationItem.sortOrder" label="SortOrder" type="number"></v-text-field>
   </MkForm>
