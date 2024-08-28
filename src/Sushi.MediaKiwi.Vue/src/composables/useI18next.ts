@@ -86,35 +86,55 @@ export async function useI18next(scope?: View | string) {
   const timeOptions = computed(() => mediakiwiOptions?.dateFormatOptions?.time || <Intl.DateTimeFormatOptions>{ timeStyle: "short" });
   const monthOptions = computed(() => mediakiwiOptions?.dateFormatOptions?.month || <Intl.DateTimeFormatOptions>{ month: "long" });
 
-  const formatDateTimeInternal = (date: string | Date, options?: Intl.DateTimeFormatOptions): string => {
+  const formatDateTimeInternal = (date: string | Date | undefined | null, options?: Intl.DateTimeFormatOptions): string => {
+    if (!date) {
+      return "";
+    }
+
     // Use the custom provided options, or merge the date and time options
     const formatOptions = options || { ...dateOptions.value, ...timeOptions.value };
 
     return formatDateTimeGenericInternal(date, { ...formatOptions });
   };
 
-  const formatDateInternal = (date: string | Date, options?: Intl.DateTimeFormatOptions): string => {
+  const formatDateInternal = (date: string | Date | undefined | null, options?: Intl.DateTimeFormatOptions): string => {
+    if (!date) {
+      return "";
+    }
+
     // Use the custom provided options, or merge the date options
     const formatOptions = options || { ...dateOptions.value };
 
     return formatDateTimeGenericInternal(date, { ...formatOptions });
   };
 
-  const formatTimeInternal = (date: string | Date, options?: Intl.DateTimeFormatOptions): string => {
+  const formatTimeInternal = (date: string | Date | undefined | null, options?: Intl.DateTimeFormatOptions): string => {
+    if (!date) {
+      return "";
+    }
+
     // Use the custom provided options, or merge the time options
     const formatOptions = options || { ...timeOptions.value };
 
     return formatDateTimeGenericInternal(date, { ...formatOptions });
   };
 
-  const formatMonthInternal = (date: string | Date, options?: Intl.DateTimeFormatOptions): string => {
+  const formatMonthInternal = (date: string | Date | undefined | null, options?: Intl.DateTimeFormatOptions): string => {
+    if (!date) {
+      return "";
+    }
+
     // Use the custom provided options, or merge the month options
     const formatOptions = options || { ...monthOptions.value };
 
     return formatDateTimeGenericInternal(date, { ...formatOptions });
   };
 
-  const formatDateTimeGenericInternal = (date: string | Date, options: Intl.DateTimeFormatOptions): string => {
+  const formatDateTimeGenericInternal = (date: string | Date | undefined | null, options: Intl.DateTimeFormatOptions): string => {
+    if (!date) {
+      return "";
+    }
+
     // parse or cast to date, depending on parameter type
     let dateValue: Date;
     if (typeof date === "string") {

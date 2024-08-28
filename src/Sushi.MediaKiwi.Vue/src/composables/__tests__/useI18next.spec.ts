@@ -102,6 +102,22 @@ describe("useI18next", () => {
       expect(spy).toHaveBeenCalledWith(language, { dateStyle: "short", timeStyle: "short" });
       expect(result).not.toBeUndefined();
     });
+
+    it("Should parse nullable Date object", async () => {
+      // arrange
+      const language = "en";
+      i18next.resolvedLanguage = language;
+      const spy = vi.spyOn(Intl, "DateTimeFormat");
+      const composable = await getComposable("myNamespace");
+      const date: Date | undefined = undefined;
+
+      // act
+      const result = composable.formatDateTime.value(date);
+
+      // assert
+      expect(spy).not.toHaveBeenCalled();
+      expect(result).toBe("");
+    });
   });
   describe("date", () => {
     it("Should parse Date object", async () => {
@@ -132,53 +148,138 @@ describe("useI18next", () => {
       expect(spy).toHaveBeenCalledWith(language, { dateStyle: "short" });
       expect(result).not.toBeUndefined();
     });
-    describe("time", () => {
-      it("Should parse Date object", async () => {
-        // arrange
-        const language = "en";
-        i18next.resolvedLanguage = language;
-        const spy = vi.spyOn(Intl, "DateTimeFormat");
-        const composable = await getComposable("myNamespace");
 
-        // act
-        const result = composable.formatTime.value(new Date(2021, 1, 1, 12, 0, 0));
+    it("Should parse nullable Date", async () => {
+      // arrange
+      const language = "en";
+      i18next.resolvedLanguage = language;
+      const spy = vi.spyOn(Intl, "DateTimeFormat");
+      const composable = await getComposable("myNamespace");
+      const date: Date | undefined = undefined;
 
-        // assert
-        expect(spy).toHaveBeenCalledWith(language, { timeStyle: "short" });
-        expect(result).not.toBeUndefined();
-      });
-      it("Should parse string", async () => {
-        // arrange
-        const language = "en";
-        i18next.resolvedLanguage = language;
-        const spy = vi.spyOn(Intl, "DateTimeFormat");
-        const composable = await getComposable("myNamespace");
+      // act
+      const result = composable.formatDate.value(date);
 
-        // act
-        const result = composable.formatTime.value("2021-01-01T13:56:43Z");
-
-        // assert
-        expect(spy).toHaveBeenCalledWith(language, { timeStyle: "short" });
-        expect(result).not.toBeUndefined();
-      });
-    });
-    describe("formatMoneyValue", () => {
-      it("Should format money value", async () => {
-        // arrange
-        const language = "en";
-        i18next.resolvedLanguage = language;
-        const spy = vi.spyOn(Intl, "NumberFormat");
-        const composable = await getComposable("myNamespace");
-
-        // act
-        const result = composable.formatMoneyValue.value({ currency: "EUR", amount: 123.45 });
-
-        // assert
-        expect(spy).toHaveBeenCalledWith(language, { style: "currency", currency: "EUR" });
-        expect(result).not.toBeUndefined();
-      });
+      // assert
+      expect(spy).not.toHaveBeenCalled();
+      expect(result).toBe("");
     });
   });
+
+  describe("time", () => {
+    it("Should parse Date object", async () => {
+      // arrange
+      const language = "en";
+      i18next.resolvedLanguage = language;
+      const spy = vi.spyOn(Intl, "DateTimeFormat");
+      const composable = await getComposable("myNamespace");
+
+      // act
+      const result = composable.formatTime.value(new Date(2021, 1, 1, 12, 0, 0));
+
+      // assert
+      expect(spy).toHaveBeenCalledWith(language, { timeStyle: "short" });
+      expect(result).not.toBeUndefined();
+    });
+    it("Should parse string", async () => {
+      // arrange
+      const language = "en";
+      i18next.resolvedLanguage = language;
+      const spy = vi.spyOn(Intl, "DateTimeFormat");
+      const composable = await getComposable("myNamespace");
+
+      // act
+      const result = composable.formatTime.value("2021-01-01T13:56:43Z");
+
+      // assert
+      expect(spy).toHaveBeenCalledWith(language, { timeStyle: "short" });
+      expect(result).not.toBeUndefined();
+    });
+
+    it("Should parse nullable time", async () => {
+      // arrange
+      const language = "en";
+      i18next.resolvedLanguage = language;
+      const spy = vi.spyOn(Intl, "DateTimeFormat");
+      const composable = await getComposable("myNamespace");
+      const date: Date | undefined = undefined;
+
+      // act
+      const result = composable.formatTime.value(date);
+
+      // assert
+      expect(spy).not.toHaveBeenCalled();
+      expect(result).toBe("");
+    });
+  });
+
+  describe("formatMonth", () => {
+    it("Should parse Date object", async () => {
+      // arrange
+      const language = "en";
+      i18next.resolvedLanguage = language;
+      const spy = vi.spyOn(Intl, "DateTimeFormat");
+      const composable = await getComposable("myNamespace");
+
+      // act
+      const result = composable.formatMonth.value(new Date(2021, 1, 1, 12, 0, 0));
+
+      // assert
+      expect(spy).toHaveBeenCalledWith(language, { month: "long" });
+      expect(result).not.toBeUndefined();
+      expect(result).toBe("February");
+    });
+
+    it("Should parse string", async () => {
+      // arrange
+      const language = "en";
+      i18next.resolvedLanguage = language;
+      const spy = vi.spyOn(Intl, "DateTimeFormat");
+      const composable = await getComposable("myNamespace");
+
+      // act
+      const result = composable.formatMonth.value("2021-01-01T13:56:43Z");
+
+      // assert
+      expect(spy).toHaveBeenCalledWith(language, { month: "long" });
+      expect(result).toBe("January");
+      expect(result).not.toBeUndefined();
+    });
+
+    it("Should nullable Date", async () => {
+      // arrange
+      const language = "en";
+      i18next.resolvedLanguage = language;
+      const spy = vi.spyOn(Intl, "DateTimeFormat");
+      const composable = await getComposable("myNamespace");
+      const date: Date | undefined = undefined;
+
+      // act
+      const result = composable.formatMonth.value(date);
+
+      // assert
+      expect(spy).not.toHaveBeenCalled();
+      expect(result).toBe("");
+    });
+  });
+
+  describe("formatMoneyValue", () => {
+    it("Should format money value", async () => {
+      // arrange
+      const language = "en";
+      i18next.resolvedLanguage = language;
+      const spy = vi.spyOn(Intl, "NumberFormat");
+      const composable = await getComposable("myNamespace");
+
+      // act
+      const result = composable.formatMoneyValue.value({ currency: "EUR", amount: 123.45 });
+
+      // assert
+      expect(spy).toHaveBeenCalledWith(language, { style: "currency", currency: "EUR" });
+      expect(result).not.toBeUndefined();
+    });
+  });
+
   describe("formatBytes", () => {
     it("Should format bytes to KB", async () => {
       // arrange
