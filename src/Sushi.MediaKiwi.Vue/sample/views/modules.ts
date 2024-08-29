@@ -3,7 +3,7 @@ import Countries from "./Countries.vue";
 import CountriesEmpty from "./CountriesEmpty.vue";
 import CountryDetails from "./CountryDetails.vue";
 import CountryEdit from "./CountryEdit.vue";
-import Customers from "./Customers.vue";
+import Customers from "./Customers3.vue";
 import CustomersTableMap from "./Customers_tableMap.vue";
 import Home from "./Home.vue";
 import LoggedIn from "./LoggedIn.vue";

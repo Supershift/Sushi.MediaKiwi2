@@ -1,12 +1,11 @@
 import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
 import { ComputedRef, ModelRef, Ref, computed } from "vue";
 import { useSnackbarStore } from "@/stores";
-import { useNavigation } from "@/composables/useNavigation";
 import { DeleteProps } from "@/models/form/FormProps";
 import { TResult } from "@/models/form/TResult";
-import { useErrorProblemDetails } from "../useErrorProblemDetails";
 import { useFormMessages } from "./useFormMessages";
-import { useRoute, useRouter } from "vue-router";
+import { toErrorProblemDetails } from "@/errorhandler/parser";
+import { container } from "tsyringe";
 
 export async function useFormDelete(
   /** Props determining the configuration and labels */
@@ -22,11 +21,8 @@ export async function useFormDelete(
 ) {
   // Inject Dependencies
   const snackbar = useSnackbarStore();
-  const navigation = useNavigation();
-  const router = useRouter();
 
-  const { toErrorProblemDetails } = useErrorProblemDetails();
-  const formMessages = await useFormMessages();
+  const formMessages = container.resolve("formMessages") as any;
 
   const entryLabel = computed(() => entryName.value || "entry");
 

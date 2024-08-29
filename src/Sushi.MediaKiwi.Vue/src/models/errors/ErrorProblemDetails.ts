@@ -1,6 +1,7 @@
 import { AxiosResponse, HttpStatusCode } from "axios";
 import { ApiError } from "./ApiError";
 import { useErrorMessages } from "@/composables/useErrorMessages";
+import { container } from "tsyringe";
 
 /**
  * Implements Sushi.MediaKiwi.Services.Model.ErrorProblemDetails
@@ -51,7 +52,8 @@ export class ErrorProblemDetails extends Error {
   }
 
   static async fromStatus(status?: number | HttpStatusCode): Promise<ErrorProblemDetails> {
-    const errorMessages = await useErrorMessages();
+    // Inject dependencies, FIX
+    const errorMessages = container.resolve("errorMessages") as any;
 
     switch (status) {
       case HttpStatusCode.NotFound:

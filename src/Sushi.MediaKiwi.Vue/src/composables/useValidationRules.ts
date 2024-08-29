@@ -1,4 +1,5 @@
 import { useErrorMessages } from "./useErrorMessages";
+import { useI18next as useI18nextComposable } from "./useI18next";
 
 /**
  * Preset Validation Rules to be used for the ValidationRule[] for form inputs
@@ -7,7 +8,11 @@ import { useErrorMessages } from "./useErrorMessages";
  * @example const rules: ValidationRule[] = useValidationRules().required('', 'This field is required');
  * @returns {object} { required, min, max, email, numeric }
  */
-export const useValidationRules = async () => {
+export const useValidationRules = async (useI18next?: ReturnType<typeof useI18nextComposable>) => {
+  if (!useI18next) {
+    useI18next = useI18nextComposable();
+  }
+
   const {
     requiredMessage,
     minLengthMessage,
@@ -19,7 +24,7 @@ export const useValidationRules = async () => {
     outOfRangeMessage,
     lessThanMessage,
     greaterThanMessage,
-  } = await useErrorMessages();
+  } = await useErrorMessages(useI18next);
 
   /** Value is required */
   const required = (value: any, message?: string) => !!value || (message ?? requiredMessage);

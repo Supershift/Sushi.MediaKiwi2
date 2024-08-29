@@ -3,8 +3,9 @@ import { ComputedRef, ModelRef, Ref, computed } from "vue";
 import { useSnackbarStore } from "@/stores";
 import { LoadProps, UndoProps } from "@/models/form/FormProps";
 import { TResult } from "@/models/form/TResult";
-import { useErrorProblemDetails } from "../useErrorProblemDetails";
 import { useFormMessages } from "./useFormMessages";
+import { toErrorProblemDetails } from "@/errorhandler/parser";
+import { container } from "tsyringe";
 
 export async function useFormLoad(
   /** Props determining the configuration and labels */
@@ -22,8 +23,8 @@ export async function useFormLoad(
 ) {
   // Inject Dependencies
   const snackbar = useSnackbarStore();
-  const { toErrorProblemDetails } = useErrorProblemDetails();
-  const formMessages = await useFormMessages();
+
+  const formMessages = container.resolve("formMessages") as any;
 
   const entryLabel = computed(() => entryName.value || "data");
 

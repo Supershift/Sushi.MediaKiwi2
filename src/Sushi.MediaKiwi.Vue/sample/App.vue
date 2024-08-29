@@ -2,6 +2,12 @@
   import { MkApplication } from "@/components";
   import { useDisplay } from "vuetify";
   import { useSectionRules } from "./composables/useSectionRules";
+  import { useFormMessages, useI18next } from "@/composables";
+  import { useErrorMessages } from "@/composables/useErrorMessages";
+  import { container } from "tsyringe";
+
+  // const useFormMessagesInstance = await useFormMessages();
+  // container.register("formMessages", { useValue: useFormMessagesInstance });
 
   // Inject Dependencies
   const { xs } = useDisplay();

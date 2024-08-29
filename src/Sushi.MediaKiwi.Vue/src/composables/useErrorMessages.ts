@@ -1,7 +1,8 @@
-import { useI18next } from "./useI18next";
+import { useI18next as useI18nextComposable } from "./useI18next";
 
-export async function useErrorMessages() {
-  const { t, formatBytes } = await useI18next("ErrorMessages");
+export async function useErrorMessages(useI18next: ReturnType<typeof useI18nextComposable>) {
+  // function formatBytes(a: number, b = 2) {}
+  const { formatBytes, t } = await useI18next;
 
   // Default error messages
   const unexpectedErrorMessage = t.value("UnexpectedError", "An unexpected error occurred. Please try again later.").toString();

@@ -1,8 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import { addAuthentication } from "./addAuthentication";
-import { useErrorProblemDetails } from "@/composables/useErrorProblemDetails";
-
-const { registerInterceptor } = useErrorProblemDetails();
+import { registerInterceptor } from "./interceptor";
 
 /** Creates an Axios client with the specified base url, application/json as content type and authorization header added when an active account is found. */
 export function createAxiosClient(baseUrl: string): AxiosInstance {

@@ -5,6 +5,8 @@ import { createTestingPinia } from "@pinia/testing";
 import { AxiosError } from "axios";
 import { ComponentPublicInstance } from "vue";
 import { ErrorTypes, NavigationFailure, RouteLocationNormalized } from "vue-router";
+import { getErrorMessages, toErrorProblemDetails } from "@/errorhandler/parser";
+import { findParentMkForm } from "@/errorhandler/globelEventHandler";
 
 // Mock the useI18next composable
 vi.mock("@/composables/useI18next");
@@ -15,19 +17,16 @@ describe("useErrorProblemDetails", async () => {
 
   // Inject the snackbar store
   const snackbar = useSnackbarStore();
-  const showMessageSpy = vi.spyOn(snackbar, "showMessage");
-  const composable = useErrorProblemDetails();
 
   beforeEach(() => {
     // reset all defined mock functions
     vi.clearAllMocks();
   });
 
-  describe("getErrorMessages", () => {
-    it("should return undefined if errorProblemDetails is null", () => {
+  describe("getErrorMessages", async () => {
+    it("should return undefined if errorProblemDetails is null", async () => {
       // Arrange
       const errorProblemDetails = null;
-      const { getErrorMessages } = useErrorProblemDetails();
 
       // Act
       const result = getErrorMessages(errorProblemDetails);
@@ -36,10 +35,9 @@ describe("useErrorProblemDetails", async () => {
       expect(result).toBeUndefined();
     });
 
-    it("should return an array with the detail if errorProblemDetails has a detail property", () => {
+    it("should return an array with the detail if errorProblemDetails has a detail property", async () => {
       // Arrange
       const errorProblemDetails = <ErrorProblemDetails>{ detail: "Some error detail" };
-      const { getErrorMessages } = useErrorProblemDetails();
 
       // Act
       const result = getErrorMessages(errorProblemDetails);
@@ -48,10 +46,9 @@ describe("useErrorProblemDetails", async () => {
       expect(result).toEqual(["Some error detail"]);
     });
 
-    it("should return an array with the error message if errorProblemDetails has an error property", () => {
+    it("should return an array with the error message if errorProblemDetails has an error property", async () => {
       // Arrange
       const errorProblemDetails = <ErrorProblemDetails>{ error: { message: "Some error message" } };
-      const { getErrorMessages } = useErrorProblemDetails();
 
       // Act
       const result = getErrorMessages(errorProblemDetails);
@@ -59,7 +56,7 @@ describe("useErrorProblemDetails", async () => {
       expect(result).toEqual(["Some error message"]);
     });
 
-    it("should return an array with the error message if errorProblemDetails has an error Array", () => {
+    it("should return an array with the error message if errorProblemDetails has an error Array", async () => {
       // Arrange
       const aggregateErrorProblemDetails = <ErrorProblemDetails>{
         type: "AggregateError",
@@ -67,7 +64,6 @@ describe("useErrorProblemDetails", async () => {
           errors: [{ message: "Some error message" }, { message: "Some other message" }],
         },
       };
-      const { getErrorMessages } = useErrorProblemDetails();
 
       // Act
       const result = getErrorMessages(aggregateErrorProblemDetails);
@@ -75,7 +71,7 @@ describe("useErrorProblemDetails", async () => {
       expect(result).toEqual(["Some error message", "Some other message"]);
     });
 
-    it("should return an array with the error message if errorProblemDetails has an errors Record", () => {
+    it("should return an array with the error message if errorProblemDetails has an errors Record", async () => {
       // Arrange
       const errorProblemDetails = <ErrorProblemDetails>{
         error: <Record<string, string[]>>{
@@ -83,7 +79,6 @@ describe("useErrorProblemDetails", async () => {
           field2: ["Some other message"],
         },
       };
-      const { getErrorMessages } = useErrorProblemDetails();
 
       // Act
       const result = getErrorMessages(errorProblemDetails);
@@ -91,14 +86,13 @@ describe("useErrorProblemDetails", async () => {
       expect(result).toEqual(["Some error message", "Some other message"]);
     });
 
-    it("should return an array with the error message if errorProblemDetails has an errors Record", () => {
+    it("should return an array with the error message if errorProblemDetails has an errors Record", async () => {
       // Arrange
       const errorProblemDetails = <ErrorProblemDetails>{
         error: {
           errors: ["Some error message", "Some other message"],
         },
       };
-      const { getErrorMessages } = useErrorProblemDetails();
 
       // Act
       const result = getErrorMessages(errorProblemDetails);
@@ -107,12 +101,11 @@ describe("useErrorProblemDetails", async () => {
     });
   });
 
-  describe("toErrorProblemDetails", () => {
-    describe("should handle unknown errors", () => {
+  describe("toErrorProblemDetails", async () => {
+    describe("should handle unknown errors", async () => {
       it("should return Unknown Error if error is undefined", async () => {
         // Arrange
         const error = undefined;
-        const { toErrorProblemDetails } = useErrorProblemDetails();
 
         // Act
         const result = await toErrorProblemDetails(error);
@@ -125,7 +118,6 @@ describe("useErrorProblemDetails", async () => {
       it("should return Unknown error if error is empty", async () => {
         // Arrange
         const error = {};
-        const { toErrorProblemDetails } = useErrorProblemDetails();
 
         // Act
         const result = await toErrorProblemDetails(error);
@@ -135,7 +127,7 @@ describe("useErrorProblemDetails", async () => {
       });
     });
 
-    describe("should handle AxiosError", () => {
+    describe("should handle AxiosError", async () => {
       it("should return ErrorProblemDetails for a response with ErrorResponse", async () => {
         // Arrange
         const error = new AxiosError();
@@ -143,8 +135,6 @@ describe("useErrorProblemDetails", async () => {
           status: 400,
           data: { title: "Bad request", detail: "Missing some field" },
         };
-
-        const { toErrorProblemDetails } = useErrorProblemDetails();
 
         // Act
         const result = await toErrorProblemDetails(error);
@@ -178,8 +168,6 @@ describe("useErrorProblemDetails", async () => {
           responseType: "blob",
           data: mockBlob,
         };
-
-        const { toErrorProblemDetails } = useErrorProblemDetails();
 
         // Act
         const result = await toErrorProblemDetails(error);
@@ -239,8 +227,6 @@ priority: u=1, i
 `,
         };
 
-        const { toErrorProblemDetails } = useErrorProblemDetails();
-
         // Act
         const result = await toErrorProblemDetails(error);
 
@@ -251,11 +237,10 @@ priority: u=1, i
       });
     });
 
-    describe("should handle Typescript Error", () => {
+    describe("should handle Typescript Error", async () => {
       it("should return an ErrorProblemDetails object if error is an Error object", async () => {
         // Arrange
         const error = new Error("Some error message");
-        const { toErrorProblemDetails } = useErrorProblemDetails();
 
         // Act
         const result = await toErrorProblemDetails(error);
@@ -270,8 +255,8 @@ priority: u=1, i
     });
   });
 
-  describe("findParentMkForm", () => {
-    it("should return the parent MkForm component", () => {
+  describe("findParentMkForm", async () => {
+    it("should return the parent MkForm component", async () => {
       // Arrange
       const component = <ComponentPublicInstance>{
         $parent: <ComponentPublicInstance>{
@@ -284,7 +269,6 @@ priority: u=1, i
           },
         },
       };
-      const { findParentMkForm } = useErrorProblemDetails();
 
       // Act
       const result = findParentMkForm(component);
@@ -294,7 +278,7 @@ priority: u=1, i
       expect(result.$options.__name).toEqual("MkForm");
     });
 
-    it("should return the parent MkFormDialog component", () => {
+    it("should return the parent MkFormDialog component", async () => {
       // Arrange
       const component = <ComponentPublicInstance>{
         $parent: <ComponentPublicInstance>{
@@ -307,7 +291,6 @@ priority: u=1, i
           },
         },
       };
-      const { findParentMkForm } = useErrorProblemDetails();
 
       // Act
       const result = findParentMkForm(component);
@@ -317,7 +300,7 @@ priority: u=1, i
       expect(result.$options.__name).toEqual("MkFormDialog");
     });
 
-    it("should return the parent MkFormSideSheet component", () => {
+    it("should return the parent MkFormSideSheet component", async () => {
       // Arrange
       const component = <ComponentPublicInstance>{
         $parent: <ComponentPublicInstance>{
@@ -330,7 +313,6 @@ priority: u=1, i
           },
         },
       };
-      const { findParentMkForm } = useErrorProblemDetails();
 
       // Act
       const result = findParentMkForm(component);
@@ -340,12 +322,10 @@ priority: u=1, i
       expect(result.$options.__name).toEqual("MkFormSideSheet");
     });
 
-    it("should return null when no MkForm component found", () => {
+    it("should return null when no MkForm component found", async () => {
       const component = <ComponentPublicInstance>{
         $parent: null,
       };
-
-      const { findParentMkForm } = useErrorProblemDetails();
 
       // Act
       const result = findParentMkForm(component);

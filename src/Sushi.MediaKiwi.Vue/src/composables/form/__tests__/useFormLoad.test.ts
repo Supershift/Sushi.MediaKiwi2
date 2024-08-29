@@ -6,8 +6,8 @@ import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
 import { TResult } from "@/models/form/TResult";
 import { useFormLoad } from "./../useFormLoad";
 import { createTestingPinia } from "@pinia/testing";
-import { useErrorProblemDetails } from "@/composables/useErrorProblemDetails";
 import { LoadProps, UndoProps } from "@/models/form/FormProps";
+import { registerInterceptor } from "@/services/axios/interceptor";
 
 // Mock the axios instance
 const axiosMock = axios.create();
@@ -25,7 +25,6 @@ describe("useFormLoad", async () => {
   createTestingPinia();
 
   // Register the axios interceptor
-  const { registerInterceptor } = useErrorProblemDetails();
   registerInterceptor(axiosMock);
 
   const formRef = ref<any>({ reset: vi.fn(), validate: vi.fn() });

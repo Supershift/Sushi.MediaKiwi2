@@ -6,7 +6,7 @@
   import type { SampleData } from "@sample/models/SampleData";
   import { SampleDataConnector } from "@sample/services/SampleDataConnector";
   import { container } from "tsyringe";
-  import { ICustomer } from "./../models/Customer";
+  import { ICustomer } from "../models/Customer";
   import { useI18next } from "@/composables";
 
   // inject dependencies

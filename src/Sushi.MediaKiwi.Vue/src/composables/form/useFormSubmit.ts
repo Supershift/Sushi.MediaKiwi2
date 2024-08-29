@@ -3,8 +3,9 @@ import { ComputedRef, ModelRef, Ref, computed, ref } from "vue";
 import { useSnackbarStore } from "@/stores";
 import { SubmitProps } from "@/models/form/FormProps";
 import { TResult } from "@/models/form/TResult";
-import { useErrorProblemDetails } from "../useErrorProblemDetails";
 import { useFormMessages } from "./useFormMessages";
+import { toErrorProblemDetails } from "@/errorhandler/parser";
+import { container } from "tsyringe";
 
 export async function useFormSubmit(
   /** Props determining the configuration and labels */
@@ -22,8 +23,8 @@ export async function useFormSubmit(
 ) {
   // Inject Dependencies
   const snackbar = useSnackbarStore();
-  const { toErrorProblemDetails } = useErrorProblemDetails();
-  const formMessages = await useFormMessages();
+
+  const formMessages = container.resolve("formMessages") as any;
 
   // Entity name, used in the feedback
   const entryLabel = computed(() => entryName.value || "entry");
