@@ -1,7 +1,6 @@
 import { FormMessages } from "@/models/form/FormMessages";
 import { useI18next } from "../useI18next";
 
-// SHOULD BE FORM LABELS
 export async function useFormMessages(): Promise<FormMessages> {
   const { t } = await useI18next("ErrorMessages");
 
