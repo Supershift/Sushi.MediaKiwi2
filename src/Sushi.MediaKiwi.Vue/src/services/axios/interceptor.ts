@@ -1,10 +1,13 @@
-import { toErrorProblemDetails } from "@/errorhandler/parser";
 import { AxiosInstance } from "axios";
+import { useErrorProblemDetails } from "@/composables/useErrorProblemDetails";
 
 /**
  * Register an interceptor for the axios instance. This will handle the response and tries to parse them to an object {@link ErrorProblemDetails}
  */
 export function registerInterceptor(axiosInstance: AxiosInstance) {
+  // inject dependencies
+  const { toErrorProblemDetails } = useErrorProblemDetails();
+
   axiosInstance.interceptors.response.use(
     (response) => response,
     async (error: any) => {

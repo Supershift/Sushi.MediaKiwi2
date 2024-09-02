@@ -8,6 +8,8 @@ import { useFormLoad } from "./../useFormLoad";
 import { createTestingPinia } from "@pinia/testing";
 import { LoadProps, UndoProps } from "@/models/form/FormProps";
 import { registerInterceptor } from "@/services/axios/interceptor";
+import { registerErrorMessages } from "@/helpers/registerErrorHandler";
+import { useI18next } from "@/framework";
 
 // Mock the axios instance
 const axiosMock = axios.create();
@@ -23,6 +25,9 @@ describe("useFormLoad", async () => {
 
   // Create a testing pinia store
   createTestingPinia();
+
+  // Register the error messages
+  await registerErrorMessages(useI18next("errorMessages"), useI18next("formMessages"));
 
   // Register the axios interceptor
   registerInterceptor(axiosMock);

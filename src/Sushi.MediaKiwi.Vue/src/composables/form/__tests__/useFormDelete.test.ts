@@ -6,6 +6,8 @@ import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
 import { createTestingPinia } from "@pinia/testing";
 import { DeleteProps } from "@/models/form/FormProps";
 import { AxiosResponse, HttpStatusCode } from "axios";
+import { registerErrorMessages } from "@/helpers/registerErrorHandler";
+import { useI18next } from "@/framework";
 
 const hoists = vi.hoisted(() => {
   return {
@@ -23,6 +25,9 @@ describe("useFormDelete", async () => {
     // reset all defined mock functions
     vi.clearAllMocks();
   });
+
+  // Register the error messages
+  await registerErrorMessages(useI18next("errorMessages"), useI18next("formMessages"));
 
   // Create a testing pinia store
   createTestingPinia();

@@ -1,14 +1,12 @@
 <script setup lang="ts">
   import { MkBreadcrumbs } from "@/components/MkBreadcrumbs/";
-  import { useErrorProblemDetails, useI18next } from "@/composables";
-  import { useErrorMessages } from "@/composables/useErrorMessages";
+  import { useI18next } from "@/composables";
   import { useNavigation } from "@/composables/useNavigation";
-  import { container } from "tsyringe";
+  import { registerErrorMessages } from "@/helpers/registerErrorHandler";
   import { computed } from "vue";
 
   const navigation = useNavigation();
-
-  await useErrorProblemDetails(useI18next("errorMessages"), useI18next("formMessages"));
+  await registerErrorMessages(useI18next("errorMessages"), useI18next("formMessages"));
 
   // Extend this in the future to include more pages?
   const isPageOnSignIn = computed(() => !navigation?.currentNavigationItem.value?.view?.id);

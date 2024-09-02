@@ -20,7 +20,7 @@ import { registerIcons } from "./helpers/registerIcons";
 import { registerDirectives } from "./helpers/registerDirectives";
 import { createVuetify } from "./plugins/vuetify";
 import { addCheckCanResolve } from "./router/checkCanResolve";
-import { globalErrorHandler } from "./errorhandler/globelEventHandler";
+import { registerErrorHandler } from "./helpers/registerErrorHandler";
 
 export default {
   install(app: App, options: MediakiwiVueOptions): void {
@@ -34,7 +34,7 @@ export default {
     registerAxios(container, options);
 
     // register global error handler
-    app.config.errorHandler = options.globalErrorHandler || globalErrorHandler;
+    registerErrorHandler(app, options);
 
     // add i18n
     app.use(

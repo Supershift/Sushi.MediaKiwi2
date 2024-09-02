@@ -1,8 +1,8 @@
+import { FormMessages } from "@/models/form/FormMessages";
 import { useI18next as useI18nextComposable } from "./../useI18next";
 
 // SHOULD BE FORM LABELS
-export async function useFormMessages(useI18next: ReturnType<typeof useI18nextComposable>) {
-  // const { t } = await useI18next("FormMessages");
+export async function useFormMessages(useI18next: ReturnType<typeof useI18nextComposable>): Promise<FormMessages> {
   const { i18next } = await useI18next;
 
   // Load Labels

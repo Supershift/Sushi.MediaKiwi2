@@ -5,7 +5,7 @@ import { createAxiosClient } from "@/services";
 import { mdiAliases, symbolsAliases } from "@/plugins/icons";
 import { MediakiwiVueOptions } from "@/models";
 import { MediakiwiIdentity } from "@/models/options/MediakiwiIdentity";
-import mediakiwi, { useErrorProblemDetails } from "@/framework";
+import mediakiwi from "@/framework";
 
 // Import the mediakiwi stylesheet
 import "./styles/main.scss";

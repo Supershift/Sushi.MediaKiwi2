@@ -1,23 +1,7 @@
 import { ErrorProblemDetails } from "@/models";
 import { ComponentPublicInstance } from "vue";
-import { toErrorProblemDetails } from "./parser";
 import { useSnackbarStore } from "@/stores";
-
-/**
- * Find a parent MkForm, MkFormDialog or MkSideSheet component for the given instance
- * const vm = instance.$parent?.$parent?.$parent?.$parent?.$parent?.$parent?.$parent || (instance as any);
- */
-export function findParentMkForm(instance: ComponentPublicInstance): any {
-  let vm;
-
-  if (instance?.$options?.__name === "MkForm" || instance?.$options?.__name === "MkFormDialog" || instance?.$options?.__name === "MkFormSideSheet") {
-    vm = instance;
-  } else if (instance.$parent) {
-    vm = findParentMkForm(instance.$parent);
-  }
-
-  return vm;
-}
+import { useErrorProblemDetails } from "@/composables/useErrorProblemDetails";
 
 /**
  * Vue global error handler, can be overridden by the user
@@ -27,6 +11,8 @@ export function findParentMkForm(instance: ComponentPublicInstance): any {
  * @returns
  */
 export async function globalErrorHandler(err: any, instance?: ComponentPublicInstance | null, info?: string) {
+  const { toErrorProblemDetails } = useErrorProblemDetails();
+
   // Log the error to the console
   console.error(err, instance, info);
 
@@ -58,9 +44,25 @@ export async function globalErrorHandler(err: any, instance?: ComponentPublicIns
 /**
  * Set the error on the form or show a snackbar message
  */
-async function setErrorSnackbar(error: ErrorProblemDetails) {
+export async function setErrorSnackbar(error: ErrorProblemDetails) {
   const snackbar = useSnackbarStore();
 
   // Show a snackbar message to the user
   snackbar.showErrorMessage(error);
+}
+
+/**
+ * Find a parent MkForm, MkFormDialog or MkSideSheet component for the given instance
+ * const vm = instance.$parent?.$parent?.$parent?.$parent?.$parent?.$parent?.$parent || (instance as any);
+ */
+export function findParentMkForm(instance: ComponentPublicInstance): any {
+  let vm;
+
+  if (instance?.$options?.__name === "MkForm" || instance?.$options?.__name === "MkFormDialog" || instance?.$options?.__name === "MkFormSideSheet") {
+    vm = instance;
+  } else if (instance.$parent) {
+    vm = findParentMkForm(instance.$parent);
+  }
+
+  return vm;
 }

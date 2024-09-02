@@ -1,9 +1,10 @@
 <script setup lang="ts">
   import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
   import { computed } from "vue";
-  import { getErrorMessages } from "@/errorhandler/parser";
+  import { useErrorProblemDetails } from "@/composables/useErrorProblemDetails";
 
   // inject dependencies
+  const { getErrorMessages } = useErrorProblemDetails();
 
   const props = withDefaults(
     defineProps<{

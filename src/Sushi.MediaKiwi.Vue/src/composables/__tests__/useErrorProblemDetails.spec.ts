@@ -1,12 +1,11 @@
 import "reflect-metadata";
 import { vi, describe, it, expect } from "vitest";
-import { ErrorProblemDetails, useErrorProblemDetails, useSnackbarStore } from "@/framework";
 import { createTestingPinia } from "@pinia/testing";
 import { AxiosError } from "axios";
-import { ComponentPublicInstance } from "vue";
-import { ErrorTypes, NavigationFailure, RouteLocationNormalized } from "vue-router";
-import { getErrorMessages, toErrorProblemDetails } from "@/errorhandler/parser";
-import { findParentMkForm } from "@/errorhandler/globelEventHandler";
+import { useErrorProblemDetails } from "../useErrorProblemDetails";
+import { ErrorProblemDetails } from "@/models";
+import { registerErrorMessages } from "@/helpers/registerErrorHandler";
+import { useI18next } from "../useI18next";
 
 // Mock the useI18next composable
 vi.mock("@/composables/useI18next");
@@ -16,7 +15,9 @@ describe("useErrorProblemDetails", async () => {
   createTestingPinia();
 
   // Inject the snackbar store
-  const snackbar = useSnackbarStore();
+  const { toErrorProblemDetails, getErrorMessages } = useErrorProblemDetails();
+  // Register the error messages
+  await registerErrorMessages(useI18next("errorMessages"), useI18next("formMessages"));
 
   beforeEach(() => {
     // reset all defined mock functions
@@ -252,86 +253,6 @@ priority: u=1, i
         expect(result.error).toBeDefined();
         //   expect(result.error.message).toBe("Some error message");
       });
-    });
-  });
-
-  describe("findParentMkForm", async () => {
-    it("should return the parent MkForm component", async () => {
-      // Arrange
-      const component = <ComponentPublicInstance>{
-        $parent: <ComponentPublicInstance>{
-          $parent: <ComponentPublicInstance>{
-            $parent: <ComponentPublicInstance>{
-              $options: {
-                __name: "MkForm",
-              },
-            },
-          },
-        },
-      };
-
-      // Act
-      const result = findParentMkForm(component);
-
-      // Assert
-      expect(result).toBeDefined();
-      expect(result.$options.__name).toEqual("MkForm");
-    });
-
-    it("should return the parent MkFormDialog component", async () => {
-      // Arrange
-      const component = <ComponentPublicInstance>{
-        $parent: <ComponentPublicInstance>{
-          $parent: <ComponentPublicInstance>{
-            $parent: <ComponentPublicInstance>{
-              $options: {
-                __name: "MkFormDialog",
-              },
-            },
-          },
-        },
-      };
-
-      // Act
-      const result = findParentMkForm(component);
-
-      // Assert
-      expect(result).toBeDefined();
-      expect(result.$options.__name).toEqual("MkFormDialog");
-    });
-
-    it("should return the parent MkFormSideSheet component", async () => {
-      // Arrange
-      const component = <ComponentPublicInstance>{
-        $parent: <ComponentPublicInstance>{
-          $parent: <ComponentPublicInstance>{
-            $parent: <ComponentPublicInstance>{
-              $options: {
-                __name: "MkFormSideSheet",
-              },
-            },
-          },
-        },
-      };
-
-      // Act
-      const result = findParentMkForm(component);
-
-      // Assert
-      expect(result).toBeDefined();
-      expect(result.$options.__name).toEqual("MkFormSideSheet");
-    });
-
-    it("should return null when no MkForm component found", async () => {
-      const component = <ComponentPublicInstance>{
-        $parent: null,
-      };
-
-      // Act
-      const result = findParentMkForm(component);
-
-      // Assert
-      expect(result).not.toBeDefined();
     });
   });
 });

@@ -74,6 +74,7 @@
       <v-btn @click="getInternalServerError()">Internal Server Error</v-btn>
       <v-btn @click="getTimeoutError()">Timeout</v-btn>
     </template>
+    <v-text-field v-model="state.value1" :rules="[required]" />
   </MkForm>
 
   <v-divider class="my-10"></v-divider>

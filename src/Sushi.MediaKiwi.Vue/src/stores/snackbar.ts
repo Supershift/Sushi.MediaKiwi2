@@ -1,5 +1,4 @@
-import { useErrorMessages } from "@/composables/useErrorMessages";
-import { getErrorMessages } from "@/errorhandler/parser";
+import { useErrorProblemDetails } from "@/composables/useErrorProblemDetails";
 import { ErrorProblemDetails } from "@/models";
 import { defineStore } from "pinia";
 import { ref } from "vue";
@@ -17,6 +16,8 @@ export const useSnackbarStore = defineStore("snackbar", () => {
    * Set the error on the form or show a snackbar message
    */
   async function showErrorMessage(error: ErrorProblemDetails) {
+    const { getErrorMessages } = useErrorProblemDetails();
+
     // define the messages
     let message = getErrorMessages(error)?.join(", ") || "";
 

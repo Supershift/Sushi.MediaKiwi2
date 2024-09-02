@@ -4,9 +4,10 @@ import { vi, describe, it, expect, afterEach } from "vitest";
 import { ref, computed, ModelRef } from "vue";
 import { useFormSubmit } from "../useFormSubmit";
 import { createTestingPinia } from "@pinia/testing";
-import { ErrorProblemDetails, TResult, useSnackbarStore } from "@/framework";
+import { ErrorProblemDetails, TResult, useI18next, useSnackbarStore } from "@/framework";
 import { SubmitProps } from "@/models/form/FormProps";
 import { registerInterceptor } from "@/services/axios/interceptor";
+import { registerErrorMessages } from "@/helpers/registerErrorHandler";
 
 // Mock the axios instance
 const axiosMock = axios.create();
@@ -20,6 +21,9 @@ describe("useFormSubmit", async () => {
 
   // Register the axios interceptor
   registerInterceptor(axiosMock);
+
+  // Register the error messages
+  await registerErrorMessages(useI18next("errorMessages"), useI18next("formMessages"));
 
   // Inject the snackbar store
   const snackbar = useSnackbarStore();

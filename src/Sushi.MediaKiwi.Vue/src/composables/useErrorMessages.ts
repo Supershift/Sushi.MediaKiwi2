@@ -1,7 +1,7 @@
+import { ErrorMessages } from "@/models/errors/ErrorMessages";
 import { useI18next as useI18nextComposable } from "./useI18next";
 
-export async function useErrorMessages(useI18next: ReturnType<typeof useI18nextComposable>) {
-  // function formatBytes(a: number, b = 2) {}
+export async function useErrorMessages(useI18next: ReturnType<typeof useI18nextComposable>): Promise<ErrorMessages> {
   const { formatBytes, t } = await useI18next;
 
   // Default error messages
