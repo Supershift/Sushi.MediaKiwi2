@@ -2,6 +2,7 @@
   import { MkNavigation, MkScreen, MkNavigationIcon, MkThemeToggle, MkAccountMenu, MkSuspense } from "@/components";
   import { useIsAuthenticated } from "@/composables/useIsAuthenticated";
   import MkLogoLockup from "./MkLogoLockup.vue";
+  import MkSnackbar from "../MkSnackbar/MkSnackbar.vue";
 
   // inject dependencies
   const isAuthenticated = useIsAuthenticated();
@@ -63,6 +64,7 @@
         <mk-navigation v-if="isAuthenticated"></mk-navigation>
       </mk-suspense>
       <mk-screen></mk-screen>
+      <mk-snackbar></mk-snackbar>
     </v-layout>
   </v-card>
 </template>
