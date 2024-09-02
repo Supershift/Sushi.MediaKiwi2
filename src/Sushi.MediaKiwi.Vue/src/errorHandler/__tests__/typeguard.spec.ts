@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { describe, it, expect } from "vitest";
-import { isError, isApiError, isApiErrorArray, isStringArray, IsErrorProblemDetails } from "../typeGuards";
+import { isError, isApiError, isApiErrorArray, isStringArray, IsErrorProblemDetails } from "../typeguards";
 import { ApiError } from "@/models";
 
 describe("Type guard functions", () => {

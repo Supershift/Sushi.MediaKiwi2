@@ -1,7 +1,7 @@
 import { useAxiosExtensions } from "@/composables/useAxiosExtensions";
 import { ApiError, ErrorProblemDetails } from "@/models";
 import { isAxiosError } from "axios";
-import { isApiError, isApiErrorArray, isError, IsErrorProblemDetails, isStringArray } from "@/errorHandler/typeGuards";
+import { isApiError, isApiErrorArray, isError, IsErrorProblemDetails, isStringArray } from "@/errorHandler/typeguards";
 import { isNavigationFailure } from "vue-router";
 
 export async function useErrorProblemDetails() {
