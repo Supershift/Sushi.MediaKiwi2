@@ -1,19 +1,17 @@
-import { container } from "tsyringe";
 import { useAxiosExtensions } from "@/composables/useAxiosExtensions";
 import { ApiError, ErrorProblemDetails } from "@/models";
 import { isAxiosError } from "axios";
 import { isApiError, isApiErrorArray, isError, IsErrorProblemDetails, isStringArray } from "@/errorHandler/typeGuards";
-import { ErrorTypes, isNavigationFailure, NavigationFailure } from "vue-router";
-import { ErrorMessages } from "@/models/errors/ErrorMessages";
+import { isNavigationFailure } from "vue-router";
 
-export function useErrorProblemDetails() {
+export async function useErrorProblemDetails() {
+  // inject dependencies
+  const { isAxiosBlobResponse } = useAxiosExtensions();
+
   /**
-   * Parse the problem details from the error response
+   * Create an error problem details object from the error
    */
-  async function toErrorProblemDetails(error?: any) {
-    // inject dependencies
-    const { isAxiosBlobResponse } = useAxiosExtensions();
-
+  async function createErrorProblemDetails(error?: any) {
     // Create a result
     let result: ErrorProblemDetails | undefined;
 
@@ -30,17 +28,16 @@ export function useErrorProblemDetails() {
         }
       } else if (isNavigationFailure(error)) {
         // If we have a navigation failure, get the error message
-        const message = await getRouterErrorMessage(error);
-        result = new ErrorProblemDetails(message);
+        result = new ErrorProblemDetails(error.message, "NavigationFailure");
       } else if (isError(error)) {
         // If we have an error object, create a default error problem details object
         result = new ErrorProblemDetails(error?.message);
       }
     }
 
-    // If we don't have a result, create a default error problem details object
+    // If we don't have a result, return an empty problem details object
     if (!result) {
-      result = await ErrorProblemDetails.fromStatus(error?.response?.status);
+      return new ErrorProblemDetails();
     }
 
     return result;
@@ -98,32 +95,9 @@ export function useErrorProblemDetails() {
     }
   }
 
-  /**
-   * Get the error message from the router error type
-   * @param t The error type
-   */
-  async function getRouterErrorMessage(t: ErrorTypes): Promise<string>;
-  async function getRouterErrorMessage(error: NavigationFailure | any): Promise<string>;
-  async function getRouterErrorMessage(error: NavigationFailure | ErrorTypes): Promise<string> {
-    const errorMessages = container.resolve("errorMessages") as ErrorMessages;
-
-    if (isNavigationFailure(error)) {
-      if (error.type) {
-        return getRouterErrorMessage(error.type);
-      }
-    } else {
-      switch (error) {
-        case 1:
-          return errorMessages.routeCouldNotBeResolvedErrorMessage;
-      }
-    }
-    return errorMessages.routerErrorMessage;
-  }
-
   return {
-    toErrorProblemDetails,
+    createErrorProblemDetails,
     getErrorMessages,
     getErrorMessageFromApiError,
-    getRouterErrorMessage,
   };
 }

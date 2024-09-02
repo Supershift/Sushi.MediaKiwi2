@@ -2,17 +2,19 @@
   import MkErrorProblemDetails from "@/components/MkErrorProblemDetails/MkErrorProblemDetails.vue";
   import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
   import { ref, watch, getCurrentInstance } from "vue";
-  import { useI18next } from "@/composables";
+  import { useFormMessages, useI18next } from "@/composables";
   import { useForm } from "@/composables/form/useForm";
   import { FormSideSheetProps, FormSlotProps } from "@/models/form/FormProps";
   import MkSideSheet from "../MkSideSheet/MkSideSheet.vue";
   import { useMediakiwiVueOptions } from "@/composables/useMediakiwiVueOptions";
   import MkConfirmDialog from "../MkConfirmDialog/MkConfirmDialog.vue";
+  import { useErrorMessages } from "@/composables/useErrorMessages";
 
   // Inject dependencies
   const { defaultT } = await useI18next();
   const { formOptions } = useMediakiwiVueOptions();
   const instance = getCurrentInstance();
+  const errorMessages = await useErrorMessages();
 
   // Define props with defaults
   const props = withDefaults(defineProps<FormSideSheetProps>(), {
@@ -108,6 +110,9 @@
       formRef.value?.resetValidation();
     },
     setError(error: ErrorProblemDetails) {
+      if (!error || !error.detail || !error.error) {
+        error = new ErrorProblemDetails(errorMessages.unexpectedErrorMessage);
+      }
       errorProblemDetails.value = error;
     },
   });

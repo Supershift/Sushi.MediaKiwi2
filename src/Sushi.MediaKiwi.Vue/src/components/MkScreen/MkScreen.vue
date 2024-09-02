@@ -1,12 +1,13 @@
 <script setup lang="ts">
   import { MkBreadcrumbs } from "@/components/MkBreadcrumbs/";
-  import { useI18next } from "@/composables";
+  import { useErrorMessages } from "@/composables/useErrorMessages";
   import { useNavigation } from "@/composables/useNavigation";
-  import { registerErrorMessages } from "@/helpers/registerErrorHandler";
+  import { useSnackbarStore } from "@/stores";
   import { computed } from "vue";
 
   const navigation = useNavigation();
-  await registerErrorMessages(useI18next("errorMessages"), useI18next("formMessages"));
+  const snackbar = useSnackbarStore();
+  const { unexpectedErrorMessage } = await useErrorMessages();
 
   // Extend this in the future to include more pages?
   const isPageOnSignIn = computed(() => !navigation?.currentNavigationItem.value?.view?.id);
@@ -38,6 +39,7 @@
         </suspense>
       </router-view>
     </div>
+    <v-snackbar class="pa-0" v-model="snackbar.show">{{ snackbar.message || unexpectedErrorMessage }}</v-snackbar>
   </v-main>
 </template>
 

@@ -3,11 +3,8 @@ import { ComputedRef, ModelRef, Ref, computed } from "vue";
 import { useSnackbarStore } from "@/stores";
 import { DeleteProps } from "@/models/form/FormProps";
 import { TResult } from "@/models/form/TResult";
-import { container } from "tsyringe";
 import { useErrorProblemDetails } from "@/composables/useErrorProblemDetails";
 import { FormMessages } from "@/models/form/FormMessages";
-
-// inject dependencies
 
 export async function useFormDelete(
   /** Props determining the configuration and labels */
@@ -19,13 +16,13 @@ export async function useFormDelete(
   /** Model for the Valid state of the component */
   inProgress: ModelRef<boolean, string>,
   /** Model for the ErrorProblemDetails state of the component */
-  errorProblemDetails: ModelRef<ErrorProblemDetails | null | undefined, string>
+  errorProblemDetails: ModelRef<ErrorProblemDetails | null | undefined, string>,
+  /** FormMessages */
+  formMessages: FormMessages
 ) {
   // Inject Dependencies
   const snackbar = useSnackbarStore();
-  const { toErrorProblemDetails } = useErrorProblemDetails();
-
-  const formMessages = container.resolve("formMessages") as FormMessages;
+  const { createErrorProblemDetails } = await useErrorProblemDetails();
 
   const entryLabel = computed(() => entryName.value || "entry");
 
@@ -82,7 +79,7 @@ export async function useFormDelete(
       if (error instanceof ErrorProblemDetails) {
         errorResult = error as ErrorProblemDetails;
       } else {
-        errorResult = await toErrorProblemDetails(error);
+        errorResult = await createErrorProblemDetails(error);
       }
 
       // Show a message that the submit failed

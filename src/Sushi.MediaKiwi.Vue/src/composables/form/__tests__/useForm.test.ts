@@ -2,10 +2,9 @@ import "reflect-metadata";
 import axios from "axios";
 import { describe, it, expect } from "vitest";
 import { ModelRef, ref } from "vue";
-import { ErrorProblemDetails, FormProps, useForm, useI18next } from "@/framework";
+import { ErrorProblemDetails, FormProps, useForm, useFormMessages, useI18next } from "@/framework";
 import { FormViewProps } from "@/models/form/FormProps";
 import { createTestingPinia } from "@pinia/testing";
-import { registerErrorMessages } from "@/helpers/registerErrorHandler";
 
 // Mock the axios instance
 const axiosMock = axios.create();
@@ -16,9 +15,6 @@ vi.mock("@/composables/useI18next");
 describe("useForm", async () => {
   // Create a testing pinia store
   createTestingPinia();
-
-  // Register the error messages
-  await registerErrorMessages(useI18next("errorMessages"), useI18next("formMessages"));
 
   beforeEach(() => {
     // reset all defined mock functions

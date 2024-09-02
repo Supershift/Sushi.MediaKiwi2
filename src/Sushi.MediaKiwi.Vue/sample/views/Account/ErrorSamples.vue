@@ -65,7 +65,7 @@
 </script>
 
 <template>
-  <MkForm @submit="onSubmit" v-moodel:error="state.error" v-model:in-progress="state.inProgress">
+  <MkForm @submit="onSubmit" v-model:error="state.error" v-model:in-progress="state.inProgress">
     <template #toolbar>
       <v-btn @click="throwCustomError()">Custom error</v-btn>
       <v-btn @click="throwError()">Unexpected error</v-btn>

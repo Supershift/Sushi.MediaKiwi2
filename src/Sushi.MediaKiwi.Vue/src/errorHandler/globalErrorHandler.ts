@@ -3,6 +3,8 @@ import { ComponentPublicInstance } from "vue";
 import { useSnackbarStore } from "@/stores";
 import { useErrorProblemDetails } from "@/composables/useErrorProblemDetails";
 
+const { createErrorProblemDetails, getErrorMessages } = await useErrorProblemDetails();
+
 /**
  * Vue global error handler, can be overridden by the user
  * @param err The error that was thrown
@@ -11,8 +13,6 @@ import { useErrorProblemDetails } from "@/composables/useErrorProblemDetails";
  * @returns
  */
 export async function globalErrorHandler(err: any, instance?: ComponentPublicInstance | null, info?: string) {
-  const { toErrorProblemDetails } = useErrorProblemDetails();
-
   // Log the error to the console
   console.error(err, instance, info);
 
@@ -21,7 +21,7 @@ export async function globalErrorHandler(err: any, instance?: ComponentPublicIns
   if (err instanceof ErrorProblemDetails) {
     errorProblemDetails = err;
   } else {
-    errorProblemDetails = await toErrorProblemDetails(err);
+    errorProblemDetails = await createErrorProblemDetails(err);
   }
 
   // If we have an instance, try to find the closest form, and set the error
@@ -47,8 +47,11 @@ export async function globalErrorHandler(err: any, instance?: ComponentPublicIns
 export async function setErrorSnackbar(error: ErrorProblemDetails) {
   const snackbar = useSnackbarStore();
 
+  // define the messages
+  const message = getErrorMessages(error)?.join(", ") || "";
+
   // Show a snackbar message to the user
-  snackbar.showErrorMessage(error);
+  snackbar.showMessage(message);
 }
 
 /**

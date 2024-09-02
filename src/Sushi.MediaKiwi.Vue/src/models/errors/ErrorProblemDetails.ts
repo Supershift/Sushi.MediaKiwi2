@@ -1,6 +1,5 @@
 import { AxiosResponse, HttpStatusCode } from "axios";
 import { ApiError } from "./ApiError";
-import { useErrorMessages } from "@/composables/useErrorMessages";
 import { container } from "tsyringe";
 import { ErrorMessages } from "./ErrorMessages";
 
@@ -50,25 +49,5 @@ export class ErrorProblemDetails extends Error {
     }
 
     return result;
-  }
-
-  static async fromStatus(status?: number | HttpStatusCode): Promise<ErrorProblemDetails> {
-    // Inject dependencies, FIX
-    const errorMessages = container.resolve("errorMessages") as ErrorMessages;
-
-    switch (status) {
-      case HttpStatusCode.NotFound:
-        return new ErrorProblemDetails(errorMessages.notFoundErrorMessage, "NotFound", "Not found", status);
-      case HttpStatusCode.BadRequest:
-        return new ErrorProblemDetails(errorMessages.badRequestErrorMessage, "BadRequest", "Bad request", status);
-      case HttpStatusCode.Unauthorized:
-        return new ErrorProblemDetails(errorMessages.unauthorizedErrorMessage, "Unauthorized", "Unauthorized", status);
-      case HttpStatusCode.Forbidden:
-        return new ErrorProblemDetails(errorMessages.forbiddenErrorMessage, "Forbidden", "Forbidden", status);
-      case HttpStatusCode.InternalServerError:
-        return new ErrorProblemDetails(errorMessages.internalServerErrorErrorMessage, "InternalServerError", "Internal server error", status);
-      default:
-        return new ErrorProblemDetails(errorMessages.unexpectedErrorMessage, "Unknown", "Unknown error", status || 418);
-    }
   }
 }

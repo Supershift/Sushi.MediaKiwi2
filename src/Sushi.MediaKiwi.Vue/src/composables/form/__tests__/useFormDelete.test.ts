@@ -6,8 +6,7 @@ import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
 import { createTestingPinia } from "@pinia/testing";
 import { DeleteProps } from "@/models/form/FormProps";
 import { AxiosResponse, HttpStatusCode } from "axios";
-import { registerErrorMessages } from "@/helpers/registerErrorHandler";
-import { useI18next } from "@/framework";
+import { useFormMessages, useI18next } from "@/framework";
 
 const hoists = vi.hoisted(() => {
   return {
@@ -26,8 +25,7 @@ describe("useFormDelete", async () => {
     vi.clearAllMocks();
   });
 
-  // Register the error messages
-  await registerErrorMessages(useI18next("errorMessages"), useI18next("formMessages"));
+  const formMessages = await useFormMessages();
 
   // Create a testing pinia store
   createTestingPinia();
@@ -50,7 +48,7 @@ describe("useFormDelete", async () => {
       redirectAfterDelete: hoists.redirectAfterDelete,
     }));
 
-    const useFormDeleteInstance = await useFormDelete(props, formRef, entityName, inProgress, error);
+    const useFormDeleteInstance = await useFormDelete(props, formRef, entityName, inProgress, error, formMessages);
 
     it("should have delete handler", async () => {
       // Assert
@@ -124,7 +122,7 @@ describe("useFormDelete", async () => {
   describe("Form without DeleteHandler", async () => {
     const props = computed<DeleteProps>(() => ({}));
 
-    const useFormDeleteInstance = await useFormDelete(props, formRef, entityName, inProgress, error);
+    const useFormDeleteInstance = await useFormDelete(props, formRef, entityName, inProgress, error, formMessages);
 
     it("should throw error", async () => {
       // Act
@@ -146,7 +144,8 @@ describe("useFormDelete", async () => {
         formRef,
         entityName,
         inProgress,
-        error
+        error,
+        formMessages
       );
 
       // Assert
@@ -173,7 +172,8 @@ describe("useFormDelete", async () => {
         formRef,
         entityName,
         inProgress,
-        error
+        error,
+        formMessages
       );
 
       // Assert
@@ -194,7 +194,8 @@ describe("useFormDelete", async () => {
         formRef,
         entityName,
         inProgress,
-        error
+        error,
+        formMessages
       );
 
       // Assert

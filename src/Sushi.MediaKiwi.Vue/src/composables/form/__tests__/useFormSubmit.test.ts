@@ -4,10 +4,9 @@ import { vi, describe, it, expect, afterEach } from "vitest";
 import { ref, computed, ModelRef } from "vue";
 import { useFormSubmit } from "../useFormSubmit";
 import { createTestingPinia } from "@pinia/testing";
-import { ErrorProblemDetails, TResult, useI18next, useSnackbarStore } from "@/framework";
+import { ErrorProblemDetails, TResult, useFormMessages, useI18next, useSnackbarStore } from "@/framework";
 import { SubmitProps } from "@/models/form/FormProps";
 import { registerInterceptor } from "@/services/axios/interceptor";
-import { registerErrorMessages } from "@/helpers/registerErrorHandler";
 
 // Mock the axios instance
 const axiosMock = axios.create();
@@ -22,8 +21,7 @@ describe("useFormSubmit", async () => {
   // Register the axios interceptor
   registerInterceptor(axiosMock);
 
-  // Register the error messages
-  await registerErrorMessages(useI18next("errorMessages"), useI18next("formMessages"));
+  const formMessages = await useFormMessages();
 
   // Inject the snackbar store
   const snackbar = useSnackbarStore();
@@ -46,7 +44,7 @@ describe("useFormSubmit", async () => {
   const showMessageSpy = vi.spyOn(snackbar, "showMessage");
 
   // Act
-  const useFormSubmitInstance = await useFormSubmit(props, formRef, entityLabel, inProgress, error, isValid);
+  const useFormSubmitInstance = await useFormSubmit(props, formRef, entityLabel, inProgress, error, isValid, formMessages);
 
   // Spy on the composable functions
   const confirmSpy = vi.spyOn(useFormSubmitInstance.submitConfirmDialog, "value", "set");
@@ -222,7 +220,8 @@ describe("useFormSubmit", async () => {
           entityLabel,
           inProgress,
           error,
-          isValid
+          isValid,
+          formMessages
         );
 
         // Assert
@@ -258,7 +257,8 @@ describe("useFormSubmit", async () => {
           entityLabel,
           inProgress,
           error,
-          isValid
+          isValid,
+          formMessages
         );
 
         // Assert
@@ -282,7 +282,8 @@ describe("useFormSubmit", async () => {
           entityLabel,
           inProgress,
           error,
-          isValid
+          isValid,
+          formMessages
         );
 
         // Assert
@@ -307,7 +308,8 @@ describe("useFormSubmit", async () => {
           entityLabel,
           inProgress,
           error,
-          isValid
+          isValid,
+          formMessages
         );
 
         expect(submitButtonLabel.value).toEqual("Save");
@@ -330,7 +332,8 @@ describe("useFormSubmit", async () => {
           entityLabel,
           inProgress,
           error,
-          isValid
+          isValid,
+          formMessages
         );
 
         // Assert
@@ -361,7 +364,7 @@ describe("useFormSubmit", async () => {
       const customProps = computed<SubmitProps>(() => ({}));
 
       // Act
-      const { hasSubmitHandler } = await useFormSubmit(customProps, formRef, entityLabel, inProgress, error, isValid);
+      const { hasSubmitHandler } = await useFormSubmit(customProps, formRef, entityLabel, inProgress, error, isValid, formMessages);
 
       // Assert
       expect(hasSubmitHandler.value).toBeFalsy();
