@@ -2,8 +2,7 @@ import { ErrorProblemDetails } from "@/models";
 import { ComponentPublicInstance } from "vue";
 import { useSnackbarStore } from "@/stores";
 import { useErrorProblemDetails } from "@/composables/useErrorProblemDetails";
-
-const { createErrorProblemDetails, getErrorMessages } = await useErrorProblemDetails();
+import { createErrorProblemDetails } from "./createErrorProblemDetails";
 
 /**
  * Vue global error handler, can be overridden by the user
@@ -45,6 +44,7 @@ export async function globalErrorHandler(err: any, instance?: ComponentPublicIns
  * Set the error on the form or show a snackbar message
  */
 export async function setErrorSnackbar(error: ErrorProblemDetails) {
+  const { getErrorMessages } = await useErrorProblemDetails();
   const snackbar = useSnackbarStore();
 
   // define the messages

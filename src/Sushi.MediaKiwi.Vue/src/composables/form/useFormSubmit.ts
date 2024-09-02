@@ -3,8 +3,8 @@ import { ComputedRef, ModelRef, Ref, computed, ref } from "vue";
 import { useSnackbarStore } from "@/stores";
 import { SubmitProps } from "@/models/form/FormProps";
 import { TResult } from "@/models/form/TResult";
-import { useErrorProblemDetails } from "@/composables/useErrorProblemDetails";
 import { FormMessages } from "@/models/form/FormMessages";
+import { createErrorProblemDetails } from "@/errorHandler/createErrorProblemDetails";
 
 export async function useFormSubmit(
   /** Props determining the configuration and labels */
@@ -24,7 +24,6 @@ export async function useFormSubmit(
 ) {
   // Inject Dependencies
   const snackbar = useSnackbarStore();
-  const { createErrorProblemDetails } = await useErrorProblemDetails();
 
   // Entity name, used in the feedback
   const entryLabel = computed(() => entryName.value || "entry");

@@ -5,6 +5,7 @@ import { DeleteProps } from "@/models/form/FormProps";
 import { TResult } from "@/models/form/TResult";
 import { useErrorProblemDetails } from "@/composables/useErrorProblemDetails";
 import { FormMessages } from "@/models/form/FormMessages";
+import { createErrorProblemDetails } from "@/errorHandler/createErrorProblemDetails";
 
 export async function useFormDelete(
   /** Props determining the configuration and labels */
@@ -22,7 +23,6 @@ export async function useFormDelete(
 ) {
   // Inject Dependencies
   const snackbar = useSnackbarStore();
-  const { createErrorProblemDetails } = await useErrorProblemDetails();
 
   const entryLabel = computed(() => entryName.value || "entry");
 

@@ -19,7 +19,6 @@ import i18next from "./plugins/i18next";
 import { registerIcons } from "./helpers/registerIcons";
 import { registerDirectives } from "./helpers/registerDirectives";
 import { createVuetify } from "./plugins/vuetify";
-import { addCheckCanResolve } from "./router/checkCanResolve";
 import { registerErrorHandler } from "./helpers/registerErrorHandler";
 
 export default {
@@ -106,9 +105,6 @@ export default {
 
     // adds a guard to all routes with the meta property 'isInRole' to check role
     addCheckIsInRole(router);
-
-    // adds a guard to check if the route can be resolved
-    addCheckCanResolve(router);
 
     // use the router instance
     app.use(router);

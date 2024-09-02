@@ -1,8 +1,5 @@
 import { AxiosInstance } from "axios";
-import { useErrorProblemDetails } from "@/composables/useErrorProblemDetails";
-
-// inject dependencies
-const { createErrorProblemDetails } = await useErrorProblemDetails();
+import { createErrorProblemDetails } from "@/errorHandler/createErrorProblemDetails";
 
 /**
  * Register an interceptor for the axios instance. This will handle the response and tries to parse them to an object {@link ErrorProblemDetails}
