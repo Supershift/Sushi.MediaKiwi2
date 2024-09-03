@@ -7,10 +7,12 @@
   import { FormDialogProps, FormSlotProps } from "@/models/form/FormProps";
   import { useMediakiwiVueOptions } from "@/composables/useMediakiwiVueOptions";
   import MkConfirmDialog from "../MkConfirmDialog/MkConfirmDialog.vue";
+  import { useErrorMessages } from "@/composables/useErrorMessages";
 
   // Inject dependencies
   const { formOptions } = useMediakiwiVueOptions();
   const instance = getCurrentInstance();
+  const errorMessages = await useErrorMessages();
 
   // Define props
   const props = withDefaults(defineProps<FormDialogProps>(), {
@@ -108,6 +110,9 @@
       formRef.value?.resetValidation();
     },
     setError(error: ErrorProblemDetails) {
+      if (!error || !error.detail || !error.error) {
+        error = new ErrorProblemDetails(errorMessages.unexpectedErrorMessage);
+      }
       errorProblemDetails.value = error;
     },
   });

@@ -1,6 +1,7 @@
+import { ErrorMessages } from "@/models/errors/ErrorMessages";
 import { useI18next } from "./useI18next";
 
-export async function useErrorMessages() {
+export async function useErrorMessages(): Promise<ErrorMessages> {
   const { t, formatBytes } = await useI18next("ErrorMessages");
 
   // Default error messages

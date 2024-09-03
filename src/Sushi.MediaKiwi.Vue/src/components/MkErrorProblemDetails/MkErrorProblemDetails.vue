@@ -4,7 +4,7 @@
   import { useErrorProblemDetails } from "@/composables/useErrorProblemDetails";
 
   // inject dependencies
-  const { getErrorMessages } = useErrorProblemDetails();
+  const { getErrorMessages } = await useErrorProblemDetails();
 
   const props = withDefaults(
     defineProps<{

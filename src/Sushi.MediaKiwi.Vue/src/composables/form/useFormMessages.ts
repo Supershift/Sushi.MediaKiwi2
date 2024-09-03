@@ -1,7 +1,8 @@
-import { useI18next } from "@/composables/useI18next";
+import { FormMessages } from "@/models/form/FormMessages";
+import { useI18next } from "../useI18next";
 
-export async function useFormMessages() {
-  const { t } = await useI18next("FormMessages");
+export async function useFormMessages(): Promise<FormMessages> {
+  const { t } = await useI18next("ErrorMessages");
 
   // Load Labels
   const loadFailedSnackbarMessage = (entryName: string) => t.value("LoadFailed", "Failed to load {{message.entryName}}", { message: { entryName } }).toString();

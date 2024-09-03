@@ -6,8 +6,9 @@ import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
 import { TResult } from "@/models/form/TResult";
 import { useFormLoad } from "./../useFormLoad";
 import { createTestingPinia } from "@pinia/testing";
-import { useErrorProblemDetails } from "@/composables/useErrorProblemDetails";
 import { LoadProps, UndoProps } from "@/models/form/FormProps";
+import { registerInterceptor } from "@/services/axios/interceptor";
+import { useFormMessages } from "@/framework";
 
 // Mock the axios instance
 const axiosMock = axios.create();
@@ -24,8 +25,9 @@ describe("useFormLoad", async () => {
   // Create a testing pinia store
   createTestingPinia();
 
+  const formMessages = await useFormMessages();
+
   // Register the axios interceptor
-  const { registerInterceptor } = useErrorProblemDetails();
   registerInterceptor(axiosMock);
 
   const formRef = ref<any>({ reset: vi.fn(), validate: vi.fn() });
@@ -46,12 +48,12 @@ describe("useFormLoad", async () => {
   const errorSpy = vi.spyOn(error, "value", "set");
   const isLoadingSpy = vi.spyOn(isLoaded, "value", "set");
 
-  const useFormLoadInstance = await useFormLoad(props, formRef, entityLabel, inProgress, error, isLoaded);
+  const useFormLoadInstance = await useFormLoad(props, formRef, entityLabel, inProgress, error, isLoaded, formMessages);
 
   describe("onLoad handler", () => {
     it("should tell when no load handler is present", async () => {
       // Act
-      const { hasLoadHandler, hasUndoHandler } = await useFormLoad(props, formRef, entityLabel, inProgress, error, isLoaded);
+      const { hasLoadHandler, hasUndoHandler } = await useFormLoad(props, formRef, entityLabel, inProgress, error, isLoaded, formMessages);
 
       // Assert
       expect(hasLoadHandler.value).toBeFalsy();
@@ -129,7 +131,7 @@ describe("useFormLoad", async () => {
       props.value.onLoad = undefined;
 
       // Act
-      const { hasUndoHandler } = await useFormLoad(props, formRef, entityName, inProgress, error, isLoaded);
+      const { hasUndoHandler } = await useFormLoad(props, formRef, entityName, inProgress, error, isLoaded, formMessages);
 
       // Assert
       expect(hasUndoHandler.value).toBeFalsy();
@@ -141,7 +143,7 @@ describe("useFormLoad", async () => {
       props.value.hideUndo = true;
 
       // Act
-      const { hasUndoHandler } = await useFormLoad(props, formRef, entityName, inProgress, error, isLoaded);
+      const { hasUndoHandler } = await useFormLoad(props, formRef, entityName, inProgress, error, isLoaded, formMessages);
 
       // Assert
       expect(hasUndoHandler.value).toBeFalsy();
@@ -194,7 +196,7 @@ describe("useFormLoad", async () => {
       props.value.onLoad = undefined;
 
       // Act
-      const { onLoad } = await useFormLoad(props, formRef, entityName, inProgress, error, isLoaded);
+      const { onLoad } = await useFormLoad(props, formRef, entityName, inProgress, error, isLoaded, formMessages);
       await onLoad();
 
       // Assert
@@ -216,7 +218,7 @@ describe("useFormLoad", async () => {
         });
 
         // Act
-        const { loadFailedSnackbarMessage } = await useFormLoad(props, formRef, entityName, inProgress, error, isLoaded);
+        const { loadFailedSnackbarMessage } = await useFormLoad(props, formRef, entityName, inProgress, error, isLoaded, formMessages);
 
         // Assert
         expect(loadFailedSnackbarMessage.value).toEqual("Failed to load data");
@@ -230,7 +232,7 @@ describe("useFormLoad", async () => {
         });
 
         // Act
-        const { loadFailedSnackbarMessage } = await useFormLoad(props, formRef, entityName, inProgress, error, isLoaded);
+        const { loadFailedSnackbarMessage } = await useFormLoad(props, formRef, entityName, inProgress, error, isLoaded, formMessages);
 
         // Assert
         expect(loadFailedSnackbarMessage.value).toEqual("Failed to load Market");
@@ -245,7 +247,7 @@ describe("useFormLoad", async () => {
       });
 
       // Act
-      const { undoButtonLabel, undoSuccessSnackbarMessage } = await useFormLoad(props, formRef, entityName, inProgress, error, isLoaded);
+      const { undoButtonLabel, undoSuccessSnackbarMessage } = await useFormLoad(props, formRef, entityName, inProgress, error, isLoaded, formMessages);
 
       // Assert
       expect(undoButtonLabel.value).toEqual("Undo changes");
@@ -270,7 +272,8 @@ describe("useFormLoad", async () => {
         entityName,
         inProgress,
         error,
-        isLoaded
+        isLoaded,
+        formMessages
       );
 
       // Assert

@@ -65,7 +65,7 @@
 </script>
 
 <template>
-  <MkForm @submit="onSubmit" v-moodel:error="state.error" v-model:in-progress="state.inProgress">
+  <MkForm @submit="onSubmit" v-model:error="state.error" v-model:in-progress="state.inProgress">
     <template #toolbar>
       <v-btn @click="throwCustomError()">Custom error</v-btn>
       <v-btn @click="throwError()">Unexpected error</v-btn>
@@ -74,6 +74,7 @@
       <v-btn @click="getInternalServerError()">Internal Server Error</v-btn>
       <v-btn @click="getTimeoutError()">Timeout</v-btn>
     </template>
+    <v-text-field v-model="state.value1" :rules="[required]" />
   </MkForm>
 
   <v-divider class="my-10"></v-divider>
