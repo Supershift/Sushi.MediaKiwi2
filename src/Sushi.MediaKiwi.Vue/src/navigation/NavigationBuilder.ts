@@ -1,40 +1,17 @@
-import { Section, NavigationItem, View } from "@/models";
+import { Section, NavigationItem, NavigationTree } from "@/models/navigation";
 import { INavigationProvider } from "./INavigationProvider";
 import { FixedNavigationProvider } from "./FixedNavigationProvider";
 
-/** Contains the basics needed to create a view. Id and name are derived from context */
-type ViewDefinition = { componentKey: string; parameterName?: string };
 
-/** Either a view or the definition to create a view */
-type ViewParameter = View | ViewDefinition | string;
-
-function isView(viewParameter: ViewParameter): viewParameter is View {
-  return (viewParameter as View).id !== undefined;
-}
-
-function toView(view: ViewParameter, id: string, name: string): View {
-  var result: View;
-  if(typeof view === "string") {
-    result = { id: id, name: name, componentKey: view };
-  }
-  else if (isView(view)) {
-    result = view as View;
-  } else {    
-    result = { id: id, name: name, componentKey: view.componentKey, parameterName: view.parameterName };
-  }
-  return result;
-}
 
 export class NavigationBuilder {
-  private currentParent?: NavigationItem;
-  private allItems: Array<NavigationItem> = [];
-  private allSections: Array<Section> = [];
-  private allViews: { [id: string]: View } = {};
+  private currentParent?: NavigationItem;  
+  private allSections: Array<Section> = [];  
   private siblings: Array<NavigationItem> = [];
   private currentSection?: Section;
 
   public startSection(id: string, name: string, icon?: string) : NavigationBuilder {
-    const section: Section = { id: id, name: name, sortOrder: this.allSections.length, icon: icon };
+    const section: Section = { id: id, name: name, icon: icon, roles: [], items: [] }; 
 
     this.allSections.push(section);
     this.currentSection = section;
@@ -52,74 +29,54 @@ export class NavigationBuilder {
     return this;
   }
 
-  public addNavigationItem(id: string, name: string, view?: ViewParameter, icon?: string) : NavigationBuilder {
+  public addNavigationItem(id: string, name: string, componentKey?: string, parameterName?: string, icon?: string) : NavigationBuilder {
     if (!this.currentSection) {
       throw new Error("No section started");
     }
-
-    // calculate sort order
-    const sortOrder = this.siblings.length;
-
-    // create view from parameter if needed
-    const localView = view ? toView(view, id, name) : undefined;
-
     // create navigation item
     const item: NavigationItem = {
       id: id,
       name: name,
-      sectionId: this.currentSection.id,
-      path: "",
-      icon: icon,
-      parentNavigationItemId: this.currentParent?.id,
+      section: this.currentSection,      
+      icon: icon,      
       parent: this.currentParent,
-      sortOrder: sortOrder,
-      viewId: localView?.id,
-      view: localView,
+      componentKey: componentKey,
+      parameterName: parameterName,      
       children: [],
+      roles: undefined
     };
 
-    // add navigation item to collections
-    this.allItems.push(item);
+    // add navigation item to collections    
     this.siblings.push(item);
-    this.currentParent?.children!.push(item);
-
-    // add view
-    if (localView) {
-      this.allViews[localView.id] = localView;
-    }
-
+    if(this.currentParent)
+      this.currentParent.children.push(item);
+    else
+      this.currentSection.items.push(item);
+      
     return this;
   }
 
   /** Adds a child to the last added navigation item. Useful to add an 'invisible' child like an edit view. */
-  public addChild(id: string, name: string, view: ViewParameter, icon?: string) : NavigationBuilder {
+  public addChild(id: string, name: string, componentKey?: string, parameterName?: string, icon?: string) : NavigationBuilder {
     if (!this.siblings) {
       throw new Error("No item to add child to");
     }
     const localParent = this.siblings[this.siblings.length - 1];
 
-    // create view from parameter if needed
-    const localView = toView(view, id, name);
-
     const item: NavigationItem = {
       id: id,
       name: name,
-      sectionId: localParent.sectionId,
-      path: "",
-      icon: icon,
-      parentNavigationItemId: localParent.id,
-      parent: localParent,
-      sortOrder: localParent.children!.length,
-      viewId: localView.id,
-      view: localView,
+      section: localParent.section,      
+      icon: icon,      
+      parent: localParent,      
+      componentKey: componentKey,
+      parameterName: parameterName,      
       children: [],
+      roles: undefined
     };
-
-    this.allItems.push(item);
+    
     localParent.children!.push(item);
-
-    // add view
-    this.allViews[localView.id] = localView;
+    
     return this;
   }
 
@@ -133,7 +90,7 @@ export class NavigationBuilder {
     }
 
     this.currentParent = this.siblings[this.siblings.length - 1];
-    this.siblings = this.currentParent.children || [];
+    this.siblings = this.currentParent.children ? [...this.currentParent.children] : [];
     return this;
   }
 
@@ -146,12 +103,13 @@ export class NavigationBuilder {
       throw new Error("Cannot go left, already at lowest level");
     }
 
-    this.siblings = this.currentParent?.children || [];
+    this.siblings = this.currentParent.children ? [...this.currentParent.children] : [];
     this.currentParent = this.currentParent?.parent;
     return this;
   }
 
-  public build(): INavigationProvider {
-    return new FixedNavigationProvider(Object.values(this.allViews), this.allItems, this.allSections);
+  public build(): NavigationTree {
+    var tree = new NavigationTree(this.allSections);
+    return tree;
   }
 }

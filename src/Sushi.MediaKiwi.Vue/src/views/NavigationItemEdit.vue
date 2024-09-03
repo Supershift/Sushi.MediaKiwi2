@@ -1,15 +1,17 @@
 <script setup lang="ts">
   import { MkForm } from "@/components";
   import { container } from "tsyringe";
-  import { INavigationConnector } from "@/services";
-  import { NavigationItem } from "@/models";
+  import { INavigationConnector, IViewConnector } from "@/services";
+  import { NavigationItemDto, ViewDto } from "@/models";
   import { useMediakiwiStore } from "@/stores";
   import { RouterManager } from "@/router/routerManager";
   import { useNavigation, useValidationRules } from "@/composables";
   import { computed, reactive } from "vue";
+  import { noPageSize } from "@/constants";
 
   // inject dependencies
   const navigationConnector = container.resolve<INavigationConnector>("INavigationConnector");
+  const viewConnector = container.resolve<IViewConnector>("IViewConnector");
   const routerManager = container.resolve<RouterManager>("RouterManager");
 
   const store = useMediakiwiStore();
@@ -20,14 +22,14 @@
   const navigationItemId = navigation.currentViewParameter;
 
   const state = reactive({
-    navigationItem: <NavigationItem>{},
+    navigationItem: <NavigationItemDto>{},
+      allNavigationItems: <NavigationItemDto[]>[],
+      views: <ViewDto[]>[]
   });
-
-  const viewOptions = computed(() => store.views);
 
   async function onLoad() {
     if (navigationItemId.value) {
-      // get existing view from api
+      // get existing item from api
       const candidate = await navigationConnector.GetNavigationItem(navigationItemId.value);
       state.navigationItem = candidate!;
     }
@@ -63,6 +65,13 @@
       }
     };
   }
+
+  // load options
+  const navigationItems = await navigationConnector.GetNavigationItems(undefined, { pageSize: noPageSize});
+  const views = await viewConnector.GetViews({ pageSize: noPageSize});
+
+  state.allNavigationItems = navigationItems.result;
+  state.views = views.result;
 </script>
 
 <template>
@@ -72,14 +81,14 @@
     <v-autocomplete
       v-model="state.navigationItem.parentNavigationItemId"
       label="Parent"
-      :items="store.navigationItems"
+      :items="state.allNavigationItems"
       item-title="name"
       item-value="id"
     ></v-autocomplete>
     <v-select
       v-model="state.navigationItem.sectionId"
       label="Section"
-      :items="store.sections"
+      :items="store.navigationTree.sections"
       item-title="name"
       item-value="id"
       :rules="[(v) => !!v]"
@@ -87,7 +96,7 @@
     <v-autocomplete
       v-model="state.navigationItem.viewId"
       label="View"
-      :items="viewOptions"
+      :items="state.views"
       item-title="name"
       item-value="id"
       :rules="[(v) => !!v]"

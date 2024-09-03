@@ -3,7 +3,7 @@
   import { ref } from "vue";
   import { container } from "tsyringe";
   import { IViewConnector } from "@/services";
-  import { View } from "@/models";
+  import { ViewDto } from "@/models";
   import { useMediakiwiStore } from "@/stores";
   import { RouterManager } from "@/router/routerManager";
   import { useNavigation } from "@/composables/useNavigation";
@@ -19,7 +19,7 @@
   const viewId = navigation.currentViewParameter;
 
   // declare reactive variables
-  const view = ref<View>({ id: viewId.value ?? "" });
+  const view = ref<ViewDto>({ id: viewId.value ?? "" });
 
   async function onLoad() {
     if (viewId.value) {

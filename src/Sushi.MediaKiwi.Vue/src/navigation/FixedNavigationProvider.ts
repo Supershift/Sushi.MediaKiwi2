@@ -1,27 +1,15 @@
-import { View, NavigationItem, Section } from "@/models";
+import { NavigationItem, NavigationTree, Section } from "@/models/navigation";
 import { INavigationProvider } from "./INavigationProvider";
 
-export class FixedNavigationProvider implements INavigationProvider{
-    private views: View[];
-    private navigationItems: NavigationItem[];
-    private sections: Section[];
+export class FixedNavigationProvider implements INavigationProvider{    
+    private navigationTree: NavigationTree;
     
-    constructor(views : View[], navigationItems: NavigationItem[], sections: Section[]){
-        this.views = views;
-        this.navigationItems = navigationItems;
-        this.sections = sections;
+    constructor(navigationTree : NavigationTree){        
+        this.navigationTree = navigationTree;
     }
-    
-    async GetViewsAsync(): Promise<View[]> {
-        return this.views;
-    }
-    
-    async GetNavigationItemsAsync(): Promise<NavigationItem[]> {
-        return this.navigationItems;
-    }
-    
-    async GetSectionsAsync(): Promise<Section[]> {
-        return this.sections;
+    async GetTreeAsync(): Promise<NavigationTree> {
+        return this.navigationTree;
     }
 
+    
 }

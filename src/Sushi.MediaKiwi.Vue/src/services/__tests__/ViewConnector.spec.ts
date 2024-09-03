@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { ViewConnector } from "../ViewConnector";
 import axiosMock from "axios";
-import { View } from "../../models/api";
+import { ViewDto } from "../../models/api";
 import ListResult from "../../models/api/ListResult";
 
 // mock axios
@@ -14,7 +14,7 @@ describe("ScreenConnector", () => {
     vi.clearAllMocks();
   });
   it("Should call get for screens", async () => {
-    const expectedResult = { data: new ListResult<View>() };
+    const expectedResult = { data: new ListResult<ViewDto>() };
     // mock axios getter to return expected result
     axiosMock.get = vi.fn().mockResolvedValue(expectedResult);
 

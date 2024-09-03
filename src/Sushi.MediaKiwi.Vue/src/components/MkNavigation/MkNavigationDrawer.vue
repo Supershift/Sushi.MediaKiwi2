@@ -9,7 +9,7 @@
   defineEmits(["change"]);
 
   // inject dependencies
-  const { getAllItemsBasedOnSection, getItemsBasedOnRoot, navigateTo, currentRootItem } = useNavigation(); // also calls store within this composable
+  const { getItemsBasedOnRoot, navigateTo, currentRootItem } = useNavigation(); // also calls store within this composable
   const { defaultT } = await useI18next();
 
   function navigationInfoLoaded() {
@@ -35,8 +35,7 @@
       <mk-navigation-item
         v-for="item in getItemsBasedOnRoot()"
         :key="item.id"
-        :navigation-item="item"
-        :all-items="getAllItemsBasedOnSection()"
+        :navigation-item="item"        
       ></mk-navigation-item>
     </v-list>
   </v-navigation-drawer>

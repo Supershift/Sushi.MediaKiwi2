@@ -1,4 +1,4 @@
-export interface View {
+export interface ViewDto {
   /** Human-readable unique ID. */
   id: string;
   /** Name for this screen, can be used for display purposes. */

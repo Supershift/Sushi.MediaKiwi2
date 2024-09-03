@@ -124,45 +124,10 @@ describe('useNavigation', () => {
         await navigateToParent(); // HOME > undefined
       })()).rejects.toThrowError();
     });
-
-    it('should navigate to a specific view', async () => {
-      const { navigateToView } = useNavigation();
-
-      const spyon = vi.spyOn(router, 'push').mockImplementationOnce(() => Promise.resolve());
-      navigateToView('detailView') // > DETAILS
-      expect(spyon).toHaveBeenCalled();
-    });
-
-    it('should fail to navigate to a non-existent view', async () => {
-      const { navigateToView } = useNavigation();
-      const spyon = vi.spyOn(router, 'push').mockImplementationOnce(() => Promise.resolve());
-
-      await expect((async () => {
-        await navigateToView('nonExistentView'); // > undefined
-      })()).rejects.toThrowError();
-      expect(spyon).not.toHaveBeenCalled();
-    });
   });
 
 
-  describe('Methods', () => {
-    // getChildren
-    it('should return children, which are without a parameterName in view', () => {
-      const { getChildren, currentNavigationItem } = useNavigation();
-
-      const expected = mockNavigationItemChildren
-
-      const result = getChildren(currentNavigationItem.value);
-      expect(result).toEqual(expected);
-    });
-
-    it('should return an empty array if there are no children', () => {
-      const { getChildren } = useNavigation();
-
-      const result = getChildren(mockNavigationItemWithoutChildren);
-      expect(result).toEqual([]);
-    });
-
+  describe('Methods', () => {    
     // determineCurrentRootItem
     it('should correctly determine the root item with item navigation and multiple children', () => {
       const { determineCurrentRoootItem } = useNavigation();
@@ -205,15 +170,7 @@ describe('useNavigation', () => {
 
       expect(result).toEqual(false);
     });
-
-    // getAllItemsBasedOnSection
-    it('should correctly get all items based on section', () => {
-      const { getAllItemsBasedOnSection } = useNavigation();
-
-      const result = getAllItemsBasedOnSection();
-
-      expect(result).toEqual(mockMediakiwiStore.navigationItems.filter(item => item.sectionId === mockMediakiwiStore.sections[0].id));
-    });
+    
     // getItemsBasedOnRoot
     it('should correctly get all items based on root', () => {
       const { getItemsBasedOnRoot } = useNavigation();

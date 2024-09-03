@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { useErrorProblemDetails, useI18next } from "@/composables";
+  import { useI18next } from "@/composables";
   import { computed } from "vue";
 
   // Inject dependencies

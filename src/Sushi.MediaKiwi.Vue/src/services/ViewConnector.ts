@@ -1,4 +1,4 @@
-import type { Sorting, View } from "@/models";
+import type { Sorting, ViewDto } from "@/models";
 import { injectable, inject } from "tsyringe";
 import type ListResult from "@/models/api/ListResult";
 import { IViewConnector } from "./IViewConnector";
@@ -9,8 +9,8 @@ import type { AxiosInstance } from "axios";
 export class ViewConnector implements IViewConnector {
   constructor(@inject("MediakiwiAxiosInstance") private axios: AxiosInstance) {}
 
-  async CreateView(id: string, request: View): Promise<View> {
-    const response = await this.axios.post<View>(`/views/${id}`, request);
+  async CreateView(id: string, request: ViewDto): Promise<ViewDto> {
+    const response = await this.axios.post<ViewDto>(`/views/${id}`, request);
     return response.data;
   }
 
@@ -18,23 +18,23 @@ export class ViewConnector implements IViewConnector {
     await this.axios.delete(`/views/${id}`);
   }
 
-  async GetViews(paging?: Paging, sorting?: Sorting): Promise<ListResult<View>> {
+  async GetViews(paging?: Paging, sorting?: Sorting): Promise<ListResult<ViewDto>> {
     // build querystring params
     const query = {
       ...paging,
       ...sorting,
     };
-    const response = await this.axios.get<ListResult<View>>("/views", { params: query });
+    const response = await this.axios.get<ListResult<ViewDto>>("/views", { params: query });
     return response.data;
   }
 
-  async GetView(id: string): Promise<View | undefined> {
-    const response = await this.axios.get<View>(`/views/${encodeURIComponent(id)}`);
+  async GetView(id: string): Promise<ViewDto | undefined> {
+    const response = await this.axios.get<ViewDto>(`/views/${encodeURIComponent(id)}`);
     return response.data;
   }
 
-  async UpdateView(id: string, request: View): Promise<View> {
-    const response = await this.axios.put<View>(`/views/${encodeURIComponent(id)}`, request);
+  async UpdateView(id: string, request: ViewDto): Promise<ViewDto> {
+    const response = await this.axios.put<ViewDto>(`/views/${encodeURIComponent(id)}`, request);
     return response.data;
   }
 }

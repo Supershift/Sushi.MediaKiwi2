@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import type { Section } from "@/models/api";
+  import type { Section } from "@/models/navigation";
   import { useNavigation } from "@/composables/useNavigation";
   import { parseIconValue } from "@/composables";
   import { useMediakiwiStore } from "@/stores";

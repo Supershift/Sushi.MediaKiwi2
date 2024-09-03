@@ -4,7 +4,7 @@ import { container } from "tsyringe";
 import { RouteGenerator } from "../routeGenerator";
 import { RouteComponent } from "vue-router";
 import { Component } from "vue";
-import type { NavigationItem, View } from "../../models";
+import { NavigationTree, type NavigationItem, type Section } from "@/models/navigation";
 
 // mock libraries
 vi.mock("vue-router");
@@ -14,14 +14,13 @@ const modules: Record<string, RouteComponent> = {
   a: <Component>{},
   b: <Component>{},
 };
+const section : Section = { id: "1", name: "Admin Section", roles: ["admin"], items:[] };
 const navigationItems: NavigationItem[] = [
-  <NavigationItem>{ id: "1", viewId: "OrderView", path: "/orders", name: "Order" },
-  <NavigationItem>{ id: "2", viewId: "CustomerView", path: "/customers", name: "Customers" },
+  <NavigationItem>{ id: "1", componentKey: "OrderView", name: "Order", section: section },
+  <NavigationItem>{ id: "2", componentKey: "CustomerView", name: "Customers", section: section },
 ];
-const screens: View[] = [
-  <View>{ id: "OrderView", sectionId: 1, componentKey: "a", name: "screen a" },
-  <View>{ id: "CustomerView", sectionId: 1, componentKey: "b", name: "screen b" },
-];
+section.items = navigationItems;
+const tree = new NavigationTree([section]);
 
 describe("RouteGenerator", () => {
   beforeEach(() => {
@@ -32,7 +31,7 @@ describe("RouteGenerator", () => {
     // arrange
     const routeManager = new RouteGenerator();
     // act
-    const routes = routeManager.generateRoutes(modules, navigationItems, screens);
+    const routes = routeManager.generateRoutes(modules, tree);
 
     // assert
     expect(routes).toHaveLength(3); // 2 navigation items + 1 default catchall route
@@ -42,7 +41,7 @@ describe("RouteGenerator", () => {
     // arrange
     const routeManager = new RouteGenerator();
     // act
-    const routes = routeManager.generateRoutes(modules, navigationItems, screens);
+    const routes = routeManager.generateRoutes(modules, tree);
 
     // assert
     expect(routes.every((x) => x.meta?.requiresAuth));
@@ -51,7 +50,7 @@ describe("RouteGenerator", () => {
     // arrange
     const routeManager = new RouteGenerator();
     // act
-    const routes = routeManager.generateRoutes(modules, navigationItems, screens);
+    const routes = routeManager.generateRoutes(modules, tree);
 
     // assert
     expect(routes.every((x) => x.meta?.isFromServer));

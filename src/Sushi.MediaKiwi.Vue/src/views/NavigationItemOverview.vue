@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { MkTable, MkTh } from "@/components";
-  import { ListResult, Paging, NavigationItem, TableFilterType, TableFilter, Sorting, SortDirection } from "@/models";
+  import { ListResult, Paging, NavigationItemDto, TableFilterType, TableFilter, Sorting, SortDirection } from "@/models";
   import { useMediakiwiStore } from "@/stores";
   import { ref } from "vue";
   import { container } from "tsyringe";
@@ -14,15 +14,14 @@
 
   // define reactive variables
   const currentPagination = ref<Paging>({});
-  const sections = ref(store.sections);
-  const navigationItems = ref(store.navigationItems);
+  const sections = ref(store.navigationTree.sections);
 
   const state = reactive({
-    navigationItems: <ListResult<NavigationItem>>{},
+    navigationItems: <ListResult<NavigationItemDto>>{},
   });
 
   // create a sorting option object with a default value
-  const sorting = ref<Sorting<NavigationItem>>({
+  const sorting = ref<Sorting<NavigationItemDto>>({
     sortBy: "name",
     sortDirection: SortDirection.Asc,
   });
@@ -40,7 +39,7 @@
   }
 
   function getNavigationItemName(id?: string): string | undefined {
-    return navigationItems.value.find((x) => x.id == id)?.name || "-";
+    return state.navigationItems.result.find((x) => x.id == id)?.name || "-";
   }
 
   // get data
@@ -68,7 +67,7 @@
       <th>Icon</th>
       <MkTh v-model:sorting="sorting" sorting-key="sortOrder" width="140">Sort order</MkTh>
     </template>
-    <template #tbody="item: NavigationItem">
+    <template #tbody="item: NavigationItemDto">
       <th>{{ item.id }}</th>
       <td>{{ item.name }}</td>
       <td>{{ getSectionName(item.sectionId) }}</td>

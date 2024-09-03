@@ -21,7 +21,7 @@
   async function onGet() {
     state.account = await accountConnector.GetAccountAsync(state.accountNumber!)!;
     if (state.account) {
-      navigation.navigateToView("EditAccount", state.account.number);
+      navigation.navigateToId("EditAccount", state.account.number);
     }
   }
 

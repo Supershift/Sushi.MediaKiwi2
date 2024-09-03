@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-labels */
 import "reflect-metadata";
 import MkNavigationDrawer from "../MkNavigationDrawer.vue";
-import { NavigationItem } from "@/models";
+import { NavigationItem, Section } from "@/models/navigation";
 
 // Declare the props to be used in all tests
 const props = {
@@ -9,9 +9,9 @@ const props = {
     {
       id: "444",
       name: "Test Item",
-      sectionId: "Home",
-      viewId: "home",
-      path: "/home",
+      section: { id: "Home" } as Section,
+      componentKey: "home.vue",
+      children: []
     },
   ] as Array<NavigationItem>,
 };

@@ -16,7 +16,7 @@ describe("useErrorProblemDetails", async () => {
   // Inject the snackbar store
   const snackbar = useSnackbarStore();
   const showMessageSpy = vi.spyOn(snackbar, "showMessage");
-  const composable = useErrorProblemDetails();
+  const composable = await useErrorProblemDetails();
 
   beforeEach(() => {
     // reset all defined mock functions
@@ -27,7 +27,7 @@ describe("useErrorProblemDetails", async () => {
     it("should return undefined if errorProblemDetails is null", () => {
       // Arrange
       const errorProblemDetails = null;
-      const { getErrorMessages } = useErrorProblemDetails();
+      const { getErrorMessages } = composable;
 
       // Act
       const result = getErrorMessages(errorProblemDetails);
@@ -39,7 +39,7 @@ describe("useErrorProblemDetails", async () => {
     it("should return an array with the detail if errorProblemDetails has a detail property", () => {
       // Arrange
       const errorProblemDetails = <ErrorProblemDetails>{ detail: "Some error detail" };
-      const { getErrorMessages } = useErrorProblemDetails();
+      const { getErrorMessages } = composable;
 
       // Act
       const result = getErrorMessages(errorProblemDetails);
@@ -51,7 +51,7 @@ describe("useErrorProblemDetails", async () => {
     it("should return an array with the error message if errorProblemDetails has an error property", () => {
       // Arrange
       const errorProblemDetails = <ErrorProblemDetails>{ error: { message: "Some error message" } };
-      const { getErrorMessages } = useErrorProblemDetails();
+      const { getErrorMessages } = composable;
 
       // Act
       const result = getErrorMessages(errorProblemDetails);
@@ -67,7 +67,7 @@ describe("useErrorProblemDetails", async () => {
           errors: [{ message: "Some error message" }, { message: "Some other message" }],
         },
       };
-      const { getErrorMessages } = useErrorProblemDetails();
+      const { getErrorMessages } = composable;
 
       // Act
       const result = getErrorMessages(aggregateErrorProblemDetails);
@@ -83,7 +83,7 @@ describe("useErrorProblemDetails", async () => {
           field2: ["Some other message"],
         },
       };
-      const { getErrorMessages } = useErrorProblemDetails();
+      const { getErrorMessages } = composable;
 
       // Act
       const result = getErrorMessages(errorProblemDetails);
@@ -98,7 +98,7 @@ describe("useErrorProblemDetails", async () => {
           errors: ["Some error message", "Some other message"],
         },
       };
-      const { getErrorMessages } = useErrorProblemDetails();
+      const { getErrorMessages } = composable;
 
       // Act
       const result = getErrorMessages(errorProblemDetails);
@@ -112,7 +112,7 @@ describe("useErrorProblemDetails", async () => {
       it("should return Unknown Error if error is undefined", async () => {
         // Arrange
         const error = undefined;
-        const { toErrorProblemDetails } = useErrorProblemDetails();
+        const { toErrorProblemDetails } = composable;
 
         // Act
         const result = await toErrorProblemDetails(error);
@@ -125,7 +125,7 @@ describe("useErrorProblemDetails", async () => {
       it("should return Unknown error if error is empty", async () => {
         // Arrange
         const error = {};
-        const { toErrorProblemDetails } = useErrorProblemDetails();
+        const { toErrorProblemDetails } = composable;
 
         // Act
         const result = await toErrorProblemDetails(error);
@@ -144,7 +144,7 @@ describe("useErrorProblemDetails", async () => {
           data: { title: "Bad request", detail: "Missing some field" },
         };
 
-        const { toErrorProblemDetails } = useErrorProblemDetails();
+        const { toErrorProblemDetails } = composable;
 
         // Act
         const result = await toErrorProblemDetails(error);
@@ -179,7 +179,7 @@ describe("useErrorProblemDetails", async () => {
           data: mockBlob,
         };
 
-        const { toErrorProblemDetails } = useErrorProblemDetails();
+        const { toErrorProblemDetails } = composable;
 
         // Act
         const result = await toErrorProblemDetails(error);
@@ -239,7 +239,7 @@ priority: u=1, i
 `,
         };
 
-        const { toErrorProblemDetails } = useErrorProblemDetails();
+        const { toErrorProblemDetails } = composable;
 
         // Act
         const result = await toErrorProblemDetails(error);
@@ -255,7 +255,7 @@ priority: u=1, i
       it("should return an ErrorProblemDetails object if error is an Error object", async () => {
         // Arrange
         const error = new Error("Some error message");
-        const { toErrorProblemDetails } = useErrorProblemDetails();
+        const { toErrorProblemDetails } = composable;
 
         // Act
         const result = await toErrorProblemDetails(error);
@@ -284,7 +284,7 @@ priority: u=1, i
           },
         },
       };
-      const { findParentMkForm } = useErrorProblemDetails();
+      const { findParentMkForm } = composable;
 
       // Act
       const result = findParentMkForm(component);
@@ -307,7 +307,7 @@ priority: u=1, i
           },
         },
       };
-      const { findParentMkForm } = useErrorProblemDetails();
+      const { findParentMkForm } = composable;
 
       // Act
       const result = findParentMkForm(component);
@@ -330,7 +330,7 @@ priority: u=1, i
           },
         },
       };
-      const { findParentMkForm } = useErrorProblemDetails();
+      const { findParentMkForm } = composable;
 
       // Act
       const result = findParentMkForm(component);
@@ -345,7 +345,7 @@ priority: u=1, i
         $parent: null,
       };
 
-      const { findParentMkForm } = useErrorProblemDetails();
+      const { findParentMkForm } = composable;
 
       // Act
       const result = findParentMkForm(component);

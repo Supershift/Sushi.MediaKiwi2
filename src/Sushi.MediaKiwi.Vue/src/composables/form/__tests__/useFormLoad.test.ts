@@ -25,7 +25,7 @@ describe("useFormLoad", async () => {
   createTestingPinia();
 
   // Register the axios interceptor
-  const { registerInterceptor } = useErrorProblemDetails();
+  const { registerInterceptor } = await useErrorProblemDetails();
   registerInterceptor(axiosMock);
 
   const formRef = ref<any>({ reset: vi.fn(), validate: vi.fn() });

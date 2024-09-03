@@ -137,7 +137,7 @@
     <MkToolbar
       v-if="!computedProps.hideToolbar"
       v-bind="$attrs"
-      :item-view-id="navigation.currentNavigationItem.value.viewId"
+      :item-view-id="navigation.currentNavigationItem.value.id"
       :title="computedProps.title"
       :new="false"
       :sticky="computedProps.sticky ? true : false"

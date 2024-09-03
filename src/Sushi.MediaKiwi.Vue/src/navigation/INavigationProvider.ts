@@ -1,7 +1,5 @@
-import { View, NavigationItem, Section } from "@/models";
+import { NavigationItem, NavigationTree, Section } from "@/models/navigation";
 
-export interface INavigationProvider {
-    GetViewsAsync(): Promise<View[]>;
-    GetNavigationItemsAsync(): Promise<NavigationItem[]>;
-    GetSectionsAsync(): Promise<Section[]>;
+export interface INavigationProvider {    
+    GetTreeAsync() : Promise<NavigationTree>;
 }

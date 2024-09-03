@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { SectionConnector } from "../SectionConnector";
 import axiosMock from "axios";
-import { Section } from "../../models/";
+import { SectionDto } from "../../models/";
 import ListResult from "../../models/api/ListResult";
 
 // mock axios
@@ -14,7 +14,7 @@ describe("SectionConnector", () => {
     vi.clearAllMocks();
   });
   it("Should call get for sections", async () => {
-    const expectedResult = { data: new ListResult<Section>() };
+    const expectedResult = { data: new ListResult<SectionDto>() };
     // mock axios getter to return expected result
     axiosMock.get = vi.fn().mockResolvedValue(expectedResult);
 

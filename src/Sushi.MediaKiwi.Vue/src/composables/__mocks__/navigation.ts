@@ -1,76 +1,64 @@
-import { NavigationItem, Section, View } from "@/models";
+import { NavigationItem, Section } from "@/models/navigation";
+
+const sections = <Array<Section>>[{ id: '1', name: 'Admin Section', roles: ['admin'] }, { id: '2', name: 'Public Section', roles: [] }];
 
 export const mockMediakiwiStore = {
-  sections: <Array<Section>>[{ id: '1', name: 'Admin Section', roles: ['admin'] }, { id: '2', name: 'Public Section', roles: [] }],
-  rootNavigationItems: <Array<NavigationItem>>[{ id: '1', sectionId: '1', name: 'Home', viewId: 'homeView', path: 'test', parent: { id: '0', name: 'Landing', viewId: 'landingView', path: 'land' } }, { id: '2', sectionId: '1', name: 'Detail', viewId: 'detailView', path: 'test0', parent: { id: '1', name: 'Home', viewId: 'homeView', path: 'test', parent: { id: '0', name: 'Landing', viewId: 'landingView', path: 'land' } } }],
-  navigationItems: <Array<NavigationItem>>[{ id: '1', sectionId: '1', name: 'Home', viewId: 'homeView', path: 'test', parent: { id: '0', name: 'Landing', viewId: 'landingView', path: 'land' } }, {
-    id: '2', sectionId: '1', name: 'Detail', viewId: 'detailView', path: 'test0', parent: {
-      id: '1', name: 'Home', viewId: 'homeView', path: 'test', parent: {
-        id: '0', name: 'Landing', viewId: 'landingView', path: 'land'
+  sections: sections,
+  rootNavigationItems: <Array<NavigationItem>>[{ id: '1', section: sections[0], name: 'Home', componentKey: 'homeView', parent: { id: '0', name: 'Landing', componentKey: 'landingView' } }, { id: '2', section: sections[0], name: 'Detail', componentKey: 'detailView', parent: { id: '1', name: 'Home', componentKey: 'homeView', parent: { id: '0', name: 'Landing', componentKey: 'landingView' } } }],
+  navigationItems: <Array<NavigationItem>>[{ id: '1', section: sections[0], name: 'Home', componentKey: 'homeView', parent: { id: '0', name: 'Landing', componentKey: 'landingView'} }, {
+    id: '2', section: sections[0], name: 'Detail', componentKey: 'detailView', parent: {
+      id: '1', name: 'Home', componentKey: 'homeView', parent: {
+        id: '0', name: 'Landing', componentKey: 'landingView'
       }
     }
-  }],
-  views: <Array<View>>[{ id: 'homeView', name: 'Home View' }, { id: 'detailView', name: 'Detail View', parameterName: "itemId" }, { id: 'landingView', name: 'Landing View' }],
+  }]
 };
 
 export const mockNavigationItemChildren = <Array<NavigationItem>>[
   {
     id: 'child1',
-    view: { id: 'child1', name: 'Child 1' }
-  }, {
+    componentKey: 'child1' }
+  , {
     id: 'child2',
-    view: { id: 'child2', name: 'Child 2' }
+    componentKey: 'child2'
   }, {
-    id: 'child3',
-    view: {}
+    id: 'child3'    
   },
   length = 3
 ];
 
 export const mockNavigationItemWithoutChildren = <NavigationItem>{
   id: '3',
-  name: 'Settings',
-  path: 'test2',
-  viewId: 'settingsView',
+  name: 'Settings',  
+  componentKey: 'settingsView',
 };
 
 export const mockRouteMeta = {
   meta: {
     navigationItem: <NavigationItem>{
       id: '2',
-      name: 'Detail',
-      path: 'test0',
-      viewId: 'detailView',
-      sectionId: '1',
-      view: {
-        id: 'detailView',
-        name: 'Detail View',
-        parameterName: "itemId"
-      },
+      name: 'Detail',      
+      componentKey: 'detailView',
+      section: sections[0],      
       parent: {
         id: '1',
         name: 'Home',
-        viewId: 'homeView',
-        path: 'test',
+        componentKey: 'homeView.',        
         parent: {
           id: '0',
           name: 'Landing',
-          viewId: 'landingView',
-          path: 'land'
+          componentKey: 'landingView',          
         },
         children: [
           {
             id: '2',
-            name: 'Detail',
-            path: 'test0',
-            viewId: 'detailView',
+            name: 'Detail',            
+            componentKey: 'detailView',
           },
           length = 1
-        ],
-        hasItemNavigation: true
+        ],        
       },
-      children: mockNavigationItemChildren,
-      hasItemNavigation: true
+      children: mockNavigationItemChildren,      
     }
   },
   params: { itemId: "1" },
@@ -100,23 +88,20 @@ export const mockRoutes = [
 export const mockAdminSections = [{ id: "1", roles: ['admin'], name: 'Admin Section' }];
 
 export const mockNavigationItemsAsRoot = <NavigationItem>{
-  id: 'root',
-  hasItemNavigation: true,
+  id: 'root',  
   children: [
     {
-      id: 'child1',
-      hasItemNavigation: false,
+      id: 'child1',      
       parent: this, // Simulating parent reference
       children: [
         {
-          id: 'grandchild1',
-          hasItemNavigation: true,
+          id: 'grandchild1',          
           parent: this, // Simulating parent reference
-          children: [{ id: 'greatGrandchild1', hasItemNavigation: false, parent: this }] // Simulating deep nesting
+          children: [{ id: 'greatGrandchild1', parent: this }] // Simulating deep nesting
         }
       ]
     },
-    { id: 'child2', hasItemNavigation: true, parent: this, children: [] },
+    { id: 'child2', parent: this, children: [] },
   ],
 };
 

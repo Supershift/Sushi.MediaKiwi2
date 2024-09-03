@@ -1,17 +1,18 @@
 import { identity } from "@/identity";
-import { MediakiwiVueOptions, MoneyValue, View } from "@/models";
+import { MediakiwiVueOptions, MoneyValue } from "@/models";
 import { tokenStore } from "@/plugins/i18next";
 import { i18n } from "i18next";
 import { Ref, computed, inject } from "vue";
 import { useNavigation } from "@/composables/useNavigation";
 import { container } from "tsyringe";
+import { NavigationItem } from "@/models/navigation";
 
 /**
  * Adds i18next to the component.
- * @param scope If provided, the t function will be scoped to this namespace. If left undefined, it will be scoped to the current view.
+ * @param scope If provided, the t function will be scoped to this namespace. If left undefined, it will be scoped to the current Navigation item's id.
  * @returns
  */
-export async function useI18next(scope?: View | string) {
+export async function useI18next(scope?: NavigationItem | string) {
   // inject dependencies
   const navigation = useNavigation();
 
@@ -49,7 +50,7 @@ export async function useI18next(scope?: View | string) {
 
   // determine namespace
   if (!scope) {
-    scope = navigation.currentNavigationItem.value?.view;
+    scope = navigation.currentNavigationItem.value;
     if (!scope) scope = "common";
   }
 
@@ -57,7 +58,7 @@ export async function useI18next(scope?: View | string) {
   if (typeof scope === "string") {
     namespace = scope;
   } else {
-    namespace = (scope as View).id;
+    namespace = (scope as NavigationItem).id;
   }
 
   // if a namespace is provided, check if it already exists on i18next and if not, add it

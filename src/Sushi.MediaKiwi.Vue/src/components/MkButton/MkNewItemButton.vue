@@ -6,8 +6,8 @@
 
   // define properties
   const props = defineProps<{
-    /** ExternalId of the view instance to which the user is pushed when clicking a row. */
-    itemViewId?: string;
+    /** Id of the navigatin item to which the user is pushed when clicking a row. */
+    navigationItemId?: string;
     /** label for the title  */
     newTitle?: string;
     /** Determines if we only want to emit instead of navigating to the given itemViewId */
@@ -27,23 +27,12 @@
   function onNewClick() {
     if (props && props?.newEmit) {
       // emit event
-      emit("click:new", props.itemViewId);
+      emit("click:new", props.navigationItemId);
     } else {
       // navigate user to target page if defined
-      if (props.itemViewId) {
-        // find navigation item for the view
-        const view = store.views.find((x) => x.id == props.itemViewId);
-
-        if (!view) {
-          throw new Error(`No view found for external id ${props.itemViewId}`);
-        }
-        const navigationItem = store.navigationItems.find((x) => x.viewId == view?.id);
-        if (!navigationItem) {
-          throw new Error(`No navigationItem found for view ${props.itemViewId}`);
-        }
-
+      if (props.navigationItemId) {
         // push user to target page
-        navigation.navigateTo(navigationItem, undefined);
+        navigation.navigateToId(props.navigationItemId, undefined);
       }
     }
   }

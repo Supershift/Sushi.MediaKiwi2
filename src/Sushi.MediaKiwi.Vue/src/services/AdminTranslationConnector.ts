@@ -1,8 +1,7 @@
-import { NavigationItem, Paging, Translation } from "@/models";
+import { Translation } from "@/models";
 import ListResult from "@/models/api/ListResult";
-import { INavigationConnector } from "./interfaces/INavigationConnector";
 import { injectable, inject } from "tsyringe";
-import type { AxiosInstance, AxiosResponse } from "axios";
+import type { AxiosInstance } from "axios";
 import { IAdminTranslationConnector } from "./interfaces";
 
 @injectable()
