@@ -4,6 +4,7 @@ import { FormDialogProps, FormViewProps, FormSideSheetProps, FormSlotProps, Subm
 import { useFormLoad } from "./useFormLoad";
 import { useFormSubmit } from "./useFormSubmit";
 import { useFormDelete } from "./useFormDelete";
+import { useFormMessages } from "./useFormMessages";
 
 export async function useForm<T extends FormViewProps | FormDialogProps | FormSideSheetProps>(
   /** Props set on the implementing component */
@@ -23,8 +24,9 @@ export async function useForm<T extends FormViewProps | FormDialogProps | FormSi
   /** Model for the Progress state of the component */
   isLoaded: Ref<boolean>
 ) {
+  const formMessages = await useFormMessages();
+
   // Helper function to filter out undefined properties
-  // const definedProps = (obj: Partial<T>) => Object.fromEntries(Object.entries(obj).filter(([_k, v]) => !!v));
   const definedProps = (obj: Partial<T>) => Object.fromEntries(Object.entries(obj).filter(([_k, v]) => v !== null && v !== undefined));
 
   /** Computed properties for the Form, merging the defaultProps with the form props */
@@ -42,9 +44,9 @@ export async function useForm<T extends FormViewProps | FormDialogProps | FormSi
   const entryName = computed(() => computedProps.value.entryName);
 
   // Init the form load, submit and delete functions
-  const formLoad = await useFormLoad(computedProps, formRef, entryName, inProgress, errorProblemDetails, isLoaded);
-  const formSubmit = await useFormSubmit(computedProps, formRef, entryName, inProgress, errorProblemDetails, isValid);
-  const formDelete = await useFormDelete(computedProps, formRef, entryName, inProgress, errorProblemDetails);
+  const formLoad = await useFormLoad(computedProps, formRef, entryName, inProgress, errorProblemDetails, isLoaded, formMessages);
+  const formSubmit = await useFormSubmit(computedProps, formRef, entryName, inProgress, errorProblemDetails, isValid, formMessages);
+  const formDelete = await useFormDelete(computedProps, formRef, entryName, inProgress, errorProblemDetails, formMessages);
 
   /**
    * Slot props for the form, to be passed to a component implementing a Form

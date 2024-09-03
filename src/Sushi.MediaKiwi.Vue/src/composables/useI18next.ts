@@ -87,35 +87,55 @@ export async function useI18next(scope?: NavigationItem | string) {
   const timeOptions = computed(() => mediakiwiOptions?.dateFormatOptions?.time || <Intl.DateTimeFormatOptions>{ timeStyle: "short" });
   const monthOptions = computed(() => mediakiwiOptions?.dateFormatOptions?.month || <Intl.DateTimeFormatOptions>{ month: "long" });
 
-  const formatDateTimeInternal = (date: string | Date, options?: Intl.DateTimeFormatOptions): string => {
+  const formatDateTimeInternal = (date: string | Date | undefined | null, options?: Intl.DateTimeFormatOptions): string => {
+    if (!date) {
+      return "";
+    }
+
     // Use the custom provided options, or merge the date and time options
     const formatOptions = options || { ...dateOptions.value, ...timeOptions.value };
 
     return formatDateTimeGenericInternal(date, { ...formatOptions });
   };
 
-  const formatDateInternal = (date: string | Date, options?: Intl.DateTimeFormatOptions): string => {
+  const formatDateInternal = (date: string | Date | undefined | null, options?: Intl.DateTimeFormatOptions): string => {
+    if (!date) {
+      return "";
+    }
+
     // Use the custom provided options, or merge the date options
     const formatOptions = options || { ...dateOptions.value };
 
     return formatDateTimeGenericInternal(date, { ...formatOptions });
   };
 
-  const formatTimeInternal = (date: string | Date, options?: Intl.DateTimeFormatOptions): string => {
+  const formatTimeInternal = (date: string | Date | undefined | null, options?: Intl.DateTimeFormatOptions): string => {
+    if (!date) {
+      return "";
+    }
+
     // Use the custom provided options, or merge the time options
     const formatOptions = options || { ...timeOptions.value };
 
     return formatDateTimeGenericInternal(date, { ...formatOptions });
   };
 
-  const formatMonthInternal = (date: string | Date, options?: Intl.DateTimeFormatOptions): string => {
+  const formatMonthInternal = (date: string | Date | undefined | null, options?: Intl.DateTimeFormatOptions): string => {
+    if (!date) {
+      return "";
+    }
+
     // Use the custom provided options, or merge the month options
     const formatOptions = options || { ...monthOptions.value };
 
     return formatDateTimeGenericInternal(date, { ...formatOptions });
   };
 
-  const formatDateTimeGenericInternal = (date: string | Date, options: Intl.DateTimeFormatOptions): string => {
+  const formatDateTimeGenericInternal = (date: string | Date | undefined | null, options: Intl.DateTimeFormatOptions): string => {
+    if (!date) {
+      return "";
+    }
+
     // parse or cast to date, depending on parameter type
     let dateValue: Date;
     if (typeof date === "string") {
@@ -147,6 +167,33 @@ export async function useI18next(scope?: NavigationItem | string) {
   };
   const formatMoneyValue = computed(() => formatMoneyValueInternal);
 
+  /**
+   * Converts bytes to a human-readable format.
+   * @param bytes The size in bytes to be converted.
+   * @param decimals (Optional) The number of decimal places to round to. Defaults to 2.
+   * @returns A string representing the size in a human-readable format.
+   */
+  const formatBytesInteral = (bytes: number, decimals: number = 2) => {
+    // Define the base for conversion (1000 bytes = 1 kilobyte)
+    const base = 1000;
+
+    // Define the units for display
+    const units = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+
+    // Calculate the index of the appropriate unit
+    const unitIndex = Math.floor(Math.log(bytes) / Math.log(base));
+
+    // Calculate the size in the chosen unit
+    const size = bytes / Math.pow(base, unitIndex);
+
+    // Return the size formatted with the appropriate unit
+    return `${formatNumber.value(size, {
+      maximumFractionDigits: decimals,
+    })} ${units[unitIndex]}`;
+  };
+
+  const formatBytes = computed(() => formatBytesInteral);
+
   return {
     i18next,
     /** T function scoped to the namespace provided when adding composable. If non provided, scoped to default. */
@@ -164,5 +211,6 @@ export async function useI18next(scope?: NavigationItem | string) {
     /**  */
     formatMonth,
     formatDateTimeGeneric,
+    formatBytes,
   };
 }

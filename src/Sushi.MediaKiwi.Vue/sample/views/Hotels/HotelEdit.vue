@@ -14,7 +14,7 @@
   // inject dependencies
   const hotelConnector = container.resolve(HotelConnector);
   const countriesConnector = container.resolve(CountryConnector);
-  const { required } = useValidationRules();
+  const { required } = await useValidationRules();
   const fileUploadConnector = container.resolve(FileUploadConnector);
   const { setCustomPageTitle } = useBreadcrumbs();
   const { formatDateTime } = await useI18next();

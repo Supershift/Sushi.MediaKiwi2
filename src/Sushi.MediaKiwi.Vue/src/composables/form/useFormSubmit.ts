@@ -3,8 +3,8 @@ import { ComputedRef, ModelRef, Ref, computed, ref } from "vue";
 import { useSnackbarStore } from "@/stores";
 import { SubmitProps } from "@/models/form/FormProps";
 import { TResult } from "@/models/form/TResult";
-import { useErrorProblemDetails } from "../useErrorProblemDetails";
-import { useFormMessages } from "./useFormMessages";
+import { FormMessages } from "@/models/form/FormMessages";
+import { createErrorProblemDetails } from "@/errorHandler/createErrorProblemDetails";
 
 export async function useFormSubmit(
   /** Props determining the configuration and labels */
@@ -18,12 +18,12 @@ export async function useFormSubmit(
   /** Model for the ErrorProblemDetails state of the component */
   errorProblemDetails: ModelRef<ErrorProblemDetails | null | undefined, string>,
   /** Model for the Valid state of the component */
-  isValid: ModelRef<any, string>
+  isValid: ModelRef<any, string>,
+  /** FormMessages */
+  formMessages: FormMessages
 ) {
   // Inject Dependencies
   const snackbar = useSnackbarStore();
-  const { toErrorProblemDetails } = useErrorProblemDetails();
-  const formMessages = await useFormMessages();
 
   // Entity name, used in the feedback
   const entryLabel = computed(() => entryName.value || "entry");
@@ -127,7 +127,7 @@ export async function useFormSubmit(
         if (error instanceof ErrorProblemDetails) {
           errorResult = error as ErrorProblemDetails;
         } else {
-          errorResult = await toErrorProblemDetails(error);
+          errorResult = await createErrorProblemDetails(error);
         }
 
         // Show a message that the submit failed

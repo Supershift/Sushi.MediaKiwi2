@@ -15,6 +15,8 @@ Errors thrown within the context of the Form are rendered as a v-alert component
 
 All feedback is given using the default labels. [Read more](./../../Feedback/FormMessages.md).
 
+Client side validation can be applied using the [useValidationRules()](./ValidationRules.md) composable
+
 ## Customization
 
 There are multiple ways of customizing the MkForms. You can define the props on the component or define them globally in the [MediaKiwiFormOptions](./MediaKiwiFormOptions.md).

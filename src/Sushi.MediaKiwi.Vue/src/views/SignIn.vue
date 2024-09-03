@@ -44,7 +44,7 @@
   // computed properties
   const currentThemeName = computed(() => theme.name.value || "");
   const currentSignInImage = computed(() => signIn?.[currentThemeName.value]?.image || "");
-  const currentSignInColor = computed(() => signIn?.[currentThemeName.value]?.color || ""); // check if the theme is dark or light and use the appropriate color
+  const currentSignInColor = computed(() => signIn?.[currentThemeName.value]?.color || undefined); // check if the theme is dark or light and use the appropriate color
 
   // Generate style based on the configuration
   const styles = computed(() => {

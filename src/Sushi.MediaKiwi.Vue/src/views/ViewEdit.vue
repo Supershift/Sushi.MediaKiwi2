@@ -7,10 +7,12 @@
   import { useMediakiwiStore } from "@/stores";
   import { RouterManager } from "@/router/routerManager";
   import { useNavigation } from "@/composables/useNavigation";
+  import { useValidationRules } from "@/composables";
 
   // inject dependencies
   const viewConnector = container.resolve<IViewConnector>("IViewConnector");
   const routerManager = container.resolve<RouterManager>("RouterManager");
+  const { required } = await useValidationRules();
 
   const store = useMediakiwiStore();
   const navigation = useNavigation();
@@ -66,12 +68,19 @@
 
 <template>
   <MkForm title="View" :onSubmit="onSave" :on-delete="onDelete" @load="onLoad">
-    <v-text-field v-model="view.id" label="Id" hint="Unique human-readable id for the view." :disabled="viewId ? true : false"></v-text-field>
-    <v-text-field v-model="view.name" label="Name"></v-text-field>
+    <v-text-field
+      v-model="view.id"
+      label="Id"
+      hint="Unique human-readable id for the view."
+      :disabled="viewId ? true : false"
+      :rules="[required]"
+    ></v-text-field>
+    <v-text-field v-model="view.name" label="Name" :rules="[required]"></v-text-field>
     <v-text-field
       v-model="view.componentKey"
       label="Component key"
       hint="The key of the component as set in the modules property of the mediakiwi options."
+      :rules="[required]"
     ></v-text-field>
     <v-text-field
       v-model="view.parameterName"

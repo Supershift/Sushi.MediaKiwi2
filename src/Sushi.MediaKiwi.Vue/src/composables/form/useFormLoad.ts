@@ -3,8 +3,8 @@ import { ComputedRef, ModelRef, Ref, computed } from "vue";
 import { useSnackbarStore } from "@/stores";
 import { LoadProps, UndoProps } from "@/models/form/FormProps";
 import { TResult } from "@/models/form/TResult";
-import { useErrorProblemDetails } from "../useErrorProblemDetails";
-import { useFormMessages } from "./useFormMessages";
+import { FormMessages } from "@/models/form/FormMessages";
+import { createErrorProblemDetails } from "@/errorHandler/createErrorProblemDetails";
 
 export async function useFormLoad(
   /** Props determining the configuration and labels */
@@ -18,12 +18,12 @@ export async function useFormLoad(
   /** Model for the ErrorProblemDetails state of the component */
   errorProblemDetails: ModelRef<ErrorProblemDetails | null | undefined, string>,
   /** Model for the Progress state of the component */
-  isLoaded: Ref<boolean>
+  isLoaded: Ref<boolean>,
+  /** FormMessages */
+  formMessages: FormMessages
 ) {
   // Inject Dependencies
   const snackbar = useSnackbarStore();
-  const { toErrorProblemDetails } = useErrorProblemDetails();
-  const formMessages = await useFormMessages();
 
   const entryLabel = computed(() => entryName.value || "data");
 
@@ -83,7 +83,7 @@ export async function useFormLoad(
         if (error instanceof ErrorProblemDetails) {
           errorResult = error as ErrorProblemDetails;
         } else {
-          errorResult = await toErrorProblemDetails(error);
+          errorResult = await createErrorProblemDetails(error);
         }
 
         // Show a message that the submit failed
@@ -157,7 +157,7 @@ export async function useFormLoad(
       if (error instanceof ErrorProblemDetails) {
         errorResult = error as ErrorProblemDetails;
       } else {
-        errorResult = await toErrorProblemDetails(error);
+        errorResult = await createErrorProblemDetails(error);
       }
 
       // Show a message that the submit failed

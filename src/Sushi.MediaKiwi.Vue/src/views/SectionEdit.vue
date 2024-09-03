@@ -15,7 +15,7 @@
 
   const store = useMediakiwiStore();
   const navigation = useNavigation();
-  const { alphaNumericNoSpace } = useValidationRules();
+  const { alphaNumericNoSpace } = await useValidationRules();
 
   // get id of the section from the route
   const sectionId = navigation.currentViewParameter;

@@ -8,6 +8,7 @@ import { MediakiwiTableOptions } from "./MediakiwiTableOptions";
 import { MediaKiwiFormOptions } from "./MediaKiwiFormOptions";
 import { MediakiwiSigninConfigurations } from "./MediakiwiSignInConfigurations";
 import { INavigationProvider } from "@/navigation/INavigationProvider";
+import { ComponentPublicInstance } from "vue";
 
 export interface MediakiwiVueOptions {
   /** Base url for the MediaKiwi API, e.g. https://portal.mydomain.com/mediakiwi/api */
@@ -43,5 +44,5 @@ export interface MediakiwiVueOptions {
   tableOptions?: MediakiwiTableOptions;
   formOptions?: MediaKiwiFormOptions;
   /** Global errorhandler, see {@link https://vuejs.org/api/application.html#app-config-errorhandler} */
-  globalErrorHandler?: (err: unknown, instance: unknown, info: string) => void;
+  globalErrorHandler?: (err: any, instance?: ComponentPublicInstance | null, info?: string) => Promise<void>;
 }

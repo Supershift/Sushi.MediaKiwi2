@@ -13,10 +13,11 @@
   const navigationConnector = container.resolve<INavigationConnector>("INavigationConnector");
   const viewConnector = container.resolve<IViewConnector>("IViewConnector");
   const routerManager = container.resolve<RouterManager>("RouterManager");
+  const { required } = await useValidationRules();
 
   const store = useMediakiwiStore();
   const navigation = useNavigation();
-  const { alphaNumericNoSpace } = useValidationRules();
+  const { alphaNumericNoSpace } = await useValidationRules();
 
   // get id of the view from the route
   const navigationItemId = navigation.currentViewParameter;
@@ -76,8 +77,13 @@
 
 <template>
   <MkForm title="" :onSubmit="onSave" :on-load="onLoad" :on-delete="onDelete">
-    <v-text-field v-model="state.navigationItem.id" label="Id" :disabled="navigationItemId ? true : false" :rules="[alphaNumericNoSpace]"></v-text-field>
-    <v-text-field v-model="state.navigationItem.name" label="Name" :rules="[(v) => !!v]"></v-text-field>
+    <v-text-field
+      v-model="state.navigationItem.id"
+      label="Id"
+      :disabled="navigationItemId ? true : false"
+      :rules="[required, alphaNumericNoSpace]"
+    ></v-text-field>
+    <v-text-field v-model="state.navigationItem.name" label="Name" :rules="[required]"></v-text-field>
     <v-autocomplete
       v-model="state.navigationItem.parentNavigationItemId"
       label="Parent"

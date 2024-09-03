@@ -6,15 +6,17 @@
   import MkToolbar from "../MkToolbar/MkToolbar.vue";
   import MkOverflowMenuIcon from "../MkOverflowMenuIcon/MkOverflowMenuIcon.vue";
   import { FormSlotProps, FormViewProps } from "@/models/form/FormProps";
-  //
   import { useMediakiwiVueOptions } from "@/composables/useMediakiwiVueOptions";
   import { useForm } from "@/composables/form/useForm";
   import { useNavigation } from "@/composables/useNavigation";
+  import { useErrorMessages } from "@/composables/useErrorMessages";
 
   // Inject dependencies
   const navigation = useNavigation();
   const { formOptions } = useMediakiwiVueOptions();
   const instance = getCurrentInstance();
+  // Get the content
+  const errorMessages = await useErrorMessages();
 
   // Define props
   const props = withDefaults(defineProps<FormViewProps>(), {
@@ -111,6 +113,9 @@
       formRef.value?.resetValidation();
     },
     setError(error: ErrorProblemDetails) {
+      if (!error || !error.detail || !error.error) {
+        error = new ErrorProblemDetails(errorMessages.unexpectedErrorMessage);
+      }
       errorProblemDetails.value = error;
     },
   });

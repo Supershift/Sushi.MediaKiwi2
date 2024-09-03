@@ -15,28 +15,7 @@ export function useAxiosExtensions() {
     };
   }
 
-  /**
-   * Check if the response is a blob response
-   * @param error
-   * @returns
-   */
-  function isAxiosBlobResponse(error?: AxiosError): boolean {
-    if (!error) return false;
-
-    if (
-      error.request?.responseType === "blob" &&
-      error.response?.data instanceof Blob &&
-      error.response.data?.type &&
-      error.response.data?.type.toLowerCase().indexOf("json") != -1
-    ) {
-      return true;
-    }
-
-    return false;
-  }
-
   return {
     addParamSerializer,
-    isAxiosBlobResponse,
   };
 }
