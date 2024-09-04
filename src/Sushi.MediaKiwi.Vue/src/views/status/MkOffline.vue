@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import { useNetwork } from "@/composables/useNetwork";
+  import { useApiConnection } from "@/composables/useApiConnection";
   import { useRouter } from "@/router";
   import { onMounted } from "vue";
-  const { isConnectedToApi } = useNetwork();
+  const { isConnectedToApi } = useApiConnection();
   const router = useRouter();
 
   onMounted(() => {

@@ -2,7 +2,7 @@ import { computed, ref } from "vue";
 
 const apiConnected = ref(true);
 
-export function useNetwork() {
+export function useApiConnection() {
   const isConnectedToApi = computed(() => apiConnected.value);
 
   function setConnected(value: boolean) {

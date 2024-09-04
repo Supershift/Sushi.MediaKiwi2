@@ -6,7 +6,7 @@ import { createErrorProblemDetails } from "./createErrorProblemDetails";
 import { getActivePinia } from "pinia";
 import { isAxiosError } from "axios";
 import { useRouter } from "@/router";
-import { useNetwork } from "@/composables/useNetwork";
+import { useApiConnection } from "@/composables/useApiConnection";
 
 /**
  * Vue global error handler, can be overridden by the user
@@ -16,7 +16,7 @@ import { useNetwork } from "@/composables/useNetwork";
  * @returns
  */
 export async function globalErrorHandler(err: any, instance?: ComponentPublicInstance | null, info?: string) {
-  const network = useNetwork();
+  const network = useApiConnection();
 
   // Log the error to the console
   console.error(err, instance, info);

@@ -4,13 +4,13 @@
   import MkLogoLockup from "./MkLogoLockup.vue";
   import MkSnackbar from "../MkSnackbar/MkSnackbar.vue";
   import { ref } from "vue";
-  import { useNetwork } from "@/composables/useNetwork";
+  import { useApiConnection } from "@/composables/useApiConnection";
   import { useRouter } from "@/router";
 
   // inject dependencies
   const isAuthenticated = useIsAuthenticated();
   const router = useRouter();
-  const { isConnectedToApi } = useNetwork();
+  const { isConnectedToApi } = useApiConnection();
   /** Tells If the MkScreen components has been loaded */
   const isMkScreenMounted = ref(false);
 

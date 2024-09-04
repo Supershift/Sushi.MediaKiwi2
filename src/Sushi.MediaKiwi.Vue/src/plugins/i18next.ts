@@ -5,10 +5,10 @@ import HttpApi from "i18next-http-backend";
 import { MediakiwiVueOptions } from "@/models";
 import { container } from "tsyringe";
 import axios from "axios";
-import { useNetwork } from "@/composables/useNetwork";
+import { useApiConnection } from "@/composables/useApiConnection";
 import { globalErrorHandler } from "@/errorHandler/globalErrorHandler";
 
-const { isConnectedToApi } = useNetwork();
+const { isConnectedToApi } = useApiConnection();
 
 export const tokenStore = <
   {
