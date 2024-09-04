@@ -133,7 +133,7 @@ describe('useNavigation', () => {
 
       const expected = "Home"; // The root item should be the expected result
       const result = determineCurrentRoootItem();
-      
+
 
       expect(result?.name).toEqual(expected);
     });
@@ -142,7 +142,7 @@ describe('useNavigation', () => {
     it('should correctly determine if navigation item is active', () => {
       const { determineIfNavigationItemIsActive } = useNavigation();
 
-      const result = determineIfNavigationItemIsActive(mockRouteMeta.meta.navigationItem);
+      const result = determineIfNavigationItemIsActive(mockRouteMeta.meta.navigationItem!);
 
       expect(result).toEqual(true);
     });

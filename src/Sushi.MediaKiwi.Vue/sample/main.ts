@@ -16,7 +16,7 @@ import { mdiAccountCheckOutline, mdiTestTube } from "@mdi/js";
 import { modules } from "./views/modules";
 import { useEntraSettings } from "@/composables/useEntraSettings";
 import { Configuration } from "@azure/msal-browser";
-import navigationTree from "./navigation/NavigationProvider";
+import sampleNavigationProvider from "./navigation/NavigationProvider";
 
 // add mediakiwi
 const mediakiwiOptions = <MediakiwiVueOptions>{
@@ -37,7 +37,7 @@ const mediakiwiOptions = <MediakiwiVueOptions>{
     },
   },
   apiBaseUrl: import.meta.env.VITE_APP_MEDIAKIWI_APIBASEURL,
-  navigationProvider: navigationTree,
+  // navigationProvider: sampleNavigationProvider,
   msalConfig: <Configuration>{},
   identity: <MediakiwiIdentity>{},
   // import all views as models
