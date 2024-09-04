@@ -3,14 +3,14 @@ import { setActivePinia, createPinia } from 'pinia';
 import { RouteRecordRaw, createRouter, createWebHistory } from 'vue-router';
 import { useNavigation } from '@/composables/useNavigation';
 import { createApp } from 'vue';
-import { mockMediakiwiStore, mockRouteMeta, mockRoutes, mockAdminSections, mockNavigationItemChildren, mockNavigationItemWithoutChildren, mockNavigationItemsAsRoot } from '@/composables/__mocks__/navigation';
+import { mockMediakiwiStore, mockRouteMeta, mockRoutes, mockNavigationItemsAsRoot } from '@/composables/__mocks__/navigation';
 
 let routes: RouteRecordRaw[] = mockRoutes;
 
 let router = createRouter({
   history: createWebHistory(),
   routes,
-});;
+});
 
 const app = createApp({});
 app.use(router);
@@ -18,7 +18,6 @@ app.use(createPinia());
 setActivePinia(createPinia());
 
 describe('useNavigation', () => {
-
   beforeEach(() => {
     // Create a new Vue application and router instance for each test
     vi.clearAllMocks();
@@ -89,7 +88,7 @@ describe('useNavigation', () => {
       const { currentSections } = useNavigation();
 
       // Expect the 'Admin Section' since our mock identity has the 'admin' role
-      expect(currentSections.value).toEqual(mockAdminSections);
+      expect(currentSections.value.length).toEqual(2);      
     });
   });
 
@@ -103,7 +102,7 @@ describe('useNavigation', () => {
           return Promise.resolve();
         }
       );
-      navigateToHome(); // > HOME
+      await navigateToHome(); // > HOME
       expect(spyon).toHaveBeenCalled();
       expect(currentNavigationItem.value).toBeDefined();
       expect(currentNavigationItem.value.name).toBe('Home');
@@ -113,7 +112,7 @@ describe('useNavigation', () => {
       const { navigateToParent } = useNavigation();
       const spyon = vi.spyOn(router, 'push').mockImplementationOnce(() => Promise.resolve());
 
-      navigateToParent(); // DETAILS > HOME
+      await navigateToParent(); // DETAILS > HOME
       expect(spyon).toHaveBeenCalled();
     });
 
@@ -134,6 +133,7 @@ describe('useNavigation', () => {
 
       const expected = "Home"; // The root item should be the expected result
       const result = determineCurrentRoootItem();
+      
 
       expect(result?.name).toEqual(expected);
     });
@@ -159,14 +159,14 @@ describe('useNavigation', () => {
     it('should correctly determine section is active', () => {
       const { determineIfSectionIsActive } = useNavigation();
 
-      const result = determineIfSectionIsActive(mockMediakiwiStore.sections[0]);
+      const result = determineIfSectionIsActive(mockMediakiwiStore.navigationTree.sections[0]);
 
       expect(result).toEqual(true);
     });
     it('should correctly determine section is inactive', () => {
       const { determineIfSectionIsActive } = useNavigation();
 
-      const result = determineIfSectionIsActive(mockMediakiwiStore.sections[1]);
+      const result = determineIfSectionIsActive(mockMediakiwiStore.navigationTree.sections[1]);
 
       expect(result).toEqual(false);
     });

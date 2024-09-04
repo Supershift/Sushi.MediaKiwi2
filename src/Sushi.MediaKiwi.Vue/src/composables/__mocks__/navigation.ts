@@ -1,65 +1,66 @@
-import { NavigationItem, Section } from "@/models/navigation";
+import { NavigationItem } from "@/models/navigation";
+import { JsonNavigationProvider, SimpleSection } from "@/navigation/JsonNavigationProvider";
+import { MediaKiwiState } from "@/stores";
 
-const sections = <Array<Section>>[{ id: '1', name: 'Admin Section', roles: ['admin'] }, { id: '2', name: 'Public Section', roles: [] }];
-
-export const mockMediakiwiStore = {
-  sections: sections,
-  rootNavigationItems: <Array<NavigationItem>>[{ id: '1', section: sections[0], name: 'Home', componentKey: 'homeView', parent: { id: '0', name: 'Landing', componentKey: 'landingView' } }, { id: '2', section: sections[0], name: 'Detail', componentKey: 'detailView', parent: { id: '1', name: 'Home', componentKey: 'homeView', parent: { id: '0', name: 'Landing', componentKey: 'landingView' } } }],
-  navigationItems: <Array<NavigationItem>>[{ id: '1', section: sections[0], name: 'Home', componentKey: 'homeView', parent: { id: '0', name: 'Landing', componentKey: 'landingView'} }, {
-    id: '2', section: sections[0], name: 'Detail', componentKey: 'detailView', parent: {
-      id: '1', name: 'Home', componentKey: 'homeView', parent: {
-        id: '0', name: 'Landing', componentKey: 'landingView'
-      }
-    }
-  }]
-};
-
-export const mockNavigationItemChildren = <Array<NavigationItem>>[
+// create nav tree
+const sections: SimpleSection[] = 
+[
   {
-    id: 'child1',
-    componentKey: 'child1' }
-  , {
-    id: 'child2',
-    componentKey: 'child2'
-  }, {
-    id: 'child3'    
-  },
-  length = 3
+    id: '1',
+    name: 'Admin Section',
+    roles: ['admin'],
+    items: [
+      {
+        id: '0',
+        name: 'Landing',
+        componentKey: 'landingView',
+        children: [
+          {
+            id: '1',
+            name: 'Home',
+            componentKey: 'homeView',
+            children: [
+              {
+                id: '2',
+                componentKey: 'detailView',
+                name: 'Detail',
+                parameterName: 'itemId',
+                children: []
+              },
+              {
+                id: '3',
+                componentKey: 'detailView2',
+                name: 'Detail2',
+                parameterName: 'itemId',
+                children: []
+              }]
+          }
+        ]
+      }]
+  }
+  ,
+  {
+    id: '2',
+    name: 'Public Section',
+    roles: [],
+    items: []
+  }
 ];
 
-export const mockNavigationItemWithoutChildren = <NavigationItem>{
-  id: '3',
-  name: 'Settings',  
-  componentKey: 'settingsView',
+const provider = new JsonNavigationProvider();
+provider.SetTree(sections);
+const tree = await provider.GetTreeAsync();
+export const mockMediakiwiStore : MediaKiwiState = {
+  navigationTree: tree,
+  roles: [{id: 'admin'}],
+  isLocal: true,
+  drawer: true,
+  externalIcons: false
 };
 
 export const mockRouteMeta = {
   meta: {
-    navigationItem: <NavigationItem>{
-      id: '2',
-      name: 'Detail',      
-      componentKey: 'detailView',
-      section: sections[0],      
-      parent: {
-        id: '1',
-        name: 'Home',
-        componentKey: 'homeView.',        
-        parent: {
-          id: '0',
-          name: 'Landing',
-          componentKey: 'landingView',          
-        },
-        children: [
-          {
-            id: '2',
-            name: 'Detail',            
-            componentKey: 'detailView',
-          },
-          length = 1
-        ],        
-      },
-      children: mockNavigationItemChildren,      
-    }
+    navigationItem: tree.getAllNavigationItems().find(n => n.id === '2')
   },
   params: { itemId: "1" },
 };
@@ -85,17 +86,15 @@ export const mockRoutes = [
   },
 ];
 
-export const mockAdminSections = [{ id: "1", roles: ['admin'], name: 'Admin Section' }];
-
 export const mockNavigationItemsAsRoot = <NavigationItem>{
-  id: 'root',  
+  id: 'root',
   children: [
     {
-      id: 'child1',      
+      id: 'child1',
       parent: this, // Simulating parent reference
       children: [
         {
-          id: 'grandchild1',          
+          id: 'grandchild1',
           parent: this, // Simulating parent reference
           children: [{ id: 'greatGrandchild1', parent: this }] // Simulating deep nesting
         }

@@ -11,13 +11,13 @@ vi.mock("vue-router");
 
 // default stubs
 const modules: Record<string, RouteComponent> = {
-  a: <Component>{},
+  a: <Component>{ },
   b: <Component>{},
 };
 const section : Section = { id: "1", name: "Admin Section", roles: ["admin"], items:[] };
 const navigationItems: NavigationItem[] = [
-  <NavigationItem>{ id: "1", componentKey: "OrderView", name: "Order", section: section },
-  <NavigationItem>{ id: "2", componentKey: "CustomerView", name: "Customers", section: section },
+  <NavigationItem>{ id: "1", componentKey: "a", name: "Order", section: section, children:[] },
+  <NavigationItem>{ id: "2", componentKey: "b", name: "Customers", section: section, children:[] },
 ];
 section.items = navigationItems;
 const tree = new NavigationTree([section]);
