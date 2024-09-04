@@ -1,8 +1,12 @@
 import { ErrorProblemDetails } from "@/models";
 import { ComponentPublicInstance } from "vue";
-import { useSnackbarStore } from "@/stores";
+import { useMediakiwiStore, useSnackbarStore } from "@/stores";
 import { useErrorProblemDetails } from "@/composables/useErrorProblemDetails";
 import { createErrorProblemDetails } from "./createErrorProblemDetails";
+import { getActivePinia } from "pinia";
+import { isAxiosError } from "axios";
+import { useRouter } from "@/router";
+import { useNetwork } from "@/composables/useNetwork";
 
 /**
  * Vue global error handler, can be overridden by the user
@@ -12,6 +16,8 @@ import { createErrorProblemDetails } from "./createErrorProblemDetails";
  * @returns
  */
 export async function globalErrorHandler(err: any, instance?: ComponentPublicInstance | null, info?: string) {
+  const network = useNetwork();
+
   // Log the error to the console
   console.error(err, instance, info);
 
@@ -36,6 +42,11 @@ export async function globalErrorHandler(err: any, instance?: ComponentPublicIns
     }
   }
 
+  if (errorProblemDetails.type === "ERR_NETWORK" || errorProblemDetails.type === "ERR_CONNECTION_CLOSED") {
+    // notify the system that the network is down
+    network.setConnected(false);
+  }
+
   // If we don't have a form, show a snackbar message
   setErrorSnackbar(errorProblemDetails);
 }
@@ -45,13 +56,15 @@ export async function globalErrorHandler(err: any, instance?: ComponentPublicIns
  */
 export async function setErrorSnackbar(error: ErrorProblemDetails) {
   const { getErrorMessages } = await useErrorProblemDetails();
-  const snackbar = useSnackbarStore();
-
   // define the messages
   const message = getErrorMessages(error)?.join(", ") || "";
 
-  // Show a snackbar message to the user
-  snackbar.showMessage(message);
+  if (getActivePinia()) {
+    const snackbar = useSnackbarStore();
+
+    // Show a snackbar message to the user
+    snackbar.showMessage(message);
+  }
 }
 
 /**

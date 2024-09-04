@@ -1,9 +1,13 @@
 <script setup lang="ts">
   import { MkBreadcrumbs } from "@/components/MkBreadcrumbs/";
   import { useNavigation } from "@/composables/useNavigation";
-  import { computed } from "vue";
+  import { computed, onMounted } from "vue";
 
   const navigation = useNavigation();
+
+  const props = defineProps<{
+    onResolved?: () => void;
+  }>();
 
   // Extend this in the future to include more pages?
   const isPageOnSignIn = computed(() => !navigation?.currentNavigationItem.value?.view?.id);
@@ -15,6 +19,10 @@
       "pa-md-10": !isPageOnSignIn.value,
       "pt-md-4": !isPageOnSignIn.value,
     };
+  });
+
+  onMounted(() => {
+    props.onResolved?.();
   });
 </script>
 

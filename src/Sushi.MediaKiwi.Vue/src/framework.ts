@@ -61,7 +61,6 @@ export default {
 
     // Create an instance of Pinia
     app.use(pinia);
-    console.log("pinia created");
 
     // register icons after pinia and vuetify are created
     registerIcons(options);
@@ -78,7 +77,7 @@ export default {
       }
     } else {
       // add api scope to msal instance
-      identity.scopes = [`api://${options.msalConfig.auth.clientId}/access_via_approle_assignments`];
+      identity.scopes = [`api://${options?.msalConfig?.auth?.clientId}/access_via_approle_assignments`];
     }
 
     // install msal plugin

@@ -7,7 +7,7 @@ import { TResult } from "@/models/form/TResult";
 import { useFormLoad } from "./../useFormLoad";
 import { createTestingPinia } from "@pinia/testing";
 import { LoadProps, UndoProps } from "@/models/form/FormProps";
-import { registerInterceptor } from "@/services/axios/interceptor";
+import { addErrorHandler } from "@/services/axios/interceptor";
 import { useFormMessages } from "@/framework";
 
 // Mock the axios instance
@@ -28,7 +28,7 @@ describe("useFormLoad", async () => {
   const formMessages = await useFormMessages();
 
   // Register the axios interceptor
-  registerInterceptor(axiosMock);
+  addErrorHandler(axiosMock);
 
   const formRef = ref<any>({ reset: vi.fn(), validate: vi.fn() });
   const entityName = ref<string>("Market");

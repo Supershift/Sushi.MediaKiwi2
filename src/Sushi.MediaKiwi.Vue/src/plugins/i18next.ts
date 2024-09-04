@@ -4,6 +4,11 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import HttpApi from "i18next-http-backend";
 import { MediakiwiVueOptions } from "@/models";
 import { container } from "tsyringe";
+import axios from "axios";
+import { useNetwork } from "@/composables/useNetwork";
+import { globalErrorHandler } from "@/errorHandler/globalErrorHandler";
+
+const { isConnectedToApi } = useNetwork();
 
 export const tokenStore = <
   {
@@ -21,6 +26,7 @@ export default {
 
     // add http backend
     const httpApi = new HttpApi();
+
     httpApi.init(null, {
       crossDomain: true,
       loadPath: `${mediakiwiOptions.apiBaseUrl}/translations/{{lng}}/{{ns}}`,
@@ -36,7 +42,33 @@ export default {
         }
         return result;
       },
+
+      request: async (options, url, payload, callback) => {
+        const headers = options && options.customHeaders && typeof options.customHeaders === "function" ? options.customHeaders() : {};
+        let response: any = {};
+
+        if (!isConnectedToApi.value) {
+          // if we are not connected, we should not retry any more
+          i18n.options.maxRetries = 0;
+        } else {
+          try {
+            if (payload) {
+              response = await axios.post(url, payload, { headers });
+            } else {
+              response = await axios.get(url, { headers });
+            }
+          } catch (error) {
+            globalErrorHandler(error);
+            callback(error, { data: {}, status: 500 });
+            return;
+          }
+        }
+
+        // call the callback with our response
+        callback(null, response);
+      },
     });
+
     i18n.use(httpApi);
 
     // call callback if provided

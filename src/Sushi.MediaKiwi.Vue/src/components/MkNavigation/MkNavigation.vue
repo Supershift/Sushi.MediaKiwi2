@@ -33,6 +33,6 @@
 </script>
 
 <template>
-  <mk-navigation-rail v-if="currentSections.length > 1" v-model="store.drawer" :rail-items="currentSections"></mk-navigation-rail>
+  <mk-navigation-rail v-if="currentSections?.length > 1" v-model="store.drawer" :rail-items="currentSections"></mk-navigation-rail>
   <mk-navigation-drawer v-if="currentRootItem || hasMultipleNavigationItems" v-model="store.drawer"></mk-navigation-drawer>
 </template>

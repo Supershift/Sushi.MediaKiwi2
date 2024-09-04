@@ -12,15 +12,19 @@ export async function createErrorProblemDetails(error?: any) {
   let result: ErrorProblemDetails | undefined;
 
   if (error) {
-    if (isAxiosError(error) && error.response?.data) {
-      // If the response is a blob and the type is json, parse the error problem details
-      if (isAxiosBlobResponse(error)) {
-        const responseText = await error.response.data.text();
-        const errorResult = JSON.parse(responseText);
-        result = errorResult as ErrorProblemDetails;
-      } else if (IsErrorProblemDetails(error.response.data)) {
-        // We got an object, so we can parse it to an error problem details object
-        result = ErrorProblemDetails.fromResponse(error.response);
+    if (isAxiosError(error)) {
+      if (error.response?.data) {
+        // If the response is a blob and the type is json, parse the error problem details
+        if (isAxiosBlobResponse(error)) {
+          const responseText = await error.response.data.text();
+          const errorResult = JSON.parse(responseText);
+          result = errorResult as ErrorProblemDetails;
+        } else if (IsErrorProblemDetails(error.response.data)) {
+          // We got an object, so we can parse it to an error problem details object
+          result = ErrorProblemDetails.fromResponse(error.response);
+        }
+      } else {
+        result = new ErrorProblemDetails(error.message, error.code || error.name, error.name, error.status);
       }
     } else if (isNavigationFailure(error)) {
       // If we have a navigation failure, get the error message

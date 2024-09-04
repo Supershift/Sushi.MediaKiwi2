@@ -5,5 +5,5 @@ export function storeTheme(theme: string) {
 
 /** Loads the current theme from localstorage */
 export function loadTheme() {
-  return localStorage.getItem("mktheme");
+  return localStorage.getItem("MkTheme");
 }

@@ -6,7 +6,7 @@ import { useFormSubmit } from "../useFormSubmit";
 import { createTestingPinia } from "@pinia/testing";
 import { ErrorProblemDetails, TResult, useFormMessages, useI18next, useSnackbarStore } from "@/framework";
 import { SubmitProps } from "@/models/form/FormProps";
-import { registerInterceptor } from "@/services/axios/interceptor";
+import { addErrorHandler } from "@/services/axios/interceptor";
 
 // Mock the axios instance
 const axiosMock = axios.create();
@@ -19,7 +19,7 @@ describe("useFormSubmit", async () => {
   createTestingPinia();
 
   // Register the axios interceptor
-  registerInterceptor(axiosMock);
+  addErrorHandler(axiosMock);
 
   const formMessages = await useFormMessages();
 

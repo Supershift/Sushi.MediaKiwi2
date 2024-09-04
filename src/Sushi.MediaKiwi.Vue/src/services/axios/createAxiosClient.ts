@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import { addAuthentication } from "./addAuthentication";
-import { registerInterceptor } from "./interceptor";
+import { addErrorHandler } from "./addErrorHandler";
+import { addConnectionWatch } from "./addNetworkWatch";
 
 /** Creates an Axios client with the specified base url, application/json as content type and authorization header added when an active account is found. */
 export function createAxiosClient(baseUrl: string): AxiosInstance {
@@ -11,10 +12,14 @@ export function createAxiosClient(baseUrl: string): AxiosInstance {
     },
   });
 
+  // Add the authentication interceptor
   result.interceptors.request.use(addAuthentication);
 
+  // Add the connection watch interceptor
+  result.interceptors.response.use(addConnectionWatch);
+
   // Add the problem details interceptor
-  registerInterceptor(result);
+  addErrorHandler(result);
 
   return result;
 }

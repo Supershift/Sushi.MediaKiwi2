@@ -3,9 +3,16 @@
   import { useIsAuthenticated } from "@/composables/useIsAuthenticated";
   import MkLogoLockup from "./MkLogoLockup.vue";
   import MkSnackbar from "../MkSnackbar/MkSnackbar.vue";
+  import { ref } from "vue";
+  import { useNetwork } from "@/composables/useNetwork";
+  import { useRouter } from "@/router";
 
   // inject dependencies
   const isAuthenticated = useIsAuthenticated();
+  const router = useRouter();
+  const { isConnectedToApi } = useNetwork();
+  /** Tells If the MkScreen components has been loaded */
+  const isMkScreenMounted = ref(false);
 
   defineProps<{
     /** Hide the avatar in the Account overflow menu */
@@ -27,9 +34,18 @@
     /** Slot to override the actions in the account menu */
     accountMenuActions?: () => never;
   }>();
+
+  const onScreenMounted = () => {
+    isMkScreenMounted.value = true;
+
+    if (!isConnectedToApi.value) {
+      router.push("/offline");
+    }
+  };
 </script>
 <template>
   <v-card>
+    <v-progress-linear v-if="!isMkScreenMounted" absolute indeterminate></v-progress-linear>
     <v-layout v-side-sheet :full-height="true" class="mk-layout">
       <mk-suspense>
         <v-app-bar>
@@ -63,7 +79,7 @@
       <mk-suspense>
         <mk-navigation v-if="isAuthenticated"></mk-navigation>
       </mk-suspense>
-      <mk-screen></mk-screen>
+      <mk-screen @resolved="onScreenMounted"></mk-screen>
       <mk-snackbar></mk-snackbar>
     </v-layout>
   </v-card>

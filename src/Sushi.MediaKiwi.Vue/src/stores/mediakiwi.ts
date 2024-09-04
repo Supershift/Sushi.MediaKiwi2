@@ -6,6 +6,7 @@ import { container } from "tsyringe";
 import { IRoleConnector } from "@/services/IRoleConnector";
 import { noPageSize } from "@/constants";
 import { VuetifyOptions } from "vuetify";
+import { globalErrorHandler } from "@/errorHandler/globalErrorHandler";
 
 export interface MediaKiwiState {
   navigationItems: Array<NavigationItem>;
@@ -34,11 +35,16 @@ export const useMediakiwiStore = defineStore({
   },
   actions: {
     async init() {
-      // load new data from API (positioning matters => section, screens, navigationItems)
-      await this.getSections();
-      await this.getViews();
-      await this.getNavigationItems();
-      await this.getRoles();
+      try {
+        // load new data from API (positioning matters => section, screens, navigationItems)
+        await this.getSections();
+        await this.getViews();
+        await this.getNavigationItems();
+        await this.getRoles();
+        return true;
+      } catch (error) {
+        await globalErrorHandler(error);
+      }
     },
     async getRoles() {
       const connector = container.resolve<IRoleConnector>("IRoleConnector");
