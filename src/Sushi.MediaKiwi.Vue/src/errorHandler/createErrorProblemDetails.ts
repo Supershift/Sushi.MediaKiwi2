@@ -21,6 +21,9 @@ export async function createErrorProblemDetails(error?: any) {
       } else if (IsErrorProblemDetails(error.response.data)) {
         // We got an object, so we can parse it to an error problem details object
         result = ErrorProblemDetails.fromResponse(error.response);
+      } else if (typeof error.response.data === "string") {
+        // If we have a response with a status code, create a new error problem details object
+        result = new ErrorProblemDetails(error.response.data, "UnknownError", "UnknownError", error.response.status);
       }
     } else if (isNavigationFailure(error)) {
       // If we have a navigation failure, get the error message
