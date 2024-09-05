@@ -27,7 +27,7 @@ export const useValidationRules = async () => {
   /** Value must be a minimum length */
   const minLength = (minLength: number, message?: string) => (value?: string) => {
     if (!!value) {
-      return value.length >= minLength || (message ?? minLengthMessage(minLength));
+      return value.toString().length >= minLength || (message ?? minLengthMessage(minLength));
     }
     return true; // Allow empty/null values
   };
@@ -35,7 +35,7 @@ export const useValidationRules = async () => {
   /** Value must be a maximum length */
   const maxLength = (maxLength: number, message?: string) => (value?: string) => {
     if (!!value) {
-      return value.length <= maxLength || (message ?? maxLengthMessage(maxLength));
+      return value.toString().length <= maxLength || (message ?? maxLengthMessage(maxLength));
     }
     return true; // Allow empty/null values
   };
@@ -43,7 +43,7 @@ export const useValidationRules = async () => {
   /** Value must be between a minimum and maximum length */
   const minMaxLength = (minLength: number, maxLength: number, message?: string) => (value?: string) => {
     if (!!value) {
-      return (value.length >= minLength && value.length <= maxLength) || (message ?? minMaxLengthMessage(minLength, maxLength));
+      return (value.toString().length >= minLength && value.toString().length <= maxLength) || (message ?? minMaxLengthMessage(minLength, maxLength));
     }
     return true; // Allow empty/null values
   };

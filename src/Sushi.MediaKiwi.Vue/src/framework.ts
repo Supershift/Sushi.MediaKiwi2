@@ -128,6 +128,8 @@ export * from "@/stores";
 
 export * from "@/router";
 
+export * from "@/errorHandler";
+
 export * from "@/plugins/icons";
 
 export * from "@/plugins/vuetify";
