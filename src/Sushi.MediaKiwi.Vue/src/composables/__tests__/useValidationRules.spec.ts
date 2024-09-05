@@ -15,16 +15,24 @@ describe("useValidationRules", async () => {
       expect(required("Some value")).toBe(true);
     });
 
-    it("should be the minimum value length", () => {
+    it("should validate the minimum value length", () => {
       expect(minLength(5)("abc")).toBe("The input must be more than 5 characters long.");
       expect(minLength(5)("abcdef")).toBe(true);
       expect(minLength(5)("")).toBe(true);
+
+      expect(minLength(5)(<any>99)).toBe("The input must be more than 5 characters long.");
+      expect(minLength(5)(<any>99999)).toBe(true);
+      expect(minLength(5)()).toBe(true);
     });
 
     it("should validate the maximum value length", () => {
       expect(maxLength(10)("abcdefghijk")).toBe("The input must be at least 10 characters long.");
       expect(maxLength(10)("abcde")).toBe(true);
       expect(maxLength(10)("")).toBe(true);
+
+      expect(maxLength(2)(<any>999)).toBe("The input must be at least 2 characters long.");
+      expect(maxLength(2)(<any>99)).toBe(true);
+      expect(maxLength(2)()).toBe(true);
     });
 
     it("should validate the min and max length", () => {
@@ -32,6 +40,11 @@ describe("useValidationRules", async () => {
       expect(minMaxLength(5, 10)("abcdefghijk")).toBe("The input must be between 5 and 10 characters long.");
       expect(minMaxLength(5, 10)("abcdef")).toBe(true);
       expect(minMaxLength(5, 10)("")).toBe(true);
+
+      expect(minMaxLength(5, 10)(<any>999)).toBe("The input must be between 5 and 10 characters long.");
+      expect(minMaxLength(5, 10)(<any>99999999999)).toBe("The input must be between 5 and 10 characters long.");
+      expect(minMaxLength(5, 10)(<any>999999)).toBe(true);
+      expect(minMaxLength(5, 10)()).toBe(true);
     });
 
     it("should validate that a value is a valid email address", () => {
