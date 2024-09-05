@@ -24,4 +24,9 @@ export class ErrorConnector {
     const response = await this.axios.get(`/Error/timeoutError`, { timeout: 1 });
     return response;
   }
+
+  async getStringError(): Promise<AxiosResponse> {
+    const response = await this.axios.get(`/Error/stringError`);
+    return response;
+  }
 }

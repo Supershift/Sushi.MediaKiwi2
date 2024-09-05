@@ -145,6 +145,7 @@ priority: u=1, i
 
       // Assert
       expect(result).toBeDefined();
+      expect(result.detail).not.toBe(error.response!.data);
     });
   });
 

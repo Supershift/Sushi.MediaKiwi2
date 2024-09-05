@@ -5,6 +5,7 @@
   import { useValidationRules } from "@/composables";
   import { ErrorConnector } from "@sample/services/ErrorConnector";
   import { ErrorProblemDetails, TResult } from "@/models";
+  import { AxiosResponse } from "axios";
 
   const errorConnector = container.resolve(ErrorConnector);
   const { required, minLength, maxLength, numeric, alphaNumericNoSpace, alphaNumericWithSpace, email } = await useValidationRules();
@@ -59,6 +60,10 @@
     return TResult.failure(new ErrorProblemDetails("This is an expected error"));
   }
 
+  async function getStringError() {
+    await errorConnector.getStringError();
+  }
+
   async function onLoad() {
     //
   }
@@ -71,8 +76,9 @@
       <v-btn @click="throwError()">Unexpected error</v-btn>
       <v-btn @click="getAggregateError()">Aggregate Error</v-btn>
       <v-btn @click="getGenericErrorFromApi()">Generic Error</v-btn>
-      <v-btn @click="getInternalServerError()">Internal Server Error</v-btn>
+      <v-btn @click="getInternalServerError()"> Server Error</v-btn>
       <v-btn @click="getTimeoutError()">Timeout</v-btn>
+      <v-btn @click="getStringError()">String error</v-btn>
     </template>
     <v-text-field v-model="state.value1" :rules="[required]" />
   </MkForm>

@@ -1,4 +1,4 @@
-import { AxiosError } from "axios";
+import { AxiosError, HttpStatusCode } from "axios";
 import { ErrorProblemDetails } from "@/models";
 import { isAxiosError } from "axios";
 import { isError, IsErrorProblemDetails } from "@/errorHandler/typeguards";
@@ -21,7 +21,7 @@ export async function createErrorProblemDetails(error?: any) {
       } else if (IsErrorProblemDetails(error.response.data)) {
         // We got an object, so we can parse it to an error problem details object
         result = ErrorProblemDetails.fromResponse(error.response);
-      } else if (typeof error.response.data === "string") {
+      } else if (typeof error.response.data === "string" && error.response.status !== HttpStatusCode.InternalServerError) {
         // If we have a response with a status code, create a new error problem details object
         result = new ErrorProblemDetails(error.response.data, "UnknownError", "UnknownError", error.response.status);
       }
