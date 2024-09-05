@@ -45,5 +45,12 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
         {
             throw new System.Exception("This is an internal server error");
         }
+
+        [HttpGet]
+        [Route($"stringError")]
+        public ActionResult GenerateStringResponse()
+        {
+            return BadRequest("This is a basic string response");
+        }
     }
 }
