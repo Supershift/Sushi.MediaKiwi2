@@ -2,6 +2,7 @@ import axios, { AxiosInstance } from "axios";
 import { addAuthentication } from "./addAuthentication";
 import { addErrorHandler } from "./addErrorHandler";
 import { addApiConnectionWatch } from "./addApiConnectionWatch";
+import { addParamSerializer } from "./addParamSerializer";
 
 /** Creates an Axios client with the specified base url, application/json as content type and authorization header added when an active account is found. */
 export function createAxiosClient(baseUrl: string): AxiosInstance {
@@ -17,6 +18,9 @@ export function createAxiosClient(baseUrl: string): AxiosInstance {
 
   // Add the connection watch interceptor
   result.interceptors.response.use(addApiConnectionWatch);
+
+  // Add the params serializer
+  addParamSerializer(result);
 
   // Add the problem details interceptor
   addErrorHandler(result);

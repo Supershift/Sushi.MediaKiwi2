@@ -1,0 +1,15 @@
+import Qs from "qs";
+import { AxiosError, AxiosInstance } from "axios";
+
+/**
+ * Add the params serializer
+ * Dotnet expects the array elements to be serialized in a repeat format (e.g. productTypes=1&productTypes=2)
+ * By default, axios serializes the array elements in a bracket format (e.g. productTypes[]=1&productTypes[]=2)
+ */
+export function addParamSerializer(axiosInstance: AxiosInstance) {
+  axiosInstance.defaults.paramsSerializer = {
+    serialize: (params: any) => {
+      return Qs.stringify(params, { arrayFormat: "repeat" });
+    },
+  };
+}
