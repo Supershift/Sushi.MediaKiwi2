@@ -1,13 +1,9 @@
 import "reflect-metadata";
-import axios from "axios";
 import { describe, it, expect } from "vitest";
 import { ModelRef, ref } from "vue";
-import { ErrorProblemDetails, FormProps, useForm, useFormMessages, useI18next } from "@/framework";
+import { ErrorProblemDetails, FormProps, useForm } from "@/framework";
 import { FormViewProps } from "@/models/form/FormProps";
 import { createTestingPinia } from "@pinia/testing";
-
-// Mock the axios instance
-const axiosMock = axios.create();
 
 // Mock the useI18next composable
 vi.mock("@/composables/useI18next");

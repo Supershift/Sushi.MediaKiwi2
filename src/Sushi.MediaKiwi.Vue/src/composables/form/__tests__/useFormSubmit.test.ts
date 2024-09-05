@@ -6,7 +6,7 @@ import { useFormSubmit } from "../useFormSubmit";
 import { createTestingPinia } from "@pinia/testing";
 import { ErrorProblemDetails, TResult, useFormMessages, useI18next, useSnackbarStore } from "@/framework";
 import { SubmitProps } from "@/models/form/FormProps";
-import { addErrorHandler } from "@/services/axios/interceptor";
+import { addErrorHandler } from "@/services/axios/addErrorHandler";
 
 // Mock the axios instance
 const axiosMock = axios.create();

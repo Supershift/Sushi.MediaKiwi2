@@ -1,45 +1,46 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { useEntraSettings } from '../useEntraSettings';
-import { MediakiwiVueOptions } from '@/models';
+import "reflect-metadata";
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { useEntraSettings } from "../useEntraSettings";
+import { MediakiwiVueOptions } from "@/models";
 
-vi.mock('axios');
+vi.mock("axios");
 // Mock the external modules
-vi.mock('@/services/axios/createAxiosClient', () => ({
+vi.mock("@/services/axios/createAxiosClient", () => ({
   createPublicAxiosClient: vi.fn(),
 }));
-vi.mock('@/services/IdentityProviderConnector', () => {
+vi.mock("@/services/IdentityProviderConnector", () => {
   return {
     IdentityProviderConnector: vi.fn().mockImplementation(() => {
       return {
         GetEntraSettings: vi.fn().mockResolvedValue({
-          instance: 'https://login.microsoftonline.com/',
-          tenantId: 'tenant-id',
-          clientId: 'client-id',
+          instance: "https://login.microsoftonline.com/",
+          tenantId: "tenant-id",
+          clientId: "client-id",
         }),
       };
     }),
   };
 });
 
-describe('useEntraSettings', () => {
+describe("useEntraSettings", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('getEntraSettings returns the correct settings', async () => {
+  it("getEntraSettings returns the correct settings", async () => {
     const { getEntraSettings } = useEntraSettings();
 
     const settings = await getEntraSettings();
 
-    expect(settings.authority).toBe('https://login.microsoftonline.com/tenant-id');
+    expect(settings.authority).toBe("https://login.microsoftonline.com/tenant-id");
   });
 
-  it('fillEntraSettings fills the options correctly', async () => {
+  it("fillEntraSettings fills the options correctly", async () => {
     const { fillEntraSettings } = useEntraSettings();
     const options = await fillEntraSettings({ apiBaseUrl: "" } as MediakiwiVueOptions);
 
     expect(options.msalConfig.auth.clientId).toBe("client-id");
-    expect(options.msalConfig.auth.authority).toContain('https://login.microsoftonline.com');
-    expect(options.identity.scopes).toEqual(['api://client-id/access_via_approle_assignments']);
+    expect(options.msalConfig.auth.authority).toContain("https://login.microsoftonline.com");
+    expect(options.identity.scopes).toEqual(["api://client-id/access_via_approle_assignments"]);
   });
 });

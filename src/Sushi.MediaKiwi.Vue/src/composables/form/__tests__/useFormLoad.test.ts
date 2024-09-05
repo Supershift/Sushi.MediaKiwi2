@@ -7,8 +7,8 @@ import { TResult } from "@/models/form/TResult";
 import { useFormLoad } from "./../useFormLoad";
 import { createTestingPinia } from "@pinia/testing";
 import { LoadProps, UndoProps } from "@/models/form/FormProps";
-import { addErrorHandler } from "@/services/axios/interceptor";
 import { useFormMessages } from "@/framework";
+import { addErrorHandler } from "@/services/axios/addErrorHandler";
 
 // Mock the axios instance
 const axiosMock = axios.create();

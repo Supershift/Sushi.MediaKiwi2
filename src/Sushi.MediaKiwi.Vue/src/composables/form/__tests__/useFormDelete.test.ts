@@ -6,7 +6,7 @@ import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
 import { createTestingPinia } from "@pinia/testing";
 import { DeleteProps } from "@/models/form/FormProps";
 import { AxiosResponse, HttpStatusCode } from "axios";
-import { useFormMessages, useI18next } from "@/framework";
+import { useFormMessages } from "@/framework";
 
 const hoists = vi.hoisted(() => {
   return {
