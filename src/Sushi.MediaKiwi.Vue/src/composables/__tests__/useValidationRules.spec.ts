@@ -16,21 +16,21 @@ describe("useValidationRules", async () => {
     });
 
     it("should validate the minimum value length", () => {
-      expect(minLength(5)("abc")).toBe("The input must be more than 5 characters long.");
+      expect(minLength(5)("abc")).toBe("The input must be at least 5 characters long.");
       expect(minLength(5)("abcdef")).toBe(true);
       expect(minLength(5)("")).toBe(true);
 
-      expect(minLength(5)(<any>99)).toBe("The input must be more than 5 characters long.");
+      expect(minLength(5)(<any>99)).toBe("The input must be at least 5 characters long.");
       expect(minLength(5)(<any>99999)).toBe(true);
       expect(minLength(5)()).toBe(true);
     });
 
     it("should validate the maximum value length", () => {
-      expect(maxLength(10)("abcdefghijk")).toBe("The input must be at least 10 characters long.");
+      expect(maxLength(10)("abcdefghijk")).toBe("The input must be no more than 10 characters long.");
       expect(maxLength(10)("abcde")).toBe(true);
       expect(maxLength(10)("")).toBe(true);
 
-      expect(maxLength(2)(<any>999)).toBe("The input must be at least 2 characters long.");
+      expect(maxLength(2)(<any>999)).toBe("The input must be no more than 2 characters long.");
       expect(maxLength(2)(<any>99)).toBe(true);
       expect(maxLength(2)()).toBe(true);
     });

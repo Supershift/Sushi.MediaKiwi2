@@ -18,8 +18,11 @@ export async function useErrorMessages(): Promise<ErrorMessages> {
 
   // Validation error messages
   const requiredMessage = t.value("RequiredField", "This field is required.");
-  const minLengthMessage = (minLength: string | number) => t.value("MinLength", "The input must be more than {{min}} characters long.", { min: minLength });
-  const maxLengthMessage = (maxLength: string | number) => t.value("MaxLength", "The input must be at least {{max}} characters long.", { max: maxLength });
+  const minLengthMessage = (minLength: string | number) => t.value("MinLength", "The input must be at least {{min}} characters long.", { min: minLength });
+  const maxLengthMessage = (maxLength: string | number) => t.value("MaxLength", "The input must be no more than {{max}} characters long.", { max: maxLength });
+
+  //
+
   const minMaxLengthMessage = (minLength: string | number, maxLength: string | number) =>
     t.value("minMaxLength", "The input must be between {{min}} and {{max}} characters long.", { min: minLength, max: maxLength });
   const numericMessage = t.value("Numeric", "Enter a valid numeric value.");
