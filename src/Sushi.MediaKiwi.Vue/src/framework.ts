@@ -126,6 +126,8 @@ export * from "@/components";
 
 export * from "@/composables";
 
+export * from "@/navigation";
+
 export * from "@/models";
 
 export * from "@/services";

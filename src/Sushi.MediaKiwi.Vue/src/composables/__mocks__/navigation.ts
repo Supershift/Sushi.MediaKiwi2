@@ -1,5 +1,5 @@
 import { NavigationItem } from "@/models/navigation";
-import { JsonNavigationProvider, SimpleSection } from "@/navigation/JsonNavigationProvider";
+import { ObjectNavigationProvider, SimpleSection } from "@/navigation/ObjectNavigationProvider";
 import { MediaKiwiState } from "@/stores";
 
 // create nav tree
@@ -47,7 +47,7 @@ const sections: SimpleSection[] =
   }
 ];
 
-const provider = new JsonNavigationProvider();
+const provider = new ObjectNavigationProvider();
 provider.SetTree(sections);
 const tree = await provider.GetTreeAsync();
 export const mockMediakiwiStore : MediaKiwiState = {

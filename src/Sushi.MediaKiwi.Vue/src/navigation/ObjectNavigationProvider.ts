@@ -30,7 +30,7 @@ export type SimpleSection = {
     items: SimpleNavigationItem[];
 }
 
-export class JsonNavigationProvider implements INavigationProvider {
+export class ObjectNavigationProvider implements INavigationProvider {
     private navigationTree: NavigationTree = new NavigationTree([]);    
     
     async GetTreeAsync(): Promise<NavigationTree> {

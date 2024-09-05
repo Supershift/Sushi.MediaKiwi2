@@ -19,7 +19,7 @@ import { Configuration } from "@azure/msal-browser";
 import sampleNavigationProvider from "./navigation/NavigationProvider";
 
 // add mediakiwi
-const mediakiwiOptions = <MediakiwiVueOptions>{
+const mediakiwiOptions : MediakiwiVueOptions = {
   // configure the vuetify options with the additional icon aliases
   vuetifyOptions: {
     icons: {
