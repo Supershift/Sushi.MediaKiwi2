@@ -24,15 +24,13 @@ const sections: SimpleSection[] =
                 id: '2',
                 componentKey: 'detailView',
                 name: 'Detail',
-                parameterName: 'itemId',
-                children: []
+                parameterName: 'itemId'                
               },
               {
                 id: '3',
                 componentKey: 'detailView2',
                 name: 'Detail2',
-                parameterName: 'itemId',
-                children: []
+                parameterName: 'itemId'
               }]
           }
         ]

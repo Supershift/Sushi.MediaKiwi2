@@ -9,7 +9,7 @@ export type SimpleNavigationItem = {
     /** If defined, name of the url parameter expected by VueRouter for this item */
     parameterName?: string;
     /** Children of this item in the navigation hierarchy */
-    children: SimpleNavigationItem[];
+    children?: SimpleNavigationItem[];
     /** Prepend icon - if available will place an icon inform of the Navigation Item */
     icon?: string;
     /** If defined, key of the component's module */
@@ -72,7 +72,8 @@ export class ObjectNavigationProvider implements INavigationProvider {
                 parent: parent,
                 children: []
             };
-            resultItem.children = this.convertNavigationItem(item.children, section, resultItem);
+            if(item.children)
+                resultItem.children = this.convertNavigationItem(item.children, section, resultItem);
             result.push(resultItem);
         });
         return result;

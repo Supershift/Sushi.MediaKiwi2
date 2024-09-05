@@ -80,8 +80,7 @@ const sections: SimpleSection[] =
                 id: 'Detail',
                 componentKey: 'detailView',
                 name: 'Detail',
-                parameterName: 'itemId',
-                children: []
+                parameterName: 'itemId'                
               }]
           }
         ]
@@ -96,8 +95,7 @@ const sections: SimpleSection[] =
       {
         id: 'Settings',
         name: 'Settings',
-        componentKey: 'settings.vue',
-        children: []
+        componentKey: 'settings.vue'
       }
     ]
   }
