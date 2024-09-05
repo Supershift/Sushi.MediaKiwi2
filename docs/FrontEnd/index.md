@@ -15,3 +15,7 @@ A list of component docs can be found [here](./Components/index.md).
 ## Static Web app
 
 To use a static web app with Azure Function, see the [guide](./Setup/StaticWebApp.md).
+
+## Navigation
+
+How to set up [navigation](Navigation.md)
