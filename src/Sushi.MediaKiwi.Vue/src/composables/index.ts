@@ -1,4 +1,3 @@
-export * from "./useAxiosExtensions";
 export * from "./useBreadcrumbs";
 export * from "./useColors";
 export * from "./useComponentContext";
