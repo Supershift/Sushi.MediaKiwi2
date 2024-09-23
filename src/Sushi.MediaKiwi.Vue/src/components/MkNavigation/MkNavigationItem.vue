@@ -3,7 +3,7 @@
   import { useNavigation } from "@/composables/useNavigation";
   import { NavigationItem } from "@/models/navigation";
 
-  const componentProps = defineProps<{
+  const props = defineProps<{
     navigationItem: NavigationItem;    
   }>();
 
@@ -12,8 +12,8 @@
   const groupOpened = ref(false);
 
   const icon = computed(() => {
-    if (componentProps.navigationItem?.icon) {
-      return componentProps.navigationItem.icon;
+    if (props.navigationItem?.icon) {
+      return props.navigationItem.icon;
     }
     return undefined;
   });
@@ -35,11 +35,14 @@
   }
 
   // determine if navigation item is active
-  const isActive = computed(() => navigation.determineIfNavigationItemIsActive(componentProps.navigationItem));
+  const isActive = computed(() => navigation.determineIfNavigationItemIsActive(props.navigationItem));
+
+  // get all children we want to render (exclude children with parameters)
+  const children = computed(() => props.navigationItem.children.filter(x=>!x.parameterName));  
 </script>
 
 <template>
-  <v-list-group v-if="navigationItem.children.length > 0" v-model="groupOpened" :value="navigationItem.name">
+  <v-list-group v-if="children.length > 0" v-model="groupOpened" :value="navigationItem.name">
     <template #activator="{ props }">
       <v-list-item
         v-bind="props"
@@ -52,7 +55,7 @@
         @click.stop="hasScreen(navigationItem) ? onItemClick(navigationItem) : {}"
       />
     </template>
-    <mk-navigation-item v-for="child in navigationItem.children" :key="child.id" :navigation-item="child" />
+    <mk-navigation-item v-for="child in children" :key="child.id" :navigation-item="child" />
   </v-list-group>
   <v-list-item
     v-else
