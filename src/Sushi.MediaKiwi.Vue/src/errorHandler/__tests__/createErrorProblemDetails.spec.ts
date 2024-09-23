@@ -145,6 +145,7 @@ priority: u=1, i
 
       // Assert
       expect(result).toBeDefined();
+      expect(result.detail).not.toBe(error.response!.data);
     });
   });
 
@@ -161,6 +162,24 @@ priority: u=1, i
       expect(result.title).toBeUndefined();
       expect(result.detail).toBe("Some error message");
       expect(result.error).toBeDefined();
+    });
+  });
+
+  describe("Errors in an unexpected format", async () => {
+    it("Should parse error as a string", async () => {
+      // Arrange
+      const error = new AxiosError();
+      error.response = <any>{
+        status: 400,
+        data: "There is already service account with this account title",
+      };
+
+      // Act
+      const result = await createErrorProblemDetails(error);
+
+      // Assert
+      expect(result).toBeDefined();
+      expect(result.detail).toBe("There is already service account with this account title");
     });
   });
 });
