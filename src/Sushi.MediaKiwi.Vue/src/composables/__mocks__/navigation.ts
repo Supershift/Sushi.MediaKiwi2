@@ -1,9 +1,9 @@
 import { NavigationItem } from "@/models/navigation";
-import { ObjectNavigationProvider, SimpleSection } from "@/navigation/ObjectNavigationProvider";
+import { ObjectNavigationProvider, Section } from "@/navigation/ObjectNavigationProvider";
 import { MediaKiwiState } from "@/stores";
 
 // create nav tree
-const sections: SimpleSection[] = 
+const sections: Section[] = 
 [
   {
     id: '1',

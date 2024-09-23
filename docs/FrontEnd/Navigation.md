@@ -59,7 +59,7 @@ Cons:
 
 Sample:
 ```tsx
-const sections: SimpleSection[] = 
+const sections: Section[] = 
 [
   {
     id: 'Home',
