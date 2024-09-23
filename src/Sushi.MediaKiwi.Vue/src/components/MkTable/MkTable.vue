@@ -270,7 +270,7 @@
       ref="mkTableViewComponent"
       :table-map="tableMap"
       :data="apiResult ? apiResult.result : data"
-      :item-view-id="itemViewId"
+      :navigation-item-id="itemViewId"
       v-model:sorting="sorting"
       v-model:selection="selection"
       :checkbox="selection ? true : false"

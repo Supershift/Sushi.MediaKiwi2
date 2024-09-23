@@ -1,11 +1,11 @@
 import { ListResult, Paging, Sorting } from "@/models";
-import { NavigationItem } from "@/models";
+import { NavigationItemDto } from "@/models";
 import { AxiosResponse } from "axios";
 
 export interface INavigationConnector {
-  GetNavigationItems(sectionId?: string, paging?: Paging, sorting?: Sorting<NavigationItem>): Promise<ListResult<NavigationItem>>;
-  GetNavigationItem(id: string): Promise<NavigationItem>;
-  CreateNavigationItem(item: NavigationItem): Promise<NavigationItem>;
-  UpdateNavigationItem(item: NavigationItem): Promise<NavigationItem>;
+  GetNavigationItems(sectionId?: string, paging?: Paging, sorting?: Sorting<NavigationItemDto>): Promise<ListResult<NavigationItemDto>>;
+  GetNavigationItem(id: string): Promise<NavigationItemDto>;
+  CreateNavigationItem(item: NavigationItemDto): Promise<NavigationItemDto>;
+  UpdateNavigationItem(item: NavigationItemDto): Promise<NavigationItemDto>;
   DeleteNavigationItem(id: string): Promise<AxiosResponse>;
 }

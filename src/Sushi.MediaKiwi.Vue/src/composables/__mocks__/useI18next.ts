@@ -1,7 +1,7 @@
-import { View } from "@/models";
+import { NavigationItem } from "@/models/navigation";
 
 // Mock the useI18next composable
-export async function useI18next(scope?: View | string) {
+export async function useI18next(scope?: NavigationItem | string) {
   return {
     i18next: {
       value: {

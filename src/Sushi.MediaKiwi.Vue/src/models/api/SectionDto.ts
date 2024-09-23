@@ -1,4 +1,4 @@
-export interface Section {
+export interface SectionDto {
   id: string;
   name: string;
   sortOrder: number;

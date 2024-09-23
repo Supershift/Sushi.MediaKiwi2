@@ -59,7 +59,7 @@
     <template #actions>
       <slot v-if="slots.actions" name="actions"></slot>
       <template v-if="props.new && (props.itemViewId || props.newEmit)">
-        <MkNewItemButton :item-view-id="props.itemViewId" :new-title="props.newTitle" :new-emit="props.newEmit" @click:new="() => emit('click:new')" />
+        <MkNewItemButton :navigation-item-id="props.itemViewId" :new-title="props.newTitle" :new-emit="props.newEmit" @click:new="() => emit('click:new')" />
       </template>
     </template>
   </v-empty-state>

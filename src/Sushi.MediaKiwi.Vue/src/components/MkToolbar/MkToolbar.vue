@@ -4,7 +4,7 @@
   // define properties
   const props = defineProps<{
     /** ExternalId of the view instance */
-    itemViewId?: string;
+    navigationItemId?: string;
     /** Title specificly for the current table */
     title?: string;
     /** Determines if the toolbar is disabled, default: false */
@@ -58,7 +58,7 @@
 
           <!-- Render the new button when the prop is set -->
           <template v-if="props.new">
-            <MkNewItemButton :item-view-id="props.itemViewId" :new-title="props.newTitle" :new-emit="props.newEmit" @click:new="emit('click:new', $event)" />
+            <MkNewItemButton :navigation-item-id="props.navigationItemId" :new-title="props.newTitle" :new-emit="props.newEmit" @click:new="emit('click:new', $event)" />
           </template>
 
           <MkOverflowMenuIcon v-if="slots.overflowMenuActions">

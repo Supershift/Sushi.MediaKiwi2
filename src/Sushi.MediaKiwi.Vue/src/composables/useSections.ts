@@ -1,4 +1,4 @@
-import { Section } from "@/models";
+import { Section } from "@/models/navigation";
 import { useMediakiwiStore } from "@/stores";
 import { watch } from "vue";
 
@@ -15,14 +15,14 @@ export function useSections() {
   async function waitForSectionsToLoad(resolve: (sections: Section[]) => void, reject?: (error: any) => void) {
     try {
       // If the sections are already loaded, call the callback immediately
-      if (mediakiwiStore.sections?.length) {
-        resolve(mediakiwiStore.sections);
+      if (mediakiwiStore.navigationTree.sections.length) {
+        resolve(mediakiwiStore.navigationTree.sections);
         return;
       }
 
       // Create a watcher to call the callback when the sections are loaded
       const sectionsWatcher = watch(
-        () => mediakiwiStore.sections,
+        () => mediakiwiStore.navigationTree.sections,
         (sections) => {
           if (sections?.length) {
             // Stop watching the sections

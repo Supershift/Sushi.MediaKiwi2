@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { MkTable } from "@/components";
-  import { TableMap, ListResult, Section, Paging } from "@/models";
+  import { TableMap, ListResult, SectionDto, Paging } from "@/models";
   import { ref } from "vue";
   import { container } from "tsyringe";
   import { SectionConnector } from "@/services";
@@ -9,11 +9,11 @@
   const sectionConnector = container.resolve<SectionConnector>("ISectionConnector");
 
   // define reactive variables
-  const data = ref<ListResult<Section>>();
+  const data = ref<ListResult<SectionDto>>();
   const currentPagination = ref<Paging>({});
 
   // define mapping
-  const tableMap: TableMap<Section> = {
+  const tableMap: TableMap<SectionDto> = {
     itemId: (x) => x.id,
     items: [
       { headerTitle: "Id", value: (x) => x.id },

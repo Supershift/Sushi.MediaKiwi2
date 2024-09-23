@@ -1,17 +1,15 @@
-<script setup lang="ts">
-  import type { NavigationItem } from "@/models/api/NavigationItem";
+<script setup lang="ts">  
   import { ref, computed } from "vue";
   import { useNavigation } from "@/composables/useNavigation";
+  import { NavigationItem } from "@/models/navigation";
 
   const componentProps = defineProps<{
-    navigationItem: NavigationItem;
-    allItems: Array<NavigationItem>;
+    navigationItem: NavigationItem;    
   }>();
 
   const navigation = useNavigation();
 
   const groupOpened = ref(false);
-  const children = navigation.getChildren(componentProps.navigationItem);
 
   const icon = computed(() => {
     if (componentProps.navigationItem?.icon) {
@@ -22,7 +20,7 @@
 
   // determine if navigation item has a screen
   function hasScreen(item: NavigationItem): boolean {
-    if (item?.viewId) {
+    if (item?.componentKey) {
       return true;
     }
     return false;
@@ -30,7 +28,7 @@
 
   // called to send user to target screen
   function onItemClick(item: NavigationItem) {
-    if (item.viewId) {
+    if (item.componentKey) {
       navigation.navigateTo(item);
     }
     return false;
@@ -41,7 +39,7 @@
 </script>
 
 <template>
-  <v-list-group v-if="children.length > 0" v-model="groupOpened" :value="navigationItem.name">
+  <v-list-group v-if="navigationItem.children.length > 0" v-model="groupOpened" :value="navigationItem.name">
     <template #activator="{ props }">
       <v-list-item
         v-bind="props"
@@ -54,7 +52,7 @@
         @click.stop="hasScreen(navigationItem) ? onItemClick(navigationItem) : {}"
       />
     </template>
-    <mk-navigation-item v-for="child in children" :key="child.id" :navigation-item="child" :all-items="allItems" />
+    <mk-navigation-item v-for="child in navigationItem.children" :key="child.id" :navigation-item="child" />
   </v-list-group>
   <v-list-item
     v-else

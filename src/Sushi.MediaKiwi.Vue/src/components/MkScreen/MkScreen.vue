@@ -6,7 +6,7 @@
   const navigation = useNavigation();
 
   // Extend this in the future to include more pages?
-  const isPageOnSignIn = computed(() => !navigation?.currentNavigationItem.value?.view?.id);
+  const isPageOnSignIn = computed(() => !navigation?.currentNavigationItem.value?.componentKey);
 
   const mkScreenClasses = computed(() => {
     return {
