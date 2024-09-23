@@ -20,7 +20,7 @@ namespace Sushi.MediaKiwi.SystemIntegrationTests.Supporting
 
         public ApiConnectionFixture()
         {
-            _msSqlContainer = new MsSqlBuilder().Build();
+            _msSqlContainer = new MsSqlBuilder().WithImage("mcr.microsoft.com/mssql/server:2022-latest").Build();
         }
 
         public async Task InitializeAsync()
