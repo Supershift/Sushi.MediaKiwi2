@@ -36,7 +36,7 @@ const mediakiwiOptions : MediakiwiVueOptions = {
     },
   },
   apiBaseUrl: import.meta.env.VITE_APP_MEDIAKIWI_APIBASEURL,
-  // navigationProvider: sampleNavigationProvider,
+  // navigationProvider: navigation,
   msalConfig: <Configuration>{},
   identity: <MediakiwiIdentity>{},
   // import all views as models
