@@ -35,6 +35,6 @@
     new
     :api-result="data"
     :on-load="onLoad"
-    item-view-id="MkLocaleEdit"
+    navigation-item-id="MkLocaleEdit"
   ></mk-table>
 </template>

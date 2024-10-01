@@ -13,7 +13,7 @@
     delete?: boolean;
     /** Determines if the toolbar has a new button, default: false. */
     new?: boolean;
-    /** Determines if we only want to emit instead of navigating to the given itemViewId */
+    /** Determines if we only want to emit instead of navigating to the given navigationItemId */
     newEmit?: boolean;
     /** Overrides the "new item" button title */
     newTitle?: string;
@@ -58,7 +58,12 @@
 
           <!-- Render the new button when the prop is set -->
           <template v-if="props.new">
-            <MkNewItemButton :navigation-item-id="props.navigationItemId" :new-title="props.newTitle" :new-emit="props.newEmit" @click:new="emit('click:new', $event)" />
+            <MkNewItemButton
+              :navigation-item-id="props.navigationItemId"
+              :new-title="props.newTitle"
+              :new-emit="props.newEmit"
+              @click:new="emit('click:new', $event)"
+            />
           </template>
 
           <MkOverflowMenuIcon v-if="slots.overflowMenuActions">

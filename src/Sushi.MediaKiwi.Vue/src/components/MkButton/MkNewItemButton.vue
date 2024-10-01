@@ -10,7 +10,7 @@
     navigationItemId?: string;
     /** label for the title  */
     newTitle?: string;
-    /** Determines if we only want to emit instead of navigating to the given itemViewId */
+    /** Determines if we only want to emit instead of navigating to the given navigationItemId */
     newEmit?: boolean;
   }>();
 

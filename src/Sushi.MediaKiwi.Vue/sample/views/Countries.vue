@@ -52,7 +52,7 @@
     :data="state.countries?.result"
     @load="LoadData"
     :item-id="(item: Country) => item.code"
-    item-view-id="CountryEdit"
+    navigation-item-id="CountryEdit"
     new
     :new-title="t('Add Country').toString()"
     new-emit
