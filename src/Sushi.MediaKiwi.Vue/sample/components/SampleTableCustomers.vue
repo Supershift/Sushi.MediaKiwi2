@@ -109,7 +109,7 @@
     :table-map="tableMap"
     :on-load="LoadData"
     :data="customerRooms"
-    item-view-id="CustomerRoomsEdit"
+    navigation-item-id="CustomerRoomsEdit"
   >
   </mk-table>
 </template>

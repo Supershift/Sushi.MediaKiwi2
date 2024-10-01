@@ -39,6 +39,6 @@
     :api-result="data"
     :on-load="onLoad"
     :table-map="tableMap"
-    item-view-id="MkViewEdit"
+    navigation-item-id="MkViewEdit"
   ></mk-table>
 </template>

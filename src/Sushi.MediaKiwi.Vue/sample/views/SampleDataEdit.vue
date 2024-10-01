@@ -77,7 +77,7 @@
       Manually go a level deeper: <v-btn @click="onButtonClick">Level deeper</v-btn>
       <v-divider></v-divider>
       Use a table to go a level deeper:
-      <MkTable :data="deepDataItems" :table-map="myMap" item-view-id="SampleDeepEdit"></MkTable>
+      <MkTable :data="deepDataItems" :table-map="myMap" navigation-item-id="SampleDeepEdit"></MkTable>
     </div>
   </v-card>
 </template>

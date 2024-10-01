@@ -84,7 +84,7 @@
     :table-map="tableMap"
     :on-load="LoadData"
     :data="hotels?.result"
-    item-view-id="HotelEdit"
+    navigation-item-id="HotelEdit"
     title="Subtitle for the hotel list"
   >
     <template #toolbar>

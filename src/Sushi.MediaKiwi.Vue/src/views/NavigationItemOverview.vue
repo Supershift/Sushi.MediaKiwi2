@@ -55,7 +55,7 @@
     new
     :api-result="state.navigationItems"
     @load="onLoad"
-    item-view-id="MkNavigationItemEdit"
+    navigation-item-id="MkNavigationItemEdit"
     :item-id="(item) => item.id"
   >
     <template #thead>
