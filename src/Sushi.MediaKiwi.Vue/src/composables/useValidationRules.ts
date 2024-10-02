@@ -59,7 +59,7 @@ export const useValidationRules = async () => {
   /** Value must be numeric */
   const numeric = (value?: string | number, message?: string) => {
     if (!!value) {
-      return /^\d+$/.test(value?.toString()) || (message ?? numericMessage);
+      return /^(-?\d*\.?\d+)$/.test(value?.toString()) || (message ?? numericMessage);
     }
     return true; // Allow empty/null values
   };
