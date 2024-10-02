@@ -32,7 +32,7 @@ export class ApiNavigationProvider implements INavigationProvider {
             const sectionNavigationItems = navigationItemDtos.filter(item => item.sectionId === sectionDto.id);
 
             // recursively add navigation items
-            function convertNavigationItems(items : NavigationItemDto[]) : NavigationItem[] {
+            function convertNavigationItems(items : NavigationItemDto[], parent? : NavigationItem) : NavigationItem[] {
                 const result : NavigationItem[] = [];
                 items.forEach(item => {
                     // get view for item
@@ -47,13 +47,15 @@ export class ApiNavigationProvider implements INavigationProvider {
                         roles: undefined,
                         componentKey: view?.componentKey,
                         parameterName: view?.parameterName,
-                        children: [] };                    
+                        children: [],
+                        parent: parent,
+                    };                    
                     result.push(navigationItem);
 
                     // get children
                     const children = sectionNavigationItems.filter(child => child.parentNavigationItemId === item.id);
                     children.sort((a, b) => a.sortOrder - b.sortOrder);
-                    navigationItem.children = convertNavigationItems(children);
+                    navigationItem.children = convertNavigationItems(children, navigationItem);
                 });
                 return result;
             }
@@ -64,7 +66,7 @@ export class ApiNavigationProvider implements INavigationProvider {
 
             section.items = convertNavigationItems(rootNavigationItems);
         });
-
+        
         // create tree
         return new NavigationTree(sections);
     }

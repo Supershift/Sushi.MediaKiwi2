@@ -17,6 +17,8 @@ import { modules } from "./views/modules";
 import { useEntraSettings } from "@/composables/useEntraSettings";
 import { Configuration } from "@azure/msal-browser";
 
+// import navigation from "./navigation/NavigationProvider";
+
 // add mediakiwi
 const mediakiwiOptions : MediakiwiVueOptions = {
   // configure the vuetify options with the additional icon aliases
