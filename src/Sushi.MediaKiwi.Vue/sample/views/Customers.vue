@@ -33,6 +33,8 @@
       countryName: "Nederland",
       date: new Date("2021-01-01"),
     },
+    selectedCustomerId: 0,
+    showCustomerSideSheet: false,
   });
 
   // define filters
@@ -107,8 +109,9 @@
     }
   }
 
-  function onCustomerClick(value: any) {
-    state.refData = value;
+  function onCustomerClick(value: SampleData) {
+    state.selectedCustomerId = value.id;
+    state.showCustomerSideSheet = true;
   }
 </script>
 
@@ -154,5 +157,5 @@
     </template>
   </MkTable>
 
-  <SampleSideSheet :customer="state.refData"></SampleSideSheet>
+  <SampleSideSheet :customer-id="state.selectedCustomerId" v-model="state.showCustomerSideSheet"></SampleSideSheet>
 </template>

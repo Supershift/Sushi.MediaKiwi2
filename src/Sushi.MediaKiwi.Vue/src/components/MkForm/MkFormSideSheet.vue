@@ -48,7 +48,7 @@
   /** The value representing the error that occurred during the last request. */
   const errorProblemDetails = defineModel<ErrorProblemDetails | null | undefined>("error", { required: false });
   /** The unique identifier for the form. This is used to reload the form when the value changes. */
-  const identifier = defineModel<string>("identifier", { required: false });
+  const identifier = defineModel<any>("identifier", { required: false });
   /** Indicator that the forms onLoad event has been completed  */
   const isLoaded = ref<boolean>(false);
 
