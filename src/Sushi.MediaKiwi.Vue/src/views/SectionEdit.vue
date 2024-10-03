@@ -3,7 +3,7 @@
   import { reactive, computed } from "vue";
   import { container } from "tsyringe";
   import { ISectionConnector } from "@/services";
-  import { Section, IconsLibrary } from "@/models";
+  import { SectionDto, IconsLibrary } from "@/models";
   import { RouterManager } from "@/router/routerManager";
   import { useNavigation, useValidationRules } from "@/composables";
   import { adminSectionId } from "@/constants";
@@ -25,7 +25,7 @@
 
   // get data object from API
   const state = reactive({
-    section: {} as Section,
+    section: {} as SectionDto,
   });
 
   async function onLoad() {

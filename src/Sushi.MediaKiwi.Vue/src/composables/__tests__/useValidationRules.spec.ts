@@ -56,6 +56,8 @@ describe("useValidationRules", async () => {
     it("should validate that a value is numeric", () => {
       expect(numeric("123abc")).toBe("Enter a valid numeric value.");
       expect(numeric("123")).toBe(true);
+      expect(numeric("123.8")).toBe(true);
+      expect(numeric(123.8)).toBe(true);
       expect(numeric(123)).toBe(true);
       expect(numeric()).toBe(true);
     });

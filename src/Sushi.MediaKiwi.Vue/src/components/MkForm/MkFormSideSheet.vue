@@ -39,7 +39,7 @@
     ...formOptions?.sideSheet,
   };
 
-  /** Model to open the dialog  */
+  /** Model to open the dialog */
   const modelValue = defineModel<boolean>("modelValue", { required: false, default: false });
   /** The value representing if the form is processing a request. */
   const inProgress = defineModel<boolean>("inProgress", { required: false, default: false });
@@ -47,6 +47,8 @@
   const isValid = defineModel<boolean>("isValid", { required: false, default: false });
   /** The value representing the error that occurred during the last request. */
   const errorProblemDetails = defineModel<ErrorProblemDetails | null | undefined>("error", { required: false });
+  /** The unique identifier for the form. This is used to reload the form when the value changes. */
+  const identifier = defineModel<any>("identifier", { required: false });
   /** Indicator that the forms onLoad event has been completed  */
   const isLoaded = ref<boolean>(false);
 
@@ -129,6 +131,14 @@
         // load data async on created
         await onLoad();
       }
+    }
+  );
+
+  /** Trigger a reload when the identifier changes */
+  watch(
+    () => identifier.value,
+    async () => {
+      await onLoad();
     }
   );
 </script>

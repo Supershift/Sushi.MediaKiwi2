@@ -17,8 +17,10 @@ import { modules } from "./views/modules";
 import { useEntraSettings } from "@/composables/useEntraSettings";
 import { Configuration } from "@azure/msal-browser";
 
+// import navigation from "./navigation/NavigationProvider";
+
 // add mediakiwi
-const mediakiwiOptions = <MediakiwiVueOptions>{
+const mediakiwiOptions : MediakiwiVueOptions = {
   // configure the vuetify options with the additional icon aliases
   vuetifyOptions: {
     icons: {
@@ -36,6 +38,7 @@ const mediakiwiOptions = <MediakiwiVueOptions>{
     },
   },
   apiBaseUrl: import.meta.env.VITE_APP_MEDIAKIWI_APIBASEURL,
+  // navigationProvider: navigation,
   msalConfig: <Configuration>{},
   identity: <MediakiwiIdentity>{},
   // import all views as models

@@ -111,7 +111,7 @@
     :on-load="LoadData"
     :data="hotels?.result"
     :item-id="(item: Hotel) => item.id"
-    item-view-id="HotelEdit"
+    navigation-item-id="HotelEdit"
     new
     new-emit
     :new-title="t('New hotel').toString()"

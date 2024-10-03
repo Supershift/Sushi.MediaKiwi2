@@ -1,5 +1,5 @@
 import { computed } from "vue";
-import type { NavigationItem, Section } from "@/models/api";
+import { NavigationItem, Section } from "@/models/navigation";
 import { useRoute, useRouter } from "@/router";
 import { useMediakiwiStore } from "@/stores";
 import { NavigationFailure, RouteLocationOptions, RouteParamValueRaw, RouteParamsRaw } from "vue-router";
@@ -25,7 +25,7 @@ export function useNavigation() {
    */
   function navigateToHome(): Promise<NavigationFailure | void | undefined> {
     // get the first section
-    const section = store.sections[0];
+    const section = store.navigationTree.sections[0];
 
     if (section) {
       // navigate to the section
@@ -47,6 +47,15 @@ export function useNavigation() {
     }
   }
 
+  function navigateToId(id: string, itemId?: RouteParamValueRaw, options?: RouteLocationOptions): Promise<NavigationFailure | void | undefined> {
+    const navigationItem = store.navigationTree.getNavigationItem(id);
+    if (navigationItem) {
+      return navigateTo(navigationItem, itemId, options);
+    } else {
+      throw new Error(`No navigation item found with id ${id}`);
+    }
+  }
+
   /** Pushes the user to the provided navigation item
    * @param item The navigation item to navigate to
    * @param itemId The id of the item to navigate to. Only required if the navigation item is a dynamic route
@@ -56,20 +65,20 @@ export function useNavigation() {
     if (checkTypeGuardIsSection(item)) {
       // if it's the section, push to the first navigation item in the section which is not a folder
       const section = item as Section;
-      const navigationItem = store.rootNavigationItems.find((x) => x.sectionId == section.id && x.viewId);
+      const navigationItem = section.items.find(x => x.componentKey);
       if (navigationItem) {
         return router.push({ name: navigationItem.id.toString() });
-      } else {
+      } else {        
         throw new Error("No default navigation item found for section");
       }
     } else {
       // if it's navigationItem then we push to nav item's path
       const navigationItem = item as NavigationItem;
       let routeParams: RouteParamsRaw | undefined = undefined;
-      if (navigationItem.view?.parameterName) {
+      if (navigationItem.parameterName) {
         // if this is a dynamic route, try to resolve route parameter
         routeParams = route.params;
-        if (itemId) routeParams[navigationItem.view.parameterName] = itemId;
+        if (itemId) routeParams[navigationItem.parameterName] = itemId;
       }
 
       // called to send user to target screen
@@ -77,14 +86,11 @@ export function useNavigation() {
     }
   }
 
-  /** (Typecheck) Checks if the provided navigation item is a section or a navigation item
-   * @param toBeDetermined The item to check
+  /** (Typecheck) Checks if the provided item is a section.
+   * @param item The item to check
    */
-  const checkTypeGuardIsSection = (toBeDetermined: NavigationTypeGuard): boolean => {
-    if ((toBeDetermined as NavigationItem).path) {
-      return false;
-    }
-    return true;
+  const checkTypeGuardIsSection = (item: NavigationTypeGuard): item is Section => {
+    return (item as Section).items !== undefined;
   };
 
   /**
@@ -96,7 +102,7 @@ export function useNavigation() {
     let result: NavigationItem | undefined = undefined;
     let candidate: NavigationItem | undefined = currentNavigationItem.value?.parent;
     while (candidate && !result) {
-      if (candidate.hasItemNavigation && candidate.children && candidate.children.length > 1) {
+      if (candidate.children.length > 1 && candidate.children.some((x) => x.parameterName)) {
         result = candidate;
       } else {
         if (candidate.parent) {
@@ -120,22 +126,12 @@ export function useNavigation() {
    */
   const currentRouteParamId = computed(() => {
     const navigationItem = currentNavigationItem.value;
-    if (navigationItem.view?.parameterName) {
+    if (navigationItem.parameterName) {
       // if this is a dynamic route, try to resolve route parameter
-      return route.params[navigationItem.view.parameterName];
+      return route.params[navigationItem.parameterName];
     }
     return null;
   });
-
-  /** Gets all children for a specific navigation item
-   * @param navigationItem The navigation item to get the children for
-   * @returns The children of the navigation item or empty array if no children are found
-   */
-  function getChildren(navigationItem: NavigationItem): Array<NavigationItem> {
-    const result = navigationItem.children?.filter((item) => !item.view?.parameterName);
-
-    return result ?? [];
-  }
 
   /** Gets all items for the current root item
    * @returns The children of the current root item or all root items for the current section if no root item is found
@@ -150,20 +146,8 @@ export function useNavigation() {
       return result;
     } else {
       // we are on the root level, so return all root items for current section
-      return store.rootNavigationItems.filter((x) => x.sectionId == currentNavigationItem.value?.sectionId);
+      return currentNavigationItem.value?.section?.items;
     }
-  }
-
-  /** Gets all items for the current section
-   * @returns The children of the current section or empty array if no section is found
-   */
-  function getAllItemsBasedOnSection(): NavigationItem[] {
-    // if route is not for a the current navigation item, return empty array
-    if (!currentNavigationItem.value) return [];
-
-    // get all items for the current item's section
-    const navigationItems = store.navigationItems.filter((x) => x.sectionId == currentNavigationItem.value.sectionId);
-    return navigationItems;
   }
 
   /** Gets the id from the url for the current view, if the current view has a parameter.
@@ -171,9 +155,9 @@ export function useNavigation() {
    */
   const currentViewParameter = computed(() => {
     const navigationItem = currentNavigationItem.value;
-    if (navigationItem.view?.parameterName) {
+    if (navigationItem.parameterName) {
       // if this is a dynamic route, try to resolve route parameter
-      return typeof route.params[navigationItem.view.parameterName] === "string" ? (route.params[navigationItem.view.parameterName] as string) : undefined;
+      return typeof route.params[navigationItem.parameterName] === "string" ? (route.params[navigationItem.parameterName] as string) : undefined;
     }
     return undefined;
   });
@@ -185,11 +169,11 @@ export function useNavigation() {
   const currentSections = computed(() => {
     // filter only sections to which current role has access
     const activeAccount = identity.msalInstance.getActiveAccount();
-    let sections = store.sections.filter((section) =>
+    let sections = store.navigationTree.sections.filter((section) =>
       !section.roles?.length ? true : false || section.roles.some((role) => activeAccount?.idTokenClaims?.roles?.includes(role))
     );
     // remove sections without navigation items
-    sections = sections.filter((section) => store.navigationItems.some((item) => item.sectionId === section.id))?.filter((x) => x.displayState !== "hidden");
+    sections = sections.filter((section) => section.items)?.filter((x) => x.displayState !== "hidden");
     return sections;
   });
 
@@ -213,7 +197,8 @@ export function useNavigation() {
     }
 
     // If the provided navigation item is the ONLY child of the current navigation item that 'has item navigation', and points to a view, then it is active
-    if (currentParent?.id === navigationItem.id && navigationItem.hasItemNavigation && navigationItem.view && navigationItem.children?.length === 1) {
+    if (currentParent?.id === navigationItem.id
+      && navigationItem.children.some(x => x.parameterName) && navigationItem.componentKey && navigationItem.children?.length === 1) {
       return true;
     }
 
@@ -234,28 +219,7 @@ export function useNavigation() {
     if (!section) {
       return false;
     }
-    return currentNavigationItem.value?.sectionId === section.id;
-  }
-
-  /**
-   * Redirect to a view based on the viewId
-   * @param viewId  The view ID to navigate to
-   */
-  function navigateToView(viewId: string, itemId?: RouteParamValueRaw, options?: RouteLocationOptions) {
-    // find navigation item for the view
-    const view = store.views.find((x) => x.id == viewId);
-
-    if (!view) {
-      throw new Error(`No view found for external id ${viewId}`);
-    }
-
-    const navigationItem = store.navigationItems.find((x) => x.viewId == view.id);
-    if (!navigationItem) {
-      throw new Error(`No navigationItem found for view ${viewId}`);
-    }
-
-    // push user to target page
-    return navigateTo(navigationItem, itemId, options);
+    return currentNavigationItem.value?.section.id === section.id;
   }
 
   return {
@@ -264,11 +228,9 @@ export function useNavigation() {
     navigateTo,
     navigateToParent,
     navigateToHome,
-    navigateToView,
-    getChildren,
+    navigateToId,    
     determineCurrentRoootItem,
-    getItemsBasedOnRoot,
-    getAllItemsBasedOnSection,
+    getItemsBasedOnRoot,    
     determineIfNavigationItemIsActive,
     determineIfSectionIsActive,
     currentRouteParamId,

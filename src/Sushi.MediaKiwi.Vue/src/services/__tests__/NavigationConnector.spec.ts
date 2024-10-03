@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { NavigationConnector } from "../NavigationConnector";
 import axiosMock, { AxiosResponse, HttpStatusCode } from "axios";
-import { NavigationItem, Paging, Sorting } from "./../../models/api";
+import { NavigationItemDto, Paging, Sorting } from "./../../models/api";
 import ListResult from "./../../models/api/ListResult";
 import { SortDirection } from "../../models/enum/SortDirection";
 
@@ -18,14 +18,14 @@ describe("NavigationConnector", () => {
   it("Should call GetNavigationItems with correct parameters", async () => {
     // Arrange
     const expectedResult = <AxiosResponse>{
-      data: <ListResult<NavigationItem>>{
-        result: [<NavigationItem>{ id: "1", name: "test", sectionId: "1" }],
+      data: <ListResult<NavigationItemDto>>{
+        result: [<NavigationItemDto>{ id: "1", name: "test", sectionId: "1" }],
         totalCount: 1,
         pageCount: 1,
       },
     };
     const paging = <Paging>{ pageIndex: 0, pageSize: 10 };
-    const sorting = <Sorting<NavigationItem>>{ sortBy: "name", sortDirection: SortDirection.Asc };
+    const sorting = <Sorting<NavigationItemDto>>{ sortBy: "name", sortDirection: SortDirection.Asc };
 
     // mock axios getter to return expected result
     axiosMock.get = vi.fn().mockResolvedValue(expectedResult);
@@ -51,7 +51,7 @@ describe("NavigationConnector", () => {
   it("Should call GetNavigationItem with correct parameters", async () => {
     // Arrange
     const expectedResult = <AxiosResponse>{
-      data: <NavigationItem>{
+      data: <NavigationItemDto>{
         id: "1",
         name: "test",
         sectionId: "1",
@@ -74,7 +74,7 @@ describe("NavigationConnector", () => {
   it("Should call CreateNavigationItem with correct parameters", async () => {
     // Arrange
     const expectedResult = <AxiosResponse>{
-      data: <NavigationItem>{
+      data: <NavigationItemDto>{
         id: "1",
         name: "test",
         sectionId: "1",
@@ -87,7 +87,7 @@ describe("NavigationConnector", () => {
     // create connector and call
     const connector = new NavigationConnector(axiosMock);
 
-    const request = <NavigationItem>{ id: "1", name: "test", sectionId: "1" };
+    const request = <NavigationItemDto>{ id: "1", name: "test", sectionId: "1" };
     const result = await connector.CreateNavigationItem(request);
 
     // assert
@@ -99,7 +99,7 @@ describe("NavigationConnector", () => {
   it("Should call UpdateNavigationItem with correct parameters", async () => {
     // Arrange
     const expectedResult = <AxiosResponse>{
-      data: <NavigationItem>{
+      data: <NavigationItemDto>{
         id: "1",
         name: "test2",
         sectionId: "1",
@@ -112,7 +112,7 @@ describe("NavigationConnector", () => {
     // create connector and call
     const connector = new NavigationConnector(axiosMock);
 
-    const request = <NavigationItem>{ id: "1", name: "test2", sectionId: "1" };
+    const request = <NavigationItemDto>{ id: "1", name: "test2", sectionId: "1" };
     const result = await connector.UpdateNavigationItem(request);
 
     // assert

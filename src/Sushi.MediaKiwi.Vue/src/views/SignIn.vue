@@ -25,7 +25,7 @@
 
   // if already authenticated, redirect to home
   if (isAuthenticated.value) {
-    // first wait for routermanager to initialize
+    // first wait for store and routermanager to initialize
     await routerManager.Initialize();
 
     const navigation = useNavigation();

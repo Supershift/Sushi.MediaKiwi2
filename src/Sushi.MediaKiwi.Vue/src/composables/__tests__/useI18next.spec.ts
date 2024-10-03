@@ -6,14 +6,14 @@ import i18next from "i18next";
 import { createTestingPinia } from "@pinia/testing";
 import { PublicClientApplication } from "@azure/msal-browser";
 import { identity } from "../../identity";
-import { View } from "../../models";
+import { NavigationItem } from "../../models/navigation";
 // mock libraries
 vi.mock("i18next");
 vi.mock("@azure/msal-browser");
 vi.mock("vue-router");
 
 describe("useI18next", () => {
-  async function getComposable(ns?: string | View): ReturnType<typeof useI18next> {
+  async function getComposable(ns?: string | NavigationItem): ReturnType<typeof useI18next> {
     let result: any = {};
     const app = createApp({
       setup() {
@@ -37,7 +37,7 @@ describe("useI18next", () => {
     it("Should call i18next.t with view's id", async () => {
       // arrange
       const spy = vi.spyOn(i18next, "getFixedT").mockImplementation(() => vi.fn());
-      const composable = await getComposable({ id: "myView" });
+      const composable = await getComposable({ id: "myView",children:[], name: 'view', section:{id : '3', name: '', items:[]} });
 
       // act
       composable.t.value("test");

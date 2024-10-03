@@ -20,6 +20,7 @@ import { registerIcons } from "./helpers/registerIcons";
 import { registerDirectives } from "./helpers/registerDirectives";
 import { createVuetify } from "./plugins/vuetify";
 import { registerErrorHandler } from "./helpers/registerErrorHandler";
+import { ApiNavigationProvider } from "./navigation";
 
 export default {
   install(app: App, options: MediakiwiVueOptions): void {
@@ -28,6 +29,10 @@ export default {
 
     // register dependencies
     registerServices(container, options.serviceRegistrations);
+
+    // register navigation provdider
+    const navigationProvider = options.navigationProvider ?? new ApiNavigationProvider();
+    container.registerInstance("INavigationProvider", navigationProvider);
 
     // register axios
     registerAxios(container, options);
@@ -120,6 +125,8 @@ export default {
 export * from "@/components";
 
 export * from "@/composables";
+
+export * from "@/navigation";
 
 export * from "@/models";
 

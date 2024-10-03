@@ -139,6 +139,4 @@
       </MkOverflowMenuIcon>
     </template>
   </MkTable>
-
-  <SampleSideSheet :customer="state.refData"></SampleSideSheet>
 </template>

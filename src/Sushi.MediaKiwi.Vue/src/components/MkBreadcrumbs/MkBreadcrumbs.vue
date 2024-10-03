@@ -3,8 +3,9 @@
   import MkBackButton from "@/components/MkNavigation/MkBackButton.vue";
   import { useDisplay } from "vuetify";
   import { useNavigation } from "@/composables/useNavigation";
-  import { NavigationItem, IconsLibrary } from "@/models";
+  import { IconsLibrary } from "@/models";
   import { useBreadcrumbs } from "@/composables/useBreadcrumbs";
+  import { NavigationItem } from "@/models/navigation";
 
   // define props
   const props = defineProps({
@@ -50,7 +51,7 @@
   }
 
   function hasScreen(item: NavigationItem): boolean {
-    if (item?.viewId) {
+    if (item?.componentKey) {
       return true;
     }
     return false;
@@ -58,7 +59,7 @@
 
   // called to send user to target screen
   function onItemClick(item: NavigationItem) {
-    if (item.viewId) {
+    if (item.componentKey) {
       navigation.navigateTo(item);
     }
     return false;

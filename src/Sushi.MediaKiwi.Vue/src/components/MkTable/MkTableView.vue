@@ -17,8 +17,8 @@
     tableMap?: TableMap<T>;
     itemId?: (entity: T) => string | number;
     data?: T[];
-    /** ExternalId of the view instance to which the user is pushed when clicking a row. */
-    itemViewId?: string;
+    /** Id of the navigation item to which the user is pushed when clicking a row. */
+    navigationItemId?: string;
     /** Make each row in the table selectable. */
     checkbox?: boolean;
     /** Defines the pagination mode */
@@ -97,23 +97,18 @@
     emit("click:row", dataItem);
 
     // navigate user to target page if defined
-    if (props.itemViewId) {
-      // find navigation item for the view
-      const view = store.views.find((x) => x.id == props.itemViewId);
-
-      if (!view) {
-        throw new Error(`No view found for external id ${props.itemViewId}`);
-      }
-      const navigationItem = store.navigationItems.find((x) => x.viewId == view?.id);
+    if (props.navigationItemId) {
+      // find navigation item       
+      const navigationItem = store.navigationTree.getNavigationItem(props.navigationItemId);
       if (!navigationItem) {
-        throw new Error(`No navigationItem found for view ${props.itemViewId}`);
+        throw new Error(`No navigationItem found for id ${props.navigationItemId}`);
       }
 
       // try to resolve route parameter
       let itemId: RouteParamValueRaw = undefined;
-      if (navigationItem.view?.parameterName) {
+      if (navigationItem.parameterName) {
         if (!getItemId.value) {
-          throw new Error(`No itemId function found to resolve ${navigationItem.view?.parameterName}`);
+          throw new Error(`No itemId function found to resolve ${navigationItem.parameterName}`);
         }
         itemId = getItemId.value(dataItem);
         if (!itemId) {
