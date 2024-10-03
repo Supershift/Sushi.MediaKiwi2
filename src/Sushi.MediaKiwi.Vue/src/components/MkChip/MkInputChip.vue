@@ -2,6 +2,7 @@
   const props = defineProps<{
     appendIcon?: string;
     prependIcon?: string;
+    closable?: boolean;
   }>();
 
   const emit = defineEmits<{
@@ -14,7 +15,7 @@
   <v-chip
     :append-icon="props.appendIcon"
     :prepend-icon="props.prependIcon"
-    closable
+    :closable="props.closable"
     color="primary"
     @click:close.stop="(_e) => emit('click:remove')"
     @click.stop="() => emit('click')"

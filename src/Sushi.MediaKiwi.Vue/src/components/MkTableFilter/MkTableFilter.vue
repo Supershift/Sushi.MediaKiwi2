@@ -307,7 +307,13 @@
           <div class="flex-1-1 d-flex flex-wrap ga-2 my-2">
             <!-- Chips -->
             <template v-for="key in Object.keys(modelValue)">
-              <MkInputChip v-if="modelValue[key].selectedValue" :key="key" @click="setCurrentFilter(key, modelValue[key])" @click:remove="removeFilter(key)">
+              <MkInputChip
+                v-if="modelValue[key].selectedValue"
+                :key="key"
+                @click="setCurrentFilter(key, modelValue[key])"
+                @click:remove="removeFilter(key)"
+                :closable="modelValue[key].closable ?? true"
+              >
                 {{ appliedFilterChip(modelValue[key]) }}
               </MkInputChip>
             </template>
