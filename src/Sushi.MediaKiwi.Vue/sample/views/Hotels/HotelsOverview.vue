@@ -56,6 +56,8 @@
         { title: "Yes", value: true },
         { title: "No", value: false },
       ],
+      closable: false,
+      selectedValue: { title: "Yes", value: true },
     },
     countryCode: {
       title: "Country",
@@ -145,7 +147,7 @@
           v-model="dataItem.countryCode"
           :items="countryOptions"
           hide-details
-          @update:model-value="(code:string) => onCountryCodeChanged(dataItem, code)"
+          @update:model-value="(code: string) => onCountryCodeChanged(dataItem, code)"
         />
       </mk-td>
       <mk-td :value="dataItem.isActive" />
