@@ -133,7 +133,6 @@
 
   /** Trigger the onLoad event when the component is mounted and the modelValue is already true */
   if (modelValue.value) {
-    alert("Trigger the onLoad event when the component is mounted and the modelValue is already true");
     await onLoad();
   }
 </script>
