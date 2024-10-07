@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T extends Object">
   import MkErrorProblemDetails from "@/components/MkErrorProblemDetails/MkErrorProblemDetails.vue";
   import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
-  import { ref, watch, getCurrentInstance } from "vue";
+  import { ref, watch, getCurrentInstance, onMounted } from "vue";
   import { useFormMessages, useI18next } from "@/composables";
   import { useForm } from "@/composables/form/useForm";
   import { FormSideSheetProps, FormSlotProps } from "@/models/form/FormProps";
@@ -141,6 +141,11 @@
       await onLoad();
     }
   );
+
+  /** Trigger the onLoad event when the component is mounted and the modelValue is already true */
+  if (modelValue.value) {
+    await onLoad();
+  }
 </script>
 <template>
   <v-form
