@@ -115,7 +115,7 @@
     new
     new-emit
     :new-title="t('New hotel').toString()"
-    title="Subtitle for the hotel list"
+    title="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin nec quam id nunc tincidunt vulputate sed eget ex. Praesent bibendum leo sed ipsum sodales euismod. Cras ac purus volutpat, dapibus quam eget, vestibulum orci. Aliquam et ligula pharetra, condimentum nibh at, congue dolor."
     @click:new="console.log('New Button Clicked: ' + $event)"
     v-model:display-options="displayOptions"
   >
