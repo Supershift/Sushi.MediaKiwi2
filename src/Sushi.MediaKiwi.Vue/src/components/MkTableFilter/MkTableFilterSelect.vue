@@ -5,7 +5,7 @@
   import MkTableFilterDialog from "./MkTableFilterDialog.vue";
 
   // inject dependencies
-  const { t, defaultT } = await useI18next("MkFilter");
+  const { defaultT } = await useI18next("MkFilter");
 
   const props = defineProps<{
     tableFilterItem: TableFilterItem;
