@@ -134,14 +134,16 @@
 <template>
   <mk-table v-model:filters="filters" :api-result="filterValues">
     <template #thead>
-      <th>Title</th>
-      <th>Raw value</th>
+      <th>Filter Title</th>
+      <th>Selected value</th>
+      <th>Selected value title</th>
       <th>Type</th>
     </template>
 
     <template #tbody="dataItem">
       <td width="250">{{ dataItem.title }}</td>
       <td>{{ dataItem.selectedValue?.value || "-" }}</td>
+      <td>{{ dataItem.selectedValue?.title || "-" }}</td>
       <td>{{ TableFilterType[dataItem.type!] }}</td>
     </template>
   </mk-table>

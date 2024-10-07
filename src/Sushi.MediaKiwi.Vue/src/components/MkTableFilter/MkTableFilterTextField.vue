@@ -35,6 +35,7 @@
     if (model.value) {
       modelValue.value = {
         value: model.value,
+        title: model.value,
       };
     }
   }

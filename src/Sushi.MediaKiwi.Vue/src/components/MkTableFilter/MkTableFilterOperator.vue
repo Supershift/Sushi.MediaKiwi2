@@ -8,7 +8,7 @@
 
   // inject dependencies
   const { t, defaultT } = await useI18next("MkFilter");
-  const { getOperatorOptions } = await useFilters(useI18next("MkFilter"));
+  const { getOperatorOptions, getFormatterFilterValue } = await useFilters(useI18next("MkFilter"));
 
   const props = defineProps<{
     tableFilterItem: TableFilterItem;
@@ -44,11 +44,25 @@
   const inputType = computed(() => (props.tableFilterItem.options ? "text" : "number"));
 
   function onApply() {
+    // Create the new filter model
+    const newFilter = <TableFilterItem>{
+      ...props.tableFilterItem,
+      selectedValue: {
+        value: {
+          operator: state.operator,
+          value: state.value,
+        },
+      },
+    };
+
+    const title = getFormatterFilterValue(newFilter);
+
     modelValue.value = {
       value: {
         operator: state.operator,
         value: state.value,
       },
+      title,
     };
   }
 </script>

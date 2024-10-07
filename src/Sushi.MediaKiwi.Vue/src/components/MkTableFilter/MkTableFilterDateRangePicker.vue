@@ -3,7 +3,7 @@
   import { ref } from "vue";
   import { MkDatePresetMenu } from "../MkDatePresetMenu";
 
-  defineProps<{
+  const props = defineProps<{
     tableFilterItem: TableFilterItem;
   }>();
 
@@ -17,9 +17,7 @@
   const model = ref(modelValue.value);
 
   function applyFilter() {
-    modelValue.value = {
-      value: model.value.value,
-    };
+    modelValue.value = { ...model.value };
   }
 </script>
 

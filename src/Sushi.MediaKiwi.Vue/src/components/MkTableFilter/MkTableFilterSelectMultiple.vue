@@ -2,10 +2,11 @@
   import type { TableFilterItem, TableFilterValue } from "@/models/table";
   import { computed, ref } from "vue";
   import MkTableFilterDialog from "./MkTableFilterDialog.vue";
-  import { useI18next } from "@/composables";
+  import { useFilters, useI18next } from "@/composables";
 
   // inject dependencies
-  const { t, defaultT } = await useI18next("MkFilter");
+  const { getFormatterFilterValue } = await useFilters(useI18next("MkFilter"));
+  const { defaultT } = await useI18next("MkFilter");
 
   const props = defineProps<{
     tableFilterItem: TableFilterItem;
@@ -25,8 +26,16 @@
 
   function applyFilter() {
     if (model.value) {
+      // Create the new filter model
+      const newFilter = <TableFilterItem>{ ...props.tableFilterItem, selectedValue: { value: model.value } };
+
+      // Get the titles of the selected options
+      const title = getFormatterFilterValue(props.tableFilterItem);
+
+      // Bind the new filter model to the model value
       modelValue.value = {
-        value: model.value,
+        value: newFilter.selectedValue!.value,
+        title: title,
       };
     }
   }
