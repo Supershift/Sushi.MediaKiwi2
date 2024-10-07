@@ -19,9 +19,6 @@
     datePickerRange: {
       title: "Date Picker Range",
       type: TableFilterType.DateRange,
-      selectedValue: {
-        value: [start, end],
-      },
       divider: true,
     },
     contains: {

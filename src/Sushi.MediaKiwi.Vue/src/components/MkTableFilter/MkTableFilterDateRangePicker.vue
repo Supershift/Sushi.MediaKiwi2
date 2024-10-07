@@ -3,7 +3,7 @@
   import { ref } from "vue";
   import { MkDatePresetMenu } from "../MkDatePresetMenu";
 
-  const props = defineProps<{
+  defineProps<{
     tableFilterItem: TableFilterItem;
   }>();
 

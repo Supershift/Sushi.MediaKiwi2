@@ -9,6 +9,11 @@ export async function useFilters(useI18next: ReturnType<typeof useI18nextComposa
   const { formatPreset } = await useDatePresets();
   const { formatDate, t } = await useI18next;
 
+  /**
+   * Returns a human readable representation for the filter value, based on the type of filter
+   * @param tableFilterItem
+   * @returns
+   */
   function getFormatterFilterValue(tableFilterItem: TableFilterItem) {
     const value = tableFilterItem.selectedValue?.value;
     const title = tableFilterItem.selectedValue?.title;
