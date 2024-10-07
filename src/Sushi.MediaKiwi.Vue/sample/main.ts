@@ -20,7 +20,7 @@ import { Configuration } from "@azure/msal-browser";
 // import navigation from "./navigation/NavigationProvider";
 
 // add mediakiwi
-const mediakiwiOptions : MediakiwiVueOptions = {
+const mediakiwiOptions: MediakiwiVueOptions = {
   // configure the vuetify options with the additional icon aliases
   vuetifyOptions: {
     icons: {
@@ -75,7 +75,7 @@ const mediakiwiOptions : MediakiwiVueOptions = {
   },
 };
 
-const { fillEntraSettings } = useEntraSettings();
+const { fillEntraSettings } = useEntraSettings(import.meta.env.VITE_APP_MEDIAKIWI_APIBASEURL);
 const mediakiwiOptionsWithEntra = await fillEntraSettings(mediakiwiOptions);
 
 // Create the app
