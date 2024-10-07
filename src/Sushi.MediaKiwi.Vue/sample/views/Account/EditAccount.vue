@@ -22,7 +22,7 @@
     account: <Account>{},
     amount: <number | undefined>undefined,
     depositSheet: false,
-    withdrawSheet: true,
+    withdrawSheet: false,
     transferMoneyDialog: false,
   });
 

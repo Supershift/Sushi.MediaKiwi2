@@ -130,6 +130,12 @@
       }
     }
   );
+
+  /** Trigger the onLoad event when the component is mounted and the modelValue is already true */
+  if (modelValue.value) {
+    alert("Trigger the onLoad event when the component is mounted and the modelValue is already true");
+    await onLoad();
+  }
 </script>
 <template>
   <v-dialog v-model="modelValue" :width="computedProps?.width" close-on-back @update:model-value="updateDialog" @close="onClose">
