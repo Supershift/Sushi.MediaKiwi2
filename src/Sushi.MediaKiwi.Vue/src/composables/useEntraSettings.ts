@@ -18,16 +18,16 @@ export function useEntraSettings(apiBaseUrl: string = "useEntraSettings: apiBase
   async function fillEntraSettings(options: MediakiwiVueOptions): Promise<MediakiwiVueOptions> {
     const entraSettings = await getEntraSettings();
 
-    var clientId = entraSettings.clientId ?? options.msalConfig.auth.clientId ?? "useEntraSettings: clientId not configured";
+    var clientId = entraSettings.clientId ?? options.msalConfig?.auth.clientId ?? "useEntraSettings: clientId not configured";
 
     return {
       ...options,
       msalConfig: {
         auth: {
           clientId: clientId,
-          authority: entraSettings.authority ?? options.msalConfig.auth.authority ?? "useEntraSettings: authority not configured",
-          redirectUri: options.msalConfig.auth.redirectUri ?? "/loginRedirect",
-          postLogoutRedirectUri: options.msalConfig.auth.postLogoutRedirectUri ?? "/signIn",
+          authority: entraSettings.authority ?? options.msalConfig?.auth.authority ?? "useEntraSettings: authority not configured",
+          redirectUri: options.msalConfig?.auth.redirectUri ?? "/loginRedirect",
+          postLogoutRedirectUri: options.msalConfig?.auth.postLogoutRedirectUri ?? "/signIn",
         },
       },
       identity: { scopes: [`api://${clientId}/access_via_approle_assignments`] },
