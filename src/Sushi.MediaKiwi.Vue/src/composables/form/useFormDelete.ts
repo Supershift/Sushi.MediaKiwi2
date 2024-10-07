@@ -76,7 +76,7 @@ export async function useFormDelete(
       result = TResult.success();
     } catch (error: any) {
       let errorResult: ErrorProblemDetails;
-      if (error instanceof ErrorProblemDetails) {
+      if (error && error instanceof ErrorProblemDetails) {
         errorResult = error as ErrorProblemDetails;
       } else {
         errorResult = await createErrorProblemDetails(error);
@@ -87,10 +87,6 @@ export async function useFormDelete(
 
       // Show a message that the delete failed
       snackbar.showMessage(deleteFailedMessage.value);
-
-      if (formRef.value && formRef.value.reset) {
-        formRef.value.reset();
-      }
 
       // Set the result
       result = TResult.failure(error);
