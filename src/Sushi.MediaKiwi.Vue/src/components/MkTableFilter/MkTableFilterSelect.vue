@@ -40,6 +40,7 @@
         :label="tableFilterItem.inputLabel || defaultT('Value')"
         return-object
         :rules="[...additionalRules]"
+        autofocus
       ></v-autocomplete>
     </div>
   </MkTableFilterDialog>

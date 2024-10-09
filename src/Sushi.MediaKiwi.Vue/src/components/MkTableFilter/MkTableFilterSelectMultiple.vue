@@ -51,6 +51,7 @@
         :items="tableFilterItem.options"
         :label="tableFilterItem.inputLabel || defaultT('Value')"
         :rules="[...additionalRules]"
+        autofocus
       >
         <template #selection="{ item }">
           <v-chip v-if="item" v-text="item.title" />
