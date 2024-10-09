@@ -6,9 +6,11 @@ import { IRoleConnector } from "@/services/IRoleConnector";
 import { VuetifyOptions } from "vuetify";
 import { INavigationProvider } from "@/navigation";
 import { NavigationTree } from "@/models/navigation";
+import { RouteLocationRaw } from "vue-router";
 
 export interface MediaKiwiState {
   navigationTree: NavigationTree;
+  navigationBackUrlOverwrite?: RouteLocationRaw | undefined;
   roles: Role[];
   isLocal: boolean;
   drawer: boolean;
