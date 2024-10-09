@@ -2,14 +2,12 @@
   import MkNavigationItem from "@/components/MkNavigation/MkNavigationItem.vue";
   import { useMediakiwiStore } from "@/stores";
   import { useNavigation } from "@/composables/useNavigation";
-  import { useI18next } from "@/composables/useI18next";
   import { IconsLibrary } from "@/models";
   import { useRouter } from "@/router";
 
   defineEmits(["change"]);
 
   const { getItemsBasedOnRoot, navigateTo, currentRootItem } = useNavigation(); // also calls store within this composable
-  const { defaultT } = await useI18next();
   const router = useRouter();
   const store = useMediakiwiStore();
 
