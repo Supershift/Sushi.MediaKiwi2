@@ -92,13 +92,13 @@
     };
   }
 
-  function onRowClick(_event: Event, dataItem: T) {
+  function handleNavigation(dataItem: T) {
     // emit event
     emit("click:row", dataItem);
 
     // navigate user to target page if defined
     if (props.navigationItemId) {
-      // find navigation item       
+      // find navigation item
       const navigationItem = store.navigationTree.getNavigationItem(props.navigationItemId);
       if (!navigationItem) {
         throw new Error(`No navigationItem found for id ${props.navigationItemId}`);
@@ -118,6 +118,49 @@
 
       // push user to target page
       navigation.navigateTo(navigationItem, itemId);
+    }
+  }
+
+  function handleSelection(dataItem: T) {
+    const isSelected = isItemSelected.value(dataItem);
+    onToggleSelection(dataItem, !isSelected);
+  }
+
+  function onRowClick(event: MouseEvent, dataItem: T) {
+    if (props.checkbox && (event.ctrlKey || event.shiftKey)) {
+      if (event.ctrlKey) {
+        if (!isDisabledItemSelection(dataItem)) {
+          handleSelection(dataItem);
+        }
+      } else if (event.shiftKey) {
+        // select all items between the last selected item and the current item
+
+        const lastSelectedIndex = props.data?.findIndex((x) => getItemId.value!(x) === selectionIds.value[selectionIds.value.length - 1]);
+        const currentIndex = props.data?.findIndex((x) => getItemId.value!(x) === getItemId.value!(dataItem));
+
+        // if both indexes are found
+        if (lastSelectedIndex !== undefined && currentIndex !== undefined) {
+          let start = Math.min(lastSelectedIndex, currentIndex);
+          let end = Math.max(lastSelectedIndex, currentIndex);
+
+          // Correct the indexes to keep the current selection as is
+          if (end < start) {
+            end++;
+          } else if (end > start) {
+            start++;
+          }
+
+          // Select all items between the start and end index
+          for (let i = start; i <= end; i++) {
+            const item = props.data?.[i];
+            if (item && !isDisabledItemSelection(item)) {
+              handleSelection(item);
+            }
+          }
+        }
+      }
+    } else {
+      handleNavigation(dataItem);
     }
   }
 
@@ -250,6 +293,7 @@
         tbody {
           tr {
             transition: 0.2s background-color;
+            user-select: none;
             &.has-hover {
               &:hover {
                 @include mixins.hover-effect;
