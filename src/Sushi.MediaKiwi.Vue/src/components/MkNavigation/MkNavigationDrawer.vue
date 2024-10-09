@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import { computed } from "vue";
   import MkNavigationItem from "@/components/MkNavigation/MkNavigationItem.vue";
   import { useMediakiwiStore } from "@/stores";
   import { useNavigation } from "@/composables/useNavigation";
@@ -14,7 +13,7 @@
   const router = useRouter();
   const store = useMediakiwiStore();
 
-  const navigate = computed(() => (item: any) => {
+  const navigate = (item: any) => {
     if (store.navigationBackUrlOverwrite) {
       const overwrite = store.navigationBackUrlOverwrite;
       store.navigationBackUrlOverwrite = undefined;
@@ -23,7 +22,7 @@
     } else {
       navigateTo(item);
     }
-  });
+  };
 </script>
 <template>
   <v-navigation-drawer class="pa-3">
