@@ -29,7 +29,7 @@
     <v-list open-strategy="single" class="pa-0">
       <v-list-item
         v-if="currentRootItem"
-        :title="defaultT('Back')"
+        :title="currentRootItem.name"
         exact
         rounded="pill"
         class="mb-2"
