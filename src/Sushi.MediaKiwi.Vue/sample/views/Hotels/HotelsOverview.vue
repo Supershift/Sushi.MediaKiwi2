@@ -109,6 +109,7 @@
     v-model:filters="filters"
     v-model:sorting="sorting"
     v-model:selection="selectedHotels"
+    hide-selection-checkbox
     :api-result="hotels"
     :on-load="LoadData"
     :data="hotels?.result"
