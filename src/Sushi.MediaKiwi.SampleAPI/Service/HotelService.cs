@@ -105,9 +105,8 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
             {
                 return new NotFoundError();
             }
-
-            // hotel.SetMetaDat();
-
+             
+            Hotel.Update(hotel, request);
 
             // save hotel
             await _hotelRepository.SaveAsync(hotel);

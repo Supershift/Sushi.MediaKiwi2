@@ -24,10 +24,17 @@ export class HotelConnector {
   }
 
   async SaveAsync(request: HotelDto): Promise<HotelDto> {
+    const createHotelRequest = {
+      countryCode: request.countryCode,
+      name: request.name,
+      isActive: request.isActive,
+      srp: request.srp,
+    };
+
     if (request?.id > 0) {
-      return (await this.axios.put<HotelDto>(`/hotel/${request.id}`, request)).data;
+      return (await this.axios.put<HotelDto>(`/hotel/${request.id}`, createHotelRequest)).data;
     } else {
-      return (await this.axios.post<HotelDto>("/hotel", request)).data;
+      return (await this.axios.post<HotelDto>("/hotel", createHotelRequest)).data;
     }
   }
 

@@ -23,11 +23,13 @@
   import { container } from "tsyringe";
   import { ref } from "vue";
   import { TableColumn } from "@/models/table/TableColumn";
+  import { useSnackbarStore } from "@/stores";
 
   // inject dependencies
   const connector = container.resolve(HotelConnector);
   const countriesConnector = container.resolve(CountryConnector);
   const { formatDateTime, t } = await useI18next();
+  const snackbar = useSnackbarStore();
 
   // define reactive variables
   const currentPagination = ref<Paging>({
@@ -94,19 +96,12 @@
     sortDirection: SortDirection.Desc,
   });
 
-  async function onNameChanged(hotel: Hotel, name: string) {
-    hotel.name = name;
-    await SaveData(hotel);
-  }
-
-  async function onCountryCodeChanged(hotel: Hotel, code: string) {
-    hotel.countryCode = code;
-    await SaveData(hotel);
-  }
-
-  /** TODO Implement */
-  async function SaveData(hotel: Hotel) {
-    console.log(hotel);
+  async function onCountryCodeChanged(hotel: Hotel) {
+    // Update the hotel object
+    const result = await connector.SaveAsync(hotel);
+    if (result) {
+      snackbar.showMessage(`Sucessfully saved ${hotel.name}`);
+    }
   }
 </script>
 
@@ -148,12 +143,7 @@
       <td>{{ dataItem.name }}</td>
       <td>{{ formatDateTime(dataItem.created) }}</td>
       <mk-td @click.stop>
-        <v-autocomplete
-          v-model="dataItem.countryCode"
-          :items="countryOptions"
-          hide-details
-          @update:model-value="(code: string) => onCountryCodeChanged(dataItem, code)"
-        />
+        <v-autocomplete v-model="dataItem.countryCode" :items="countryOptions" hide-details @update:model-value="() => onCountryCodeChanged(dataItem)" />
       </mk-td>
       <mk-td :value="dataItem.isActive" />
       <td>{{ dataItem.srpFormatted }}</td>
