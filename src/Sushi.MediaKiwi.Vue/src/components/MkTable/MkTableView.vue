@@ -313,7 +313,8 @@
             }
 
             &.mk-table-view__row--selected {
-              background-color: rgba(var(--v-theme-primary), var(--v-disabled-opacity)) !important;
+              background-color: rgb(var(--v-theme-secondary-container)) !important; //, var(--v-disabled-opacity)) !important;
+              color: var(--v-theme-on-secondary-container) !important;
             }
           }
         }
