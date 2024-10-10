@@ -76,9 +76,8 @@
     );
 
     hotels.value = result.result.map((item) => {
-      const h = new Hotel(item);
-      console.log(h);
-      return h;
+      // convert to Hotel class
+      return new Hotel(item);
     });
   }
 
