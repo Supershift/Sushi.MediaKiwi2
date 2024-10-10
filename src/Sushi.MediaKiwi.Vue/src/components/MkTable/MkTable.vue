@@ -22,6 +22,7 @@
   import { defaultPageSizeOptions, defaultPageSize } from "@/constants";
   import { useComponentContext } from "@/composables/useComponentContext";
   import MkEmptyState from "../MkEmptyState/MkEmptyState.vue";
+  import { MkTableBodySlotProps } from "@/models/table/TableProp";
 
   // define properties
   const props = withDefaults(
@@ -113,7 +114,7 @@
     /** table templating  */
     thead?: () => never;
     /** table templating */
-    tbody?: (dataItem: T) => never;
+    tbody?: (slotProps: MkTableBodySlotProps<T>) => never;
     /** Custom component for the empty state */
     emptyState?: () => never;
     /* Custom title */

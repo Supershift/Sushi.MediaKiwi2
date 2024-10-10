@@ -141,7 +141,7 @@
       <th></th>
     </template>
 
-    <template #tbody="dataItem">
+    <template #tbody="{ dataItem }">
       <td>{{ dataItem.name }}</td>
       <td>{{ formatDateTime(dataItem.created) }}</td>
       <mk-td @click.stop>

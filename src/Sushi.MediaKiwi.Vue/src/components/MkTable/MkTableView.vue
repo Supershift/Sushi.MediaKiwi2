@@ -8,6 +8,7 @@
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
   import { computed, onMounted, ref } from "vue";
   import { useTableDisplayOptions } from "@/composables/useTableDisplayOptions";
+  import { MkTableBodySlotProps } from "@/models/table/TableProp";
 
   // inject dependencies
   const { initTableDisplayOptions } = useTableDisplayOptions();
@@ -58,7 +59,7 @@
     /** table templating  */
     thead: () => never;
     /** table templating */
-    tbody: (props: T) => never;
+    tbody?: (slotProps: MkTableBodySlotProps<T>) => never;
   }>();
 
   // inject dependencies
@@ -98,7 +99,7 @@
 
     // navigate user to target page if defined
     if (props.navigationItemId) {
-      // find navigation item       
+      // find navigation item
       const navigationItem = store.navigationTree.getNavigationItem(props.navigationItemId);
       if (!navigationItem) {
         throw new Error(`No navigationItem found for id ${props.navigationItemId}`);
@@ -225,7 +226,7 @@
             @update:selected="(e) => onToggleSelection(dataItem, e)"
           />
         </td>
-        <slot name="tbody" v-bind="dataItem"></slot>
+        <slot name="tbody" v-bind="{ dataItem }"></slot>
       </tr>
     </tbody>
     <tfoot class="mk-table-view__footer-container">
