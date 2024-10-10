@@ -22,6 +22,7 @@
   import { defaultPageSizeOptions, defaultPageSize } from "@/constants";
   import { useComponentContext } from "@/composables/useComponentContext";
   import MkEmptyState from "../MkEmptyState/MkEmptyState.vue";
+  import { ContextmenuProps } from "@/models/table/TableProps";
 
   // define properties
   const props = withDefaults(
@@ -62,6 +63,8 @@
       pageTracking?: boolean;
       /** Callback to disable the selection checkbox for a row based on specific criteria */
       disableItemSelection?: (entity: T) => boolean;
+      /** Hide the table row action cell when a context menu is implemented */
+      hideTableRowActions?: boolean;
     }>(),
     {
       paginationMode: "controls",
@@ -118,6 +121,7 @@
     emptyState?: () => never;
     /* Custom title */
     toolbarTitle?: () => never;
+    contextmenu?: (props: ContextmenuProps<T>) => never;
   }>();
 
   // inject dependencies
@@ -278,6 +282,7 @@
       :pagination-mode="paginationMode"
       :item-id="itemId"
       :show-hover-effect="hasTableRowClickAction"
+      :hide-table-row-actions="hideTableRowActions"
       @click:row="(e) => emit('click:row', e)"
       @update:sorting="sortingChanged"
       @update:selection="(e) => emit('update:selection', e)"
@@ -327,6 +332,10 @@
             />
           </div>
         </div>
+      </template>
+
+      <template #contextmenu="props" v-if="slots.contextmenu">
+        <slot name="contextmenu" v-bind="props"></slot>
       </template>
     </MkTableView>
 
