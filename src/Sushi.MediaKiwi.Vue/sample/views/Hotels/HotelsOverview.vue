@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { Country } from "./../../models/Country";
   import { Hotel } from "./../../models/Hotel";
+  import { HotelDto } from "./../../models/HotelDto";
   import { CountryConnector } from "./../../services/CountryConnector";
   import { HotelConnector } from "./../../services/HotelConnector";
   import {
@@ -22,6 +23,7 @@
   import { container } from "tsyringe";
   import { ref } from "vue";
   import { TableColumn } from "@/models/table/TableColumn";
+  import Test from "./Test.vue";
 
   // inject dependencies
   const connector = container.resolve(HotelConnector);
@@ -33,7 +35,7 @@
     pageIndex: 0,
     pageSize: 11,
   }); // demos 11 items per page (higher than default 10), also adds to the current list
-  const hotels = ref<ListResult<Hotel>>();
+  const hotels = ref<Hotel[]>([]);
   const countries = ref<Country[]>();
   const displayOptions = ref<TableColumn[]>();
 
@@ -68,11 +70,17 @@
 
   // load data
   async function LoadData() {
-    hotels.value = await connector.GetAllAsync(
+    const result = await connector.GetAllAsync(
       currentPagination.value,
       filters.value.countryCode.selectedValue?.value,
       filters.value.isActive.selectedValue?.value
     );
+
+    hotels.value = result.result.map((item) => {
+      const h = new Hotel(item);
+      console.log(h);
+      return h;
+    });
   }
 
   // Load countries
@@ -87,11 +95,6 @@
     sortBy: "name",
     sortDirection: SortDirection.Desc,
   });
-
-  async function onNameChanged(hotel: Hotel, name: string) {
-    hotel.name = name;
-    await SaveData(hotel);
-  }
 
   async function onCountryCodeChanged(hotel: Hotel, code: string) {
     hotel.countryCode = code;
@@ -109,10 +112,9 @@
     v-model:current-pagination="currentPagination"
     v-model:filters="filters"
     v-model:sorting="sorting"
-    :api-result="hotels"
+    :data="hotels"
     :on-load="LoadData"
-    :data="hotels?.result"
-    :item-id="(item: Hotel) => item.id"
+    :item-id="(item) => item.id"
     navigation-item-id="HotelEdit"
     new
     new-emit
@@ -139,7 +141,7 @@
       <th></th>
     </template>
 
-    <template #tbody="dataItem: Hotel">
+    <template #tbody="dataItem">
       <td>{{ dataItem.name }}</td>
       <td>{{ formatDateTime(dataItem.created) }}</td>
       <mk-td @click.stop>
@@ -151,7 +153,7 @@
         />
       </mk-td>
       <mk-td :value="dataItem.isActive" />
-      <mk-td :value="dataItem.srp" />
+      <td>{{ dataItem.srpFormatted }}</td>
       <mk-td :value="srpIcon(dataItem)" />
     </template>
   </mk-table>

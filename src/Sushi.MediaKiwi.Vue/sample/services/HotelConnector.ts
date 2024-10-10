@@ -1,37 +1,37 @@
 import { injectable, inject } from "tsyringe";
 import type { AxiosInstance, AxiosResponse } from "axios";
-import { Hotel } from "./../models/Hotel";
+import { HotelDto } from "./../models/HotelDto";
 import { ListResult, Paging } from "@/models";
 
 @injectable()
 export class HotelConnector {
   constructor(@inject("SampleApiAxiosInstance") private axios: AxiosInstance) {}
 
-  async GetAllAsync(paging?: Paging, countryCode?: string, isActive?: boolean): Promise<ListResult<Hotel>> {
+  async GetAllAsync(paging?: Paging, countryCode?: string, isActive?: boolean): Promise<ListResult<HotelDto>> {
     // build querystring params
     const query = {
       ...(paging && { paging }),
       ...(countryCode && { countryCode }),
       ...(isActive && { isActive }),
     };
-    const response = await this.axios.get<ListResult<Hotel>>("/hotel", { params: query });
+    const response = await this.axios.get<ListResult<HotelDto>>("/hotel", { params: query });
     return response.data;
   }
 
-  async GetAsync(id: number): Promise<Hotel> {
-    const response = await this.axios.get<Hotel>(`/hotel/${id}`);
+  async GetAsync(id: number): Promise<HotelDto> {
+    const response = await this.axios.get<HotelDto>(`/hotel/${id}`);
     return response.data;
   }
 
-  async SaveAsync(request: Hotel): Promise<Hotel> {
+  async SaveAsync(request: HotelDto): Promise<HotelDto> {
     if (request?.id > 0) {
-      return (await this.axios.put<Hotel>(`/hotel/${request.id}`, request)).data;
+      return (await this.axios.put<HotelDto>(`/hotel/${request.id}`, request)).data;
     } else {
-      return (await this.axios.post<Hotel>("/hotel", request)).data;
+      return (await this.axios.post<HotelDto>("/hotel", request)).data;
     }
   }
 
   async DeleteAsync(id: number): Promise<AxiosResponse> {
-    return await this.axios.delete<Hotel>(`/hotel/${id}`);
+    return await this.axios.delete<HotelDto>(`/hotel/${id}`);
   }
 }
