@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { Country } from "./../../models/Country";
-  import { Hotel } from "./../../models/Hotel";
+  import { HotelDto } from "./../../models/HotelDto";
   import { CountryConnector } from "./../../services/CountryConnector";
   import { HotelConnector } from "./../../services/HotelConnector";
   import { ListResult, IconsLibrary, Paging, TableCellIcon, TableIconPosition, TableFilter, TableFilterType, TableFilterValue, TableMap } from "@/models";
@@ -18,11 +18,11 @@
 
   // define reactive variables
   const currentPagination = ref<Paging>({});
-  const hotels = ref<ListResult<Hotel>>();
+  const hotels = ref<ListResult<HotelDto>>();
   const countries = ref<Country[]>();
 
   // define mapping
-  function srpIcon(item: Hotel): TableCellIcon {
+  function srpIcon(item: HotelDto): TableCellIcon {
     return {
       position: item.srp ? TableIconPosition.Append : TableIconPosition.Prepend,
       iconName: item.srp ? IconsLibrary.checkCircleOutline : IconsLibrary.accountCircle,
@@ -30,7 +30,7 @@
       label: item.srp ? "SRP correct" : "Define SRP",
     };
   }
-  const tableMap: TableMap<Hotel> = {
+  const tableMap: TableMap<HotelDto> = {
     itemId: (item) => item.id,
     items: [
       { headerTitle: t.value("Name"), value: (item) => item.name },

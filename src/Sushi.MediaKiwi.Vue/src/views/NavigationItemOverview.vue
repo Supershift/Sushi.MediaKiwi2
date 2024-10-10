@@ -67,14 +67,14 @@
       <th>Icon</th>
       <MkTh v-model:sorting="sorting" sorting-key="sortOrder" width="140">Sort order</MkTh>
     </template>
-    <template #tbody="item: NavigationItemDto">
-      <th>{{ item.id }}</th>
-      <td>{{ item.name }}</td>
-      <td>{{ getSectionName(item.sectionId) }}</td>
-      <td>{{ getNavigationItemName(item.parentNavigationItemId) }}</td>
-      <td>{{ item.viewId }}</td>
-      <td>{{ item.icon }}</td>
-      <td>{{ item.sortOrder }}</td>
+    <template #tbody="{ dataItem }">
+      <th>{{ dataItem.id }}</th>
+      <td>{{ dataItem.name }}</td>
+      <td>{{ getSectionName(dataItem.sectionId) }}</td>
+      <td>{{ getNavigationItemName(dataItem.parentNavigationItemId) }}</td>
+      <td>{{ dataItem.viewId }}</td>
+      <td>{{ dataItem.icon }}</td>
+      <td>{{ dataItem.sortOrder }}</td>
     </template>
   </mk-table>
 </template>
