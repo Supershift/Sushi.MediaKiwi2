@@ -23,7 +23,6 @@
   import { container } from "tsyringe";
   import { ref } from "vue";
   import { TableColumn } from "@/models/table/TableColumn";
-  import Test from "./Test.vue";
 
   // inject dependencies
   const connector = container.resolve(HotelConnector);
