@@ -8,26 +8,14 @@ export class Hotel {
   isActive: boolean;
   id: number;
   srp?: MoneyValue;
-  testValue: string;
 
-  constructor(hotel: HotelDto);
-  constructor(id: number, name: string, countryCode: string, created: string, isActive: boolean);
-  constructor(hotel: number | HotelDto, name?: string, countryCode?: string, created?: string, isActive?: boolean) {
-    if (typeof hotel === "object") {
-      this.id = hotel.id;
-      this.name = hotel.name;
-      this.countryCode = hotel.countryCode;
-      this.created = hotel.created;
-      this.isActive = hotel.isActive;
-      this.srp = hotel.srp;
-    } else {
-      this.id = hotel;
-      this.name = name!;
-      this.countryCode = countryCode!;
-      this.created = created!;
-      this.isActive = isActive!;
-    }
-    this.testValue = "Test value";
+  constructor(hotel: HotelDto) {
+    this.id = hotel.id;
+    this.name = hotel.name;
+    this.countryCode = hotel.countryCode;
+    this.created = hotel.created;
+    this.isActive = hotel.isActive;
+    this.srp = hotel.srp;
   }
 
   get srpFormatted(): string {
