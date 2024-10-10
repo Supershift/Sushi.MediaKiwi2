@@ -94,6 +94,11 @@
     sortDirection: SortDirection.Desc,
   });
 
+  async function onNameChanged(hotel: Hotel, name: string) {
+    hotel.name = name;
+    await SaveData(hotel);
+  }
+
   async function onCountryCodeChanged(hotel: Hotel, code: string) {
     hotel.countryCode = code;
     await SaveData(hotel);
