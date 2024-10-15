@@ -1,11 +1,20 @@
 .v-navigation-drawer {
   &__content {
     .v-list {
-      .v-list-item {
+      .v-list-item,
+      .v-list-group__items .v-list-item {
         &--active {
-          background: rgb(var(--v-theme-secondary-container));
-          color: rgb(var(--v-theme-on-secondary-container));
+          background: rgb(var(--v-theme-secondary));
+          color: rgb(var(--v-theme-on-secondary));
         }
+      }
+    }
+  }
+  .v-list-group {
+    .v-list-item {
+      &--active {
+        background: rgba(var(--v-theme-secondary), 0.16);
+        color: rgb(var(--v-theme-on-background));
       }
     }
   }
