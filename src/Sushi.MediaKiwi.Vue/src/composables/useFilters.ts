@@ -9,6 +9,11 @@ export async function useFilters(useI18next: ReturnType<typeof useI18nextComposa
   const { formatPreset } = await useDatePresets();
   const { formatDate, t } = await useI18next;
 
+  /**
+   * Returns a human readable representation for the filter value, based on the type of filter
+   * @param tableFilterItem
+   * @returns
+   */
   function getFormatterFilterValue(tableFilterItem: TableFilterItem) {
     const value = tableFilterItem.selectedValue?.value;
     const title = tableFilterItem.selectedValue?.title;
@@ -44,7 +49,15 @@ export async function useFilters(useI18next: ReturnType<typeof useI18nextComposa
       }
       case TableFilterType.Operator: {
         const operatorValue = value as FilterOperatorValue<any>;
-        return operatorValue?.value;
+
+        let operator;
+        if (tableFilterItem.options && tableFilterItem.options.length) {
+          operator = tableFilterItem.options.find((o) => o.value === operatorValue.operator)?.title;
+        } else {
+          operator = FilterOperatorTypeSymbol.get(operatorValue.operator);
+        }
+
+        return `${operator} ${value.value}`;
       }
       default:
       case TableFilterType.Custom:
@@ -68,18 +81,7 @@ export async function useFilters(useI18next: ReturnType<typeof useI18nextComposa
         return t.value("FilterContains", "{{filter.title}} contains {{filter.value}}", {
           filter: { title: tableFilterItem.title, value },
         });
-      case TableFilterType.Operator: {
-        const filterOperatorValue = tableFilterItem.selectedValue?.value as FilterOperatorValue<any>;
-
-        let title;
-        if (tableFilterItem.options && tableFilterItem.options.length) {
-          title = tableFilterItem.options.find((o) => o.value === filterOperatorValue.operator)?.title;
-        } else {
-          title = FilterOperatorTypeSymbol.get(filterOperatorValue.operator);
-        }
-
-        return `${tableFilterItem.title}: ${title} ${value}`;
-      }
+      case TableFilterType.Operator:
       case TableFilterType.DatePicker:
       case TableFilterType.DateRange:
       case TableFilterType.TextField:

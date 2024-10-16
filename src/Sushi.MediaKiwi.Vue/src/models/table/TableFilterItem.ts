@@ -29,4 +29,6 @@ export type TableFilterItem = {
   divider?: boolean;
   /** Custom form rules the input should match */
   rules?: any[];
+  /** Indicates if the user can close the filter. When not set, the user can close the filter */
+  closable?: boolean;
 };

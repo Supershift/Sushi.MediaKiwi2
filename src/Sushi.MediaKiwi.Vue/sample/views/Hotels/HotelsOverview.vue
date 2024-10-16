@@ -57,6 +57,8 @@
         { title: "Yes", value: true },
         { title: "No", value: false },
       ],
+      closable: false,
+      selectedValue: { title: "Yes", value: true },
     },
     countryCode: {
       title: "Country",
@@ -116,7 +118,7 @@
     new
     new-emit
     :new-title="t('New hotel').toString()"
-    title="Subtitle for the hotel list"
+    title="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin nec quam id nunc tincidunt vulputate sed eget ex. Praesent bibendum leo sed ipsum sodales euismod. Cras ac purus volutpat, dapibus quam eget, vestibulum orci. Aliquam et ligula pharetra, condimentum nibh at, congue dolor."
     @click:new="console.log('New Button Clicked: ' + $event)"
     v-model:display-options="displayOptions"
   >
@@ -146,7 +148,7 @@
           v-model="dataItem.countryCode"
           :items="countryOptions"
           hide-details
-          @update:model-value="(code:string) => onCountryCodeChanged(dataItem, code)"
+          @update:model-value="(code: string) => onCountryCodeChanged(dataItem, code)"
         />
       </mk-td>
       <mk-td :value="dataItem.isActive" />

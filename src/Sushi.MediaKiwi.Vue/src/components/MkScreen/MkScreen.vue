@@ -11,6 +11,7 @@
   const mkScreenClasses = computed(() => {
     return {
       "mk-screen": true,
+      "mk-screen__sign-in": isPageOnSignIn.value,
       "pa-4": !isPageOnSignIn.value,
       "pa-md-10": !isPageOnSignIn.value,
       "pt-md-4": !isPageOnSignIn.value,

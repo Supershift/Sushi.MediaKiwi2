@@ -17,9 +17,7 @@
   const model = ref(modelValue.value);
 
   function applyFilter() {
-    modelValue.value = {
-      value: model.value.value,
-    };
+    modelValue.value = { ...model.value };
   }
 </script>
 

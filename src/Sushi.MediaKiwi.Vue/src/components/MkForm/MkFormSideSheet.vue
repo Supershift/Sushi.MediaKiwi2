@@ -141,6 +141,11 @@
       await onLoad();
     }
   );
+
+  /** Trigger the onLoad event when the component is mounted and the modelValue is already true */
+  if (modelValue.value) {
+    await onLoad();
+  }
 </script>
 <template>
   <v-form
