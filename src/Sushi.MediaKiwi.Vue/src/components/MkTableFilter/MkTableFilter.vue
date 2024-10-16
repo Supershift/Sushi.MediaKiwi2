@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { shallowReactive, ref, watch, type Component, computed } from "vue";
+  import { shallowReactive, ref, watch, type Component, computed, onMounted } from "vue";
   import { TableFilter } from "@/models/table/TableFilter.js";
   import { TableFilterItem } from "@/models/table/TableFilterItem.js";
   import { TableFilterValue } from "@/models/table/TableFilterValue.js";
@@ -35,7 +35,7 @@
   // inject dependencies
   const { t, defaultT } = await useI18next("MkFilter");
   const { addKeyboardShortcuts, removeKeyboardShortcuts } = useKeyboardShortcuts();
-  const { appliedFilterChip } = await useFilters(useI18next("MkFilter"));
+  const { appliedFilterChip, getFormatterFilterValue } = await useFilters(useI18next("MkFilter"));
 
   // define reactive variables
   const menu = ref(false);
@@ -112,7 +112,8 @@
 
   function directApplyFilter() {
     const value = state.currentFilter?.options?.[0]?.value || true;
-    state.currentFilterValue = { title: "", value };
+    const title = state.currentFilter?.options?.[0]?.title || "";
+    state.currentFilterValue = { title, value };
     applyFilter();
   }
 
@@ -307,7 +308,13 @@
           <div class="flex-1-1 d-flex flex-wrap ga-2 my-2">
             <!-- Chips -->
             <template v-for="key in Object.keys(modelValue)">
-              <MkInputChip v-if="modelValue[key].selectedValue" :key="key" @click="setCurrentFilter(key, modelValue[key])" @click:remove="removeFilter(key)">
+              <MkInputChip
+                v-if="modelValue[key].selectedValue"
+                :key="key"
+                @click="setCurrentFilter(key, modelValue[key])"
+                @click:remove="removeFilter(key)"
+                :closable="modelValue[key].closable ?? true"
+              >
                 {{ appliedFilterChip(modelValue[key]) }}
               </MkInputChip>
             </template>

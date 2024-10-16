@@ -2,9 +2,11 @@
   import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
   import { computed } from "vue";
   import { useErrorProblemDetails } from "@/composables/useErrorProblemDetails";
+  import { useErrorMessages } from "@/composables";
 
   // inject dependencies
   const { getErrorMessages } = await useErrorProblemDetails();
+  const { unexpectedErrorMessage } = await useErrorMessages();
 
   const props = withDefaults(
     defineProps<{
@@ -44,7 +46,8 @@
 <template>
   <v-alert v-if="errorProblemDetails" v-bind="$attrs" type="error" closable @click:close="onClose">
     <template #text>
-      <p class="text-body-large" v-for="message in messages">{{ message }}</p>
+      <p v-if="messages && messages.length" class="text-body-large" v-for="message in messages">{{ message }}</p>
+      <p v-else>{{ unexpectedErrorMessage }}</p>
     </template>
     <template #close="{ props }">
       <v-btn icon="symbols:close" color="neutral" v-bind="props" />

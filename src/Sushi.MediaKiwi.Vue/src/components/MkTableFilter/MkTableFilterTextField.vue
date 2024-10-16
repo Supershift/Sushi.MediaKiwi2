@@ -35,6 +35,7 @@
     if (model.value) {
       modelValue.value = {
         value: model.value,
+        title: model.value,
       };
     }
   }
@@ -43,7 +44,7 @@
 <template>
   <MkTableFilterDialog :table-filter-item="tableFilterItem" @close="emit('click:close')" @apply="applyFilter">
     <div class="pa-6">
-      <v-text-field v-model="model" :label="inputLabel" hide-details="auto" :rules="[...additionalRules]"> </v-text-field>
+      <v-text-field v-model="model" :label="inputLabel" hide-details="auto" :rules="[...additionalRules]" autofocus> </v-text-field>
     </div>
   </MkTableFilterDialog>
 </template>
