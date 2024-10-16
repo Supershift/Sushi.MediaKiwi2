@@ -195,6 +195,18 @@
     }
   }
 
+  /**
+   * Returns a row key for the provided data item, or a fallback value if no key can be generated
+   * @param dataItem The data item for which to generate a key
+   * @param fallback The fallback value to use if no key can be generated 
+   */
+   function getRowKey(dataItem: T, fallback: number) {
+    if (getItemId.value && dataItem) {
+      return getItemId.value(dataItem);
+    }
+    return fallback;
+  }
+
   onMounted(() => {
     const observer = new MutationObserver(loadDisplayOptions);
     observer.observe(tbodyNode.value, {
@@ -216,7 +228,7 @@
     </thead>
     <tbody ref="tbodyContainer" class="mk-table-view__body-container">
       <!-- render a row for each provided data entity -->
-      <tr v-for="(dataItem, rowIndex) in props.data" :key="rowIndex" :class="tableRowClassses()" @click.stop="(e) => onRowClick(e, dataItem)">
+      <tr v-for="(dataItem, rowIndex) in props.data" :key="getRowKey(dataItem, rowIndex)" :class="tableRowClassses()" @click.stop="(e) => onRowClick(e, dataItem)">
         <td v-if="checkbox" @click.stop class="mk-table-view__checkbox-container--body">
           <MkTableCheckbox
             :item="dataItem"
