@@ -57,7 +57,10 @@ function normalizeKeyboardShortcuts(shortcuts: KeyboardShortcutCollection) {
  */
 function addKeyboardShortcuts(shortcuts: KeyboardShortcutCollection) {
   const normalizedshortcuts = normalizeKeyboardShortcuts(shortcuts);
-  registerdKeyboardShortcuts.value = { ...normalizedshortcuts };
+  registerdKeyboardShortcuts.value = {
+    ...(registerdKeyboardShortcuts.value || {}),
+    ...normalizedshortcuts,
+  };
 }
 
 /**
