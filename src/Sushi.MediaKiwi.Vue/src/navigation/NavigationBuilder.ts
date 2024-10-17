@@ -1,6 +1,7 @@
 import { Section, NavigationItem, NavigationTree } from "@/models/navigation";
 import { INavigationProvider } from "./INavigationProvider";
 import { FixedNavigationProvider } from "./FixedNavigationProvider";
+import { MkLayout } from "@/constants";
 
 
 
@@ -44,7 +45,7 @@ export class NavigationBuilder {
       parameterName: parameterName,
       children: [],
       roles: undefined,
-      layout: layout ?? 'DefaultLayout'
+      layout: layout ?? MkLayout.Default
     };
 
     // add navigation item to collections    

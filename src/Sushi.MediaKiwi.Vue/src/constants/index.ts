@@ -6,3 +6,8 @@ export const noPageSize = 9999;
 
 // localStorage key for table display options
 export const DISPLAY_OPTIONS_KEY = "MkTableDisplayOptions";
+
+export const MkLayout = {
+  Default: "DefaultLayout",
+  Full: "FullScreenLayout",
+};

@@ -1,3 +1,4 @@
+import { MkLayout } from "@/constants";
 import { NavigationBuilder } from "@/navigation";
 import { FixedNavigationProvider } from "@/navigation/FixedNavigationProvider";
 
@@ -9,7 +10,7 @@ builder
   .addNavigationItem("Home", "Home", "./views/Home.vue", undefined, "$home")
   .endSection()
   .startSection("Hotels", "Hotels", "$hotel")
-  .addNavigationItem("HotelOverview", "Hotels", "./views/Hotels/HotelsOverview.vue", undefined, "$hotel", "FullScreenLayout")
+  .addNavigationItem("HotelOverview", "Hotels", "./views/Hotels/HotelsOverview.vue", undefined, "$hotel", MkLayout.Full)
   .right()
   .addNavigationItem("HotelEdit", "Hotel detail", "./views/Hotels/HotelEdit.vue", "hotelId")
   .addNavigationItem("RoomTypesOverview", "Room types", "./views/Hotels/RoomTypesOverview.vue", "hotelId")
