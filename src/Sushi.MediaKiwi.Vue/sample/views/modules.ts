@@ -15,7 +15,7 @@ import { modules as HotelsModules } from "./Hotels/modules";
 import { modules as DemoModules } from "./Demo/modules";
 
 // import custom layouts
-import { CustomLayout } from "../layouts/index";
+import * as MyCustomLayouts from "../layouts/index";
 
 const modules: Record<string, RouteComponent> = {
   Countries,
@@ -29,7 +29,7 @@ const modules: Record<string, RouteComponent> = {
   SampleDataEdit,
   SampleDeepDataEdit,
   Screen1,
-  CustomLayout,
+  ...MyCustomLayouts,
   ...HotelsModules,
   ...DemoModules,
 };
