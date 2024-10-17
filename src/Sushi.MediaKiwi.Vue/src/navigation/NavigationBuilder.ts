@@ -59,7 +59,7 @@ export class NavigationBuilder {
   }
 
   /** Adds a child to the last added navigation item. Useful to add an 'invisible' child like an edit view. */
-  public addChild(id: string, name: string, componentKey?: string, parameterName?: string, icon?: string): NavigationBuilder {
+  public addChild(id: string, name: string, componentKey?: string, parameterName?: string, icon?: string, layout?: string): NavigationBuilder {
     if (!this.siblings) {
       throw new Error("No item to add child to");
     }
@@ -74,7 +74,8 @@ export class NavigationBuilder {
       componentKey: componentKey,
       parameterName: parameterName,
       children: [],
-      roles: undefined
+      roles: undefined,
+      layout: layout ?? MkLayout.Default
     };
 
     localParent.children!.push(item);
