@@ -5,7 +5,7 @@ import { RouteComponent, RouteRecordRaw } from "vue-router";
 
 @injectable()
 export class RouteGenerator {
-  constructor() {}
+  constructor() { }
 
   getPath(navigationItem: NavigationItem): string {
     // get the full path for this item by recursively going up the tree
@@ -28,32 +28,34 @@ export class RouteGenerator {
   public generateRoutes(modules: Record<string, RouteComponent>, navigationTree: NavigationTree): RouteRecordRaw[] {
     const result: RouteRecordRaw[] = [];
     // add new routes for navigation items
-    navigationTree.getAllNavigationItems().forEach((navigationItem: NavigationItem) => {      
-      if (navigationItem.componentKey && modules) {        
+    navigationTree.getAllNavigationItems().forEach((navigationItem: NavigationItem) => {
+      if (navigationItem.componentKey && modules) {
         // determine path
         const path = this.getPath(navigationItem);
-        
-        // find the module referenced by the nav item
-          const module = modules[navigationItem.componentKey];
-          if (module !== undefined) {
-            // add a route to the module
-            const route = <RouteRecordRaw>{
-              path: path,
-              name: navigationItem.id.toString(),
-              component: module,
-              meta: {
-                isFromServer: true,
-                requiresAuth: true,
-                requiresRole: navigationItem.roles,
-                navigationItem: navigationItem,
-              },
-            };
 
-            result.push(route);
-          } else {
-            // no module found, give a warning
-            console.warn(`No module found for nav item ${navigationItem.id}, component key: ${navigationItem.componentKey}`);
-          }        
+        // find the module referenced by the nav item
+        const module = modules[navigationItem.componentKey];
+        if (module !== undefined) {
+          // add a route to the module
+          const route = <RouteRecordRaw>{
+            path: path,
+            name: navigationItem.id.toString(),
+            component: module,
+            meta: {
+              isFromServer: true,
+              requiresAuth: true,
+              requiresRole: navigationItem.roles,
+              navigationItem: navigationItem,
+              layout: navigationItem.layout,
+              layoutComponent: navigationItem.layout ? modules[navigationItem.layout] : undefined,
+            },
+          };
+
+          result.push(route);
+        } else {
+          // no module found, give a warning
+          console.warn(`No module found for nav item ${navigationItem.id}, component key: ${navigationItem.componentKey}`);
+        }
       }
     });
 
