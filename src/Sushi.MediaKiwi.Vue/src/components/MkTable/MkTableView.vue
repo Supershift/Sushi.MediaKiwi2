@@ -6,7 +6,7 @@
   import MkTableCheckbox from "./MkTableCheckbox.vue";
   import { useNavigation } from "@/composables/useNavigation";
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
-  import { computed, ComputedRef, onMounted, reactive, ref } from "vue";
+  import { computed, onMounted, ref } from "vue";
   import { useTableDisplayOptions } from "@/composables/useTableDisplayOptions";
   import { ContextmenuProps } from "@/models/table/TableProps";
   import { useContextmenu } from "@/composables/useContextmenu";
@@ -32,6 +32,11 @@
     disableItemSelection?: (entity: T) => boolean;
     /** Hide the table row action cell when a context menu is implemented */
     hideTableRowActions?: boolean;
+    /**
+     * Applies when {@link selection} is set.
+     * Hides the checkbox in the selection column
+     */
+    hideSelectionCheckbox?: boolean;
   }>();
 
   /** Use Sorting<T> for typesafety */
@@ -46,7 +51,7 @@
   const hasDisplayOptions = computed(() => displayOptions.value !== undefined && displayOptions.value !== false);
 
   /** Ref to the table element */
-  const tbodyContainer = ref(null);
+  const tbodyContainer = ref<any>(null);
   const tbodyNode = computed(() => tbodyContainer.value! as Node);
 
   // define event
@@ -92,13 +97,14 @@
   });
 
   /** Classes for the table row */
-  function tableRowClassses() {
+  function tableRowClassses(dataItem: T) {
     return {
       "has-hover": props.showHoverEffect,
+      "mk-table-view__row--selected": isItemSelected.value(dataItem),
     };
   }
 
-  function onRowClick(_event: Event, dataItem: T) {
+  function handleNavigation(dataItem: T) {
     // emit event
     emit("click:row", dataItem);
 
@@ -124,6 +130,49 @@
 
       // push user to target page
       navigation.navigateTo(navigationItem, itemId);
+    }
+  }
+
+  function handleSelection(dataItem: T) {
+    const isSelected = isItemSelected.value(dataItem);
+    onToggleSelection(dataItem, !isSelected);
+  }
+
+  function onRowClick(event: MouseEvent, dataItem: T) {
+    if (props.checkbox && (event.ctrlKey || event.shiftKey)) {
+      if (event.ctrlKey) {
+        if (!isDisabledItemSelection(dataItem)) {
+          handleSelection(dataItem);
+        }
+      } else if (event.shiftKey) {
+        // select all items between the last selected item and the current item
+
+        const lastSelectedIndex = props.data?.findIndex((x) => getItemId.value!(x) === selectionIds.value[selectionIds.value.length - 1]);
+        const currentIndex = props.data?.findIndex((x) => getItemId.value!(x) === getItemId.value!(dataItem));
+
+        // if both indexes are found
+        if (lastSelectedIndex !== undefined && currentIndex !== undefined) {
+          let start = Math.min(lastSelectedIndex, currentIndex);
+          let end = Math.max(lastSelectedIndex, currentIndex);
+
+          // Correct the indexes to keep the current selection as is
+          if (end < start) {
+            end++;
+          } else if (end > start) {
+            start++;
+          }
+
+          // Select all items between the start and end index
+          for (let i = start; i <= end; i++) {
+            const item = props.data?.[i];
+            if (item && !isDisabledItemSelection(item)) {
+              handleSelection(item);
+            }
+          }
+        }
+      }
+    } else {
+      handleNavigation(dataItem);
     }
   }
 
@@ -223,10 +272,10 @@
 </script>
 
 <template>
-  <v-table class="mk-table-view" :class="{ 'mk-table-display-options': hasDisplayOptions }" :data-table-ref="tableReference">
+  <v-table id="hello" ref="myTable" class="mk-table-view" :class="{ 'mk-table-display-options': hasDisplayOptions }" :data-table-ref="tableReference">
     <thead class="mk-table-view__header-container">
       <tr>
-        <th v-if="checkbox" width="65" class="mk-table-view__checkbox-container--header">
+        <th v-if="checkbox && !props.hideSelectionCheckbox" width="65" class="mk-table-view__checkbox-container--header">
           <MkTableCheckbox :disabled="allItemsDisabled" :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:selected="onToggleAll" />
         </th>
         <slot name="thead"></slot>
@@ -238,11 +287,12 @@
       <tr
         v-for="(dataItem, rowIndex) in props.data"
         :key="getRowKey(dataItem, rowIndex)"
-        :class="tableRowClassses()"
+        class="mk-table-view__row"
+        :class="tableRowClassses(dataItem)"
         @click.stop="(e) => onRowClick(e, dataItem)"
         @contextmenu.prevent="(e) => openContextMenu(e, dataItem)"
       >
-        <td v-if="checkbox" @click.stop class="mk-table-view__checkbox-container--body">
+        <td v-if="checkbox && !props.hideSelectionCheckbox" @click.stop class="mk-table-view__checkbox-container--body">
           <MkTableCheckbox
             :item="dataItem"
             :is-selected="isItemSelected(dataItem)"
@@ -286,10 +336,16 @@
         tbody {
           tr {
             transition: 0.2s background-color;
+            user-select: none;
             &.has-hover {
               &:hover {
                 @include mixins.hover-effect;
               }
+            }
+
+            &.mk-table-view__row--selected {
+              background-color: rgb(var(--v-theme-secondary-container)) !important; //, var(--v-disabled-opacity)) !important;
+              color: var(--v-theme-on-secondary-container) !important;
             }
           }
         }
@@ -303,5 +359,15 @@
     th[mk-hidden] {
       display: none !important;
     }
+  }
+
+  .lasso {
+    position: fixed;
+    border: 2px solid blue;
+    background-color: transparent;
+    z-index: 1000;
+  }
+  .selected {
+    background-color: lightblue;
   }
 </style>

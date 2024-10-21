@@ -37,6 +37,7 @@
   const hotels = ref<ListResult<Hotel>>();
   const countries = ref<Country[]>();
   const displayOptions = ref<TableColumn[]>();
+  const selectedHotels = ref<Hotel[]>([]);
 
   // define mapping
   function srpIcon(item: Hotel): TableCellIcon {
@@ -110,6 +111,8 @@
     v-model:current-pagination="currentPagination"
     v-model:filters="filters"
     v-model:sorting="sorting"
+    v-model:selection="selectedHotels"
+    hide-selection-checkbox
     :api-result="hotels"
     :on-load="LoadData"
     :data="hotels?.result"
