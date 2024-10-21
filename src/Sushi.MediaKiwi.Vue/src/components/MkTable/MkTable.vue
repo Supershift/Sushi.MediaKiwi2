@@ -63,6 +63,11 @@
       pageTracking?: boolean;
       /** Callback to disable the selection checkbox for a row based on specific criteria */
       disableItemSelection?: (entity: T) => boolean;
+      /**
+       * Applies when {@link selection} is set.
+       * Hides the checkbox in the selection column
+       */
+      hideSelectionCheckbox?: boolean;
     }>(),
     {
       paginationMode: "controls",
@@ -279,6 +284,7 @@
       :pagination-mode="paginationMode"
       :item-id="itemId"
       :show-hover-effect="hasTableRowClickAction"
+      :hide-selection-checkbox="hideSelectionCheckbox"
       @click:row="(e) => emit('click:row', e)"
       @update:sorting="sortingChanged"
       @update:selection="(e) => emit('update:selection', e)"

@@ -1,21 +1,9 @@
 <script setup lang="ts">
   import { Country } from "./../../models/Country";
   import { Hotel } from "./../../models/Hotel";
-  import { HotelDto } from "./../../models/HotelDto";
   import { CountryConnector } from "./../../services/CountryConnector";
   import { HotelConnector } from "./../../services/HotelConnector";
-  import {
-    IconsLibrary,
-    Paging,
-    ListResult,
-    Sorting,
-    SortDirection,
-    TableCellIcon,
-    TableIconPosition,
-    TableFilter,
-    TableFilterType,
-    TableFilterValue,
-  } from "@/models";
+  import { IconsLibrary, Paging, Sorting, SortDirection, TableCellIcon, TableIconPosition, TableFilter, TableFilterType, TableFilterValue } from "@/models";
 
   import { MkTable, MkTh, MkTd } from "@/components";
   import { useI18next } from "@/composables";
@@ -39,6 +27,7 @@
   const hotels = ref<Hotel[]>([]);
   const countries = ref<Country[]>();
   const displayOptions = ref<TableColumn[]>();
+  const selectedHotels = ref<Hotel[]>([]);
 
   // define mapping
   function srpIcon(item: Hotel): TableCellIcon {
@@ -111,6 +100,8 @@
     v-model:filters="filters"
     v-model:sorting="sorting"
     :data="hotels"
+    v-model:selection="selectedHotels"
+    hide-selection-checkbox
     :on-load="LoadData"
     :item-id="(item) => item.id"
     navigation-item-id="HotelEdit"

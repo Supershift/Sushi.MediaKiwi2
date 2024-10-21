@@ -98,14 +98,6 @@
 </script>
 
 <template>
-  <MkNavigationDrawerInfo>
-    <v-card variant="flat" rounded="lg">
-      <v-card-title>{{ state.hotel.name }}</v-card-title>
-      <v-card-text> </v-card-text>
-      <v-card-text> Located in: {{ state.hotel.countryCode }} </v-card-text>
-    </v-card>
-  </MkNavigationDrawerInfo>
-
   <MkForm title="Hotel edit" @submit="onSave" @delete="onDelete" @undo="onUndo" @load="onLoad">
     <template #toolbarHeader>
       <v-card-text class="flex-1-1 w-75"> Hotel edit </v-card-text>
