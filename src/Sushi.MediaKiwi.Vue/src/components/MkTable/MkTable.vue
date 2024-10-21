@@ -23,6 +23,7 @@
   import { useComponentContext } from "@/composables/useComponentContext";
   import MkEmptyState from "../MkEmptyState/MkEmptyState.vue";
   import { MkTableBodySlotProps } from "@/models/table/TableProp";
+  import { ContextmenuProps } from "@/models/table/TableProps";
 
   // define properties
   const props = withDefaults(
@@ -63,6 +64,8 @@
       pageTracking?: boolean;
       /** Callback to disable the selection checkbox for a row based on specific criteria */
       disableItemSelection?: (entity: T) => boolean;
+      /** Hide the table row action cell when a context menu is implemented */
+      hideTableRowActions?: boolean;
       /**
        * Applies when {@link selection} is set.
        * Hides the checkbox in the selection column
@@ -124,6 +127,7 @@
     emptyState?: () => never;
     /* Custom title */
     toolbarTitle?: () => never;
+    contextmenu?: (props: ContextmenuProps<T>) => never;
   }>();
 
   // inject dependencies
@@ -284,6 +288,7 @@
       :pagination-mode="paginationMode"
       :item-id="itemId"
       :show-hover-effect="hasTableRowClickAction"
+      :hide-table-row-actions="hideTableRowActions"
       :hide-selection-checkbox="hideSelectionCheckbox"
       @click:row="(e) => emit('click:row', e)"
       @update:sorting="sortingChanged"
@@ -334,6 +339,10 @@
             />
           </div>
         </div>
+      </template>
+
+      <template #contextmenu="props" v-if="slots.contextmenu">
+        <slot name="contextmenu" v-bind="props"></slot>
       </template>
     </MkTableView>
 

@@ -140,5 +140,12 @@
       <td>{{ dataItem.srpFormatted }}</td>
       <mk-td :value="srpIcon(dataItem)" />
     </template>
+
+    <template #contextmenu="{ dataItem }">
+      <v-list>
+        <v-list-item @click="() => console.log('context click')"> Knop A: {{ dataItem.name! }}</v-list-item>
+        <v-list-item @click="() => console.log('ccontext click')"> Knop B: {{ dataItem.name! }}</v-list-item>
+      </v-list>
+    </template>
   </mk-table>
 </template>
