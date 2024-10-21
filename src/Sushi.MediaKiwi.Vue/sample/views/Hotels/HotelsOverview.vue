@@ -22,6 +22,7 @@
   import { container } from "tsyringe";
   import { ref } from "vue";
   import { TableColumn } from "@/models/table/TableColumn";
+  import { isAbsolute } from "path";
 
   // inject dependencies
   const connector = container.resolve(HotelConnector);
@@ -156,6 +157,13 @@
       <mk-td :value="dataItem.isActive" />
       <mk-td :value="dataItem.srp" />
       <mk-td :value="srpIcon(dataItem)" />
+    </template>
+
+    <template #contextmenu="{ dataItem }">
+      <v-list>
+        <v-list-item @click="() => console.log('context click')"> Knop A: {{ dataItem.name! }}</v-list-item>
+        <v-list-item @click="() => console.log('ccontext click')"> Knop B: {{ dataItem.name! }}</v-list-item>
+      </v-list>
     </template>
   </mk-table>
 </template>

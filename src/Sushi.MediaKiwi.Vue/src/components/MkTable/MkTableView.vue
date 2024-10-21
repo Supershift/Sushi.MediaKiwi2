@@ -6,11 +6,14 @@
   import MkTableCheckbox from "./MkTableCheckbox.vue";
   import { useNavigation } from "@/composables/useNavigation";
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
-  import { computed, onMounted, reactive, ref } from "vue";
+  import { computed, onMounted, ref } from "vue";
   import { useTableDisplayOptions } from "@/composables/useTableDisplayOptions";
+  import { ContextmenuProps } from "@/models/table/TableProps";
+  import { useContextmenu } from "@/composables/useContextmenu";
 
   // inject dependencies
   const { initTableDisplayOptions } = useTableDisplayOptions();
+  const { openContextMenu, contextmenuIsVisible, contextMenuProps, contextMenuStyles } = useContextmenu<T>();
 
   // define properties
   const props = defineProps<{
@@ -27,6 +30,8 @@
     showHoverEffect: boolean;
     /** Callback to disable the selection checkbox for a row based on specific criteria */
     disableItemSelection?: (entity: T) => boolean;
+    /** Hide the table row action cell when a context menu is implemented */
+    hideTableRowActions?: boolean;
     /**
      * Applies when {@link selection} is set.
      * Hides the checkbox in the selection column
@@ -64,6 +69,7 @@
     thead: () => never;
     /** table templating */
     tbody: (props: T) => never;
+    contextmenu?: (props: ContextmenuProps<T>) => never;
   }>();
 
   // inject dependencies
@@ -273,6 +279,7 @@
           <MkTableCheckbox :disabled="allItemsDisabled" :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:selected="onToggleAll" />
         </th>
         <slot name="thead"></slot>
+        <th v-if="!props.hideTableRowActions">&nbsp;</th>
       </tr>
     </thead>
     <tbody ref="tbodyContainer" class="mk-table-view__body-container">
@@ -283,6 +290,7 @@
         class="mk-table-view__row"
         :class="tableRowClassses(dataItem)"
         @click.stop="(e) => onRowClick(e, dataItem)"
+        @contextmenu.prevent="(e) => openContextMenu(e, dataItem)"
       >
         <td v-if="checkbox && !props.hideSelectionCheckbox" @click.stop class="mk-table-view__checkbox-container--body">
           <MkTableCheckbox
@@ -293,6 +301,14 @@
           />
         </td>
         <slot name="tbody" v-bind="dataItem"></slot>
+        <td v-if="!props.hideTableRowActions">
+          <v-menu>
+            <template #activator="{ props }">
+              <v-btn icon variant="text" v-bind="props"><v-icon icon="$dotsVertical" /> </v-btn>
+            </template>
+            <slot v-if="slots.contextmenu" name="contextmenu" v-bind:dataItem="dataItem"></slot>
+          </v-menu>
+        </td>
       </tr>
     </tbody>
     <tfoot class="mk-table-view__footer-container">
@@ -306,6 +322,9 @@
       <v-divider v-if="slots?.bottom" />
     </template>
   </v-table>
+  <v-menu v-model="contextmenuIsVisible" :style="contextMenuStyles">
+    <slot v-if="slots.contextmenu" name="contextmenu" v-bind="contextMenuProps"></slot>
+  </v-menu>
 </template>
 
 <style scoped lang="scss">
