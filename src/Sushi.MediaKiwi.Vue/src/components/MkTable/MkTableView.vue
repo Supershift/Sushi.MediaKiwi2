@@ -8,6 +8,7 @@
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
   import { computed, onMounted, ref } from "vue";
   import { useTableDisplayOptions } from "@/composables/useTableDisplayOptions";
+  import { MkTableBodySlotProps } from "@/models/table/TableProp";
   import { ContextmenuProps } from "@/models/table/TableProps";
   import { useContextmenu } from "@/composables/useContextmenu";
 
@@ -68,7 +69,7 @@
     /** table templating  */
     thead: () => never;
     /** table templating */
-    tbody: (props: T) => never;
+    tbody?: (slotProps: MkTableBodySlotProps<T>) => never;
     contextmenu?: (props: ContextmenuProps<T>) => never;
   }>();
 
@@ -300,7 +301,7 @@
             @update:selected="(e) => onToggleSelection(dataItem, e)"
           />
         </td>
-        <slot name="tbody" v-bind="dataItem"></slot>
+        <slot name="tbody" v-bind="{ dataItem }"></slot>
         <td v-if="!props.hideTableRowActions">
           <v-menu>
             <template #activator="{ props }">

@@ -44,7 +44,7 @@
     if (navigation.currentViewParameterNumber.value > 0) {
       // get existing hotel from api
       const candidate = await hotelConnector.GetAsync(navigation.currentViewParameterNumber.value);
-      state.hotel = candidate!;
+      state.hotel = new Hotel(candidate!);
       setCustomPageTitle(state.hotel.name);
     } else {
       // create a new hotel
@@ -53,7 +53,8 @@
   }
 
   async function onUndo() {
-    state.hotel = await hotelConnector.GetAsync(navigation.currentViewParameterNumber.value);
+    const hotel = await hotelConnector.GetAsync(navigation.currentViewParameterNumber.value);
+    state.hotel = new Hotel(hotel!);
   }
 
   async function onSave() {

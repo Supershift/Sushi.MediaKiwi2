@@ -3,18 +3,7 @@
   import { Hotel } from "./../../models/Hotel";
   import { CountryConnector } from "./../../services/CountryConnector";
   import { HotelConnector } from "./../../services/HotelConnector";
-  import {
-    IconsLibrary,
-    Paging,
-    ListResult,
-    Sorting,
-    SortDirection,
-    TableCellIcon,
-    TableIconPosition,
-    TableFilter,
-    TableFilterType,
-    TableFilterValue,
-  } from "@/models";
+  import { IconsLibrary, Paging, Sorting, SortDirection, TableCellIcon, TableIconPosition, TableFilter, TableFilterType, TableFilterValue } from "@/models";
 
   import { MkTable, MkTh, MkTd } from "@/components";
   import { useI18next } from "@/composables";
@@ -22,19 +11,20 @@
   import { container } from "tsyringe";
   import { ref } from "vue";
   import { TableColumn } from "@/models/table/TableColumn";
-  import { isAbsolute } from "path";
+  import { useSnackbarStore } from "@/stores";
 
   // inject dependencies
   const connector = container.resolve(HotelConnector);
   const countriesConnector = container.resolve(CountryConnector);
   const { formatDateTime, t } = await useI18next();
+  const snackbar = useSnackbarStore();
 
   // define reactive variables
   const currentPagination = ref<Paging>({
     pageIndex: 0,
     pageSize: 11,
   }); // demos 11 items per page (higher than default 10), also adds to the current list
-  const hotels = ref<ListResult<Hotel>>();
+  const hotels = ref<Hotel[]>([]);
   const countries = ref<Country[]>();
   const displayOptions = ref<TableColumn[]>();
   const selectedHotels = ref<Hotel[]>([]);
@@ -70,11 +60,16 @@
 
   // load data
   async function LoadData() {
-    hotels.value = await connector.GetAllAsync(
+    const result = await connector.GetAllAsync(
       currentPagination.value,
       filters.value.countryCode.selectedValue?.value,
       filters.value.isActive.selectedValue?.value
     );
+
+    hotels.value = result.result.map((item) => {
+      // convert to Hotel class
+      return new Hotel(item);
+    });
   }
 
   // Load countries
@@ -90,19 +85,12 @@
     sortDirection: SortDirection.Desc,
   });
 
-  async function onNameChanged(hotel: Hotel, name: string) {
-    hotel.name = name;
-    await SaveData(hotel);
-  }
-
-  async function onCountryCodeChanged(hotel: Hotel, code: string) {
-    hotel.countryCode = code;
-    await SaveData(hotel);
-  }
-
-  /** TODO Implement */
-  async function SaveData(hotel: Hotel) {
-    console.log(hotel);
+  async function onCountryCodeChanged(hotel: Hotel) {
+    // Update the hotel object
+    const result = await connector.SaveAsync(hotel);
+    if (result) {
+      snackbar.showMessage(`Sucessfully saved ${hotel.name}`);
+    }
   }
 </script>
 
@@ -111,12 +99,11 @@
     v-model:current-pagination="currentPagination"
     v-model:filters="filters"
     v-model:sorting="sorting"
+    :data="hotels"
     v-model:selection="selectedHotels"
     hide-selection-checkbox
-    :api-result="hotels"
     :on-load="LoadData"
-    :data="hotels?.result"
-    :item-id="(item: Hotel) => item.id"
+    :item-id="(item) => item.id"
     navigation-item-id="HotelEdit"
     new
     new-emit
@@ -143,19 +130,14 @@
       <th></th>
     </template>
 
-    <template #tbody="dataItem: Hotel">
+    <template #tbody="{ dataItem }">
       <td>{{ dataItem.name }}</td>
       <td>{{ formatDateTime(dataItem.created) }}</td>
       <mk-td @click.stop>
-        <v-autocomplete
-          v-model="dataItem.countryCode"
-          :items="countryOptions"
-          hide-details
-          @update:model-value="(code: string) => onCountryCodeChanged(dataItem, code)"
-        />
+        <v-autocomplete v-model="dataItem.countryCode" :items="countryOptions" hide-details @update:model-value="() => onCountryCodeChanged(dataItem)" />
       </mk-td>
       <mk-td :value="dataItem.isActive" />
-      <mk-td :value="dataItem.srp" />
+      <td>{{ dataItem.srpFormatted }}</td>
       <mk-td :value="srpIcon(dataItem)" />
     </template>
 

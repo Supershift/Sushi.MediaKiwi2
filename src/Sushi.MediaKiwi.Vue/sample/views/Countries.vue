@@ -68,7 +68,7 @@
       <th>Name</th>
     </template>
 
-    <template #tbody="dataItem: Country">
+    <template #tbody="{ dataItem }">
       <td>{{ dataItem.code }}</td>
       <td>{{ dataItem.name }}</td>
     </template>
