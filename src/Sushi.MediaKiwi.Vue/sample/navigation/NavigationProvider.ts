@@ -1,17 +1,18 @@
+import { MkLayout } from "@/constants";
 import { NavigationBuilder } from "@/navigation";
 import { FixedNavigationProvider } from "@/navigation/FixedNavigationProvider";
 
 // create builder
 const builder = new NavigationBuilder();
 
-builder  
+builder
   .startSection("Home", "Home", "$home")
   .addNavigationItem("Home", "Home", "./views/Home.vue", undefined, "$home")
-  .endSection()    
+  .endSection()
   .startSection("Hotels", "Hotels", "$hotel")
-  .addNavigationItem("HotelOverview", "Hotels", "./views/Hotels/HotelsOverview.vue", undefined, "$hotel")
+  .addNavigationItem("HotelOverview", "Hotels", "./views/Hotels/HotelsOverview.vue", undefined, "$hotel", MkLayout.Full)
   .right()
-  .addNavigationItem("HotelEdit", "Hotel detail", "./views/Hotels/HotelEdit.vue", "hotelId")  
+  .addNavigationItem("HotelEdit", "Hotel detail", "./views/Hotels/HotelEdit.vue", "hotelId")
   .addNavigationItem("RoomTypesOverview", "Room types", "./views/Hotels/RoomTypesOverview.vue", "hotelId")
   .right()
   .addNavigationItem("RoomTypesEdit", "Room type detail", "./views/Hotels/RoomTypesEdit.vue", "roomTypeId")
@@ -24,14 +25,14 @@ builder
   .left()
   .endSection()
   .startSection("Customers", "Customers")
-  .addNavigationItem("CustomerOverview", "Customers", "./views/Customers.vue" )
+  .addNavigationItem("CustomerOverview", "Customers", "./views/Customers.vue", undefined, "$customer", "CustomLayout")
   .endSection()
   .startSection('CRM', 'CRM')
   .addNavigationItem("Countries", "Countries", "./views/Countries.vue")
   .addNavigationItem("CountriesEmpty", "Countries Empty state", "./views/CountriesEmpty.vue")
   .endSection()
   .startSection("Account", "Account", "symbols:person")
-  .addNavigationItem("Errors", "Errors", "./views/Account/ErrorSamples.vue" )
+  .addNavigationItem("Errors", "Errors", "./views/Account/ErrorSamples.vue")
   .addNavigationItem("GetAccount", "Get Account", "./views/Account/GetAccount.vue")
   .addChild("EditAccount", "Edit Account", "./views/Account/EditAccount.vue", "accountId")
   .endSection();

@@ -1,9 +1,11 @@
 <script setup lang="ts">
   import { MkBreadcrumbs } from "@/components/MkBreadcrumbs/";
   import { useNavigation } from "@/composables/useNavigation";
+  import { useRoute } from "@/router";
   import { computed } from "vue";
 
   const navigation = useNavigation();
+  const route = useRoute();
 
   // Extend this in the future to include more pages?
   const isPageOnSignIn = computed(() => !navigation?.currentNavigationItem.value?.componentKey);
@@ -23,18 +25,20 @@
   <v-main>
     <mk-breadcrumbs :sticky="true" />
     <div :class="mkScreenClasses">
-      <router-view v-slot="{ Component }">
-        <suspense timeout="0">
-          <template #default>
-            <div class="mk-screen__content">
-              <component :is="Component" :key="$route.path"></component>
-            </div>
-          </template>
-          <template #fallback>
-            <v-progress-circular indeterminate></v-progress-circular>
-          </template>
-        </suspense>
-      </router-view>
+      <component :is="route.meta.layoutComponent || 'div'" class="mk-layout">
+        <router-view v-slot="{ Component }">
+          <suspense timeout="0">
+            <template #default>
+              <div class="mk-screen__content">
+                <component :is="Component" :key="$route.path"></component>
+              </div>
+            </template>
+            <template #fallback>
+              <v-progress-circular indeterminate></v-progress-circular>
+            </template>
+          </suspense>
+        </router-view>
+      </component>
     </div>
   </v-main>
 </template>
@@ -44,6 +48,9 @@
     height: 100%;
 
     &__content {
+      height: inherit;
+    }
+    .mk-layout {
       height: inherit;
     }
   }

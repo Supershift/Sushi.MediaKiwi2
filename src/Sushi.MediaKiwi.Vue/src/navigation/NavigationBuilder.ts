@@ -1,17 +1,18 @@
 import { Section, NavigationItem, NavigationTree } from "@/models/navigation";
 import { INavigationProvider } from "./INavigationProvider";
 import { FixedNavigationProvider } from "./FixedNavigationProvider";
+import { MkLayout } from "@/constants";
 
 
 
 export class NavigationBuilder {
-  private currentParent?: NavigationItem;  
-  private allSections: Array<Section> = [];  
+  private currentParent?: NavigationItem;
+  private allSections: Array<Section> = [];
   private siblings: Array<NavigationItem> = [];
   private currentSection?: Section;
 
-  public startSection(id: string, name: string, icon?: string) : NavigationBuilder {
-    const section: Section = { id: id, name: name, icon: icon, roles: [], items: [] }; 
+  public startSection(id: string, name: string, icon?: string): NavigationBuilder {
+    const section: Section = { id: id, name: name, icon: icon, roles: [], items: [] };
 
     this.allSections.push(section);
     this.currentSection = section;
@@ -20,7 +21,7 @@ export class NavigationBuilder {
     return this;
   }
 
-  public endSection() : NavigationBuilder {
+  public endSection(): NavigationBuilder {
     if (!this.currentSection) {
       throw new Error("No section started");
     }
@@ -29,7 +30,7 @@ export class NavigationBuilder {
     return this;
   }
 
-  public addNavigationItem(id: string, name: string, componentKey?: string, parameterName?: string, icon?: string) : NavigationBuilder {
+  public addNavigationItem(id: string, name: string, componentKey?: string, parameterName?: string, icon?: string, layout?: string): NavigationBuilder {
     if (!this.currentSection) {
       throw new Error("No section started");
     }
@@ -37,27 +38,28 @@ export class NavigationBuilder {
     const item: NavigationItem = {
       id: id,
       name: name,
-      section: this.currentSection,      
-      icon: icon,      
+      section: this.currentSection,
+      icon: icon,
       parent: this.currentParent,
       componentKey: componentKey,
-      parameterName: parameterName,      
+      parameterName: parameterName,
       children: [],
-      roles: undefined
+      roles: undefined,
+      layout: layout ?? MkLayout.Default
     };
 
     // add navigation item to collections    
     this.siblings.push(item);
-    if(this.currentParent)
+    if (this.currentParent)
       this.currentParent.children.push(item);
     else
       this.currentSection.items.push(item);
-      
+
     return this;
   }
 
   /** Adds a child to the last added navigation item. Useful to add an 'invisible' child like an edit view. */
-  public addChild(id: string, name: string, componentKey?: string, parameterName?: string, icon?: string) : NavigationBuilder {
+  public addChild(id: string, name: string, componentKey?: string, parameterName?: string, icon?: string, layout?: string): NavigationBuilder {
     if (!this.siblings) {
       throw new Error("No item to add child to");
     }
@@ -66,21 +68,22 @@ export class NavigationBuilder {
     const item: NavigationItem = {
       id: id,
       name: name,
-      section: localParent.section,      
-      icon: icon,      
-      parent: localParent,      
+      section: localParent.section,
+      icon: icon,
+      parent: localParent,
       componentKey: componentKey,
-      parameterName: parameterName,      
+      parameterName: parameterName,
       children: [],
-      roles: undefined
+      roles: undefined,
+      layout: layout ?? MkLayout.Default
     };
-    
+
     localParent.children!.push(item);
-    
+
     return this;
   }
 
-  public right() : NavigationBuilder {
+  public right(): NavigationBuilder {
     if (!this.currentSection) {
       throw new Error("No section started");
     }
@@ -94,7 +97,7 @@ export class NavigationBuilder {
     return this;
   }
 
-  public left() : NavigationBuilder {
+  public left(): NavigationBuilder {
     if (!this.currentSection) {
       throw new Error("No section started");
     }
