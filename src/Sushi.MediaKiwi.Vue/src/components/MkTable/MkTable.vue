@@ -226,18 +226,24 @@
 
     <MkTableView
       ref="mkTableViewComponent"
-      v-bind="props"
+      :table-map="tableMap"
+      :data="apiResult ? apiResult.result : data"
+      :navigation-item-id="navigationItemId"
       v-model:sorting="sorting"
       v-model:selection="selection"
-      v-model:display-options="displayOptions"
-      v-model:tableReference="tableReference"
-      :data="apiResult ? apiResult.result : data"
       :checkbox="selection ? true : false"
       class="mk-table"
+      :pagination-mode="paginationMode"
+      :item-id="itemId"
       :show-hover-effect="hasTableRowClickAction"
+      :hide-table-row-actions="hideTableRowActions"
+      :hide-selection-checkbox="hideSelectionCheckbox"
       @click:row="(e) => emit('click:row', e)"
       @update:sorting="sortingChanged"
       @update:selection="(e) => emit('update:selection', e)"
+      :disable-item-selection="props.disableItemSelection"
+      v-model:display-options="displayOptions"
+      v-model:tableReference="tableReference"
     >
       <template #thead>
         <slot v-if="slots.thead" name="thead"></slot>
