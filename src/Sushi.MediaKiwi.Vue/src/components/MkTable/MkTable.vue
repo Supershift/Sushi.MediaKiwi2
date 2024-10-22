@@ -232,7 +232,6 @@
       v-model:sorting="sorting"
       v-model:selection="selection"
       :checkbox="selection ? true : false"
-      class="mk-table"
       :pagination-mode="paginationMode"
       :item-id="itemId"
       :show-hover-effect="hasTableRowClickAction"
