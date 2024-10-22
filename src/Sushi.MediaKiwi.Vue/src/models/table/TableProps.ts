@@ -58,6 +58,13 @@ export type MkTableProps<T> = MkTableBaseProps<T> & {
   pageTracking?: boolean;
 };
 
+export type MkTableTableSlotProps<T> = {
+  /** An array of objects used for automatically generating rows. */
+  data?: T[];
+  /** Unique identifier for the item. */
+  itemId?: (entity: T) => string | number;
+};
+
 /** Base Props for the table row slots */
 export type MkTableRowBaseSlotProps<T> = {
   dataItem: T;
