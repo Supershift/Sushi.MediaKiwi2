@@ -82,14 +82,14 @@
   });
 
   /** Proxy collection that contains the itemIds for the selection collection */
-  const selectionIds = computed(() => selection.value?.map((x) => getItemId.value!(x)));
+  const selectionIds = computed(() => selection.value?.map((x) => getItemId.value?.(x)));
   /** Returns if 'some' items are in the selection collection */
   const isIndeterminate = computed(() => selection.value.length > 0 && !isAllSelected.value);
   /** Returns if all items ids are selection collection */
   const isAllSelected = computed(() => selection.value.length === props.data?.length);
   /** Returns if the provided item ids are selected */
   const isItemSelected = computed(() => (dataItem: T): boolean => {
-    const itemId = getItemId.value!(dataItem);
+    const itemId = getItemId.value?.(dataItem);
     if (itemId) {
       const index = selectionIds.value?.findIndex((x) => x === itemId);
       return index > -1;
@@ -280,7 +280,7 @@
           <MkTableCheckbox :disabled="allItemsDisabled" :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:selected="onToggleAll" />
         </th>
         <slot name="thead"></slot>
-        <th v-if="!props.hideTableRowActions">&nbsp;</th>
+        <th v-if="slots.contextmenu && !props.hideTableRowActions">&nbsp;</th>
       </tr>
     </thead>
     <tbody ref="tbodyContainer" class="mk-table-view__body-container">
@@ -302,12 +302,12 @@
           />
         </td>
         <slot name="tbody" v-bind="{ dataItem }"></slot>
-        <td v-if="!props.hideTableRowActions">
+        <td v-if="slots.contextmenu && !props.hideTableRowActions">
           <v-menu>
             <template #activator="{ props }">
-              <v-btn icon variant="text" v-bind="props"><v-icon icon="$dotsVertical" /> </v-btn>
+              <v-btn size="x-small" icon variant="text" v-bind="props"><v-icon icon="$dotsVertical" /> </v-btn>
             </template>
-            <slot v-if="slots.contextmenu" name="contextmenu" v-bind:dataItem="dataItem"></slot>
+            <slot name="contextmenu" v-bind:dataItem="dataItem"></slot>
           </v-menu>
         </td>
       </tr>
@@ -323,8 +323,8 @@
       <v-divider v-if="slots?.bottom" />
     </template>
   </v-table>
-  <v-menu v-model="contextmenuIsVisible" :style="contextMenuStyles">
-    <slot v-if="slots.contextmenu" name="contextmenu" v-bind="contextMenuProps"></slot>
+  <v-menu v-if="slots.contextmenu" v-model="contextmenuIsVisible" :style="contextMenuStyles">
+    <slot name="contextmenu" v-bind="contextMenuProps"></slot>
   </v-menu>
 </template>
 
