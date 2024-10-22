@@ -22,60 +22,12 @@
   import { defaultPageSizeOptions, defaultPageSize } from "@/constants";
   import { useComponentContext } from "@/composables/useComponentContext";
   import MkEmptyState from "../MkEmptyState/MkEmptyState.vue";
-  import { MkTableBodySlotProps } from "@/models/table/TableProp";
-  import { ContextmenuProps } from "@/models/table/TableProps";
+  import { MkTableContextMenuSlotProps, MkTableBodySlotProps, MkTableBulkActionBarSlotProps, MkTableProps } from "@/models/table/TableProps";
 
   // define properties
-  const props = withDefaults(
-    defineProps<{
-      /** Defines mapping between data and the table. */
-      tableMap?: TableMap<T>;
-      /** Sets data and paging properties based on the API's result. */
-      apiResult?: IListResult<T>;
-      /** An array of objects used for automatically generating rows. */
-      data?: T[];
-      /** When set, enables paging based on provided values. */
-      paging?: IPagingResult;
-      /** ExternalId of the view instance to which the user is pushed when clicking a row. */
-      navigationItemId?: string;
-      /** Determines if the toolbar has a new button, default: false. */
-      new?: boolean;
-      /** Determines if we only want to emit instead of navigating to the given navigationItemId */
-      newEmit?: boolean;
-      /** Overrides the "new item" button title */
-      newTitle?: string;
-      /** Callback invoked when the component needs new data, i.e. a filter changes, the current page changes, etc. */
-      onLoad?: () => Promise<void>;
-      /** Title specificly for the current table */
-      title?: string;
-      /** Defines the pagination mode */
-      paginationMode?: MediakiwiPaginationMode;
-      /** */
-      itemId?: (entity: T) => string | number;
-      /** Hides the empty state component entirely */
-      hideEmptyState?: boolean;
-      /** Title for the Empty State component */
-      emptyStateTitle?: string;
-      /** Subtitle for the Empty State component  */
-      emptyStateSubtitle?: string;
-      /** Hides the bulk action bar while keeing the checkboxes intact */
-      hideBulkActionBar?: boolean;
-      /** 'Tracks' the item the user viewed when changing pageSize, when true calculates this instead of resetting pageIndex to 0 */
-      pageTracking?: boolean;
-      /** Callback to disable the selection checkbox for a row based on specific criteria */
-      disableItemSelection?: (entity: T) => boolean;
-      /** Hide the table row action cell when a context menu is implemented */
-      hideTableRowActions?: boolean;
-      /**
-       * Applies when {@link selection} is set.
-       * Hides the checkbox in the selection column
-       */
-      hideSelectionCheckbox?: boolean;
-    }>(),
-    {
-      paginationMode: "controls",
-    }
-  );
+  const props = withDefaults(defineProps<MkTableProps<T>>(), {
+    paginationMode: "controls",
+  });
 
   /** Use Sorting<T> for typesafety  */
   const sorting = defineModel<Sorting | Sorting<T>>("sorting");
@@ -118,7 +70,7 @@
     /** Menu actions for the MkToolbar */
     overflowMenuActions?: () => never;
     /** Action slot for the MkBulkActionBar */
-    bulkActionBar?: (props: { confirm: (callback: () => void) => void }) => never;
+    bulkActionBar?: (slotProps: MkTableBulkActionBarSlotProps) => never;
     /** table templating  */
     thead?: () => never;
     /** table templating */
@@ -127,7 +79,8 @@
     emptyState?: () => never;
     /* Custom title */
     toolbarTitle?: () => never;
-    contextmenu?: (props: ContextmenuProps<T>) => never;
+    /** Context menu slot */
+    contextmenu?: (slotProps: MkTableContextMenuSlotProps<T>) => never;
   }>();
 
   // inject dependencies
@@ -278,24 +231,18 @@
 
     <MkTableView
       ref="mkTableViewComponent"
-      :table-map="tableMap"
-      :data="apiResult ? apiResult.result : data"
-      :navigation-item-id="navigationItemId"
+      v-bind="props"
       v-model:sorting="sorting"
       v-model:selection="selection"
+      v-model:display-options="displayOptions"
+      v-model:tableReference="tableReference"
+      :data="apiResult ? apiResult.result : data"
       :checkbox="selection ? true : false"
       class="mk-table"
-      :pagination-mode="paginationMode"
-      :item-id="itemId"
       :show-hover-effect="hasTableRowClickAction"
-      :hide-table-row-actions="hideTableRowActions"
-      :hide-selection-checkbox="hideSelectionCheckbox"
       @click:row="(e) => emit('click:row', e)"
       @update:sorting="sortingChanged"
       @update:selection="(e) => emit('update:selection', e)"
-      :disable-item-selection="props.disableItemSelection"
-      v-model:display-options="displayOptions"
-      v-model:tableReference="tableReference"
     >
       <template #thead>
         <slot v-if="slots.thead" name="thead"></slot>

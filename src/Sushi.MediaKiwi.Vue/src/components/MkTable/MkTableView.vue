@@ -8,8 +8,7 @@
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
   import { computed, onMounted, ref } from "vue";
   import { useTableDisplayOptions } from "@/composables/useTableDisplayOptions";
-  import { MkTableBodySlotProps } from "@/models/table/TableProp";
-  import { ContextmenuProps } from "@/models/table/TableProps";
+  import { MkTableContextMenuSlotProps, MkTableBodySlotProps, MkTableViewProps } from "@/models/table/TableProps";
   import { useContextmenu } from "@/composables/useContextmenu";
 
   // inject dependencies
@@ -17,28 +16,7 @@
   const { openContextMenu, contextmenuIsVisible, contextMenuProps, contextMenuStyles } = useContextmenu<T>();
 
   // define properties
-  const props = defineProps<{
-    tableMap?: TableMap<T>;
-    itemId?: (entity: T) => string | number;
-    data?: T[];
-    /** Id of the navigation item to which the user is pushed when clicking a row. */
-    navigationItemId?: string;
-    /** Make each row in the table selectable. */
-    checkbox?: boolean;
-    /** Defines the pagination mode */
-    paginationMode?: MediakiwiPaginationMode;
-    /** Defines if the table row has a hover effect */
-    showHoverEffect: boolean;
-    /** Callback to disable the selection checkbox for a row based on specific criteria */
-    disableItemSelection?: (entity: T) => boolean;
-    /** Hide the table row action cell when a context menu is implemented */
-    hideTableRowActions?: boolean;
-    /**
-     * Applies when {@link selection} is set.
-     * Hides the checkbox in the selection column
-     */
-    hideSelectionCheckbox?: boolean;
-  }>();
+  const props = defineProps<MkTableViewProps<T>>();
 
   /** Use Sorting<T> for typesafety */
   defineModel<Sorting | Sorting<T>>("sorting");
@@ -70,7 +48,7 @@
     thead: () => never;
     /** table templating */
     tbody?: (slotProps: MkTableBodySlotProps<T>) => never;
-    contextmenu?: (props: ContextmenuProps<T>) => never;
+    contextmenu?: (slotProps: MkTableContextMenuSlotProps<T>) => never;
   }>();
 
   // inject dependencies
