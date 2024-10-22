@@ -3,26 +3,21 @@
   import { TableMap, TableFilter, TableColumn } from "@/models/table";
   import { Paging, Sorting } from "@/models/api";
   import { ref, watch } from "vue";
-  import MkTableFilter from "@/components/MkTableFilter/MkTableFilter.vue";
-  import MkTableView from "./MkTableView.vue";
-
-  import MkBulkActionBar from "@/components/MkBulkActionBar/MkBulkActionBar.vue";
-  import MkToolbar from "@/components/MkToolbar/MkToolbar.vue";
-
-  import MkPagination from "@/components/MkPagination/MkPagination.vue";
-  import { IListResult, IPagingResult } from "@/models";
   import { useSnackbarStore } from "@/stores/snackbar";
   import { onMounted, computed } from "vue";
-
   import { ITableMapPaging } from "@/models/table/TableMapPaging";
-  import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
+  import { defaultPageSizeOptions, defaultPageSize } from "@/constants";
+  import { useComponentContext } from "@/composables/useComponentContext";
+  import { MkTableContextMenuSlotProps, MkTableBodySlotProps, MkTableBulkActionBarSlotProps, MkTableProps } from "@/models/table/TableProps";
+  import MkTableFilter from "@/components/MkTableFilter/MkTableFilter.vue";
+  import MkTableView from "./MkTableView.vue";
+  import MkBulkActionBar from "@/components/MkBulkActionBar/MkBulkActionBar.vue";
+  import MkToolbar from "@/components/MkToolbar/MkToolbar.vue";
+  import MkPagination from "@/components/MkPagination/MkPagination.vue";
   import MkTableHead from "./MkTableHead.vue"; // Mk-Th
   import MkTableCell from "./MkTableCell.vue"; // Mk-Td
   import MkDisplayOptions from "@/components/MkDisplayOptions/MkDisplayOptions.vue";
-  import { defaultPageSizeOptions, defaultPageSize } from "@/constants";
-  import { useComponentContext } from "@/composables/useComponentContext";
   import MkEmptyState from "../MkEmptyState/MkEmptyState.vue";
-  import { MkTableContextMenuSlotProps, MkTableBodySlotProps, MkTableBulkActionBarSlotProps, MkTableProps } from "@/models/table/TableProps";
 
   // define properties
   const props = withDefaults(defineProps<MkTableProps<T>>(), {

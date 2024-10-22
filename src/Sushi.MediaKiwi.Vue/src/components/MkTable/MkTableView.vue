@@ -1,15 +1,13 @@
 <script setup lang="ts" generic="T">
-  import { RouteParamValueRaw } from "vue-router";
-  import type { TableMap } from "@/models/table/TableMap";
-  import { useMediakiwiStore } from "@/stores/";
   import type { Sorting, TableColumn } from "@/models";
-  import MkTableCheckbox from "./MkTableCheckbox.vue";
+  import { RouteParamValueRaw } from "vue-router";
+  import { useMediakiwiStore } from "@/stores/";
   import { useNavigation } from "@/composables/useNavigation";
-  import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
   import { computed, onMounted, ref } from "vue";
   import { useTableDisplayOptions } from "@/composables/useTableDisplayOptions";
   import { MkTableContextMenuSlotProps, MkTableBodySlotProps, MkTableViewProps } from "@/models/table/TableProps";
   import { useContextmenu } from "@/composables/useContextmenu";
+  import MkTableCheckbox from "./MkTableCheckbox.vue";
 
   // inject dependencies
   const { initTableDisplayOptions } = useTableDisplayOptions();
