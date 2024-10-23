@@ -257,6 +257,7 @@
         @update:sorting="sortingChanged"
         @update:selection="(e) => emit('update:selection', e)"
         :disable-item-selection="props.disableItemSelection"
+        :remove-item-selection="props.removeItemSelection"
         v-model:display-options="displayOptions"
         v-model:tableReference="tableReference"
       >

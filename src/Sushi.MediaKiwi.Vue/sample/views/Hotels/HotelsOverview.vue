@@ -101,7 +101,6 @@
     v-model:sorting="sorting"
     :data="hotels"
     v-model:selection="selectedHotels"
-    hide-selection-checkbox
     :on-load="LoadData"
     :item-id="(item) => item.id"
     navigation-item-id="HotelEdit"
@@ -111,6 +110,8 @@
     title="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin nec quam id nunc tincidunt vulputate sed eget ex. Praesent bibendum leo sed ipsum sodales euismod. Cras ac purus volutpat, dapibus quam eget, vestibulum orci. Aliquam et ligula pharetra, condimentum nibh at, congue dolor."
     @click:new="console.log('New Button Clicked: ' + $event)"
     v-model:display-options="displayOptions"
+    :remove-item-selection="(item) => item.countryCode !== 'NL'"
+    hide-selection-checkbox
   >
     <template #toolbar>
       <v-btn>Knop 1</v-btn>

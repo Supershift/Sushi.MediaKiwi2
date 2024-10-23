@@ -3,9 +3,9 @@
   import { RouteParamValueRaw } from "vue-router";
   import { useMediakiwiStore } from "@/stores/";
   import { useNavigation } from "@/composables/useNavigation";
-  import { computed, onMounted, ref } from "vue";
+  import { computed, onMounted, onUnmounted, ref } from "vue";
   import { useTableDisplayOptions } from "@/composables/useTableDisplayOptions";
-  import { MkTableContextMenuSlotProps, MkTableBodySlotProps, MkTableViewProps } from "@/models/table/TableProps";
+  import { MkTableContextMenuSlotProps, MkTableBodySlotProps, MkTableViewProps, MkTableBulkActionBarSlotProps } from "@/models/table/TableProps";
   import { useContextmenu } from "@/composables/useContextmenu";
   import MkTableCheckbox from "./MkTableCheckbox.vue";
 
@@ -30,6 +30,7 @@
   /** Ref to the table element */
   const tbodyContainer = ref<any>(null);
   const tbodyNode = computed(() => tbodyContainer.value! as Node);
+  const isSelectionMode = ref(false);
 
   // define event
   const emit = defineEmits<{
@@ -47,6 +48,7 @@
     /** table templating */
     tbody?: (slotProps: MkTableBodySlotProps<T>) => never;
     contextmenu?: (slotProps: MkTableContextMenuSlotProps<T>) => never;
+    bulkActionBar?: (slotProps: MkTableBulkActionBarSlotProps) => never;
   }>();
 
   // inject dependencies
@@ -78,6 +80,7 @@
     return {
       "has-hover": props.showHoverEffect,
       "mk-table-view__row--selected": isItemSelected.value(dataItem),
+      "cursor-not-allowed": props.checkbox && isSelectionMode.value && (isDisabledItemSelection(dataItem) || isRemovedItemSelection(dataItem)),
     };
   }
 
@@ -118,7 +121,7 @@
   function onRowClick(event: MouseEvent, dataItem: T) {
     if (props.checkbox && (event.ctrlKey || event.shiftKey)) {
       if (event.ctrlKey) {
-        if (!isDisabledItemSelection(dataItem)) {
+        if (!isDisabledItemSelection(dataItem) && !isRemovedItemSelection(dataItem)) {
           handleSelection(dataItem);
         }
       } else if (event.shiftKey) {
@@ -160,7 +163,7 @@
   function onToggleAll(value: boolean): void {
     if (props.data) {
       props.data.forEach((dataItem) => {
-        if (!isDisabledItemSelection(dataItem)) {
+        if (!isDisabledItemSelection(dataItem) && !isRemovedItemSelection(dataItem)) {
           onToggleSelection(dataItem, value);
         }
       });
@@ -183,7 +186,9 @@
       if (value) {
         // Add the item if not already present
         if (index === -1) {
-          selection.value.push(dataItem);
+          if (!isDisabledItemSelection(dataItem) && !isRemovedItemSelection(dataItem)) {
+            selection.value.push(dataItem);
+          }
         }
       } else {
         // Remove the item if present
@@ -202,6 +207,16 @@
 
     if (props.disableItemSelection) {
       result = props.disableItemSelection(dataItem);
+    }
+
+    return result;
+  }
+
+  function isRemovedItemSelection(dataItem: T) {
+    let result = false;
+
+    if (props.removeItemSelection) {
+      result = props.removeItemSelection(dataItem);
     }
 
     return result;
@@ -239,16 +254,39 @@
     return fallback;
   }
 
+  const observer = new MutationObserver(loadDisplayOptions);
+
+  function enableSelectionMode(e: KeyboardEvent) {
+    if (e.key === "Control" || e.key === "Shift") {
+      isSelectionMode.value = true;
+    } else if (isSelectionMode.value && e.key === "a") {
+      e.preventDefault();
+      onToggleAll(true);
+    }
+  }
+  function disableSelectionMode() {
+    isSelectionMode.value = false;
+  }
+
   onMounted(() => {
-    const observer = new MutationObserver(loadDisplayOptions);
     observer.observe(tbodyNode.value, {
       childList: true,
       subtree: true,
     });
+
+    window.addEventListener("keydown", enableSelectionMode);
+    window.addEventListener("keyup", disableSelectionMode);
+  });
+
+  onUnmounted(() => {
+    observer.disconnect();
+    window.removeEventListener("keydown", enableSelectionMode);
+    window.removeEventListener("keyup", disableSelectionMode);
   });
 </script>
 
 <template>
+  isSelectionMode; {{ isSelectionMode }}
   <v-table ref="myTable" class="mk-table mk-table-view" :class="{ 'mk-table-display-options': hasDisplayOptions }" :data-table-ref="tableReference">
     <thead class="mk-table-view__header-container">
       <tr>
@@ -271,6 +309,7 @@
       >
         <td v-if="checkbox && !props.hideSelectionCheckbox" @click.stop class="mk-table-view__checkbox-container--body">
           <MkTableCheckbox
+            v-if="!isRemovedItemSelection(dataItem)"
             :item="dataItem"
             :is-selected="isItemSelected(dataItem)"
             :disabled="isDisabledItemSelection(dataItem)"
@@ -299,8 +338,11 @@
       <v-divider v-if="slots?.bottom" />
     </template>
   </v-table>
-  <v-menu v-if="slots.contextmenu" v-model="contextmenuIsVisible" :style="contextMenuStyles">
-    <slot name="contextmenu" v-bind="contextMenuProps"></slot>
+  <v-menu v-if="slots.contextmenu || slots.bulkActionBar" v-model="contextmenuIsVisible" :style="contextMenuStyles">
+    <v-list v-if="slots.bulkActionBar && (isIndeterminate || isAllSelected)">
+      <slot name="bulkActionBar"></slot>
+    </v-list>
+    <slot v-else name="contextmenu" v-bind="contextMenuProps"></slot>
   </v-menu>
 </template>
 
@@ -320,6 +362,10 @@
               }
             }
 
+            &.cursor-not-allowed {
+              cursor: not-allowed;
+            }
+
             &.mk-table-view__row--selected {
               background-color: rgb(var(--v-theme-secondary-container)) !important; //, var(--v-disabled-opacity)) !important;
               color: var(--v-theme-on-secondary-container) !important;
@@ -336,15 +382,5 @@
     th[mk-hidden] {
       display: none !important;
     }
-  }
-
-  .lasso {
-    position: fixed;
-    border: 2px solid blue;
-    background-color: transparent;
-    z-index: 1000;
-  }
-  .selected {
-    background-color: lightblue;
   }
 </style>

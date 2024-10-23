@@ -17,6 +17,8 @@ export type MkTableBaseProps<T> = {
   paginationMode?: MediakiwiPaginationMode;
   /** Callback to disable the selection checkbox for a row based on specific criteria */
   disableItemSelection?: (entity: T) => boolean;
+  /** Callback to remove the selection checkbox for a row based on specific criteria   */
+  removeItemSelection?: (entity: T) => boolean;
   /** Hide the table row action cell when a context menu is implemented */
   hideTableRowActions?: boolean;
   /**
@@ -81,4 +83,7 @@ export type MkTableBodySlotProps<T> = MkTableRowBaseSlotProps<T>;
  */
 export type MkTableBulkActionBarSlotProps = {
   confirm: (callback: () => void) => void;
+  props?: {
+    tag?: string;
+  };
 };
