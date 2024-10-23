@@ -83,7 +83,4 @@ export type MkTableBodySlotProps<T> = MkTableRowBaseSlotProps<T>;
  */
 export type MkTableBulkActionBarSlotProps = {
   confirm: (callback: () => void) => void;
-  props?: {
-    tag?: string;
-  };
 };
