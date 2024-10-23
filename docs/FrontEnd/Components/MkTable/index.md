@@ -4,9 +4,37 @@
 
 Basic example of some the slots avaiable on the MkTable.
 
+- header: Add markup above the entire component
+- footer: Add markup below the entire component
+- toolbar: Visible action slot for the MkToolbar
+- overflowMenuActions: Add actions behind an overflow menu (kebab-menu)
+- bulkActionBar: Add actions for when the bulk action bar appears
+- prependTable: Add markup between the filterbar and table
+- table: Replace the table with you're own component
+- thead: Header for the table body using templating
+- tbody: Body for the table body using templating
+- emptyState: Add a custom component for the empty state
+- toolbarTitle: Custom title
+- contextmenu: Context menu slot
+
 ```tsx
 <template>
 <mk-table>
+	<template #prependTable>
+	<v-btn-toggle v-model="displayMode" variant="outlined" class="mr-2">
+		<v-btn :value="1">List</v-btn>
+		<v-btn :value="2">Grid</v-btn>
+	</v-btn-toggle>
+    </template>
+
+    <template #table="{ data }">
+      <ul>
+        <li v-for="dataItem in data">
+          {{ dataItem.name }}
+        </li>
+      </ul>
+    </template>
+
     <template #toolbar>
 		<!-- buttons available in the toolbar above the table -->
 		<v-btn>Your custom button</v-btn>
