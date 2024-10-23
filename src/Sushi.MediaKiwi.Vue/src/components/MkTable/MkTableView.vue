@@ -286,7 +286,6 @@
 </script>
 
 <template>
-  isSelectionMode; {{ isSelectionMode }}
   <v-table ref="myTable" class="mk-table mk-table-view" :class="{ 'mk-table-display-options': hasDisplayOptions }" :data-table-ref="tableReference">
     <thead class="mk-table-view__header-container">
       <tr>
@@ -339,10 +338,7 @@
     </template>
   </v-table>
   <v-menu v-if="slots.contextmenu || slots.bulkActionBar" v-model="contextmenuIsVisible" :style="contextMenuStyles">
-    <v-list v-if="slots.bulkActionBar && (isIndeterminate || isAllSelected)">
-      <slot name="bulkActionBar"></slot>
-    </v-list>
-    <slot v-else name="contextmenu" v-bind="contextMenuProps"></slot>
+    <slot name="contextmenu" v-bind="contextMenuProps"></slot>
   </v-menu>
 </template>
 
