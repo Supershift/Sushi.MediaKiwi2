@@ -3,8 +3,6 @@ import { INavigationProvider } from "./INavigationProvider";
 import { FixedNavigationProvider } from "./FixedNavigationProvider";
 import { MkLayout } from "@/constants";
 
-
-
 export class NavigationBuilder {
   private currentParent?: NavigationItem;
   private allSections: Array<Section> = [];
@@ -30,7 +28,15 @@ export class NavigationBuilder {
     return this;
   }
 
-  public addNavigationItem(id: string, name: string, componentKey?: string, parameterName?: string, icon?: string, layout?: string): NavigationBuilder {
+  public addNavigationItem(
+    id: string,
+    name: string,
+    componentKey?: string,
+    parameterName?: string,
+    icon?: string,
+    layout?: string,
+    getBreadcrumbLabelCallback?: (currentViewParameter: any) => Promise<string>
+  ): NavigationBuilder {
     if (!this.currentSection) {
       throw new Error("No section started");
     }
@@ -45,15 +51,14 @@ export class NavigationBuilder {
       parameterName: parameterName,
       children: [],
       roles: undefined,
-      layout: layout ?? MkLayout.Default
+      layout: layout ?? MkLayout.Default,
+      getBreadcrumbLabelCallback: getBreadcrumbLabelCallback,
     };
 
-    // add navigation item to collections    
+    // add navigation item to collections
     this.siblings.push(item);
-    if (this.currentParent)
-      this.currentParent.children.push(item);
-    else
-      this.currentSection.items.push(item);
+    if (this.currentParent) this.currentParent.children.push(item);
+    else this.currentSection.items.push(item);
 
     return this;
   }
@@ -75,7 +80,7 @@ export class NavigationBuilder {
       parameterName: parameterName,
       children: [],
       roles: undefined,
-      layout: layout ?? MkLayout.Default
+      layout: layout ?? MkLayout.Default,
     };
 
     localParent.children!.push(item);

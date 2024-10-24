@@ -1,11 +1,9 @@
 <script setup lang="ts">
   import { computed } from "vue";
   import MkBackButton from "@/components/MkNavigation/MkBackButton.vue";
-  import { useDisplay } from "vuetify";
   import { useNavigation } from "@/composables/useNavigation";
-  import { IconsLibrary } from "@/models";
   import { useBreadcrumbs } from "@/composables/useBreadcrumbs";
-  import { NavigationItem } from "@/models/navigation";
+  import MkBreadcrumbsItem from "./MkBreadcrumbsItem.vue";
 
   // define props
   const props = defineProps({
@@ -17,53 +15,8 @@
   });
 
   // inject dependencies
-  const { xs } = useDisplay();
   const navigation = useNavigation();
-  const { customPageTitle, setCustomPageTitle } = useBreadcrumbs();
-
-  // determine if we show the whole breadcrumb or only a back button
-  const showBackButton = computed(() => xs.value && breadcrumbs.value.length > 1);
-
-  // go up the navigation tree starting from the current item
-  const breadcrumbs = computed(() => {
-    const currentItem = navigation.currentNavigationItem.value;
-    const result: Array<NavigationItem> = [];
-    let candidate: NavigationItem | undefined = { ...currentItem };
-    while (candidate) {
-      result.unshift(candidate);
-      candidate = candidate.parent;
-    }
-
-    // Alter the title of the last item in the collection
-    if (customPageTitle.value && result && result[result.length - 1]) {
-      result[result.length - 1].name = customPageTitle.value ?? result[result.length - 1].name;
-    }
-
-    // Reset the custom title
-    setCustomPageTitle();
-
-    return result;
-  });
-
-  /** Return if the item is the last in the collection */
-  function isCurrentItem(index: number): boolean {
-    return index === breadcrumbs.value.length - 1;
-  }
-
-  function hasScreen(item: NavigationItem): boolean {
-    if (item?.componentKey) {
-      return true;
-    }
-    return false;
-  }
-
-  // called to send user to target screen
-  function onItemClick(item: NavigationItem) {
-    if (item.componentKey) {
-      navigation.navigateTo(item);
-    }
-    return false;
-  }
+  const { breadcrumbs, showBackButton, isCurrentItem } = useBreadcrumbs();
 
   /** Check if the breadcrumbs have any items and if all have a name */
   const hasBreadcrumbs = computed(() => breadcrumbs.value.length && breadcrumbs.value.some((x) => x.name));
@@ -78,23 +31,14 @@
     </div>
     <div v-else>
       <v-breadcrumbs class="px-0 pt-0">
-        <template v-for="(item, index) in breadcrumbs" :key="item.id">
-          <li v-if="index" class="v-breadcrumbs-divider">
-            <v-icon :icon="IconsLibrary.chevronRight" />
-          </li>
-
-          <v-btn
-            :active="isCurrentItem(index)"
-            :disabled="isCurrentItem(index)"
-            class="text-title-large text-container"
-            :class="{ 'text-truncate d-inline-block': !isCurrentItem(index), 'pl-2': isCurrentItem(index) && breadcrumbs?.length === 1 }"
-            size="unset"
-            :title="item.name"
-            @click.stop="hasScreen(item) ? onItemClick(item) : {}"
-          >
-            {{ item.name }}
-          </v-btn>
-        </template>
+        <MkBreadcrumbsItem
+          v-for="(item, index) in breadcrumbs"
+          :key="item.id"
+          :item="item"
+          :index="index"
+          :is-current-item="isCurrentItem(item)"
+          :is-only-item="breadcrumbs.length === 1"
+        ></MkBreadcrumbsItem>
       </v-breadcrumbs>
     </div>
   </v-card>

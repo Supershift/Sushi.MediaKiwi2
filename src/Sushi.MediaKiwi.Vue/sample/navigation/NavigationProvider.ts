@@ -1,6 +1,9 @@
 import { MkLayout } from "@/constants";
 import { NavigationBuilder } from "@/navigation";
 import { FixedNavigationProvider } from "@/navigation/FixedNavigationProvider";
+import { useRoomTypes } from "@sample/composables/useRoomTypes";
+
+const { getRoomType, getBoardType } = useRoomTypes();
 
 // create builder
 const builder = new NavigationBuilder();
@@ -15,9 +18,15 @@ builder
   .addNavigationItem("HotelEdit", "Hotel detail", "./views/Hotels/HotelEdit.vue", "hotelId")
   .addNavigationItem("RoomTypesOverview", "Room types", "./views/Hotels/RoomTypesOverview.vue", "hotelId")
   .right()
-  .addNavigationItem("RoomTypesEdit", "Room type detail", "./views/Hotels/RoomTypesEdit.vue", "roomTypeId")
+  .addNavigationItem("RoomTypesEdit", "Room type detail", "./views/Hotels/RoomTypesEdit.vue", "roomTypeId", undefined, undefined, async (id) => {
+    const result = await getRoomType(parseInt(id));
+    return result?.name || "";
+  })
   .right()
-  .addNavigationItem("RoomTypesEditDeep", "Room type edit deep", "./views/Hotels/RoomTypesEditDeep.vue", "roomTypeId")
+  .addNavigationItem("RoomTypesEditDeep", "Room type edit deep", "./views/Hotels/RoomTypesEditDeep.vue", "boardTypeId", undefined, undefined, async (id) => {
+    const result = await getBoardType(parseInt(id));
+    return result?.name || "";
+  })
   .left()
   .left()
   .addNavigationItem("SunbedTypes", "Sunbed types", "./views/Hotels/SunbedTypesOverview.vue", "hotelId")
@@ -27,7 +36,7 @@ builder
   .startSection("Customers", "Customers")
   .addNavigationItem("CustomerOverview", "Customers", "./views/Customers.vue", undefined, "$customer", "CustomLayout")
   .endSection()
-  .startSection('CRM', 'CRM')
+  .startSection("CRM", "CRM")
   .addNavigationItem("Countries", "Countries", "./views/Countries.vue")
   .addNavigationItem("CountriesEmpty", "Countries Empty state", "./views/CountriesEmpty.vue")
   .endSection()

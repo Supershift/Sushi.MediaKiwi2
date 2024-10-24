@@ -16,12 +16,14 @@ export type NavigationItem = {
   icon?: string;
   /** If defined contains details about the view to render for this item */
   componentKey?: string;
-
-  section: Section
-
+  /** Section under which this item is placed. */
+  section: Section;
   /** If not empty, access to this screen is restricted to these roles. */
   roles?: string[];
-
   /** If defined, the layout to use for this item */
   layout?: string;
-}
+  /** Custom breadcrumb label */
+  breadcrumbLabel?: string;
+  /** If defined, this function will be called to get the breadcrumb label for this item. */
+  getBreadcrumbLabelCallback?: (currentViewParameter: any) => Promise<string>;
+};

@@ -1,45 +1,58 @@
 <script setup lang="ts">
-  import { MkTable, MkEmptyState } from "@/components";
-  import { useI18next } from "@/composables";
+  import { MkTable, MkTd } from "@/components";
+  import MkForm from "@/components/MkForm/MkForm.vue";
+  import { useBreadcrumbs, useI18next, useNavigation } from "@/composables";
   import { ListResult, Paging } from "@/models";
-
-  import { ref } from "vue";
+  import { useRoomTypes } from "@sample/composables/useRoomTypes";
+  import { RoomType } from "@sample/models/Hotel/RoomType";
+  import { computed, reactive, ref } from "vue";
 
   // inject dependencies
   const { t } = await useI18next();
+  const navigation = useNavigation();
+  const { setCustomPageTitle } = useBreadcrumbs();
+  const roomTypeId = computed(() => navigation.currentViewParameterNumber.value);
+  const { getRoomType, getAllBoardTypes } = useRoomTypes();
 
   // define reactive variables
   const currentPagination = ref<Paging>({});
-  const roomTypes = ref<ListResult<any>>({
-    pageCount: 1,
-    totalCount: 3,
-    result: [
-      { id: 1, name: "Single", active: true },
-      { id: 2, name: "Double", active: true },
-      { id: 3, name: "Triple", active: true },
-    ],
+  const state = reactive({
+    roomType: <any>{},
+    boardTypes: <ListResult<RoomType>>{},
   });
+
+  async function load() {
+    state.roomType = getRoomType(roomTypeId.value);
+    setCustomPageTitle(state.roomType!.name);
+  }
+
+  async function loadBoardTypes() {
+    state.boardTypes = getAllBoardTypes();
+  }
 </script>
 
 <template>
+  <MkForm @load="load">
+    <v-text-field label="Name" v-model="state.roomType.name"></v-text-field>
+  </MkForm>
+
   <mk-table
-    v-if="roomTypes?.result?.length"
     v-model:current-pagination="currentPagination"
-    :api-result="roomTypes"
-    :data="roomTypes?.result"
-    new
-    :item-id="(item: any) => item.id"
+    :api-result="state.boardTypes"
+    :data="state.boardTypes?.result"
+    :item-id="(item) => item.id"
     navigation-item-id="RoomTypesEditDeep"
-    title="Subtitle for the hotel list"
+    title="Board Types"
+    @load="loadBoardTypes"
   >
     <template #thead>
-      <th>{{ t("Room Type") }}</th>
+      <th>{{ t("Board Type") }}</th>
       <th>{{ t("Active") }}</th>
     </template>
 
-    <template #tbody="dataItem: any">
+    <template #tbody="dataItem">
       <td>{{ dataItem.name }}</td>
-      <td>{{ dataItem.active }}</td>
+      <MkTd :value="dataItem.active"></MkTd>
     </template>
   </mk-table>
 </template>
