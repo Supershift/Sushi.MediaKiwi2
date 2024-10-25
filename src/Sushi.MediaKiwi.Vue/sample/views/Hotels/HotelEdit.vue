@@ -102,11 +102,7 @@
     </v-card>
   </MkNavigationDrawerInfo>
 
-  <MkForm title="Hotel edit" @submit="onSave" @delete="onDelete" @undo="onUndo" @load="onLoad">
-    <template #toolbarHeader>
-      <v-card-text class="flex-1-1 w-75"> Hotel edit </v-card-text>
-    </template>
-
+  <MkForm @submit="onSave" @delete="onDelete" @undo="onUndo" @load="onLoad">
     <v-text-field v-model="state.hotel.name" label="Name" :rules="[required]"></v-text-field>
 
     <v-autocomplete

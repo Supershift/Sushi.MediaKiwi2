@@ -33,6 +33,8 @@
   }
 
   async function load() {
+    customBreadcrumbLabel.value = "";
+
     // Try to get the breadcrumb name
     const result = await getBreadcrumbLabel(props.item);
 

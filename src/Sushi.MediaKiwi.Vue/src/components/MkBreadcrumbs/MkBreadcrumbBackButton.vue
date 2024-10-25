@@ -22,6 +22,8 @@
   async function load() {
     // Try to get the breadcrumb name
     if (navigation.currentNavigationItem.value) {
+      customBreadcrumbLabel.value = "";
+
       // Set loading state
       state.loading = true;
       const result = await getBreadcrumbLabel(navigation.currentNavigationItem.value);

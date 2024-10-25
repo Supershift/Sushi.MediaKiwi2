@@ -17,19 +17,20 @@ builder
   .startSection("Hotels", "Hotels", "$hotel")
   .addNavigationItem("HotelOverview", "Hotels", "./views/Hotels/HotelsOverview.vue", undefined, "$hotel", MkLayout.Full)
   .right()
-  .addNavigationItem("HotelEdit", "Hotel detail", "./views/Hotels/HotelEdit.vue", "hotelId", undefined, undefined, async (hotelId) => {
+  .addNavigationItem("HotelEdit", "Details", "./views/Hotels/HotelEdit.vue", "hotelId", undefined, undefined, async (hotelId) => {
     const hotelConnector = container.resolve(HotelConnector);
     const candidate = await hotelConnector.GetAsync(hotelId);
     return candidate?.name;
   })
   .addNavigationItem("RoomTypesOverview", "Room types", "./views/Hotels/RoomTypesOverview.vue", "hotelId")
   .right()
-  .addNavigationItem("RoomTypesEdit", "Room type detail", "./views/Hotels/RoomTypesEdit.vue", "roomTypeId", undefined, undefined, async (id) => {
+  .addNavigationItem("RoomTypesEdit", "Details", "./views/Hotels/RoomTypesEdit.vue", "roomTypeId", undefined, undefined, async (id) => {
     const result = await getRoomType(parseInt(id));
     return result?.name;
   })
+  .addNavigationItem("BoardTypesOverview", "Board types", "./views/Hotels/BoardTypesOverview.vue", "roomTypeId")
   .right()
-  .addNavigationItem("RoomTypesEditDeep", "Room type edit deep", "./views/Hotels/RoomTypesEditDeep.vue", "boardTypeId", undefined, undefined, async (id) => {
+  .addNavigationItem("BoardTypeEdit", "Details", "./views/Hotels/BoardTypeEdit.vue", "boardTypeId", undefined, undefined, async (id) => {
     const result = await getBoardType(parseInt(id));
     return result?.name;
   })

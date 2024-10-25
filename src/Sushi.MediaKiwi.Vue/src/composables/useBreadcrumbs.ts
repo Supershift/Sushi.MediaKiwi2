@@ -3,6 +3,7 @@ import { useNavigation } from "./useNavigation";
 import { NavigationItem } from "@/models/navigation";
 import { useDisplay } from "vuetify/lib/framework.mjs";
 import { useMediakiwiStore } from "@/stores";
+import { get } from "cypress/types/lodash";
 
 export function useBreadcrumbs() {
   // Inject dependencies.
@@ -21,24 +22,28 @@ export function useBreadcrumbs() {
       candidate = candidate.parent;
     }
 
-    // If we have a current root item, a back button is shown, so we remove the first item
     if (navigation.currentRootItem.value) {
-      result.splice(0, 1);
+      // If we have a current root item, a back button is shown, so we remove the first item(s).
+      while (result.length > 1 && result[0].id !== navigation.currentNavigationItem.value.id) {
+        result.shift();
+      }
 
-      // Validate if the root item has more than one child
-      if (navigation.currentRootItem.value.children.length > 1) {
-        // Get the first child of the root item
-        const firstChild = navigation.currentRootItem.value.children[0];
-
-        // if the current view is not the first child in the collection, we add the first child to the breadcrumb
-        if (firstChild.id !== navigation.currentNavigationItem.value.id) {
-          result.unshift(firstChild);
-        }
+      // if the current view the item child in the collection, we add this to the breadcrumb path
+      if (itemChild.value && itemChild.value.id !== navigation.currentNavigationItem.value.id) {
+        result.unshift(itemChild.value);
       }
     }
 
     return result;
   });
+
+  function getItemChild(navigationItem?: NavigationItem): NavigationItem | undefined {
+    if (navigationItem && navigationItem.children?.length > 1) {
+      return navigationItem.children[0]; // the first child is the item child.
+    }
+  }
+
+  const itemChild = computed(() => getItemChild(navigation.currentRootItem.value));
 
   /** Determines if we show the whole breadcrumb or only a back button */
   const showMobileBackButton = computed(() => xs.value && breadcrumbs.value.length);
@@ -80,7 +85,7 @@ export function useBreadcrumbs() {
       }
     } catch (error) {
       // silent error, just log it to the console
-      console.error(error);
+      console.error("getBreadcrumbLabel", error);
     }
   }
 
@@ -92,5 +97,7 @@ export function useBreadcrumbs() {
     setCurrentBreadcrumbLabel,
     isCurrentNavigationItem,
     getBreadcrumbLabel,
+    itemChild,
+    getItemChild,
   };
 }
