@@ -35,7 +35,7 @@ export class NavigationBuilder {
     parameterName?: string,
     icon?: string,
     layout?: string,
-    getBreadcrumbLabelCallback?: (currentViewParameter: any) => Promise<string>
+    getBreadcrumbLabelCallback?: (currentViewParameter: any) => Promise<string | undefined>
   ): NavigationBuilder {
     if (!this.currentSection) {
       throw new Error("No section started");
@@ -52,7 +52,7 @@ export class NavigationBuilder {
       children: [],
       roles: undefined,
       layout: layout ?? MkLayout.Default,
-      getBreadcrumbLabelCallback: getBreadcrumbLabelCallback,
+      getBreadcrumbLabelCallback,
     };
 
     // add navigation item to collections

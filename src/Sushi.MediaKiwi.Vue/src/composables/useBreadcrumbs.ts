@@ -24,6 +24,17 @@ export function useBreadcrumbs() {
     // If we have a current root item, a back button is shown, so we remove the first item
     if (navigation.currentRootItem.value) {
       result.splice(0, 1);
+
+      // Validate if the root item has more than one child
+      if (navigation.currentRootItem.value.children.length > 1) {
+        // Get the first child of the root item
+        const firstChild = navigation.currentRootItem.value.children[0];
+
+        // if the current view is not the first child in the collection, we add the first child to the breadcrumb
+        if (firstChild.id !== navigation.currentNavigationItem.value.id) {
+          result.unshift(firstChild);
+        }
+      }
     }
 
     return result;
@@ -43,13 +54,13 @@ export function useBreadcrumbs() {
     return false;
   }
 
-  function setCustomPageTitle(value?: string) {
+  function setCurrentBreadcrumbLabel(value?: string) {
     if (navigation.currentNavigationItem.value) {
       navigation.currentNavigationItem.value.breadcrumbLabel = value;
     }
   }
 
-  function clearCustomPageTitle(navigationItem: NavigationItem) {
+  function clearCurrentBreadcrumbLabel(navigationItem: NavigationItem) {
     // find the item in the navigation tree
     const item = store.navigationTree.getNavigationItem(navigationItem.id);
     if (item) {
@@ -61,8 +72,11 @@ export function useBreadcrumbs() {
     try {
       // if the item has a getBreadcrumbLabel function, call it to get the breadcrumb label
       if (navigationItem.getBreadcrumbLabelCallback && !navigationItem.breadcrumbLabel) {
-        const result = await navigationItem.getBreadcrumbLabelCallback(navigation.currentViewParameter.value);
-        return result;
+        const viewParameterValue = navigation.getViewParameter(navigationItem);
+        if (viewParameterValue) {
+          const result = await navigationItem.getBreadcrumbLabelCallback(viewParameterValue);
+          return result;
+        }
       }
     } catch (error) {
       // silent error, just log it to the console
@@ -74,8 +88,8 @@ export function useBreadcrumbs() {
     hasBreadcrumbs,
     breadcrumbs,
     showMobileBackButton,
-    clearCustomPageTitle,
-    setCustomPageTitle,
+    clearCurrentBreadcrumbLabel,
+    setCurrentBreadcrumbLabel,
     isCurrentNavigationItem,
     getBreadcrumbLabel,
   };

@@ -10,7 +10,6 @@
   // inject dependencies
   const { t } = await useI18next();
   const navigation = useNavigation();
-  const { setCustomPageTitle } = useBreadcrumbs();
   const roomTypeId = computed(() => navigation.currentViewParameterNumber.value);
   const { getRoomType, getAllBoardTypes } = useRoomTypes();
 
@@ -23,7 +22,6 @@
 
   async function load() {
     state.roomType = getRoomType(roomTypeId.value);
-    setCustomPageTitle(state.roomType!.name);
   }
 
   async function loadBoardTypes() {

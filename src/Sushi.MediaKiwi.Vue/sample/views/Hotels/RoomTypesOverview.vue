@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { Paging, ListResult } from "@/models";
-  import { MkEmptyState, MkTable, MkTd } from "@/components";
+  import { MkTable, MkTd } from "@/components";
   import { useI18next } from "@/composables";
 
   import { reactive, ref } from "vue";

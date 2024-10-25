@@ -65,10 +65,10 @@ export function useNavigation() {
     if (checkTypeGuardIsSection(item)) {
       // if it's the section, push to the first navigation item in the section which is not a folder
       const section = item as Section;
-      const navigationItem = section.items.find(x => x.componentKey);
+      const navigationItem = section.items.find((x) => x.componentKey);
       if (navigationItem) {
         return router.push({ name: navigationItem.id.toString() });
-      } else {        
+      } else {
         throw new Error("No default navigation item found for section");
       }
     } else {
@@ -150,16 +150,21 @@ export function useNavigation() {
     }
   }
 
-  /** Gets the id from the url for the current view, if the current view has a parameter.
-   * @returns The id as string or undefined.
-   */
-  const currentViewParameter = computed(() => {
-    const navigationItem = currentNavigationItem.value;
+  function getViewParameter(navigationItem: NavigationItem): string | undefined {
     if (navigationItem.parameterName) {
       // if this is a dynamic route, try to resolve route parameter
       return typeof route.params[navigationItem.parameterName] === "string" ? (route.params[navigationItem.parameterName] as string) : undefined;
     }
     return undefined;
+  }
+
+  /**
+   * Gets the id from the url for the current view, if the current view has a parameter.
+   * @returns The id as string or undefined.
+   */
+  const currentViewParameter = computed(() => {
+    const navigationItem = currentNavigationItem.value;
+    return getViewParameter(navigationItem);
   });
 
   /** Gets the id from the url for the current view, if the current view has a parameter, and converts it to a number. */
@@ -197,8 +202,12 @@ export function useNavigation() {
     }
 
     // If the provided navigation item is the ONLY child of the current navigation item that 'has item navigation', and points to a view, then it is active
-    if (currentParent?.id === navigationItem.id
-      && navigationItem.children.some(x => x.parameterName) && navigationItem.componentKey && navigationItem.children?.length === 1) {
+    if (
+      currentParent?.id === navigationItem.id &&
+      navigationItem.children.some((x) => x.parameterName) &&
+      navigationItem.componentKey &&
+      navigationItem.children?.length === 1
+    ) {
       return true;
     }
 
@@ -228,11 +237,12 @@ export function useNavigation() {
     navigateTo,
     navigateToParent,
     navigateToHome,
-    navigateToId,    
+    navigateToId,
     determineCurrentRoootItem,
-    getItemsBasedOnRoot,    
+    getItemsBasedOnRoot,
     determineIfNavigationItemIsActive,
     determineIfSectionIsActive,
+    getViewParameter,
     currentRouteParamId,
     /** Gets the id from the url for the current view, if the current view has a parameter. */
     currentViewParameter,

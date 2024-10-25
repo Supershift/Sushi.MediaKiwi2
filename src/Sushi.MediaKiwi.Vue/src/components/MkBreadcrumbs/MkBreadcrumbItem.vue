@@ -6,7 +6,7 @@
 
   //  inject dependencies
   const navigation = useNavigation();
-  const { clearCustomPageTitle, getBreadcrumbLabel, isCurrentNavigationItem } = useBreadcrumbs();
+  const { clearCurrentBreadcrumbLabel, getBreadcrumbLabel, isCurrentNavigationItem } = useBreadcrumbs();
 
   // define props
   const props = defineProps<{
@@ -44,7 +44,7 @@
 
   onBeforeUnmount(() => {
     // When the component is destroyed, clear the custom page title
-    clearCustomPageTitle(props.item);
+    clearCurrentBreadcrumbLabel(props.item);
   });
 
   load();

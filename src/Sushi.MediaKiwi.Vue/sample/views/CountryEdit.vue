@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import MkForm from "@/components/MkForm/MkForm.vue";
-  import { useNavigation, useValidationRules } from "@/composables";
+  import { useBreadcrumbs, useNavigation, useValidationRules } from "@/composables";
   import { Country } from "@sample/models/Country";
   import { CountryConnector } from "@sample/services/CountryConnector";
   import { container } from "tsyringe";
@@ -11,6 +11,7 @@
   const navigation = useNavigation();
   const countryCode = computed(() => navigation.currentRouteParamId.value?.toString());
   const { required } = await useValidationRules();
+  const { setCurrentBreadcrumbLabel } = useBreadcrumbs();
 
   const state = reactive({
     country: <Country>{},
@@ -18,6 +19,7 @@
 
   async function load() {
     state.country = await connector.GetCountry(countryCode.value!);
+    setCurrentBreadcrumbLabel(state.country.name);
   }
 
   async function save() {

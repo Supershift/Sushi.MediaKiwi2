@@ -7,7 +7,6 @@
   const navigation = useNavigation();
   const boardTypeId = computed(() => navigation.currentViewParameterNumber.value);
   const { getBoardType } = useRoomTypes();
-  const { setCustomPageTitle } = useBreadcrumbs();
 
   const state = reactive({
     boardType: <any>{},
@@ -15,7 +14,6 @@
 
   async function onLoad() {
     state.boardType = getBoardType(boardTypeId.value);
-    setCustomPageTitle(state.boardType!.name);
   }
 </script>
 <template>
