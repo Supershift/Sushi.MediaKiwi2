@@ -1,26 +1,32 @@
 <script setup lang="ts">
-  import MkDialogCard from "@/components/MkDialog/MkDialogCard.vue";
+  import MkForm from "@/components/MkForm/MkForm.vue";
+  import { useNavigation, useValidationRules } from "@/composables";
+  import { Country } from "@sample/models/Country";
+  import { CountryConnector } from "@sample/services/CountryConnector";
+  import { container } from "tsyringe";
+  import { computed, reactive } from "vue";
 
   // Inject dependencies
-  const model = defineModel({ type: Boolean, default: false });
+  const connector = container.resolve(CountryConnector);
+  const navigation = useNavigation();
+  const countryCode = computed(() => navigation.currentRouteParamId.value?.toString());
+  const { required } = await useValidationRules();
 
-  const emit = defineEmits<{
-    (e: "update:modelValue", value: boolean): void;
-  }>();
+  const state = reactive({
+    country: <Country>{},
+  });
 
-  function close() {
-    model.value = false;
+  async function load() {
+    state.country = await connector.GetCountry(countryCode.value!);
+  }
+
+  async function save() {
+    throw new Error("Not implemented");
   }
 </script>
 <template>
-  <v-dialog v-model="model" width="612" close-on-back>
-    <MkDialogCard @click:close="close">
-      <template #intro>
-        <h1>Country</h1>
-      </template>
-      <template #default>
-        <p>Todo - Here comes the form</p>
-      </template>
-    </MkDialogCard>
-  </v-dialog>
+  <MkForm @load="load" @submit="save">
+    <v-text-field v-model="state.country.code" label="Code" required :rules="[required]"></v-text-field>
+    <v-text-field v-model="state.country.name" label="Name" required :rules="[required]"></v-text-field>
+  </MkForm>
 </template>

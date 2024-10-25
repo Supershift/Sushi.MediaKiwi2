@@ -10,14 +10,6 @@ export function useBreadcrumbs() {
   const navigation = useNavigation();
   const store = useMediakiwiStore();
 
-  /** Return if the item is the last in the collection */
-  function isCurrentItem(navigationItem: NavigationItem): boolean {
-    if (navigationItem) {
-      return navigationItem.id === navigation.currentNavigationItem.value.id;
-    }
-    return false;
-  }
-
   // go up the navigation tree starting from the current item
   const breadcrumbs = computed(() => {
     const currentItem = navigation.currentNavigationItem.value;
@@ -29,11 +21,27 @@ export function useBreadcrumbs() {
       candidate = candidate.parent;
     }
 
+    // If we have a current root item, a back button is shown, so we remove the first item
+    if (navigation.currentRootItem.value) {
+      result.splice(0, 1);
+    }
+
     return result;
   });
 
   /** Determines if we show the whole breadcrumb or only a back button */
-  const showBackButton = computed(() => xs.value && breadcrumbs.value.length > 1);
+  const showMobileBackButton = computed(() => xs.value && breadcrumbs.value.length);
+
+  /** Check if the breadcrumbs have any items and if all have a name */
+  const hasBreadcrumbs = computed(() => breadcrumbs.value.length && breadcrumbs.value.some((x) => x.name));
+
+  /** Return if the item is the last in the collection */
+  function isCurrentNavigationItem(navigationItem: NavigationItem): boolean {
+    if (navigationItem) {
+      return navigationItem.id === navigation.currentNavigationItem.value.id;
+    }
+    return false;
+  }
 
   function setCustomPageTitle(value?: string) {
     if (navigation.currentNavigationItem.value) {
@@ -49,11 +57,26 @@ export function useBreadcrumbs() {
     }
   }
 
+  async function getBreadcrumbLabel(navigationItem: NavigationItem) {
+    try {
+      // if the item has a getBreadcrumbLabel function, call it to get the breadcrumb label
+      if (navigationItem.getBreadcrumbLabelCallback && !navigationItem.breadcrumbLabel) {
+        const result = await navigationItem.getBreadcrumbLabelCallback(navigation.currentViewParameter.value);
+        return result;
+      }
+    } catch (error) {
+      // silent error, just log it to the console
+      console.error(error);
+    }
+  }
+
   return {
+    hasBreadcrumbs,
     breadcrumbs,
-    showBackButton,
+    showMobileBackButton,
     clearCustomPageTitle,
     setCustomPageTitle,
-    isCurrentItem,
+    isCurrentNavigationItem,
+    getBreadcrumbLabel,
   };
 }

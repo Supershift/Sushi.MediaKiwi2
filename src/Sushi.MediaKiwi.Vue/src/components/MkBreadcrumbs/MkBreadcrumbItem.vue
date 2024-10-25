@@ -2,25 +2,24 @@
   import { useBreadcrumbs, useNavigation } from "@/composables";
   import { IconsLibrary } from "@/models";
   import { NavigationItem } from "@/models/navigation";
-  import { useRouter } from "@/router";
-  import { computed, onBeforeUnmount, ref } from "vue";
+  import { computed, onBeforeUnmount, reactive, ref } from "vue";
 
   //  inject dependencies
   const navigation = useNavigation();
-  const router = useRouter();
-  const { clearCustomPageTitle } = useBreadcrumbs();
+  const { clearCustomPageTitle, getBreadcrumbLabel, isCurrentNavigationItem } = useBreadcrumbs();
 
   // define props
   const props = defineProps<{
     item: NavigationItem;
     index: Number;
-    isCurrentItem: boolean;
     isOnlyItem: boolean;
   }>();
 
-  const hasComponentKey = computed(() => !!props.item?.componentKey);
-
   const customBreadcrumbLabel = ref<string | null>(null);
+
+  // define computed properties
+  const hasComponentKey = computed(() => !!props.item?.componentKey);
+  const isCurrentItem = computed(() => isCurrentNavigationItem(props.item));
   const displayBreadcrumbLabel = computed(() => {
     return customBreadcrumbLabel.value ? customBreadcrumbLabel.value : props.item.breadcrumbLabel || props.item.name;
   });
@@ -33,21 +32,14 @@
     return false;
   }
 
-  async function tryGetBreadcrumbName() {
-    setTimeout(async () => {
-      try {
-        // if the item has a getBreadcrumbLabel function, call it to get the breadcrumb label
-        if (props.item.getBreadcrumbLabelCallback && !props.item.breadcrumbLabel) {
-          const result = await props.item.getBreadcrumbLabelCallback(navigation.currentViewParameter.value);
-          if (result) {
-            customBreadcrumbLabel.value = result;
-          }
-        }
-      } catch (error) {
-        // silent error
-        console.error(error);
-      }
-    });
+  async function load() {
+    // Try to get the breadcrumb name
+    const result = await getBreadcrumbLabel(props.item);
+
+    if (result) {
+      // Set the custom breadcrumb label
+      customBreadcrumbLabel.value = result;
+    }
   }
 
   onBeforeUnmount(() => {
@@ -55,7 +47,7 @@
     clearCustomPageTitle(props.item);
   });
 
-  tryGetBreadcrumbName();
+  load();
 </script>
 <template>
   <li v-if="index" class="v-breadcrumbs-divider">
