@@ -1,15 +1,12 @@
-import { computed, ref } from "vue";
-import { useNavigation } from "./useNavigation";
+import { computed } from "vue";
+import { useNavigation } from "@/composables/useNavigation";
 import { NavigationItem } from "@/models/navigation";
 import { useDisplay } from "vuetify/lib/framework.mjs";
-import { useMediakiwiStore } from "@/stores";
-import { get } from "cypress/types/lodash";
 
 export function useBreadcrumbs() {
   // Inject dependencies.
   const { xs } = useDisplay();
   const navigation = useNavigation();
-  const store = useMediakiwiStore();
 
   // go up the navigation tree starting from the current item
   const breadcrumbs = computed(() => {
@@ -33,18 +30,6 @@ export function useBreadcrumbs() {
 
       candidate = candidate.parent;
     }
-
-    // if (navigation.currentRootItem.value) {
-    //   // If we have a current root item, a back button is shown, so we remove the all the item untill we reach the current.
-    //   while (result.length > 1 && result[0].id !== navigation.currentNavigationItem.value.id) {
-    //     result.shift();
-    //   }
-
-    //   // if the current view is the item child* in the collection, we add this to the breadcrumb path
-    //   if (itemChild.value && itemChild.value.id !== navigation.currentNavigationItem.value.id) {
-    //     result.unshift(itemChild.value);
-    //   }
-    // }
 
     return result;
   });
