@@ -1,6 +1,4 @@
 import { Section, NavigationItem, NavigationTree } from "@/models/navigation";
-import { INavigationProvider } from "./INavigationProvider";
-import { FixedNavigationProvider } from "./FixedNavigationProvider";
 import { MkLayout } from "@/constants";
 
 export class NavigationBuilder {

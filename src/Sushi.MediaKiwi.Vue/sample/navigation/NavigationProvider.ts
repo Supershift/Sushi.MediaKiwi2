@@ -1,11 +1,6 @@
 import { MkLayout } from "@/constants";
 import { NavigationBuilder } from "@/navigation";
 import { FixedNavigationProvider } from "@/navigation/FixedNavigationProvider";
-import { useRoomTypes } from "@sample/composables/useRoomTypes";
-import { HotelConnector } from "@sample/services/HotelConnector";
-import { container } from "tsyringe";
-
-const { getRoomType, getBoardType } = useRoomTypes();
 
 // create builder
 const builder = new NavigationBuilder();
@@ -17,13 +12,13 @@ builder
   .startSection("Hotels", "Hotels", "$hotel")
   .addNavigationItem("HotelOverview", "Hotels", "./views/Hotels/HotelsOverview.vue", undefined, "$hotel", MkLayout.Full)
   .right()
-  .addNavigationItem("HotelEdit", "Details", "./views/Hotels/HotelEdit.vue", "hotelId")
+  .addNavigationItem("HotelEdit", "Hotel detail", "./views/Hotels/HotelEdit.vue", "hotelId")
   .addNavigationItem("RoomTypesOverview", "Room types", "./views/Hotels/RoomTypesOverview.vue", "hotelId")
   .right()
-  .addNavigationItem("RoomTypesEdit", "Details", "./views/Hotels/RoomTypesEdit.vue", "roomTypeId")
+  .addNavigationItem("RoomTypesEdit", "Room type detail", "./views/Hotels/RoomTypesEdit.vue", "roomTypeId")
   .addNavigationItem("BoardTypesOverview", "Board types", "./views/Hotels/BoardTypesOverview.vue", "roomTypeId")
   .right()
-  .addNavigationItem("BoardTypeEdit", "Details", "./views/Hotels/BoardTypeEdit.vue", "boardTypeId")
+  .addNavigationItem("BoardTypeEdit", "Board type detail", "./views/Hotels/BoardTypeEdit.vue", "boardTypeId")
   .left()
   .left()
   .addNavigationItem("SunbedTypes", "Sunbed types", "./views/Hotels/SunbedTypesOverview.vue", "hotelId")
