@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { MkForm, MkMoneyValue, MkFileInput } from "@/components";
-  import { useNavigation, useValidationRules } from "@/composables";
+  import { useBreadcrumbs, useNavigation, useValidationRules } from "@/composables";
 
   import { HotelConnector } from "./../../services/HotelConnector";
   import { CountryConnector } from "./../../services/CountryConnector";
@@ -16,6 +16,7 @@
   const countriesConnector = container.resolve(CountryConnector);
   const { required } = await useValidationRules();
   const fileUploadConnector = container.resolve(FileUploadConnector);
+  const { setCurrentBreadcrumbLabel } = useBreadcrumbs();
 
   const navigation = useNavigation();
   const radioModel = ref("1");
@@ -43,6 +44,7 @@
       // get existing hotel from api
       const candidate = await hotelConnector.GetAsync(navigation.currentViewParameterNumber.value);
       state.hotel = candidate!;
+      setCurrentBreadcrumbLabel(state.hotel.name);
     } else {
       // create a new hotel
       state.hotel = <Hotel>{ id: 0 };

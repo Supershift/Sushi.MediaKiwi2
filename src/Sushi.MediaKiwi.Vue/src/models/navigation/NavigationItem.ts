@@ -24,6 +24,4 @@ export type NavigationItem = {
   layout?: string;
   /** Custom breadcrumb label */
   breadcrumbLabel?: string;
-  /** If defined, this function will be called to get the breadcrumb label for this item. */
-  getBreadcrumbLabelCallback?: (currentViewParameter: any) => Promise<string | undefined>;
 };

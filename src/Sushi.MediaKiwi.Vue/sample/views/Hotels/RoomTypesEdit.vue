@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import MkForm from "@/components/MkForm/MkForm.vue";
-  import { useNavigation } from "@/composables";
+  import { useBreadcrumbs, useNavigation } from "@/composables";
   import { ListResult } from "@/models";
   import { useRoomTypes } from "@sample/composables/useRoomTypes";
   import { RoomType } from "@sample/models/Hotel/RoomType";
@@ -10,6 +10,7 @@
   const navigation = useNavigation();
   const roomTypeId = computed(() => navigation.currentViewParameterNumber.value);
   const { getRoomType } = useRoomTypes();
+  const { setCurrentBreadcrumbLabel } = useBreadcrumbs();
 
   // define reactive variables
   const state = reactive({
@@ -19,6 +20,7 @@
 
   async function load() {
     state.roomType = getRoomType(roomTypeId.value);
+    setCurrentBreadcrumbLabel(state.roomType.name);
   }
 </script>
 

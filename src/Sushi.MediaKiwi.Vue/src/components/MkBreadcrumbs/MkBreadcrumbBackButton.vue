@@ -1,43 +1,14 @@
 <script setup lang="ts">
-  import { computed, reactive, ref } from "vue";
+  import { computed } from "vue";
   import MkBackButton from "@/components/MkNavigation/MkBackButton.vue";
   import { useNavigation } from "@/composables/useNavigation";
-  import { useBreadcrumbs } from "@/composables/useBreadcrumbs";
 
   // inject dependencies
   const navigation = useNavigation();
-  const { getBreadcrumbLabel } = useBreadcrumbs();
 
-  const state = reactive({
-    loading: false,
-  });
-
-  const customBreadcrumbLabel = ref<string | null>(null);
   const displayBreadcrumbLabel = computed(() => {
-    return customBreadcrumbLabel.value
-      ? customBreadcrumbLabel.value
-      : navigation.currentNavigationItem.value?.breadcrumbLabel || navigation.currentNavigationItem.value?.name;
+    return navigation.currentNavigationItem.value?.breadcrumbLabel || navigation.currentNavigationItem.value?.name;
   });
-
-  async function load() {
-    // Try to get the breadcrumb name
-    if (navigation.currentNavigationItem.value) {
-      customBreadcrumbLabel.value = "";
-
-      // Set loading state
-      state.loading = true;
-      const result = await getBreadcrumbLabel(navigation.currentNavigationItem.value);
-      if (result) {
-        // Set the custom breadcrumb label
-        customBreadcrumbLabel.value = result;
-      }
-
-      // Clear loading state
-      state.loading = false;
-    }
-  }
-
-  load();
 </script>
 <template>
   <div class="breadcrumb-title-container">

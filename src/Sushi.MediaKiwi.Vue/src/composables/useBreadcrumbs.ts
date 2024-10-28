@@ -17,22 +17,34 @@ export function useBreadcrumbs() {
     const result: Array<NavigationItem> = [];
     let candidate: NavigationItem | undefined = { ...currentItem };
 
+    // Adds all the parents of the current item to the breadcrumb path.
     while (candidate) {
+      if (navigation.currentRootItem.value && candidate.id === navigation.currentRootItem.value.id) {
+        // If we reach the root item, we add the item child of the root item to the breadcrumb path, if it exists.
+        if (itemChild.value && itemChild.value.id !== navigation.currentNavigationItem.value.id) {
+          result.unshift(itemChild.value);
+        }
+
+        // We stop the loop when we reach the root item.
+        break;
+      }
+
       result.unshift(candidate);
+
       candidate = candidate.parent;
     }
 
-    if (navigation.currentRootItem.value) {
-      // If we have a current root item, a back button is shown, so we remove the first item(s).
-      while (result.length > 1 && result[0].id !== navigation.currentNavigationItem.value.id) {
-        result.shift();
-      }
+    // if (navigation.currentRootItem.value) {
+    //   // If we have a current root item, a back button is shown, so we remove the all the item untill we reach the current.
+    //   while (result.length > 1 && result[0].id !== navigation.currentNavigationItem.value.id) {
+    //     result.shift();
+    //   }
 
-      // if the current view the item child in the collection, we add this to the breadcrumb path
-      if (itemChild.value && itemChild.value.id !== navigation.currentNavigationItem.value.id) {
-        result.unshift(itemChild.value);
-      }
-    }
+    //   // if the current view is the item child* in the collection, we add this to the breadcrumb path
+    //   if (itemChild.value && itemChild.value.id !== navigation.currentNavigationItem.value.id) {
+    //     result.unshift(itemChild.value);
+    //   }
+    // }
 
     return result;
   });
@@ -65,38 +77,12 @@ export function useBreadcrumbs() {
     }
   }
 
-  function clearCurrentBreadcrumbLabel(navigationItem: NavigationItem) {
-    // find the item in the navigation tree
-    const item = store.navigationTree.getNavigationItem(navigationItem.id);
-    if (item) {
-      item.breadcrumbLabel = undefined;
-    }
-  }
-
-  async function getBreadcrumbLabel(navigationItem: NavigationItem) {
-    try {
-      // if the item has a getBreadcrumbLabel function, call it to get the breadcrumb label
-      if (navigationItem.getBreadcrumbLabelCallback && !navigationItem.breadcrumbLabel) {
-        const viewParameterValue = navigation.getViewParameter(navigationItem);
-        if (viewParameterValue) {
-          const result = await navigationItem.getBreadcrumbLabelCallback(viewParameterValue);
-          return result;
-        }
-      }
-    } catch (error) {
-      // silent error, just log it to the console
-      console.error("getBreadcrumbLabel", error);
-    }
-  }
-
   return {
     hasBreadcrumbs,
     breadcrumbs,
     showMobileBackButton,
-    clearCurrentBreadcrumbLabel,
     setCurrentBreadcrumbLabel,
     isCurrentNavigationItem,
-    getBreadcrumbLabel,
     itemChild,
     getItemChild,
   };

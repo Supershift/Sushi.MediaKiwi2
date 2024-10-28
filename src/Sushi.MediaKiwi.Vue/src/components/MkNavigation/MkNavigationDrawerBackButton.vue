@@ -6,11 +6,16 @@
   import { computed, ref } from "vue";
   import { useBreadcrumbs } from "@/composables";
   import { watch } from "vue";
+  import { NavigationItem } from "@/models/navigation";
 
   const navigation = useNavigation(); // also calls store within this composable
-  const { getBreadcrumbLabel, getItemChild } = useBreadcrumbs(); // also calls store within this composable
+  const { getItemChild } = useBreadcrumbs(); // also calls store within this composable
   const router = useRouter();
   const store = useMediakiwiStore();
+
+  // define computed properties
+  const currentRootItemId = computed(() => navigation.currentRootItem.value?.id || "-1");
+  const customCurrentRootItem = ref<NavigationItem | undefined>(undefined);
 
   const navigate = () => {
     if (store.navigationBackUrlOverwrite) {
@@ -18,50 +23,31 @@
       store.navigationBackUrlOverwrite = undefined;
 
       router.push(overwrite);
-    } else if (navigation.currentRootItem.value) {
-      navigation.navigateTo(navigation.currentRootItem.value);
+    } else if (customCurrentRootItem.value) {
+      navigation.navigateTo(customCurrentRootItem.value);
     }
   };
 
-  const currentRootItemId = computed(() => navigation.currentRootItem.value?.id || "-1");
-
-  const customBreadcrumbLabel = ref<string | null>(null);
   const displayBreadcrumbLabel = computed(() => {
-    return customBreadcrumbLabel.value
-      ? customBreadcrumbLabel.value
-      : navigation.currentRootItem.value?.breadcrumbLabel || navigation.currentRootItem.value?.name;
+    return customCurrentRootItem.value?.breadcrumbLabel || customCurrentRootItem.value?.name;
   });
 
-  async function load() {
-    // Try to get the breadcrumb name
-    if (navigation.currentRootItem.value) {
-      // Clear the custom breadcrumb label
-      customBreadcrumbLabel.value = "";
+  function load() {
+    // get the current root item
+    customCurrentRootItem.value = navigation.currentRootItem.value;
 
-      // Get the current root item
-      let item = { ...navigation.currentRootItem.value };
-
+    // if we have a parent, we can get the breadcrumb label from the parent's item child
+    if (navigation.currentRootItem.value?.parent) {
       // get the item child of our parent, this provides us with the breadcrumb label
-      const parentChild = getItemChild(navigation.currentRootItem.value?.parent);
-      if (parentChild) {
-        item = { ...parentChild };
-      }
+      const itemChild = getItemChild(navigation.currentRootItem.value?.parent);
 
-      // Get the breadcrumb label
-      const result = await getBreadcrumbLabel(item);
-      if (result) {
-        // Set the custom breadcrumb label
-        customBreadcrumbLabel.value = result;
+      if (itemChild) {
+        customCurrentRootItem.value = itemChild;
       }
     }
   }
 
-  watch(
-    () => currentRootItemId.value,
-    () => {
-      load();
-    }
-  );
+  watch(() => currentRootItemId.value, load);
   load();
 </script>
 <template>

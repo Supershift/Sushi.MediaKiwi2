@@ -17,23 +17,13 @@ builder
   .startSection("Hotels", "Hotels", "$hotel")
   .addNavigationItem("HotelOverview", "Hotels", "./views/Hotels/HotelsOverview.vue", undefined, "$hotel", MkLayout.Full)
   .right()
-  .addNavigationItem("HotelEdit", "Details", "./views/Hotels/HotelEdit.vue", "hotelId", undefined, undefined, async (hotelId) => {
-    const hotelConnector = container.resolve(HotelConnector);
-    const candidate = await hotelConnector.GetAsync(hotelId);
-    return candidate?.name;
-  })
+  .addNavigationItem("HotelEdit", "Details", "./views/Hotels/HotelEdit.vue", "hotelId")
   .addNavigationItem("RoomTypesOverview", "Room types", "./views/Hotels/RoomTypesOverview.vue", "hotelId")
   .right()
-  .addNavigationItem("RoomTypesEdit", "Details", "./views/Hotels/RoomTypesEdit.vue", "roomTypeId", undefined, undefined, async (id) => {
-    const result = await getRoomType(parseInt(id));
-    return result?.name;
-  })
+  .addNavigationItem("RoomTypesEdit", "Details", "./views/Hotels/RoomTypesEdit.vue", "roomTypeId")
   .addNavigationItem("BoardTypesOverview", "Board types", "./views/Hotels/BoardTypesOverview.vue", "roomTypeId")
   .right()
-  .addNavigationItem("BoardTypeEdit", "Details", "./views/Hotels/BoardTypeEdit.vue", "boardTypeId", undefined, undefined, async (id) => {
-    const result = await getBoardType(parseInt(id));
-    return result?.name;
-  })
+  .addNavigationItem("BoardTypeEdit", "Details", "./views/Hotels/BoardTypeEdit.vue", "boardTypeId")
   .left()
   .left()
   .addNavigationItem("SunbedTypes", "Sunbed types", "./views/Hotels/SunbedTypesOverview.vue", "hotelId")
