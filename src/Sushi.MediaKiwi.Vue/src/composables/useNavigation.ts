@@ -65,10 +65,10 @@ export function useNavigation() {
     if (checkTypeGuardIsSection(item)) {
       // if it's the section, push to the first navigation item in the section which is not a folder
       const section = item as Section;
-      const navigationItem = section.items.find((x) => x.componentKey);
+      const navigationItem = section.items.find(x => x.componentKey);
       if (navigationItem) {
         return router.push({ name: navigationItem.id.toString() });
-      } else {
+      } else {        
         throw new Error("No default navigation item found for section");
       }
     } else {
@@ -197,12 +197,8 @@ export function useNavigation() {
     }
 
     // If the provided navigation item is the ONLY child of the current navigation item that 'has item navigation', and points to a view, then it is active
-    if (
-      currentParent?.id === navigationItem.id &&
-      navigationItem.children.some((x) => x.parameterName) &&
-      navigationItem.componentKey &&
-      navigationItem.children?.length === 1
-    ) {
+    if (currentParent?.id === navigationItem.id
+      && navigationItem.children.some(x => x.parameterName) && navigationItem.componentKey && navigationItem.children?.length === 1) {
       return true;
     }
 
@@ -232,9 +228,9 @@ export function useNavigation() {
     navigateTo,
     navigateToParent,
     navigateToHome,
-    navigateToId,
+    navigateToId,    
     determineCurrentRoootItem,
-    getItemsBasedOnRoot,
+    getItemsBasedOnRoot,    
     determineIfNavigationItemIsActive,
     determineIfSectionIsActive,
     currentRouteParamId,
