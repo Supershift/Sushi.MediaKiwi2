@@ -9,7 +9,7 @@
   import { NavigationItem } from "@/models/navigation";
 
   const navigation = useNavigation(); // also calls store within this composable
-  const { getEntityNavigationItem } = useBreadcrumbs(); // also calls store within this composable
+  const { getEntityNavigationItem, getBreadcrumbLabel } = useBreadcrumbs(); // also calls store within this composable
   const router = useRouter();
   const store = useMediakiwiStore();
 
@@ -28,9 +28,7 @@
     }
   };
 
-  const displayBreadcrumbLabel = computed(() => {
-    return customCurrentRootItem.value?.breadcrumbLabel || customCurrentRootItem.value?.name;
-  });
+  const displayBreadcrumbLabel = computed(() => getBreadcrumbLabel(customCurrentRootItem.value));
 
   function load() {
     // get the current root item

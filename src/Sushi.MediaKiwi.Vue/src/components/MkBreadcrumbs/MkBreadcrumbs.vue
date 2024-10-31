@@ -1,7 +1,11 @@
 <script setup lang="ts">
   import { useBreadcrumbs } from "@/composables/useBreadcrumbs";
   import MkBreadcrumbItem from "./MkBreadcrumbItem.vue";
-  import MkBreadcrumbBackButton from "./MkBreadcrumbBackButton.vue";
+  import { useNavigation } from "@/composables";
+
+  // inject dependencies
+  const { hasBreadcrumbs, breadcrumbs, showMobileBackButton, getBreadcrumbLabel } = useBreadcrumbs();
+  const navigation = useNavigation();
 
   // define props
   const props = defineProps({
@@ -11,13 +15,15 @@
       default: false,
     },
   });
-
-  // inject dependencies
-  const { hasBreadcrumbs, breadcrumbs, showMobileBackButton } = useBreadcrumbs();
 </script>
 <template>
   <v-card v-if="hasBreadcrumbs" :class="['breadcrumbs-container ml-0 pa-4 pa-md-10 pb-0', { 'v-breadcrumbs--sticky': props.sticky }]">
-    <MkBreadcrumbBackButton v-if="showMobileBackButton" />
+    <div v-if="showMobileBackButton" class="breadcrumb-title-container">
+      <mk-back-button />
+      <div class="v-breadcrumbs-item text-title-large d-inline-block text-truncate">
+        {{ getBreadcrumbLabel(navigation.currentNavigationItem.value) }}
+      </div>
+    </div>
     <div v-else>
       <v-breadcrumbs class="px-0 pt-0">
         <MkBreadcrumbItem

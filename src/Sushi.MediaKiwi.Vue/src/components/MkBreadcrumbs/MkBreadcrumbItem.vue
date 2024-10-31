@@ -6,7 +6,7 @@
 
   //  inject dependencies
   const navigation = useNavigation();
-  const { isCurrentNavigationItem } = useBreadcrumbs();
+  const { isCurrentNavigationItem, getBreadcrumbLabel } = useBreadcrumbs();
 
   // define props
   const props = defineProps<{
@@ -18,9 +18,7 @@
   // define computed properties
   const hasComponentKey = computed(() => !!props.item?.componentKey);
   const isCurrentItem = computed(() => isCurrentNavigationItem(props.item));
-  const displayBreadcrumbLabel = computed(() => {
-    return props.item.breadcrumbLabel || props.item.name;
-  });
+  const displayBreadcrumbLabel = computed(() => getBreadcrumbLabel(props.item));
 
   // called to send user to target screen
   function onItemClick() {

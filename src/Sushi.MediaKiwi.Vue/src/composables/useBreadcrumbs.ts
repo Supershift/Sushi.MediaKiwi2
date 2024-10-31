@@ -66,6 +66,13 @@ export function useBreadcrumbs() {
     }
   }
 
+  function getBreadcrumbLabel(navigationItem?: NavigationItem): string {
+    if (!navigationItem) {
+      return "";
+    }
+    return navigationItem.breadcrumbLabel || navigationItem.name || "";
+  }
+
   return {
     hasBreadcrumbs,
     breadcrumbs,
@@ -74,5 +81,6 @@ export function useBreadcrumbs() {
     isCurrentNavigationItem,
     currentEntityNavigationItem,
     getEntityNavigationItem,
+    getBreadcrumbLabel,
   };
 }
