@@ -9,7 +9,7 @@
   import { NavigationItem } from "@/models/navigation";
 
   const navigation = useNavigation(); // also calls store within this composable
-  const { getItemChild } = useBreadcrumbs(); // also calls store within this composable
+  const { getEntityNavigationItem } = useBreadcrumbs(); // also calls store within this composable
   const router = useRouter();
   const store = useMediakiwiStore();
 
@@ -39,10 +39,10 @@
     // if we have a parent, we can get the breadcrumb label from the parent's item child
     if (navigation.currentRootItem.value?.parent) {
       // get the item child of our parent, this provides us with the breadcrumb label
-      const itemChild = getItemChild(navigation.currentRootItem.value?.parent);
+      const entityNavigationItem = getEntityNavigationItem(navigation.currentRootItem.value?.parent);
 
-      if (itemChild) {
-        customCurrentRootItem.value = itemChild;
+      if (entityNavigationItem) {
+        customCurrentRootItem.value = entityNavigationItem;
       }
     }
   }

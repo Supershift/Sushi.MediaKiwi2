@@ -18,8 +18,8 @@ export function useBreadcrumbs() {
     while (candidate) {
       if (navigation.currentRootItem.value && candidate.id === navigation.currentRootItem.value.id) {
         // If we reach the root item, we add the item child of the root item to the breadcrumb path, if it exists.
-        if (itemChild.value && itemChild.value.id !== navigation.currentNavigationItem.value.id) {
-          result.unshift(itemChild.value);
+        if (currentEntityNavigationItem.value && currentEntityNavigationItem.value.id !== navigation.currentNavigationItem.value.id) {
+          result.unshift(currentEntityNavigationItem.value);
         }
 
         // We stop the loop when we reach the root item.
@@ -34,13 +34,17 @@ export function useBreadcrumbs() {
     return result;
   });
 
-  function getItemChild(navigationItem?: NavigationItem): NavigationItem | undefined {
+  /**
+   * Get the entity navigation item from the navigation tree.
+   */
+  function getEntityNavigationItem(navigationItem?: NavigationItem): NavigationItem | undefined {
     if (navigationItem && navigationItem.children?.length > 1) {
       return navigationItem.children[0]; // the first child is the item child.
     }
   }
 
-  const itemChild = computed(() => getItemChild(navigation.currentRootItem.value));
+  /** Ther current entity navigation item */
+  const currentEntityNavigationItem = computed(() => getEntityNavigationItem(navigation.currentRootItem.value));
 
   /** Determines if we show the whole breadcrumb or only a back button */
   const showMobileBackButton = computed(() => xs.value && breadcrumbs.value.length);
@@ -68,7 +72,7 @@ export function useBreadcrumbs() {
     showMobileBackButton,
     setCurrentBreadcrumbLabel,
     isCurrentNavigationItem,
-    itemChild,
-    getItemChild,
+    currentEntityNavigationItem,
+    getEntityNavigationItem,
   };
 }
