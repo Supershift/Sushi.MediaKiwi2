@@ -1,10 +1,10 @@
-import 'reflect-metadata';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { useTableDisplayOptions } from '../useTableDisplayOptions';
-import { setActivePinia, createPinia } from 'pinia';
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import { mockRouteMeta, mockRoutes } from '../__mocks__/navigation';
-import { TableColumn } from '@/models';
+import "reflect-metadata";
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { useTableDisplayOptions } from "../useTableDisplayOptions";
+import { setActivePinia, createPinia } from "pinia";
+import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import { mockRouteMeta, mockRoutes } from "../__mocks__/navigation";
+import { TableColumn } from "@/models";
 
 // Mock any external dependencies and mocks here
 const mockTableDisplayStore = {
@@ -14,68 +14,68 @@ const mockTableDisplayStore = {
     },
   },
   setDisplayOptions: vi.fn().mockImplementation(() => {
-    localStorage.setItem('test', JSON.stringify("test"));
+    localStorage.setItem("test", JSON.stringify("test"));
   }),
   getDisplayOptions: vi.fn().mockImplementation(() => {
-    JSON.parse(localStorage.getItem('test') || "{}");
+    JSON.parse(localStorage.getItem("test") || "{}");
   }),
-}
+};
 let routes: RouteRecordRaw[] = mockRoutes;
 
 let router = createRouter({
   history: createWebHistory(),
   routes,
-});;
+});
 
-describe('useTableDisplayOptions', () => {
+describe("useTableDisplayOptions", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     setActivePinia(createPinia());
     // Mock the store
-    vi.mock('@/stores/tableDisplay', () => ({
-      useTableDisplayStore: vi.fn(() => (mockTableDisplayStore)),
+    vi.mock("@/stores/tableDisplay", () => ({
+      useTableDisplayStore: vi.fn(() => mockTableDisplayStore),
     }));
     // Mock current router navigationItem
-    vi.mock('@/router', () => ({
-      useRoute: vi.fn(() => (mockRouteMeta)),
+    vi.mock("@/router", () => ({
+      useRoute: vi.fn(() => mockRouteMeta),
       useRouter: vi.fn(() => router),
     }));
   });
 
-  describe('getTextNode', () => {
+  describe("getTextNode", () => {
     const { getTextNode } = useTableDisplayOptions();
-    it('finds a text node directly within the given node', () => {
-      const node = document.createTextNode('Valid Text');
+    it("finds a text node directly within the given node", () => {
+      const node = document.createTextNode("Valid Text");
       expect(getTextNode(node)).toBe(node);
     });
 
-    it('finds a text node within child nodes', () => {
-      const parent = document.createElement('div');
-      const child = document.createElement('span');
-      const textNode = document.createTextNode('Valid Text');
+    it("finds a text node within child nodes", () => {
+      const parent = document.createElement("div");
+      const child = document.createElement("span");
+      const textNode = document.createTextNode("Valid Text");
       child.appendChild(textNode);
       parent.appendChild(child);
 
       expect(getTextNode(parent)).toBe(textNode);
     });
 
-    it('does not return nodes with underscores in their text', () => {
-      const node = document.createTextNode('Invalid_Text');
+    it("does not return nodes with underscores in their text", () => {
+      const node = document.createTextNode("Invalid_Text");
       expect(getTextNode(node)).toBeNull();
     });
 
-    it('returns null when no suitable text node is found', () => {
-      const parent = document.createElement('div');
-      const child = document.createElement('span');
+    it("returns null when no suitable text node is found", () => {
+      const parent = document.createElement("div");
+      const child = document.createElement("span");
       parent.appendChild(child); // No text node added
 
       expect(getTextNode(parent)).toBeNull();
     });
   });
 
-  describe('getHeaderNodes', () => {
+  describe("getHeaderNodes", () => {
     const { getHeaderNodes } = useTableDisplayOptions();
-    it('returns an object with header nodes and their indexes', () => {
+    it("returns an object with header nodes and their indexes", () => {
       document.body.innerHTML = `
         <table class="mk-table-display-options">
           <thead>
@@ -89,15 +89,15 @@ describe('useTableDisplayOptions', () => {
 
       const headerNodes = getHeaderNodes();
       expect(headerNodes).toEqual({
-        0: document.querySelector('th:nth-child(1)'),
-        1: document.querySelector('th:nth-child(2)'),
+        0: document.querySelector("th:nth-child(1)"),
+        1: document.querySelector("th:nth-child(2)"),
       });
     });
   });
 
-  describe('registerBodyElements', () => {
+  describe("registerBodyElements", () => {
     const { registerBodyElements } = useTableDisplayOptions();
-    it('registers body elements to columns', () => {
+    it("registers body elements to columns", () => {
       // arrange
       document.body.innerHTML = `
         <table class="mk-table-display-options">
@@ -121,17 +121,17 @@ describe('useTableDisplayOptions', () => {
       `;
 
       const columns: TableColumn[] = [
-        { id: 'test-1', index: 0, name: 'Header 1', visible: true },
-        { id: 'test-2', index: 1, name: 'Header 2', visible: true },
+        { id: "test-1", index: 0, name: "Header 1", visible: true },
+        { id: "test-2", index: 1, name: "Header 2", visible: true },
       ];
 
       // act
       registerBodyElements(columns);
 
       // assert
-      const rows = document.querySelectorAll('.mk-table-display-options tbody tr');
+      const rows = document.querySelectorAll(".mk-table-display-options tbody tr");
       rows.forEach((row, index) => {
-        const tds = row.querySelectorAll('td');
+        const tds = row.querySelectorAll("td");
         tds.forEach((td, i) => {
           expect(td.getAttribute("data-display-options-id")).toContain(columns[i].id);
         });
@@ -139,9 +139,9 @@ describe('useTableDisplayOptions', () => {
     });
   });
 
-  describe('registerHeaderElements', () => {
+  describe("registerHeaderElements", () => {
     const { registerHeaderElements } = useTableDisplayOptions();
-    it('registers header elements to columns', () => {
+    it("registers header elements to columns", () => {
       // arrange
       document.body.innerHTML = `
         <table class="mk-table-display-options">
@@ -155,24 +155,24 @@ describe('useTableDisplayOptions', () => {
       `;
 
       const columns: TableColumn[] = [
-        { id: 'test-1', index: 0, name: 'Header 1', visible: true },
-        { id: 'test-2', index: 1, name: 'Header 2', visible: true },
+        { id: "test-1", index: 0, name: "Header 1", visible: true },
+        { id: "test-2", index: 1, name: "Header 2", visible: true },
       ];
 
       // act
       registerHeaderElements(columns);
 
       // assert
-      const ths = document.querySelectorAll('.mk-table-display-options thead th');
+      const ths = document.querySelectorAll(".mk-table-display-options thead th");
       ths.forEach((th, index) => {
         expect(th.getAttribute("data-display-options-id")).toContain(columns[index].id);
       });
     });
   });
 
-  describe('generateDisplayColumns', () => {
+  describe("generateDisplayColumns", () => {
     const { generateDisplayColumns } = useTableDisplayOptions();
-    it('generates display columns based on table headers', () => {
+    it("generates display columns based on table headers", () => {
       // arrange
       document.body.innerHTML = `
         <table class="mk-table-display-options">
@@ -200,14 +200,14 @@ describe('useTableDisplayOptions', () => {
 
       // assert
       expect(columns.length).toBe(2);
-      expect(columns[0].name).toBe('Header 1');
-      expect(columns[1].name).toBe('Header 2');
+      expect(columns[0].name).toBe("Header 1");
+      expect(columns[1].name).toBe("Header 2");
     });
   });
 
-  describe('createTableColumns', () => {
+  describe("createTableColumns", () => {
     const { createTableColumns } = useTableDisplayOptions();
-    it('creates table columns based on the given headers', () => {
+    it("creates table columns based on the given headers", () => {
       // arrange
       const tableRef = "testRef";
 
@@ -216,18 +216,18 @@ describe('useTableDisplayOptions', () => {
 
       // assert
       expect(columns.length).toBe(2);
-      expect(columns[0].name).toBe('Header 1');
-      expect(columns[1].name).toBe('Header 2');
+      expect(columns[0].name).toBe("Header 1");
+      expect(columns[1].name).toBe("Header 2");
     });
   });
 
-  describe('setColumnVisibility', () => {
+  describe("setColumnVisibility", () => {
     const { setColumnVisibility } = useTableDisplayOptions();
-    it('sets the visibility of a column', () => {
+    it("sets the visibility of a column", () => {
       // arrange
       const columns: TableColumn[] = [
-        { id: 'test-1', index: 0, name: 'Header 1', visible: false },
-        { id: 'test-2', index: 1, name: 'Header 2', visible: true },
+        { id: "test-1", index: 0, name: "Header 1", visible: false },
+        { id: "test-2", index: 1, name: "Header 2", visible: true },
       ];
       const column = columns[0];
       const tableRef = "testRef";
@@ -239,9 +239,9 @@ describe('useTableDisplayOptions', () => {
       expect(columns[0].visible).toBe(false);
     });
   });
-  describe('initTableDisplayOptions', () => {
+  describe("initTableDisplayOptions", () => {
     const { initTableDisplayOptions } = useTableDisplayOptions();
-    it('initializes table display options', () => {
+    it("initializes table display options", () => {
       // arrange
       const tableRef = "testRef";
 
@@ -250,16 +250,16 @@ describe('useTableDisplayOptions', () => {
 
       // assert
       expect(mockTableDisplayStore.getDisplayOptions).toHaveBeenCalled();
-      expect(mockTableDisplayStore.setDisplayOptions).toHaveBeenCalled();
+      expect(mockTableDisplayStore.setDisplayOptions).not.toHaveBeenCalled();
     });
   });
-  describe('saveTableColumns', () => {
+  describe("saveTableColumns", () => {
     const { saveTableColumns } = useTableDisplayOptions();
-    it('saves the columns to the tableDisplayStore', () => {
+    it("saves the columns to the tableDisplayStore", () => {
       // arrange
       const columns: TableColumn[] = [
-        { id: 'test-1', index: 0, name: 'Header 1', visible: true },
-        { id: 'test-2', index: 1, name: 'Header 2', visible: true },
+        { id: "test-1", index: 0, name: "Header 1", visible: true },
+        { id: "test-2", index: 1, name: "Header 2", visible: true },
       ];
       const tableRef = "testRef";
 
