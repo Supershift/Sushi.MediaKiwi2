@@ -1,5 +1,9 @@
 import { Section, NavigationItem, NavigationTree } from "@/models/navigation";
+import { INavigationProvider } from "./INavigationProvider";
+import { FixedNavigationProvider } from "./FixedNavigationProvider";
 import { MkLayout } from "@/constants";
+
+
 
 export class NavigationBuilder {
   private currentParent?: NavigationItem;
@@ -41,13 +45,15 @@ export class NavigationBuilder {
       parameterName: parameterName,
       children: [],
       roles: undefined,
-      layout: layout ?? MkLayout.Default,
+      layout: layout ?? MkLayout.Default
     };
 
-    // add navigation item to collections
+    // add navigation item to collections    
     this.siblings.push(item);
-    if (this.currentParent) this.currentParent.children.push(item);
-    else this.currentSection.items.push(item);
+    if (this.currentParent)
+      this.currentParent.children.push(item);
+    else
+      this.currentSection.items.push(item);
 
     return this;
   }
@@ -69,7 +75,7 @@ export class NavigationBuilder {
       parameterName: parameterName,
       children: [],
       roles: undefined,
-      layout: layout ?? MkLayout.Default,
+      layout: layout ?? MkLayout.Default
     };
 
     localParent.children!.push(item);

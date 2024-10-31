@@ -150,21 +150,16 @@ export function useNavigation() {
     }
   }
 
-  function getViewParameter(navigationItem: NavigationItem): string | undefined {
+  /** Gets the id from the url for the current view, if the current view has a parameter.
+   * @returns The id as string or undefined.
+   */
+  const currentViewParameter = computed(() => {
+    const navigationItem = currentNavigationItem.value;
     if (navigationItem.parameterName) {
       // if this is a dynamic route, try to resolve route parameter
       return typeof route.params[navigationItem.parameterName] === "string" ? (route.params[navigationItem.parameterName] as string) : undefined;
     }
     return undefined;
-  }
-
-  /**
-   * Gets the id from the url for the current view, if the current view has a parameter.
-   * @returns The id as string or undefined.
-   */
-  const currentViewParameter = computed(() => {
-    const navigationItem = currentNavigationItem.value;
-    return getViewParameter(navigationItem);
   });
 
   /** Gets the id from the url for the current view, if the current view has a parameter, and converts it to a number. */
@@ -242,7 +237,6 @@ export function useNavigation() {
     getItemsBasedOnRoot,
     determineIfNavigationItemIsActive,
     determineIfSectionIsActive,
-    getViewParameter,
     currentRouteParamId,
     /** Gets the id from the url for the current view, if the current view has a parameter. */
     currentViewParameter,
