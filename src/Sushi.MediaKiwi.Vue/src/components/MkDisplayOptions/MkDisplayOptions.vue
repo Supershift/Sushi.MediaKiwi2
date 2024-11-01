@@ -4,6 +4,7 @@
   import { useSnackbarStore } from "@/stores";
   import { useI18next } from "@/composables/useI18next";
   import { computed, reactive } from "vue";
+  import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
 
   // inject dependencies
   const { setColumnVisibility } = useTableDisplayOptions();
@@ -16,9 +17,11 @@
   });
 
   /** Display Options */
-  const displayOptions = defineModel<TableColumn[] | boolean>("displayOptions", { required: false, default: [] });
+  const displayOptions = defineModel<TableDisplayOptions | boolean>("displayOptions", { required: false, default: [] });
   const hasDisplayOptions = computed(() => displayOptions.value !== undefined && displayOptions.value !== false);
-  const loadedColumns = computed(() => displayOptions.value as TableColumn[]);
+  const hasColumns = computed(() => hasDisplayOptions.value && (displayOptions.value as TableDisplayOptions)?.columns?.length);
+
+  const loadedColumns = computed(() => (displayOptions.value as TableDisplayOptions).columns);
   /** TODO: Define Table Reference for when multiple tables are on one view */
   const tableReference = defineModel<string | undefined>("tableReference", { required: false });
 
@@ -29,7 +32,7 @@
   function updateDisplayColumns(column: TableColumn) {
     state.isEdited = true;
     // Update the visibility of the columns when the user changes the options in the list
-    setColumnVisibility(displayOptions.value as TableColumn[], column, tableReference.value);
+    setColumnVisibility((displayOptions.value as TableDisplayOptions).columns!, column, tableReference.value, true);
   }
 
   function onModelStateChange(value: boolean) {
@@ -44,7 +47,7 @@
 </script>
 <template>
   <div class="mk-display-options">
-    <v-menu v-if="hasDisplayOptions" v-model="state.menuState" @update:model-value="onModelStateChange" :close-on-back="false" :close-on-content-click="false">
+    <v-menu v-if="hasColumns" v-model="state.menuState" @update:model-value="onModelStateChange" :close-on-back="false" :close-on-content-click="false">
       <!-- Button -->
       <template #activator="args">
         <v-btn v-bind="args.props" variant="text" class="mk-display-options__button">

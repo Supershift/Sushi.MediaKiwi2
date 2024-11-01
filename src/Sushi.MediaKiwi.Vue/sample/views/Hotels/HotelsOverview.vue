@@ -21,7 +21,7 @@
 
   import { container } from "tsyringe";
   import { ref } from "vue";
-  import { TableColumn } from "@/models/table/TableColumn";
+  import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
 
   // inject dependencies
   const connector = container.resolve(HotelConnector);
@@ -35,7 +35,20 @@
   }); // demos 11 items per page (higher than default 10), also adds to the current list
   const hotels = ref<ListResult<Hotel>>();
   const countries = ref<Country[]>();
-  const displayOptions = ref<TableColumn[]>();
+
+  // Set the name column to be hidden by default, the user can change this in the display options
+  const displayOptions = ref<TableDisplayOptions>({
+    columns: [
+      {
+        id: "srp", // camelCase text of the table header
+        visible: false,
+      },
+      {
+        id: "srpIcon", // camelCase text of the table header
+        visible: false,
+      },
+    ],
+  });
 
   // define mapping
   function srpIcon(item: Hotel): TableCellIcon {
@@ -136,7 +149,7 @@
       <th>{{ t("Country") }}</th>
       <th>{{ t("Active") }}</th>
       <th>{{ t("SRP") }}</th>
-      <th></th>
+      <th>{{ t("SRP Icon") }}</th>
     </template>
 
     <template #tbody="dataItem: Hotel">

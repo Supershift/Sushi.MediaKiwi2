@@ -28,13 +28,13 @@ export function useTableDisplayOptions() {
   }
 
   /**
-  * Generates a random UUID table options
-  */
-  function _uuid() {
-    return 'DO-xxxxxx'.replace(/[xy]/g, function (c) {
-      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(8);
-    });
+   * Generates a unique id based on the value
+   */
+  function generateUniqueId(value: string) {
+    return value
+      .toLowerCase()
+      .replace(/[^a-z0-9]+(.)/g, (_, char) => char.toUpperCase()) // capitalize after non-alphanumeric characters
+      .replace(/^[A-Z]/, (char) => char.toLowerCase()); // make the first letter lowercase
   }
 
   /**
@@ -70,7 +70,6 @@ export function useTableDisplayOptions() {
           setColumnVisibility(columns, column, tableRef);
         }
       });
-
     });
   }
 
@@ -84,7 +83,7 @@ export function useTableDisplayOptions() {
 
     // Add an attribute to the head element
     columns.forEach((column) => {
-      const element = headerNodes[column.index];
+      const element = headerNodes[column.index!];
       if (element) {
         element.setAttribute("data-display-options-id", column.id);
       }
@@ -102,13 +101,13 @@ export function useTableDisplayOptions() {
         const nodeValue = getTextNode(headerElement[1])?.nodeValue; // get the element value in the record
         return nodeValue ?? false; // filter out the first column if its name is empty (the checkbox column)
       }
-      return false
+      return false;
     });
     return entries.map(([key, value]) => {
       const name = getTextNode(value)?.nodeValue || "";
       return <TableColumn>{
         index: parseInt(key),
-        id: _uuid(),
+        id: generateUniqueId(name),
         visible: true,
         name,
         tableRef: tableRef,
@@ -119,9 +118,9 @@ export function useTableDisplayOptions() {
   /**
    * Initializes the table display options by generating new ones or using the current ones in localstorage
    */
-  function initTableDisplayOptions(tableRef?: string) {
-    // // Assign the columns based on the availability of the local storage, otherwise generate new columns
-    const columns = createTableColumns(tableRef);
+  function initTableDisplayOptions(tableRef?: string, displayOptions?: boolean | TableDisplayOptions) {
+    // Assign the columns based on the availability of the local storage, otherwise generate new columns
+    const columns = createTableColumns(tableRef, displayOptions);
 
     // Find header elements and add the data-display-options attribute
     registerHeaderElements(columns, tableRef);
@@ -130,24 +129,51 @@ export function useTableDisplayOptions() {
     registerBodyElements(columns, tableRef);
 
     // Save the columns to the local storage
-    saveTableColumns(columns, tableRef);
+    // saveTableColumns(columns, tableRef);
 
     return columns;
   }
 
-  function createTableColumns(tableRef?: string) {
-    let localColumns: Array<TableColumn> = [];
-
+  function createTableColumns(tableRef?: string, displayOptions?: boolean | TableDisplayOptions) {
     // Get the columns from the local storage
     const storedColumns = loadTableColumns(tableRef);
 
     // Generated columns based on the table headers
     const generatedColumns = generateDisplayColumns(tableRef);
 
-    // Bind the data from the stored columns to the generated columns
-    localColumns = storedColumns.length ? [...storedColumns] : [...generatedColumns];
+    // Merge the stored columns with the generated columns
+    return mergeColumns(storedColumns, generatedColumns, displayOptions);
+  }
 
-    return [...localColumns];
+  // Function that merges the storedColumns with the generated columns
+  function mergeColumns(storedColumns: TableColumn[], generatedColumns: TableColumn[], displayOptions?: boolean | TableDisplayOptions): TableColumn[] {
+    // Lecagy - DO-xxxxxx - replace the current random id's to readable (and usable) id's
+    if (storedColumns.length && storedColumns[0].id.includes("DO-")) {
+      storedColumns.forEach((col) => {
+        if (col.name) {
+          col.id = generateUniqueId(col.name);
+        }
+      });
+    }
+
+    // selection
+    let x = storedColumns;
+    if (!storedColumns?.length && displayOptions && typeof displayOptions !== "boolean" && displayOptions?.columns) {
+      x = displayOptions.columns;
+    }
+
+    // Bind the data from the stored columns to the generated columns
+    // if a stored column is not found in the generated columns, it should be removed
+    const localColumns = generatedColumns.map((genCol) => {
+      const storedCol = x.find((col) => col.id === genCol.id);
+      if (storedCol) {
+        // Assign the visibility from the stored column
+        genCol.visible = storedCol.visible;
+      }
+      return genCol;
+    });
+
+    return localColumns;
   }
 
   /**
@@ -210,7 +236,7 @@ export function useTableDisplayOptions() {
    * @param columns
    * @param column
    */
-  function setColumnVisibility(columns: TableColumn[], column: TableColumn, tableRef?: string) {
+  function setColumnVisibility(columns: TableColumn[], column: TableColumn, tableRef?: string, saveToStorage = false) {
     const col = columns.find((c) => c.id === column.id);
     if (!col) {
       return;
@@ -238,7 +264,9 @@ export function useTableDisplayOptions() {
     });
 
     // Save the columns to the tableDisplayStore
-    saveTableColumns(columns, tableRef);
+    if (saveToStorage) {
+      saveTableColumns(columns, tableRef);
+    }
   }
 
   return {
