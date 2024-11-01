@@ -21,7 +21,7 @@
   const hasDisplayOptions = computed(() => displayOptions.value !== undefined && displayOptions.value !== false);
   const hasColumns = computed(() => hasDisplayOptions.value && (displayOptions.value as TableDisplayOptions)?.columns?.length);
 
-  const loadedColumns = computed(() => (displayOptions.value as TableDisplayOptions).columns);
+  const loadedColumns = computed(() => (displayOptions.value as TableDisplayOptions).columns?.filter((column) => column.name) || []);
   /** TODO: Define Table Reference for when multiple tables are on one view */
   const tableReference = defineModel<string | undefined>("tableReference", { required: false });
 

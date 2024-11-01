@@ -37,17 +37,9 @@
   const countries = ref<Country[]>();
 
   // Set the name column to be hidden by default, the user can change this in the display options
+  const hiddenColumns = ["hotelName", "srpValue", "srpIcon"];
   const displayOptions = ref<TableDisplayOptions>({
-    columns: [
-      {
-        id: "srp", // camelCase text of the table header
-        visible: false,
-      },
-      {
-        id: "srpIcon", // camelCase text of the table header
-        visible: false,
-      },
-    ],
+    columns: [...hiddenColumns.map((id) => ({ id, visible: false }))],
   });
 
   // define mapping
@@ -115,6 +107,8 @@
   async function SaveData(hotel: Hotel) {
     console.log(hotel);
   }
+
+  const selectedItems = ref<Hotel[]>([]);
 </script>
 
 <template>
@@ -122,6 +116,7 @@
     v-model:current-pagination="currentPagination"
     v-model:filters="filters"
     v-model:sorting="sorting"
+    v-model:selection="selectedItems"
     :api-result="hotels"
     :on-load="LoadData"
     :data="hotels?.result"
@@ -144,12 +139,12 @@
     </template>
 
     <template #thead>
-      <mk-th v-model:sorting="sorting" :sorting-options="{ id: 'name' }">{{ t("Name") }}</mk-th>
-      <mk-th v-model:sorting="sorting" :sorting-options="{ id: 'created' }">{{ t("Created") }}</mk-th>
-      <th>{{ t("Country") }}</th>
-      <th>{{ t("Active") }}</th>
-      <th>{{ t("SRP") }}</th>
-      <th>{{ t("SRP Icon") }}</th>
+      <mk-th data-mk="hotelName" v-model:sorting="sorting" :sorting-options="{ id: 'name' }">{{ t("Name") }}</mk-th>
+      <mk-th data-mk="createdDate" v-model:sorting="sorting" :sorting-options="{ id: 'created' }">{{ t("Created") }}</mk-th>
+      <th data-mk="countryName">{{ t("Country") }}</th>
+      <th data-mk="isActive">{{ t("Active") }}</th>
+      <th data-mk="srp" width="100">{{ t("SRP") }}</th>
+      <th data-mk="srp"></th>
     </template>
 
     <template #tbody="dataItem: Hotel">
