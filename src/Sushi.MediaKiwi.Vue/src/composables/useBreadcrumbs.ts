@@ -47,7 +47,7 @@ export function useBreadcrumbs() {
   const currentEntityNavigationItem = computed(() => getEntityNavigationItem(navigation.currentRootItem.value));
 
   /** Determines if we show the whole breadcrumb or only a back button */
-  const showMobileBackButton = computed(() => xs.value && breadcrumbs.value.length);
+  const showMobileBackButton = computed<boolean>(() => xs.value && breadcrumbs.value.length > 0);
 
   /** Check if the breadcrumbs have any items and if all have a name */
   const hasBreadcrumbs = computed(() => breadcrumbs.value.length && breadcrumbs.value.some((x) => x.name));
