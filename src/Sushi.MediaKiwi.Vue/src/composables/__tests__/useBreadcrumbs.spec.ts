@@ -3,12 +3,15 @@ import { describe, it, expect } from "vitest";
 import { useBreadcrumbs } from "./../useBreadcrumbs";
 import { NavigationItem } from "@/models/navigation";
 import { createPinia, setActivePinia } from "pinia";
+import { h } from "vue";
 
 const hoist = vi.hoisted(() => {
   return {
     isMobile: false,
     currentRootItem: <NavigationItem>{},
     currentNavigationItem: <NavigationItem>{},
+    currentViewParameter: "",
+    getViewParameter: vi.fn().mockImplementation(() => hoist.currentViewParameter),
   };
 });
 
@@ -34,6 +37,10 @@ vi.mock("@/composables/useNavigation", async () => {
         currentNavigationItem: {
           value: hoist.currentNavigationItem,
         },
+        currentViewParameter: {
+          value: hoist.currentViewParameter,
+        },
+        getViewParameter: hoist.getViewParameter,
       };
     },
   };
@@ -45,7 +52,6 @@ const mockNavigationItem = (id: string, name: string, parent?: NavigationItem): 
   name,
   parent,
   children: [],
-  breadcrumbLabel: "",
   section: { id: "section1", name: "Section 1", items: [] },
 });
 
@@ -110,7 +116,7 @@ describe("useBreadcrumbs", () => {
 
     // get the last item in the breadcrumbs
     const lastItem = <NavigationItem>{ ...breadcrumbs.value.pop() };
-    expect(lastItem.breadcrumbLabel).toBe("New Label");
+    expect(lastItem.entity?.label).toBe("New Label");
   });
 
   it("should get breadcrumb label", () => {
@@ -124,7 +130,7 @@ describe("useBreadcrumbs", () => {
     const { breadcrumbs } = useBreadcrumbs();
 
     const lastItem = { ...breadcrumbs.value.pop() };
-    expect(lastItem?.breadcrumbLabel).toBe("");
+    expect(lastItem.entity?.label).toBe(undefined);
     expect(lastItem?.name).toBe("Child");
   });
 
@@ -165,5 +171,37 @@ describe("useBreadcrumbs", () => {
     expect(isCurrentNavigationItem({ ...childItem1 })).toBe(false);
     expect(isCurrentNavigationItem({ ...childItem2 })).toBe(true);
     expect(isCurrentNavigationItem({ ...childItem3 })).toBe(false);
+  });
+
+  ////
+
+  it("should revert to the default navigation item name if a new entity is requested", () => {
+    const rootItem = mockNavigationItem("root", "Root");
+    const childItem1 = mockNavigationItem("child1", "Child 1", rootItem);
+    rootItem.children.push(childItem1);
+
+    hoist.currentRootItem = { ...rootItem };
+    hoist.currentViewParameter = "child1";
+    hoist.currentNavigationItem = { ...childItem1, parent: rootItem };
+
+    const breadcrumbs = useBreadcrumbs();
+
+    // act - set breadcrumb label for child 1 (current navigation item)
+    breadcrumbs.setCurrentBreadcrumbLabel("Custom Child 1 label");
+
+    const lastItem = <NavigationItem>{ ...breadcrumbs.breadcrumbs.value[breadcrumbs.breadcrumbs.value.length - 1] };
+    expect(breadcrumbs.getBreadcrumbLabel(lastItem)).toBe("Custom Child 1 label");
+
+    // change the current navigation item to child 2
+    hoist.currentViewParameter = "child2";
+
+    const newBreadcrumbs = useBreadcrumbs();
+
+    // Without setting the current breadcrumb label for child 2,
+    // we expect the breadcrumb label to be the default name of the navigation item,
+    // and not the custom label we set for child 1
+    const lastItemB = <NavigationItem>{ ...newBreadcrumbs.breadcrumbs.value[breadcrumbs.breadcrumbs.value.length - 1] };
+    expect(newBreadcrumbs.getBreadcrumbLabel(lastItemB)).not.toBe("Custom Child 1 label");
+    expect(newBreadcrumbs.getBreadcrumbLabel(lastItemB)).toBe("Child 1");
   });
 });
