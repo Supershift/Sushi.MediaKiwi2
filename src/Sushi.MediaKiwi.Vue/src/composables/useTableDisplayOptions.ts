@@ -31,10 +31,7 @@ export function useTableDisplayOptions() {
    * Generates a unique id based on the value
    */
   function generateUniqueId(value: string) {
-    return value
-      .toLowerCase()
-      .replace(/[^a-z0-9]+(.)/g, (_, char) => char.toUpperCase()) // capitalize after non-alphanumeric characters
-      .replace(/^[A-Z]/, (char) => char.toLowerCase()); // make the first letter lowercase
+    return value.toLowerCase().replace(/[^a-z0-9]+(.)/g, (_, char) => char.toUpperCase()); // capitalize after non-alphanumeric characters
   }
 
   /**
@@ -102,10 +99,8 @@ export function useTableDisplayOptions() {
     const entries = Object.entries(headerNodes).filter(([_, element]) => {
       const id = element?.getAttribute("data-mk");
       const name = getTextNode(element)?.nodeValue || "";
-      return name || id;
+      return id || name;
     });
-
-    console.log("validEntries", entries);
 
     return entries.map(([key, element]) => {
       const id = element?.getAttribute("data-mk");
@@ -274,6 +269,7 @@ export function useTableDisplayOptions() {
   }
 
   return {
+    generateUniqueId,
     initTableDisplayOptions,
     setColumnVisibility,
     createTableColumns,

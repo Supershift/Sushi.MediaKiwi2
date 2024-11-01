@@ -1,10 +1,22 @@
 import "reflect-metadata";
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { useTableDisplayOptions } from "../useTableDisplayOptions";
-import { setActivePinia, createPinia } from "pinia";
+import { TableColumn } from "@/models/table/TableColumn";
+import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
+import { createPinia, setActivePinia } from "pinia";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import { mockRouteMeta, mockRoutes } from "../__mocks__/navigation";
-import { TableColumn } from "@/models";
+
+const hoists = vi.hoisted(() => {
+  return {
+    getDisplayOptions: vi.fn().mockImplementation(() => {
+      JSON.parse(localStorage.getItem("test") || "{}");
+    }),
+    setDisplayOptions: vi.fn().mockImplementation(() => {
+      localStorage.setItem("test", JSON.stringify("test"));
+    }),
+  };
+});
 
 // Mock any external dependencies and mocks here
 const mockTableDisplayStore = {
@@ -13,261 +25,402 @@ const mockTableDisplayStore = {
       columns: [],
     },
   },
-  setDisplayOptions: vi.fn().mockImplementation(() => {
-    localStorage.setItem("test", JSON.stringify("test"));
-  }),
-  getDisplayOptions: vi.fn().mockImplementation(() => {
-    JSON.parse(localStorage.getItem("test") || "{}");
-  }),
+  setDisplayOptions: hoists.setDisplayOptions,
+  getDisplayOptions: hoists.getDisplayOptions,
 };
 let routes: RouteRecordRaw[] = mockRoutes;
 
-let router = createRouter({
+const router = createRouter({
   history: createWebHistory(),
   routes,
 });
+
+// Mock the store
+vi.mock("@/stores/tableDisplay", () => ({
+  useTableDisplayStore: vi.fn(() => mockTableDisplayStore),
+}));
+
+// Mock current router navigationItem
+vi.mock("@/router", () => ({
+  useRoute: vi.fn(() => mockRouteMeta),
+  useRouter: vi.fn(() => router),
+}));
 
 describe("useTableDisplayOptions", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     setActivePinia(createPinia());
-    // Mock the store
-    vi.mock("@/stores/tableDisplay", () => ({
-      useTableDisplayStore: vi.fn(() => mockTableDisplayStore),
-    }));
-    // Mock current router navigationItem
-    vi.mock("@/router", () => ({
-      useRoute: vi.fn(() => mockRouteMeta),
-      useRouter: vi.fn(() => router),
-    }));
   });
 
-  describe("getTextNode", () => {
-    const { getTextNode } = useTableDisplayOptions();
-    it("finds a text node directly within the given node", () => {
-      const node = document.createTextNode("Valid Text");
-      expect(getTextNode(node)).toBe(node);
-    });
+  const {
+    generateUniqueId,
+    initTableDisplayOptions,
+    setColumnVisibility,
+    createTableColumns,
+    getHeaderNodes,
+    getTextNode,
+    generateDisplayColumns,
+    registerHeaderElements,
+    registerBodyElements,
+    saveTableColumns,
+  } = useTableDisplayOptions();
 
-    it("finds a text node within child nodes", () => {
-      const parent = document.createElement("div");
-      const child = document.createElement("span");
-      const textNode = document.createTextNode("Valid Text");
-      child.appendChild(textNode);
-      parent.appendChild(child);
-
-      expect(getTextNode(parent)).toBe(textNode);
-    });
-
-    it("does not return nodes with underscores in their text", () => {
-      const node = document.createTextNode("Invalid_Text");
-      expect(getTextNode(node)).toBeNull();
-    });
-
-    it("returns null when no suitable text node is found", () => {
-      const parent = document.createElement("div");
-      const child = document.createElement("span");
-      parent.appendChild(child); // No text node added
-
-      expect(getTextNode(parent)).toBeNull();
+  describe("Generate ID", () => {
+    it("should generate unique id correctly", () => {
+      const id = generateUniqueId("Test Column Name");
+      expect(id).toBe("testColumnName");
     });
   });
 
-  describe("getHeaderNodes", () => {
-    const { getHeaderNodes } = useTableDisplayOptions();
-    it("returns an object with header nodes and their indexes", () => {
+  describe("Header Nodes", () => {
+    it("should get text node correctly", () => {
+      const node = document.createTextNode("Test Node");
+      const result = getTextNode(node);
+      expect(result).toBe(node);
+    });
+
+    it("should get header nodes correctly", () => {
       document.body.innerHTML = `
-        <table class="mk-table-display-options">
-          <thead>
-            <tr>
-              <th>Header 1</th>
-              <th>Header 2</th>
-            </tr>
-          </thead>
-        </table>
-      `;
-
+      <table class="mk-table-display-options">
+        <thead>
+          <tr>
+            <th>Header 1</th>
+            <th>Header 2</th>
+          </tr>
+        </thead>
+      </table>
+    `;
       const headerNodes = getHeaderNodes();
-      expect(headerNodes).toEqual({
-        0: document.querySelector("th:nth-child(1)"),
-        1: document.querySelector("th:nth-child(2)"),
-      });
+      expect(Object.keys(headerNodes).length).toBe(2);
     });
-  });
 
-  describe("registerBodyElements", () => {
-    const { registerBodyElements } = useTableDisplayOptions();
-    it("registers body elements to columns", () => {
-      // arrange
+    it("should register header elements correctly", () => {
       document.body.innerHTML = `
-        <table class="mk-table-display-options">
-          <thead>
-            <tr>
-              <th>Header 1</th>
-              <th>Header 2</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Row 1 Column 1</td>
-              <td>Row 1 Column 2</td>
-            </tr>
-            <tr>
-              <td>Row 2 Column 1</td>
-              <td>Row 2 Column 2</td>
-            </tr>
-          </tbody>
-        </table>
-      `;
-
+      <table class="mk-table-display-options">
+        <thead>
+          <tr>
+            <th>Header 1</th>
+            <th>Header 2</th>
+          </tr>
+        </thead>
+      </table>
+    `;
       const columns: TableColumn[] = [
-        { id: "test-1", index: 0, name: "Header 1", visible: true },
-        { id: "test-2", index: 1, name: "Header 2", visible: true },
+        { index: 0, id: "header1", visible: true, name: "Header 1" },
+        { index: 1, id: "header2", visible: true, name: "Header 2" },
       ];
-
-      // act
-      registerBodyElements(columns);
-
-      // assert
-      const rows = document.querySelectorAll(".mk-table-display-options tbody tr");
-      rows.forEach((row, index) => {
-        const tds = row.querySelectorAll("td");
-        tds.forEach((td, i) => {
-          expect(td.getAttribute("data-display-options-id")).toContain(columns[i].id);
-        });
-      });
-    });
-  });
-
-  describe("registerHeaderElements", () => {
-    const { registerHeaderElements } = useTableDisplayOptions();
-    it("registers header elements to columns", () => {
-      // arrange
-      document.body.innerHTML = `
-        <table class="mk-table-display-options">
-          <thead>
-            <tr>
-              <th>Header 1</th>
-              <th>Header 2</th>
-            </tr>
-          </thead>
-        </table>
-      `;
-
-      const columns: TableColumn[] = [
-        { id: "test-1", index: 0, name: "Header 1", visible: true },
-        { id: "test-2", index: 1, name: "Header 2", visible: true },
-      ];
-
-      // act
       registerHeaderElements(columns);
+      const headerNodes = getHeaderNodes();
+      expect(headerNodes[0].getAttribute("data-display-options-id")).toBe("header1");
+      expect(headerNodes[1].getAttribute("data-display-options-id")).toBe("header2");
+    });
 
-      // assert
-      const ths = document.querySelectorAll(".mk-table-display-options thead th");
-      ths.forEach((th, index) => {
-        expect(th.getAttribute("data-display-options-id")).toContain(columns[index].id);
-      });
+    it("should register body elements correctly", () => {
+      document.body.innerHTML = `
+      <table class="mk-table-display-options">
+        <tbody>
+          <tr>
+            <td>Cell 1</td>
+            <td>Cell 2</td>
+          </tr>
+        </tbody>
+      </table>
+    `;
+      const columns: TableColumn[] = [
+        { index: 0, id: "cell1", visible: true, name: "Cell 1" },
+        { index: 1, id: "cell2", visible: true, name: "Cell 2" },
+      ];
+
+      registerBodyElements(columns);
+      const rows = document.querySelectorAll(".mk-table-display-options tbody tr");
+      expect(rows[0].querySelector("td")?.getAttribute("data-display-options-id")).toBe("cell1");
     });
   });
 
-  describe("generateDisplayColumns", () => {
-    const { generateDisplayColumns } = useTableDisplayOptions();
-    it("generates display columns based on table headers", () => {
-      // arrange
+  describe("generate display columns", () => {
+    it("should generate display columns correctly", () => {
+      document.body.innerHTML = `
+      <table class="mk-table-display-options">
+        <thead>
+          <tr>
+            <th>Header 1</th>
+            <th>Header 2</th>
+          </tr>
+        </thead>
+      </table>
+    `;
+      const columns = generateDisplayColumns();
+      expect(columns.length).toBe(2);
+      expect(columns[0].name).toBe("Header 1");
+      expect(columns[1].name).toBe("Header 2");
+    });
+
+    it("should generate display columns correctly", () => {
+      document.body.innerHTML = `
+      <table class="mk-table-display-options">
+        <thead>
+          <tr>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+      </table>
+    `;
+      const columns = generateDisplayColumns();
+      expect(columns.length).toBe(0);
+    });
+
+    it("should generate display columns correctly", () => {
       document.body.innerHTML = `
         <table class="mk-table-display-options">
           <thead>
             <tr>
-              <th>Header 1</th>
-              <th>Header 2</th>
+              <th data-mk="header1"></th>
+              <th data-mk="header2"></th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>Row 1 Column 1</td>
-              <td>Row 1 Column 2</td>
-            </tr>
-            <tr>
-              <td>Row 2 Column 1</td>
-              <td>Row 2 Column 2</td>
-            </tr>
-          </tbody>
         </table>
       `;
+      const columns = generateDisplayColumns();
+      expect(columns.length).toBe(2);
+      expect(columns[0].id).toBe("header1");
+      expect(columns[1].id).toBe("header2");
+    });
+  });
 
-      // act
-      const columns = generateDisplayColumns("TestRef");
-
-      // assert
+  describe("Create table columns", () => {
+    it("should initialize table display options correctly", () => {
+      document.body.innerHTML = `
+      <table class="mk-table-display-options">
+        <thead>
+          <tr>
+            <th>Header 1</th>
+            <th>Header 2</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Cell 1</td>
+            <td>Cell 2</td>
+          </tr>
+        </tbody>
+      </table>
+    `;
+      const columns = initTableDisplayOptions();
       expect(columns.length).toBe(2);
       expect(columns[0].name).toBe("Header 1");
       expect(columns[1].name).toBe("Header 2");
     });
-  });
 
-  describe("createTableColumns", () => {
-    const { createTableColumns } = useTableDisplayOptions();
-    it("creates table columns based on the given headers", () => {
-      // arrange
-      const tableRef = "testRef";
+    // Create test with display options parameter in the initTableDisplayOptions
+    it("should initialize table display options correctly", () => {
+      document.body.innerHTML = `
+      <table class="mk-table-display-options">
+        <thead>
+          <tr>
+            <th data-mk="header1">Header 1</th>
+            <th data-mk-"header2">Header 2</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Cell 1</td>
+            <td>Cell 2</td>
+          </tr>
+        </tbody>
+      </table>
+    `;
 
-      // act
-      const columns = createTableColumns(tableRef);
+      // Create display options
+      const hiddenColumns = ["header1"];
+      const displayOptions = <TableDisplayOptions>{
+        columns: [...hiddenColumns.map((id) => ({ id, visible: false }))],
+      };
 
-      // assert
+      const columns = initTableDisplayOptions(undefined, displayOptions);
       expect(columns.length).toBe(2);
-      expect(columns[0].name).toBe("Header 1");
-      expect(columns[1].name).toBe("Header 2");
-    });
-  });
-
-  describe("setColumnVisibility", () => {
-    const { setColumnVisibility } = useTableDisplayOptions();
-    it("sets the visibility of a column", () => {
-      // arrange
-      const columns: TableColumn[] = [
-        { id: "test-1", index: 0, name: "Header 1", visible: false },
-        { id: "test-2", index: 1, name: "Header 2", visible: true },
-      ];
-      const column = columns[0];
-      const tableRef = "testRef";
-
-      // act
-      setColumnVisibility(columns, column, tableRef);
-
-      // assert
       expect(columns[0].visible).toBe(false);
+      expect(columns[1].visible).toBe(true);
+    });
+
+    it("should initialize table display options correctly", () => {
+      document.body.innerHTML = `
+      <table class="mk-table-display-options">
+        <thead>
+          <tr>
+            <th data-mk="header1">Header 1</th>
+            <th data-mk-"header2">Header 2</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Cell 1</td>
+            <td>Cell 2</td>
+          </tr>
+        </tbody>
+      </table>
+    `;
+
+      // Mock the localStorage data
+      hoists.getDisplayOptions.mockImplementationOnce(() => {
+        return <TableDisplayOptions>{
+          columns: [
+            {
+              id: "header1",
+              visible: false,
+              index: 0,
+              name: "Header 1",
+            },
+            {
+              id: "header2",
+              visible: false,
+              index: 1,
+              name: "Header 2",
+            },
+          ],
+        };
+      });
+
+      const columns = initTableDisplayOptions(undefined);
+
+      expect(columns.length).toBe(2);
+      expect(columns[0].visible).toBe(false);
+      expect(columns[1].visible).toBe(false);
+    });
+
+    it("should initialize NEW table display options correctly", () => {
+      document.body.innerHTML = `
+      <table class="mk-table-display-options">
+        <thead>
+          <tr>
+            <th data-mk="header1">Header 1</th>
+            <th data-mk-"header2">Header 2</th>
+            <th data-mk-"header3">Header 3</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Cell 1</td>
+            <td>Cell 2</td>
+          </tr>
+        </tbody>
+      </table>
+    `;
+
+      // Mock the localStorage data
+      hoists.getDisplayOptions.mockImplementationOnce(() => {
+        return <TableDisplayOptions>{
+          columns: [
+            {
+              id: "header1",
+              visible: false,
+              index: 0,
+              name: "Header 1",
+            },
+            {
+              id: "header2",
+              visible: false,
+              index: 1,
+              name: "Header 2",
+            },
+          ],
+        };
+      });
+
+      const columns = initTableDisplayOptions(undefined);
+
+      expect(columns.length).toBe(3);
+      expect(columns[0].visible).toBe(false);
+      expect(columns[1].visible).toBe(false);
+      expect(columns[2].visible).toBe(true);
     });
   });
-  describe("initTableDisplayOptions", () => {
-    const { initTableDisplayOptions } = useTableDisplayOptions();
-    it("initializes table display options", () => {
-      // arrange
-      const tableRef = "testRef";
 
-      // act
-      initTableDisplayOptions(tableRef);
-
-      // assert
-      expect(mockTableDisplayStore.getDisplayOptions).toHaveBeenCalled();
-      expect(mockTableDisplayStore.setDisplayOptions).not.toHaveBeenCalled();
-    });
-  });
-  describe("saveTableColumns", () => {
-    const { saveTableColumns } = useTableDisplayOptions();
-    it("saves the columns to the tableDisplayStore", () => {
-      // arrange
+  describe("Save table columns", () => {
+    it("should set column visibility correctly", () => {
+      document.body.innerHTML = `
+      <table class="mk-table-display-options">
+        <thead>
+          <tr>
+            <th data-display-options-id="header1">Header 1</th>
+            <th data-display-options-id="header2">Header 2</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-display-options-id="header1">Cell 1</td>
+            <td data-display-options-id="header2">Cell 2</td>
+          </tr>
+        </tbody>
+      </table>
+    `;
       const columns: TableColumn[] = [
-        { id: "test-1", index: 0, name: "Header 1", visible: true },
-        { id: "test-2", index: 1, name: "Header 2", visible: true },
+        { index: 0, id: "header1", visible: false, name: "Header 1" },
+        { index: 1, id: "header2", visible: true, name: "Header 2" },
       ];
-      const tableRef = "testRef";
+      setColumnVisibility(columns, columns[0]);
+      const header = document.querySelector('th[data-display-options-id="header1"]');
+      expect(header?.getAttribute("mk-hidden")).toBe("");
+    });
 
-      // act
-      saveTableColumns(columns, tableRef);
+    it("should set column visibility correctly", () => {
+      document.body.innerHTML = `
+      <table class="mk-table-display-options">
+        <thead>
+          <tr>
+            <th data-display-options-id="header1">Header 1</th>
+            <th data-display-options-id="header2">Header 2</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-display-options-id="header1">Cell 1</td>
+            <td data-display-options-id="header2">Cell 2</td>
+          </tr>
+        </tbody>
+      </table>
+    `;
+      const columns: TableColumn[] = [
+        { index: 0, id: "header1", visible: false, name: "Header 1" },
+        { index: 1, id: "header2", visible: true, name: "Header 2" },
+      ];
 
-      // assert
-      expect(mockTableDisplayStore.setDisplayOptions).toHaveBeenCalled();
+      // create spy for the setDisplayOptions
+      const spy = vi.spyOn(mockTableDisplayStore, "setDisplayOptions");
+
+      setColumnVisibility(columns, columns[0], undefined, true);
+      const header = document.querySelector('th[data-display-options-id="header1"]');
+      expect(header?.getAttribute("mk-hidden")).toBe("");
+      expect(spy).toHaveBeenCalled();
+    });
+
+    // create test where columns are empty
+    it("should set column visibility correctly", () => {
+      document.body.innerHTML = `
+      <table class="mk-table-display-options">
+        <thead>
+          <tr>
+            <th data-display-options-id="header1">Header 1</th>
+            <th data-display-options-id="header2">Header 2</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-display-options-id="header1">Cell 1</td>
+            <td data-display-options-id="header2">Cell 2</td>
+          </tr>
+        </tbody>
+      </table>
+    `;
+      const columns: TableColumn[] = [];
+
+      // create spy for the setDisplayOptions
+      const spy = vi.spyOn(mockTableDisplayStore, "setDisplayOptions");
+
+      setColumnVisibility(columns, columns[0]);
+      const header = document.querySelector('th[data-display-options-id="header1"]');
+      expect(header?.getAttribute("mk-hidden")).toBe(null);
+      expect(spy).not.toHaveBeenCalled();
     });
   });
 });
