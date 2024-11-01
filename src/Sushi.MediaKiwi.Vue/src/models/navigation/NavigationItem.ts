@@ -22,6 +22,9 @@ export type NavigationItem = {
   roles?: string[];
   /** If defined, the layout to use for this item */
   layout?: string;
-  /** Custom breadcrumb label */
-  breadcrumbLabel?: string;
+  /** If defined, the entity that this navigation item represents. Used to display the entity name in the breadcrumbs. */
+  entity?: {
+    label: string;
+    id: string;
+  };
 };

@@ -47,7 +47,7 @@ export function useBreadcrumbs() {
   const currentEntityNavigationItem = computed(() => getEntityNavigationItem(navigation.currentRootItem.value));
 
   /** Determines if we show the whole breadcrumb or only a back button */
-  const showMobileBackButton = computed(() => xs.value && breadcrumbs.value.length);
+  const showMobileBackButton = computed<boolean>(() => xs.value && breadcrumbs.value.length > 0);
 
   /** Check if the breadcrumbs have any items and if all have a name */
   const hasBreadcrumbs = computed(() => breadcrumbs.value.length && breadcrumbs.value.some((x) => x.name));
@@ -60,9 +60,17 @@ export function useBreadcrumbs() {
     return false;
   }
 
-  function setCurrentBreadcrumbLabel(value?: string) {
+  /**
+   * Set the current breadcrumb label.
+   * @param label The label to set.
+   * @param id The id of the entity, if different from the current view parameter.
+   */
+  function setCurrentBreadcrumbLabel(label: string, id?: string) {
     if (navigation.currentNavigationItem.value) {
-      navigation.currentNavigationItem.value.breadcrumbLabel = value;
+      navigation.currentNavigationItem.value.entity = {
+        label: label || "",
+        id: navigation.currentViewParameter.value || id || "",
+      };
     }
   }
 
@@ -70,7 +78,16 @@ export function useBreadcrumbs() {
     if (!navigationItem) {
       return "";
     }
-    return navigationItem.breadcrumbLabel || navigationItem.name || "";
+
+    // get the view parameter for the a specific navigation item
+    const viewParameter = navigation.getViewParameter(navigationItem);
+
+    // If the entity id is the same as the current view parameter, we use the entity label as the breadcrumb label.
+    if (navigationItem.entity && navigationItem.entity.label && navigationItem.entity?.id === viewParameter) {
+      return navigationItem.entity?.label;
+    }
+
+    return navigationItem.name || "";
   }
 
   return {
