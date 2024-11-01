@@ -37,7 +37,7 @@
   const countries = ref<Country[]>();
 
   // Set the name column to be hidden by default, the user can change this in the display options
-  const hiddenColumns = ["hotelName", "srpValue", "srpIcon"];
+  const hiddenColumns = ["hotelName", "srp"];
   const displayOptions = ref<TableDisplayOptions>({
     columns: [...hiddenColumns.map((id) => ({ id, visible: false }))],
   });
@@ -107,8 +107,6 @@
   async function SaveData(hotel: Hotel) {
     console.log(hotel);
   }
-
-  const selectedItems = ref<Hotel[]>([]);
 </script>
 
 <template>
@@ -116,7 +114,6 @@
     v-model:current-pagination="currentPagination"
     v-model:filters="filters"
     v-model:sorting="sorting"
-    v-model:selection="selectedItems"
     :api-result="hotels"
     :on-load="LoadData"
     :data="hotels?.result"

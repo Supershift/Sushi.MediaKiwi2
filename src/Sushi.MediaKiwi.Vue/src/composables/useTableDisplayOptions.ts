@@ -28,14 +28,13 @@ export function useTableDisplayOptions() {
   }
 
   /**
-   * Generates a random UUID table options
+   * Generates a unique id based on the value
    */
-  function _uuid() {
-    return "DO-xxxxxx".replace(/[xy]/g, function (c) {
-      var r = (Math.random() * 16) | 0,
-        v = c == "x" ? r : (r & 0x3) | 0x8;
-      return v.toString(8);
-    });
+  function generateUniqueId(value: string) {
+    return value
+      .toLowerCase()
+      .replace(/[^a-z0-9]+(.)/g, (_, char) => char.toUpperCase()) // capitalize after non-alphanumeric characters
+      .replace(/^[A-Z]/, (char) => char.toLowerCase()); // make the first letter lowercase
   }
 
   /**
@@ -114,7 +113,7 @@ export function useTableDisplayOptions() {
 
       const tableColumn = <TableColumn>{
         index: parseInt(key),
-        id: id ?? _uuid(),
+        id: id ?? generateUniqueId(name),
         visible: true,
         name,
         tableRef: tableRef,
@@ -153,14 +152,21 @@ export function useTableDisplayOptions() {
 
   // Function that merges the storedColumns with the generated columns
   function mergeColumns(storedColumns: TableColumn[], generatedColumns: TableColumn[], displayOptions?: boolean | TableDisplayOptions): TableColumn[] {
+    // Filters the stored column based on the ID's of the generated columns
+    // If the stored column is not found in the generated columns, it should be removed
+    storedColumns = storedColumns.filter((storedCol) => generatedColumns.some((genCol) => genCol.id === storedCol.id));
+
+    // set the prelseected columns to the stored columns
     let preselection = storedColumns;
+
+    // If the displayOptions is an object and has columns, set the preselection to the columns
     if (!storedColumns?.length && displayOptions && typeof displayOptions !== "boolean" && displayOptions?.columns) {
       preselection = displayOptions.columns;
     }
 
     // Bind the data from the stored columns to the generated columns
     // if a stored column is not found in the generated columns, it should be removed
-    const localColumns = generatedColumns.map((genCol) => {
+    let localColumns = generatedColumns.map((genCol) => {
       const storedCol = preselection.find((col) => col.id === genCol.id);
       if (storedCol) {
         // Assign the visibility from the stored column
