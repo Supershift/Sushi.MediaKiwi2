@@ -31,10 +31,7 @@ export function useTableDisplayOptions() {
    * Generates a unique id based on the value
    */
   function generateUniqueId(value: string) {
-    return value
-      .toLowerCase()
-      .replace(/[^a-z0-9]+(.)/g, (_, char) => char.toUpperCase()) // capitalize after non-alphanumeric characters
-      .replace(/^[A-Z]/, (char) => char.toLowerCase()); // make the first letter lowercase
+    return value.toLowerCase().replace(/[^a-z0-9]+(.)/g, (_, char) => char.toUpperCase()); // capitalize after non-alphanumeric characters
   }
 
   /**
@@ -95,23 +92,29 @@ export function useTableDisplayOptions() {
    * @returns Array<TableColumn> an array of table columns generated from the table headers
    */
   function generateDisplayColumns(tableRef?: string): Array<TableColumn> {
-    const headerNodes = getHeaderNodes(); // collect the headers
-    const entries = Object.entries(headerNodes).filter((headerElement) => {
-      if (headerElement && headerElement[1]) {
-        const nodeValue = getTextNode(headerElement[1])?.nodeValue; // get the element value in the record
-        return nodeValue ?? false; // filter out the first column if its name is empty (the checkbox column)
-      }
-      return false;
+    // collect the headers
+    const headerNodes = getHeaderNodes();
+
+    // Filter out the entries that don't have an id or name
+    const entries = Object.entries(headerNodes).filter(([_, element]) => {
+      const id = element?.getAttribute("data-mk");
+      const name = getTextNode(element)?.nodeValue || "";
+      return id || name;
     });
-    return entries.map(([key, value]) => {
-      const name = getTextNode(value)?.nodeValue || "";
-      return <TableColumn>{
+
+    return entries.map(([key, element]) => {
+      const id = element?.getAttribute("data-mk");
+      const name = getTextNode(element)?.nodeValue || "";
+
+      const tableColumn = <TableColumn>{
         index: parseInt(key),
-        id: generateUniqueId(name),
+        id: id ?? generateUniqueId(name),
         visible: true,
         name,
         tableRef: tableRef,
       };
+
+      return tableColumn;
     });
   }
 
@@ -127,9 +130,6 @@ export function useTableDisplayOptions() {
 
     // Find body elements and add the data-display-options attribute
     registerBodyElements(columns, tableRef);
-
-    // Save the columns to the local storage
-    // saveTableColumns(columns, tableRef);
 
     return columns;
   }
@@ -147,25 +147,22 @@ export function useTableDisplayOptions() {
 
   // Function that merges the storedColumns with the generated columns
   function mergeColumns(storedColumns: TableColumn[], generatedColumns: TableColumn[], displayOptions?: boolean | TableDisplayOptions): TableColumn[] {
-    // Lecagy - DO-xxxxxx - replace the current random id's to readable (and usable) id's
-    if (storedColumns.length && storedColumns[0].id.includes("DO-")) {
-      storedColumns.forEach((col) => {
-        if (col.name) {
-          col.id = generateUniqueId(col.name);
-        }
-      });
-    }
+    // Filters the stored column based on the ID's of the generated columns
+    // If the stored column is not found in the generated columns, it should be removed
+    storedColumns = storedColumns.filter((storedCol) => generatedColumns.some((genCol) => genCol.id === storedCol.id));
 
-    // selection
-    let x = storedColumns;
+    // set the prelseected columns to the stored columns
+    let preselection = storedColumns;
+
+    // If the displayOptions is an object and has columns, set the preselection to the columns
     if (!storedColumns?.length && displayOptions && typeof displayOptions !== "boolean" && displayOptions?.columns) {
-      x = displayOptions.columns;
+      preselection = displayOptions.columns;
     }
 
     // Bind the data from the stored columns to the generated columns
     // if a stored column is not found in the generated columns, it should be removed
-    const localColumns = generatedColumns.map((genCol) => {
-      const storedCol = x.find((col) => col.id === genCol.id);
+    let localColumns = generatedColumns.map((genCol) => {
+      const storedCol = preselection.find((col) => col.id === genCol.id);
       if (storedCol) {
         // Assign the visibility from the stored column
         genCol.visible = storedCol.visible;
@@ -243,17 +240,19 @@ export function useTableDisplayOptions() {
     }
 
     // TODO: Try to use the table reference for multiple tables on one view ex. document.querySelector([data-table-ref="<tableRef>"])
-    const th = document.querySelector(`.mk-table-display-options thead th[data-display-options-id="${column.id}"]`);
-    if (th) {
-      if (col.visible) {
-        th.removeAttribute("mk-hidden");
-      } else {
-        th.setAttribute("mk-hidden", "");
+    const headers = document.querySelectorAll(`.mk-table-display-options thead th[data-display-options-id="${column.id}"]`);
+    headers?.forEach((th) => {
+      if (th) {
+        if (col.visible) {
+          th.removeAttribute("mk-hidden");
+        } else {
+          th.setAttribute("mk-hidden", "");
+        }
       }
-    }
+    });
 
     const rows = document.querySelectorAll(`.mk-table-display-options tbody tr`);
-    rows.forEach((row) => {
+    rows?.forEach((row) => {
       row.querySelectorAll(`td[data-display-options-id="${col.id}"]`).forEach((td) => {
         if (col.visible) {
           td.removeAttribute("mk-hidden");
@@ -270,6 +269,7 @@ export function useTableDisplayOptions() {
   }
 
   return {
+    generateUniqueId,
     initTableDisplayOptions,
     setColumnVisibility,
     createTableColumns,
