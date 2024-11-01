@@ -136,12 +136,12 @@
     </template>
 
     <template #thead>
-      <mk-th data-mk="hotelName" v-model:sorting="sorting" :sorting-options="{ id: 'name' }">{{ t("Name") }}</mk-th>
-      <mk-th data-mk="createdDate" v-model:sorting="sorting" :sorting-options="{ id: 'created' }">{{ t("Created") }}</mk-th>
-      <th data-mk="countryName">{{ t("Country") }}</th>
-      <th data-mk="isActive">{{ t("Active") }}</th>
-      <th data-mk="srp" width="100">{{ t("SRP") }}</th>
-      <th data-mk="srp"></th>
+      <mk-th mk-column-id="hotelName" v-model:sorting="sorting" :sorting-options="{ id: 'name' }">{{ t("Name") }}</mk-th>
+      <mk-th mk-column-id="createdDate" v-model:sorting="sorting" :sorting-options="{ id: 'created' }">{{ t("Created") }}</mk-th>
+      <th mk-column-id="countryName">{{ t("Country") }}</th>
+      <th mk-column-id="isActive">{{ t("Active") }}</th>
+      <th mk-column-id="srp" width="100">{{ t("SRP") }}</th>
+      <th mk-column-id="srpValue" :mk-column-label="t('SRP Icon')"></th>
     </template>
 
     <template #tbody="dataItem: Hotel">
