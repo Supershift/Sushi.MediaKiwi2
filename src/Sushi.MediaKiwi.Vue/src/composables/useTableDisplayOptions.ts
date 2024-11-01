@@ -1,6 +1,7 @@
 import { TableColumn } from "@/models/table/TableColumn";
 import { useTableDisplayStore } from "@/stores/tableDisplay";
 import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
+import { displayOptionsColumnIdAttr, displayOptionsColumnNameAttr } from "@/constants";
 
 export function useTableDisplayOptions() {
   const tableDisplayStore = useTableDisplayStore();
@@ -97,20 +98,22 @@ export function useTableDisplayOptions() {
 
     // Filter out the entries that don't have an id or name
     const entries = Object.entries(headerNodes).filter(([_, element]) => {
-      const id = element?.getAttribute("data-mk");
+      const attrId = element?.getAttribute(displayOptionsColumnIdAttr);
+      const attrName = element?.getAttribute(displayOptionsColumnNameAttr);
       const name = getTextNode(element)?.nodeValue || "";
-      return id || name;
+      return attrId || attrName || name;
     });
 
     return entries.map(([key, element]) => {
-      const id = element?.getAttribute("data-mk");
+      const id = element?.getAttribute(displayOptionsColumnIdAttr);
+      const attrName = element?.getAttribute(displayOptionsColumnNameAttr);
       const name = getTextNode(element)?.nodeValue || "";
 
       const tableColumn = <TableColumn>{
         index: parseInt(key),
         id: id ?? generateUniqueId(name),
         visible: true,
-        name,
+        name: attrName || name,
         tableRef: tableRef,
       };
 

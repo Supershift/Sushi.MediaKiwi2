@@ -175,8 +175,8 @@ describe("useTableDisplayOptions", () => {
         <table class="mk-table-display-options">
           <thead>
             <tr>
-              <th data-mk="header1"></th>
-              <th data-mk="header2"></th>
+              <th mk-column-id="header1" mk-column-label="My header name 1"></th>
+              <th mk-column-id="header2" mk-column-label="My header name 2"></th>
             </tr>
           </thead>
         </table>
@@ -184,7 +184,9 @@ describe("useTableDisplayOptions", () => {
       const columns = generateDisplayColumns();
       expect(columns.length).toBe(2);
       expect(columns[0].id).toBe("header1");
+      expect(columns[0].name).toBe("My header name 1");
       expect(columns[1].id).toBe("header2");
+      expect(columns[1].name).toBe("My header name 2");
     });
   });
 
@@ -218,8 +220,8 @@ describe("useTableDisplayOptions", () => {
       <table class="mk-table-display-options">
         <thead>
           <tr>
-            <th data-mk="header1">Header 1</th>
-            <th data-mk-"header2">Header 2</th>
+            <th mk-column-id="header1">Header 1</th>
+            <th mk-column-id-"header2">Header 2</th>
           </tr>
         </thead>
         <tbody>
@@ -248,8 +250,8 @@ describe("useTableDisplayOptions", () => {
       <table class="mk-table-display-options">
         <thead>
           <tr>
-            <th data-mk="header1">Header 1</th>
-            <th data-mk-"header2">Header 2</th>
+            <th mk-column-id="header1">Header 1</th>
+            <th mk-column-id-"header2">Header 2</th>
           </tr>
         </thead>
         <tbody>
@@ -293,9 +295,9 @@ describe("useTableDisplayOptions", () => {
       <table class="mk-table-display-options">
         <thead>
           <tr>
-            <th data-mk="header1">Header 1</th>
-            <th data-mk-"header2">Header 2</th>
-            <th data-mk-"header3">Header 3</th>
+            <th mk-column-id="header1">Header 1</th>
+            <th mk-column-id-"header2">Header 2</th>
+            <th mk-column-id-"header3">Header 3</th>
           </tr>
         </thead>
         <tbody>
