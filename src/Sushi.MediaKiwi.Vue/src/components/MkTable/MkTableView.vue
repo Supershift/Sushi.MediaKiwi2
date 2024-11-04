@@ -8,6 +8,7 @@
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
   import { computed, onMounted, ref } from "vue";
   import { useTableDisplayOptions } from "@/composables/useTableDisplayOptions";
+  import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
 
   // inject dependencies
   const { initTableDisplayOptions } = useTableDisplayOptions();
@@ -34,7 +35,7 @@
   /** Selected items */
   const selection = defineModel<Array<T>>("selection", { default: [] });
   /** Define Display Options */
-  const displayOptions = defineModel<TableColumn[] | boolean>("displayOptions", { required: false, default: [] });
+  const displayOptions = defineModel<TableDisplayOptions | boolean>("displayOptions", { required: false, default: [] });
   /** Define Table Reference for when multiple tables are on one view*/
   const tableReference = defineModel<string | undefined>("tableReference", { required: false });
   /** Check if display options are available */
@@ -98,7 +99,7 @@
 
     // navigate user to target page if defined
     if (props.navigationItemId) {
-      // find navigation item       
+      // find navigation item
       const navigationItem = store.navigationTree.getNavigationItem(props.navigationItemId);
       if (!navigationItem) {
         throw new Error(`No navigationItem found for id ${props.navigationItemId}`);
@@ -191,16 +192,20 @@
 
   async function loadDisplayOptions() {
     if (hasDisplayOptions.value) {
-      displayOptions.value = initTableDisplayOptions(tableReference.value);
+      const columns = initTableDisplayOptions(tableReference.value, displayOptions.value);
+
+      displayOptions.value = <TableDisplayOptions>{
+        columns: columns,
+      };
     }
   }
 
   /**
    * Returns a row key for the provided data item, or a fallback value if no key can be generated
    * @param dataItem The data item for which to generate a key
-   * @param fallback The fallback value to use if no key can be generated 
+   * @param fallback The fallback value to use if no key can be generated
    */
-   function getRowKey(dataItem: T, fallback: number) {
+  function getRowKey(dataItem: T, fallback: number) {
     if (getItemId.value && dataItem) {
       return getItemId.value(dataItem);
     }
@@ -228,7 +233,12 @@
     </thead>
     <tbody ref="tbodyContainer" class="mk-table-view__body-container">
       <!-- render a row for each provided data entity -->
-      <tr v-for="(dataItem, rowIndex) in props.data" :key="getRowKey(dataItem, rowIndex)" :class="tableRowClassses()" @click.stop="(e) => onRowClick(e, dataItem)">
+      <tr
+        v-for="(dataItem, rowIndex) in props.data"
+        :key="getRowKey(dataItem, rowIndex)"
+        :class="tableRowClassses()"
+        @click.stop="(e) => onRowClick(e, dataItem)"
+      >
         <td v-if="checkbox" @click.stop class="mk-table-view__checkbox-container--body">
           <MkTableCheckbox
             :item="dataItem"

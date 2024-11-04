@@ -11,3 +11,5 @@ export const MkLayout = {
   Default: "DefaultLayout",
   Full: "FullScreenLayout",
 };
+
+export * from "./table";
