@@ -21,5 +21,13 @@ namespace Sushi.MediaKiwi.SampleAPI.DAL.Repository
             var result = await _connector.GetAllAsync(query);
             return result;
         }
+
+        public async Task<Country?> GetCountryAsync(string code)
+        {
+            var query = _connector.CreateQuery();
+            query.Add(x => x.Code, code);
+            var result = await _connector.GetFirstAsync(query);
+            return result;
+        }
     }
 }
