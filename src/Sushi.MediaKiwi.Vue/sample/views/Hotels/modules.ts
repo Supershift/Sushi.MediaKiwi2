@@ -4,7 +4,8 @@ import HotelSendOffer from "./HotelSendOffer.vue";
 import HotelsOverview from "./HotelsOverview.vue";
 import HotelsOverviewTableMap from "./HotelsOverview_TableMap.vue";
 import RoomTypesEdit from "./RoomTypesEdit.vue";
-import RoomTypesEditDeep from "./RoomTypesEditDeep.vue";
+import BoardTypesOverview from "./BoardTypesOverview.vue";
+import BoardTypeEdit from "./BoardTypeEdit.vue";
 import RoomTypesOverview from "./RoomTypesOverview.vue";
 import SunbedTypesOverview from "./SunbedTypesOverview.vue";
 
@@ -14,7 +15,8 @@ const modules: Record<string, RouteComponent> = {
   HotelsOverview,
   HotelsOverviewTableMap,
   RoomTypesEdit,
-  RoomTypesEditDeep,
+  BoardTypesOverview,
+  BoardTypeEdit,
   RoomTypesOverview,
   SunbedTypesOverview,
 };

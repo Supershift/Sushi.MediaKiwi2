@@ -4,6 +4,7 @@
   import { useNavigation } from "@/composables/useNavigation";
   import { IconsLibrary } from "@/models";
   import { useRouter } from "@/router";
+  import MkNavigationDrawerBackButton from "./MkNavigationDrawerBackButton.vue";
 
   defineEmits(["change"]);
 
@@ -25,7 +26,7 @@
 <template>
   <v-navigation-drawer class="pa-3">
     <v-list open-strategy="single" class="pa-0">
-      <v-list-item
+      <!-- <v-list-item
         v-if="currentRootItem"
         :title="currentRootItem.name"
         exact
@@ -33,15 +34,12 @@
         class="mb-2"
         :prepend-icon="IconsLibrary.arrowLeft"
         @click.stop="navigate(currentRootItem)"
-      />
+      /> -->
+      <MkNavigationDrawerBackButton v-if="currentRootItem" />
 
       <div id="navigationDrawerInfo" class="mb-4"></div>
 
-      <mk-navigation-item
-        v-for="item in getItemsBasedOnRoot()"
-        :key="item.id"
-        :navigation-item="item"        
-      ></mk-navigation-item>
+      <mk-navigation-item v-for="item in getItemsBasedOnRoot()" :key="item.id" :navigation-item="item"></mk-navigation-item>
     </v-list>
   </v-navigation-drawer>
 </template>
