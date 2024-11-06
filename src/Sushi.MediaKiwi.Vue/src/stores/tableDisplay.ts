@@ -14,7 +14,7 @@ export const useTableDisplayStore = defineStore("tableDisplay", () => {
     // Set the display options
     displayOptions.value = { ...options };
 
-    // if there is more than one table use the reference also 
+    // if there is more than one table use the reference also
     let storageKey = displayOptionsKey.value;
 
     if (tableRef) {
@@ -38,7 +38,7 @@ export const useTableDisplayStore = defineStore("tableDisplay", () => {
    * @returns TableColumn[] an Array of table columns retrieved from the local storage
    */
   async function fetchDisplayOptions(tableRef?: string) {
-    // if there is more than one table use the reference also 
+    // if there is more than one table use the reference also
     let storageKey = displayOptionsKey.value;
 
     if (tableRef) {
@@ -55,9 +55,7 @@ export const useTableDisplayStore = defineStore("tableDisplay", () => {
     displayOptions.value = tableDisplayOptions;
   }
 
-
   fetchDisplayOptions();
 
-
-  return { displayOptions, setDisplayOptions, getDisplayOptions, fetchDisplayOptions, displayOptionsKey, viewRef };
+  return { displayOptions, setDisplayOptions, getDisplayOptions, fetchDisplayOptions, displayOptionsKey, navItemRef };
 });
