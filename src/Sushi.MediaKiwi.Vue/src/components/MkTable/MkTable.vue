@@ -24,6 +24,7 @@
   import MkTableCell from "./MkTableCell.vue"; // Mk-Td
   import MkDisplayOptions from "@/components/MkDisplayOptions/MkDisplayOptions.vue";
   import MkEmptyState from "../MkEmptyState/MkEmptyState.vue";
+  import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
 
   // define properties
   const props = withDefaults(defineProps<MkTableProps<T>>(), {
@@ -44,7 +45,7 @@
     },
   });
   /** Display options for the table */
-  const displayOptions = defineModel<TableColumn[] | boolean>("displayOptions", { required: false });
+  const displayOptions = defineModel<TableDisplayOptions | boolean>("displayOptions", { required: false });
   const hasDisplayOptions = computed(() => displayOptions.value !== undefined && displayOptions.value !== false);
   /** Reference for multiple tables on one view */
   const tableReference = defineModel<string>("tableReference", { required: false, default: "Table" });

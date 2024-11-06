@@ -17,7 +17,6 @@
   const currentPagination = ref<Paging>({
     pageIndex: 0,
   });
-  const displayOptions = ref<TableColumn[]>();
 
   const state = reactive({
     selectedSortOption: <Sorting<SampleData>>{
@@ -128,7 +127,7 @@
     @click:row="onCustomerClick"
     hide-bulk-action-bar
     :disable-item-selection="(item) => item.id % 2 !== 0"
-    v-model:display-options="displayOptions"
+    display-options
     pagination-mode="controls"
   >
     <template #bulkActionBar="{ confirm }">

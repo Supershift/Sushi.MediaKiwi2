@@ -5,7 +5,7 @@
   import { ListResult, Paging } from "@/models";
   import { reactive } from "vue";
   import { ref } from "vue";
-  import CountryEdit from "./CountryEdit.vue";
+  import CountryEdit from "./AddCountry.vue";
 
   // inject dependencies
   const { t } = await useI18next();

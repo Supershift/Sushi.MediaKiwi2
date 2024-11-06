@@ -34,5 +34,16 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
 
             return result;
         }
+
+        public async Task<Result<Country, Error>> GetCountryAsync(string code)
+        {
+            // get countries from datastore
+            var item = await _countryRepository.GetCountryAsync(code);
+
+            // map to result
+            var itemsDto = _mapper.Map<Country>(item);
+
+            return itemsDto;
+        }
     }
 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { MkForm, MkMoneyValue, MkFileInput } from "@/components";
-  import { useNavigation, useValidationRules, useBreadcrumbs, useI18next } from "@/composables";
+  import { useBreadcrumbs, useNavigation, useValidationRules } from "@/composables";
 
   import { HotelConnector } from "./../../services/HotelConnector";
   import { CountryConnector } from "./../../services/CountryConnector";
@@ -16,8 +16,7 @@
   const countriesConnector = container.resolve(CountryConnector);
   const { required } = await useValidationRules();
   const fileUploadConnector = container.resolve(FileUploadConnector);
-  const { setCustomPageTitle } = useBreadcrumbs();
-  const { formatDateTime } = await useI18next();
+  const { setCurrentBreadcrumbLabel } = useBreadcrumbs();
 
   const navigation = useNavigation();
   const radioModel = ref("1");
@@ -45,7 +44,7 @@
       // get existing hotel from api
       const candidate = await hotelConnector.GetAsync(navigation.currentViewParameterNumber.value);
       state.hotel = new Hotel(candidate!);
-      setCustomPageTitle(state.hotel.name);
+      setCurrentBreadcrumbLabel(state.hotel.name);
     } else {
       // create a new hotel
       state.hotel = <Hotel>{ id: 0 };
@@ -98,11 +97,15 @@
 </script>
 
 <template>
-  <MkForm title="Hotel edit" @submit="onSave" @delete="onDelete" @undo="onUndo" @load="onLoad">
-    <template #toolbarHeader>
-      <v-card-text class="flex-1-1 w-75"> Hotel edit </v-card-text>
-    </template>
+  <MkNavigationDrawerInfo>
+    <v-card variant="flat" rounded="lg">
+      <v-card-title>{{ state.hotel.name }}</v-card-title>
+      <v-card-text> </v-card-text>
+      <v-card-text> Located in: {{ state.hotel.countryCode }} </v-card-text>
+    </v-card>
+  </MkNavigationDrawerInfo>
 
+  <MkForm @submit="onSave" @delete="onDelete" @undo="onUndo" @load="onLoad">
     <v-text-field v-model="state.hotel.name" label="Name" :rules="[required]"></v-text-field>
 
     <v-autocomplete

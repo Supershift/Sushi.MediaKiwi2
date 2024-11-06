@@ -8,6 +8,7 @@
   import { MkTableContextMenuSlotProps, MkTableBodySlotProps, MkTableViewProps, MkTableBulkActionBarSlotProps } from "@/models/table/TableProps";
   import { useContextmenu } from "@/composables/useContextmenu";
   import MkTableCheckbox from "./MkTableCheckbox.vue";
+  import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
 
   // inject dependencies
   const { initTableDisplayOptions } = useTableDisplayOptions();
@@ -21,7 +22,7 @@
   /** Selected items */
   const selection = defineModel<Array<T>>("selection", { default: [] });
   /** Define Display Options */
-  const displayOptions = defineModel<TableColumn[] | boolean>("displayOptions", { required: false, default: [] });
+  const displayOptions = defineModel<TableDisplayOptions | boolean>("displayOptions", { required: false, default: [] });
   /** Define Table Reference for when multiple tables are on one view*/
   const tableReference = defineModel<string | undefined>("tableReference", { required: false });
   /** Check if display options are available */
@@ -238,7 +239,11 @@
 
   async function loadDisplayOptions() {
     if (hasDisplayOptions.value) {
-      displayOptions.value = initTableDisplayOptions(tableReference.value);
+      const columns = initTableDisplayOptions(tableReference.value, displayOptions.value);
+
+      displayOptions.value = <TableDisplayOptions>{
+        columns: columns,
+      };
     }
   }
 

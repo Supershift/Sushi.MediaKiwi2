@@ -8,7 +8,7 @@
   import { reactive } from "vue";
   import { onDeactivated } from "vue";
   import { ref } from "vue";
-  import CountryEdit from "./CountryEdit.vue";
+  import AddCountry from "./AddCountry.vue";
 
   // inject dependencies
   const { addKeyboardShortcuts, removeKeyboardShortcuts } = useKeyboardShortcuts();
@@ -59,10 +59,6 @@
     page-tracking
     @click:new="openDialog"
   >
-    <template #toolbarTitle>
-      <v-text-field label="Sample field that does nothing"></v-text-field>
-    </template>
-
     <template #thead>
       <th>Code</th>
       <th>Name</th>
@@ -74,5 +70,5 @@
     </template>
   </mk-table>
 
-  <CountryEdit v-model="state.addCountry" />
+  <AddCountry v-model="state.addCountry" />
 </template>
