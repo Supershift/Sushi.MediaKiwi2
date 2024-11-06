@@ -1,22 +1,103 @@
-import { computed, ref } from "vue";
+import { computed } from "vue";
+import { useNavigation } from "@/composables/useNavigation";
+import { NavigationItem } from "@/models/navigation";
+import { useDisplay } from "vuetify/lib/framework.mjs";
 
-/** Page title for the breadcrumb. */
-const pageTitle = ref<string | undefined>();
-
-/**
- * Composable to interfere for breadcrumbs.
- * TODO; May need further thought on how to handle in a more generic way.
- * @returns {*} Object with customPageTitle and setCustomPageTitle.
- */
 export function useBreadcrumbs() {
-  function setCustomPageTitle(value?: string) {
-    pageTitle.value = value;
+  // Inject dependencies.
+  const { xs } = useDisplay();
+  const navigation = useNavigation();
+
+  // go up the navigation tree starting from the current item
+  const breadcrumbs = computed(() => {
+    const currentItem = navigation.currentNavigationItem.value;
+    const result: Array<NavigationItem> = [];
+    let candidate: NavigationItem | undefined = { ...currentItem };
+
+    // Adds all the parents of the current item to the breadcrumb path.
+    while (candidate) {
+      if (navigation.currentRootItem.value && candidate.id === navigation.currentRootItem.value.id) {
+        // If we reach the root item, we add the item child of the root item to the breadcrumb path, if it exists.
+        if (currentEntityNavigationItem.value && currentEntityNavigationItem.value.id !== navigation.currentNavigationItem.value.id) {
+          result.unshift(currentEntityNavigationItem.value);
+        }
+
+        // We stop the loop when we reach the root item.
+        break;
+      }
+
+      result.unshift(candidate);
+
+      candidate = candidate.parent;
+    }
+
+    return result;
+  });
+
+  /**
+   * Get the entity navigation item from the navigation tree.
+   */
+  function getEntityNavigationItem(navigationItem?: NavigationItem): NavigationItem | undefined {
+    if (navigationItem && navigationItem.children?.length > 1) {
+      return navigationItem.children[0]; // the first child is the item child.
+    }
   }
 
-  const customPageTitle = computed(() => pageTitle.value);
+  /** Ther current entity navigation item */
+  const currentEntityNavigationItem = computed(() => getEntityNavigationItem(navigation.currentRootItem.value));
+
+  /** Determines if we show the whole breadcrumb or only a back button */
+  const showMobileBackButton = computed<boolean>(() => xs.value && breadcrumbs.value.length > 0);
+
+  /** Check if the breadcrumbs have any items and if all have a name */
+  const hasBreadcrumbs = computed(() => breadcrumbs.value.length && breadcrumbs.value.some((x) => x.name));
+
+  /** Return if the item is the last in the collection */
+  function isCurrentNavigationItem(navigationItem: NavigationItem): boolean {
+    if (navigationItem) {
+      return navigationItem.id === navigation.currentNavigationItem.value.id;
+    }
+    return false;
+  }
+
+  /**
+   * Set the current breadcrumb label.
+   * @param label The label to set.
+   * @param id The id of the entity, if different from the current view parameter.
+   */
+  function setCurrentBreadcrumbLabel(label: string, id?: string) {
+    if (navigation.currentNavigationItem.value) {
+      navigation.currentNavigationItem.value.entity = {
+        label: label || "",
+        id: navigation.currentViewParameter.value || id || "",
+      };
+    }
+  }
+
+  function getBreadcrumbLabel(navigationItem?: NavigationItem): string {
+    if (!navigationItem) {
+      return "";
+    }
+
+    // get the view parameter for the a specific navigation item
+    const viewParameter = navigation.getViewParameter(navigationItem);
+
+    // If the entity id is the same as the current view parameter, we use the entity label as the breadcrumb label.
+    if (navigationItem.entity && navigationItem.entity.label && navigationItem.entity?.id === viewParameter) {
+      return navigationItem.entity?.label;
+    }
+
+    return navigationItem.name || "";
+  }
 
   return {
-    setCustomPageTitle,
-    customPageTitle,
+    hasBreadcrumbs,
+    breadcrumbs,
+    showMobileBackButton,
+    setCurrentBreadcrumbLabel,
+    isCurrentNavigationItem,
+    currentEntityNavigationItem,
+    getEntityNavigationItem,
+    getBreadcrumbLabel,
   };
 }

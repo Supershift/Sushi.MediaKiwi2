@@ -15,4 +15,9 @@ export class CountryConnector {
     const response = await this.axios.get<ListResult<Country>>("/countries", { params: query });
     return response.data;
   }
+
+  async GetCountry(code: string): Promise<Country> {
+    const response = await this.axios.get<Country>(`/countries/${code}`);
+    return response.data;
+  }
 }

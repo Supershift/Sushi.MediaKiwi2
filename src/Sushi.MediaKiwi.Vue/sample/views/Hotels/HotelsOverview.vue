@@ -10,7 +10,7 @@
 
   import { container } from "tsyringe";
   import { ref } from "vue";
-  import { TableColumn } from "@/models/table/TableColumn";
+  import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
   import { useSnackbarStore } from "@/stores";
 
   // inject dependencies
@@ -26,8 +26,13 @@
   }); // demos 11 items per page (higher than default 10), also adds to the current list
   const hotels = ref<Hotel[]>([]);
   const countries = ref<Country[]>();
-  const displayOptions = ref<TableColumn[]>();
   const selectedHotels = ref<Hotel[]>([]);
+
+  // Set the name column to be hidden by default, the user can change this in the display options
+  const hiddenColumns = ["hotelName", "srp"];
+  const displayOptions = ref<TableDisplayOptions>({
+    columns: [...hiddenColumns.map((id) => ({ id, visible: false }))],
+  });
 
   // define mapping
   function srpIcon(item: Hotel): TableCellIcon {
@@ -123,12 +128,12 @@
     </template>
 
     <template #thead>
-      <mk-th v-model:sorting="sorting" :sorting-options="{ id: 'name' }">{{ t("Name") }}</mk-th>
-      <mk-th v-model:sorting="sorting" :sorting-options="{ id: 'created' }">{{ t("Created") }}</mk-th>
-      <th>{{ t("Country") }}</th>
-      <th>{{ t("Active") }}</th>
-      <th>{{ t("SRP") }}</th>
-      <th></th>
+      <mk-th mk-column-id="hotelName" v-model:sorting="sorting" :sorting-options="{ id: 'name' }">{{ t("Name") }}</mk-th>
+      <mk-th mk-column-id="createdDate" v-model:sorting="sorting" :sorting-options="{ id: 'created' }">{{ t("Created") }}</mk-th>
+      <th mk-column-id="countryName">{{ t("Country") }}</th>
+      <th mk-column-id="isActive">{{ t("Active") }}</th>
+      <th mk-column-id="srp" width="100">{{ t("SRP") }}</th>
+      <th mk-column-id="srpValue" :mk-column-label="t('SRP Icon')"></th>
     </template>
 
     <template #tbody="{ dataItem }">

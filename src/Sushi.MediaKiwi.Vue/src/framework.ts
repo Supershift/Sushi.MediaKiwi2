@@ -21,6 +21,7 @@ import { registerDirectives } from "./helpers/registerDirectives";
 import { createVuetify } from "./plugins/vuetify";
 import { registerErrorHandler } from "./helpers/registerErrorHandler";
 import { ApiNavigationProvider } from "./navigation";
+import "material-symbols/outlined.css";
 
 export default {
   install(app: App, options: MediakiwiVueOptions): void {
