@@ -34,7 +34,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<Section>> DeleteSection(string id)
         {
             var result = await _sectionService.DeleteAsync(id);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Sushi.MediaKiwi.WebAPI
             Section request)
         {   
             var result = await _sectionService.CreateAsync(id, request);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<Section>> UpdateSection(string id, Section request)
         {
             var result = await _sectionService.UpdateAsync(id, request);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<Section>> UpdateId(string id, [FromBody] string newId)
         {
             var result = await _sectionService.UpdateIdAsync(id, newId);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
     }
 }

@@ -7,8 +7,8 @@ import { DISPLAY_OPTIONS_KEY } from "@/constants";
 export const useTableDisplayStore = defineStore("tableDisplay", () => {
   const displayOptions = ref<TableDisplayOptions>();
   const { currentNavigationItem } = useNavigation();
-  const viewRef = computed(() => currentNavigationItem.value?.view?.id || "");
-  const displayOptionsKey = computed(() => `${DISPLAY_OPTIONS_KEY}_${viewRef.value}`);
+  const navItemRef = computed(() => currentNavigationItem.value?.id || "");
+  const displayOptionsKey = computed(() => `${DISPLAY_OPTIONS_KEY}_${navItemRef.value}`);
 
   async function setDisplayOptions(options: TableDisplayOptions, tableRef?: string) {
     // Set the display options

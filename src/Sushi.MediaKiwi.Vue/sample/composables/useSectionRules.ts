@@ -1,14 +1,14 @@
 import { useMediakiwiStore } from "@/stores";
 import { HotelConnector } from "../services/HotelConnector";
 import { container } from "tsyringe";
+import { SectionDisplayState } from "@/models/navigation";
 import { useSections } from "@/composables";
-import { SectionDisplayState } from "@/models/api/Section";
 
 export function useSectionRules() {
   // Inject depecency
   const hotelConnector = container.resolve(HotelConnector);
   const mediakiwiStore = useMediakiwiStore();
-  const { waitForSectionsToLoad } = useSections();
+  const { waitForSectionsToLoad } = useSections();  
 
   /**
    * Check if there are available hotels
@@ -23,9 +23,9 @@ export function useSectionRules() {
    * Disable or enable the hotel section based on the availability of hotels
    */
   function setHotelSectionDisplayState(value: SectionDisplayState = undefined) {
-    // Wait for the sections to load, to ensure that the section is available
+    // first check if store is initialized
     waitForSectionsToLoad(async () => {
-      const section = mediakiwiStore.sections.find((x) => x.id === "TestSection");
+      const section = mediakiwiStore.navigationTree.sections.find((x) => x.id === "TestSection");
       if (section) {
         // Preset true to disable the section
         section.displayState = "disabled";

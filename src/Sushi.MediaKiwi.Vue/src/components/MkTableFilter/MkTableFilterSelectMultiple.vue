@@ -2,10 +2,11 @@
   import type { TableFilterItem, TableFilterValue } from "@/models/table";
   import { computed, ref } from "vue";
   import MkTableFilterDialog from "./MkTableFilterDialog.vue";
-  import { useI18next } from "@/composables";
+  import { useFilters, useI18next } from "@/composables";
 
   // inject dependencies
-  const { t, defaultT } = await useI18next("MkFilter");
+  const { getFormatterFilterValue } = await useFilters(useI18next("MkFilter"));
+  const { defaultT } = await useI18next("MkFilter");
 
   const props = defineProps<{
     tableFilterItem: TableFilterItem;
@@ -24,9 +25,19 @@
   const additionalRules = computed(() => props.tableFilterItem.rules || []);
 
   function applyFilter() {
-    modelValue.value = {
-      value: model.value,
-    };
+    if (model.value) {
+      // Create the new filter model
+      const newFilter = <TableFilterItem>{ ...props.tableFilterItem, selectedValue: { value: model.value } };
+
+      // Get the titles of the selected options
+      const title = getFormatterFilterValue(props.tableFilterItem);
+
+      // Bind the new filter model to the model value
+      modelValue.value = {
+        value: newFilter.selectedValue!.value,
+        title: title,
+      };
+    }
   }
 </script>
 
@@ -39,7 +50,8 @@
         hide-details="auto"
         :items="tableFilterItem.options"
         :label="tableFilterItem.inputLabel || defaultT('Value')"
-        :rules="[(v: any) => !!v && !!v.length || t(`EmptyFilterError`, `This field is required`), ...additionalRules]"
+        :rules="[...additionalRules]"
+        autofocus
       >
         <template #selection="{ item }">
           <v-chip v-if="item" v-text="item.title" />

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
-using Sushi.MediaKiwi.WebAPI.Paging;
 using Sushi.MediaKiwi.WebAPI.Sorting;
 
 namespace Sushi.MediaKiwi.WebAPI
@@ -46,7 +45,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<View>> DeleteView(string id)
         {
             var result = await _viewService.DeleteAsync(id);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         
@@ -57,11 +56,11 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpGet]
         [QueryStringSorting<ViewSortMap>()]
-        public async Task<ActionResult<ListResult<View>>> GetViews(PagingValues page)
+        public async Task<ActionResult<ListResult<View>>> GetViews([FromQuery] PagingValues page)
         {
             var sortValues = _sortingRetriever.GetSorting<View>();
             var result = await _viewService.GetAllAsync(page, sortValues);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -74,7 +73,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<View>> GetView(string id)
         {
             var result = await _viewService.GetAsync(id);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -87,7 +86,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<View>> CreateView(string id, View request)
         {
             var result = await _viewService.CreateAsync(id, request);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -100,7 +99,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<View>> UpdateView(string id, View request)
         {
             var result = await _viewService.UpdateAsync(id, request);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
     }
 }

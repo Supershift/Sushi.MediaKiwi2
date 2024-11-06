@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Moq;
+using Sushi.LanguageExtensions.Errors;
 using Sushi.MediaKiwi.Services.Interfaces;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MicroORM;
@@ -39,7 +40,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             Assert.NotNull(result.Value);
             Assert.NotNull(result.Value.Result);
             Assert.Equal(2, result.Value.Result.Count);
@@ -71,7 +72,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var result = await service.GetAsync(existingId);
 
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             Assert.Equal(resultLocale, result.Value);
         }
 
@@ -93,9 +94,9 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             // act
             var result = await service.GetAsync(existingId);
-
-            Assert.NotNull(result);
-            Assert.Equal(ResultCode.NotFound, result.Code);
+            
+            Assert.NotNull(result.Error);
+            Assert.IsType<NotFoundError>(result.Error);
             Assert.Null(result.Value);
         }
 
@@ -129,7 +130,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var result = await service.CreateAsync(newId, locale);
 
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             Assert.NotNull(result.Value);
             Assert.Equal(newId, result.Value.Id);
             localeRepositoryMock.Verify(x => x.InsertAsync(It.Is<Entities.Locale>(x => x.Id == newId)), Times.Once);
@@ -162,7 +163,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var result = await service.CreateAsync(newId, locale);
 
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             Assert.NotNull(result.Value);
             Assert.Equal(newId, result.Value.Id);
             localeRepositoryMock.Verify(x => x.InsertAsync(It.Is<Entities.Locale>(x => x.Id == newId)), Times.Once);
@@ -194,7 +195,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var result = await service.DeleteAsync(existingId);
 
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             localeRepositoryMock.Verify(x=>x.DeleteAsync(existingLocale), Times.Once);
         }
 
@@ -231,7 +232,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var result = await service.UpdateAsync(existingId, locale);
 
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             Assert.NotNull(result.Value);            
             localeRepositoryMock.Verify(x => x.UpdateAsync(existingLocale), Times.Once());
             mapperMock.Verify(x => x.Map(locale, existingLocale), Times.Once());            

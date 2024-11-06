@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection.Extensions;
 using Sushi.MediaKiwi.DAL;
+using Sushi.MediaKiwi.SampleAPI.Service.Interfaces;
 
 namespace Sushi.MediaKiwi.SampleAPI
 {
@@ -14,11 +15,13 @@ namespace Sushi.MediaKiwi.SampleAPI
             // add repositories
             collection.TryAddTransient<DAL.Repository.CountryRepository>();
             collection.TryAddTransient<DAL.Repository.HotelRepository>();
+            collection.TryAddTransient<IAccountRepository, DAL.Repository.AccountRepository>(); 
 
             // add services
             collection.TryAddTransient<Service.CountryService>();
             collection.TryAddTransient<Service.HotelService>();
             collection.TryAddTransient<Service.FileUploadService>();
+            collection.TryAddTransient<Service.AccountHandler>();
 
             return collection;
         }

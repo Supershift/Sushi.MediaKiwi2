@@ -8,7 +8,7 @@
   const start = new Date("2024-05-31T22:00:00.000Z");
   const end = new Date("2024-06-30T21:59:59.999Z");
 
-  const { email } = useValidationRules();
+  const { email } = await useValidationRules();
 
   // define filters
   const filters = ref<TableFilter>({
@@ -19,9 +19,6 @@
     datePickerRange: {
       title: "Date Picker Range",
       type: TableFilterType.DateRange,
-      selectedValue: {
-        value: [start, end],
-      },
       divider: true,
     },
     contains: {
@@ -134,14 +131,16 @@
 <template>
   <mk-table v-model:filters="filters" :api-result="filterValues">
     <template #thead>
-      <th>Title</th>
-      <th>Raw value</th>
+      <th>Filter Title</th>
+      <th>Selected value</th>
+      <th>Selected value title</th>
       <th>Type</th>
     </template>
 
     <template #tbody="dataItem">
       <td width="250">{{ dataItem.title }}</td>
       <td>{{ dataItem.selectedValue?.value || "-" }}</td>
+      <td>{{ dataItem.selectedValue?.title || "-" }}</td>
       <td>{{ TableFilterType[dataItem.type!] }}</td>
     </template>
   </mk-table>

@@ -31,9 +31,10 @@ namespace Sushi.MediaKiwi.WebAPI.Sorting
         public void Add(Expression<Func<T, object?>> expression)
         {
             var _memberTree = ReflectionHelper.GetMemberTree(expression);
-            var id = string.Join(".", _memberTree.Select(x => x.Name));
+            var id = FirstCharToLower(string.Join(".", _memberTree.Select(x => x.Name)));
             _items.Add(id, expression);
 
+            static string FirstCharToLower(string n) => char.ToLowerInvariant(n[0]) + n[1..];
         }
 
         /// <summary>

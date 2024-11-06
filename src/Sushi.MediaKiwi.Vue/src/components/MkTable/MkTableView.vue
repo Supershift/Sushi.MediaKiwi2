@@ -8,6 +8,7 @@
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
   import { computed, onMounted, ref } from "vue";
   import { useTableDisplayOptions } from "@/composables/useTableDisplayOptions";
+  import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
 
   // inject dependencies
   const { initTableDisplayOptions } = useTableDisplayOptions();
@@ -17,8 +18,8 @@
     tableMap?: TableMap<T>;
     itemId?: (entity: T) => string | number;
     data?: T[];
-    /** ExternalId of the view instance to which the user is pushed when clicking a row. */
-    itemViewId?: string;
+    /** Id of the navigation item to which the user is pushed when clicking a row. */
+    navigationItemId?: string;
     /** Make each row in the table selectable. */
     checkbox?: boolean;
     /** Defines the pagination mode */
@@ -34,7 +35,7 @@
   /** Selected items */
   const selection = defineModel<Array<T>>("selection", { default: [] });
   /** Define Display Options */
-  const displayOptions = defineModel<TableColumn[] | boolean>("displayOptions", { required: false, default: [] });
+  const displayOptions = defineModel<TableDisplayOptions | boolean>("displayOptions", { required: false, default: [] });
   /** Define Table Reference for when multiple tables are on one view*/
   const tableReference = defineModel<string | undefined>("tableReference", { required: false });
   /** Check if display options are available */
@@ -97,23 +98,18 @@
     emit("click:row", dataItem);
 
     // navigate user to target page if defined
-    if (props.itemViewId) {
-      // find navigation item for the view
-      const view = store.views.find((x) => x.id == props.itemViewId);
-
-      if (!view) {
-        throw new Error(`No view found for external id ${props.itemViewId}`);
-      }
-      const navigationItem = store.navigationItems.find((x) => x.viewId == view?.id);
+    if (props.navigationItemId) {
+      // find navigation item
+      const navigationItem = store.navigationTree.getNavigationItem(props.navigationItemId);
       if (!navigationItem) {
-        throw new Error(`No navigationItem found for view ${props.itemViewId}`);
+        throw new Error(`No navigationItem found for id ${props.navigationItemId}`);
       }
 
       // try to resolve route parameter
       let itemId: RouteParamValueRaw = undefined;
-      if (navigationItem.view?.parameterName) {
+      if (navigationItem.parameterName) {
         if (!getItemId.value) {
-          throw new Error(`No itemId function found to resolve ${navigationItem.view?.parameterName}`);
+          throw new Error(`No itemId function found to resolve ${navigationItem.parameterName}`);
         }
         itemId = getItemId.value(dataItem);
         if (!itemId) {
@@ -196,8 +192,24 @@
 
   async function loadDisplayOptions() {
     if (hasDisplayOptions.value) {
-      displayOptions.value = initTableDisplayOptions(tableReference.value);
+      const columns = initTableDisplayOptions(tableReference.value, displayOptions.value);
+
+      displayOptions.value = <TableDisplayOptions>{
+        columns: columns,
+      };
     }
+  }
+
+  /**
+   * Returns a row key for the provided data item, or a fallback value if no key can be generated
+   * @param dataItem The data item for which to generate a key
+   * @param fallback The fallback value to use if no key can be generated
+   */
+  function getRowKey(dataItem: T, fallback: number) {
+    if (getItemId.value && dataItem) {
+      return getItemId.value(dataItem);
+    }
+    return fallback;
   }
 
   onMounted(() => {
@@ -221,7 +233,12 @@
     </thead>
     <tbody ref="tbodyContainer" class="mk-table-view__body-container">
       <!-- render a row for each provided data entity -->
-      <tr v-for="(dataItem, rowIndex) in props.data" :key="rowIndex" :class="tableRowClassses()" @click.stop="(e) => onRowClick(e, dataItem)">
+      <tr
+        v-for="(dataItem, rowIndex) in props.data"
+        :key="getRowKey(dataItem, rowIndex)"
+        :class="tableRowClassses()"
+        @click.stop="(e) => onRowClick(e, dataItem)"
+      >
         <td v-if="checkbox" @click.stop class="mk-table-view__checkbox-container--body">
           <MkTableCheckbox
             :item="dataItem"

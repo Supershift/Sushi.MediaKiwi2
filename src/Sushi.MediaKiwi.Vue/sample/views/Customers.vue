@@ -17,7 +17,6 @@
   const currentPagination = ref<Paging>({
     pageIndex: 0,
   });
-  const displayOptions = ref<TableColumn[]>();
 
   const state = reactive({
     selectedSortOption: <Sorting<SampleData>>{
@@ -33,6 +32,8 @@
       countryName: "Nederland",
       date: new Date("2021-01-01"),
     },
+    selectedCustomerId: 0,
+    showCustomerSideSheet: false,
   });
 
   // define filters
@@ -107,8 +108,9 @@
     }
   }
 
-  function onCustomerClick(value: any) {
-    state.refData = value;
+  function onCustomerClick(value: SampleData) {
+    state.selectedCustomerId = value.id;
+    state.showCustomerSideSheet = true;
   }
 </script>
 
@@ -125,7 +127,7 @@
     @click:row="onCustomerClick"
     hide-bulk-action-bar
     :disable-item-selection="(item) => item.id % 2 !== 0"
-    v-model:display-options="displayOptions"
+    display-options
     pagination-mode="controls"
   >
     <template #bulkActionBar="{ confirm }">
@@ -154,5 +156,5 @@
     </template>
   </MkTable>
 
-  <SampleSideSheet :customer="state.refData"></SampleSideSheet>
+  <SampleSideSheet :customer-id="state.selectedCustomerId" v-model="state.showCustomerSideSheet"></SampleSideSheet>
 </template>

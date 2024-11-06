@@ -29,7 +29,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             Assert.NotNull(result.Value);
             Assert.Equal(2, result.Value.Count);
             Assert.Equal(stubs[0].Key, result.Value.Keys.ToArray()[0]);
@@ -54,7 +54,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             translationRepositoryMock.Verify(x=> x.InsertMissingAsync(ns, key, value));
         }
     }

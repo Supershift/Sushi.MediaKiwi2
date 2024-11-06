@@ -5,11 +5,16 @@ import { InitOptions, i18n } from "i18next";
 import { MediakiwiIdentity } from "./MediakiwiIdentity";
 import { VuetifyOptions } from "vuetify";
 import { MediakiwiTableOptions } from "./MediakiwiTableOptions";
+import { MediaKiwiFormOptions } from "./MediaKiwiFormOptions";
 import { MediakiwiSigninConfigurations } from "./MediakiwiSignInConfigurations";
+import { INavigationProvider } from "@/navigation/INavigationProvider";
+import { ComponentPublicInstance } from "vue";
 
 export interface MediakiwiVueOptions {
   /** Base url for the MediaKiwi API, e.g. https://portal.mydomain.com/mediakiwi/api */
   apiBaseUrl: string;
+  /** Which provider to use for retrieving navigation. By default, API connectors are used */
+  navigationProvider?: INavigationProvider;
   modules: Record<string, RouteComponent>;
   customRoutes?: RouteRecordRaw[];
   msalConfig: Configuration;
@@ -36,5 +41,8 @@ export interface MediakiwiVueOptions {
     [key: string]: MediakiwiSigninConfigurations;
   };
   /** Global options used for MkTable */
-  tableOptions?: MediakiwiTableOptions
+  tableOptions?: MediakiwiTableOptions;
+  formOptions?: MediaKiwiFormOptions;
+  /** Global errorhandler, see {@link https://vuejs.org/api/application.html#app-config-errorhandler} */
+  globalErrorHandler?: (err: any, instance?: ComponentPublicInstance | null, info?: string) => Promise<void>;
 }

@@ -1,134 +1,199 @@
-<script setup lang="ts">
-  import { ref } from "vue";
-  import { MkToolbar } from "@/components/MkToolbar";
-  import { useNavigation } from "@/composables/useNavigation";
-  import { useSnackbarStore } from "@/stores/snackbar";
-  import { useI18next } from "@/composables/useI18next";
+<script setup lang="ts" generic="T extends Object">
+  import MkErrorProblemDetails from "@/components/MkErrorProblemDetails/MkErrorProblemDetails.vue";
+  import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
+  import MkConfirmDialog from "@/components/MkConfirmDialog/MkConfirmDialog.vue";
+  import { ref, getCurrentInstance } from "vue";
+  import MkToolbar from "../MkToolbar/MkToolbar.vue";
   import MkOverflowMenuIcon from "../MkOverflowMenuIcon/MkOverflowMenuIcon.vue";
+  import { FormSlotProps, FormViewProps } from "@/models/form/FormProps";
+  import { useMediakiwiVueOptions } from "@/composables/useMediakiwiVueOptions";
+  import { useForm } from "@/composables/form/useForm";
+  import { useNavigation } from "@/composables/useNavigation";
+  import { useErrorMessages } from "@/composables/useErrorMessages";
 
-  // inject dependencies
-  const { defaultT } = await useI18next();
-
-  // define properties
-  const props = defineProps<{
-    onSave?: (event?: Event) => Promise<void>;
-    onDelete?: (event: Event) => Promise<void>;
-    onLoad?: (event?: Event) => Promise<void>;
-    sticky?: boolean;
-    title?: string;
-    hideToolbar?: boolean;
-  }>();
-
-  // define slots
-  defineSlots<{
-    toolbarHeader?: void;
-    default?: void;
-  }>();
-
-  // define reactive variables
-  const inProgress = ref(false);
-
-  // inject dependencies
+  // Inject dependencies
   const navigation = useNavigation();
-  const snackbar = useSnackbarStore();
+  const { formOptions } = useMediakiwiVueOptions();
+  const instance = getCurrentInstance();
+  // Get the content
+  const errorMessages = await useErrorMessages();
 
-  // event listeners
-  async function onSave(event?: Event) {
-    if (!props.onSave) {
-      throw new Error("No onSave handler provided");
-    }
-    inProgress.value = true;
-    try {
-      await props.onSave(event);
-      snackbar.showMessage("Saved successfully");
-    } catch (error) {
-      snackbar.showMessage("Failed to save");
-      throw error;
-    } finally {
-      inProgress.value = false;
-    }
-  }
+  // Define props
+  const props = withDefaults(defineProps<FormViewProps>(), {
+    sticky: undefined,
+    hideToolbar: undefined,
+    closeOnSubmit: undefined,
+    showProblemDetailsDetailField: undefined,
+    validateOnLoad: undefined,
+    confirmBeforeSubmit: undefined,
+    hideSubmitSnackbar: undefined,
+    resetOnSubmit: undefined,
+    saveLabels: undefined,
+    editLabels: undefined,
+    redirectAfterDelete: undefined,
+    hideDeleteSnackbar: undefined,
+    hideUndo: undefined,
+  });
 
-  async function onDelete(event: Event) {
-    if (!props.onDelete) {
-      throw new Error("No onDelete handler provided");
-    }
-    inProgress.value = true;
-    try {
-      await props.onDelete(event);
-      snackbar.showMessage("Deleted successfully");
-      // send back to parent
-      navigation.navigateToParent();
-    } catch (error) {
-      snackbar.showMessage("Failed to delete");
-      throw error;
-    } finally {
-      inProgress.value = false;
-    }
-  }
+  // Define computedProps defaults
+  const defaultProps = <FormViewProps>{
+    redirectAfterDelete: true,
+    validateOn: "blur",
+    ...formOptions?.general,
+    ...formOptions?.view,
+  };
 
-  async function onLoad(event?: Event) {
-    if (!props.onLoad) {
-      throw new Error("No onLoad handler provided");
-    }
-    inProgress.value = true;
-    try {
-      await props.onLoad(event);
-    } catch (error) {
-      snackbar.showMessage("Failed to load data");
-      throw error;
-    } finally {
-      inProgress.value = false;
-    }
-  }
+  /** The value representing if the form is processing a request. */
+  const inProgress = defineModel<boolean>("inProgress", { required: false, default: false });
+  /** The value representing the validity of the form. If the value is null then no validation has taken place yet, or the form has been reset. Otherwise the value will be a boolean that indicates if validation has passed or not. */
+  const isValid = defineModel<boolean>("isValid", { required: false, default: false });
+  /** The value representing the error that occurred during the last request. */
+  const errorProblemDetails = defineModel<ErrorProblemDetails | null | undefined>("error", { required: false });
+  /** Indicator that the forms onLoad event has been completed  */
+  const isLoaded = ref<boolean>(false);
 
-  async function onUndo(event?: Event) {
-    if (!props.onLoad) {
-      throw new Error("No onLoad handler provided");
-    }
-    inProgress.value = true;
-    try {
-      await props.onLoad(event);
-      snackbar.showMessage("Changes reverted");
-    } catch (error) {
-      snackbar.showMessage("Failed to revert changes");
-      throw error;
-    } finally {
-      inProgress.value = false;
+  // Define refs
+  const formRef = ref();
+  const formId = `mk-form-view__${instance?.uid}`;
+
+  // Define the form
+  const {
+    onLoad,
+    onDelete,
+    onSubmit,
+    onUndo,
+    submitConfirmDialog,
+    hasSubmitHandler,
+    hasUndoHandler,
+    submitButtonColor,
+    hasDeleteHandler,
+    isSubmitDisabled,
+    isUndoDisabled,
+    computedProps,
+    submitConfirmationTitle,
+    submitButtonLabel,
+    submitConfirmationBody,
+    undoButtonLabel,
+    formSlotProps,
+    deleteButtonLabel,
+    deleteConfirmationTitle,
+    deleteConfirmationBody,
+  } = await useForm(() => props, defaultProps, formRef, formId, inProgress, isValid, errorProblemDetails, isLoaded);
+
+  // Define slots
+  const slots = defineSlots<{
+    /** Additional toolbar items */
+    toolbar?: (props: FormSlotProps) => never;
+    /** Additional toolbar header */
+    toolbarHeader?: (props: FormSlotProps) => never;
+    /** Default body slot */
+    default?: (props: FormSlotProps) => never;
+    /** Additional list items for the overflow menu */
+    overflowIconItems?: (props: FormSlotProps) => never;
+    /** slots for the title */
+    title?: void;
+    /** Provide the form with actions instead of the default */
+    actions?: (props: FormSlotProps) => never;
+  }>();
+
+  /**
+   * Exposes refs to the parent component.
+   * @example <Form ref="mkFormRef" ... />
+   */
+  /** Exposes refs to the parent component. */
+  defineExpose({
+    validate: () => {
+      formRef.value?.validate();
+    },
+    /** Clear the form */
+    reset: () => {
+      formRef.value?.reset();
+    },
+    resetValidation() {
+      formRef.value?.resetValidation();
+    },
+    setError(error: ErrorProblemDetails) {
+      if (!error || !error.detail || !error.error) {
+        error = new ErrorProblemDetails(errorMessages.unexpectedErrorMessage);
+      }
+      errorProblemDetails.value = error;
+    },
+  });
+
+  async function onDeleteWithRedirect() {
+    const result = await onDelete();
+
+    if (result.isSuccess) {
+      // Redirect to the parent if the flag is set
+      if (computedProps.value.redirectAfterDelete && navigation.currentNavigationItem.value?.parent) {
+        // Redirect to the top list
+        navigation.navigateToParent();
+      }
     }
   }
 
   // load data async on created
-  await onLoad();
+  onLoad();
 </script>
 <template>
-  <MkToolbar
-    v-if="!hideToolbar"
-    :loading="inProgress"
-    v-bind="$attrs"
-    :item-view-id="navigation.currentNavigationItem.value.viewId"
-    :title="props.title ?? navigation.currentNavigationItem.value.viewId"
-    :new="false"
-    :delete="$props.onDelete ? true : false"
-    :save="$props.onSave ? true : false"
-    :undo="$props.onLoad && $props.onSave ? true : false"
-    :sticky="props.sticky ? true : false"
-    @save="onSave"
-    @undo="onUndo"
-    @delete="onDelete"
-  >
-    <template #header>
-      <slot name="toolbarHeader"></slot>
-      <v-card-actions>
-        <v-btn v-if="onUndo" :disabled="false" @click="onUndo">{{ defaultT("Undo") }}</v-btn>
-        <v-btn v-if="onSave" :disabled="false" @click="onSave">{{ defaultT("Save") }}</v-btn>
-        <MkOverflowMenuIcon v-if="onDelete">
-          <v-list-item v-if="onDelete" @click="onDelete"> {{ defaultT("Delete") }}</v-list-item>
-        </MkOverflowMenuIcon>
-      </v-card-actions>
-    </template>
-  </MkToolbar>
-  <v-form :disabled="inProgress" :class="[{ 'v-form--sticky': $props.sticky }]">
-    <slot></slot>
+  <v-progress-linear v-if="inProgress" indeterminate></v-progress-linear>
+
+  <v-form v-if="isLoaded" :id="formId" v-model="isValid" :validate-on="computedProps.validateOn" ref="formRef" @submit.prevent="onSubmit">
+    <MkToolbar
+      v-if="!computedProps.hideToolbar"
+      v-bind="$attrs"
+      :navigation-item-id="navigation.currentNavigationItem.value.id"
+      :title="computedProps.title"
+      :new="false"
+      :sticky="computedProps.sticky ? true : false"
+    >
+      <template v-if="slots.title" #title>
+        <slot name="title" v-bind="formSlotProps"></slot>
+      </template>
+
+      <template v-if="slots.toolbarHeader" #header>
+        <slot name="toolbarHeader" v-bind="formSlotProps"></slot>
+      </template>
+
+      <template #toolbar>
+        <slot v-if="slots.actions" name="actions" v-bind="formSlotProps"></slot>
+        <template v-else>
+          <slot v-if="slots.toolbar" name="toolbar" v-bind="formSlotProps"></slot>
+          <v-btn v-if="hasUndoHandler" color="primary" @click="onUndo()" :disabled="isUndoDisabled">{{ undoButtonLabel }}</v-btn>
+          <v-btn type="submit" v-if="hasSubmitHandler" variant="flat" :color="submitButtonColor" :disabled="isSubmitDisabled" :form="formId">{{
+            submitButtonLabel
+          }}</v-btn>
+
+          <MkOverflowMenuIcon v-if="hasDeleteHandler || slots.overflowIconItems">
+            <MkConfirmDialog v-if="hasDeleteHandler" @confirm="onDeleteWithRedirect" :title="deleteConfirmationTitle" :confirm-button-label="deleteButtonLabel">
+              <template #activator="{ props }">
+                <v-list-item v-bind="props" :title="deleteButtonLabel" />
+              </template>
+              <template #default>
+                <p>{{ deleteConfirmationBody }}</p>
+              </template>
+            </MkConfirmDialog>
+            <slot v-if="slots.overflowIconItems" name="overflowIconItems" v-bind="formSlotProps"></slot>
+          </MkOverflowMenuIcon>
+        </template>
+      </template>
+    </MkToolbar>
+
+    <MkErrorProblemDetails
+      v-if="errorProblemDetails"
+      v-model:problem-details="errorProblemDetails"
+      class="mb-4"
+      :show-details="computedProps.showProblemDetailsDetailField"
+    />
+
+    <MkConfirmDialog
+      v-model="submitConfirmDialog"
+      :title="submitConfirmationTitle"
+      :confirm-button-label="submitButtonLabel"
+      :body="submitConfirmationBody"
+      @confirm="(event) => onSubmit(event, true)"
+    />
+
+    <slot name="default" v-bind="formSlotProps"></slot>
   </v-form>
 </template>

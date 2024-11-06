@@ -15,14 +15,13 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.6" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="Microsoft.SqlServer.DacFx" Version="162.2.111" />
-    <PackageReference Include="Testcontainers.MsSql" Version="3.8.0" />
+    <PackageReference Include="Testcontainers.MsSql" Version="3.10.0" />
     <PackageReference Include="xunit" Version="2.5.3" />
     <PackageReference Include="Xunit.Extensions.AssemblyFixture" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Sushi.LanguageExtensions\Sushi.LanguageExtensions.csproj" />
     <ProjectReference Include="..\..\src\Sushi.MediaKiwi.SampleAPI\Sushi.MediaKiwi.SampleAPI.csproj" />
   </ItemGroup>
 

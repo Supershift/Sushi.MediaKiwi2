@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Sushi.LanguageExtensions;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
 
@@ -12,13 +13,13 @@ namespace Sushi.MediaKiwi.WebAPI
     [Route($"{BaseRoute}/identityprovider/")]
     public class IdentityProviderController : MediaKiwiControllerBase
     {
-        private readonly EntraSettings settings;
+        private readonly EntraSettings _settings;
 
         /// <summary></summary>
         public IdentityProviderController(IConfiguration configuration)
         {
             var azureAdSection = configuration.GetSection(Microsoft.Identity.Web.Constants.AzureAd);
-            settings = new EntraSettings
+            _settings = new EntraSettings
             {
                 ClientId = azureAdSection.GetSection("ClientId")?.Value ?? "",
                 TenantId = azureAdSection.GetSection("TenantId")?.Value ?? "",
@@ -35,7 +36,7 @@ namespace Sushi.MediaKiwi.WebAPI
         [AllowAnonymous]
         public ActionResult<EntraSettings> GetEntra()
         {
-            return this.CreateResponse(new Result<EntraSettings>(settings));
+            return Ok(_settings);
         }
     }
 }

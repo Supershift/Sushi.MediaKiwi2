@@ -3,14 +3,16 @@
   import { ref } from "vue";
   import { container } from "tsyringe";
   import { IViewConnector } from "@/services";
-  import { View } from "@/models";
+  import { ViewDto } from "@/models";
   import { useMediakiwiStore } from "@/stores";
   import { RouterManager } from "@/router/routerManager";
   import { useNavigation } from "@/composables/useNavigation";
+  import { useValidationRules } from "@/composables";
 
   // inject dependencies
   const viewConnector = container.resolve<IViewConnector>("IViewConnector");
   const routerManager = container.resolve<RouterManager>("RouterManager");
+  const { required } = await useValidationRules();
 
   const store = useMediakiwiStore();
   const navigation = useNavigation();
@@ -19,7 +21,7 @@
   const viewId = navigation.currentViewParameter;
 
   // declare reactive variables
-  const view = ref<View>({ id: viewId.value ?? "" });
+  const view = ref<ViewDto>({ id: viewId.value ?? "" });
 
   async function onLoad() {
     if (viewId.value) {
@@ -51,7 +53,7 @@
     }
   }
 
-  let onDelete: ((event: Event) => Promise<void>) | undefined = undefined;
+  let onDelete: ((event?: Event) => Promise<void>) | undefined = undefined;
   if (viewId.value) {
     onDelete = async () => {
       if (viewId.value) {
@@ -65,13 +67,20 @@
 </script>
 
 <template>
-  <MkForm title="View" :on-save="onSave" :on-load="onLoad" :on-delete="onDelete">
-    <v-text-field v-model="view.id" label="Id" hint="Unique human-readable id for the view." :disabled="viewId ? true : false"></v-text-field>
-    <v-text-field v-model="view.name" label="Name"></v-text-field>
+  <MkForm title="View" :onSubmit="onSave" :on-delete="onDelete" @load="onLoad">
+    <v-text-field
+      v-model="view.id"
+      label="Id"
+      hint="Unique human-readable id for the view."
+      :disabled="viewId ? true : false"
+      :rules="[required]"
+    ></v-text-field>
+    <v-text-field v-model="view.name" label="Name" :rules="[required]"></v-text-field>
     <v-text-field
       v-model="view.componentKey"
       label="Component key"
       hint="The key of the component as set in the modules property of the mediakiwi options."
+      :rules="[required]"
     ></v-text-field>
     <v-text-field
       v-model="view.parameterName"

@@ -97,7 +97,7 @@
     :table-map="tableMap"
     :on-load="LoadData"
     :data="availableRooms"
-    item-view-id="RoomsEdit"
+    navigation-item-id="RoomsEdit"
   >
   </mk-table>
 </template>

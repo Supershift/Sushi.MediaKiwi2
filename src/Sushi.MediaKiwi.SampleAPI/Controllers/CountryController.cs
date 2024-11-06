@@ -20,10 +20,18 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
         }
 
         [HttpGet]      
-        public async Task<ActionResult<ListResult<Country>>> GetAll(PagingValues paging)
-        {
+        public async Task<ActionResult<ListResult<Country>>> GetAll([FromQuery] PagingValues paging)
+        {   
             var result = await _countryService.GetAllAsync(paging);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
+        }
+        
+
+        [HttpGet, Route("{code}")]      
+        public async Task<ActionResult<Country>> GetCountry(string code)
+        {   
+            var result = await _countryService.GetCountryAsync(code);
+            return this.ToResponse(result);
         }
     }
 }

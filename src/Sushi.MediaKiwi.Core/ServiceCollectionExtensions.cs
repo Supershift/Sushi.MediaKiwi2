@@ -24,6 +24,7 @@ namespace Sushi.MediaKiwi.Core
         {
             services.AddMediaKiwiDAL();
             services.AddMediaKiwiApi(azureAdConfig, autoMapperConfig, authorizationOptions);
+
             return services;
         }
     }

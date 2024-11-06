@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Sushi.LanguageExtensions;
+using Sushi.LanguageExtensions.Errors;
 using Sushi.MediaKiwi.Services.Interfaces;
 using Sushi.MediaKiwi.Services.Model;
 
@@ -9,19 +11,17 @@ namespace Sushi.MediaKiwi.Services
     /// </summary>
     public class NavigationItemService
     {
-        private readonly INavigationItemRepository _navigationItemRepository;
+        private readonly INavigationItemRepository _navigationItemRepository;        
         private readonly IMapper _mapper;
 
         /// <summary>
         /// Creates a new instance of <see cref="NavigationItemService"/>.
-        /// </summary>
-        /// <param name="navigationItemRepository"></param>
-        /// <param name="mapper"></param>
+        /// </summary>        
         public NavigationItemService(
-            INavigationItemRepository navigationItemRepository, 
+            INavigationItemRepository navigationItemRepository,             
             IMapper mapper)
         {
-            _navigationItemRepository = navigationItemRepository;
+            _navigationItemRepository = navigationItemRepository;            
             _mapper = mapper;
         }
 
@@ -32,7 +32,7 @@ namespace Sushi.MediaKiwi.Services
         /// <param name="pagingValues"></param>
         /// <param name="sortValues"></param>
         /// <returns></returns>
-        public async Task<Result<ListResult<NavigationItem>>> GetAllAsync(string? sectionID, PagingValues pagingValues, SortValues<NavigationItem>? sortValues = null)
+        public async Task<Result<ListResult<NavigationItem>, Error>> GetAllAsync(string? sectionID, PagingValues pagingValues, SortValues<NavigationItem>? sortValues = null)
         {
             // map sort values to dal
             var sortValuesDal = _mapper.MapSortValues<Entities.NavigationItem>(sortValues);
@@ -44,9 +44,9 @@ namespace Sushi.MediaKiwi.Services
             var itemsDto = _mapper.Map<List<NavigationItem>>(items);
 
             // create result object
-            var result = new ListResult<NavigationItem>(itemsDto, items);            
+            var result = new ListResult<NavigationItem>(itemsDto, items);
 
-            return new Result<ListResult<NavigationItem>>(result);
+            return result;
         }       
                 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Sushi.MediaKiwi.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<Result<NavigationItem>> GetAsync(string id)
+        public async Task<Result<NavigationItem, Error>> GetAsync(string id)
         {
             // get item from datastore
             var navigationItem = await _navigationItemRepository.GetAsync(id);
@@ -64,12 +64,12 @@ namespace Sushi.MediaKiwi.Services
                 // map to result
                 var result = new NavigationItem();
                 _mapper.Map(navigationItem, result);
-                
-                return new Result<NavigationItem>(result);
+
+                return result;
             }
             else
             {
-                return new Result<NavigationItem>(ResultCode.NotFound);
+                return new NotFoundError();
             }
         }
          
@@ -79,7 +79,7 @@ namespace Sushi.MediaKiwi.Services
         /// <param name="id"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<Result<NavigationItem>> CreateAsync(string id, NavigationItem request)
+        public async Task<Result<NavigationItem, Error>> CreateAsync(string id, NavigationItem request)
         {
             var navigationItem = new Entities.NavigationItem();
 
@@ -90,7 +90,7 @@ namespace Sushi.MediaKiwi.Services
             navigationItem.Id = id;
 
             // start transaction
-            using (var ts = Utility.CreateTransactionScope())
+            using (var ts = TransactionUtility.CreateTransactionScope())
             {                
                 await _navigationItemRepository.InsertAsync(navigationItem);
 
@@ -102,7 +102,7 @@ namespace Sushi.MediaKiwi.Services
             var result = new NavigationItem();
             _mapper.Map(navigationItem, result);
 
-            return new Result<NavigationItem>(result);            
+            return result;            
         }
                 
         /// <summary>
@@ -111,20 +111,20 @@ namespace Sushi.MediaKiwi.Services
         /// <param name="id"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<Result<NavigationItem>> UpdateAsync(string id, NavigationItem request)
+        public async Task<Result<NavigationItem, Error>> UpdateAsync(string id, NavigationItem request)
         {
             // get existing view, based on id
             var navigationItem = await _navigationItemRepository.GetAsync(id);
             if (navigationItem == null)
             {
-                return new Result<NavigationItem>(ResultCode.NotFound);
+                return new NotFoundError();
             }
 
             // map from model to database
             _mapper.Map(request, navigationItem);
 
             // start transaction
-            using (var ts = Utility.CreateTransactionScope())
+            using (var ts = TransactionUtility.CreateTransactionScope())
             {
                 // update view                
                 await _navigationItemRepository.UpdateAsync(navigationItem);
@@ -136,7 +136,7 @@ namespace Sushi.MediaKiwi.Services
             var result = new NavigationItem();
             _mapper.Map(navigationItem, result);
 
-            return new Result<NavigationItem>(result);
+            return result;
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace Sushi.MediaKiwi.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<Result> DeleteAsync(string id)
+        public async Task<Result<Error>> DeleteAsync(string id)
         {
             // get item from datastore
             var view = await _navigationItemRepository.GetAsync(id);
@@ -153,43 +153,32 @@ namespace Sushi.MediaKiwi.Services
             {   
                 // delete item
                 await _navigationItemRepository.DeleteAsync(view.Id);
-                return new Result(ResultCode.Success);
+                return Result.Success<Error>();
             }
             else
             {
-                return new Result(ResultCode.NotFound);
+                return new NotFoundError();
             }
         }
 
         /// <summary>
         /// Updates the ID of a <see cref="NavigationItem"/>.
         /// </summary>
-        /// <param name="oldId"></param>
-        /// <param name="newId"></param>
-        /// <returns></returns>
-        public async Task<Result<NavigationItem>> UpdateIdAsync(string oldId, string newId)
-        {
-            // sanitize input
-            newId = newId.Trim();
-            
-            // validate input
-            var error = Entities.NavigationItem.ValidateId(newId);
-            if (error != null)
-                return new Result<NavigationItem>(ResultCode.ValidationFailed) { ErrorMessage = error };
-            
+        public async Task<Result<NavigationItem, Error>> UpdateIdAsync(UpdateNavigationItemIdRequest request)
+        {   
             // get item from datastore
-            var navigationItem = await _navigationItemRepository.GetAsync(oldId);
+            var navigationItem = await _navigationItemRepository.GetAsync(request.FromId);
 
             if (navigationItem == null)
             {
-                return new Result<NavigationItem>(ResultCode.NotFound);
+                return new NotFoundError();
             }
 
             // change ID
-            await _navigationItemRepository.UpdateIdAsync(oldId, newId);
+            await _navigationItemRepository.UpdateIdAsync(request.FromId, request.ToId);
 
             // return result
-            return await GetAsync(newId);
+            return await GetAsync(request.ToId);
         }
     }
 }

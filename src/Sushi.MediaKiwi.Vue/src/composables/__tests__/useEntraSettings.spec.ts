@@ -27,7 +27,7 @@ describe('useEntraSettings', () => {
   });
 
   it('getEntraSettings returns the correct settings', async () => {
-    const { getEntraSettings } = useEntraSettings();
+    const { getEntraSettings } = useEntraSettings('');
 
     const settings = await getEntraSettings();
 
@@ -35,7 +35,7 @@ describe('useEntraSettings', () => {
   });
 
   it('fillEntraSettings fills the options correctly', async () => {
-    const { fillEntraSettings } = useEntraSettings();
+    const { fillEntraSettings } = useEntraSettings('');
     const options = await fillEntraSettings({ apiBaseUrl: "" } as MediakiwiVueOptions);
 
     expect(options.msalConfig.auth.clientId).toBe("client-id");

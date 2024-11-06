@@ -17,8 +17,10 @@ import { modules } from "./views/modules";
 import { useEntraSettings } from "@/composables/useEntraSettings";
 import { Configuration } from "@azure/msal-browser";
 
+import navigation from "./navigation/NavigationProvider";
+
 // add mediakiwi
-const mediakiwiOptions = <MediakiwiVueOptions>{
+const mediakiwiOptions: MediakiwiVueOptions = {
   // configure the vuetify options with the additional icon aliases
   vuetifyOptions: {
     icons: {
@@ -36,6 +38,7 @@ const mediakiwiOptions = <MediakiwiVueOptions>{
     },
   },
   apiBaseUrl: import.meta.env.VITE_APP_MEDIAKIWI_APIBASEURL,
+  navigationProvider: navigation,
   msalConfig: <Configuration>{},
   identity: <MediakiwiIdentity>{},
   // import all views as models
@@ -55,11 +58,24 @@ const mediakiwiOptions = <MediakiwiVueOptions>{
     light: {
       image: "./flowers.png",
       color: "rgba(100, 142, 239, 0.6)",
-    }
-  }
+    },
+  },
+  formOptions: {
+    view: {
+      redirectAfterDelete: true,
+    },
+    dialog: {
+      closeOnSubmit: true,
+      resetOnSubmit: true,
+    },
+    sideSheet: {
+      resetOnSubmit: true,
+      closeOnSubmit: true,
+    },
+  },
 };
 
-const { fillEntraSettings } = useEntraSettings();
+const { fillEntraSettings } = useEntraSettings(import.meta.env.VITE_APP_MEDIAKIWI_APIBASEURL);
 const mediakiwiOptionsWithEntra = await fillEntraSettings(mediakiwiOptions);
 
 // Create the app

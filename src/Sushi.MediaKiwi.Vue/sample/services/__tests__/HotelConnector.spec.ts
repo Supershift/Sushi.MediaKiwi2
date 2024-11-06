@@ -23,7 +23,7 @@ describe("HotelConnector", () => {
     const result = await connector.GetAllAsync();
 
     // assert
-    expect(axiosMock.get).toHaveBeenCalledWith("/hotels", { params: {} });
+    expect(axiosMock.get).toHaveBeenCalledWith("/hotel", { params: {} });
     expect(result).toBe(expectedResult.data);
   });
 
@@ -37,7 +37,7 @@ describe("HotelConnector", () => {
     const result = await connector.GetAsync(1);
 
     // assert
-    expect(axiosMock.get).toHaveBeenCalledWith("/hotels/1");
+    expect(axiosMock.get).toHaveBeenCalledWith("/hotel/1");
     expect(result).toBe(expectedResult.data);
   });
 });

@@ -22,6 +22,7 @@
   import { defaultPageSizeOptions, defaultPageSize } from "@/constants";
   import { useComponentContext } from "@/composables/useComponentContext";
   import MkEmptyState from "../MkEmptyState/MkEmptyState.vue";
+  import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
 
   // define properties
   const props = withDefaults(
@@ -35,10 +36,10 @@
       /** When set, enables paging based on provided values. */
       paging?: IPagingResult;
       /** ExternalId of the view instance to which the user is pushed when clicking a row. */
-      itemViewId?: string;
+      navigationItemId?: string;
       /** Determines if the toolbar has a new button, default: false. */
       new?: boolean;
-      /** Determines if we only want to emit instead of navigating to the given itemViewId */
+      /** Determines if we only want to emit instead of navigating to the given navigationItemId */
       newEmit?: boolean;
       /** Overrides the "new item" button title */
       newTitle?: string;
@@ -82,7 +83,7 @@
     },
   });
   /** Display options for the table */
-  const displayOptions = defineModel<TableColumn[] | boolean>("displayOptions", { required: false });
+  const displayOptions = defineModel<TableDisplayOptions | boolean>("displayOptions", { required: false });
   const hasDisplayOptions = computed(() => displayOptions.value !== undefined && displayOptions.value !== false);
   /** Reference for multiple tables on one view */
   const tableReference = defineModel<string>("tableReference", { required: false, default: "Table" });
@@ -144,10 +145,10 @@
 
   /**
    * Returns if the component has click implementation
-   * Either by itemViewId or click:row event
+   * Either by navigationItemId or click:row event
    */
   const hasTableRowClickAction = computed<boolean>(() => {
-    return hasDefinedEmit("click:row") || props.itemViewId !== undefined;
+    return hasDefinedEmit("click:row") || props.navigationItemId !== undefined;
   });
 
   /**
@@ -215,7 +216,6 @@
         initialDataLoaded.value = true;
       } catch (error) {
         snackbar.showMessage("Failed to fetch data");
-        throw error;
       } finally {
         // stop progress indicator
         inProgress.value = false;
@@ -234,7 +234,7 @@
 
     <template v-if="props.new || props.title || slots.toolbar || slots.overflowMenuActions">
       <MkToolbar
-        :item-view-id="props.itemViewId"
+        :navigation-item-id="props.navigationItemId"
         :title="props.title"
         :new="props.new"
         :new-emit="props.newEmit"
@@ -271,7 +271,7 @@
       ref="mkTableViewComponent"
       :table-map="tableMap"
       :data="apiResult ? apiResult.result : data"
-      :item-view-id="itemViewId"
+      :navigation-item-id="navigationItemId"
       v-model:sorting="sorting"
       v-model:selection="selection"
       :checkbox="selection ? true : false"
@@ -336,7 +336,7 @@
       <MkEmptyState
         v-else
         :new="props.new"
-        :item-view-id="props.itemViewId"
+        :navigation-item-id="props.navigationItemId"
         :new-title="props.newTitle"
         :new-emit="props.newEmit"
         :headline="props.emptyStateTitle"

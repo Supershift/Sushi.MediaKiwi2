@@ -1,6 +1,7 @@
 import { TableColumn } from "@/models/table/TableColumn";
 import { useTableDisplayStore } from "@/stores/tableDisplay";
 import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
+import { displayOptionsColumnIdAttr, displayOptionsColumnNameAttr } from "@/constants";
 
 export function useTableDisplayOptions() {
   const tableDisplayStore = useTableDisplayStore();
@@ -28,13 +29,10 @@ export function useTableDisplayOptions() {
   }
 
   /**
-  * Generates a random UUID table options
-  */
-  function _uuid() {
-    return 'DO-xxxxxx'.replace(/[xy]/g, function (c) {
-      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(8);
-    });
+   * Generates a unique id based on the value
+   */
+  function generateUniqueId(value: string) {
+    return value.toLowerCase().replace(/[^a-z0-9]+(.)/g, (_, char) => char.toUpperCase()); // capitalize after non-alphanumeric characters
   }
 
   /**
@@ -70,7 +68,6 @@ export function useTableDisplayOptions() {
           setColumnVisibility(columns, column, tableRef);
         }
       });
-
     });
   }
 
@@ -84,7 +81,7 @@ export function useTableDisplayOptions() {
 
     // Add an attribute to the head element
     columns.forEach((column) => {
-      const element = headerNodes[column.index];
+      const element = headerNodes[column.index!];
       if (element) {
         element.setAttribute("data-display-options-id", column.id);
       }
@@ -96,32 +93,40 @@ export function useTableDisplayOptions() {
    * @returns Array<TableColumn> an array of table columns generated from the table headers
    */
   function generateDisplayColumns(tableRef?: string): Array<TableColumn> {
-    const headerNodes = getHeaderNodes(); // collect the headers
-    const entries = Object.entries(headerNodes).filter((headerElement) => {
-      if (headerElement && headerElement[1]) {
-        const nodeValue = getTextNode(headerElement[1])?.nodeValue; // get the element value in the record
-        return nodeValue ?? false; // filter out the first column if its name is empty (the checkbox column)
-      }
-      return false
+    // collect the headers
+    const headerNodes = getHeaderNodes();
+
+    // Filter out the entries that don't have an id or name
+    const entries = Object.entries(headerNodes).filter(([_, element]) => {
+      const attrId = element?.getAttribute(displayOptionsColumnIdAttr);
+      const attrName = element?.getAttribute(displayOptionsColumnNameAttr);
+      const name = getTextNode(element)?.nodeValue || "";
+      return attrId || attrName || name;
     });
-    return entries.map(([key, value]) => {
-      const name = getTextNode(value)?.nodeValue || "";
-      return <TableColumn>{
+
+    return entries.map(([key, element]) => {
+      const id = element?.getAttribute(displayOptionsColumnIdAttr);
+      const attrName = element?.getAttribute(displayOptionsColumnNameAttr);
+      const name = getTextNode(element)?.nodeValue || "";
+
+      const tableColumn = <TableColumn>{
         index: parseInt(key),
-        id: _uuid(),
+        id: id ?? generateUniqueId(name),
         visible: true,
-        name,
+        name: attrName || name,
         tableRef: tableRef,
       };
+
+      return tableColumn;
     });
   }
 
   /**
    * Initializes the table display options by generating new ones or using the current ones in localstorage
    */
-  function initTableDisplayOptions(tableRef?: string) {
-    // // Assign the columns based on the availability of the local storage, otherwise generate new columns
-    const columns = createTableColumns(tableRef);
+  function initTableDisplayOptions(tableRef?: string, displayOptions?: boolean | TableDisplayOptions) {
+    // Assign the columns based on the availability of the local storage, otherwise generate new columns
+    const columns = createTableColumns(tableRef, displayOptions);
 
     // Find header elements and add the data-display-options attribute
     registerHeaderElements(columns, tableRef);
@@ -129,25 +134,46 @@ export function useTableDisplayOptions() {
     // Find body elements and add the data-display-options attribute
     registerBodyElements(columns, tableRef);
 
-    // Save the columns to the local storage
-    saveTableColumns(columns, tableRef);
-
     return columns;
   }
 
-  function createTableColumns(tableRef?: string) {
-    let localColumns: Array<TableColumn> = [];
-
+  function createTableColumns(tableRef?: string, displayOptions?: boolean | TableDisplayOptions) {
     // Get the columns from the local storage
     const storedColumns = loadTableColumns(tableRef);
 
     // Generated columns based on the table headers
     const generatedColumns = generateDisplayColumns(tableRef);
 
-    // Bind the data from the stored columns to the generated columns
-    localColumns = storedColumns.length ? [...storedColumns] : [...generatedColumns];
+    // Merge the stored columns with the generated columns
+    return mergeColumns(storedColumns, generatedColumns, displayOptions);
+  }
 
-    return [...localColumns];
+  // Function that merges the storedColumns with the generated columns
+  function mergeColumns(storedColumns: TableColumn[], generatedColumns: TableColumn[], displayOptions?: boolean | TableDisplayOptions): TableColumn[] {
+    // Filters the stored column based on the ID's of the generated columns
+    // If the stored column is not found in the generated columns, it should be removed
+    storedColumns = storedColumns.filter((storedCol) => generatedColumns.some((genCol) => genCol.id === storedCol.id));
+
+    // set the prelseected columns to the stored columns
+    let preselection = storedColumns;
+
+    // If the displayOptions is an object and has columns, set the preselection to the columns
+    if (!storedColumns?.length && displayOptions && typeof displayOptions !== "boolean" && displayOptions?.columns) {
+      preselection = displayOptions.columns;
+    }
+
+    // Bind the data from the stored columns to the generated columns
+    // if a stored column is not found in the generated columns, it should be removed
+    let localColumns = generatedColumns.map((genCol) => {
+      const storedCol = preselection.find((col) => col.id === genCol.id);
+      if (storedCol) {
+        // Assign the visibility from the stored column
+        genCol.visible = storedCol.visible;
+      }
+      return genCol;
+    });
+
+    return localColumns;
   }
 
   /**
@@ -210,24 +236,26 @@ export function useTableDisplayOptions() {
    * @param columns
    * @param column
    */
-  function setColumnVisibility(columns: TableColumn[], column: TableColumn, tableRef?: string) {
+  function setColumnVisibility(columns: TableColumn[], column: TableColumn, tableRef?: string, saveToStorage = false) {
     const col = columns.find((c) => c.id === column.id);
     if (!col) {
       return;
     }
 
     // TODO: Try to use the table reference for multiple tables on one view ex. document.querySelector([data-table-ref="<tableRef>"])
-    const th = document.querySelector(`.mk-table-display-options thead th[data-display-options-id="${column.id}"]`);
-    if (th) {
-      if (col.visible) {
-        th.removeAttribute("mk-hidden");
-      } else {
-        th.setAttribute("mk-hidden", "");
+    const headers = document.querySelectorAll(`.mk-table-display-options thead th[data-display-options-id="${column.id}"]`);
+    headers?.forEach((th) => {
+      if (th) {
+        if (col.visible) {
+          th.removeAttribute("mk-hidden");
+        } else {
+          th.setAttribute("mk-hidden", "");
+        }
       }
-    }
+    });
 
     const rows = document.querySelectorAll(`.mk-table-display-options tbody tr`);
-    rows.forEach((row) => {
+    rows?.forEach((row) => {
       row.querySelectorAll(`td[data-display-options-id="${col.id}"]`).forEach((td) => {
         if (col.visible) {
           td.removeAttribute("mk-hidden");
@@ -238,10 +266,13 @@ export function useTableDisplayOptions() {
     });
 
     // Save the columns to the tableDisplayStore
-    saveTableColumns(columns, tableRef);
+    if (saveToStorage) {
+      saveTableColumns(columns, tableRef);
+    }
   }
 
   return {
+    generateUniqueId,
     initTableDisplayOptions,
     setColumnVisibility,
     createTableColumns,

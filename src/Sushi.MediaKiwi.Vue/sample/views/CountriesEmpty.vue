@@ -5,7 +5,7 @@
   import { ListResult, Paging } from "@/models";
   import { reactive } from "vue";
   import { ref } from "vue";
-  import CountryEdit from "./CountryEdit.vue";
+  import CountryEdit from "./AddCountry.vue";
 
   // inject dependencies
   const { t } = await useI18next();
@@ -36,7 +36,7 @@
     :data="state.countries?.result"
     @load="LoadData"
     :item-id="(item: Country) => item.code"
-    item-view-id="CountryEdit"
+    navigation-item-id="CountryEdit"
     new
     :new-title="t('Add Country').toString()"
     new-emit

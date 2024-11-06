@@ -31,7 +31,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<ListResult<Translation>>> GetTranslations(string? localeId, string? @namespace, string? key, string? value)
         {   
             var result = await _translationService.GetAllAsync(localeId, @namespace, key, value);           
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<ListResult<string?>>> GetNamespaces(string? localeId)
         {
             var result = await _translationService.GetNamespacesAsync(localeId);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<ListResult<string?>>> GetKeys(string? localeId)
         {
             var result = await _translationService.GetKeysAsync(localeId);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult> UpdateTranslation(string localeId, string @namespace, string key, UpdateTranslationRequest request)
         {
             var result = await _translationService.UpdateTranslationAsync(localeId, @namespace, key, request);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult> DeleteTranslation(string localeId, string @namespace, string key)
         {
             var result = await _translationService.DeleteTranslationAsync(localeId, @namespace, key);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
     }
 }

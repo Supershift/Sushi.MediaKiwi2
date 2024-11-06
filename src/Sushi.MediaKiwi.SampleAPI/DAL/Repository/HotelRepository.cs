@@ -1,6 +1,7 @@
 ﻿using Sushi.MicroORM;
 using Sushi.MediaKiwi.DAL;
 using Sushi.MediaKiwi.Services;
+using Sushi.MediaKiwi.SampleAPI.Domain;
 
 namespace Sushi.MediaKiwi.SampleAPI.DAL.Repository
 {

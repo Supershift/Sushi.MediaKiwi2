@@ -1,21 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using Sushi.MediaKiwi.SampleAPI.Service;
 using Sushi.MediaKiwi.SampleAPI.Service.Model;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MediaKiwi.WebAPI;
-using Sushi.MediaKiwi.WebAPI.Paging;
 
 namespace Sushi.MediaKiwi.SampleAPI.Controllers
 {
-    [Route($"{BaseRoute}/hotels")]
     public class HotelController : SampleControllerBase
     {
         private readonly HotelService _hotelService;
+        private readonly IValidator<CreateHotelRequest> _createHotelValidator;
 
-        public HotelController(HotelService hotelService)
+        public HotelController(HotelService hotelService, IValidator<CreateHotelRequest> createHotelValidator)
         {
             _hotelService = hotelService;
+            _createHotelValidator = createHotelValidator;
         }
 
         /// <summary>
@@ -23,10 +24,10 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<ListResult<Hotel>>> GetHotels(GetHotelsQuery query)
+        public async Task<ActionResult<ListResult<HotelDto>>> GetHotels(string? countryCode, bool? isActive, [FromQuery] PagingValues pagingValues)
         {
-            var result = await _hotelService.GetAllAsync(query);
-            return this.CreateResponse(result);
+            var result = await _hotelService.GetAllAsync(countryCode, isActive, pagingValues);
+            return this.ToResponse(result);
         }
 
 
@@ -37,10 +38,10 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult<Hotel>> GetHotel(int id)
+        public async Task<ActionResult<HotelDto>> GetHotel(int id)
         {
             var result = await _hotelService.GetAsync(id);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -50,10 +51,10 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
         /// <returns></returns>
         [HttpDelete]
         [Route("{id}")]
-        public async Task<ActionResult<Hotel>> DeleteHotel(int id)
+        public async Task<ActionResult<HotelDto>> DeleteHotel(int id)
         {
             var result = await _hotelService.DeleteAsync(id);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
 
@@ -63,10 +64,17 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
         /// <param name="request">The request containing all Hotel information</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<Hotel>> CreateHotel(Hotel request)
-        {
-            var result = await _hotelService.SaveAsync(null, request);
-            return this.CreateResponse(result);
+        public async Task<ActionResult<HotelDto>> CreateHotel(CreateHotelRequest request)
+        {   
+            var validationResult = await _createHotelValidator.ValidateAsync(request);
+
+            if (validationResult.IsValid == false)
+            {
+                return this.ToResponse(validationResult.ToError());
+            }
+
+            var result = await _hotelService.CreateAsync(request);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -75,17 +83,10 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
         /// <returns></returns>
         [HttpPut]
         [Route("{id}")]
-        public async Task<ActionResult<Hotel>> UpdateHotel(int id, Hotel request)
+        public async Task<ActionResult<HotelDto>> UpdateHotel(int id, CreateHotelRequest request)
         {
-            var result = await _hotelService.SaveAsync(id, request);
-            return this.CreateResponse(result);
+            var result = await _hotelService.UpdateAsync(id, request);
+            return this.ToResponse(result);
         }
-    }
-
-    public class GetHotelsQuery
-    {
-        public PagingValues Page { get; set; } = null!;
-        public string? CountryCode { get; set; }
-        public bool? IsActive { get; set; }
     }
 }

@@ -1,33 +1,56 @@
 import { identity } from "@/identity";
-import { MediakiwiVueOptions, MoneyValue, View } from "@/models";
+import { MediakiwiVueOptions, MoneyValue } from "@/models";
 import { tokenStore } from "@/plugins/i18next";
 import { i18n } from "i18next";
 import { Ref, computed, inject } from "vue";
 import { useNavigation } from "@/composables/useNavigation";
+import { container } from "tsyringe";
+import { NavigationItem } from "@/models/navigation";
 
 /**
  * Adds i18next to the component.
- * @param scope If provided, the t function will be scoped to this namespace. If left undefined, it will be scoped to the current view.
+ * @param scope If provided, the t function will be scoped to this namespace. If left undefined, it will be scoped to the current Navigation item's id.
  * @returns
  */
-export async function useI18next(scope?: View | string) {
+export async function useI18next(scope?: NavigationItem | string) {
   // inject dependencies
   const navigation = useNavigation();
-  const i18next = inject<Ref<i18n>>("i18next");
-  const mediakiwiOptions = inject<MediakiwiVueOptions>("mediakiwi");
 
+  // get i18next instance
+  let i18next: Ref<i18n> | undefined;
+  if (container.isRegistered("i18next")) {
+    i18next = container.resolve<Ref<i18n>>("i18next");
+  } else {
+    i18next = inject<Ref<i18n>>("i18next");
+  }
+
+  // get mediakiwi options
+  let mediakiwiOptions: MediakiwiVueOptions | undefined;
+  if (container.isRegistered("MediakiwiOptions")) {
+    mediakiwiOptions = container.resolve<MediakiwiVueOptions>("MediakiwiOptions");
+  } else {
+    mediakiwiOptions = inject<MediakiwiVueOptions>("mediakiwi");
+  }
+
+  // check if i18next is provided
   if (!i18next) {
     throw new Error("i18next is not provided, install the plugin first");
   }
 
-  const i18nInitPromise = inject<Promise<any>>("i18initPromise");
+  // get i18next initialization promise
+  let i18nInitPromise: Promise<any> | undefined;
+  if (container.isRegistered("i18initPromise")) {
+    i18nInitPromise = container.resolve<Promise<any>>("i18initPromise");
+  } else {
+    i18nInitPromise = inject<Promise<any>>("i18initPromise");
+  }
 
   // check if i18next is initialized
   await i18nInitPromise;
 
   // determine namespace
   if (!scope) {
-    scope = navigation.currentNavigationItem.value?.view;
+    scope = navigation.currentNavigationItem.value;
     if (!scope) scope = "common";
   }
 
@@ -35,7 +58,7 @@ export async function useI18next(scope?: View | string) {
   if (typeof scope === "string") {
     namespace = scope;
   } else {
-    namespace = (scope as View).id;
+    namespace = (scope as NavigationItem).id;
   }
 
   // if a namespace is provided, check if it already exists on i18next and if not, add it
@@ -64,35 +87,55 @@ export async function useI18next(scope?: View | string) {
   const timeOptions = computed(() => mediakiwiOptions?.dateFormatOptions?.time || <Intl.DateTimeFormatOptions>{ timeStyle: "short" });
   const monthOptions = computed(() => mediakiwiOptions?.dateFormatOptions?.month || <Intl.DateTimeFormatOptions>{ month: "long" });
 
-  const formatDateTimeInternal = (date: string | Date, options?: Intl.DateTimeFormatOptions): string => {
+  const formatDateTimeInternal = (date: string | Date | undefined | null, options?: Intl.DateTimeFormatOptions): string => {
+    if (!date) {
+      return "";
+    }
+
     // Use the custom provided options, or merge the date and time options
     const formatOptions = options || { ...dateOptions.value, ...timeOptions.value };
 
     return formatDateTimeGenericInternal(date, { ...formatOptions });
   };
 
-  const formatDateInternal = (date: string | Date, options?: Intl.DateTimeFormatOptions): string => {
+  const formatDateInternal = (date: string | Date | undefined | null, options?: Intl.DateTimeFormatOptions): string => {
+    if (!date) {
+      return "";
+    }
+
     // Use the custom provided options, or merge the date options
     const formatOptions = options || { ...dateOptions.value };
 
     return formatDateTimeGenericInternal(date, { ...formatOptions });
   };
 
-  const formatTimeInternal = (date: string | Date, options?: Intl.DateTimeFormatOptions): string => {
+  const formatTimeInternal = (date: string | Date | undefined | null, options?: Intl.DateTimeFormatOptions): string => {
+    if (!date) {
+      return "";
+    }
+
     // Use the custom provided options, or merge the time options
     const formatOptions = options || { ...timeOptions.value };
 
     return formatDateTimeGenericInternal(date, { ...formatOptions });
   };
 
-  const formatMonthInternal = (date: string | Date, options?: Intl.DateTimeFormatOptions): string => {
+  const formatMonthInternal = (date: string | Date | undefined | null, options?: Intl.DateTimeFormatOptions): string => {
+    if (!date) {
+      return "";
+    }
+
     // Use the custom provided options, or merge the month options
     const formatOptions = options || { ...monthOptions.value };
 
     return formatDateTimeGenericInternal(date, { ...formatOptions });
   };
 
-  const formatDateTimeGenericInternal = (date: string | Date, options: Intl.DateTimeFormatOptions): string => {
+  const formatDateTimeGenericInternal = (date: string | Date | undefined | null, options: Intl.DateTimeFormatOptions): string => {
+    if (!date) {
+      return "";
+    }
+
     // parse or cast to date, depending on parameter type
     let dateValue: Date;
     if (typeof date === "string") {
@@ -124,6 +167,33 @@ export async function useI18next(scope?: View | string) {
   };
   const formatMoneyValue = computed(() => formatMoneyValueInternal);
 
+  /**
+   * Converts bytes to a human-readable format.
+   * @param bytes The size in bytes to be converted.
+   * @param decimals (Optional) The number of decimal places to round to. Defaults to 2.
+   * @returns A string representing the size in a human-readable format.
+   */
+  const formatBytesInteral = (bytes: number, decimals: number = 2) => {
+    // Define the base for conversion (1000 bytes = 1 kilobyte)
+    const base = 1000;
+
+    // Define the units for display
+    const units = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+
+    // Calculate the index of the appropriate unit
+    const unitIndex = Math.floor(Math.log(bytes) / Math.log(base));
+
+    // Calculate the size in the chosen unit
+    const size = bytes / Math.pow(base, unitIndex);
+
+    // Return the size formatted with the appropriate unit
+    return `${formatNumber.value(size, {
+      maximumFractionDigits: decimals,
+    })} ${units[unitIndex]}`;
+  };
+
+  const formatBytes = computed(() => formatBytesInteral);
+
   return {
     i18next,
     /** T function scoped to the namespace provided when adding composable. If non provided, scoped to default. */
@@ -141,5 +211,6 @@ export async function useI18next(scope?: View | string) {
     /**  */
     formatMonth,
     formatDateTimeGeneric,
+    formatBytes,
   };
 }

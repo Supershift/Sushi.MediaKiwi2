@@ -23,11 +23,11 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
             // get all controllers
-            var asm = Assembly.GetAssembly(typeof(MediaKiwiControllerBase));
+            var assembly = Assembly.GetAssembly(typeof(MediaKiwiControllerBase));
 
-            Assert.NotNull(asm);
+            Assert.NotNull(assembly);
 
-            var controllers = asm.GetTypes().Where(type => typeof(ControllerBase).IsAssignableFrom(type) && !type.IsAbstract);
+            var controllers = assembly.GetTypes().Where(type => typeof(ControllerBase).IsAssignableFrom(type) && !type.IsAbstract);
 
             // try to create instances of all controllers
             foreach (var controller in controllers)
