@@ -264,8 +264,17 @@
       onToggleAll(true);
     }
   }
+
   function disableSelectionMode() {
     isSelectionMode.value = false;
+  }
+
+  function openContextMenuPreCheck(event: MouseEvent, dataItem: T) {
+    // Only open the context menu if no items are selected
+    // TODO; Introduce a context menu for selected items
+    if (!selectionIds.value?.length) {
+      openContextMenu(event, dataItem);
+    }
   }
 
   onMounted(() => {
@@ -304,7 +313,7 @@
         class="mk-table-view__row"
         :class="tableRowClassses(dataItem)"
         @click.stop="(e) => onRowClick(e, dataItem)"
-        @contextmenu.prevent="(e) => openContextMenu(e, dataItem)"
+        @contextmenu.prevent="(e) => openContextMenuPreCheck(e, dataItem)"
       >
         <td v-if="checkbox && !props.hideSelectionCheckbox" @click.stop class="mk-table-view__checkbox-container--body">
           <MkTableCheckbox
