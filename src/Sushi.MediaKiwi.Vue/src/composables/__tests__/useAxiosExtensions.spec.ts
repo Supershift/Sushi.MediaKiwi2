@@ -35,7 +35,6 @@ describe("useAxiosExtensions", async () => {
       expect(spyonGet).toHaveBeenCalledOnce();
       expect(spyonGet).toHaveBeenCalledWith("http://localhost", { params });
       expect(response.status).toBe(HttpStatusCode.Ok);
-      console.log(axiosInstance);
 
       // expect(serializer.serialize(params)).toEqual();
       expect(axiosInstance.defaults.paramsSerializer).toBeDefined();
