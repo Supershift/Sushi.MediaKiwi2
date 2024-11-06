@@ -127,6 +127,11 @@
       <v-list-item>Knop 3</v-list-item>
     </template>
 
+    <template #bulkActionBar>
+      <v-btn>Move</v-btn>
+      <v-btn>Delete</v-btn>
+    </template>
+
     <template #thead>
       <mk-th mk-column-id="hotelName" v-model:sorting="sorting" :sorting-options="{ id: 'name' }">{{ t("Name") }}</mk-th>
       <mk-th mk-column-id="createdDate" v-model:sorting="sorting" :sorting-options="{ id: 'created' }">{{ t("Created") }}</mk-th>
@@ -149,8 +154,8 @@
 
     <template #contextmenu="{ dataItem }">
       <v-list>
-        <v-list-item @click="() => console.log('context click')"> Knop A: {{ dataItem.name! }}</v-list-item>
-        <v-list-item @click="() => console.log('ccontext click')"> Knop B: {{ dataItem.name! }}</v-list-item>
+        <v-list-item @click="() => console.log('context click')"> Move: {{ dataItem.name! }}</v-list-item>
+        <v-list-item @click="() => console.log('ccontext click')"> Delete: {{ dataItem.name! }}</v-list-item>
       </v-list>
     </template>
   </mk-table>
