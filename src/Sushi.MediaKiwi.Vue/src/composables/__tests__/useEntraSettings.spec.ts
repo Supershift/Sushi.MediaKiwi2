@@ -2,20 +2,22 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useEntraSettings } from '../useEntraSettings';
 import { MediakiwiVueOptions } from '@/models';
 
-vi.mock('axios');
-// Mock the external modules
 vi.mock('@/services/axios/createAxiosClient', () => ({
   createPublicAxiosClient: vi.fn(),
 }));
-vi.mock('@/services/IdentityProviderConnector', () => {
+vi.mock('@/services/api', () => {
   return {
-    IdentityProviderConnector: vi.fn().mockImplementation(() => {
+    Api: vi.fn().mockImplementation(() => {
       return {
-        GetEntraSettings: vi.fn().mockResolvedValue({
-          instance: 'https://login.microsoftonline.com/',
-          tenantId: 'tenant-id',
-          clientId: 'client-id',
-        }),
+        mediakiwi: {
+          apiIdentityproviderEntraList: vi.fn().mockResolvedValue({
+            data: {
+              instance: "https://login.microsoftonline.com/",
+              tenantId: "tenant-id",
+              clientId: "client-id"
+            }
+          }),
+        },
       };
     }),
   };
