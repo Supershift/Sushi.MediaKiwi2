@@ -7,7 +7,7 @@ import istanbul from "vite-plugin-istanbul";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 
 // Exclude folders from the build
-const exclude = ["sample", "cypress", "test"];
+const exclude = ["sample", "cypress", "test", "**/__tests__/**", "**/__mocks__/**"];
 
 // https://vitejs.dev/config/
 export default defineConfig({
