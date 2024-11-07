@@ -2,7 +2,7 @@
   import { MkForm } from "@/components";
   import { reactive, computed } from "vue";
   import { container } from "tsyringe";
-  import { ISectionConnector } from "@/services";
+  import { Api } from "@/services";
   import { SectionDto, IconsLibrary } from "@/models";
   import { RouterManager } from "@/router/routerManager";
   import { useNavigation, useValidationRules } from "@/composables";
@@ -10,7 +10,7 @@
   import { useMediakiwiStore } from "@/stores";
 
   // inject dependencies
-  const SectionConnector = container.resolve<ISectionConnector>("ISectionConnector");
+  const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
   const routerManager = container.resolve<RouterManager>("RouterManager");
 
   const store = useMediakiwiStore();
@@ -30,13 +30,13 @@
 
   async function onLoad() {
     if (sectionId.value) {
-      const candidate = await SectionConnector.GetSection(sectionId.value);
+      const candidate = (await mediaKiwiApi.apiSectionsDetail(sectionId.value)).data;
       if (!candidate) {
         alert("No section found!");
       }
       state.section = candidate!;
     } else {
-      state.section = { id: "", name: "", sortOrder: 0 };
+      state.section = { id: "", name: "", sortOrder: 0, roles: [] };
     }
   }
 
@@ -44,19 +44,19 @@
     if (sectionId.value !== adminSectionId) {
       if (sectionId.value) {
         // update existing section
-        await SectionConnector.UpdateSection(sectionId.value, state.section);
+        await mediaKiwiApi.apiSectionsUpdate(sectionId.value, state.section);
 
         // refresh store (to update the section in the navigation)
         await routerManager.ForceInitialize();
       } else {
         // create new section
-        const newSection = await SectionConnector.CreateSection(state.section.id, state.section);
+        const newSection = await mediaKiwiApi.apiSectionsCreate(state.section.id, state.section);
 
         // refresh store (to update the section in the navigation)
         await routerManager.ForceInitialize();
 
         // push user to the new section
-        navigation.navigateTo(navigation.currentNavigationItem.value, newSection.id);
+        navigation.navigateTo(navigation.currentNavigationItem.value, newSection.data.id);
       }
     }
   }
@@ -64,7 +64,7 @@
   async function onDelete(): Promise<void> {
     if (sectionId.value !== adminSectionId) {
       if (sectionId.value) {
-        await SectionConnector.DeleteSection(sectionId.value);
+        await mediaKiwiApi.apiSectionsDelete(sectionId.value);
 
         // refresh store (to update the section in the navigation)
         await routerManager.ForceInitialize();

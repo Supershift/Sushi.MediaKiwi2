@@ -1,14 +1,14 @@
 <script setup lang="ts">
   import { useI18next, useNavigation } from "@/composables";
   import { Locale } from "@/models";
-  import { ILocaleConnector } from "@/services";
   import { container } from "tsyringe";
   import { ref } from "vue";
-  import { MkForm, MkDialogCard } from "@/components";
+  import { MkForm } from "@/components";
   import Translations from "./components/Translations.vue";
+  import { Api } from "@/services";
 
   // inject dependencies
-  const localeConnector = container.resolve<ILocaleConnector>("ILocaleConnector");
+  const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
   const navigation = useNavigation();
   const { defaultT } = await useI18next();
 
@@ -16,16 +16,16 @@
   const localeId = navigation.currentViewParameter;
 
   // declare reactive variables
-  const locale = ref<Locale>({ id: localeId.value ?? "", isEnabled: false });
+  const locale = ref<Locale>({ id: localeId.value ?? "", name: "", isEnabled: false });
 
   async function onLoad() {
     if (localeId.value) {
       // get existing locale from api
-      const candidate = await localeConnector.Get(localeId.value);
-      if (!candidate) {
+      const candidate = await mediaKiwiApi.apiLocalesDetail(localeId.value);
+      if (!candidate?.data) {
         alert("No locale found!");
       } else {
-        locale.value = candidate;
+        locale.value = { ...candidate.data, id: candidate.data.id ?? "" };
       }
     }
   }
@@ -33,13 +33,13 @@
   async function onSave() {
     if (localeId.value) {
       // update existing locale
-      await localeConnector.Update(localeId.value, locale.value);
+      await mediaKiwiApi.apiLocalesUpdate(localeId.value, locale.value);
     } else {
       // create new locale
-      const newView = await localeConnector.Create(locale.value.id, locale.value);
+      const newView = await mediaKiwiApi.apiLocalesCreate(locale.value.id, locale.value);
 
       // push user to the new view
-      navigation.navigateTo(navigation.currentNavigationItem.value, newView.id);
+      navigation.navigateTo(navigation.currentNavigationItem.value, newView.data.id);
     }
   }
 
@@ -47,7 +47,7 @@
   if (localeId.value) {
     onDelete = async () => {
       if (localeId.value) {
-        await localeConnector.Delete(localeId.value);
+        await mediaKiwiApi.apiLocalesDelete(localeId.value);
       }
     };
   }

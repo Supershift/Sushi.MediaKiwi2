@@ -16,13 +16,13 @@ namespace Sushi.MediaKiwi.Services.Model
         /// <summary>
         /// Unique id of the locale, following ISO standards, e.g. en, jp, nl-NL, en-US
         /// </summary>
-        [SwaggerSchema(ReadOnly = true)]
-        public string? Id { get; set; }
+        [Required, SwaggerSchema(ReadOnly = true)]
+        public required string Id { get; set; }
         /// <summary>
         /// Display name of the locale in its own language.
         /// </summary>
         [Required, StringLength(128)]
-        public string Name { get; set; } = null!;
+        public required string Name { get; set; }
         /// <summary>
         /// If set to true, this locale can be used.
         /// </summary>

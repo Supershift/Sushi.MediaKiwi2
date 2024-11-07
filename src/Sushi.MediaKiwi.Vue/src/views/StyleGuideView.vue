@@ -1,18 +1,18 @@
 <script setup lang="ts">
   import { ref } from "vue";
   import { container } from "tsyringe";
-  import { SectionConnector } from "@/services";
   import { ListResult, Paging, SectionDto, TableMap } from "@/models";
   import { MkTable } from "@/components";
   import { useColors, useTypography, useElevations } from "@/composables";
   import { IconsLibrary } from "@/models";
+  import { Api } from "@/services";
 
   const { colors, variants, cssVariables, variables, getColorBackgroundClasses } = useColors(); //getColorValue
   const { typographyItems, getTypographyClasses } = useTypography();
   const { elevations, getElevationClass } = useElevations();
 
   // Table data
-  const sectionConnector = container.resolve<SectionConnector>("ISectionConnector");
+  const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
   const currentPagination = ref<Paging>({});
   const data = ref<ListResult<SectionDto>>();
   // define mapping
@@ -30,7 +30,7 @@
 
   // get data
   async function onLoad() {
-    data.value = await sectionConnector.GetSections(currentPagination.value);
+    data.value = (await mediaKiwiApi.apiSectionsList({ ...currentPagination.value })).data;
   }
 </script>
 

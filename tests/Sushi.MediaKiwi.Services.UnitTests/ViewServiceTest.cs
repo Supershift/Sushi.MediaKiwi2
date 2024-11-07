@@ -11,11 +11,11 @@ namespace Sushi.MediaKiwi.Services.UnitTests
     public class ViewServiceTest
     {
         private readonly IMapper _mapper;
-        
+
         public ViewServiceTest()
         {
             var config = new MapperConfiguration(cfg =>
-            {   
+            {
                 cfg.AddProfile<AutoMapperProfile>();
                 cfg.AddExpressionMapping();
             });
@@ -34,7 +34,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var viewRepositoryMock = new Mock<IViewRepository>();
             viewRepositoryMock.Setup(x => x.GetAsync(viewStub.Id)).ReturnsAsync(viewStub);
             viewRepositoryMock.Setup(x => x.DeleteAsync(viewStub.Id)).Verifiable();
-            var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();            
+            var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();
 
             var service = new ViewService(viewRepositoryMock.Object, viewRoleRepositoryMock.Object, _mapper);
 
@@ -44,7 +44,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             // assert
             Assert.NotNull(result);
             Assert.Null(result.Error);
-            viewRepositoryMock.Verify(x=>x.DeleteAsync(viewStub.Id), Times.Once);
+            viewRepositoryMock.Verify(x => x.DeleteAsync(viewStub.Id), Times.Once);
         }
 
         [Fact]
@@ -65,7 +65,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             Assert.NotNull(result);
             Assert.NotNull(result.Error);
             Assert.IsType<NotFoundError>(result.Error);
-            
+
         }
 
         [Fact]
@@ -90,13 +90,13 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             // assert
             Assert.NotNull(result);
-            Assert.Null(result.Error);            
+            Assert.Null(result.Error);
             Assert.NotNull(result.Value);
             Assert.NotNull(result.Value.Result);
             Assert.Equal(2, result.Value.Result.Count);
         }
 
-        
+
 
         [Fact]
         public async Task GetAllViewsTest_Roles()
@@ -139,10 +139,10 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var viewStub = new Entities.View()
             {
                 Id = "abc"
-            };                
+            };
 
             var viewRepositoryMock = new Mock<IViewRepository>();
-            viewRepositoryMock.Setup(x => x.GetAsync(It.Is<string>(x=>x == viewStub.Id))).ReturnsAsync(viewStub);
+            viewRepositoryMock.Setup(x => x.GetAsync(It.Is<string>(x => x == viewStub.Id))).ReturnsAsync(viewStub);
             var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();
             viewRoleRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<string>())).ReturnsAsync(new QueryListResult<Entities.ViewRole>());
             var service = new ViewService(viewRepositoryMock.Object, viewRoleRepositoryMock.Object, _mapper);
@@ -184,9 +184,9 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var view = new View()
             {
                 Id = "value to be ignored",
-                ComponentKey = "comp",                
+                ComponentKey = "comp",
                 Name = "name",
-                Roles = new List<string>() { "Admin", "User" },                
+                Roles = new List<string>() { "Admin", "User" },
             };
 
             string newId = "abc";
@@ -199,7 +199,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             };
 
             var viewRepositoryMock = new Mock<IViewRepository>();
-            viewRepositoryMock.Setup(x => x.InsertAsync(It.Is<Entities.View>(x=>x.Id == newId))).Callback<Entities.View>(x => x.Id = newId);
+            viewRepositoryMock.Setup(x => x.InsertAsync(It.Is<Entities.View>(x => x.Id == newId))).Callback<Entities.View>(x => x.Id = newId);
             var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();
             viewRoleRepositoryMock.Setup(x => x.DeleteForViewAsync(It.IsAny<string>())).Verifiable();
             viewRoleRepositoryMock.Setup(x => x.InsertAsync(It.IsAny<Entities.ViewRole>())).Verifiable();
@@ -218,7 +218,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             viewRoleRepositoryMock.Verify(x => x.InsertAsync(It.IsAny<Entities.ViewRole>()), Times.Exactly(2));
         }
 
-        
+
 
         [Fact]
         public async Task UpdateViewTest()
@@ -227,9 +227,9 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var view = new View()
             {
                 Id = "value to be ignored",
-                ComponentKey = "comp",                
+                ComponentKey = "comp",
                 Name = "name",
-                Roles = new List<string>() { "Admin", "User" },                
+                Roles = new List<string>() { "Admin", "User" },
             };
 
 
@@ -259,8 +259,8 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             Assert.Null(result.Error);
             Assert.NotNull(result.Value);
             Assert.Equal(existingId, result.Value.Id);
-            viewRepositoryMock.Verify(x=>x.GetAsync(existingId), Times.Once);
-            viewRepositoryMock.Verify(x=>x.UpdateAsync(dalResult), Times.Once);
+            viewRepositoryMock.Verify(x => x.GetAsync(existingId), Times.Once);
+            viewRepositoryMock.Verify(x => x.UpdateAsync(dalResult), Times.Once);
             viewRoleRepositoryMock.Verify(x => x.DeleteForViewAsync(It.IsAny<string>()), Times.Once);
             viewRoleRepositoryMock.Verify(x => x.InsertAsync(It.IsAny<Entities.ViewRole>()), Times.Exactly(2));
         }
@@ -277,7 +277,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var service = new ViewService(viewRepositoryMock.Object, viewRoleRepositoryMock.Object, _mapper);
 
             // act
-            var result = await service.UpdateAsync("jkl", new View());
+            var result = await service.UpdateAsync("jkl", new View { Id = "test", Name = "test", ComponentKey = "test" });
 
             // assert
             Assert.NotNull(result);

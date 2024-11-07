@@ -15,7 +15,8 @@
     "cy:coverage:component": "cypress run --component",
     "build:sample": "vue-tsc && vite build --config ./vite.config.sample.ts",
     "preview:sample": "npm run build:sample && vite preview --config ./vite.config.sample.ts",
-    "build": "vue-tsc && vite build"
+    "build": "vue-tsc && vite build",
+    "update_api_from_gen_project": "npx swagger-typescript-api --axios -p ../Sushi.MediaKiwi.SampleAPI/swagger.mediakiwi.json.tmp -o ./src/services -n api.ts"
   },
   "type": "module",
   "files": [

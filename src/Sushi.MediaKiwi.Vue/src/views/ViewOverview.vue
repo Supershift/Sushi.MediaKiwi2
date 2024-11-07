@@ -4,10 +4,10 @@
   import { ViewDto } from "@/models";
   import { ref } from "vue";
   import { container } from "tsyringe";
-  import { IViewConnector } from "@/services";
+  import { Api } from "@/services";
 
   // inject dependencies
-  const viewConnector = container.resolve<IViewConnector>("IViewConnector");
+  const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
 
   // define reactive variables
   const data = ref<ListResult<ViewDto>>();
@@ -28,7 +28,7 @@
 
   // get data
   async function onLoad() {
-    data.value = await viewConnector.GetViews(currentPagination.value, sorting.value);
+    data.value = (await mediaKiwiApi.apiViewsList({ ...currentPagination.value, ...sorting.value, sortBy: "name" })).data;
   }
 </script>
 <template>

@@ -1,17 +1,17 @@
 <script setup lang="ts">
   import { MkForm } from "@/components";
   import { container } from "tsyringe";
-  import { INavigationConnector, IViewConnector } from "@/services";
+  import { Api, INavigationConnector } from "@/services";
   import { NavigationItemDto, ViewDto } from "@/models";
   import { useMediakiwiStore } from "@/stores";
   import { RouterManager } from "@/router/routerManager";
   import { useNavigation, useValidationRules } from "@/composables";
-  import { computed, reactive } from "vue";
+  import { reactive } from "vue";
   import { noPageSize } from "@/constants";
 
   // inject dependencies
   const navigationConnector = container.resolve<INavigationConnector>("INavigationConnector");
-  const viewConnector = container.resolve<IViewConnector>("IViewConnector");
+  const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
   const routerManager = container.resolve<RouterManager>("RouterManager");
   const { required } = await useValidationRules();
 
@@ -24,8 +24,8 @@
 
   const state = reactive({
     navigationItem: <NavigationItemDto>{},
-      allNavigationItems: <NavigationItemDto[]>[],
-      views: <ViewDto[]>[]
+    allNavigationItems: <NavigationItemDto[]>[],
+    views: <ViewDto[]>[],
   });
 
   async function onLoad() {
@@ -68,8 +68,8 @@
   }
 
   // load options
-  const navigationItems = await navigationConnector.GetNavigationItems(undefined, { pageSize: noPageSize});
-  const views = await viewConnector.GetViews({ pageSize: noPageSize});
+  const navigationItems = await navigationConnector.GetNavigationItems(undefined, { pageSize: noPageSize });
+  const views = (await mediaKiwiApi.apiViewsList({ pageSize: noPageSize })).data;
 
   state.allNavigationItems = navigationItems.result;
   state.views = views.result;
