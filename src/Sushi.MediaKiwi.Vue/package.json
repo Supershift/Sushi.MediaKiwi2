@@ -7,7 +7,7 @@
     "api": "cd ../Sushi.MediaKiwi.SampleAPI && dotnet build && dotnet watch run",
     "vi": "vitest",
     "vi:coverage": "vitest --coverage",
-    "vi:ui": "vitest --ui",
+    "vi:ui": "vitest --ui --api 9999",
     "vi:ui:coverage": "vitest --ui --coverage --api 9999",
     "cy:open": "cypress open",
     "cy:run-e2e": "cypress run --e2e",

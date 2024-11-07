@@ -14,9 +14,9 @@ export async function useFormLoad(
   /** Name of the entity that is being used in the form. Used in the snackbar feedback  */
   entryName: ComputedRef<string | undefined>,
   /** Model for the Progress state of the component */
-  inProgress: ModelRef<boolean, string>,
+  inProgress: ModelRef<boolean, string> | Ref<boolean>,
   /** Model for the ErrorProblemDetails state of the component */
-  errorProblemDetails: ModelRef<ErrorProblemDetails | null | undefined, string>,
+  errorProblemDetails: ModelRef<ErrorProblemDetails | null | undefined, string> | Ref<ErrorProblemDetails | null | undefined>,
   /** Model for the Progress state of the component */
   isLoaded: Ref<boolean>,
   /** FormMessages */

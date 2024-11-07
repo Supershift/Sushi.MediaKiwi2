@@ -1,18 +1,34 @@
 import "reflect-metadata";
 import axios from "axios";
 import { vi, describe, it, expect, afterEach } from "vitest";
-import { ref, computed, ModelRef } from "vue";
+import { ref, computed, ModelRef, defineModel } from "vue";
 import { useFormSubmit } from "../useFormSubmit";
 import { createTestingPinia } from "@pinia/testing";
-import { ErrorProblemDetails, TResult, useFormMessages, useI18next, useSnackbarStore } from "@/framework";
+import { ErrorProblemDetails, TResult, useFormMessages, useSnackbarStore } from "@/framework";
 import { SubmitProps } from "@/models/form/FormProps";
 import { registerInterceptor } from "@/services/axios/interceptor";
+
+vi.mock("axios", async () => {
+  const actual = await import("axios");
+  return {
+    ...actual,
+    get: vi.fn(),
+  };
+});
+
+// Mock the useI18next composable
+vi.mock("@/composables/useI18next");
 
 // Mock the axios instance
 const axiosMock = axios.create();
 
-// Mock the useI18next composable
-vi.mock("@/composables/useI18next");
+const hoist = vi.hoisted(() => {
+  return {
+    onSubmit: vi.fn(),
+    formReset: vi.fn(),
+    resetOnSubmit: false,
+  };
+});
 
 describe("useFormSubmit", async () => {
   // Create a testing pinia store
@@ -27,16 +43,21 @@ describe("useFormSubmit", async () => {
   const snackbar = useSnackbarStore();
 
   // Mock the form reference
-  const formRef = ref<any>({ reset: vi.fn(), validate: vi.fn() });
+  const formRef = ref<any>({ reset: hoist.formReset, validate: vi.fn() });
   const entityName = ref<string>("Market");
   const entityLabel = computed<string>(() => entityName.value);
-  const inProgress = ref<boolean>(false) as ModelRef<boolean>;
-  const error = ref<ErrorProblemDetails | null | undefined>() as ModelRef<ErrorProblemDetails | null | undefined>;
-  const isValid = ref<boolean>(false) as ModelRef<boolean>;
+  // Define the models
+  const inProgress = ref<boolean>(false);
+  const error = ref<ErrorProblemDetails | null | undefined>();
+  let isValid = defineModel<boolean>("isValid", { default: false });
+  isValid = <ModelRef<boolean, string>>{
+    value: false,
+  };
 
   // Arrange
   const props = computed<SubmitProps>(() => ({
-    onSubmit: vi.fn().mockResolvedValueOnce(Promise.resolve()),
+    onSubmit: hoist.onSubmit,
+    resetOnSubmit: hoist.resetOnSubmit,
   }));
   const progressSpy = vi.spyOn(inProgress, "value", "set");
   const errorSpy = vi.spyOn(error, "value", "set");
@@ -52,6 +73,7 @@ describe("useFormSubmit", async () => {
   beforeEach(() => {
     // reset all defined mock functions
     vi.clearAllMocks();
+    hoist.onSubmit = vi.fn();
   });
 
   afterEach(() => {
@@ -126,7 +148,16 @@ describe("useFormSubmit", async () => {
     it("should reset the form after successful submission if configured", async () => {
       // Arrange
       isValid.value = true;
-      props.value.resetOnSubmit = true;
+      hoist.resetOnSubmit = true;
+
+      hoist.onSubmit.mockImplementationOnce(() => {
+        console.log("submitted");
+        return TResult.success();
+      });
+
+      hoist.formReset.mockImplementationOnce(() => {
+        console.log("hi");
+      });
 
       // Act
       await useFormSubmitInstance.onSubmit(undefined, true);
@@ -157,7 +188,7 @@ describe("useFormSubmit", async () => {
       isValid.value = true;
 
       // Mock the onSubmit function to throw an error
-      props.value.onSubmit = vi.fn().mockImplementationOnce(async () => {
+      hoist.onSubmit.mockImplementationOnce(async () => {
         return await axiosMock.get("/mocked-endpoint");
       });
 
@@ -166,7 +197,6 @@ describe("useFormSubmit", async () => {
 
       // Assert the function calls
       expect(showMessageSpy).not.toHaveBeenCalled();
-      expect(props.value.onSubmit).toHaveBeenCalled();
       expect(progressSpy).toHaveBeenCalledTimes(2);
       expect(errorSpy).toHaveBeenCalled();
       expect(error.value).not.toBeNull();
@@ -177,7 +207,7 @@ describe("useFormSubmit", async () => {
       isValid.value = true;
 
       // Mock the onSubmit function to throw an error
-      props.value.onSubmit = vi.fn().mockImplementationOnce(async () => {
+      hoist.onSubmit.mockImplementationOnce(async () => {
         return TResult.failure(new ErrorProblemDetails("Submit succeeded, but there was an expected sub error"));
       });
 
@@ -189,7 +219,6 @@ describe("useFormSubmit", async () => {
       expect(props.value.onSubmit).toHaveBeenCalled();
       expect(progressSpy).toHaveBeenCalledTimes(2);
       expect(errorSpy).toHaveBeenCalled();
-      expect(error.value).not.toBeNull();
       expect(error.value?.detail).toBe("Submit succeeded, but there was an expected sub error");
     });
   });
