@@ -151,12 +151,7 @@ describe("useFormSubmit", async () => {
       hoist.resetOnSubmit = true;
 
       hoist.onSubmit.mockImplementationOnce(() => {
-        console.log("submitted");
         return TResult.success();
-      });
-
-      hoist.formReset.mockImplementationOnce(() => {
-        console.log("hi");
       });
 
       // Act

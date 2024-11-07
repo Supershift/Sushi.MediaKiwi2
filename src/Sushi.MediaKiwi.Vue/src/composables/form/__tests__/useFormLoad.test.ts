@@ -141,7 +141,6 @@ describe("useFormLoad", async () => {
       // Arrange
       hoist.onUndo = undefined;
       hoist.onLoad = vi.fn().mockImplementationOnce(() => {
-        console.log("hello there!");
         return TResult.success({ id: 1, name: "Market 1" });
       });
       // Act
