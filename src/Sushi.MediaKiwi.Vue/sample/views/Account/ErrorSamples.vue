@@ -3,11 +3,10 @@
   import { container } from "tsyringe";
   import { reactive } from "vue";
   import { useValidationRules } from "@/composables";
-  import { ErrorConnector } from "@sample/services/ErrorConnector";
   import { ErrorProblemDetails, TResult } from "@/models";
-  import { AxiosResponse } from "axios";
+  import { Api } from "@sample/services";
 
-  const errorConnector = container.resolve(ErrorConnector);
+  const { sample: sampleApi } = container.resolve<Api<any>>("SampleApi");
   const { required, minLength, maxLength, numeric, alphaNumericNoSpace, alphaNumericWithSpace, email } = await useValidationRules();
 
   const state = reactive({
@@ -35,7 +34,7 @@
     return new Promise<void>(async (resolve, reject) => {
       state.inProgress = true;
       setTimeout(() => {
-        errorConnector.getGenericError().catch((error) => {
+        sampleApi.errorGenericErrorList().catch((error) => {
           state.inProgress = false;
           reject(error);
         });
@@ -44,15 +43,15 @@
   }
 
   async function getAggregateError() {
-    await errorConnector.getAggregateError();
+    await sampleApi.errorAggregateErrorList();
   }
 
   async function getInternalServerError() {
-    await errorConnector.getInternalServerError();
+    await sampleApi.errorInternalServerErrorList();
   }
 
   async function getTimeoutError() {
-    await errorConnector.getTimeoutError();
+    await sampleApi.errorSlowList({ timeout: 1 });
   }
 
   async function onSubmit() {
@@ -61,7 +60,7 @@
   }
 
   async function getStringError() {
-    await errorConnector.getStringError();
+    await sampleApi.errorStringErrorList();
   }
 
   async function onLoad() {

@@ -18,6 +18,7 @@ import { useEntraSettings } from "@/composables/useEntraSettings";
 import { Configuration } from "@azure/msal-browser";
 
 import navigation from "./navigation/NavigationProvider";
+import { Api } from "./services";
 
 // add mediakiwi
 const mediakiwiOptions: MediakiwiVueOptions = {
@@ -85,6 +86,8 @@ const app = createApp(App);
 app.use(mediakiwi, mediakiwiOptionsWithEntra);
 
 // register dependencies
-const sampleApiAxiosInstance = createAxiosClient(import.meta.env.VITE_APP_SAMPLEAPI_APIBASEURL);
-container.register("SampleApiAxiosInstance", { useValue: sampleApiAxiosInstance });
+const api = new Api<any>();
+api.instance = createAxiosClient(import.meta.env.VITE_APP_SAMPLEAPI_APIBASEURL.replace('sample', ''));
+container.register("SampleApi", { useValue: api });
+
 app.mount("#app");

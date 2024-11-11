@@ -1,20 +1,20 @@
 import { useMediakiwiStore } from "@/stores";
-import { HotelConnector } from "../services/HotelConnector";
 import { container } from "tsyringe";
 import { SectionDisplayState } from "@/models/navigation";
 import { useSections } from "@/composables";
+import { Api } from "@sample/services";
 
 export function useSectionRules() {
   // Inject depecency
-  const hotelConnector = container.resolve(HotelConnector);
+  const { sample: sampleApi } = container.resolve<Api<any>>("SampleApi");
   const mediakiwiStore = useMediakiwiStore();
-  const { waitForSectionsToLoad } = useSections();  
+  const { waitForSectionsToLoad } = useSections();
 
   /**
    * Check if there are available hotels
    */
   async function hasAvailableHotels(): Promise<boolean> {
-    const hotels = await hotelConnector.GetAllAsync();
+    const hotels = (await sampleApi.hotelList()).data;
     const hasHotels = !(hotels?.totalCount && hotels.totalCount > 0) || false;
     return hasHotels;
   }

@@ -1,17 +1,16 @@
 <script setup lang="ts">
   import { reactive, ref } from "vue";
-  import { AccountConnector } from "@sample/services/AccountConnector";
   import { container } from "tsyringe";
-  import { CreateAccountRequest } from "@sample/models/Account/CreateAccountRequest";
   import { useValidationRules } from "@/composables";
   import MkFormDialog from "@/components/MkForm/MkFormDialog.vue";
+  import { AccountDto, Api } from "@sample/services";
 
-  const connector = container.resolve(AccountConnector);
+  const { sample: sampleApi } = container.resolve<Api<any>>("SampleApi");
   const { required, minLength } = await useValidationRules();
 
   const state = reactive({
     title: "Create Account",
-    account: <CreateAccountRequest>{
+    account: <AccountDto>{
       number: <string | undefined>undefined,
       holderName: <string | undefined>undefined,
     },
@@ -19,7 +18,12 @@
   });
 
   async function onSubmit() {
-    const candidate = await connector.CreateAccountAsync(state.account!);
+    const candidate = (
+      await sampleApi.accountCreateAccountCreate({
+        number: state.account.number ?? "??",
+        holderName: state.account.holderName ?? "??",
+      })
+    ).data;
     state.account = candidate!;
     if (state.account.number) {
       state.isSuccessful = true;

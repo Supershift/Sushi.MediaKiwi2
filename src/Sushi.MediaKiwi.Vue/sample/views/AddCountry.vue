@@ -1,8 +1,7 @@
 <script setup lang="ts">
   import MkFormDialog from "@/components/MkForm/MkFormDialog.vue";
   import { useValidationRules } from "@/composables";
-  import { Country } from "@sample/models/Country";
-  import { kMaxLength } from "buffer";
+  import { Country } from "@sample/services";
   import { reactive } from "vue";
 
   // Inject dependencies

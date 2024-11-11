@@ -1,25 +1,24 @@
 <script setup lang="ts">
   import { MkForm } from "@/components";
-  import { Account } from "@sample/models/Account/Account";
-  import { AccountConnector } from "@sample/services/AccountConnector";
   import { container } from "tsyringe";
   import { reactive } from "vue";
   import { useNavigation, useValidationRules } from "@/composables";
   import CreateAccountDialog from "./partials/CreateAccountDialog.vue";
+  import { AccountDto, Api } from "@sample/services";
 
-  const accountConnector = container.resolve(AccountConnector);
+  const { sample: sampleApi } = container.resolve<Api<any>>("SampleApi");
   const { required } = await useValidationRules();
   const navigation = useNavigation();
 
   const state = reactive({
     accountNumber: <string | undefined>undefined,
-    account: <Account | undefined>undefined,
+    account: <AccountDto | undefined>undefined,
     createAccountDialog: false,
     accountDetailsSheet: false,
   });
 
   async function onGet() {
-    state.account = await accountConnector.GetAccountAsync(state.accountNumber!)!;
+    state.account = (await sampleApi.accountDetail(state.accountNumber!)).data;
     if (state.account) {
       navigation.navigateToId("EditAccount", state.account.number);
     }

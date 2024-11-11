@@ -1,13 +1,12 @@
 <script setup lang="ts">
   import MkForm from "@/components/MkForm/MkForm.vue";
   import { useBreadcrumbs, useNavigation, useValidationRules } from "@/composables";
-  import { Country } from "@sample/models/Country";
-  import { CountryConnector } from "@sample/services/CountryConnector";
+  import { Api, Country } from "@sample/services";
   import { container } from "tsyringe";
   import { computed, reactive } from "vue";
 
   // Inject dependencies
-  const connector = container.resolve(CountryConnector);
+  const { sample: sampleApi } = container.resolve<Api<any>>("SampleApi");
   const navigation = useNavigation();
   const countryCode = computed(() => navigation.currentRouteParamId.value?.toString());
   const { required } = await useValidationRules();
@@ -18,7 +17,7 @@
   });
 
   async function load() {
-    state.country = await connector.GetCountry(countryCode.value!);
+    state.country = (await sampleApi.countriesDetail(countryCode.value!)).data;
     setCurrentBreadcrumbLabel(state.country.name);
   }
 

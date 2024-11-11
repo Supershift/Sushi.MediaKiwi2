@@ -21,8 +21,8 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
         [Route($"genericError")]
         public ActionResult GenerateGenericError()
         {
-            var localized = _stringLocalizer["Hello {0}", "Jaap" ];
-            
+            var localized = _stringLocalizer["Hello {0}", "Jaap"];
+
             var error = new Error("Auto generated error");
             var result = new Result<Error>(error);
             return this.ToResponse(result);
@@ -50,6 +50,14 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
         [Route($"stringError")]
         public ActionResult GenerateStringResponse()
         {
+            return BadRequest("This is a basic string response");
+        }
+
+        [HttpGet]
+        [Route($"slow")]
+        public ActionResult SlowResponse()
+        {
+            System.Threading.Thread.Sleep(10000);
             return BadRequest("This is a basic string response");
         }
     }
