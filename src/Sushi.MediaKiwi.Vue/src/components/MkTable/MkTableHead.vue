@@ -11,6 +11,10 @@
     sortingOptions?: TableSortingOptions<T>;
     sortingKey?: keyof T;
     truncate?: boolean;
+    /** optional width of the column */
+    width?: string;
+    /** optional id used for the display options */
+    mkColumnId?: string;
   }>();
 
   // define event
@@ -55,7 +59,7 @@
 </script>
 
 <template>
-  <th :class="headerClasses" @click="onClick">
+  <th :class="headerClasses" @click="onClick" :width="width" :mk-column-id="mkColumnId">
     <label class="mk-table-view__head" :class="{ truncate }">
       <label>
         <template v-if="mapItem?.headerTitle"> {{ mapItem?.headerTitle }}</template>
