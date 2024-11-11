@@ -1,7 +1,6 @@
 import "reflect-metadata";
 import App from "./App.vue";
 import { createApp } from "vue";
-import { createAxiosClient } from "@/services";
 import { mdiAliases, symbolsAliases } from "@/plugins/icons";
 import { MediakiwiVueOptions } from "@/models";
 import { MediakiwiIdentity } from "@/models/options/MediakiwiIdentity";
@@ -9,7 +8,6 @@ import mediakiwi from "@/framework";
 
 // Import the mediakiwi stylesheet
 import "./styles/main.scss";
-import { container } from "tsyringe";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
 import { mdiAccountCheckOutline, mdiTestTube } from "@mdi/js";
 
@@ -18,7 +16,6 @@ import { useEntraSettings } from "@/composables/useEntraSettings";
 import { Configuration } from "@azure/msal-browser";
 
 import navigation from "./navigation/NavigationProvider";
-import { Api } from "./services";
 
 // add mediakiwi
 const mediakiwiOptions: MediakiwiVueOptions = {
@@ -84,10 +81,5 @@ const app = createApp(App);
 
 // install mediakiwi
 app.use(mediakiwi, mediakiwiOptionsWithEntra);
-
-// register dependencies
-const api = new Api<any>();
-api.instance = createAxiosClient(import.meta.env.VITE_APP_SAMPLEAPI_APIBASEURL.replace('sample', ''));
-container.register("SampleApi", { useValue: api });
 
 app.mount("#app");

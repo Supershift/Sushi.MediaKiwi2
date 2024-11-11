@@ -3,12 +3,10 @@
   import { useBreadcrumbs, useNavigation, useValidationRules } from "@/composables";
 
   import { reactive, ref } from "vue";
-  import { container } from "tsyringe";
   import MkNavigationDrawerInfo from "@/components/MkNavigation/MkNavigationDrawerInfo.vue";
-  import { Api, Country, HotelDto } from "@sample/services";
+  import { sampleApi, Country, HotelDto } from "@sample/services";
 
   // inject dependencies
-  const { sample: sampleApi } = container.resolve<Api<any>>("SampleApi");
   const { required } = await useValidationRules();
   const { setCurrentBreadcrumbLabel } = useBreadcrumbs();
 

@@ -1,15 +1,13 @@
 <script setup lang="ts">
   import { MkForm } from "@/components";
   import { computed, reactive } from "vue";
-  import { container } from "tsyringe";
   import { useNavigation } from "@/composables/useNavigation";
   import MkConfirmDialog from "@/components/MkConfirmDialog/MkConfirmDialog.vue";
   import { useValidationRules } from "@/composables";
   import MkFormSideSheet from "@/components/MkForm/MkFormSideSheet.vue";
   import TransferMoneyDialog from "./partials/TransferMoneyDialog.vue";
-  import { Api, AccountDto, DepositMoneyRequest, WithdrawMoneyRequest } from "@sample/services";
+  import { sampleApi, AccountDto, DepositMoneyRequest, WithdrawMoneyRequest } from "@sample/services";
 
-  const { sample: sampleApi } = container.resolve<Api<any>>("SampleApi");
   const navigation = useNavigation();
   const { required } = await useValidationRules();
   const accountNumber = computed<string>(() => navigation.currentViewParameter.value as string);

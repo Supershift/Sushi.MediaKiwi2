@@ -1,11 +1,9 @@
 <script setup lang="ts">
   import { reactive } from "vue";
-  import { container } from "tsyringe";
   import { useValidationRules } from "@/composables";
   import MkFormDialog from "@/components/MkForm/MkFormDialog.vue";
-  import { Api, TransferMoneyRequest } from "@sample/services";
+  import { sampleApi, TransferMoneyRequest } from "@sample/services";
 
-  const { sample: sampleApi } = container.resolve<Api<any>>("SampleApi");
   const { required } = await useValidationRules();
 
   const state = reactive({
