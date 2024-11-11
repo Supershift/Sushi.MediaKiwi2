@@ -7,13 +7,24 @@ import { useMediakiwiStore } from "../mediakiwi";
 import { ObjectNavigationProvider, SimpleSection } from "@/navigation";
 import { Api } from "@/services/api";
 
-vi.mock(import("@/services/api"), () => {
-  const SomeClass = vi.fn()
-  SomeClass.prototype.someMethod = vi.fn()
-  return { SomeClass }
-})
+vi.mock('@/services/api', () => {
+  return {
+    Api: vi.fn().mockImplementation(() => {
+      return {
+        mediakiwi: {
+          apiRolesList: vi.fn().mockResolvedValue({ data: {} }),
+        },
+      };
+    }),
+  };
+});
+
 
 describe("Mediakiwi Store", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   container.register("MediaKiwiApi", { useValue: new Api<any>() });
 
   // All the sections
