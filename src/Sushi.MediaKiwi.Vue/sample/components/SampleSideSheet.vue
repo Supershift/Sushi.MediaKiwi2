@@ -1,13 +1,10 @@
 <script setup lang="ts">
-  import { computed, reactive, ref, watch } from "vue";
-  import { MkSideSheet } from "@/components";
-  import type { ICustomer } from "./../models/Customer";
-  import { container } from "tsyringe";
+  import { computed, reactive } from "vue";
   import { SampleDataConnector } from "@sample/services/SampleDataConnector";
   import MkFormSideSheet from "@/components/MkForm/MkFormSideSheet.vue";
   import { SampleData } from "@sample/models/SampleData";
 
-  const sampleDataConnector = container.resolve(SampleDataConnector);
+  const sampleDataConnector = new SampleDataConnector();
 
   /** Model to open the dialog */
   const modelValue = defineModel<boolean>("modelValue", { required: false, default: false });

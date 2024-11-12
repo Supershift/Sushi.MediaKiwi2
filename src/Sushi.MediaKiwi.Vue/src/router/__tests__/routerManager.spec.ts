@@ -1,6 +1,5 @@
 import "reflect-metadata";
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { container } from "tsyringe";
 import { RouterManager, RouterManagerState } from "../routerManager";
 import { RouteGenerator } from "../routeGenerator";
 import { MediakiwiVueOptions } from "../../models";
@@ -20,7 +19,7 @@ const modules: Record<string, RouteComponent> = {
   a: <Component>{},
   b: <Component>{},
 };
-const section : Section = { id: "1", name: "Admin Section", roles: ["admin"], items:[] };
+const section: Section = { id: "1", name: "Admin Section", roles: ["admin"], items: [] };
 const navigationItems: NavigationItem[] = [
   { id: "1", componentKey: "a", name: "", section: section, children: [] },
   { id: "2", componentKey: "b", name: "", section: section, children: [] },
@@ -37,7 +36,6 @@ const options: MediakiwiVueOptions = {
 
 describe("RouterManager", () => {
   beforeEach(() => {
-    container.reset();
     vi.clearAllMocks();
     setActivePinia(createTestingPinia());
   });
@@ -49,7 +47,7 @@ describe("RouterManager", () => {
     const routeGenerator = vi.mocked(new RouteGenerator());
 
     routeGenerator.generateRoutes.mockReturnValue([]);
-    const routerManager = new RouterManager(options, router, routeGenerator);
+    const routerManager = new RouterManager(options, router);
 
     const mkStore = store.useMediakiwiStore();
 
@@ -68,7 +66,7 @@ describe("RouterManager", () => {
 
     const initSpy = vi.spyOn(RouterManager.prototype as any, "initializeManager");
 
-    const routerManager = new RouterManager(options, router, routeGenerator);
+    const routerManager = new RouterManager(options, router);
 
     routerManager.Initialize();
     routerManager.Initialize();
@@ -88,8 +86,8 @@ describe("RouterManager", () => {
 
     const routeGenerator = vi.mocked(new RouteGenerator());
     routeGenerator.generateRoutes.mockReturnValue([]);
-    const routerManager = new RouterManager(options, router, routeGenerator);
-    
+    const routerManager = new RouterManager(options, router);
+
     // act
     routerManager.updateRoutes(modules, tree);
 

@@ -5,12 +5,11 @@
   import { MkTable, MkOverflowMenuIcon, MkTd, MkTh } from "@/components";
   import type { SampleData } from "@sample/models/SampleData";
   import { SampleDataConnector } from "@sample/services/SampleDataConnector";
-  import { container } from "tsyringe";
   import { ICustomer } from "./../models/Customer";
   import { useI18next } from "@/composables";
 
   // inject dependencies
-  const sampleDataConnector = container.resolve(SampleDataConnector);
+  const sampleDataConnector = new SampleDataConnector();
   const { formatDate } = await useI18next();
 
   // define state

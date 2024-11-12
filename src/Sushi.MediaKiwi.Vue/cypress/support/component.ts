@@ -14,8 +14,7 @@ import { identity } from "@/identity";
 import "./commands";
 import { PublicClientApplication } from "@azure/msal-browser";
 
-import { container } from "tsyringe";
-import { registerRouter } from "@/helpers/registerRouter";
+//import { registerRouter } from "@/helpers/registerRouter";
 import { VueWrapper } from "@vue/test-utils";
 
 /* eslint-disable @typescript-eslint/no-namespace */
@@ -79,7 +78,7 @@ Cypress.Commands.add("mount", (component, options = {}) => {
     },
   });
 
-  registerRouter(container, options.router);
+  //registerRouter(container, options.router);
 
   // Create the vuetify instance
 

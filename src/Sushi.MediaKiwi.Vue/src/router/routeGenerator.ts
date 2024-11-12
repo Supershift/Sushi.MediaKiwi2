@@ -1,9 +1,7 @@
 import { NavigationItem, NavigationTree } from "@/models/navigation";
-import { injectable } from "tsyringe";
 import { RouteComponent, RouteRecordRaw } from "vue-router";
 
 
-@injectable()
 export class RouteGenerator {
   constructor() { }
 

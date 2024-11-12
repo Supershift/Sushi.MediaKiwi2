@@ -1,24 +1,21 @@
-import { injectable, inject } from "tsyringe";
 import { useMediakiwiStore } from "../stores/index";
-import { type MediakiwiVueOptions } from "../models/options/MediakiwiVueOptions";
-import type { RouteComponent } from "vue-router";
-import { type Router } from "vue-router";
-import { NavigationTree, type NavigationItem } from "@/models/navigation";
-import type { RouteGenerator } from "./routeGenerator";
+import { MediakiwiVueOptions } from "../models/options/MediakiwiVueOptions";
+import type { RouteComponent, Router } from "vue-router";
+import { NavigationTree } from "@/models/navigation";
+import { RouteGenerator } from "./routeGenerator";
 import { modules } from "@/views/modules";
+
 export enum RouterManagerState {
   Empty = 0,
   Initialized = 1,
   Failed = 2,
 }
 
-@injectable()
 export class RouterManager {
   constructor(
-    @inject("MediakiwiOptions") private options: MediakiwiVueOptions,
-    @inject("Router") private router: Router,
-    @inject("RouteGenerator") private routeGenerator: RouteGenerator
-  ) {}
+    private options: MediakiwiVueOptions,
+    private router: Router
+  ) { }
 
   private _initialize?: Promise<RouterManagerState>;
   private _isInitialized: RouterManagerState = RouterManagerState.Empty;
@@ -56,7 +53,7 @@ export class RouterManager {
     });
 
     // add new routes for navigation items
-    const routes = this.routeGenerator.generateRoutes(modules, navigationTree);
+    const routes = new RouteGenerator().generateRoutes(modules, navigationTree);
     routes.forEach((route) => this.router.addRoute(route));
   }
 
@@ -65,7 +62,7 @@ export class RouterManager {
     try {
       // tell store to load data from sources
       const store = useMediakiwiStore();
-      await store.init();
+      await store.init(this.options);
 
       // apply loaded data to router
       const allModules = this.getModules();

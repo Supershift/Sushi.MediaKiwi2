@@ -1,11 +1,10 @@
 <script setup lang="ts">
-  import { container } from "tsyringe";
   import { MkTable, MkSideSheet } from "@/components";
   import { ref, reactive } from "vue";
   import { ListResult, Paging, TableFilter, TableFilterType, TableFilterValue, TableMap, Translation } from "@/models";
   import { useI18next } from "@/composables";
   import { useSnackbarStore } from "@/stores/snackbar";
-  import { Api } from "@/services";
+  import { useMediaKiwiApi } from "@/services";
 
   // define properties
   const props = defineProps({
@@ -17,9 +16,9 @@
   });
 
   // inject dependencies
-  const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
   const { defaultT } = await useI18next();
   const snackbar = useSnackbarStore();
+  const mediaKiwiApi = useMediaKiwiApi();
 
   // define reactive variables
   const currentPagination = ref<Paging>({});

@@ -4,7 +4,6 @@ import { tokenStore } from "@/plugins/i18next";
 import { i18n } from "i18next";
 import { Ref, computed, inject } from "vue";
 import { useNavigation } from "@/composables/useNavigation";
-import { container } from "tsyringe";
 import { NavigationItem } from "@/models/navigation";
 
 /**
@@ -16,34 +15,15 @@ export async function useI18next(scope?: NavigationItem | string) {
   // inject dependencies
   const navigation = useNavigation();
 
-  // get i18next instance
-  let i18next: Ref<i18n> | undefined;
-  if (container.isRegistered("i18next")) {
-    i18next = container.resolve<Ref<i18n>>("i18next");
-  } else {
-    i18next = inject<Ref<i18n>>("i18next");
-  }
-
-  // get mediakiwi options
-  let mediakiwiOptions: MediakiwiVueOptions | undefined;
-  if (container.isRegistered("MediakiwiOptions")) {
-    mediakiwiOptions = container.resolve<MediakiwiVueOptions>("MediakiwiOptions");
-  } else {
-    mediakiwiOptions = inject<MediakiwiVueOptions>("mediakiwi");
-  }
+  const i18next = inject<Ref<i18n>>("i18next");
+  const mediakiwiOptions = inject<MediakiwiVueOptions>("mediakiwi");
 
   // check if i18next is provided
   if (!i18next) {
     throw new Error("i18next is not provided, install the plugin first");
   }
 
-  // get i18next initialization promise
-  let i18nInitPromise: Promise<any> | undefined;
-  if (container.isRegistered("i18initPromise")) {
-    i18nInitPromise = container.resolve<Promise<any>>("i18initPromise");
-  } else {
-    i18nInitPromise = inject<Promise<any>>("i18initPromise");
-  }
+  const i18nInitPromise = inject<Promise<any>>("i18initPromise");
 
   // check if i18next is initialized
   await i18nInitPromise;

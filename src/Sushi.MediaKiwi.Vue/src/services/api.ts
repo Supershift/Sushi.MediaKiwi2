@@ -36,7 +36,8 @@ export interface LocaleListResult {
 }
 
 export interface NavigationItem {
-  id?: string | null;
+  /** @minLength 1 */
+  id: string;
   /**
    * @minLength 0
    * @maxLength 128
@@ -63,7 +64,7 @@ export interface NavigationItem {
    */
   icon?: string | null;
   /** @format int32 */
-  sortOrder?: number;
+  sortOrder: number;
 }
 
 export interface NavigationItemListResult {

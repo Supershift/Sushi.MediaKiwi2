@@ -1,6 +1,5 @@
 import { RouteComponent, RouteRecordRaw } from "vue-router";
 import { Configuration } from "@azure/msal-browser";
-import { IMediakiwiServiceRegistrations } from "./IMediakiwiServiceRegistrations";
 import { InitOptions, i18n } from "i18next";
 import { MediakiwiIdentity } from "./MediakiwiIdentity";
 import { VuetifyOptions } from "vuetify";
@@ -21,8 +20,6 @@ export interface MediakiwiVueOptions {
   identity: MediakiwiIdentity;
   /** Override default vuetify options. Provided object will be merged with default vuetify options. */
   vuetifyOptions?: VuetifyOptions;
-  /** Exposes classes which can be injected. Provide your implementation for interfaces here. */
-  serviceRegistrations?: IMediakiwiServiceRegistrations;
   /** Override default i18next options. Provided object will be merged with default options. */
   i18nextOptions?: InitOptions;
   i18nextCallback?: (instance: i18n) => void;

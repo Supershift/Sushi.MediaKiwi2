@@ -1,10 +1,8 @@
 import { NavigationItemDto, SectionDto, ViewDto } from "@/models";
 import { INavigationProvider } from "./INavigationProvider";
-import { container } from "tsyringe";
-import { Api, INavigationConnector } from "@/services";
+import { useMediaKiwiApi } from "@/services";
 import { noPageSize } from "@/constants";
 import { NavigationItem, NavigationTree, Section } from "@/models/navigation";
-
 
 export class ApiNavigationProvider implements INavigationProvider {
     async GetTreeAsync(): Promise<NavigationTree> {
@@ -44,7 +42,7 @@ export class ApiNavigationProvider implements INavigationProvider {
                     const navigationItem: NavigationItem = {
                         id: item.id,
                         name: item.name,
-                        icon: item.icon,
+                        icon: item.icon ?? undefined,
                         section: section,
                         roles: undefined,
                         componentKey: view?.componentKey,
@@ -74,18 +72,19 @@ export class ApiNavigationProvider implements INavigationProvider {
     }
 
     async GetNavigationItemsAsync(): Promise<NavigationItemDto[]> {
-        const connector = container.resolve<INavigationConnector>("INavigationConnector");
-        const navigationItems = await connector.GetNavigationItems(undefined, { pageSize: noPageSize });
-        return navigationItems.result;
+        const mediaKiwiApi = useMediaKiwiApi();
+        const navigationItems = await mediaKiwiApi.apiNavigationitemsList({ pageSize: noPageSize });
+        return navigationItems.data.result;
     }
+
     async GetSectionsAsync(): Promise<SectionDto[]> {
-        const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
-        const sections = (await mediaKiwiApi.apiSectionsList({ pageSize: noPageSize })).data;
-        return sections.result;
+        const mediaKiwiApi = useMediaKiwiApi();
+        const sections = await mediaKiwiApi.apiSectionsList({ pageSize: noPageSize });
+        return sections.data.result;
     }
 
     async GetViewsAsync(): Promise<ViewDto[]> {
-        const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
+        const mediaKiwiApi = useMediaKiwiApi();
         const response = await mediaKiwiApi.apiViewsList({ pageSize: noPageSize });
         return response.data.result;
     }

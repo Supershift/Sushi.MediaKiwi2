@@ -1,18 +1,17 @@
 <script setup lang="ts">
   import { MkForm } from "@/components";
-  import { ref } from "vue";
-  import { container } from "tsyringe";
-  import { ViewDto } from "@/models";
+  import { inject, ref } from "vue";
+  import { MediakiwiVueOptions, ViewDto } from "@/models";
   import { useMediakiwiStore } from "@/stores";
   import { RouterManager } from "@/router/routerManager";
   import { useNavigation } from "@/composables/useNavigation";
   import { useValidationRules } from "@/composables";
-  import { Api } from "@/services";
+  import { useMediaKiwiApi } from "@/services";
 
   // inject dependencies
-  const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
-  const routerManager = container.resolve<RouterManager>("RouterManager");
+  const routerManager = inject<RouterManager>("RouterManager");
   const { required } = await useValidationRules();
+  const mediaKiwiApi = useMediaKiwiApi();
 
   const store = useMediakiwiStore();
   const navigation = useNavigation();
@@ -40,13 +39,13 @@
       await mediaKiwiApi.apiViewsUpdate(viewId.value, view.value);
 
       // refresh store (to update the view in the navigation)
-      await routerManager.ForceInitialize();
+      await routerManager?.ForceInitialize();
     } else {
       // create new view
       const newView = await mediaKiwiApi.apiViewsCreate(view.value.id, view.value);
 
       // refresh store (to update the view in the navigation)
-      await routerManager.ForceInitialize();
+      await routerManager?.ForceInitialize();
 
       // push user to the new view
       navigation.navigateTo(navigation.currentNavigationItem.value, newView.data.id);
@@ -60,7 +59,7 @@
         await mediaKiwiApi.apiViewsDelete(viewId.value);
 
         // refresh store (to update the view in the navigation)
-        await routerManager.ForceInitialize();
+        await routerManager?.ForceInitialize();
       }
     };
   }

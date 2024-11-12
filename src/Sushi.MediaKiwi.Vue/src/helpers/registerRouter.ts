@@ -1,13 +1,12 @@
+import { MediakiwiVueOptions } from "@/models";
 import { layoutManager } from "@/router/layoutManager";
+import { RouterManager } from "@/router/routerManager";
 import { setPageTitle } from "@/router/setPageTitle";
-import { DependencyContainer } from "tsyringe";
+import { App } from "vue";
 import { Router } from "vue-router";
 
-export function registerRouter(container: DependencyContainer, router: Router) {
-  // register router
-  container.register("Router", {
-    useValue: router,
-  });
+export function registerRouter(app: App<any>, router: Router, options: MediakiwiVueOptions) {
+  app.provide('RouterManager', new RouterManager(options, router))
 
   // Add method to set page title
   setPageTitle(router);

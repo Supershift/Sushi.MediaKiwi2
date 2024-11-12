@@ -3,14 +3,13 @@
   import { ref } from "vue";
   import { Locale } from "@/models";
   import { onMounted } from "vue";
-  import { container } from "tsyringe";
   import { useLocale } from "vuetify";
-  import { Api } from "@/services";
+  import { useMediaKiwiApi } from "@/services";
 
   // inject dependencies
   const { i18next } = await useI18next();
-  const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
   const { current } = useLocale();
+  const mediaKiwiApi = useMediaKiwiApi();
 
   // define reactive variables
   const locales = ref<Locale[]>([]);

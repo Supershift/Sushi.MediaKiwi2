@@ -1,15 +1,13 @@
 <script setup lang="ts">
-  import SampleSideSheet from "./../components/SampleSideSheet.vue";
   import { reactive, ref } from "vue";
   import { TableMap, TableFilter, Sorting, Paging, TableFilterType, SortDirection, IconsLibrary } from "@/models";
   import { MkTable, MkOverflowMenuIcon } from "@/components";
   import type { SampleData } from "@sample/models/SampleData";
   import { SampleDataConnector } from "@sample/services/SampleDataConnector";
-  import { container } from "tsyringe";
   import { ICustomer } from "./../models/Customer";
 
   // inject dependencies
-  const sampleDataConnector = container.resolve(SampleDataConnector);
+  const sampleDataConnector = new SampleDataConnector();
 
   // define a mapping between source data and desired columns in the table
   const myMap: TableMap<SampleData> = {

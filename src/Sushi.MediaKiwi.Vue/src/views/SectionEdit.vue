@@ -1,21 +1,20 @@
 <script setup lang="ts">
   import { MkForm } from "@/components";
-  import { reactive, computed } from "vue";
-  import { container } from "tsyringe";
-  import { Api } from "@/services";
-  import { SectionDto, IconsLibrary } from "@/models";
+  import { reactive, computed, inject } from "vue";
+  import { useMediaKiwiApi } from "@/services";
+  import { SectionDto, IconsLibrary, MediakiwiVueOptions } from "@/models";
   import { RouterManager } from "@/router/routerManager";
   import { useNavigation, useValidationRules } from "@/composables";
   import { adminSectionId } from "@/constants";
   import { useMediakiwiStore } from "@/stores";
 
   // inject dependencies
-  const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
-  const routerManager = container.resolve<RouterManager>("RouterManager");
+  const routerManager = inject<RouterManager>("RouterManager");
 
   const store = useMediakiwiStore();
   const navigation = useNavigation();
   const { alphaNumericNoSpace } = await useValidationRules();
+  const mediaKiwiApi = useMediaKiwiApi();
 
   // get id of the section from the route
   const sectionId = navigation.currentViewParameter;
@@ -47,13 +46,13 @@
         await mediaKiwiApi.apiSectionsUpdate(sectionId.value, state.section);
 
         // refresh store (to update the section in the navigation)
-        await routerManager.ForceInitialize();
+        await routerManager?.ForceInitialize();
       } else {
         // create new section
         const newSection = await mediaKiwiApi.apiSectionsCreate(state.section.id, state.section);
 
         // refresh store (to update the section in the navigation)
-        await routerManager.ForceInitialize();
+        await routerManager?.ForceInitialize();
 
         // push user to the new section
         navigation.navigateTo(navigation.currentNavigationItem.value, newSection.data.id);
@@ -67,7 +66,7 @@
         await mediaKiwiApi.apiSectionsDelete(sectionId.value);
 
         // refresh store (to update the section in the navigation)
-        await routerManager.ForceInitialize();
+        await routerManager?.ForceInitialize();
       }
     }
   }

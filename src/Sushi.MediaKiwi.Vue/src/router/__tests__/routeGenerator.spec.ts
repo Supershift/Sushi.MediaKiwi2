@@ -1,6 +1,5 @@
 import "reflect-metadata";
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { container } from "tsyringe";
 import { RouteGenerator } from "../routeGenerator";
 import { RouteComponent } from "vue-router";
 import { Component } from "vue";
@@ -11,20 +10,19 @@ vi.mock("vue-router");
 
 // default stubs
 const modules: Record<string, RouteComponent> = {
-  a: <Component>{ },
+  a: <Component>{},
   b: <Component>{},
 };
-const section : Section = { id: "1", name: "Admin Section", roles: ["admin"], items:[] };
+const section: Section = { id: "1", name: "Admin Section", roles: ["admin"], items: [] };
 const navigationItems: NavigationItem[] = [
-  <NavigationItem>{ id: "1", componentKey: "a", name: "Order", section: section, children:[] },
-  <NavigationItem>{ id: "2", componentKey: "b", name: "Customers", section: section, children:[] },
+  <NavigationItem>{ id: "1", componentKey: "a", name: "Order", section: section, children: [] },
+  <NavigationItem>{ id: "2", componentKey: "b", name: "Customers", section: section, children: [] },
 ];
 section.items = navigationItems;
 const tree = new NavigationTree([section]);
 
 describe("RouteGenerator", () => {
   beforeEach(() => {
-    container.reset();
     vi.clearAllMocks();
   });
   it("Should generate routes for all valid navigation items", () => {

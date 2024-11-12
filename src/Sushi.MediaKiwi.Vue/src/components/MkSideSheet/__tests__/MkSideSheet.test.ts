@@ -2,7 +2,6 @@
 import "reflect-metadata";
 import MkSideSheet from "../MkSideSheet.vue";
 import { describe, expect, vi, beforeEach } from "vitest";
-import { container } from "tsyringe";
 import { mountAsync } from "@test/utils";
 
 // props
@@ -17,7 +16,6 @@ const props = {
 };
 describe("MkSideSheet", () => {
   beforeEach(() => {
-    container.reset();
     vi.clearAllMocks();
   });
   afterEach(() => {

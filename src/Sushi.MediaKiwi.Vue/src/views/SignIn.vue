@@ -3,18 +3,18 @@
   import { useIsAuthenticated } from "@/composables/useIsAuthenticated";
   import { useNavigation } from "@/composables/useNavigation";
   import { useMsal } from "@/composables/useMsal";
-  import { container } from "tsyringe";
   import { RouterManager } from "@/router/routerManager";
   import { useI18next } from "@/composables/useI18next";
   import { useMediakiwiVueOptions } from "@/composables/useMediakiwiVueOptions";
-  import { computed, ref, watch } from "vue";
+  import { computed, inject, ref, watch } from "vue";
   import { useTheme } from "vuetify";
   import { useColors } from "@/composables";
+  import { MediakiwiVueOptions } from "@/models";
 
   // inject dependencies
   const isAuthenticated = useIsAuthenticated();
   const { instance } = useMsal();
-  const routerManager = container.resolve<RouterManager>("RouterManager");
+  const routerManager = inject<RouterManager>("RouterManager");
   const { signIn } = useMediakiwiVueOptions();
   const theme = useTheme();
   const { isCssColor } = useColors();
@@ -26,7 +26,7 @@
   // if already authenticated, redirect to home
   if (isAuthenticated.value) {
     // first wait for store and routermanager to initialize
-    await routerManager.Initialize();
+    await routerManager?.Initialize();
 
     const navigation = useNavigation();
     navigation.navigateToHome();

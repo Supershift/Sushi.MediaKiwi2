@@ -17,20 +17,20 @@ namespace Sushi.MediaKiwi.Services.Model
         /// <summary>
         /// Unique identifier for this navigation item.
         /// </summary>        
-        [SwaggerSchema(ReadOnly = true)]
-        public string Id { get; set; } = null!;
+        [Required, SwaggerSchema(ReadOnly = true)]
+        public required string Id { get; set; }
 
         /// <summary>
         /// Name of this navigation item.
         /// </summary>        
         [Required, StringLength(128)]
-        public string Name { get; set; } = null!;
+        public required string Name { get; set; }
 
         /// <summary>
         /// The section to which the item belongs in the navigation tree.
         /// </summary>        
         [Required, StringLength(64)]
-        public string SectionId { get; set; } = null!;
+        public required string SectionId { get; set; }
 
         /// <summary>
         /// If not empty, Id of the parent navigation item.
@@ -48,11 +48,12 @@ namespace Sushi.MediaKiwi.Services.Model
         /// Icon to display for this item.
         /// </summary>
         [StringLength(255)]
-        public string? Icon { get; set; }   
+        public string? Icon { get; set; }
 
         /// <summary>
         /// Order in which this item should be displayed. Lower values are displayed first.
         /// </summary>
+        [Required]
         public int SortOrder { get; set; }
     }
 }

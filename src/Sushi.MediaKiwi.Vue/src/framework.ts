@@ -1,43 +1,25 @@
-import { type App } from "vue";
+import { InjectionKey, provide, type App } from "vue";
 import pinia from "./plugins/pinia";
 import { getDefaultRouterOptions } from "@/router/getDefaultRouterOptions";
-import { createRouter } from "vue-router";
+import { createRouter, useRouter } from "vue-router";
 import { PublicClientApplication } from "@azure/msal-browser";
 import { type MediakiwiVueOptions } from "./models/options";
 import { msalPlugin } from "./plugins/msalPlugin";
 import { CustomNavigationClient } from "./router/navigationClient";
 import { addCheckIsAuthenticated } from "./router/checkIsAuthenticated";
 import { identity } from "./identity";
-import { container } from "tsyringe";
-import { registerServices } from "./helpers/registerServices";
-import { registerOptions } from "./helpers/registerOptions";
-import { registerRouter } from "./helpers/registerRouter";
 import { addWaitOnRouterManager } from "./router/waitOnRouterManager";
 import { addCheckIsInRole } from "./router/checkIsInRole";
-import { registerAxios } from "./helpers/registerAxios";
 import i18next from "./plugins/i18next";
 import { registerIcons } from "./helpers/registerIcons";
 import { registerDirectives } from "./helpers/registerDirectives";
 import { createVuetify } from "./plugins/vuetify";
 import { registerErrorHandler } from "./helpers/registerErrorHandler";
-import { ApiNavigationProvider } from "./navigation";
 import "material-symbols/outlined.css";
+import { registerRouter } from "./helpers/registerRouter";
 
 export default {
   install(app: App, options: MediakiwiVueOptions): void {
-    // register options
-    registerOptions(container, options);
-
-    // register dependencies
-    registerServices(container, options.serviceRegistrations);
-
-    // register navigation provdider
-    const navigationProvider = options.navigationProvider ?? new ApiNavigationProvider();
-    container.registerInstance("INavigationProvider", navigationProvider);
-
-    // register axios
-    registerAxios(container, options);
-
     // register global error handler
     registerErrorHandler(app, options);
 
@@ -95,9 +77,7 @@ export default {
 
     // create the router
     const router = createRouter(routerOptions);
-
-    // register the router as dependency
-    registerRouter(container, router);
+    registerRouter(app, router, options);
 
     // create navigation client for msal
     const navigationClient = new CustomNavigationClient(router);

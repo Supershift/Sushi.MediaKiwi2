@@ -1,18 +1,20 @@
 import "reflect-metadata";
 import { describe, it, beforeEach, vi, expect } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
-import { container } from "tsyringe";
 import { VuetifyOptions } from "vuetify/lib/framework.mjs";
 import { useMediakiwiStore } from "../mediakiwi";
 import { ObjectNavigationProvider, SimpleSection } from "@/navigation";
-import { Api } from "@/services/api";
 
 vi.mock('@/services/api', () => {
   return {
     Api: vi.fn().mockImplementation(() => {
       return {
         mediakiwi: {
-          apiRolesList: vi.fn().mockResolvedValue({ data: {} }),
+          apiRolesList: vi.fn().mockResolvedValue(Promise.resolve({ data: { result: [] } })),
+          navigationList: vi.fn().mockResolvedValue(Promise.resolve({ data: { result: [] } })),
+          apiSectionsList: vi.fn().mockResolvedValue(Promise.resolve({ data: { result: [] } })),
+          apiNavigationitemsList: vi.fn().mockResolvedValue(Promise.resolve({ data: { result: [] } })),
+          apiViewsList: vi.fn().mockResolvedValue(Promise.resolve({ data: { result: [] } })),
         },
       };
     }),
@@ -24,8 +26,6 @@ describe("Mediakiwi Store", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
-
-  container.register("MediaKiwiApi", { useValue: new Api<any>() });
 
   // All the sections
   const sections: SimpleSection[] = [
@@ -43,8 +43,6 @@ describe("Mediakiwi Store", () => {
   ];
   const provider = new ObjectNavigationProvider();
   provider.SetTree(sections);
-
-  container.registerInstance("INavigationProvider", provider);
 
   beforeEach(() => {
     vi.clearAllMocks();

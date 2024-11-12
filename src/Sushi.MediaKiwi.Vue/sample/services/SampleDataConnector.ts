@@ -1,7 +1,6 @@
 import type { Sorting } from "@/models";
 import { SortDirection } from "@/models";
 import type { SampleData } from "../models/SampleData";
-import { injectable } from "tsyringe";
 
 const data = <SampleData[]>[
   { id: 1, name: "Data A", countryCode: "NL", countryName: "Nederland", date: new Date("2023-03-14T12:00:00") },
@@ -16,7 +15,6 @@ const data = <SampleData[]>[
   { id: 10, name: "Data J", countryCode: "BE", countryName: "België", date: new Date("2023-03-14T21:00:00") },
 ];
 
-@injectable()
 export class SampleDataConnector {
   async GetAll(countryCode: string, sortOrder?: Sorting): Promise<SampleData[]> {
     let result = [...data];

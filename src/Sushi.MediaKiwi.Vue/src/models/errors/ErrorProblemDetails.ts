@@ -1,7 +1,5 @@
-import { AxiosResponse, HttpStatusCode } from "axios";
+import { AxiosResponse } from "axios";
 import { ApiError } from "./ApiError";
-import { container } from "tsyringe";
-import { ErrorMessages } from "./ErrorMessages";
 
 /**
  * Implements Sushi.MediaKiwi.Services.Model.ErrorProblemDetails

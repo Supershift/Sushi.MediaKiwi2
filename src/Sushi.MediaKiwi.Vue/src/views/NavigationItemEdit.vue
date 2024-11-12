@@ -1,23 +1,21 @@
 <script setup lang="ts">
   import { MkForm } from "@/components";
-  import { container } from "tsyringe";
-  import { Api, INavigationConnector } from "@/services";
-  import { NavigationItemDto, ViewDto } from "@/models";
+  import { useMediaKiwiApi } from "@/services";
+  import { MediakiwiVueOptions, NavigationItemDto, ViewDto } from "@/models";
   import { useMediakiwiStore } from "@/stores";
   import { RouterManager } from "@/router/routerManager";
   import { useNavigation, useValidationRules } from "@/composables";
-  import { reactive } from "vue";
+  import { inject, reactive } from "vue";
   import { noPageSize } from "@/constants";
 
   // inject dependencies
-  const navigationConnector = container.resolve<INavigationConnector>("INavigationConnector");
-  const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
-  const routerManager = container.resolve<RouterManager>("RouterManager");
+  const routerManager = inject<RouterManager>("RouterManager");
   const { required } = await useValidationRules();
 
   const store = useMediakiwiStore();
   const navigation = useNavigation();
   const { alphaNumericNoSpace } = await useValidationRules();
+  const mediaKiwiApi = useMediaKiwiApi();
 
   // get id of the view from the route
   const navigationItemId = navigation.currentViewParameter;
@@ -31,27 +29,27 @@
   async function onLoad() {
     if (navigationItemId.value) {
       // get existing item from api
-      const candidate = await navigationConnector.GetNavigationItem(navigationItemId.value);
-      state.navigationItem = candidate!;
+      const candidate = await mediaKiwiApi.apiNavigationitemsDetail(navigationItemId.value);
+      state.navigationItem = candidate.data;
     }
   }
 
   async function onSave() {
     if (navigationItemId.value) {
       // update existing view
-      await navigationConnector.UpdateNavigationItem(state.navigationItem);
+      await mediaKiwiApi.apiNavigationitemsUpdate(state.navigationItem.id, state.navigationItem);
 
       // refresh store (to update the view in the navigation)
-      await routerManager.ForceInitialize();
+      await routerManager?.ForceInitialize();
     } else {
       // create new view
-      const newNavigationItem = await navigationConnector.CreateNavigationItem(state.navigationItem);
+      const newNavigationItem = await mediaKiwiApi.apiNavigationitemsCreate(state.navigationItem.id, state.navigationItem);
 
       // refresh store (to update the view in the navigation)
-      await routerManager.ForceInitialize();
+      await routerManager?.ForceInitialize();
 
       // push user to the new view
-      navigation.navigateTo(navigation.currentNavigationItem.value, newNavigationItem.id);
+      navigation.navigateTo(navigation.currentNavigationItem.value, newNavigationItem.data.id);
     }
   }
 
@@ -59,19 +57,19 @@
   if (navigationItemId.value) {
     onDelete = async () => {
       if (navigationItemId.value) {
-        await navigationConnector.DeleteNavigationItem(state.navigationItem.id);
+        await mediaKiwiApi.apiNavigationitemsDelete(state.navigationItem.id);
 
         // refresh store (to update the view in the navigation)
-        await routerManager.ForceInitialize();
+        await routerManager?.ForceInitialize();
       }
     };
   }
 
   // load options
-  const navigationItems = await navigationConnector.GetNavigationItems(undefined, { pageSize: noPageSize });
+  const navigationItems = await mediaKiwiApi.apiNavigationitemsList({ pageSize: noPageSize });
   const views = (await mediaKiwiApi.apiViewsList({ pageSize: noPageSize })).data;
 
-  state.allNavigationItems = navigationItems.result;
+  state.allNavigationItems = navigationItems.data.result;
   state.views = views.result;
 </script>
 

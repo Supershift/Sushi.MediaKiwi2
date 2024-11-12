@@ -3,14 +3,12 @@
   import { ListResult, Paging, NavigationItemDto, TableFilterType, TableFilter, Sorting, SortDirection } from "@/models";
   import { useMediakiwiStore } from "@/stores";
   import { ref } from "vue";
-  import { container } from "tsyringe";
-  import { INavigationConnector } from "@/services";
+  import { useMediaKiwiApi } from "@/services";
   import { reactive } from "vue";
-  import { watch } from "vue";
 
   // inject dependencies
-  const navigationConnector = container.resolve<INavigationConnector>("INavigationConnector");
   const store = useMediakiwiStore();
+  const mediaKiwiApi = useMediaKiwiApi();
 
   // define reactive variables
   const currentPagination = ref<Paging>({});
@@ -38,13 +36,20 @@
     return sections.value.find((section) => section.id == id)?.name;
   }
 
-  function getNavigationItemName(id?: string): string | undefined {
+  function getNavigationItemName(id?: string | null): string | undefined {
     return state.navigationItems.result.find((x) => x.id == id)?.name || "-";
   }
 
   // get data
   async function onLoad() {
-    state.navigationItems = await navigationConnector.GetNavigationItems(filters.value.section?.selectedValue?.value, currentPagination.value, sorting.value);
+    state.navigationItems = (
+      await mediaKiwiApi.apiNavigationitemsList({
+        sectionId: filters.value.section?.selectedValue?.value,
+        ...currentPagination.value,
+        sortBy: <"name" | "sortOrder" | "id" | "sectionId" | "parentNavigationItemId" | undefined>sorting.value.sortBy,
+        sortDirection: sorting.value.sortDirection,
+      })
+    ).data;
   }
 </script>
 <template>

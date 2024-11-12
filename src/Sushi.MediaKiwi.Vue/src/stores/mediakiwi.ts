@@ -1,12 +1,13 @@
 import { defineStore } from "pinia";
 import type { Role } from "@/models/api";
 import type ListResult from "@/models/api/ListResult";
-import { container } from "tsyringe";
 import { VuetifyOptions } from "vuetify";
-import { INavigationProvider } from "@/navigation";
+import { ApiNavigationProvider, INavigationProvider } from "@/navigation";
 import { NavigationTree } from "@/models/navigation";
 import { RouteLocationRaw } from "vue-router";
-import { Api } from "@/services";
+import { useMediaKiwiApi } from "@/services";
+import { inject } from "vue";
+import { MediakiwiVueOptions } from "@/models";
 
 export interface MediaKiwiState {
   navigationTree: NavigationTree;
@@ -30,24 +31,24 @@ export const useMediakiwiStore = defineStore({
     externalIcons: false,
   } as MediaKiwiState),
   actions: {
-    async init() {
+    async init(mediakiwiVueOptions?: MediakiwiVueOptions) {
       // check if this is the first call
       if (isInitialized === undefined) {
         // start initializing
-        isInitialized = this.loadFromSources();
+        isInitialized = this.loadFromSources(mediakiwiVueOptions);
       }
 
       // return the initialization promise
       return await isInitialized;
     },
     /* Load the navigation tree and roles from the sources. Do not invoke directly unless forcing a reload, use init() instead. */
-    async loadFromSources() {
+    async loadFromSources(mediakiwiVueOptions?: MediakiwiVueOptions) {
       await this.getRoles();
-      const provider = container.resolve<INavigationProvider>("INavigationProvider");
+      const provider = mediakiwiVueOptions?.navigationProvider ?? new ApiNavigationProvider();
       this.navigationTree = await provider.GetTreeAsync();
     },
     async getRoles() {
-      const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
+      const mediaKiwiApi = useMediaKiwiApi();
       const response = await mediaKiwiApi.apiRolesList();
       this.setRoles({
         ...response.data,

@@ -3,12 +3,11 @@
   import { useRoute, useRouter } from "@/router";
   import type { TableMap } from "@/models";
   import { SampleDataConnector } from "@sample/services/SampleDataConnector";
-  import { container } from "tsyringe";
   import type { SampleData } from "@sample/models/SampleData";
   import { reactive, ref } from "vue";
 
   // inject dependencies
-  const sampleDataConnector = container.resolve(SampleDataConnector);
+  const sampleDataConnector = new SampleDataConnector();
   const route = useRoute();
   const router = useRouter();
 
