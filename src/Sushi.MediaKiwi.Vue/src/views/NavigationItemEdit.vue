@@ -97,7 +97,7 @@
       :items="store.navigationTree.sections"
       item-title="name"
       item-value="id"
-      :rules="[(v) => !!v]"
+      :rules="[(v: string) => !!v]"
     ></v-select>
     <v-autocomplete
       v-model="state.navigationItem.viewId"
@@ -105,7 +105,7 @@
       :items="state.views"
       item-title="name"
       item-value="id"
-      :rules="[(v) => !!v]"
+      :rules="[(v: string|undefined) => !!v]"
     ></v-autocomplete>
     <v-text-field v-model="state.navigationItem.icon" label="Icon"></v-text-field>
     <v-text-field v-model="state.navigationItem.sortOrder" label="SortOrder" type="number"></v-text-field>
