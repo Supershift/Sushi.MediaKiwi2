@@ -17,7 +17,7 @@
     :prepend-icon="props.prependIcon"
     :closable="props.closable"
     color="primary"
-    @click:close.stop="(_e) => emit('click:remove')"
+    @click:close.stop="() => emit('click:remove')"
     @click.stop="() => emit('click')"
   >
     <slot></slot>
