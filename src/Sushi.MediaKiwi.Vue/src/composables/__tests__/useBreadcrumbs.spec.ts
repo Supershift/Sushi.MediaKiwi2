@@ -3,15 +3,14 @@ import { describe, it, expect } from "vitest";
 import { useBreadcrumbs } from "./../useBreadcrumbs";
 import { NavigationItem } from "@/models/navigation";
 import { createPinia, setActivePinia } from "pinia";
-import { h } from "vue";
 
-const hoist = vi.hoisted(() => {
+let { isMobile, currentRootItem, currentNavigationItem, currentViewParameter, getViewParameter } = vi.hoisted(() => {
   return {
     isMobile: false,
     currentRootItem: <NavigationItem>{},
     currentNavigationItem: <NavigationItem>{},
     currentViewParameter: "",
-    getViewParameter: vi.fn().mockImplementation(() => hoist.currentViewParameter),
+    getViewParameter: vi.fn().mockImplementation(() => currentViewParameter),
   };
 });
 
@@ -20,7 +19,7 @@ vi.mock("vuetify/lib/framework.mjs", () => ({
   useDisplay: () => {
     return {
       xs: {
-        value: hoist.isMobile,
+        value: isMobile,
       },
     };
   },
@@ -32,15 +31,15 @@ vi.mock("@/composables/useNavigation", async () => {
     useNavigation: () => {
       return {
         currentRootItem: {
-          value: hoist.currentRootItem,
+          value: currentRootItem,
         },
         currentNavigationItem: {
-          value: hoist.currentNavigationItem,
+          value: currentNavigationItem,
         },
         currentViewParameter: {
-          value: hoist.currentViewParameter,
+          value: currentViewParameter,
         },
-        getViewParameter: hoist.getViewParameter,
+        getViewParameter: getViewParameter,
       };
     },
   };
@@ -65,8 +64,8 @@ describe("useBreadcrumbs", () => {
     const childItem = mockNavigationItem("child", "Child", rootItem);
     rootItem.children.push(childItem);
 
-    hoist.currentRootItem = { ...rootItem };
-    hoist.currentNavigationItem = { ...childItem, parent: rootItem };
+    currentRootItem = { ...rootItem };
+    currentNavigationItem = { ...childItem, parent: rootItem };
 
     const { breadcrumbs } = useBreadcrumbs();
 
@@ -74,14 +73,14 @@ describe("useBreadcrumbs", () => {
   });
 
   it("should show mobile back button when xs is true and breadcrumbs exist", () => {
-    hoist.isMobile = true;
+    isMobile = true;
 
     const rootItem = mockNavigationItem("root", "Root");
     const childItem = mockNavigationItem("child", "Child", rootItem);
     rootItem.children.push(childItem);
 
-    hoist.currentRootItem = { ...rootItem };
-    hoist.currentNavigationItem = { ...childItem, parent: rootItem };
+    currentRootItem = { ...rootItem };
+    currentNavigationItem = { ...childItem, parent: rootItem };
 
     const { showMobileBackButton } = useBreadcrumbs();
 
@@ -93,8 +92,8 @@ describe("useBreadcrumbs", () => {
     const childItem = mockNavigationItem("child", "Child", rootItem);
     rootItem.children.push(childItem);
 
-    hoist.currentRootItem = { ...rootItem };
-    hoist.currentNavigationItem = { ...childItem, parent: rootItem };
+    currentRootItem = { ...rootItem };
+    currentNavigationItem = { ...childItem, parent: rootItem };
 
     const { hasBreadcrumbs } = useBreadcrumbs();
 
@@ -106,8 +105,8 @@ describe("useBreadcrumbs", () => {
     const childItem = mockNavigationItem("child", "Child", rootItem);
     rootItem.children.push(childItem);
 
-    hoist.currentRootItem = { ...rootItem };
-    hoist.currentNavigationItem = { ...childItem, parent: rootItem };
+    currentRootItem = { ...rootItem };
+    currentNavigationItem = { ...childItem, parent: rootItem };
 
     const { setCurrentBreadcrumbLabel, breadcrumbs } = useBreadcrumbs();
 
@@ -124,8 +123,8 @@ describe("useBreadcrumbs", () => {
     const childItem = mockNavigationItem("child", "Child", rootItem);
     rootItem.children.push(childItem);
 
-    hoist.currentRootItem = { ...rootItem };
-    hoist.currentNavigationItem = { ...childItem, parent: rootItem };
+    currentRootItem = { ...rootItem };
+    currentNavigationItem = { ...childItem, parent: rootItem };
 
     const { breadcrumbs } = useBreadcrumbs();
 
@@ -143,8 +142,8 @@ describe("useBreadcrumbs", () => {
     rootItem.children.push(childItem2);
     rootItem.children.push(childItem3);
 
-    hoist.currentRootItem = { ...rootItem };
-    hoist.currentNavigationItem = { ...childItem2, parent: rootItem };
+    currentRootItem = { ...rootItem };
+    currentNavigationItem = { ...childItem2, parent: rootItem };
 
     const { breadcrumbs, getBreadcrumbLabel } = useBreadcrumbs();
 
@@ -163,8 +162,8 @@ describe("useBreadcrumbs", () => {
     rootItem.children.push(childItem2);
     rootItem.children.push(childItem3);
 
-    hoist.currentRootItem = { ...rootItem };
-    hoist.currentNavigationItem = { ...childItem2, parent: rootItem };
+    currentRootItem = { ...rootItem };
+    currentNavigationItem = { ...childItem2, parent: rootItem };
 
     const { isCurrentNavigationItem } = useBreadcrumbs();
 
@@ -180,9 +179,9 @@ describe("useBreadcrumbs", () => {
     const childItem1 = mockNavigationItem("child1", "Child 1", rootItem);
     rootItem.children.push(childItem1);
 
-    hoist.currentRootItem = { ...rootItem };
-    hoist.currentViewParameter = "child1";
-    hoist.currentNavigationItem = { ...childItem1, parent: rootItem };
+    currentRootItem = { ...rootItem };
+    currentViewParameter = "child1";
+    currentNavigationItem = { ...childItem1, parent: rootItem };
 
     const breadcrumbs = useBreadcrumbs();
 
@@ -193,7 +192,7 @@ describe("useBreadcrumbs", () => {
     expect(breadcrumbs.getBreadcrumbLabel(lastItem)).toBe("Custom Child 1 label");
 
     // change the current navigation item to child 2
-    hoist.currentViewParameter = "child2";
+    currentViewParameter = "child2";
 
     const newBreadcrumbs = useBreadcrumbs();
 

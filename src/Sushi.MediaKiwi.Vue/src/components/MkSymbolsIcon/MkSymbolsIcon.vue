@@ -1,6 +1,6 @@
 <!-- TODO Add this to the MediaKiwi codebase -->
 <script setup lang="ts">
-  import { JSXComponent, computed } from "vue";
+  import { computed } from "vue";
 
   /** {@link https://fonts.google.com/icons?icon.query=error&icon.style=Outlined} */
   const props = withDefaults(
@@ -12,7 +12,7 @@
       /**
        * Icon to render
        */
-      icon?: string | (string | [path: string, opacity: number])[] | JSXComponent;
+      icon?: string | (string | [path: string, opacity: number])[];
       /**
        * Determines the disabled state of the icon
        */

@@ -24,8 +24,8 @@
 
   const state = reactive({
     navigationItem: <NavigationItemDto>{},
-      allNavigationItems: <NavigationItemDto[]>[],
-      views: <ViewDto[]>[]
+    allNavigationItems: <NavigationItemDto[]>[],
+    views: <ViewDto[]>[],
   });
 
   async function onLoad() {
@@ -68,8 +68,8 @@
   }
 
   // load options
-  const navigationItems = await navigationConnector.GetNavigationItems(undefined, { pageSize: noPageSize});
-  const views = await viewConnector.GetViews({ pageSize: noPageSize});
+  const navigationItems = await navigationConnector.GetNavigationItems(undefined, { pageSize: noPageSize });
+  const views = await viewConnector.GetViews({ pageSize: noPageSize });
 
   state.allNavigationItems = navigationItems.result;
   state.views = views.result;
@@ -97,7 +97,7 @@
       :items="store.navigationTree.sections"
       item-title="name"
       item-value="id"
-      :rules="[(v) => !!v]"
+      :rules="[(v: string) => !!v]"
     ></v-select>
     <v-autocomplete
       v-model="state.navigationItem.viewId"
@@ -105,7 +105,7 @@
       :items="state.views"
       item-title="name"
       item-value="id"
-      :rules="[(v) => !!v]"
+      :rules="[(v: string|undefined) => !!v]"
     ></v-autocomplete>
     <v-text-field v-model="state.navigationItem.icon" label="Icon"></v-text-field>
     <v-text-field v-model="state.navigationItem.sortOrder" label="SortOrder" type="number"></v-text-field>
