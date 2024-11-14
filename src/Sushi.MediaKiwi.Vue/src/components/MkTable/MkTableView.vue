@@ -12,7 +12,7 @@
 
   // inject dependencies
   const { initTableDisplayOptions } = useTableDisplayOptions();
-  const { openContextMenu, contextmenuIsVisible, contextMenuProps, contextMenuStyles } = useContextmenu<T>();
+  const { openContextMenu, contextMenuProps, contextMenuPositionProps } = useContextmenu<T>();
 
   // define properties
   const props = defineProps<MkTableViewProps<T>>();
@@ -297,6 +297,10 @@
     window.removeEventListener("keydown", enableSelectionMode);
     window.removeEventListener("keyup", disableSelectionMode);
   });
+
+  function ok() {
+    alert("ok");
+  }
 </script>
 
 <template>
@@ -351,7 +355,7 @@
       <v-divider v-if="slots?.bottom" />
     </template>
   </v-table>
-  <v-menu v-if="slots.contextmenu || slots.bulkActionBar" v-model="contextmenuIsVisible" :style="contextMenuStyles">
+  <v-menu v-if="slots.contextmenu || slots.bulkActionBar" v-bind="contextMenuPositionProps">
     <slot name="contextmenu" v-bind="contextMenuProps"></slot>
   </v-menu>
 </template>

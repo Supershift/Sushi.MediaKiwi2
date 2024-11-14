@@ -26,3 +26,4 @@ export * from "./useTableSorting";
 export * from "./useTypography";
 export * from "./useValidationRules";
 export * from "./form";
+export * from "./useContextmenu";
