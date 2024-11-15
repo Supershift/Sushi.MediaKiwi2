@@ -15,6 +15,8 @@
     width?: string;
     /** optional id used for the display options */
     mkColumnId?: string;
+    /** colspan  */
+    colspan?: number | string;
   }>();
 
   // define event
@@ -59,7 +61,7 @@
 </script>
 
 <template>
-  <th :class="headerClasses" @click="onClick" :width="width" :mk-column-id="mkColumnId" v-bind="$attrs">
+  <th :class="headerClasses" @click="onClick" :width="width" :mk-column-id="mkColumnId" :colspan="colspan">
     <label class="mk-table-view__head" :class="{ truncate }">
       <label>
         <template v-if="mapItem?.headerTitle"> {{ mapItem?.headerTitle }}</template>
