@@ -59,7 +59,7 @@
 </script>
 
 <template>
-  <th :class="headerClasses" @click="onClick" :width="width" :mk-column-id="mkColumnId">
+  <th :class="headerClasses" @click="onClick" :width="width" :mk-column-id="mkColumnId" v-bind="$attrs">
     <label class="mk-table-view__head" :class="{ truncate }">
       <label>
         <template v-if="mapItem?.headerTitle"> {{ mapItem?.headerTitle }}</template>
