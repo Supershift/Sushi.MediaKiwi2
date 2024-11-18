@@ -275,11 +275,9 @@
   }
 
   function openContextMenuPreCheck(event: MouseEvent, dataItem: T) {
-    // Only open the context menu if no items are selected
-    // TODO; Introduce a context menu for selected items
-    if (!selectionIds.value?.length) {
-      openContextMenu(event, dataItem);
-    }
+    openContextMenu(event, dataItem, {
+      isBulkAction: !!selectionIds.value?.length,
+    });
   }
 
   onMounted(() => {
