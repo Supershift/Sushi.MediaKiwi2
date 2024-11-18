@@ -16,8 +16,8 @@
   const { openContextMenu, contextMenuProps, contextMenuPositionProps } = useContextmenu<T>();
   const { isSelectionMode, createSelectionProps } = useItemSelectionShortcuts<T>({
     onCtrlA: () => onToggleAll(true),
-    onShiftClick: ({ dataItem }) => onShiftKeyPressed(dataItem),
-    onCtrlClick: ({ dataItem }) => onCtrlKeyPressed(dataItem),
+    onShiftClick: ({ dataItem }) => onSelectRangeItems(dataItem),
+    onCtrlClick: ({ dataItem }) => onSelectItem(dataItem),
   });
 
   // define properties
@@ -124,7 +124,7 @@
     onToggleSelection(dataItem, !isSelected);
   }
 
-  function onShiftKeyPressed(dataItem: T) {
+  function onSelectRangeItems(dataItem: T) {
     // select all items between the last selected item and the current item
     const lastSelectedIndex = props.data?.findIndex((x) => getItemId.value!(x) === selectionIds.value[selectionIds.value.length - 1]);
     const currentIndex = props.data?.findIndex((x) => getItemId.value!(x) === getItemId.value!(dataItem));
@@ -148,7 +148,7 @@
     }
   }
 
-  function onCtrlKeyPressed(dataItem: T) {
+  function onSelectItem(dataItem: T) {
     if (!isDisabledItemSelection(dataItem) && !isRemovedItemSelection(dataItem)) {
       handleSelection(dataItem);
     }
