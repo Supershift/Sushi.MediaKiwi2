@@ -73,7 +73,9 @@ export type MkTableRowBaseSlotProps<T> = {
 };
 
 /** Props for the table context menu slot */
-export type MkTableContextMenuSlotProps<T> = MkTableRowBaseSlotProps<T>;
+export type MkTableContextMenuSlotProps<T> = MkTableRowBaseSlotProps<T> & {
+  isBulkAction?: boolean;
+};
 
 /** Props for the table body slot */
 export type MkTableBodySlotProps<T> = MkTableRowBaseSlotProps<T>;

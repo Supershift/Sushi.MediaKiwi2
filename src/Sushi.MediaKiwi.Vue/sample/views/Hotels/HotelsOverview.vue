@@ -152,8 +152,12 @@
       <mk-td :value="srpIcon(dataItem)" />
     </template>
 
-    <template #contextmenu="{ dataItem }">
-      <v-list>
+    <template #contextmenu="{ dataItem, isBulkAction }">
+      <v-list v-if="isBulkAction">
+        <v-list-item @click="() => console.log('ccontext click')"> Move all {{ selectedHotels.length }} hotels</v-list-item>
+        <v-list-item @click="() => console.log('ccontext click')"> Delete all {{ selectedHotels.length }} hotels</v-list-item>
+      </v-list>
+      <v-list v-else>
         <v-list-item @click="() => console.log('context click')"> Move: {{ dataItem.name! }}</v-list-item>
         <v-list-item @click="() => console.log('ccontext click')"> Delete: {{ dataItem.name! }}</v-list-item>
       </v-list>

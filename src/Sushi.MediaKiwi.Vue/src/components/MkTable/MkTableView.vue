@@ -9,10 +9,16 @@
   import { useContextmenu } from "@/composables/useContextmenu";
   import MkTableCheckbox from "./MkTableCheckbox.vue";
   import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
+  import { useItemSelectionShortcuts } from "@/composables/useItemSelectionShortcuts";
 
   // inject dependencies
   const { initTableDisplayOptions } = useTableDisplayOptions();
   const { openContextMenu, contextMenuProps, contextMenuPositionProps } = useContextmenu<T>();
+  const { isSelectionMode, createSelectionProps } = useItemSelectionShortcuts<T>({
+    onCtrlA: () => onToggleAll(true),
+    onShiftClick: ({ dataItem }) => onSelectRangeItems(dataItem),
+    onCtrlClick: ({ dataItem }) => onSelectItem(dataItem),
+  });
 
   // define properties
   const props = defineProps<MkTableViewProps<T>>();
@@ -31,7 +37,6 @@
   /** Ref to the table element */
   const tbodyContainer = ref<any>(null);
   const tbodyNode = computed(() => tbodyContainer.value! as Node);
-  const isSelectionMode = ref(false);
 
   // define event
   const emit = defineEmits<{
@@ -119,40 +124,38 @@
     onToggleSelection(dataItem, !isSelected);
   }
 
-  function onRowClick(event: MouseEvent, dataItem: T) {
-    if (props.checkbox && (event.ctrlKey || event.shiftKey)) {
-      if (event.ctrlKey) {
-        if (!isDisabledItemSelection(dataItem) && !isRemovedItemSelection(dataItem)) {
-          handleSelection(dataItem);
-        }
-      } else if (event.shiftKey) {
-        // select all items between the last selected item and the current item
-
-        const lastSelectedIndex = props.data?.findIndex((x) => getItemId.value!(x) === selectionIds.value[selectionIds.value.length - 1]);
-        const currentIndex = props.data?.findIndex((x) => getItemId.value!(x) === getItemId.value!(dataItem));
-
-        // if both indexes are found
-        if (lastSelectedIndex !== undefined && currentIndex !== undefined) {
-          let start = Math.min(lastSelectedIndex, currentIndex);
-          let end = Math.max(lastSelectedIndex, currentIndex);
-
-          // Correct the indexes to keep the current selection as is
-          if (end < start) {
-            end++;
-          } else if (end > start) {
-            start++;
-          }
-
-          // Select all items between the start and end index
-          for (let i = start; i <= end; i++) {
-            const item = props.data?.[i];
-            if (item && !isDisabledItemSelection(item)) {
-              handleSelection(item);
-            }
-          }
+  function onSelectRangeItems(dataItem: T) {
+    // select all items between the last selected item and the current item
+    const lastSelectedIndex = props.data?.findIndex((x) => getItemId.value!(x) === selectionIds.value[selectionIds.value.length - 1]);
+    const currentIndex = props.data?.findIndex((x) => getItemId.value!(x) === getItemId.value!(dataItem));
+    // if both indexes are found
+    if (lastSelectedIndex !== undefined && currentIndex !== undefined) {
+      let start = Math.min(lastSelectedIndex, currentIndex);
+      let end = Math.max(lastSelectedIndex, currentIndex);
+      // Correct the indexes to keep the current selection as is
+      if (end < start) {
+        end++;
+      } else if (end > start) {
+        start++;
+      }
+      // Select all items between the start and end index
+      for (let i = start; i <= end; i++) {
+        const item = props.data?.[i];
+        if (item && !isDisabledItemSelection(item)) {
+          handleSelection(item);
         }
       }
-    } else {
+    }
+  }
+
+  function onSelectItem(dataItem: T) {
+    if (!isDisabledItemSelection(dataItem) && !isRemovedItemSelection(dataItem)) {
+      handleSelection(dataItem);
+    }
+  }
+
+  function onRowClick(_event: MouseEvent, dataItem: T) {
+    if (!isSelectionMode.value) {
       handleNavigation(dataItem);
     }
   }
@@ -261,25 +264,10 @@
 
   const observer = new MutationObserver(loadDisplayOptions);
 
-  function enableSelectionMode(e: KeyboardEvent) {
-    if (e.key === "Control" || e.key === "Shift") {
-      isSelectionMode.value = true;
-    } else if (isSelectionMode.value && e.key === "a") {
-      e.preventDefault();
-      onToggleAll(true);
-    }
-  }
-
-  function disableSelectionMode() {
-    isSelectionMode.value = false;
-  }
-
   function openContextMenuPreCheck(event: MouseEvent, dataItem: T) {
-    // Only open the context menu if no items are selected
-    // TODO; Introduce a context menu for selected items
-    if (!selectionIds.value?.length) {
-      openContextMenu(event, dataItem);
-    }
+    openContextMenu(event, dataItem, {
+      isBulkAction: !!selectionIds.value?.length,
+    });
   }
 
   onMounted(() => {
@@ -287,15 +275,10 @@
       childList: true,
       subtree: true,
     });
-
-    window.addEventListener("keydown", enableSelectionMode);
-    window.addEventListener("keyup", disableSelectionMode);
   });
 
   onUnmounted(() => {
     observer.disconnect();
-    window.removeEventListener("keydown", enableSelectionMode);
-    window.removeEventListener("keyup", disableSelectionMode);
   });
 
   function ok() {
@@ -323,6 +306,7 @@
         :class="tableRowClassses(dataItem)"
         @click.stop="(e) => onRowClick(e, dataItem)"
         @contextmenu.prevent="(e) => openContextMenuPreCheck(e, dataItem)"
+        v-bind="createSelectionProps(dataItem)"
       >
         <td v-if="checkbox && !props.hideSelectionCheckbox" @click.stop class="mk-table-view__checkbox-container--body">
           <MkTableCheckbox
