@@ -29,7 +29,7 @@
   async function onLoad() {
     if (navigationItemId.value) {
       // get existing item from api
-      const candidate = await mediaKiwiApi.apiNavigationitemsDetail(navigationItemId.value);
+      const candidate = await mediaKiwiApi.navigationitemsGet(navigationItemId.value);
       state.navigationItem = candidate.data;
     }
   }
@@ -37,13 +37,13 @@
   async function onSave() {
     if (navigationItemId.value) {
       // update existing view
-      await mediaKiwiApi.apiNavigationitemsUpdate(state.navigationItem.id, state.navigationItem);
+      await mediaKiwiApi.navigationitemsUpdate(state.navigationItem.id, state.navigationItem);
 
       // refresh store (to update the view in the navigation)
       await routerManager?.ForceInitialize();
     } else {
       // create new view
-      const newNavigationItem = await mediaKiwiApi.apiNavigationitemsCreate(state.navigationItem.id, state.navigationItem);
+      const newNavigationItem = await mediaKiwiApi.navigationitemsCreate(state.navigationItem.id, state.navigationItem);
 
       // refresh store (to update the view in the navigation)
       await routerManager?.ForceInitialize();
