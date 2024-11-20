@@ -7,7 +7,7 @@ export function useEntraSettings(apiBaseUrl: string) {
   mediaKiwiApi.instance = createPublicAxiosClient(apiBaseUrl.replace("mediakiwi/api", ""));
 
   async function getEntraSettings() {
-    const entraSettings = await mediaKiwiApi.mediakiwi.apiIdentityproviderEntraList();
+    const entraSettings = await mediaKiwiApi.mediakiwi.identityproviderEntra();
 
     const authority = `${entraSettings.data.instance}${entraSettings.data.tenantId}`;
 

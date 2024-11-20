@@ -57,7 +57,7 @@
   if (navigationItemId.value) {
     onDelete = async () => {
       if (navigationItemId.value) {
-        await mediaKiwiApi.apiNavigationitemsDelete(state.navigationItem.id);
+        await mediaKiwiApi.navigationitemsDelete(state.navigationItem.id);
 
         // refresh store (to update the view in the navigation)
         await routerManager?.ForceInitialize();
@@ -66,8 +66,8 @@
   }
 
   // load options
-  const navigationItems = await mediaKiwiApi.apiNavigationitemsList({ pageSize: noPageSize });
-  const views = (await mediaKiwiApi.apiViewsList({ pageSize: noPageSize })).data;
+  const navigationItems = await mediaKiwiApi.navigationitems({ pageSize: noPageSize });
+  const views = (await mediaKiwiApi.views({ pageSize: noPageSize })).data;
 
   state.allNavigationItems = navigationItems.data.result;
   state.views = views.result;

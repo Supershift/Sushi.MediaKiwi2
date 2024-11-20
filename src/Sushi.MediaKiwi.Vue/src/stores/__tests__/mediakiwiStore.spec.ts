@@ -10,11 +10,11 @@ vi.mock('@/services/api', () => {
     Api: vi.fn().mockImplementation(() => {
       return {
         mediakiwi: {
-          apiRolesList: vi.fn().mockResolvedValue(Promise.resolve({ data: { result: [] } })),
-          navigationList: vi.fn().mockResolvedValue(Promise.resolve({ data: { result: [] } })),
-          apiSectionsList: vi.fn().mockResolvedValue(Promise.resolve({ data: { result: [] } })),
-          apiNavigationitemsList: vi.fn().mockResolvedValue(Promise.resolve({ data: { result: [] } })),
-          apiViewsList: vi.fn().mockResolvedValue(Promise.resolve({ data: { result: [] } })),
+          roles: vi.fn().mockResolvedValue(Promise.resolve({ data: { result: [] } })),
+          navigation: vi.fn().mockResolvedValue(Promise.resolve({ data: { result: [] } })),
+          sections: vi.fn().mockResolvedValue(Promise.resolve({ data: { result: [] } })),
+          navigationitems: vi.fn().mockResolvedValue(Promise.resolve({ data: { result: [] } })),
+          views: vi.fn().mockResolvedValue(Promise.resolve({ data: { result: [] } })),
         },
       };
     }),

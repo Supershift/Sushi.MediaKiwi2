@@ -25,7 +25,7 @@
 
   // get data
   async function onLoad() {
-    data.value = (await mediaKiwiApi.apiLocalesList({ ...currentPagination.value, onlyEnabled: false })).data;
+    data.value = (await mediaKiwiApi.locales({ ...currentPagination.value, onlyEnabled: false })).data;
   }
 </script>
 <template>

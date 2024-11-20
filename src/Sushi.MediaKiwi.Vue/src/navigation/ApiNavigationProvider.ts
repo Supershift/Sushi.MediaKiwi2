@@ -73,19 +73,19 @@ export class ApiNavigationProvider implements INavigationProvider {
 
     async GetNavigationItemsAsync(): Promise<NavigationItemDto[]> {
         const mediaKiwiApi = useMediaKiwiApi();
-        const navigationItems = await mediaKiwiApi.apiNavigationitemsList({ pageSize: noPageSize });
+        const navigationItems = await mediaKiwiApi.navigationitems({ pageSize: noPageSize });
         return navigationItems.data.result;
     }
 
     async GetSectionsAsync(): Promise<SectionDto[]> {
         const mediaKiwiApi = useMediaKiwiApi();
-        const sections = await mediaKiwiApi.apiSectionsList({ pageSize: noPageSize });
+        const sections = await mediaKiwiApi.sections({ pageSize: noPageSize });
         return sections.data.result;
     }
 
     async GetViewsAsync(): Promise<ViewDto[]> {
         const mediaKiwiApi = useMediaKiwiApi();
-        const response = await mediaKiwiApi.apiViewsList({ pageSize: noPageSize });
+        const response = await mediaKiwiApi.views({ pageSize: noPageSize });
         return response.data.result;
     }
 }

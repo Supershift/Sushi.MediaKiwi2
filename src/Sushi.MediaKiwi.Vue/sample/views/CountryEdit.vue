@@ -15,7 +15,7 @@
   });
 
   async function load() {
-    state.country = (await sampleApi.countriesDetail(countryCode.value!)).data;
+    state.country = (await sampleApi.countriesGet(countryCode.value!)).data;
     setCurrentBreadcrumbLabel(state.country.name);
   }
 

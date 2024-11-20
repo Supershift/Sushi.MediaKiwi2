@@ -29,7 +29,7 @@
 
   async function onLoad() {
     if (sectionId.value) {
-      const candidate = (await mediaKiwiApi.apiSectionsDetail(sectionId.value)).data;
+      const candidate = (await mediaKiwiApi.sectionsGet(sectionId.value)).data;
       if (!candidate) {
         alert("No section found!");
       }
@@ -43,13 +43,13 @@
     if (sectionId.value !== adminSectionId) {
       if (sectionId.value) {
         // update existing section
-        await mediaKiwiApi.apiSectionsUpdate(sectionId.value, state.section);
+        await mediaKiwiApi.sectionsUpdate(sectionId.value, state.section);
 
         // refresh store (to update the section in the navigation)
         await routerManager?.ForceInitialize();
       } else {
         // create new section
-        const newSection = await mediaKiwiApi.apiSectionsCreate(state.section.id, state.section);
+        const newSection = await mediaKiwiApi.sectionsCreate(state.section.id, state.section);
 
         // refresh store (to update the section in the navigation)
         await routerManager?.ForceInitialize();
@@ -63,7 +63,7 @@
   async function onDelete(): Promise<void> {
     if (sectionId.value !== adminSectionId) {
       if (sectionId.value) {
-        await mediaKiwiApi.apiSectionsDelete(sectionId.value);
+        await mediaKiwiApi.sectionsDelete(sectionId.value);
 
         // refresh store (to update the section in the navigation)
         await routerManager?.ForceInitialize();

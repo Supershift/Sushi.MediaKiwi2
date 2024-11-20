@@ -63,7 +63,7 @@
     const selectedKey = filters.value.key.selectedValue?.value;
     const selectedValue = filters.value.value.selectedValue?.value;
 
-    const response = await mediaKiwiApi.apiAdminTranslationsList({
+    const response = await mediaKiwiApi.adminTranslations({
       localeId: props.localeId,
       namespace: selectedNamespace,
       key: selectedKey,
@@ -83,8 +83,8 @@
   }
 
   // get filter options
-  const namespaces = await mediaKiwiApi.apiAdminTranslationsNamespacesList({ localeId: props.localeId });
-  const keys = await mediaKiwiApi.apiAdminTranslationsKeysList({ localeId: props.localeId });
+  const namespaces = await mediaKiwiApi.adminTranslationsNamespaces({ localeId: props.localeId });
+  const keys = await mediaKiwiApi.adminTranslationsKeys({ localeId: props.localeId });
 
   // Set filter options
   filters.value.namespaces.options = (namespaces.data?.result ?? []).map((ns) => <TableFilterValue>{ title: ns, value: ns });
@@ -105,7 +105,7 @@
         ...state.translation,
         value: state.editTranslationValue,
       };
-      await mediaKiwiApi.apiAdminTranslationsUpdate(item.localeId, item.namespace, item.key, item);
+      await mediaKiwiApi.adminTranslationsUpdate(item.localeId, item.namespace, item.key, item);
 
       // update model value if successful
       state.translation.value = state.editTranslationValue;

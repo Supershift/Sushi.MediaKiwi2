@@ -24,7 +24,7 @@
 
   // get data
   async function onLoad() {
-    data.value = (await mediaKiwiApi.apiSectionsList({ ...currentPagination.value })).data;
+    data.value = (await mediaKiwiApi.sections({ ...currentPagination.value })).data;
   }
 </script>
 <template>

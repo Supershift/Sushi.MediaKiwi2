@@ -11,7 +11,7 @@ export function useSectionRules() {
    * Check if there are available hotels
    */
   async function hasAvailableHotels(): Promise<boolean> {
-    const hotels = (await sampleApi.hotelList()).data;
+    const hotels = (await sampleApi.hotel()).data;
     const hasHotels = !(hotels?.totalCount && hotels.totalCount > 0) || false;
     return hasHotels;
   }

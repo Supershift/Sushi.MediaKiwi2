@@ -43,7 +43,7 @@
   // get data
   async function onLoad() {
     state.navigationItems = (
-      await mediaKiwiApi.apiNavigationitemsList({
+      await mediaKiwiApi.navigationitems({
         sectionId: filters.value.section?.selectedValue?.value,
         ...currentPagination.value,
         sortBy: <"name" | "sortOrder" | "id" | "sectionId" | "parentNavigationItemId" | undefined>sorting.value.sortBy,

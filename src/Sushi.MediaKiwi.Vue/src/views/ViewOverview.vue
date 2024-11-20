@@ -26,7 +26,7 @@
 
   // get data
   async function onLoad() {
-    data.value = (await mediaKiwiApi.apiViewsList({ ...currentPagination.value, ...sorting.value, sortBy: "name" })).data;
+    data.value = (await mediaKiwiApi.views({ ...currentPagination.value, ...sorting.value, sortBy: "name" })).data;
   }
 </script>
 <template>

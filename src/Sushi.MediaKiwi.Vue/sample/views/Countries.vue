@@ -35,7 +35,7 @@
 
   // load data
   async function LoadData() {
-    state.countries = (await sampleApi.countriesList(currentPagination.value)).data;
+    state.countries = (await sampleApi.countries(currentPagination.value)).data;
   }
 
   function openDialog() {

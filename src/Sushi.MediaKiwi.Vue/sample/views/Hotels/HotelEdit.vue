@@ -25,7 +25,7 @@
 
   // Load countries for selection at dropdown
   async function LoadCountries() {
-    const countries = await sampleApi.countriesList({ pageIndex: 0, pageSize: 9999 });
+    const countries = await sampleApi.countries({ pageIndex: 0, pageSize: 9999 });
     state.countries = countries.data.result;
   }
 
@@ -34,7 +34,7 @@
 
     if (navigation.currentViewParameterNumber.value > 0) {
       // get existing hotel from api
-      const candidate = (await sampleApi.hotelDetail(navigation.currentViewParameterNumber.value)).data;
+      const candidate = (await sampleApi.hotelGet(navigation.currentViewParameterNumber.value)).data;
       state.hotel = candidate!;
       setCurrentBreadcrumbLabel(state.hotel.name);
     } else {
@@ -44,7 +44,7 @@
   }
 
   async function onUndo() {
-    state.hotel = (await sampleApi.hotelDetail(navigation.currentViewParameterNumber.value)).data;
+    state.hotel = (await sampleApi.hotelGet(navigation.currentViewParameterNumber.value)).data;
   }
 
   async function onSave() {

@@ -25,7 +25,7 @@
   async function onLoad() {
     if (viewId.value) {
       // get existing view from api
-      const candidate = (await mediaKiwiApi.apiViewsDetail(viewId.value)).data;
+      const candidate = (await mediaKiwiApi.viewsGet(viewId.value)).data;
       if (!candidate) {
         alert("No view found!");
       }
@@ -36,13 +36,13 @@
   async function onSave() {
     if (viewId.value) {
       // update existing view
-      await mediaKiwiApi.apiViewsUpdate(viewId.value, view.value);
+      await mediaKiwiApi.viewsUpdate(viewId.value, view.value);
 
       // refresh store (to update the view in the navigation)
       await routerManager?.ForceInitialize();
     } else {
       // create new view
-      const newView = await mediaKiwiApi.apiViewsCreate(view.value.id, view.value);
+      const newView = await mediaKiwiApi.viewsCreate(view.value.id, view.value);
 
       // refresh store (to update the view in the navigation)
       await routerManager?.ForceInitialize();
@@ -56,7 +56,7 @@
   if (viewId.value) {
     onDelete = async () => {
       if (viewId.value) {
-        await mediaKiwiApi.apiViewsDelete(viewId.value);
+        await mediaKiwiApi.viewsDelete(viewId.value);
 
         // refresh store (to update the view in the navigation)
         await routerManager?.ForceInitialize();
