@@ -12,7 +12,7 @@ vi.mock('@/services/api', () => {
     Api: vi.fn().mockImplementation(() => {
       return {
         mediakiwi: {
-          apiRolesList: vi.fn().mockResolvedValue({ data: {} }),
+          roles: vi.fn().mockResolvedValue({ data: {} }),
         },
       };
     }),

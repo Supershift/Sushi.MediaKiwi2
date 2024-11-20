@@ -10,7 +10,7 @@ vi.mock('@/services/api', () => {
     Api: vi.fn().mockImplementation(() => {
       return {
         mediakiwi: {
-          apiIdentityproviderEntraList: vi.fn().mockResolvedValue({
+          identityproviderEntra: vi.fn().mockResolvedValue({
             data: {
               instance: "https://login.microsoftonline.com/",
               tenantId: "tenant-id",
