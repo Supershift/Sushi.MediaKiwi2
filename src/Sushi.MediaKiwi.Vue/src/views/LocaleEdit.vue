@@ -21,7 +21,7 @@
   async function onLoad() {
     if (localeId.value) {
       // get existing locale from api
-      const candidate = await mediaKiwiApi.apiLocalesDetail(localeId.value);
+      const candidate = await mediaKiwiApi.localesGet(localeId.value);
       if (!candidate?.data) {
         alert("No locale found!");
       } else {
@@ -33,10 +33,10 @@
   async function onSave() {
     if (localeId.value) {
       // update existing locale
-      await mediaKiwiApi.apiLocalesUpdate(localeId.value, locale.value);
+      await mediaKiwiApi.localesUpdate(localeId.value, locale.value);
     } else {
       // create new locale
-      const newView = await mediaKiwiApi.apiLocalesCreate(locale.value.id, locale.value);
+      const newView = await mediaKiwiApi.localesCreate(locale.value.id, locale.value);
 
       // push user to the new view
       navigation.navigateTo(navigation.currentNavigationItem.value, newView.data.id);
@@ -47,7 +47,7 @@
   if (localeId.value) {
     onDelete = async () => {
       if (localeId.value) {
-        await mediaKiwiApi.apiLocalesDelete(localeId.value);
+        await mediaKiwiApi.localesDelete(localeId.value);
       }
     };
   }

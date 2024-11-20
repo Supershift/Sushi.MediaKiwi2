@@ -35,7 +35,7 @@
   }
 
   async function onLoad() {
-    state.account = (await sampleApi.accountDetail(accountNumber.value!)).data;
+    state.account = (await sampleApi.accountGet(accountNumber.value!)).data;
   }
 
   async function onDeposit() {

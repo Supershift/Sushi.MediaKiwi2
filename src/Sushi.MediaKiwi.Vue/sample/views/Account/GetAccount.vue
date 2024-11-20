@@ -18,7 +18,7 @@
   });
 
   async function onGet() {
-    state.account = (await sampleApi.accountDetail(state.accountNumber!)).data;
+    state.account = (await sampleApi.accountGet(state.accountNumber!)).data;
     if (state.account) {
       navigation.navigateToId("EditAccount", state.account.number);
     }

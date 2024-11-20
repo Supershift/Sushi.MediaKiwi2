@@ -80,13 +80,13 @@ export class ApiNavigationProvider implements INavigationProvider {
     }
     async GetSectionsAsync(): Promise<SectionDto[]> {
         const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
-        const sections = (await mediaKiwiApi.apiSectionsList({ pageSize: noPageSize })).data;
+        const sections = (await mediaKiwiApi.sections({ pageSize: noPageSize })).data;
         return sections.result;
     }
 
     async GetViewsAsync(): Promise<ViewDto[]> {
         const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
-        const response = await mediaKiwiApi.apiViewsList({ pageSize: noPageSize });
+        const response = await mediaKiwiApi.views({ pageSize: noPageSize });
         return response.data.result;
     }
 }

@@ -36,7 +36,8 @@ export interface LocaleListResult {
 }
 
 export interface NavigationItem {
-  id?: string | null;
+  /** @minLength 1 */
+  id: string;
   /**
    * @minLength 0
    * @maxLength 128
@@ -63,7 +64,7 @@ export interface NavigationItem {
    */
   icon?: string | null;
   /** @format int32 */
-  sortOrder?: number;
+  sortOrder: number;
 }
 
 export interface NavigationItemListResult {
@@ -294,11 +295,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags AdminNavigationItem
-     * @name ApiNavigationitemsDelete
+     * @name NavigationitemsDelete
      * @request DELETE:/mediakiwi/api/navigationitems/{id}
      * @secure
      */
-    apiNavigationitemsDelete: (id: string, params: RequestParams = {}) =>
+    navigationitemsDelete: (id: string, params: RequestParams = {}) =>
       this.request<NavigationItem, any>({
         path: `/mediakiwi/api/navigationitems/${id}`,
         method: "DELETE",
@@ -311,11 +312,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags AdminNavigationItem
-     * @name ApiNavigationitemsCreate
+     * @name NavigationitemsCreate
      * @request POST:/mediakiwi/api/navigationitems/{id}
      * @secure
      */
-    apiNavigationitemsCreate: (id: string, data: NavigationItem, params: RequestParams = {}) =>
+    navigationitemsCreate: (id: string, data: NavigationItem, params: RequestParams = {}) =>
       this.request<NavigationItem, any>({
         path: `/mediakiwi/api/navigationitems/${id}`,
         method: "POST",
@@ -330,11 +331,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags AdminNavigationItem
-     * @name ApiNavigationitemsUpdate
+     * @name NavigationitemsUpdate
      * @request PUT:/mediakiwi/api/navigationitems/{id}
      * @secure
      */
-    apiNavigationitemsUpdate: (id: string, data: NavigationItem, params: RequestParams = {}) =>
+    navigationitemsUpdate: (id: string, data: NavigationItem, params: RequestParams = {}) =>
       this.request<NavigationItem, any>({
         path: `/mediakiwi/api/navigationitems/${id}`,
         method: "PUT",
@@ -349,11 +350,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags NavigationItem
-     * @name ApiNavigationitemsDetail
+     * @name NavigationitemsGet
      * @request GET:/mediakiwi/api/navigationitems/{id}
      * @secure
      */
-    apiNavigationitemsDetail: (id: string, params: RequestParams = {}) =>
+    navigationitemsGet: (id: string, params: RequestParams = {}) =>
       this.request<NavigationItem, any>({
         path: `/mediakiwi/api/navigationitems/${id}`,
         method: "GET",
@@ -366,11 +367,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags AdminNavigationItem
-     * @name ApiNavigationitemsUpdateIdCreate
+     * @name NavigationitemsUpdateIdCreate
      * @request POST:/mediakiwi/api/navigationitems/{id}/updateId
      * @secure
      */
-    apiNavigationitemsUpdateIdCreate: (id: string, data: string, params: RequestParams = {}) =>
+    navigationitemsUpdateIdCreate: (id: string, data: string, params: RequestParams = {}) =>
       this.request<NavigationItem, any>({
         path: `/mediakiwi/api/navigationitems/${id}/updateId`,
         method: "POST",
@@ -385,11 +386,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags AdminSection
-     * @name ApiSectionsDelete
+     * @name SectionsDelete
      * @request DELETE:/mediakiwi/api/sections/{id}
      * @secure
      */
-    apiSectionsDelete: (id: string, params: RequestParams = {}) =>
+    sectionsDelete: (id: string, params: RequestParams = {}) =>
       this.request<Section, any>({
         path: `/mediakiwi/api/sections/${id}`,
         method: "DELETE",
@@ -402,11 +403,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags AdminSection
-     * @name ApiSectionsCreate
+     * @name SectionsCreate
      * @request POST:/mediakiwi/api/sections/{id}
      * @secure
      */
-    apiSectionsCreate: (id: string, data: Section, params: RequestParams = {}) =>
+    sectionsCreate: (id: string, data: Section, params: RequestParams = {}) =>
       this.request<Section, any>({
         path: `/mediakiwi/api/sections/${id}`,
         method: "POST",
@@ -421,11 +422,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags AdminSection
-     * @name ApiSectionsUpdate
+     * @name SectionsUpdate
      * @request PUT:/mediakiwi/api/sections/{id}
      * @secure
      */
-    apiSectionsUpdate: (id: string, data: Section, params: RequestParams = {}) =>
+    sectionsUpdate: (id: string, data: Section, params: RequestParams = {}) =>
       this.request<Section, any>({
         path: `/mediakiwi/api/sections/${id}`,
         method: "PUT",
@@ -440,11 +441,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Section
-     * @name ApiSectionsDetail
+     * @name SectionsGet
      * @request GET:/mediakiwi/api/sections/{id}
      * @secure
      */
-    apiSectionsDetail: (id: string, params: RequestParams = {}) =>
+    sectionsGet: (id: string, params: RequestParams = {}) =>
       this.request<Section, any>({
         path: `/mediakiwi/api/sections/${id}`,
         method: "GET",
@@ -457,11 +458,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags AdminSection
-     * @name ApiSectionsUpdateIdCreate
+     * @name SectionsUpdateIdCreate
      * @request POST:/mediakiwi/api/sections/{id}/updateId
      * @secure
      */
-    apiSectionsUpdateIdCreate: (id: string, data: string, params: RequestParams = {}) =>
+    sectionsUpdateIdCreate: (id: string, data: string, params: RequestParams = {}) =>
       this.request<Section, any>({
         path: `/mediakiwi/api/sections/${id}/updateId`,
         method: "POST",
@@ -476,11 +477,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags AdminTranslation
-     * @name ApiAdminTranslationsList
+     * @name AdminTranslations
      * @request GET:/mediakiwi/api/admin/translations
      * @secure
      */
-    apiAdminTranslationsList: (
+    adminTranslations: (
       query?: {
         localeId?: string;
         namespace?: string;
@@ -502,11 +503,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags AdminTranslation
-     * @name ApiAdminTranslationsNamespacesList
+     * @name AdminTranslationsNamespaces
      * @request GET:/mediakiwi/api/admin/translations/namespaces
      * @secure
      */
-    apiAdminTranslationsNamespacesList: (
+    adminTranslationsNamespaces: (
       query?: {
         localeId?: string;
       },
@@ -525,11 +526,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags AdminTranslation
-     * @name ApiAdminTranslationsKeysList
+     * @name AdminTranslationsKeys
      * @request GET:/mediakiwi/api/admin/translations/keys
      * @secure
      */
-    apiAdminTranslationsKeysList: (
+    adminTranslationsKeys: (
       query?: {
         localeId?: string;
       },
@@ -548,11 +549,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags AdminTranslation
-     * @name ApiAdminTranslationsUpdate
+     * @name AdminTranslationsUpdate
      * @request PUT:/mediakiwi/api/admin/translations/{localeId}/{namespace}/{key}
      * @secure
      */
-    apiAdminTranslationsUpdate: (localeId: string, namespace: string, key: string, data: UpdateTranslationRequest, params: RequestParams = {}) =>
+    adminTranslationsUpdate: (localeId: string, namespace: string, key: string, data: UpdateTranslationRequest, params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/mediakiwi/api/admin/translations/${localeId}/${namespace}/${key}`,
         method: "PUT",
@@ -566,11 +567,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags AdminTranslation
-     * @name ApiAdminTranslationsDelete
+     * @name AdminTranslationsDelete
      * @request DELETE:/mediakiwi/api/admin/translations/{localeId}/{namespace}/{key}
      * @secure
      */
-    apiAdminTranslationsDelete: (localeId: string, namespace: string, key: string, params: RequestParams = {}) =>
+    adminTranslationsDelete: (localeId: string, namespace: string, key: string, params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/mediakiwi/api/admin/translations/${localeId}/${namespace}/${key}`,
         method: "DELETE",
@@ -582,11 +583,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags IdentityProvider
-     * @name ApiIdentityproviderEntraList
+     * @name IdentityproviderEntra
      * @request GET:/mediakiwi/api/identityprovider/entra
      * @secure
      */
-    apiIdentityproviderEntraList: (params: RequestParams = {}) =>
+    identityproviderEntra: (params: RequestParams = {}) =>
       this.request<EntraSettings, any>({
         path: `/mediakiwi/api/identityprovider/entra`,
         method: "GET",
@@ -599,11 +600,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Locale
-     * @name ApiLocalesEnabledList
+     * @name LocalesEnabled
      * @request GET:/mediakiwi/api/locales/enabled
      * @secure
      */
-    apiLocalesEnabledList: (params: RequestParams = {}) =>
+    localesEnabled: (params: RequestParams = {}) =>
       this.request<LocaleListResult, any>({
         path: `/mediakiwi/api/locales/enabled`,
         method: "GET",
@@ -616,11 +617,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Locale
-     * @name ApiLocalesList
+     * @name Locales
      * @request GET:/mediakiwi/api/locales
      * @secure
      */
-    apiLocalesList: (
+    locales: (
       query?: {
         /** @format int32 */
         pageIndex?: number;
@@ -644,11 +645,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Locale
-     * @name ApiLocalesDetail
+     * @name LocalesGet
      * @request GET:/mediakiwi/api/locales/{id}
      * @secure
      */
-    apiLocalesDetail: (id: string, params: RequestParams = {}) =>
+    localesGet: (id: string, params: RequestParams = {}) =>
       this.request<Locale, any>({
         path: `/mediakiwi/api/locales/${id}`,
         method: "GET",
@@ -661,11 +662,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Locale
-     * @name ApiLocalesCreate
+     * @name LocalesCreate
      * @request POST:/mediakiwi/api/locales/{id}
      * @secure
      */
-    apiLocalesCreate: (id: string, data: Locale, params: RequestParams = {}) =>
+    localesCreate: (id: string, data: Locale, params: RequestParams = {}) =>
       this.request<Locale, any>({
         path: `/mediakiwi/api/locales/${id}`,
         method: "POST",
@@ -680,11 +681,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Locale
-     * @name ApiLocalesDelete
+     * @name LocalesDelete
      * @request DELETE:/mediakiwi/api/locales/{id}
      * @secure
      */
-    apiLocalesDelete: (id: string, params: RequestParams = {}) =>
+    localesDelete: (id: string, params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/mediakiwi/api/locales/${id}`,
         method: "DELETE",
@@ -696,11 +697,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Locale
-     * @name ApiLocalesUpdate
+     * @name LocalesUpdate
      * @request PUT:/mediakiwi/api/locales/{id}
      * @secure
      */
-    apiLocalesUpdate: (id: string, data: Locale, params: RequestParams = {}) =>
+    localesUpdate: (id: string, data: Locale, params: RequestParams = {}) =>
       this.request<Locale, any>({
         path: `/mediakiwi/api/locales/${id}`,
         method: "PUT",
@@ -715,11 +716,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags NavigationItem
-     * @name ApiNavigationitemsList
+     * @name Navigationitems
      * @request GET:/mediakiwi/api/navigationitems
      * @secure
      */
-    apiNavigationitemsList: (
+    navigationitems: (
       query?: {
         sectionId?: string;
         /** @format int32 */
@@ -746,11 +747,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Role
-     * @name ApiRolesList
+     * @name Roles
      * @request GET:/mediakiwi/api/roles
      * @secure
      */
-    apiRolesList: (params: RequestParams = {}) =>
+    roles: (params: RequestParams = {}) =>
       this.request<RoleListResult, any>({
         path: `/mediakiwi/api/roles`,
         method: "GET",
@@ -763,11 +764,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Section
-     * @name ApiSectionsList
+     * @name Sections
      * @request GET:/mediakiwi/api/sections
      * @secure
      */
-    apiSectionsList: (
+    sections: (
       query?: {
         /** @format int32 */
         pageIndex?: number;
@@ -789,11 +790,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Translation
-     * @name ApiTranslationsDetail
+     * @name TranslationsGet
      * @request GET:/mediakiwi/api/translations/{localeId}/{namespace}
      * @secure
      */
-    apiTranslationsDetail: (localeId: string, namespace: string, params: RequestParams = {}) =>
+    translationsGet: (localeId: string, namespace: string, params: RequestParams = {}) =>
       this.request<Record<string, string>, any>({
         path: `/mediakiwi/api/translations/${localeId}/${namespace}`,
         method: "GET",
@@ -806,11 +807,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Translation
-     * @name ApiTranslationsCreate
+     * @name TranslationsCreate
      * @request POST:/mediakiwi/api/translations/{localeId}/{namespace}
      * @secure
      */
-    apiTranslationsCreate: (localeId: string, namespace: string, data: Record<string, string>, params: RequestParams = {}) =>
+    translationsCreate: (localeId: string, namespace: string, data: Record<string, string>, params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/mediakiwi/api/translations/${localeId}/${namespace}`,
         method: "POST",
@@ -824,11 +825,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags View
-     * @name ApiViewsDelete
+     * @name ViewsDelete
      * @request DELETE:/mediakiwi/api/views/{id}
      * @secure
      */
-    apiViewsDelete: (id: string, params: RequestParams = {}) =>
+    viewsDelete: (id: string, params: RequestParams = {}) =>
       this.request<View, any>({
         path: `/mediakiwi/api/views/${id}`,
         method: "DELETE",
@@ -841,11 +842,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags View
-     * @name ApiViewsDetail
+     * @name ViewsGet
      * @request GET:/mediakiwi/api/views/{id}
      * @secure
      */
-    apiViewsDetail: (id: string, params: RequestParams = {}) =>
+    viewsGet: (id: string, params: RequestParams = {}) =>
       this.request<View, any>({
         path: `/mediakiwi/api/views/${id}`,
         method: "GET",
@@ -858,11 +859,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags View
-     * @name ApiViewsCreate
+     * @name ViewsCreate
      * @request POST:/mediakiwi/api/views/{id}
      * @secure
      */
-    apiViewsCreate: (id: string, data: View, params: RequestParams = {}) =>
+    viewsCreate: (id: string, data: View, params: RequestParams = {}) =>
       this.request<View, any>({
         path: `/mediakiwi/api/views/${id}`,
         method: "POST",
@@ -877,11 +878,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags View
-     * @name ApiViewsUpdate
+     * @name ViewsUpdate
      * @request PUT:/mediakiwi/api/views/{id}
      * @secure
      */
-    apiViewsUpdate: (id: string, data: View, params: RequestParams = {}) =>
+    viewsUpdate: (id: string, data: View, params: RequestParams = {}) =>
       this.request<View, any>({
         path: `/mediakiwi/api/views/${id}`,
         method: "PUT",
@@ -896,11 +897,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags View
-     * @name ApiViewsList
+     * @name Views
      * @request GET:/mediakiwi/api/views
      * @secure
      */
-    apiViewsList: (
+    views: (
       query?: {
         /** @format int32 */
         pageIndex?: number;

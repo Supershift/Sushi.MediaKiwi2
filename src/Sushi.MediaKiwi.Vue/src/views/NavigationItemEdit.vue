@@ -69,7 +69,7 @@
 
   // load options
   const navigationItems = await navigationConnector.GetNavigationItems(undefined, { pageSize: noPageSize });
-  const views = (await mediaKiwiApi.apiViewsList({ pageSize: noPageSize })).data;
+  const views = (await mediaKiwiApi.views({ pageSize: noPageSize })).data;
 
   state.allNavigationItems = navigationItems.result;
   state.views = views.result;

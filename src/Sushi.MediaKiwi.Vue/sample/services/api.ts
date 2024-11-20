@@ -78,7 +78,7 @@ export interface FileUpload {
   /** @format int64 */
   size: number;
   /** @format date-time */
-  created?: string;
+  created?: Date;
   fileType?: string | null;
   fileUrl?: string | null;
   fileName?: string | null;
@@ -99,7 +99,7 @@ export interface HotelDto {
   name: string;
   isActive?: boolean;
   /** @format date-time */
-  created?: string;
+  created?: Date;
   srp?: MoneyValue;
 }
 
@@ -273,11 +273,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Account
-     * @name AccountDetail
+     * @name AccountGet
      * @request GET:/sample/Account/{number}
      * @secure
      */
-    accountDetail: (number: string, params: RequestParams = {}) =>
+    accountGet: (number: string, params: RequestParams = {}) =>
       this.request<AccountDto, any>({
         path: `/sample/Account/${number}`,
         method: "GET",
@@ -383,11 +383,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Country
-     * @name CountriesList
+     * @name Countries
      * @request GET:/sample/countries
      * @secure
      */
-    countriesList: (
+    countries: (
       query?: {
         /** @format int32 */
         pageIndex?: number;
@@ -409,11 +409,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Country
-     * @name CountriesDetail
+     * @name CountriesGet
      * @request GET:/sample/countries/{code}
      * @secure
      */
-    countriesDetail: (code: string, params: RequestParams = {}) =>
+    countriesGet: (code: string, params: RequestParams = {}) =>
       this.request<Country, any>({
         path: `/sample/countries/${code}`,
         method: "GET",
@@ -426,11 +426,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Error
-     * @name ErrorGenericErrorList
+     * @name ErrorGenericError
      * @request GET:/sample/Error/genericError
      * @secure
      */
-    errorGenericErrorList: (params: RequestParams = {}) =>
+    errorGenericError: (params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/sample/Error/genericError`,
         method: "GET",
@@ -442,11 +442,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Error
-     * @name ErrorAggregateErrorList
+     * @name ErrorAggregateError
      * @request GET:/sample/Error/aggregateError
      * @secure
      */
-    errorAggregateErrorList: (params: RequestParams = {}) =>
+    errorAggregateError: (params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/sample/Error/aggregateError`,
         method: "GET",
@@ -458,11 +458,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Error
-     * @name ErrorInternalServerErrorList
+     * @name ErrorInternalServerError
      * @request GET:/sample/Error/internalServerError
      * @secure
      */
-    errorInternalServerErrorList: (params: RequestParams = {}) =>
+    errorInternalServerError: (params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/sample/Error/internalServerError`,
         method: "GET",
@@ -474,11 +474,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Error
-     * @name ErrorStringErrorList
+     * @name ErrorStringError
      * @request GET:/sample/Error/stringError
      * @secure
      */
-    errorStringErrorList: (params: RequestParams = {}) =>
+    errorStringError: (params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/sample/Error/stringError`,
         method: "GET",
@@ -490,11 +490,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Error
-     * @name ErrorSlowList
+     * @name ErrorSlow
      * @request GET:/sample/Error/slow
      * @secure
      */
-    errorSlowList: (params: RequestParams = {}) =>
+    errorSlow: (params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/sample/Error/slow`,
         method: "GET",
@@ -525,11 +525,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Hotel
-     * @name HotelList
+     * @name Hotel
      * @request GET:/sample/Hotel
      * @secure
      */
-    hotelList: (
+    hotel: (
       query?: {
         countryCode?: string;
         isActive?: boolean;
@@ -572,11 +572,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Hotel
-     * @name HotelDetail
+     * @name HotelGet
      * @request GET:/sample/Hotel/{id}
      * @secure
      */
-    hotelDetail: (id: number, params: RequestParams = {}) =>
+    hotelGet: (id: number, params: RequestParams = {}) =>
       this.request<HotelDto, any>({
         path: `/sample/Hotel/${id}`,
         method: "GET",
@@ -625,11 +625,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Ping
-     * @name PingSamplePingList
+     * @name PingSamplePing
      * @request GET:/sample/Ping/sample/ping
      * @secure
      */
-    pingSamplePingList: (params: RequestParams = {}) =>
+    pingSamplePing: (params: RequestParams = {}) =>
       this.request<string, any>({
         path: `/sample/Ping/sample/ping`,
         method: "GET",

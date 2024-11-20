@@ -34,7 +34,7 @@
     return new Promise<void>(async (resolve, reject) => {
       state.inProgress = true;
       setTimeout(() => {
-        sampleApi.errorGenericErrorList().catch((error) => {
+        sampleApi.errorGenericError().catch((error) => {
           state.inProgress = false;
           reject(error);
         });
@@ -43,15 +43,15 @@
   }
 
   async function getAggregateError() {
-    await sampleApi.errorAggregateErrorList();
+    await sampleApi.errorAggregateError();
   }
 
   async function getInternalServerError() {
-    await sampleApi.errorInternalServerErrorList();
+    await sampleApi.errorInternalServerError();
   }
 
   async function getTimeoutError() {
-    await sampleApi.errorSlowList({ timeout: 1 });
+    await sampleApi.errorSlow({ timeout: 1 });
   }
 
   async function onSubmit() {
@@ -60,7 +60,7 @@
   }
 
   async function getStringError() {
-    await sampleApi.errorStringErrorList();
+    await sampleApi.errorStringError();
   }
 
   async function onLoad() {

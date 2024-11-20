@@ -25,7 +25,7 @@
 
   // load languages from server
   onMounted(async () => {
-    const response = await mediaKiwiApi.apiLocalesEnabledList();
+    const response = await mediaKiwiApi.localesEnabled();
     locales.value = response.data.result?.map((t) => ({ ...t, id: t.id ?? "" })) ?? [];
   });
 </script>

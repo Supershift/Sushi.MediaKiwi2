@@ -48,7 +48,7 @@ export const useMediakiwiStore = defineStore({
     },
     async getRoles() {
       const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
-      const response = await mediaKiwiApi.apiRolesList();
+      const response = await mediaKiwiApi.roles();
       this.setRoles({
         ...response.data,
         result: response.data.result?.map((t) => ({ ...t, id: t.id ?? "" })) ?? [],

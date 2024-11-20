@@ -95,7 +95,7 @@
   }
 
   // Load countries
-  countries.value = (await sampleApi.countriesList({ pageIndex: 0, pageSize: 9999 })).data.result;
+  countries.value = (await sampleApi.countries({ pageIndex: 0, pageSize: 9999 })).data.result;
 
   // Set filter options
   filters.value.countryCode.options = countries.value?.map(({ code, name }) => <TableFilterValue>{ title: name, value: code });
