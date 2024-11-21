@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T">
-  import type { Sorting, TableColumn } from "@/models";
+  import type { Sorting } from "@/models";
   import { RouteParamValueRaw } from "vue-router";
   import { useMediakiwiStore } from "@/stores/";
   import { useNavigation } from "@/composables/useNavigation";
@@ -14,14 +14,20 @@
   // inject dependencies
   const { initTableDisplayOptions } = useTableDisplayOptions();
   const { openContextMenu, contextMenuProps, contextMenuPositionProps } = useContextmenu<T>();
-  const { isSelectionMode, createSelectionProps } = useItemSelectionShortcuts<T>({
-    onCtrlA: () => onToggleAll(true),
-    onShiftClick: ({ dataItem }) => onSelectRangeItems(dataItem),
-    onCtrlClick: ({ dataItem }) => onSelectItem(dataItem),
-  });
 
   // define properties
   const props = defineProps<MkTableViewProps<T>>();
+
+  // define selection
+  let itemSelectionShortcuts: ReturnType<typeof useItemSelectionShortcuts<T>> | undefined = undefined;
+  if (props.checkbox) {
+    // const { isSelectionMode, createSelectionProps }
+    itemSelectionShortcuts = useItemSelectionShortcuts<T>({
+      onCtrlA: () => onToggleAll(true),
+      onShiftClick: ({ dataItem }) => onSelectRangeItems(dataItem),
+      onCtrlClick: ({ dataItem }) => onSelectItem(dataItem),
+    });
+  }
 
   /** Use Sorting<T> for typesafety */
   defineModel<Sorting | Sorting<T>>("sorting");
@@ -86,7 +92,8 @@
     return {
       "has-hover": props.showHoverEffect,
       "mk-table-view__row--selected": isItemSelected.value(dataItem),
-      "cursor-not-allowed": props.checkbox && isSelectionMode.value && (isDisabledItemSelection(dataItem) || isRemovedItemSelection(dataItem)),
+      "cursor-not-allowed":
+        props.checkbox && itemSelectionShortcuts?.isSelectionMode.value && (isDisabledItemSelection(dataItem) || isRemovedItemSelection(dataItem)),
     };
   }
 
@@ -155,7 +162,7 @@
   }
 
   function onRowClick(_event: MouseEvent, dataItem: T) {
-    if (!isSelectionMode.value) {
+    if (!itemSelectionShortcuts?.isSelectionMode.value) {
       handleNavigation(dataItem);
     }
   }
@@ -306,7 +313,7 @@
         :class="tableRowClassses(dataItem)"
         @click.stop="(e) => onRowClick(e, dataItem)"
         @contextmenu.prevent="(e) => openContextMenuPreCheck(e, dataItem)"
-        v-bind="createSelectionProps(dataItem)"
+        v-bind="itemSelectionShortcuts?.createSelectionProps(dataItem)"
       >
         <td v-if="checkbox && !props.hideSelectionCheckbox" @click.stop class="mk-table-view__checkbox-container--body">
           <MkTableCheckbox
