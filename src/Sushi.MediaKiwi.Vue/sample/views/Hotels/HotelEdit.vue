@@ -10,6 +10,7 @@
   import { container } from "tsyringe";
   import { Country } from "./../../models/Country";
   import MkNavigationDrawerInfo from "@/components/MkNavigation/MkNavigationDrawerInfo.vue";
+  import { useSnackbarStore } from "@/stores";
 
   // inject dependencies
   const hotelConnector = container.resolve(HotelConnector);

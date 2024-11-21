@@ -2,6 +2,7 @@
   import { MkApplication } from "@/components";
   import { useDisplay } from "vuetify";
   import { useSectionRules } from "./composables/useSectionRules";
+  import { registerLayoutManager } from "./helpers/layoutManager";
 
   // Inject Dependencies
   const { xs } = useDisplay();
@@ -9,6 +10,7 @@
 
   // Force the hotel section to be disabled and the customer section to be hidden
   setHotelSectionDisplayState("disabled");
+  registerLayoutManager();
 </script>
 
 <template>
