@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/require-default-prop -->
 <script setup lang="ts" generic="T">
-  import { TableMap, TableFilter, TableColumn } from "@/models/table";
+  import { TableFilter } from "@/models/table";
   import { Paging, Sorting } from "@/models/api";
   import { ref, watch } from "vue";
   import { useSnackbarStore } from "@/stores/snackbar";
@@ -98,7 +98,6 @@
   // define reactive variables
   const initialDataLoaded = ref(false);
   const inProgress = ref(false);
-  const mkTableViewComponent = ref();
   const pageSizes = ref([...defaultPageSizeOptions]);
   // Add the current page size if present to the pageSizes array, only if its above the defaultPageSize (10)
   if (currentPagination.value?.pageSize && currentPagination.value?.pageSize > defaultPageSize) {
@@ -229,7 +228,7 @@
 
     <template v-if="selection && !props.hideBulkActionBar">
       <v-expand-transition>
-        <MkBulkActionBar v-if="selection?.length" :selection="selection" @click:close="mkTableViewComponent?.clearSelection">
+        <MkBulkActionBar v-if="selection?.length" v-model="selection">
           <template #default="{ confirm }">
             <slot name="bulkActionBar" :confirm="confirm"></slot>
           </template>
@@ -242,7 +241,6 @@
     <slot v-if="slots.table" name="table" :data="apiResult ? apiResult.result : data" :item-id="itemId"></slot>
     <template v-else>
       <MkTableView
-        ref="mkTableViewComponent"
         :table-map="tableMap"
         :data="apiResult ? apiResult.result : data"
         :navigation-item-id="navigationItemId"
