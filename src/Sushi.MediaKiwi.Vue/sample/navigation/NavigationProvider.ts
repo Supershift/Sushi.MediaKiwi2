@@ -10,7 +10,7 @@ builder
   .addNavigationItem("Home", "Home", "./views/Home.vue", undefined, "$home")
   .endSection()
   .startSection("Hotels", "Hotels", "$hotel")
-  .addNavigationItem("HotelOverview", "Hotels", "./views/Hotels/HotelsOverview.vue", undefined, "$hotel", MkLayout.Full)
+  .addNavigationItem("HotelOverview", "Hotels", "./views/Hotels/HotelsOverview.vue", undefined, "$hotel", "CustomLayout")
   .right()
   .addNavigationItem("HotelEdit", "Hotel detail", "./views/Hotels/HotelEdit.vue", "hotelId")
   .addNavigationItem("RoomTypesOverview", "Room types", "./views/Hotels/RoomTypesOverview.vue", "hotelId")
