@@ -72,16 +72,6 @@ export function useItemSelectionShortcuts<T>(props: useItemSelectionShortcutsPro
     }
   }
 
-  onMounted(() => {
-    window.addEventListener("keydown", onKeyDown);
-    window.addEventListener("keyup", onKeyUp);
-  });
-
-  onUnmounted(() => {
-    window.removeEventListener("keydown", onKeyDown);
-    window.removeEventListener("keyup", onKeyUp);
-  });
-
   function createSelectionProps(dataItem: T) {
     return {
       onClick: (e: Event) => {
@@ -92,10 +82,20 @@ export function useItemSelectionShortcuts<T>(props: useItemSelectionShortcutsPro
     };
   }
 
+  onMounted(() => {
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keyup", onKeyUp);
+  });
+
+  onUnmounted(() => {
+    window.removeEventListener("keydown", onKeyDown);
+    window.removeEventListener("keyup", onKeyUp);
+  });
+
   return {
     isSelectionMode,
     createSelectionProps,
-    enableSelectionMode: onKeyDown,
-    disableSelectionMode: onKeyUp,
+    onKeyDown,
+    onKeyUp,
   };
 }
