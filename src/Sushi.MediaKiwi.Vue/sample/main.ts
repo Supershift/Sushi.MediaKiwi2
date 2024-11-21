@@ -43,7 +43,7 @@ const mediakiwiOptions: MediakiwiVueOptions = {
   identity: <MediakiwiIdentity>{},
   // import all views as models
   modules: {
-    ...import.meta.glob("./views/**/*.vue"),
+    ...import.meta.glob(["./views/**/*.vue", "./layouts/*.vue"]),
     ...modules,
   },
   dateFormatOptions: {

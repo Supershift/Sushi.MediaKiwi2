@@ -3,8 +3,8 @@ import { defineAsyncComponent } from "vue";
 
 // Layouts availabel in the application
 export const layouts = {
-  Default: "MCDefault",
-  FullScreen: "MCFullScreen",
+  Default: "DefaultLayout",
+  FullScreen: "FullScreenLayout",
 };
 
 

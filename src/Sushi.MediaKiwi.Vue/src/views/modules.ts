@@ -10,8 +10,6 @@ import NavigationItemOverview from "./NavigationItemOverview.vue";
 import NavigationItemEdit from "./NavigationItemEdit.vue";
 import MkPageNotFound from "./status/MkPageNotFound.vue";
 
-import * as Layouts from "@/layouts/index";
-
 const modules: Record<string, RouteComponent> = {
   MkViewOverview: ViewOverview,
   MkViewEdit: ViewEdit,
@@ -23,7 +21,6 @@ const modules: Record<string, RouteComponent> = {
   MkNavigationItemOverview: NavigationItemOverview,
   MkNavigationItemEdit: NavigationItemEdit,
   MkPageNotFound: MkPageNotFound,
-  ...Layouts
 };
 
 export { modules };
