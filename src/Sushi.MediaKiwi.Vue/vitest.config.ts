@@ -2,6 +2,7 @@
 import { mergeConfig } from "vite";
 import { defineConfig } from "vitest/config";
 import viteConfig from "./vite.config";
+import { coverageConfigDefaults } from "vitest/config";
 
 // Merge the current configs with the testing config
 export default mergeConfig(
@@ -23,7 +24,7 @@ export default mergeConfig(
       coverage: {
         provider: "istanbul",
         reporter: ["text", "json-summary", "json", "html"],
-        exclude: ["**/*.vue", "**/*.test.ts", "**/*.spec.ts", "**/*.d.ts", "**/*.cy.ts"],
+        exclude: [...coverageConfigDefaults.exclude, "**/*.vue", "**/*.test.ts", "**/*.spec.ts", "**/*.d.ts", "**/*.cy.ts"],
       },
     },
   })
