@@ -3,13 +3,14 @@
   import { RouteParamValueRaw } from "vue-router";
   import { useMediakiwiStore } from "@/stores/";
   import { useNavigation } from "@/composables/useNavigation";
-  import { computed, onMounted, onUnmounted, ref } from "vue";
+  import { computed, onMounted, onUnmounted, ref, useTemplateRef } from "vue";
   import { useTableDisplayOptions } from "@/composables/useTableDisplayOptions";
   import { MkTableContextMenuSlotProps, MkTableBodySlotProps, MkTableViewProps, MkTableBulkActionBarSlotProps } from "@/models/table/TableProps";
   import { useContextmenu } from "@/composables/useContextmenu";
   import MkTableCheckbox from "./MkTableCheckbox.vue";
   import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
   import { useItemSelectionShortcuts } from "@/composables/useItemSelectionShortcuts";
+  import { VTable } from "vuetify/lib/components/index.mjs";
 
   // inject dependencies
   const { initTableDisplayOptions } = useTableDisplayOptions();
@@ -17,17 +18,6 @@
 
   // define properties
   const props = defineProps<MkTableViewProps<T>>();
-
-  // define selection
-  let itemSelectionShortcuts: ReturnType<typeof useItemSelectionShortcuts<T>> | undefined = undefined;
-  if (props.checkbox) {
-    // const { isSelectionMode, createSelectionProps }
-    itemSelectionShortcuts = useItemSelectionShortcuts<T>({
-      onCtrlA: () => onToggleAll(true),
-      onShiftClick: ({ dataItem }) => onSelectRangeItems(dataItem),
-      onCtrlClick: ({ dataItem }) => onSelectItem(dataItem),
-    });
-  }
 
   /** Use Sorting<T> for typesafety */
   defineModel<Sorting | Sorting<T>>("sorting");
@@ -43,6 +33,19 @@
   /** Ref to the table element */
   const tbodyContainer = ref<any>(null);
   const tbodyNode = computed(() => tbodyContainer.value! as Node);
+  const myTable = useTemplateRef<VTable>("myTable");
+
+  // define selection
+  let itemSelectionShortcuts: ReturnType<typeof useItemSelectionShortcuts<T>> | undefined = undefined;
+  if (props.checkbox) {
+    // const { isSelectionMode, createSelectionProps }
+    itemSelectionShortcuts = useItemSelectionShortcuts<T>({
+      element: myTable,
+      onCtrlA: () => onToggleAll(true),
+      onShiftClick: ({ dataItem }) => onSelectRangeItems(dataItem),
+      onCtrlClick: ({ dataItem }) => onSelectItem(dataItem),
+    });
+  }
 
   // define event
   const emit = defineEmits<{

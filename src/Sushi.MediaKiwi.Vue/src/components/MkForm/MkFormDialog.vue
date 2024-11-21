@@ -127,6 +127,7 @@
       if (value) {
         // load data async on created
         await onLoad();
+        alert("onLoad");
       }
     }
   );

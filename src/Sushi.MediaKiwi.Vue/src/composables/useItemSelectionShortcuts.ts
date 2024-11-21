@@ -1,10 +1,11 @@
-import { onMounted, onUnmounted, ref } from "vue";
+import { ComponentPublicInstance, CreateComponentPublicInstance, onMounted, onUnmounted, ref, ShallowRef } from "vue";
 
 type itemSelectionShortcutsParams<T> = {
   dataItem: T;
 };
 
 type useItemSelectionShortcutsProps<T> = {
+  element?: ShallowRef<any>;
   onCtrlA?: () => void | Promise<void>;
   onShiftClick?: (args: itemSelectionShortcutsParams<T>) => void | Promise<void>;
   onCtrlClick?: (args: itemSelectionShortcutsParams<T>) => void | Promise<void>;
@@ -83,13 +84,19 @@ export function useItemSelectionShortcuts<T>(props: useItemSelectionShortcutsPro
   }
 
   onMounted(() => {
-    window.addEventListener("keydown", onKeyDown);
-    window.addEventListener("keyup", onKeyUp);
+    if (props.element?.value) {
+      props.element.value.$el?.addEventListener("keydown", onKeyDown);
+      props.element.value.$el?.addEventListener("keyup", onKeyUp);
+      props.element.value.$el?.setAttribute("tabindex", "0");
+    }
   });
 
   onUnmounted(() => {
-    window.removeEventListener("keydown", onKeyDown);
-    window.removeEventListener("keyup", onKeyUp);
+    if (props.element?.value) {
+      props.element.value.$el?.removeEventListener("keydown", onKeyDown);
+      props.element.value.$el?.removeEventListener("keyup", onKeyUp);
+      props.element.value.$el?.removeAttribute("tabindex");
+    }
   });
 
   return {
