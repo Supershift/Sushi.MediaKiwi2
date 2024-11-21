@@ -93,7 +93,7 @@
         width: !props.mobile ? props.width : "unset", // ensures the full width overlay based on the display size
         zIndex: props.zIndex !== "auto" ? props.zIndex : 1007, // (default: 1007, since drawer is 1006) layer positioning on the z-axis
         backgroundColor: props.sheetColor ?? "rgb(var(--v-theme-surface1))", // custom color for the sheet
-      } as StyleValue)
+      }) as StyleValue
   );
 
   const bodyHeight = computed<number | undefined>(() => {
@@ -139,7 +139,7 @@
   </v-sheet>
 </template>
 <style lang="scss">
-  @import "../../styles/themes/variables.scss";
+  @use "../../styles/themes/variables.scss";
   .side-sheet {
     &__sheet {
       display: flex;
@@ -170,7 +170,7 @@
     }
 
     &__header {
-      @media (min-width: $breakpoints-lg) {
+      @media (min-width: variables.$breakpoints-lg) {
         border-top-left-radius: 16px;
         border-top-right-radius: 16px;
       }
@@ -188,7 +188,7 @@
     &__body {
       text-align: left;
       height: calc(100% - 150px); // so the content is scrollable ( accounting for margins top and bottom)
-      @media (min-width: $breakpoints-lg) {
+      @media (min-width: variables.$breakpoints-lg) {
         height: calc(100vh - 220px); // so the content is scrollable ( accounting for margins top and bottom)
       }
     }
