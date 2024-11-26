@@ -64,7 +64,9 @@
         <mk-navigation v-if="isAuthenticated"></mk-navigation>
       </mk-suspense>
       <mk-screen></mk-screen>
-      <mk-snackbar></mk-snackbar>
+      <mk-suspense>
+        <mk-snackbar></mk-snackbar>
+      </mk-suspense>
     </v-layout>
   </v-card>
 </template>

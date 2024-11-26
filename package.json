@@ -13,8 +13,7 @@
   },
   "homepage": "https://github.com/Supershift/Sushi.MediaKiwi2.UI#readme",
   "scripts": {
-    "postinstall": "npm run install:mediakiwi.vue && npm run install:mediakiwi.azurefunction",
-    "install:mediakiwi.vue": "cd src/Sushi.MediaKiwi.Vue && npm install --ignore-scripts",
-    "install:mediakiwi.azurefunction": "cd src/Sushi.MediaKiwi.AzureFunction && npm install --ignore-scripts"
+    "postinstall": "npm run install:mediakiwi.vue",
+    "install:mediakiwi.vue": "cd src/Sushi.MediaKiwi.Vue && npm install --ignore-scripts"
   }
 }

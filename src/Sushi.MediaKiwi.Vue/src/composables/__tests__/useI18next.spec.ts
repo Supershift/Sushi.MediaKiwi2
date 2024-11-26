@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { createApp, ref } from "vue";
 import { useI18next } from "../useI18next";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import i18next from "i18next";
+import i18next, { TFunction } from "i18next";
 import { createTestingPinia } from "@pinia/testing";
 import { PublicClientApplication } from "@azure/msal-browser";
 import { identity } from "../../identity";
@@ -19,7 +19,7 @@ describe("useI18next", () => {
       setup() {
         result = useI18next(ns);
         // suppress missing template warning
-        return () => {};
+        return () => { };
       },
     });
     app.provide("i18next", ref(i18next));
@@ -36,8 +36,8 @@ describe("useI18next", () => {
   describe("t", () => {
     it("Should call i18next.t with view's id", async () => {
       // arrange
-      const spy = vi.spyOn(i18next, "getFixedT").mockImplementation(() => vi.fn());
-      const composable = await getComposable({ id: "myView",children:[], name: 'view', section:{id : '3', name: '', items:[]} });
+      const spy = vi.spyOn(i18next, "getFixedT").mockImplementation(() => vi.fn() as unknown as TFunction);
+      const composable = await getComposable({ id: "myView", children: [], name: 'view', section: { id: '3', name: '', items: [] } });
 
       // act
       composable.t.value("test");
@@ -48,7 +48,7 @@ describe("useI18next", () => {
     });
     it("Should call i18next.getFixedT with namespace", async () => {
       // arrange
-      const spy = vi.spyOn(i18next, "getFixedT").mockImplementation(() => vi.fn());
+      const spy = vi.spyOn(i18next, "getFixedT").mockImplementation(() => vi.fn() as unknown as TFunction);
       const composable = await getComposable("myNamespace");
 
       // act
