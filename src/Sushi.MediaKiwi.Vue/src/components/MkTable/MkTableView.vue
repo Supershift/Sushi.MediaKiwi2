@@ -3,7 +3,7 @@
   import { RouteParamValueRaw } from "vue-router";
   import { useMediakiwiStore } from "@/stores/";
   import { useNavigation } from "@/composables/useNavigation";
-  import { computed, onMounted, onUnmounted, ref, useTemplateRef } from "vue";
+  import { computed, onMounted, onUnmounted, reactive, ref, useTemplateRef } from "vue";
   import { useTableDisplayOptions } from "@/composables/useTableDisplayOptions";
   import { MkTableContextMenuSlotProps, MkTableBodySlotProps, MkTableViewProps, MkTableBulkActionBarSlotProps } from "@/models/table/TableProps";
   import { useContextmenu } from "@/composables/useContextmenu";
@@ -34,6 +34,9 @@
   const tbodyContainer = ref<any>(null);
   const tbodyNode = computed(() => tbodyContainer.value! as Node);
   const myTable = useTemplateRef<VTable>("myTable");
+  const rowMenuActive = reactive<{
+    [key: string]: boolean;
+  }>({});
 
   // define selection
   let itemSelectionShortcuts: ReturnType<typeof useItemSelectionShortcuts<T>> | undefined = undefined;
@@ -275,6 +278,15 @@
   const observer = new MutationObserver(loadDisplayOptions);
 
   function openContextMenuPreCheck(event: MouseEvent, dataItem: T) {
+    // Close any open row menu
+    if (rowMenuActive) {
+      for (const key in rowMenuActive) {
+        if (!!rowMenuActive[key]) {
+          rowMenuActive[key] = false;
+        }
+      }
+    }
+
     openContextMenu(event, dataItem, {
       isBulkAction: !!selectionIds.value?.length,
     });
@@ -329,7 +341,7 @@
         </td>
         <slot name="tbody" v-bind="{ dataItem }"></slot>
         <td v-if="slots.contextmenu && !props.hideTableRowActions">
-          <v-menu class="mk-table-view__row__menu">
+          <v-menu v-model="rowMenuActive[getRowKey(dataItem, rowIndex)]" class="mk-table-view__row__menu">
             <template #activator="{ props }">
               <v-btn size="x-small" icon variant="text" v-bind="props"><v-icon icon="$dotsVertical" /> </v-btn>
             </template>
