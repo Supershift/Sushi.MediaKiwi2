@@ -304,7 +304,7 @@
           <MkTableCheckbox :disabled="allItemsDisabled" :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:selected="onToggleAll" />
         </th>
         <slot name="thead"></slot>
-        <th v-if="slots.contextmenu && !props.hideTableRowActions">&nbsp;</th>
+        <th width="75" v-if="slots.contextmenu && !props.hideTableRowActions">&nbsp;</th>
       </tr>
     </thead>
     <tbody ref="tbodyContainer" class="mk-table-view__body-container">
@@ -329,7 +329,7 @@
         </td>
         <slot name="tbody" v-bind="{ dataItem }"></slot>
         <td v-if="slots.contextmenu && !props.hideTableRowActions">
-          <v-menu>
+          <v-menu class="mk-table-view__row__menu">
             <template #activator="{ props }">
               <v-btn size="x-small" icon variant="text" v-bind="props"><v-icon icon="$dotsVertical" /> </v-btn>
             </template>
