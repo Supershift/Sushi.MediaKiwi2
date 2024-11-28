@@ -15,8 +15,14 @@ export function useItemSelectionShortcuts<T>(props: useItemSelectionShortcutsPro
   const isSelectionMode = ref(false);
   const { onCtrlA, onCtrlClick, onShiftClick } = props || {};
 
+  /** Check if the ctrl key is pressed */
+  function isCtrlKey(e: KeyboardEvent) {
+    // e.ctrlKey is for windows and e.metaKey is for mac
+    return e.ctrlKey || e.metaKey;
+  }
+
   function onKeyDown(e: KeyboardEvent) {
-    if (e.ctrlKey || e.shiftKey) {
+    if (isCtrlKey(e) || e.shiftKey) {
       isSelectionMode.value = true;
 
       if (e.key === "a") {
@@ -28,7 +34,7 @@ export function useItemSelectionShortcuts<T>(props: useItemSelectionShortcutsPro
   }
 
   function onKeyUp(e: KeyboardEvent) {
-    if (!e.ctrlKey && !e.shiftKey) {
+    if (!isCtrlKey(e) && !e.shiftKey) {
       isSelectionMode.value = false;
     }
   }
@@ -39,7 +45,7 @@ export function useItemSelectionShortcuts<T>(props: useItemSelectionShortcutsPro
         handleCtrlClick(e, dataItem);
       }
 
-      if (!e.ctrlKey) {
+      if (!isCtrlKey(e)) {
         handleShiftClick(e, dataItem!);
       }
     }
