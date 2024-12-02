@@ -52,6 +52,8 @@
 
   const sortBy = computed(() => sorting.value?.sortBy);
   const sortDirection = computed(() => sorting.value?.sortDirection);
+  const showBulkActionBar = computed(() => !!selection.value?.length && !props.hideBulkActionBar);
+  const showFilterBar = computed(() => filters.value && !showBulkActionBar.value);
 
   // define events
   const emit = defineEmits<{
@@ -222,18 +224,16 @@
       </MkToolbar>
     </template>
 
-    <template v-if="filters">
-      <MkTableFilter :model-value="filters" @update:model-value="filterChanged" />
+    <template v-if="showFilterBar">
+      <MkTableFilter :model-value="filters!" @update:model-value="filterChanged" />
     </template>
 
-    <template v-if="selection && !props.hideBulkActionBar">
-      <v-expand-transition>
-        <MkBulkActionBar v-if="selection?.length" v-model="selection">
-          <template #default="{ confirm }">
-            <slot name="bulkActionBar" :confirm="confirm"></slot>
-          </template>
-        </MkBulkActionBar>
-      </v-expand-transition>
+    <template v-if="showBulkActionBar">
+      <MkBulkActionBar v-if="selection?.length" v-model="selection">
+        <template #default="{ confirm }">
+          <slot name="bulkActionBar" :confirm="confirm"></slot>
+        </template>
+      </MkBulkActionBar>
     </template>
 
     <slot v-if="slots.prependTable" name="prependTable"></slot>

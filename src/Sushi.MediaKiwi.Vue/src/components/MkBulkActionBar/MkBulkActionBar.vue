@@ -62,7 +62,7 @@
 </script>
 
 <template>
-  <v-toolbar class="mk-bulk-action-bar" color="inverse-surface">
+  <v-toolbar class="mk-bulk-action-bar d-flex justify-center align-center mb-4" color="inverse-surface">
     <v-label class="ms-5 me-4"> {{ modelValue.length }} {{ defaultT("selected") }} </v-label>
     <v-divider class="mx-2" inset vertical></v-divider>
 
@@ -81,10 +81,17 @@
     <v-btn v-if="!confirmState?.show" :icon="IconsLibrary.close" @click="onCloseClick"></v-btn>
   </v-toolbar>
 </template>
-<style>
+<style scoped lang="scss">
   .mk-bulk-action-bar {
+    height: 56px;
+
     * {
       color: rgb(var(--v-theme-inverse-on-surface));
+    }
+
+    // Override the toolbar content height, this is hardcoded in the Vuetify CSS
+    :deep(.v-toolbar__content) {
+      height: auto !important;
     }
   }
 </style>

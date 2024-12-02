@@ -339,3 +339,8 @@
     </div>
   </v-card>
 </template>
+<style lang="scss" scoped>
+  .mk-table-filter {
+    height: 56px;
+  }
+</style>
