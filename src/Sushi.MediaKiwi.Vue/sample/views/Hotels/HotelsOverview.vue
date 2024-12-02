@@ -24,6 +24,7 @@
   import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
   import { useSnackbarStore } from "@/stores";
   import AddHotelDialog from "./AddHotelDialog.vue";
+  import HotelsOverviewDialog from "./HotelsOverviewDialog.vue";
 
   // inject dependencies
   const connector = container.resolve(HotelConnector);
@@ -39,6 +40,7 @@
 
   const state = reactive({
     addDialog: false,
+    selectionDialog: false,
   });
 
   // Set the name column to be hidden by default, the user can change this in the display options
@@ -134,8 +136,7 @@
     hide-selection-checkbox
   >
     <template #toolbar>
-      <v-btn>Knop 1</v-btn>
-      <v-btn>Knop 2</v-btn>
+      <v-btn @click="state.selectionDialog = true">Open dialog</v-btn>
     </template>
 
     <template #overflowMenuActions>
@@ -180,4 +181,5 @@
   </mk-table>
 
   <AddHotelDialog v-model="state.addDialog" @update:model-value="LoadData" />
+  <HotelsOverviewDialog v-model="state.selectionDialog"></HotelsOverviewDialog>
 </template>
