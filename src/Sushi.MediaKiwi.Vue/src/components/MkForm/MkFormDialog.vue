@@ -137,7 +137,7 @@
   }
 </script>
 <template>
-  <v-dialog v-model="modelValue" :width="computedProps?.width" close-on-back @update:model-value="updateDialog" @close="onClose">
+  <v-dialog v-model="modelValue" :width="computedProps?.width" close-on-back @update:model-value="updateDialog" @close="onClose" @click:outside="onClose">
     <template #default>
       <v-form :id="formId" v-model="isValid" :validate-on="computedProps.validateOn" ref="formRef" @submit.prevent="onSubmitAndClose">
         <MkDialogCard @click:close="onClose" :loading="inProgress" :height="height">

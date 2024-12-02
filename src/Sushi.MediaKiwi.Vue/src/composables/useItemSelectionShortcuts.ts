@@ -1,3 +1,4 @@
+import { isBuffer } from "cypress/types/lodash";
 import { ComponentPublicInstance, CreateComponentPublicInstance, onMounted, onUnmounted, ref, ShallowRef } from "vue";
 
 type itemSelectionShortcutsParams<T> = {
@@ -13,6 +14,7 @@ type useItemSelectionShortcutsProps<T> = {
 
 export function useItemSelectionShortcuts<T>(props: useItemSelectionShortcutsProps<T>) {
   const isSelectionMode = ref(false);
+  const activeElement = ref<HTMLElement | null>(null);
   const { onCtrlA, onCtrlClick, onShiftClick } = props || {};
 
   /** Check if the ctrl key is pressed */
@@ -22,6 +24,7 @@ export function useItemSelectionShortcuts<T>(props: useItemSelectionShortcutsPro
   }
 
   function onKeyDown(e: KeyboardEvent) {
+    e.stopImmediatePropagation();
     if (isCtrlKey(e) || e.shiftKey) {
       isSelectionMode.value = true;
 
@@ -34,6 +37,7 @@ export function useItemSelectionShortcuts<T>(props: useItemSelectionShortcutsPro
   }
 
   function onKeyUp(e: KeyboardEvent) {
+    e.stopImmediatePropagation();
     if (!isCtrlKey(e) && !e.shiftKey) {
       isSelectionMode.value = false;
     }
@@ -89,20 +93,53 @@ export function useItemSelectionShortcuts<T>(props: useItemSelectionShortcutsPro
     };
   }
 
-  onMounted(() => {
-    if (props.element?.value) {
-      props.element.value.$el?.addEventListener("keydown", onKeyDown);
-      props.element.value.$el?.addEventListener("keyup", onKeyUp);
-      props.element.value.$el?.setAttribute("tabindex", "0");
+  /**
+   * Get the current screen, if the element is a dialog or a view
+   */
+  function getCurrentScreen() {
+    if (props.element?.value && props.element.value.$el) {
+      activeElement.value = props.element.value.$el.closest(".v-overlay--active") || window;
     }
+  }
+
+  /**
+   * Add event listeners to the active element (dialog or view)
+   */
+  function addEventListeners() {
+    if (activeElement.value) {
+      activeElement.value.addEventListener("keydown", onKeyDown);
+      activeElement.value.addEventListener("keyup", onKeyUp);
+      if (activeElement.value instanceof HTMLElement) {
+        activeElement.value.setAttribute("tabindex", "0");
+      }
+    }
+  }
+
+  /**
+   * Remove event listeners from the active element (dialog or view)
+   */
+  function removeEventListeners() {
+    if (activeElement.value) {
+      activeElement.value.removeEventListener("keydown", onKeyDown);
+      activeElement.value.removeEventListener("keyup", onKeyUp);
+      activeElement.value.removeAttribute("tabindex");
+    }
+  }
+
+  onMounted(() => {
+    // Get the current screen
+    getCurrentScreen();
+
+    // Add event listeners
+    addEventListeners();
   });
 
   onUnmounted(() => {
-    if (props.element?.value) {
-      props.element.value.$el?.removeEventListener("keydown", onKeyDown);
-      props.element.value.$el?.removeEventListener("keyup", onKeyUp);
-      props.element.value.$el?.removeAttribute("tabindex");
-    }
+    // Reset the active element
+    activeElement.value = null;
+
+    // Remove event listeners
+    removeEventListeners();
   });
 
   return {
