@@ -1,10 +1,11 @@
-import { onMounted, onUnmounted, ref } from "vue";
+import { ComponentPublicInstance, CreateComponentPublicInstance, onMounted, onUnmounted, ref, ShallowRef } from "vue";
 
 type itemSelectionShortcutsParams<T> = {
   dataItem: T;
 };
 
 type useItemSelectionShortcutsProps<T> = {
+  element?: ShallowRef<any>;
   onCtrlA?: () => void | Promise<void>;
   onShiftClick?: (args: itemSelectionShortcutsParams<T>) => void | Promise<void>;
   onCtrlClick?: (args: itemSelectionShortcutsParams<T>) => void | Promise<void>;
@@ -14,8 +15,14 @@ export function useItemSelectionShortcuts<T>(props: useItemSelectionShortcutsPro
   const isSelectionMode = ref(false);
   const { onCtrlA, onCtrlClick, onShiftClick } = props || {};
 
+  /** Check if the ctrl key is pressed */
+  function isCtrlKey(e: KeyboardEvent) {
+    // e.ctrlKey is for windows and e.metaKey is for mac
+    return e.ctrlKey || e.metaKey;
+  }
+
   function onKeyDown(e: KeyboardEvent) {
-    if (e.ctrlKey || e.shiftKey) {
+    if (isCtrlKey(e) || e.shiftKey) {
       isSelectionMode.value = true;
 
       if (e.key === "a") {
@@ -27,7 +34,7 @@ export function useItemSelectionShortcuts<T>(props: useItemSelectionShortcutsPro
   }
 
   function onKeyUp(e: KeyboardEvent) {
-    if (!e.ctrlKey && !e.shiftKey) {
+    if (!isCtrlKey(e) && !e.shiftKey) {
       isSelectionMode.value = false;
     }
   }
@@ -38,7 +45,7 @@ export function useItemSelectionShortcuts<T>(props: useItemSelectionShortcutsPro
         handleCtrlClick(e, dataItem);
       }
 
-      if (!e.ctrlKey) {
+      if (!isCtrlKey(e)) {
         handleShiftClick(e, dataItem!);
       }
     }
@@ -83,13 +90,19 @@ export function useItemSelectionShortcuts<T>(props: useItemSelectionShortcutsPro
   }
 
   onMounted(() => {
-    window.addEventListener("keydown", onKeyDown);
-    window.addEventListener("keyup", onKeyUp);
+    if (props.element?.value) {
+      props.element.value.$el?.addEventListener("keydown", onKeyDown);
+      props.element.value.$el?.addEventListener("keyup", onKeyUp);
+      props.element.value.$el?.setAttribute("tabindex", "0");
+    }
   });
 
   onUnmounted(() => {
-    window.removeEventListener("keydown", onKeyDown);
-    window.removeEventListener("keyup", onKeyUp);
+    if (props.element?.value) {
+      props.element.value.$el?.removeEventListener("keydown", onKeyDown);
+      props.element.value.$el?.removeEventListener("keyup", onKeyUp);
+      props.element.value.$el?.removeAttribute("tabindex");
+    }
   });
 
   return {

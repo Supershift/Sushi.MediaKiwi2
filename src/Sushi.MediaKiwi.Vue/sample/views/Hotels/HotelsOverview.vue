@@ -3,15 +3,27 @@
   import { Hotel } from "./../../models/Hotel";
   import { CountryConnector } from "./../../services/CountryConnector";
   import { HotelConnector } from "./../../services/HotelConnector";
-  import { IconsLibrary, Paging, Sorting, SortDirection, TableCellIcon, TableIconPosition, TableFilter, TableFilterType, TableFilterValue } from "@/models";
+  import {
+    IconsLibrary,
+    Paging,
+    Sorting,
+    SortDirection,
+    TableCellIcon,
+    TableIconPosition,
+    TableFilter,
+    TableFilterType,
+    TableFilterValue,
+    ListResult,
+  } from "@/models";
 
   import { MkTable, MkTh, MkTd } from "@/components";
   import { useI18next } from "@/composables";
 
   import { container } from "tsyringe";
-  import { ref } from "vue";
+  import { reactive, ref } from "vue";
   import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
   import { useSnackbarStore } from "@/stores";
+  import AddHotelDialog from "./AddHotelDialog.vue";
 
   // inject dependencies
   const connector = container.resolve(HotelConnector);
@@ -20,13 +32,14 @@
   const snackbar = useSnackbarStore();
 
   // define reactive variables
-  const currentPagination = ref<Paging>({
-    pageIndex: 0,
-    pageSize: 11,
-  }); // demos 11 items per page (higher than default 10), also adds to the current list
-  const hotels = ref<Hotel[]>([]);
+  const currentPagination = ref<Paging>();
+  const hotels = ref<ListResult<Hotel>>();
   const countries = ref<Country[]>();
   const selectedHotels = ref<Hotel[]>([]);
+
+  const state = reactive({
+    addDialog: false,
+  });
 
   // Set the name column to be hidden by default, the user can change this in the display options
   const hiddenColumns = ["hotelName", "srp"];
@@ -65,16 +78,18 @@
 
   // load data
   async function LoadData() {
-    const result = await connector.GetAllAsync(
+    const response = await connector.GetAllAsync(
       currentPagination.value,
       filters.value.countryCode.selectedValue?.value,
       filters.value.isActive.selectedValue?.value
     );
 
-    hotels.value = result.result.map((item) => {
+    const hotelItems = response.result.map((item) => {
       // convert to Hotel class
       return new Hotel(item);
     });
+
+    hotels.value = { ...response, result: hotelItems };
   }
 
   // Load countries
@@ -104,7 +119,7 @@
     v-model:current-pagination="currentPagination"
     v-model:filters="filters"
     v-model:sorting="sorting"
-    :data="hotels"
+    :api-result="hotels"
     v-model:selection="selectedHotels"
     :on-load="LoadData"
     :item-id="(item) => item.id"
@@ -113,7 +128,7 @@
     new-emit
     :new-title="t('New hotel').toString()"
     title="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin nec quam id nunc tincidunt vulputate sed eget ex. Praesent bibendum leo sed ipsum sodales euismod. Cras ac purus volutpat, dapibus quam eget, vestibulum orci. Aliquam et ligula pharetra, condimentum nibh at, congue dolor."
-    @click:new="console.log('New Button Clicked: ' + $event)"
+    @click:new="state.addDialog = true"
     v-model:display-options="displayOptions"
     :remove-item-selection="(item) => item.countryCode !== 'NL'"
     hide-selection-checkbox
@@ -163,4 +178,6 @@
       </v-list>
     </template>
   </mk-table>
+
+  <AddHotelDialog v-model="state.addDialog" @update:model-value="LoadData" />
 </template>
