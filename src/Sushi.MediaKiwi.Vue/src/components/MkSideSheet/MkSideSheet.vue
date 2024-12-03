@@ -86,7 +86,7 @@
     return props.width; // this determines if the content gets pushed or not, minimal 20vw
   });
 
-  const wrapperStyles = computed(() => ({ width: width.value } as StyleValue));
+  const wrapperStyles = computed(() => ({ width: width.value }) as StyleValue);
 
   // functions
   function handleClose() {
@@ -211,7 +211,7 @@
   </teleport>
 </template>
 <style lang="scss" scoped>
-  @import "../../styles/themes/variables.scss";
+  @use "../../styles/themes/variables.scss";
   .side-sheet {
     &--mobile {
       height: 100vh;
