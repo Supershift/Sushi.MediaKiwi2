@@ -4,10 +4,6 @@
   import { computed, ref } from "vue";
   import { useValidationRules } from "@/composables";
 
-  //
-  const start = new Date("2024-05-31T22:00:00.000Z");
-  const end = new Date("2024-06-30T21:59:59.999Z");
-
   const { email } = await useValidationRules();
 
   // define filters

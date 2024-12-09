@@ -31,7 +31,6 @@
   const modelValue = defineModel<{ value: any[]; title?: string }>({ required: true });
 
   // Inject dependencies
-  const { isSame } = useDayjs();
   const { defaultT } = await useI18next("MkDatePresetMenu");
   const { presets, formatPreset } = await useDatePresets({
     dayPresets: props.days,
@@ -51,25 +50,32 @@
   function updateModelValue(value: DateRange): void;
   function updateModelValue(value: any[]): void;
   function updateModelValue(value: DateRange | any[]): void {
-    let startDate, endDate;
+    let startDate: Date, endDate: Date, title: string;
 
     if (Array.isArray(value)) {
       // Deconstruct the array
       const [start, end] = value;
-      startDate = start;
-      endDate = end;
+
+      // Create a new Date object with the UTC values
+      const startUTC = new Date(Date.UTC(start.getFullYear(), start.getMonth(), start.getDate()));
+      const endUTC = new Date(Date.UTC(end.getFullYear(), end.getMonth(), end.getDate()));
+
+      startDate = startUTC;
+      endDate = endUTC;
+      title = formatPreset(startDate, endDate);
     } else {
       // Deconstruct the DateRange
       const { start, end } = value;
-      startDate = start;
-      endDate = end;
+      startDate = start.toDate();
+      endDate = end.toDate();
+      title = formatPreset(start, end);
     }
 
     // Set the value
     state.model.value = [startDate, endDate];
 
     // Set the title
-    state.model.title = formatPreset(startDate, endDate);
+    state.model.title = title;
 
     // Apply the changes
     apply();
@@ -95,7 +101,7 @@
     if (!state.model.value || !state.model.value[0]) {
       return false;
     }
-    return isSame.value(item.start, state.model.value[0], "day");
+    return item.start.isSame(state.model.value[0], "day");
   }
 
   /**
@@ -106,7 +112,7 @@
     if (!state.model.value || !state.model.value[1]) {
       return false;
     }
-    return isSame.value(item.end, state.model.value[1], "day");
+    return item.end.isSame(state.model.value[0], "day");
   }
 
   /**

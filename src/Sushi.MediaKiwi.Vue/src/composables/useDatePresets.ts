@@ -2,6 +2,7 @@ import { computed } from "vue";
 import { DateRange } from "@/models/ranges/DateRange";
 import { useDayjs } from "./useDayjs";
 import { useI18next } from "./useI18next";
+import { Dayjs } from "dayjs";
 
 export async function useDatePresets(options?: {
   /**
@@ -17,7 +18,7 @@ export async function useDatePresets(options?: {
   monthPresets: number[];
 }) {
   // refs
-  const { currentDate, substractDate, startOf, endOf, getDifference, isFullMonth, isToday } = useDayjs();
+  const { currentDayjs, isFullMonth, isToday } = useDayjs();
   const { dayPresets, monthPresets } = options || {};
 
   const { formatMonth, defaultT, formatDate } = await useI18next();
@@ -37,42 +38,53 @@ export async function useDatePresets(options?: {
   function getPreset(type: "day"): DateRange[];
   function getPreset(type: "month"): DateRange[];
   function getPreset(type: "day" | "month") {
-    const start = currentDate.value;
-    const end = currentDate.value;
+    const start = currentDayjs.value;
+    const end = currentDayjs.value;
     const result = <DateRange[]>[];
 
     if (type === "day" && dayPresets) {
       // Last x days
       for (const day of dayPresets) {
-        const current = substractDate.value(start, day, "day");
+        const current = start.subtract(day, "day");
+
+        const startOf = current.startOf("day");
+        const endOf = end.endOf("day");
+
         result.push({
-          start: startOf.value(current, "day"),
-          end: endOf.value(end, "day"),
+          start: startOf,
+          end: endOf,
           duration: day,
         });
       }
     } else if (type === "month" && monthPresets) {
       // Add current and last 2 months
       for (const month of monthPresets) {
-        const current = substractDate.value(start, month, "month");
-        const m = startOf.value(current, "month");
+        const current = start.subtract(month, "month");
+
+        const startOf = current.startOf("month");
+        const endOf = current.endOf("month");
 
         result.push({
-          start: m,
-          end: endOf.value(m, "month"),
+          start: startOf,
+          end: endOf,
         });
       }
     }
 
     // Sort by start date descending
-    result.sort((a, b) => b.start.getTime() - a.start.getTime());
+    result.sort((a, b) => b.start.valueOf() - a.start.valueOf());
 
     return result;
   }
 
-  function formatPreset(dates: Date[]): string;
+  function isDate(object: any): object is Date {
+    return object instanceof Date;
+  }
+
+  function formatPreset(dates: Dayjs[]): string;
+  function formatPreset(start: Dayjs, end: Dayjs): string;
   function formatPreset(start: Date, end: Date): string;
-  function formatPreset(dates: Date[] | Date, end?: Date): string {
+  function formatPreset(dates: Dayjs[] | Dayjs | Date, end?: Dayjs | Date): string {
     // determine mode
     if (Array.isArray(dates)) {
       const [start, end] = dates;
@@ -80,26 +92,30 @@ export async function useDatePresets(options?: {
     } else {
       if (dates && end) {
         const start = dates;
-        if (isFullMonth.value(start, end)) {
-          return formatMonth.value(start);
-        } else if (isToday.value(end)) {
-          const duration = getDifference.value(start, end, "day");
+
+        if (!isDate(start) && !isDate(end) && isFullMonth.value(start, end)) {
+          return formatMonth.value(start.toDate());
+        } else if (!isDate(end) && isToday.value(end)) {
+          const duration = end.diff(start, "day");
           return defaultT.value("LastXDays", "Last {{duration}} days", { duration });
         } else {
-          // Format the dates to a readable format
-          const result = [formatDate.value(start), formatDate.value(end)];
+          let startDate = isDate(start) ? start : start.toDate();
+          let endDate = isDate(end) ? end : end.toDate();
 
+          // Format the dates to a readable format
+          const formattedStartDate = formatDate.value(startDate, { timeZone: "UTC" });
+          const formattedEndDate = formatDate.value(endDate, { timeZone: "UTC" });
+
+          const result = [formattedStartDate, formattedEndDate];
           // Join the dates with a dash
           return result.join(" - ");
         }
       }
     }
-
     return "";
   }
 
   return {
-    currentDate,
     presets,
     formatPreset,
   };
