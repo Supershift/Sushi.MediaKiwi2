@@ -1,10 +1,10 @@
 <script setup lang="ts">
   import { useDatePresets } from "@/composables/useDatePresets";
-  import { useDayjs } from "@/composables/useDayjs";
   import { useI18next } from "@/composables/useI18next";
   import { DateRange } from "@/models/ranges";
   import { reactive } from "vue";
   import { MkDatePicker } from "../MkDatePicker";
+  import dayjs from "dayjs";
 
   const props = withDefaults(
     defineProps<{
@@ -66,8 +66,9 @@
     } else {
       // Deconstruct the DateRange
       const { start, end } = value;
-      startDate = start.toDate();
-      endDate = end.toDate();
+      startDate = start;
+      endDate = end;
+
       title = formatPreset(start, end);
     }
 
@@ -101,7 +102,7 @@
     if (!state.model.value || !state.model.value[0]) {
       return false;
     }
-    return item.start.isSame(state.model.value[0], "day");
+    return dayjs(item.start).isSame(state.model.value[0], "day");
   }
 
   /**
@@ -112,7 +113,7 @@
     if (!state.model.value || !state.model.value[1]) {
       return false;
     }
-    return item.end.isSame(state.model.value[0], "day");
+    return dayjs(item.end).isSame(state.model.value[0], "day");
   }
 
   /**

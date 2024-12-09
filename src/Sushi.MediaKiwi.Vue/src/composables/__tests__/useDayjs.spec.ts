@@ -7,8 +7,8 @@ describe("useDayjs", () => {
 
   it("compares full month correctly", () => {
     // Arrange
-    const start = dayjs(new Date(2024, 11, 1));
-    const end = dayjs(new Date(2024, 11, 31));
+    const start = new Date("2024-12-01T00:00:00.000Z");
+    const end = new Date("2024-12-31T23:59:59.999Z");
 
     // Act
     const result = useDayjsInstance.isFullMonth.value(start, end);
@@ -19,7 +19,7 @@ describe("useDayjs", () => {
 
   it("compares today correctly", () => {
     // Arrange
-    const now = dayjs();
+    const now = new Date();
 
     // Act
     const result = useDayjsInstance.isToday.value(now);

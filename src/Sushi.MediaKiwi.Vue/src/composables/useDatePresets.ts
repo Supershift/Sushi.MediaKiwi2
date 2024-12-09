@@ -2,7 +2,6 @@ import { computed } from "vue";
 import { DateRange } from "@/models/ranges/DateRange";
 import { useDayjs } from "./useDayjs";
 import { useI18next } from "./useI18next";
-import { Dayjs } from "dayjs";
 
 export async function useDatePresets(options?: {
   /**
@@ -18,7 +17,7 @@ export async function useDatePresets(options?: {
   monthPresets: number[];
 }) {
   // refs
-  const { currentDayjs, isFullMonth, isToday } = useDayjs();
+  const { currentDayjs, isFullMonth, isToday, getDuration } = useDayjs();
   const { dayPresets, monthPresets } = options || {};
 
   const { formatMonth, defaultT, formatDate } = await useI18next();
@@ -50,9 +49,12 @@ export async function useDatePresets(options?: {
         const startOf = current.startOf("day");
         const endOf = end.endOf("day");
 
+        const st = new Date(Date.UTC(startOf.year(), startOf.month(), startOf.date()));
+        const et = new Date(Date.UTC(endOf.year(), endOf.month(), endOf.date()));
+
         result.push({
-          start: startOf,
-          end: endOf,
+          start: st,
+          end: et,
           duration: day,
         });
       }
@@ -64,9 +66,12 @@ export async function useDatePresets(options?: {
         const startOf = current.startOf("month");
         const endOf = current.endOf("month");
 
+        const st = new Date(Date.UTC(startOf.year(), startOf.month(), startOf.date()));
+        const et = new Date(Date.UTC(endOf.year(), endOf.month(), endOf.date(), 23, 59, 59, 999));
+
         result.push({
-          start: startOf,
-          end: endOf,
+          start: st,
+          end: et,
         });
       }
     }
@@ -77,14 +82,9 @@ export async function useDatePresets(options?: {
     return result;
   }
 
-  function isDate(object: any): object is Date {
-    return object instanceof Date;
-  }
-
-  function formatPreset(dates: Dayjs[]): string;
-  function formatPreset(start: Dayjs, end: Dayjs): string;
+  function formatPreset(dates: Date[]): string;
   function formatPreset(start: Date, end: Date): string;
-  function formatPreset(dates: Dayjs[] | Dayjs | Date, end?: Dayjs | Date): string {
+  function formatPreset(dates: Date[] | Date, end?: Date): string {
     // determine mode
     if (Array.isArray(dates)) {
       const [start, end] = dates;
@@ -93,18 +93,15 @@ export async function useDatePresets(options?: {
       if (dates && end) {
         const start = dates;
 
-        if (!isDate(start) && !isDate(end) && isFullMonth.value(start, end)) {
-          return formatMonth.value(start.toDate());
-        } else if (!isDate(end) && isToday.value(end)) {
-          const duration = end.diff(start, "day");
+        if (isFullMonth.value(start, end)) {
+          return formatMonth.value(start);
+        } else if (isToday.value(end)) {
+          const duration = getDuration.value(start, end, "day");
           return defaultT.value("LastXDays", "Last {{duration}} days", { duration });
         } else {
-          let startDate = isDate(start) ? start : start.toDate();
-          let endDate = isDate(end) ? end : end.toDate();
-
           // Format the dates to a readable format
-          const formattedStartDate = formatDate.value(startDate, { timeZone: "UTC" });
-          const formattedEndDate = formatDate.value(endDate, { timeZone: "UTC" });
+          const formattedStartDate = formatDate.value(start, { timeZone: "UTC" });
+          const formattedEndDate = formatDate.value(end, { timeZone: "UTC" });
 
           const result = [formattedStartDate, formattedEndDate];
           // Join the dates with a dash

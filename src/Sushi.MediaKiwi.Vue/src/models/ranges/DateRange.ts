@@ -1,10 +1,8 @@
-import { Dayjs } from "dayjs";
-
 export type DateRange = {
   /** start date of the current range */
-  start: Dayjs;
+  start: Date;
   /** end date of the current range */
-  end: Dayjs;
+  end: Date;
   /** Duration in days */
   duration?: number;
 };
