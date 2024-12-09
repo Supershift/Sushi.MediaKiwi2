@@ -56,7 +56,7 @@
       // Deconstruct the array
       const [start, end] = value;
 
-      // Create a new Date object with the UTC values
+      // Create a new Date object with the UTC values for custom date ranges
       const startUTC = new Date(Date.UTC(start.getFullYear(), start.getMonth(), start.getDate()));
       const endUTC = new Date(Date.UTC(end.getFullYear(), end.getMonth(), end.getDate()));
 
@@ -68,7 +68,6 @@
       const { start, end } = value;
       startDate = start;
       endDate = end;
-
       title = formatPreset(start, end);
     }
 
