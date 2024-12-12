@@ -5,6 +5,7 @@
   import { DateRange } from "@/models/ranges";
   import { reactive } from "vue";
   import { MkDatePicker } from "../MkDatePicker";
+  import dayjs from "dayjs";
 
   const props = withDefaults(
     defineProps<{
@@ -56,8 +57,12 @@
     if (Array.isArray(value)) {
       // Deconstruct the array
       const [start, end] = value;
-      startDate = start;
-      endDate = end;
+
+      // Convert to dayjs,
+      // Set the start date at the start of the DAY
+      // And the endDate at the end of the DAY
+      startDate = dayjs(start).startOf("day").toDate();
+      endDate = dayjs(end).endOf("day").toDate();
     } else {
       // Deconstruct the DateRange
       const { start, end } = value;
