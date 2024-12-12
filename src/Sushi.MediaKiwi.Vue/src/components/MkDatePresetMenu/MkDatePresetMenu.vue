@@ -59,7 +59,7 @@
       const [start, end] = value;
 
       // Convert to dayjs,
-      // Set the start date at the start of the DAY
+      // Force the start date at the start of the DAY
       // And the endDate at the end of the DAY
       startDate = dayjs(start).startOf("day").toDate();
       endDate = dayjs(end).endOf("day").toDate();
