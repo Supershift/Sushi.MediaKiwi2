@@ -3,14 +3,14 @@
   import { RouteParamValueRaw } from "vue-router";
   import { useMediakiwiStore } from "@/stores/";
   import { useNavigation } from "@/composables/useNavigation";
-  import { computed, onMounted, onUnmounted, reactive, ref, useTemplateRef } from "vue";
+  import { computed, onMounted, onUnmounted, onUpdated, reactive, ref, useTemplateRef } from "vue";
   import { useTableDisplayOptions } from "@/composables/useTableDisplayOptions";
   import { MkTableContextMenuSlotProps, MkTableBodySlotProps, MkTableViewProps, MkTableBulkActionBarSlotProps } from "@/models/table/TableProps";
   import { useContextmenu } from "@/composables/useContextmenu";
   import MkTableCheckbox from "./MkTableCheckbox.vue";
   import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
-  import { useItemSelectionShortcuts } from "@/composables/useItemSelectionShortcuts";
   import { VTable } from "vuetify/lib/components/index.mjs";
+  import { onKeyDown, onKeyStroke, onKeyUp } from "@vueuse/core";
 
   // inject dependencies
   const { initTableDisplayOptions } = useTableDisplayOptions();
@@ -37,18 +37,10 @@
   const rowMenuActive = reactive<{
     [key: string]: boolean;
   }>({});
-
-  // define selection
-  let itemSelectionShortcuts: ReturnType<typeof useItemSelectionShortcuts<T>> | undefined = undefined;
-  if (props.checkbox) {
-    // const { isSelectionMode, createSelectionProps }
-    itemSelectionShortcuts = useItemSelectionShortcuts<T>({
-      element: myTable,
-      onCtrlA: () => onToggleAll(true),
-      onShiftClick: ({ dataItem }) => onSelectRangeItems(dataItem),
-      onCtrlClick: ({ dataItem }) => onSelectItem(dataItem),
-    });
-  }
+  const pageHasAcitveOverlay = ref(false);
+  const tableIsPartOfActiveOverlay = computed(() => !!myTable.value?.$el?.closest(".v-overlay--active"));
+  const isKeyStrokeForCurrentTable = computed(() => !pageHasAcitveOverlay.value || tableIsPartOfActiveOverlay.value);
+  const isSelectionKeyPressed = ref(false);
 
   // define event
   const emit = defineEmits<{
@@ -98,8 +90,7 @@
     return {
       "has-hover": props.showHoverEffect,
       "mk-table-view__row--selected": isItemSelected.value(dataItem),
-      "cursor-not-allowed":
-        props.checkbox && itemSelectionShortcuts?.isSelectionMode.value && (isDisabledItemSelection(dataItem) || isRemovedItemSelection(dataItem)),
+      "cursor-not-allowed": props.checkbox && isSelectionKeyPressed.value && (isDisabledItemSelection(dataItem) || isRemovedItemSelection(dataItem)),
     };
   }
 
@@ -167,8 +158,12 @@
     }
   }
 
-  function onRowClick(_event: MouseEvent, dataItem: T) {
-    if (!itemSelectionShortcuts?.isSelectionMode.value) {
+  function onRowClick(e: MouseEvent, dataItem: T) {
+    if (e.ctrlKey || e.metaKey) {
+      onSelectItem(dataItem);
+    } else if (e.shiftKey) {
+      onSelectRangeItems(dataItem);
+    } else {
       handleNavigation(dataItem);
     }
   }
@@ -303,9 +298,58 @@
     observer.disconnect();
   });
 
-  function ok() {
-    alert("ok");
-  }
+  /**
+   * Catch CTRL+A / Command+A key combination to select all items
+   * @param e The key event
+   */
+  onKeyStroke(
+    ["a", "A"],
+    (e) => {
+      if (e.ctrlKey || e.metaKey) {
+        // If the table part of an overlay and is that overlay NOT the active overlay, do nothing
+        // Or if the table is not part of an overlay, but there IS an active overlay, do nothing
+        if (!isKeyStrokeForCurrentTable.value) return;
+        e.preventDefault();
+        onToggleAll(true);
+      }
+    },
+    { dedupe: true }
+  );
+
+  /**
+   * Catch ESC key to clear the selection
+   */
+  onKeyStroke(
+    ["Escape"],
+    (e) => {
+      if (!isKeyStrokeForCurrentTable.value) return;
+      e.preventDefault();
+      clearSelection();
+    },
+    { dedupe: true }
+  );
+
+  onKeyDown(
+    ["Control", "Meta", "Shift"],
+    () => {
+      if (!isKeyStrokeForCurrentTable.value) return;
+      isSelectionKeyPressed.value = true;
+    },
+    { dedupe: true }
+  );
+
+  onKeyUp(
+    ["Control", "Meta", "Shift"],
+    () => {
+      if (!isKeyStrokeForCurrentTable.value) return;
+      isSelectionKeyPressed.value = false;
+    },
+    { dedupe: true }
+  );
+
+  onUpdated(() => {
+    pageHasAcitveOverlay.value = !!document.querySelector(".v-overlay--active");
+  });
 </script>
 
 <template>
@@ -328,7 +372,6 @@
         :class="tableRowClassses(dataItem)"
         @click.stop="(e) => onRowClick(e, dataItem)"
         @contextmenu.prevent="(e) => openContextMenuPreCheck(e, dataItem)"
-        v-bind="itemSelectionShortcuts?.createSelectionProps(dataItem)"
       >
         <td v-if="checkbox && !props.hideSelectionCheckbox" @click.stop class="mk-table-view__checkbox-container--body">
           <MkTableCheckbox

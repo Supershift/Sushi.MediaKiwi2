@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { shallowReactive, ref, watch, type Component, computed, onMounted } from "vue";
+  import { shallowReactive, ref, watch, type Component, computed } from "vue";
   import { TableFilter } from "@/models/table/TableFilter.js";
   import { TableFilterItem } from "@/models/table/TableFilterItem.js";
   import { TableFilterValue } from "@/models/table/TableFilterValue.js";
@@ -18,10 +18,8 @@
   import { MkInputChip } from "@/components/MkChip";
   import { defineAsyncComponent } from "vue";
   import { useI18next } from "@/composables/useI18next";
-  import { useKeyboardShortcuts } from "@/composables/useKeyboardShortcuts";
-  import { onDeactivated } from "vue";
-  import { KeyboardShortcutCollection } from "@/models/keyboard/KeyboardShortcutCollection";
   import { useFilters } from "@/composables/useFilters";
+  import { onKeyStroke } from "@vueuse/core";
 
   // define properties and events
   const props = defineProps<{
@@ -34,8 +32,8 @@
 
   // inject dependencies
   const { t, defaultT } = await useI18next("MkFilter");
-  const { addKeyboardShortcuts, removeKeyboardShortcuts } = useKeyboardShortcuts();
-  const { appliedFilterChip, getFormatterFilterValue } = await useFilters(useI18next("MkFilter"));
+  // const { addKeyboardShortcuts, removeKeyboardShortcuts } = useKeyboardShortcuts();
+  const { appliedFilterChip } = await useFilters(useI18next("MkFilter"));
 
   // define reactive variables
   const menu = ref(false);
@@ -251,18 +249,11 @@
     }
   });
 
-  /** Define Keybinding collection */
-  const shortCuts: KeyboardShortcutCollection = {
-    "control+f": (e: KeyboardEvent) => {
+  onKeyStroke("f", (e) => {
+    if (e.ctrlKey || e.metaKey) {
       e.preventDefault();
       openMenu();
-    },
-  };
-
-  addKeyboardShortcuts(shortCuts);
-
-  onDeactivated(() => {
-    removeKeyboardShortcuts(shortCuts);
+    }
   });
 </script>
 
