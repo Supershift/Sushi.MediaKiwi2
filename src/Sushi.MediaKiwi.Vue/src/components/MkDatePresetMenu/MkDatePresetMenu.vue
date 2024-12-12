@@ -93,7 +93,7 @@
   }
 
   function apply() {
-    modelValue.value = state.model;
+    modelValue.value = { ...state.model };
   }
 
   function openDatePicker() {
