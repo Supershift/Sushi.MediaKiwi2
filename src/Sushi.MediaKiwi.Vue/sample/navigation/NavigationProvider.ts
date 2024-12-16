@@ -37,6 +37,7 @@ builder
   .endSection()
   .startSection("Account", "Account", "symbols:person")
   .addNavigationItem("Errors", "Errors", "./views/Account/ErrorSamples.vue")
+  .addNavigationItem("Filters", "Filters", "./views/Demo/FiltersOverview.vue")
   .addNavigationItem("GetAccount", "Get Account", "./views/Account/GetAccount.vue")
   .addChild("EditAccount", "Edit Account", "./views/Account/EditAccount.vue", "accountId")
   .endSection();
