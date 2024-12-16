@@ -50,7 +50,7 @@ export function useDayjs() {
     return d.toDate();
   }
 
-  function isSameInternal(date1: string | Date, date2: string | Date, unit: dayjs.OpUnitType) {
+  function isSameInternal(date1: string | Date, date2: string | Date, unit?: dayjs.OpUnitType) {
     // parse to dayjs
     const d1 = dayjs(date1);
     const d2 = dayjs(date2);
@@ -59,7 +59,7 @@ export function useDayjs() {
     return d1.isSame(d2, unit);
   }
 
-  function isBeforeInternal(date1: string | Date, date2: string | Date, unit: dayjs.OpUnitType) {
+  function isBeforeInternal(date1: string | Date, date2: string | Date, unit?: dayjs.OpUnitType) {
     // parse to dayjs
     const d1 = dayjs(date1);
     const d2 = dayjs(date2);
@@ -68,7 +68,7 @@ export function useDayjs() {
     return d1.isBefore(d2, unit);
   }
 
-  function isAfterInternal(date1: string | Date, date2: string | Date, unit: dayjs.OpUnitType) {
+  function isAfterInternal(date1: string | Date, date2: string | Date, unit?: dayjs.OpUnitType) {
     // parse to dayjs
     const d1 = dayjs(date1);
     const d2 = dayjs(date2);
@@ -77,7 +77,7 @@ export function useDayjs() {
     return d1.isAfter(d2, unit);
   }
 
-  function getDifferenceInternal(date1: string | Date, date2: string | Date, unit: dayjs.OpUnitType) {
+  function getDifferenceInternal(date1: string | Date, date2: string | Date, unit?: dayjs.OpUnitType) {
     // parse to dayjs
     const d1 = dayjs(date1);
     const d2 = dayjs(date2);
