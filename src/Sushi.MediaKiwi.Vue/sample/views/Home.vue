@@ -2,6 +2,7 @@
   import { useI18next } from "@/composables";
   import { useSnackbarStore } from "@/stores";
   import { useSectionRules } from "@sample/composables/useSectionRules";
+  import { useRouter } from "vue-router";
 
   // inject dependecies
   const { t, defaultT } = await useI18next();
@@ -15,6 +16,11 @@
   function triggerSnackbar() {
     snackbar.showMessage("This is a test message");
   }
+
+  const router = useRouter();
+
+  // proof that the router querystring is parsed as array
+  console.log(router.currentRoute.value.query);
 </script>
 
 <template>
