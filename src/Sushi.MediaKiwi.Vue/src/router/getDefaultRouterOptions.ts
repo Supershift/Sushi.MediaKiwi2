@@ -1,10 +1,10 @@
-import { createWebHistory, type RouteRecordRaw, type RouterOptions } from "vue-router";
+import { createWebHistory, LocationQuery, LocationQueryRaw, type RouteRecordRaw, type RouterOptions } from "vue-router";
 import SignIn from "@/views/SignIn.vue";
 import LoginRedirect from "@/views/LoginRedirect.vue";
 import QueryString from "qs";
 
 /** Creates default router options based on provided modules. */
-export function getDefaultRouterOptions(customRoutes?: RouteRecordRaw[], parseQuery?: boolean): RouterOptions {
+export function getDefaultRouterOptions(customRoutes?: RouteRecordRaw[], parseQueryArray?: boolean): RouterOptions {
   // create routes
   const routes = <RouteRecordRaw[]>[];
 
@@ -24,16 +24,8 @@ export function getDefaultRouterOptions(customRoutes?: RouteRecordRaw[], parseQu
     },
   });
 
-  const routerOptions = <RouterOptions>{
+  let routerOptions = <RouterOptions>{
     routes: routes,
-    parseQuery: function (search: string) {
-      if (!parseQuery) return QueryString.parse(search, { parseArrays: false });
-      return QueryString.parse(search, { parseArrays: true, allowEmptyArrays: true, strictNullHandling: true });
-    },
-    stringifyQuery: function (query: any) {
-      if (!parseQuery) return QueryString.stringify(query, { arrayFormat: "repeat" });
-      return QueryString.stringify(query, { arrayFormat: "brackets", strictNullHandling: true });
-    },
     history: createWebHistory(),
     scrollBehavior: function (to, _from, savedPosition) {
       if (savedPosition) {
@@ -46,6 +38,18 @@ export function getDefaultRouterOptions(customRoutes?: RouteRecordRaw[], parseQu
       }
     },
   };
+  // query parsing functions when parseQueryArray is true
+  if (parseQueryArray) {
+    routerOptions = <RouterOptions>{
+      ...routerOptions,
+      parseQuery: function (search: string): LocationQuery {
+        return QueryString.parse(search, { parseArrays: true, allowEmptyArrays: true, strictNullHandling: true }) as LocationQuery;
+      },
+      stringifyQuery: function (query: LocationQueryRaw): string {
+        return QueryString.stringify(query, { arrayFormat: "brackets", allowDots: true, strictNullHandling: true });
+      },
+    };
+  }
 
   return routerOptions;
 }
