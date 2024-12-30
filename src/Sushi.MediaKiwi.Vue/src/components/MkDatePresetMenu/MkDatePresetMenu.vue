@@ -7,6 +7,9 @@
   import { MkDatePicker } from "../MkDatePicker";
   import dayjs from "dayjs";
 
+  // threshold date for the forever date, when the date is before this date, it is considered forever
+  let foreverDateThreshold = new Date("01-01-1900");
+
   const props = withDefaults(
     defineProps<{
       /**
@@ -22,6 +25,9 @@
       months?: number[];
       datePickerClass?: string;
       datePickerTitle?: string;
+      hasForever?: boolean;
+      foreverLabel?: string;
+      foreverThreshold?: string; // date string
     }>(),
     {
       days: () => [7, 28, 90, 365],
@@ -30,13 +36,20 @@
   );
 
   const modelValue = defineModel<{ value: any[]; title?: string }>({ required: true });
+  // copy the initial model value to prevent direct mutation
+  const initialModel = { ...modelValue.value };
+  // Set the threshold date for the forever date
+  if (props?.foreverThreshold) {
+    foreverDateThreshold = new Date(props?.foreverThreshold);
+  }
 
   // Inject dependencies
-  const { isSame, isBefore } = useDayjs();
+  const { isSame, isBefore, substractDate } = useDayjs();
   const { defaultT } = await useI18next("MkDatePresetMenu");
   const { presets, formatPreset, formatDateRange } = await useDatePresets({
     dayPresets: props.days,
     monthPresets: props.months,
+    foreverLabel: props.foreverLabel,
   });
 
   const state = reactive({
@@ -97,11 +110,19 @@
   }
 
   function openDatePicker() {
+    // reset the model value if the custom item is selected and we've just selected forever
+    if (isSelectedForeverItem()) updateModelValue(initialModel.value);
     state.datePicker = true;
   }
 
   function closeDatePicker() {
     state.datePicker = false;
+  }
+
+  function setForever() {
+    // Set the forever date past the threshold date
+    const foreverDate = substractDate.value(foreverDateThreshold, 2, "day");
+    updateModelValue([foreverDate, new Date()]);
   }
 
   /**
@@ -143,7 +164,21 @@
       state.model.value[0] &&
       state.model.value[1] &&
       !presets.value.days?.some((x: DateRange) => isSelectedPresetItem(x)) &&
-      !presets.value.months.some((x: DateRange) => isSelectedPresetItem(x))
+      !presets.value.months.some((x: DateRange) => isSelectedPresetItem(x)) &&
+      !isBefore.value(state.model.value[0], foreverDateThreshold)
+    );
+  }
+  /**
+   * Check if the forever item is selected. This is the case when the model has a value, but it is not in the presets
+   */
+  function isSelectedForeverItem() {
+    return (
+      state.model.value &&
+      state.model.value[0] &&
+      state.model.value[1] &&
+      !presets.value.days?.some((x: DateRange) => isSelectedPresetItem(x)) &&
+      !presets.value.months.some((x: DateRange) => isSelectedPresetItem(x)) &&
+      isBefore.value(state.model.value[0], foreverDateThreshold)
     );
   }
 </script>
@@ -152,6 +187,9 @@
   <v-list v-if="!state.datePicker">
     <v-list-item v-for="(item, i) in presets.days" :key="i" :active="isSelectedPresetItem(item)" @click="updateModelValue(item)">
       <v-list-item-title>{{ formatPreset(item.start, item.end) }}</v-list-item-title>
+    </v-list-item>
+    <v-list-item v-if="hasForever" :active="isSelectedForeverItem()" @click="setForever">
+      <v-list-item-title> {{ foreverLabel ?? defaultT("Forever") }}</v-list-item-title>
     </v-list-item>
     <v-divider />
     <v-list-item v-for="(item, i) in presets.months" :key="i" :active="isSelectedPresetItem(item)" @click="updateModelValue(item)">

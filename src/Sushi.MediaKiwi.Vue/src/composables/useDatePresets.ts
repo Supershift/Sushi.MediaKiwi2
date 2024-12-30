@@ -15,9 +15,13 @@ export async function useDatePresets(options?: {
    * @example [0, 1, 2] Current month, last month, 2 months ago
    */
   monthPresets: number[];
+  /**
+   * Label for the forever range
+   */
+  foreverLabel?: string;
 }) {
   // refs
-  const { currentDate, substractDate, startOf, endOf, getDifference, isFullMonth, isToday } = useDayjs();
+  const { currentDate, substractDate, startOf, endOf, getDifference, isFullMonth, isToday, isBefore } = useDayjs();
   const { dayPresets, monthPresets } = options || {};
 
   const { formatMonth, defaultT, formatDate } = await useI18next();
@@ -85,6 +89,9 @@ export async function useDatePresets(options?: {
         } else if (isToday.value(end)) {
           const duration = getDifference.value(start, end, "day");
           return defaultT.value("LastXDays", "Last {{duration}} days", { duration });
+        } else if (isBefore.value(start, new Date("01-01-1900")) || isBefore.value(end, new Date("01-01-1900"))) {
+          // Check if the start date is before "01-01-1900", which we consider forever
+          return options?.foreverLabel ?? defaultT.value("Forever", "Forever");
         } else {
           return formatDateRange(start, end);
         }
@@ -97,6 +104,11 @@ export async function useDatePresets(options?: {
   function formatDateRange(start: Date, end: Date): string {
     // Format the dates to a readable format
     const result = [formatDate.value(start), formatDate.value(end)];
+
+    // Check if the start date is before "01-01-1900", which we consider forever
+    if (isBefore.value(start, new Date("01-01-1900")) || isBefore.value(end, new Date("01-01-1900"))) {
+      return options?.foreverLabel ?? defaultT.value("Forever", "Forever");
+    }
 
     // Join the dates with a dash
     return result.join(" - ");
