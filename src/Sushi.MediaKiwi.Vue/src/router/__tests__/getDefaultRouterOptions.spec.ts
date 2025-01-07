@@ -14,11 +14,13 @@ describe("RouteGenerator", () => {
   });
   it("Should return custom routes items", () => {
     // arrange
-    const routerOptions = getDefaultRouterOptions([{
-      path: "/Test",
-      name: "Test",
-      component: defineComponent({ template: "<div>Test</div>" }),
-    }]);
+    const routerOptions = getDefaultRouterOptions([
+      {
+        path: "/Test",
+        name: "Test",
+        component: defineComponent({ template: "<div>Test</div>" }),
+      },
+    ]);
 
     // assert
     expect(routerOptions.routes).toHaveLength(4); // signin, loginRedirect, root, Test
@@ -26,19 +28,24 @@ describe("RouteGenerator", () => {
   });
   it("Should return parsed query", () => {
     // arrange
-    const routerOptions = getDefaultRouterOptions([{
-      path: "/Test",
-      name: "Test",
-      component: defineComponent({ template: "<div>Test</div>" }),
-    }], true);
+    const routerOptions = getDefaultRouterOptions(
+      [
+        {
+          path: "/Test",
+          name: "Test",
+          component: defineComponent({ template: "<div>Test</div>" }),
+        },
+      ],
+      true
+    );
 
-    const res = routerOptions?.parseQuery ? routerOptions.parseQuery("test[]=1") : {};
-    const res2 = routerOptions?.parseQuery ? routerOptions.parseQuery("test[]=1&test[]=2") : {};
+    const res = routerOptions.parseQuery!("test[]=1");
+    const res2 = routerOptions.parseQuery!("test[]=1&test[]=2");
 
     // assert
     expect(res).toBeDefined(); // signin, loginRedirect, root, Test
-    expect(res?.test?.length).toBe(1); // test should be an array with 1 item
+    expect(res.test!.length).toBe(1); // test should be an array with 1 item
     expect(res2).toBeDefined();
-    expect(res2?.test?.length).toBe(2); // test should be an array with 2 items
+    expect(res2!.test!.length).toBe(2); // test should be an array with 2 items
   });
 });
