@@ -4,7 +4,7 @@ import LoginRedirect from "@/views/LoginRedirect.vue";
 import QueryString from "qs";
 
 /** Creates default router options based on provided modules. */
-export function getDefaultRouterOptions(customRoutes?: RouteRecordRaw[], parseQueryArray?: boolean): RouterOptions {
+export function getDefaultRouterOptions(customRoutes?: RouteRecordRaw[], parseQueryStringArray?: boolean): RouterOptions {
   // create routes
   const routes = <RouteRecordRaw[]>[];
 
@@ -39,7 +39,7 @@ export function getDefaultRouterOptions(customRoutes?: RouteRecordRaw[], parseQu
     },
   };
   // query parsing functions when parseQueryArray is true
-  if (parseQueryArray) {
+  if (parseQueryStringArray) {
     routerOptions = <RouterOptions>{
       ...routerOptions,
       parseQuery: function (search: string): LocationQuery {
