@@ -1,5 +1,5 @@
 import { computed } from "vue";
-import { DateRange } from "@/models/ranges/DateRange";
+import { DateRange } from "@/models/ranges";
 import { useDayjs } from "./useDayjs";
 import { useI18next } from "./useI18next";
 
@@ -94,12 +94,11 @@ export async function useDatePresets(options?: {
     return "";
   }
 
-  function formatDateRange(start: Date, end: Date): string {
+  function formatDateRange(start: Date, end: Date, title?: string): string {
     // Format the dates to a readable format
     const result = [formatDate.value(start), formatDate.value(end)];
-
-    // Join the dates with a dash
-    return result.join(" - ");
+    
+    return title ?? result.join(" - ");
   }
 
   return {
