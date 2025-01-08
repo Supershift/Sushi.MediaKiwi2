@@ -11,7 +11,7 @@ Will also save the full uri to pinia, so it can be used in certain 'back' scenar
 
 Please note that this function currently does not support nesting.
 */
-export default function useFilterInQuery<T>(
+export function useFilterInQuery<T>(
   filtersModel?: Ref<TableFilter>,
   pagingModel?: Ref<Paging>,
   sortingModel?: Ref<Sorting<T>>,
