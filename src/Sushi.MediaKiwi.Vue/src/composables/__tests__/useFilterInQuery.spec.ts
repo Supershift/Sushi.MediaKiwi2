@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import useFilterInQuery from '@/composables/useFilterInQuery';
+import { useFilterInQuery } from '@/composables/useFilterInQuery';
 import { ref } from 'vue';
 import { TableFilter, Paging, Sorting, SortDirection, Locale } from '@/models';
 
