@@ -11,11 +11,7 @@ Will also save the full uri to pinia, so it can be used in certain 'back' scenar
 
 Please note that this function currently does not support nesting.
 */
-export function useFilterInQuery<T>(
-  filtersModel?: Ref<TableFilter>,
-  pagingModel?: Ref<Paging>,
-  sortingModel?: Ref<Sorting<T>>,
-) {
+export function useFilterInQuery<T>(filtersModel?: Ref<TableFilter>, pagingModel?: Ref<Paging>, sortingModel?: Ref<Sorting<T>>) {
   const mediakiwiStore = useMediakiwiStore();
   const router = useRouter();
   const route = useRoute();
@@ -28,35 +24,15 @@ export function useFilterInQuery<T>(
       updateQueryWithValue(query, name, filterValue);
     }
 
-    updateQueryWithValue(
-      query,
-      "pageIndex",
-      pagingModel?.value.pageIndex?.toString(),
-    );
-    updateQueryWithValue(
-      query,
-      "pageSize",
-      pagingModel?.value.pageSize?.toString(),
-    );
-    updateQueryWithValue(
-      query,
-      "sortBy",
-      sortingModel?.value.sortBy?.toString(),
-    );
-    updateQueryWithValue(
-      query,
-      "sortDirection",
-      sortingModel?.value.sortDirection?.toString(),
-    );
+    updateQueryWithValue(query, "pageIndex", pagingModel?.value.pageIndex?.toString());
+    updateQueryWithValue(query, "pageSize", pagingModel?.value.pageSize?.toString());
+    updateQueryWithValue(query, "sortBy", sortingModel?.value.sortBy?.toString());
+    updateQueryWithValue(query, "sortDirection", sortingModel?.value.sortDirection?.toString());
 
     return Object.fromEntries(query);
   };
 
-  const updateQueryWithValue = (
-    query: Map<string, string | null | undefined>,
-    name: string,
-    value: string | undefined,
-  ) => {
+  const updateQueryWithValue = (query: Map<string, string | null | undefined>, name: string, value: string | undefined) => {
     if (value) {
       query.set(name, value);
     } else {
@@ -81,8 +57,7 @@ export function useFilterInQuery<T>(
 
   const configureBackControl = () => {
     if (
-      Object.values(filtersModel?.value ?? []).filter((f) => !!f.selectedValue)
-        .length !== 0 ||
+      Object.values(filtersModel?.value ?? []).filter((f) => !!f.selectedValue).length !== 0 ||
       pagingModel?.value.pageIndex !== 0 ||
       pagingModel?.value.pageSize !== 0 ||
       sortingModel?.value.sortBy ||
@@ -98,38 +73,30 @@ export function useFilterInQuery<T>(
   };
 
   const loadFromQuery = () => {
-    const query = queryToMap();
+    const query = route.query;
 
     for (const filterName in filtersModel?.value) {
-      if (query.has(filterName)) {
-        const filterValue = query.get(filterName);
-
-        const option = filtersModel.value[filterName].options?.find(
-          (x) => x.value.toString() == filterValue,
-        );
-
-        filtersModel.value[filterName].selectedValue = option
-          ? option
-          : { value: filterValue };
+      if (filterName in query) {
+        const filterValue = query[filterName];
+        const option = filtersModel.value[filterName].options?.find((x) => x.value.toString() == filterValue);
+        filtersModel.value[filterName].selectedValue = option ? option : { value: filterValue };
       }
     }
 
-    if (pagingModel && query.has("pageIndex")) {
-      pagingModel.value.pageIndex = parseInt(query.get("pageIndex") ?? "0");
+    if (pagingModel && "pageIndex" in query) {
+      pagingModel.value.pageIndex = parseInt((query["pageIndex"] as string) ?? "0");
     }
 
-    if (pagingModel && query.has("pageSize")) {
-      pagingModel.value.pageSize = parseInt(query.get("pageSize") ?? "0");
+    if (pagingModel && "pageSize" in query) {
+      pagingModel.value.pageSize = parseInt((query["pageSize"] as string) ?? "0");
     }
 
-    if (sortingModel && query.has("sortBy")) {
-      sortingModel.value.sortBy = query.get("sortBy") as keyof T;
+    if (sortingModel && "sortBy" in query) {
+      sortingModel.value.sortBy = query["sortBy"] as keyof T;
     }
 
-    if (sortingModel && query.has("sortDirection")) {
-      sortingModel.value.sortDirection = query.get(
-        "sortDirection",
-      ) as SortDirection;
+    if (sortingModel && "sortDirection" in query) {
+      sortingModel.value.sortDirection = query["sortDirection"] as SortDirection;
     }
     configureBackControl();
   };

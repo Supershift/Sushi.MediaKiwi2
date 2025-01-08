@@ -100,7 +100,7 @@
 
   async function LoadData() {
     // get the data, using the sorting option
-    const result = await sampleDataConnector.GetAll(filters.value.country.selectedValue?.value, state.selectedSortOption);
+    const result = await sampleDataConnector.GetAll(filters.value.country.selectedValue?.value, sorting.value);
     state.sampleData.result = result;
     // pagination and display options will only display when pageCount is not 0 !!!
     state.sampleData.pageCount = 1;
