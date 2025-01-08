@@ -7,7 +7,7 @@
   import { SampleDataConnector } from "@sample/services/SampleDataConnector";
   import { container } from "tsyringe";
   import { ICustomer } from "./../models/Customer";
-  import { useI18next } from "@/composables";
+  import { useI18next, useFilterInQuery } from "@/composables";
 
   // inject dependencies
   const sampleDataConnector = container.resolve(SampleDataConnector);
@@ -18,11 +18,13 @@
     pageIndex: 0,
   });
 
+  // create a sorting option object with a default value
+  const sorting = ref<Sorting>({
+    sortBy: "id",
+    sortDirection: SortDirection.Desc,
+  });
+
   const state = reactive({
-    selectedSortOption: <Sorting<SampleData>>{
-      sortBy: "id",
-      sortDirection: SortDirection.Desc,
-    },
     selectedTableRows: <SampleData[]>[],
     sampleData: <IListResult<SampleData>>{},
     refData: <ICustomer>{
@@ -78,9 +80,11 @@
         { title: "Nederland", value: "NL" },
         { title: "België", value: "BE" },
       ],
-      type: TableFilterType.SelectMultipleCheckbox,
+      type: TableFilterType.MultiSelect,
     },
   });
+
+  useFilterInQuery(filters, currentPagination, sorting);
 
   function download() {
     alert("Download: " + state.selectedTableRows.length);
@@ -116,7 +120,7 @@
 
 <template>
   <MkTable
-    v-model:sorting="state.selectedSortOption"
+    v-model:sorting="sorting"
     v-model:selection="state.selectedTableRows"
     v-model:filters="filters"
     v-model:current-pagination="currentPagination"
@@ -140,10 +144,10 @@
     </template>
 
     <template #thead>
-      <mk-th v-model:sorting="state.selectedSortOption" sorting-key="id">Id</mk-th>
-      <mk-th v-model:sorting="state.selectedSortOption" sorting-key="name">Name</mk-th>
-      <mk-th v-model:sorting="state.selectedSortOption" sorting-key="countryName">Country of origin</mk-th>
-      <mk-th v-model:sorting="state.selectedSortOption" sorting-key="date">Last seen</mk-th>
+      <mk-th v-model:sorting="sorting" sorting-key="id">Id</mk-th>
+      <mk-th v-model:sorting="sorting" sorting-key="name">Name</mk-th>
+      <mk-th v-model:sorting="sorting" sorting-key="countryName">Country of origin</mk-th>
+      <mk-th v-model:sorting="sorting" sorting-key="date">Last seen</mk-th>
       <MkTh>Checked</MkTh>
     </template>
 
