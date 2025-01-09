@@ -78,7 +78,7 @@ export function useFilterInQuery<T>(filtersModel?: Ref<TableFilter>, pagingModel
     for (const filterName in filtersModel?.value) {
       if (filterName in query) {
         const filterValue = query[filterName];
-        const option = filtersModel.value[filterName].options?.find((x) => x.value.toString() == filterValue);
+        const option = filtersModel.value[filterName].options?.find((x) => x.value.toString() == filterValue!.toString());
         filtersModel.value[filterName].selectedValue = option ? option : { value: filterValue };
       }
     }
