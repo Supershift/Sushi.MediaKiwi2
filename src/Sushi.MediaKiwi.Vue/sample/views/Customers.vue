@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import SampleSideSheet from "./../components/SampleSideSheet.vue";
   import { reactive, ref } from "vue";
-  import { TableFilter, Sorting, Paging, TableFilterType, SortDirection, IconsLibrary, TableColumn, IListResult } from "@/models";
+  import { TableFilter, Sorting, Paging, TableFilterType, SortDirection, IconsLibrary, TableColumn, IListResult, DateRange } from "@/models";
   import { MkTable, MkOverflowMenuIcon, MkTd, MkTh } from "@/components";
   import type { SampleData } from "@sample/models/SampleData";
   import { SampleDataConnector } from "@sample/services/SampleDataConnector";
@@ -12,6 +12,8 @@
   // inject dependencies
   const sampleDataConnector = container.resolve(SampleDataConnector);
   const { formatDate } = await useI18next();
+
+  const currentYear = new Date().getFullYear();
 
   // define state
   const currentPagination = ref<Paging>({
@@ -69,6 +71,12 @@
     dates: {
       title: "Dates",
       type: TableFilterType.DateRange,
+      options: [
+        { title: `Q1 ${currentYear}`, value: getQuarter("Q1") },
+        { title: `Q2 ${currentYear}`, value: getQuarter("Q2") },
+        { title: `Q3 ${currentYear}`, value: getQuarter("Q3") },
+        { title: `Q4 ${currentYear}`, value: getQuarter("Q4") }
+      ],
     },
     date: {
       title: "Date",
@@ -83,6 +91,35 @@
       type: TableFilterType.MultiSelect,
     },
   });
+
+  function getQuarter(quarterTitle: string) : DateRange {
+
+    //if you are using current year 
+    const todayDate = new Date();
+
+    let startMonth = todayDate.getMonth();
+    let startDay = 1;
+
+    let endMonth = todayDate.getMonth();
+    let endDay = 0;
+
+    switch(quarterTitle) {
+      case "Q1" : startMonth = 0; endMonth = 2; endDay = 31; break;
+      case "Q2" : startMonth = 3; endMonth = 5; endDay = 30; break;
+      case "Q3" : startMonth = 6; endMonth = 8; endDay = 30; break;
+      case "Q4" : startMonth = 9; endMonth = 11; endDay = 31; break;
+    }
+
+    todayDate.setMonth(startMonth);
+    todayDate.setDate(startDay);
+    const startDate = new Date(todayDate);
+
+    todayDate.setMonth(endMonth);
+    todayDate.setDate(endDay);
+    const endDate = new Date(todayDate);
+
+    return { start: startDate, end: endDate } as DateRange;
+  }
 
   useFilterInQuery(filters, currentPagination, sorting);
 
