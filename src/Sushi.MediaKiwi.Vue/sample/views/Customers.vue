@@ -117,11 +117,11 @@
 
   // setup date range label and title
   const dataRangeLabel = computed<string>(() => {
-    const dateRange = dateRangeFilter.value!.dateRange!.selectedValue!.value;
+    const dateRange = dateRangeFilter.value.dateRange.selectedValue!.value;
     return formatDateRange(dateRange[0], dateRange[1]);
   });
-  if (!dateRangeFilter.value!.dateRange!.selectedValue!.title) {
-    dateRangeFilter!.value!.dateRange!.selectedValue!.title = dataRangeLabel.value;
+  if (!dateRangeFilter.value.dateRange.selectedValue!.title) {
+    dateRangeFilter.value.dateRange.selectedValue!.title = dataRangeLabel.value;
   }
 
   function download() {
@@ -156,7 +156,7 @@
   }
 
   // watch to close, othermethods not working
-  watch(dateRangeFilter.value, () => {
+  watch(dateRangeFilter, () => {
     state.openPreselectMenu = false;
   });
 </script>
@@ -165,7 +165,7 @@
   <div class="d-flex flex-row text-start align-start on-surface">
     <div class="flex-column">
       <v-select
-        v-model="dateRangeFilter.dateRange!.selectedValue!"
+        v-model="dateRangeFilter.dateRange!.selectedValue"
         item-title="title"
         item-value="value"
         :label="dataRangeLabel"
