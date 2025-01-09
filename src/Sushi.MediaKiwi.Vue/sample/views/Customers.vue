@@ -97,6 +97,10 @@
       options: [
         { title: "Nederland", value: "NL" },
         { title: "België", value: "BE" },
+        { title: "Duitsland", value: "DE" },
+        { title: "Amerika", value: "US" },
+        { title: "Frankrijk", value: "FR" },
+        { title: "Polen", value: "PL" },
       ],
       type: TableFilterType.MultiSelect,
     },

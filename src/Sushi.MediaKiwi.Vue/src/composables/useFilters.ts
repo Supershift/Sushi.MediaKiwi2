@@ -16,12 +16,7 @@ export async function useFilters(useI18next: ReturnType<typeof useI18nextComposa
    */
   function getFormatterFilterValue(tableFilterItem: TableFilterItem) {
     const value = tableFilterItem.selectedValue?.value;
-    const title = tableFilterItem.selectedValue?.title;
-
-    if (title) {
-      return title;
-    }
-
+ 
     if (!value) {
       return;
     }
