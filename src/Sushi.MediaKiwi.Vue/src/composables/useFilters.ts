@@ -36,7 +36,7 @@ export async function useFilters(useI18next: ReturnType<typeof useI18nextComposa
         return selectedOption?.title || "";
       }
       case TableFilterType.MultiSelect:
-      case TableFilterType.SelectMultipleCheckbox:
+      case TableFilterType.SelectMultipleCheckbox: 
       case TableFilterType.SelectMultiple: {
         const selectedOptions = tableFilterItem.options?.filter((o) => value?.includes(o.value));
         return selectedOptions?.map((o) => o.title).join(", ");

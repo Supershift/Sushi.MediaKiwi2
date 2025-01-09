@@ -1,13 +1,23 @@
 <script setup lang="ts">
-  import { TableFilterItem, TableFilterValue } from "@/models";
-  import { ref } from "vue";
+  import { DateRange, TableFilterItem, TableFilterValue, TitledDateRange } from "@/models";
+  import { computed, ref } from "vue";
   import { MkDatePresetMenu } from "../MkDatePresetMenu";
 
-  defineProps<{
+  const props = defineProps<{
     tableFilterItem: TableFilterItem;
   }>();
 
   const modelValue = defineModel<TableFilterValue>({ required: true });
+
+  const customDateRangeOptions = computed(() => {
+    return props.tableFilterItem.options?.map((x) => {
+      return {
+        title: x.title,
+        start: (x.value as DateRange).start,
+        end: (x.value as DateRange).end,
+      } as TitledDateRange;
+    });
+  });
 
   const emit = defineEmits<{
     (e: "click:close"): void;
@@ -22,7 +32,12 @@
 </script>
 
 <template>
-  <MkDatePresetMenu v-model="model" date-picker-class="mk-table-filter__item" @update:model-value="applyFilter" :datePickerTitle="tableFilterItem.inputLabel" />
+  <MkDatePresetMenu 
+    v-model="model" 
+    date-picker-class="mk-table-filter__item" 
+    @update:model-value="applyFilter" 
+    :datePickerTitle="tableFilterItem.inputLabel"
+    :customOptions="customDateRangeOptions" />
 </template>
 
 <style>
