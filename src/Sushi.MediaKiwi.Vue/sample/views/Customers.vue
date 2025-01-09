@@ -1,17 +1,26 @@
 <script setup lang="ts">
   import SampleSideSheet from "./../components/SampleSideSheet.vue";
-  import { reactive, ref } from "vue";
-  import { TableFilter, Sorting, Paging, TableFilterType, SortDirection, IconsLibrary, TableColumn, IListResult, DateRange } from "@/models";
-  import { MkTable, MkTableFilter, MkOverflowMenuIcon, MkTd, MkTh } from "@/components";
+  import { reactive, ref, watch, computed } from "vue";
+  import { TableFilter, Sorting, Paging, TableFilterType, SortDirection, IconsLibrary, TableColumn, IListResult, DateRange, TableFilterValue } from "@/models";
+  import { MkTable, MkOverflowMenuIcon, MkTd, MkTh } from "@/components";
   import type { SampleData } from "@sample/models/SampleData";
   import { SampleDataConnector } from "@sample/services/SampleDataConnector";
   import { container } from "tsyringe";
   import { ICustomer } from "./../models/Customer";
-  import { useI18next, useFilterInQuery } from "@/composables";
+  import { useI18next, useFilterInQuery, useDatePresets } from "@/composables";
+  import MkDatePresetMenu from "@/components/MkDatePresetMenu/MkDatePresetMenu.vue";
 
   // inject dependencies
   const sampleDataConnector = container.resolve(SampleDataConnector);
   const { formatDate } = await useI18next();
+
+  const dayPresets = [7, 28, 90, 365];
+  const monthPresets = [0, 1];
+
+  const { presets, formatPreset, formatDateRange } = await useDatePresets({
+    dayPresets,
+    monthPresets,
+  });
 
   const currentYear = new Date().getFullYear();
 
@@ -38,6 +47,7 @@
     },
     selectedCustomerId: 0,
     showCustomerSideSheet: false,
+    openPreselectMenu: <boolean>false,
   });
 
   // define filters
@@ -75,7 +85,7 @@
         { title: `Q1 ${currentYear}`, value: getQuarter("Q1") },
         { title: `Q2 ${currentYear}`, value: getQuarter("Q2") },
         { title: `Q3 ${currentYear}`, value: getQuarter("Q3") },
-        { title: `Q4 ${currentYear}`, value: getQuarter("Q4") }
+        { title: `Q4 ${currentYear}`, value: getQuarter("Q4") },
       ],
     },
     date: {
@@ -96,9 +106,38 @@
     },
   });
 
-  function getQuarter(quarterTitle: string) : DateRange {
+  // setup date range filter
+  const dateOptions = [...presets.value.days, ...presets.value.months].map((o) => {
+    return { title: formatPreset([o.start, o.end]), value: [o.start, o.end] };
+  });
+  const dateRangeFilter = ref<TableFilter>({
+    dateRange: {
+      title: "",
+      selectedValue: { title: dateOptions[1].title, value: dateOptions[1].value },
+      options: dateOptions.map((o) => {
+        return {
+          title: o.title,
+          value: o.value.map((a) => a.toISOString()), // needs to be iso so it can play nice with url values
+        };
+      }),
+    },
+  });
 
-    //if you are using current year 
+  // keep filters and query params in sync
+  const allFilters = ref<TableFilter>({ ...filters.value, ...dateRangeFilter.value });
+  useFilterInQuery(allFilters, currentPagination, sorting);
+
+  // setup date range label and title
+  const dataRangeLabel = computed<string>(() => {
+    const dateRange = dateRangeFilter.value.dateRange.selectedValue!.value;
+    return formatDateRange(dateRange[0], dateRange[1]);
+  });
+  if (!dateRangeFilter.value.dateRange.selectedValue!.title) {
+    dateRangeFilter.value.dateRange.selectedValue!.title = dataRangeLabel.value;
+  }
+
+  function getQuarter(quarterTitle: string): DateRange {
+    //if you are using current year
     const todayDate = new Date();
 
     let startMonth = todayDate.getMonth();
@@ -107,11 +146,27 @@
     let endMonth = todayDate.getMonth();
     let endDay = 0;
 
-    switch(quarterTitle) {
-      case "Q1" : startMonth = 0; endMonth = 2; endDay = 31; break;
-      case "Q2" : startMonth = 3; endMonth = 5; endDay = 30; break;
-      case "Q3" : startMonth = 6; endMonth = 8; endDay = 30; break;
-      case "Q4" : startMonth = 9; endMonth = 11; endDay = 31; break;
+    switch (quarterTitle) {
+      case "Q1":
+        startMonth = 0;
+        endMonth = 2;
+        endDay = 31;
+        break;
+      case "Q2":
+        startMonth = 3;
+        endMonth = 5;
+        endDay = 30;
+        break;
+      case "Q3":
+        startMonth = 6;
+        endMonth = 8;
+        endDay = 30;
+        break;
+      case "Q4":
+        startMonth = 9;
+        endMonth = 11;
+        endDay = 31;
+        break;
     }
 
     todayDate.setMonth(startMonth);
@@ -124,8 +179,6 @@
 
     return { start: startDate, end: endDate } as DateRange;
   }
-
-  useFilterInQuery(filters, currentPagination, sorting);
 
   function download() {
     alert("Download: " + state.selectedTableRows.length);
@@ -157,9 +210,44 @@
     state.selectedCustomerId = value.id;
     state.showCustomerSideSheet = true;
   }
+
+  // watch to close, othermethods not working
+  watch(
+    dateRangeFilter,
+    () => {
+      state.openPreselectMenu = false;
+    },
+    { deep: true }
+  );
 </script>
 
 <template>
+  <div class="d-flex flex-row text-start align-start on-surface">
+    <div class="flex-column">
+      <v-select
+        v-model="dateRangeFilter.dateRange!.selectedValue"
+        item-title="title"
+        item-value="value"
+        :label="dataRangeLabel"
+        hide-details
+        readonly
+        :width="350"
+        @click="state.openPreselectMenu = !state.openPreselectMenu"
+      />
+      <MkDatePresetMenu
+        v-show="state.openPreselectMenu"
+        v-model="dateRangeFilter.dateRange!.selectedValue!"
+        elevation="3"
+        item-title="title"
+        item-value="value"
+        :days="dayPresets"
+        :months="monthPresets"
+        hide-details
+        date-picker-title="date range picker title"
+      />
+    </div>
+  </div>
+
   <MkTable
     v-model:sorting="sorting"
     v-model:selection="state.selectedTableRows"
