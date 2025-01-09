@@ -95,10 +95,13 @@ export async function useDatePresets(options?: {
   }
 
   function formatDateRange(start: Date, end: Date, title?: string): string {
+    if (title) {
+      return title;
+    }
+
     // Format the dates to a readable format
     const result = [formatDate.value(start), formatDate.value(end)];
-    
-    return title ?? result.join(" - ");
+    return result.join(" - ");
   }
 
   return {

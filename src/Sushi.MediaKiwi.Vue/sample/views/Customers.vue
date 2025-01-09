@@ -72,10 +72,10 @@
       title: "Dates",
       type: TableFilterType.DateRange,
       options: [
-        { title: "Q1 " + currentYear, value: getQuarter("Q1") },
-        { title: "Q2 " + currentYear, value: getQuarter("Q2") },
-        { title: "Q3 " + currentYear, value: getQuarter("Q3") },
-        { title: "Q4 " + currentYear, value: getQuarter("Q4") }
+        { title: `Q1 ${currentYear}`, value: getQuarter("Q1") },
+        { title: `Q2 ${currentYear}`, value: getQuarter("Q2") },
+        { title: `Q3 ${currentYear}`, value: getQuarter("Q3") },
+        { title: `Q4 ${currentYear}`, value: getQuarter("Q4") }
       ],
     },
     date: {
