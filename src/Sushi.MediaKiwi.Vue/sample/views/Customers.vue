@@ -1,17 +1,26 @@
 <script setup lang="ts">
   import SampleSideSheet from "./../components/SampleSideSheet.vue";
-  import { reactive, ref } from "vue";
-  import { TableFilter, Sorting, Paging, TableFilterType, SortDirection, IconsLibrary, TableColumn, IListResult } from "@/models";
+  import { reactive, ref, watch, computed } from "vue";
+  import { TableFilter, Sorting, Paging, TableFilterType, SortDirection, IconsLibrary, TableColumn, IListResult, TableFilterValue } from "@/models";
   import { MkTable, MkOverflowMenuIcon, MkTd, MkTh } from "@/components";
   import type { SampleData } from "@sample/models/SampleData";
   import { SampleDataConnector } from "@sample/services/SampleDataConnector";
   import { container } from "tsyringe";
   import { ICustomer } from "./../models/Customer";
-  import { useI18next, useFilterInQuery } from "@/composables";
+  import { useI18next, useFilterInQuery, useDatePresets } from "@/composables";
+  import MkDatePresetMenu from "@/components/MkDatePresetMenu/MkDatePresetMenu.vue";
 
   // inject dependencies
   const sampleDataConnector = container.resolve(SampleDataConnector);
   const { formatDate } = await useI18next();
+
+  const dayPresets = [7, 28, 90, 365];
+  const monthPresets = [0, 1];
+
+  const { presets, formatPreset, formatDateRange } = await useDatePresets({
+    dayPresets,
+    monthPresets,
+  });
 
   // define state
   const currentPagination = ref<Paging>({
@@ -36,6 +45,7 @@
     },
     selectedCustomerId: 0,
     showCustomerSideSheet: false,
+    openPreselectMenu: <boolean>false,
   });
 
   // define filters
@@ -84,7 +94,35 @@
     },
   });
 
-  useFilterInQuery(filters, currentPagination, sorting);
+  // setup date range filter
+  const dateOptions = [...presets.value.days, ...presets.value.months].map((o) => {
+    return { title: formatPreset([o.start, o.end]), value: [o.start, o.end] };
+  });
+  const dateRangeFilter = ref<TableFilter>({
+    dateRange: {
+      title: "",
+      selectedValue: { title: dateOptions[1].title, value: dateOptions[1].value },
+      options: dateOptions.map((o) => {
+        return {
+          title: o.title,
+          value: o.value.map((a) => a.toISOString()), // needs to be iso so it can play nice with url values
+        };
+      }),
+    },
+  });
+
+  // keep filters and query params in sync
+  const allFilters = ref<TableFilter>({ ...filters.value, ...dateRangeFilter.value });
+  useFilterInQuery(allFilters, currentPagination, sorting);
+
+  // setup date range label and title
+  const dataRangeLabel = computed<string>(() => {
+    const dateRange = dateRangeFilter.value!.dateRange!.selectedValue!.value;
+    return formatDateRange(dateRange[0], dateRange[1]);
+  });
+  if (!dateRangeFilter.value!.dateRange!.selectedValue!.title) {
+    dateRangeFilter!.value!.dateRange!.selectedValue!.title = dataRangeLabel.value;
+  }
 
   function download() {
     alert("Download: " + state.selectedTableRows.length);
@@ -116,9 +154,40 @@
     state.selectedCustomerId = value.id;
     state.showCustomerSideSheet = true;
   }
+
+  // watch to close, othermethods not working
+  watch(dateRangeFilter.value, () => {
+    state.openPreselectMenu = false;
+  });
 </script>
 
 <template>
+  <div class="d-flex flex-row text-start align-start on-surface">
+    <div class="flex-column">
+      <v-select
+        v-model="dateRangeFilter.dateRange!.selectedValue!"
+        item-title="title"
+        item-value="value"
+        :label="dataRangeLabel"
+        hide-details
+        readonly
+        :width="350"
+        @click="state.openPreselectMenu = !state.openPreselectMenu"
+      />
+      <MkDatePresetMenu
+        v-show="state.openPreselectMenu"
+        v-model="dateRangeFilter.dateRange!.selectedValue!"
+        elevation="3"
+        item-title="title"
+        item-value="value"
+        :days="dayPresets"
+        :months="monthPresets"
+        hide-details
+        date-picker-title="date range picker title"
+      />
+    </div>
+  </div>
+
   <MkTable
     v-model:sorting="sorting"
     v-model:selection="state.selectedTableRows"
