@@ -208,9 +208,13 @@
   }
 
   // watch to close, othermethods not working
-  watch(dateRangeFilter, () => {
-    state.openPreselectMenu = false;
-  });
+  watch(
+    dateRangeFilter,
+    () => {
+      state.openPreselectMenu = false;
+    },
+    { deep: true }
+  );
 </script>
 
 <template>
