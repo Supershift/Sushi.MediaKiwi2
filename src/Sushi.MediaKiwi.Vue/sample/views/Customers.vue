@@ -2,7 +2,7 @@
   import SampleSideSheet from "./../components/SampleSideSheet.vue";
   import { reactive, ref } from "vue";
   import { TableFilter, Sorting, Paging, TableFilterType, SortDirection, IconsLibrary, TableColumn, IListResult, DateRange } from "@/models";
-  import { MkTable, MkOverflowMenuIcon, MkTd, MkTh } from "@/components";
+  import { MkTable, MkTableFilter, MkOverflowMenuIcon, MkTd, MkTh } from "@/components";
   import type { SampleData } from "@sample/models/SampleData";
   import { SampleDataConnector } from "@sample/services/SampleDataConnector";
   import { container } from "tsyringe";
@@ -87,6 +87,10 @@
       options: [
         { title: "Nederland", value: "NL" },
         { title: "België", value: "BE" },
+        { title: "Duitsland", value: "DE" },
+        { title: "Amerika", value: "US" },
+        { title: "Frankrijk", value: "FR" },
+        { title: "Polen", value: "PL" },
       ],
       type: TableFilterType.MultiSelect,
     },
