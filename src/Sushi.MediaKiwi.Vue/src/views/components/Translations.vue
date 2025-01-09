@@ -1,11 +1,10 @@
 <script setup lang="ts">
-  import { container } from "tsyringe";
   import { MkTable, MkSideSheet } from "@/components";
   import { ref, reactive } from "vue";
   import { ListResult, Paging, TableFilter, TableFilterType, TableFilterValue, TableMap, Translation } from "@/models";
   import { useI18next } from "@/composables";
   import { useSnackbarStore } from "@/stores/snackbar";
-  import { Api } from "@/services";
+  import { useMediaKiwiApi } from "@/services";
 
   // define properties
   const props = defineProps({
@@ -17,7 +16,7 @@
   });
 
   // inject dependencies
-  const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
+  const mediaKiwiApi = useMediaKiwiApi();
   const { defaultT } = await useI18next();
   const snackbar = useSnackbarStore();
 
@@ -141,7 +140,7 @@
     </template>
     <template #footer>
       <v-btn @click="onSave">{{ defaultT("Save") }}</v-btn>
-      <v-btn @click="state.showEditTranslation = false">{{ defaultT("Close") }}</v-btn>
+      <v-btn @click="(state.showEditTranslation = false)">{{ defaultT("Close") }}</v-btn>
     </template>
   </mk-side-sheet>
 </template>

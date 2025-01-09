@@ -2,16 +2,15 @@
   import { MkTable } from "@/components";
   import { useI18next, useKeyboardShortcuts } from "@/composables";
   import { ListResult, Paging, KeyboardShortcutCollection } from "@/models";
-  import { container } from "tsyringe";
   import { reactive } from "vue";
   import { onDeactivated } from "vue";
   import { ref } from "vue";
   import AddCountry from "./AddCountry.vue";
-  import { Api, Country } from "@sample/services";
+  import { useSampleApi, Country } from "@sample/services";
 
   // inject dependencies
   const { addKeyboardShortcuts, removeKeyboardShortcuts } = useKeyboardShortcuts();
-  const { sample: sampleApi } = container.resolve<Api<any>>("SampleApi");
+  const sampleApi = useSampleApi();
   const { t } = await useI18next();
 
   // define reactive variables

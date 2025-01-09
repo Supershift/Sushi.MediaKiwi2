@@ -1,18 +1,17 @@
 <script setup lang="ts">
   import { ref } from "vue";
-  import { container } from "tsyringe";
   import { ListResult, Paging, SectionDto, TableMap } from "@/models";
   import { MkTable } from "@/components";
   import { useColors, useTypography, useElevations } from "@/composables";
   import { IconsLibrary } from "@/models";
-  import { Api } from "@/services";
+  import { useMediaKiwiApi } from "@/services";
 
   const { colors, variants, cssVariables, variables, getColorBackgroundClasses } = useColors(); //getColorValue
   const { typographyItems, getTypographyClasses } = useTypography();
   const { elevations, getElevationClass } = useElevations();
 
   // Table data
-  const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
+  const mediaKiwiApi = useMediaKiwiApi();
   const currentPagination = ref<Paging>({});
   const data = ref<ListResult<SectionDto>>();
   // define mapping

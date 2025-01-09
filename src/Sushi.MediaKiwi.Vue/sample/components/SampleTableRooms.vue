@@ -5,12 +5,11 @@
   import { Paging, TableFilter, TableFilterType, TableFilterValue, TableMap } from "@/models";
   import { useI18next } from "@/composables";
 
-  import { container } from "tsyringe";
   import { ref } from "vue";
-  import { Api, Country } from "@sample/services";
+  import { useSampleApi, Country } from "@sample/services";
 
   // inject dependencies
-  const { sample: sampleApi } = container.resolve<Api<any>>("SampleApi");
+  const sampleApi = useSampleApi();
   const availableRooms = [
     {
       id: 1,

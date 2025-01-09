@@ -7,10 +7,10 @@
   import { RouterManager } from "@/router/routerManager";
   import { useNavigation } from "@/composables/useNavigation";
   import { useValidationRules } from "@/composables";
-  import { Api } from "@/services";
+  import { useMediaKiwiApi } from "@/services";
 
   // inject dependencies
-  const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
+  const mediaKiwiApi = useMediaKiwiApi();
   const routerManager = container.resolve<RouterManager>("RouterManager");
   const { required } = await useValidationRules();
 

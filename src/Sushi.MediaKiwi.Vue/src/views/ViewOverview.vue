@@ -3,11 +3,10 @@
   import { TableMap, ListResult, Sorting, Paging } from "@/models";
   import { ViewDto } from "@/models";
   import { ref } from "vue";
-  import { container } from "tsyringe";
-  import { Api } from "@/services";
+  import { useMediaKiwiApi } from "@/services";
 
   // inject dependencies
-  const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
+  const mediaKiwiApi = useMediaKiwiApi();
 
   // define reactive variables
   const data = ref<ListResult<ViewDto>>();

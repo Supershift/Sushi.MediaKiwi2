@@ -7,9 +7,9 @@
   import { useValidationRules } from "@/composables";
   import MkFormSideSheet from "@/components/MkForm/MkFormSideSheet.vue";
   import TransferMoneyDialog from "./partials/TransferMoneyDialog.vue";
-  import { Api, AccountDto, DepositMoneyRequest, WithdrawMoneyRequest } from "@sample/services";
+  import { useSampleApi, AccountDto, DepositMoneyRequest, WithdrawMoneyRequest } from "@sample/services";
 
-  const { sample: sampleApi } = container.resolve<Api<any>>("SampleApi");
+  const sampleApi = useSampleApi();
   const navigation = useNavigation();
   const { required } = await useValidationRules();
   const accountNumber = computed<string>(() => navigation.currentViewParameter.value as string);
@@ -63,9 +63,9 @@
 <template>
   <MkForm title="Close Account" @load="onLoad" hide-undo>
     <template #toolbar>
-      <v-btn @click="state.depositSheet = true">Deposit</v-btn>
-      <v-btn @click="state.withdrawSheet = true">Withdraw</v-btn>
-      <v-btn variant="flat" @click="state.transferMoneyDialog = true">Transfer</v-btn>
+      <v-btn @click="(state.depositSheet = true)">Deposit</v-btn>
+      <v-btn @click="(state.withdrawSheet = true)">Withdraw</v-btn>
+      <v-btn variant="flat" @click="(state.transferMoneyDialog = true)">Transfer</v-btn>
     </template>
     <template #overflowIconItems>
       <MkConfirmDialog @confirm="onCloseWithError" body="Are you sure you wan't de close this account">

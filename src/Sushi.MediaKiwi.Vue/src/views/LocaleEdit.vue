@@ -1,14 +1,13 @@
 <script setup lang="ts">
   import { useI18next, useNavigation } from "@/composables";
   import { Locale } from "@/models";
-  import { container } from "tsyringe";
   import { ref } from "vue";
   import { MkForm } from "@/components";
   import Translations from "./components/Translations.vue";
-  import { Api } from "@/services";
+  import { useMediaKiwiApi } from "@/services";
 
   // inject dependencies
-  const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
+  const mediaKiwiApi = useMediaKiwiApi();
   const navigation = useNavigation();
   const { defaultT } = await useI18next();
 

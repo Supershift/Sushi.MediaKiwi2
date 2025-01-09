@@ -2,7 +2,7 @@
   import { MkForm } from "@/components";
   import { reactive, computed } from "vue";
   import { container } from "tsyringe";
-  import { Api } from "@/services";
+  import { useMediaKiwiApi } from "@/services";
   import { SectionDto, IconsLibrary } from "@/models";
   import { RouterManager } from "@/router/routerManager";
   import { useNavigation, useValidationRules } from "@/composables";
@@ -10,7 +10,7 @@
   import { useMediakiwiStore } from "@/stores";
 
   // inject dependencies
-  const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
+  const mediaKiwiApi = useMediaKiwiApi();
   const routerManager = container.resolve<RouterManager>("RouterManager");
 
   const store = useMediakiwiStore();

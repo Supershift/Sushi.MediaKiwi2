@@ -1,12 +1,11 @@
 <script setup lang="ts">
   import { MkForm } from "@/components";
-  import { container } from "tsyringe";
   import { reactive } from "vue";
   import { useValidationRules } from "@/composables";
   import { ErrorProblemDetails, TResult } from "@/models";
-  import { Api } from "@sample/services";
+  import { useSampleApi } from "@sample/services";
 
-  const { sample: sampleApi } = container.resolve<Api<any>>("SampleApi");
+  const sampleApi = useSampleApi();
   const { required, minLength, maxLength, numeric, alphaNumericNoSpace, alphaNumericWithSpace, email } = await useValidationRules();
 
   const state = reactive({

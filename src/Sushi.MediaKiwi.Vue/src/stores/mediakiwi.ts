@@ -6,7 +6,7 @@ import { VuetifyOptions } from "vuetify";
 import { INavigationProvider } from "@/navigation";
 import { NavigationTree } from "@/models/navigation";
 import { RouteLocationRaw } from "vue-router";
-import { Api } from "@/services";
+import { useMediaKiwiApi } from "@/services";
 
 export interface MediaKiwiState {
   navigationTree: NavigationTree;
@@ -47,7 +47,7 @@ export const useMediakiwiStore = defineStore({
       this.navigationTree = await provider.GetTreeAsync();
     },
     async getRoles() {
-      const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
+      const mediaKiwiApi = useMediaKiwiApi();
       const response = await mediaKiwiApi.roles();
       this.setRoles({
         ...response.data,

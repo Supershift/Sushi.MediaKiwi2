@@ -1,13 +1,12 @@
 <script setup lang="ts">
   import { TableMap, Locale, ListResult, Paging } from "@/models";
   import { useI18next } from "@/composables";
-  import { container } from "tsyringe";
   import { ref } from "vue";
   import { MkTable } from "@/components";
-  import { Api } from "@/services";
+  import { useMediaKiwiApi } from "@/services";
 
   // inject dependencies
-  const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
+  const mediaKiwiApi = useMediaKiwiApi();
   const { defaultT } = await useI18next();
 
   // define reactive variables

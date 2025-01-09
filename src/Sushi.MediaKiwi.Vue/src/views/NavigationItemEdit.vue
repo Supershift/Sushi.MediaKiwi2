@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { MkForm } from "@/components";
   import { container } from "tsyringe";
-  import { Api, INavigationConnector } from "@/services";
+  import { useMediaKiwiApi, INavigationConnector } from "@/services";
   import { NavigationItemDto, ViewDto } from "@/models";
   import { useMediakiwiStore } from "@/stores";
   import { RouterManager } from "@/router/routerManager";
@@ -11,7 +11,7 @@
 
   // inject dependencies
   const navigationConnector = container.resolve<INavigationConnector>("INavigationConnector");
-  const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
+  const mediaKiwiApi = useMediaKiwiApi();
   const routerManager = container.resolve<RouterManager>("RouterManager");
   const { required } = await useValidationRules();
 
@@ -105,7 +105,7 @@
       :items="state.views"
       item-title="name"
       item-value="id"
-      :rules="[(v: string|undefined) => !!v]"
+      :rules="[(v: string | undefined) => !!v]"
     ></v-autocomplete>
     <v-text-field v-model="state.navigationItem.icon" label="Icon"></v-text-field>
     <v-text-field v-model="state.navigationItem.sortOrder" label="SortOrder" type="number"></v-text-field>

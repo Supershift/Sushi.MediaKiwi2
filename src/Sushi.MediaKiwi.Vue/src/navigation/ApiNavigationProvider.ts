@@ -1,7 +1,7 @@
 import { NavigationItemDto, SectionDto, ViewDto } from "@/models";
 import { INavigationProvider } from "./INavigationProvider";
 import { container } from "tsyringe";
-import { Api, INavigationConnector } from "@/services";
+import { useMediaKiwiApi, INavigationConnector } from "@/services";
 import { noPageSize } from "@/constants";
 import { NavigationItem, NavigationTree, Section } from "@/models/navigation";
 
@@ -79,13 +79,13 @@ export class ApiNavigationProvider implements INavigationProvider {
         return navigationItems.result;
     }
     async GetSectionsAsync(): Promise<SectionDto[]> {
-        const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
+        const mediaKiwiApi = useMediaKiwiApi();
         const sections = (await mediaKiwiApi.sections({ pageSize: noPageSize })).data;
         return sections.result;
     }
 
     async GetViewsAsync(): Promise<ViewDto[]> {
-        const { mediakiwi: mediaKiwiApi } = container.resolve<Api<any>>("MediaKiwiApi");
+        const mediaKiwiApi = useMediaKiwiApi();
         const response = await mediaKiwiApi.views({ pageSize: noPageSize });
         return response.data.result;
     }

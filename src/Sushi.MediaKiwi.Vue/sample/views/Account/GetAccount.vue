@@ -1,12 +1,11 @@
 <script setup lang="ts">
   import { MkForm } from "@/components";
-  import { container } from "tsyringe";
   import { reactive } from "vue";
   import { useNavigation, useValidationRules } from "@/composables";
   import CreateAccountDialog from "./partials/CreateAccountDialog.vue";
-  import { AccountDto, Api } from "@sample/services";
+  import { AccountDto, useSampleApi } from "@sample/services";
 
-  const { sample: sampleApi } = container.resolve<Api<any>>("SampleApi");
+  const sampleApi = useSampleApi();
   const { required } = await useValidationRules();
   const navigation = useNavigation();
 

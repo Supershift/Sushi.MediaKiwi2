@@ -15,13 +15,12 @@
   import { MkTable, MkTh, MkTd } from "@/components";
   import { useI18next, useFilterInQuery } from "@/composables";
 
-  import { container } from "tsyringe";
   import { ref } from "vue";
   import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
-  import { Api, Country, HotelDto } from "@sample/services";
+  import { useSampleApi, Country, HotelDto } from "@sample/services";
 
   // inject dependencies
-  const { sample: sampleApi } = container.resolve<Api<any>>("SampleApi");
+  const sampleApi = useSampleApi();
   const { formatDateTime, t } = await useI18next();
 
   // define reactive variables
