@@ -42,6 +42,7 @@ const mediakiwiOptions: MediakiwiVueOptions = {
   navigationProvider: navigation,
   msalConfig: <Configuration>{},
   identity: <MediakiwiIdentity>{},
+  parseQueryStringArray: true,
   // import all views as models
   modules: {
     ...import.meta.glob("./views/**/*.vue"),
@@ -73,6 +74,7 @@ const mediakiwiOptions: MediakiwiVueOptions = {
       resetOnSubmit: true,
       closeOnSubmit: true,
     },
+
   },
 };
 

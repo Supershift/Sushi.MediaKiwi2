@@ -5,6 +5,7 @@
   import { DateRange } from "@/models/ranges";
   import { reactive } from "vue";
   import { MkDatePicker } from "../MkDatePicker";
+  import dayjs from "dayjs";
 
   const props = withDefaults(
     defineProps<{
@@ -31,9 +32,9 @@
   const modelValue = defineModel<{ value: any[]; title?: string }>({ required: true });
 
   // Inject dependencies
-  const { isSame } = useDayjs();
+  const { isSame, isBefore } = useDayjs();
   const { defaultT } = await useI18next("MkDatePresetMenu");
-  const { presets, formatPreset } = await useDatePresets({
+  const { presets, formatPreset, formatDateRange } = await useDatePresets({
     dayPresets: props.days,
     monthPresets: props.months,
   });
@@ -51,32 +52,48 @@
   function updateModelValue(value: DateRange): void;
   function updateModelValue(value: any[]): void;
   function updateModelValue(value: DateRange | any[]): void {
-    let startDate, endDate;
+    let startDate, endDate, title;
 
     if (Array.isArray(value)) {
       // Deconstruct the array
-      const [start, end] = value;
-      startDate = start;
-      endDate = end;
+      const [date1, date2] = value;
+      let start, end;
+
+      // determine the start and end date, based on the values, since the order can be the other way around
+      if (isBefore.value(new Date(date1), new Date(date2))) {
+        start = date1;
+        end = date2;
+      } else {
+        start = date2;
+        end = date1;
+      }
+
+      // Convert to dayjs,
+      // Force the start date at the start of the DAY
+      // And the endDate at the end of the DAY
+      startDate = dayjs(start).startOf("day").toDate();
+      endDate = dayjs(end).endOf("day").toDate();
+      title = formatDateRange(startDate, endDate);
     } else {
       // Deconstruct the DateRange
       const { start, end } = value;
       startDate = start;
       endDate = end;
+      title = formatPreset(startDate, endDate);
     }
 
     // Set the value
     state.model.value = [startDate, endDate];
 
     // Set the title
-    state.model.title = formatPreset(startDate, endDate);
+    state.model.title = title;
 
     // Apply the changes
     apply();
   }
 
   function apply() {
-    modelValue.value = state.model;
+    modelValue.value = { ...state.model };
   }
 
   function openDatePicker() {

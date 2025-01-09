@@ -13,7 +13,7 @@
   } from "@/models";
 
   import { MkTable, MkTh, MkTd } from "@/components";
-  import { useI18next } from "@/composables";
+  import { useI18next, useFilterInQuery } from "@/composables";
 
   import { container } from "tsyringe";
   import { ref } from "vue";
@@ -90,6 +90,8 @@
     sortBy: "name",
     sortDirection: SortDirection.Desc,
   });
+
+  useFilterInQuery(filters, currentPagination, sorting);
 
   async function onNameChanged(hotel: HotelDto, name: string) {
     hotel.name = name;
