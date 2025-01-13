@@ -2,9 +2,10 @@
   import { useDatePresets } from "@/composables/useDatePresets";
   import { useDayjs } from "@/composables/useDayjs";
   import { useI18next } from "@/composables/useI18next";
-  import { DateRange } from "@/models/ranges";
+  import { DateRange, TitledDateRange } from "@/models/ranges";
   import { reactive } from "vue";
   import { MkDatePicker } from "../MkDatePicker";
+  import dayjs from "dayjs";
 
   const props = withDefaults(
     defineProps<{
@@ -19,8 +20,19 @@
        * @example [0, 1, 2]
        */
       months?: number[];
+      /**
+       * CSS Class to apply to the date picker
+       */
       datePickerClass?: string;
+      /**
+       * Title to display in the date picker
+       */
       datePickerTitle?: string;
+      /**
+       * Custom date ranges
+       * @example [{ title: "Last 7 days", start: new Date(), end: new Date() }]
+       */
+      customOptions?: Array<TitledDateRange>;
     }>(),
     {
       days: () => [7, 28, 90, 365],
@@ -31,9 +43,9 @@
   const modelValue = defineModel<{ value: any[]; title?: string }>({ required: true });
 
   // Inject dependencies
-  const { isSame } = useDayjs();
+  const { isSame, isBefore } = useDayjs();
   const { defaultT } = await useI18next("MkDatePresetMenu");
-  const { presets, formatPreset } = await useDatePresets({
+  const { presets, formatPreset, formatDateRange } = await useDatePresets({
     dayPresets: props.days,
     monthPresets: props.months,
   });
@@ -48,35 +60,61 @@
     (e: "click:close"): void;
   }>();
 
-  function updateModelValue(value: DateRange): void;
+  function updateModelValue(value: DateRange | TitledDateRange): void;
   function updateModelValue(value: any[]): void;
-  function updateModelValue(value: DateRange | any[]): void {
-    let startDate, endDate;
+  function updateModelValue(value: DateRange | TitledDateRange | any[]): void {
+    let startDate, endDate, itemTitle;
 
     if (Array.isArray(value)) {
+
       // Deconstruct the array
-      const [start, end] = value;
+      const [date1, date2] = value;
+      let start, end;
+
+      // determine the start and end date, based on the values, since the order can be the other way around
+      if (isBefore.value(new Date(date1), new Date(date2))) {
+        start = date1;
+        end = date2;
+      } else {
+        start = date2;
+        end = date1;
+      }
+
+      // Convert to dayjs,
+      // Force the start date at the start of the DAY
+      // And the endDate at the end of the DAY
+      startDate = dayjs(start).startOf("day").toDate();
+      endDate = dayjs(end).endOf("day").toDate();
+      itemTitle = formatDateRange(startDate, endDate);
+    } 
+    else if ("title" in value) { // Deconstruct the TitledDateRange
+
+      const { start, end, title } = value;
       startDate = start;
       endDate = end;
-    } else {
-      // Deconstruct the DateRange
+      itemTitle = formatDateRange(startDate, endDate, title);
+    
+    } else { // Deconstruct the DateRange
+      
       const { start, end } = value;
       startDate = start;
       endDate = end;
+      itemTitle = formatPreset(startDate, endDate);
     }
+  
 
     // Set the value
     state.model.value = [startDate, endDate];
 
     // Set the title
-    state.model.title = formatPreset(startDate, endDate);
+    state.model.title = itemTitle;
 
     // Apply the changes
     apply();
   }
 
   function apply() {
-    modelValue.value = state.model;
+    modelValue.value = { ...state.model };
   }
 
   function openDatePicker() {
@@ -91,7 +129,7 @@
    * Compare the start date of the item with the start date of the model
    * @param item
    */
-  function isSameStart(item: DateRange) {
+  function isSameStart(item: DateRange | TitledDateRange) {
     if (!state.model.value || !state.model.value[0]) {
       return false;
     }
@@ -102,7 +140,7 @@
    * Compare the end date of the item with the end date of the model
    * @param item
    */
-  function isSameEnd(item: DateRange) {
+  function isSameEnd(item: DateRange | TitledDateRange) {
     if (!state.model.value || !state.model.value[1]) {
       return false;
     }
@@ -113,7 +151,7 @@
    * Check if the item is selected. This is the case when the start and end date are the same
    * @param item
    */
-  function isSelectedPresetItem(item: DateRange) {
+  function isSelectedPresetItem(item: DateRange | TitledDateRange) {
     return isSameStart(item) && isSameEnd(item);
   }
 
@@ -129,6 +167,18 @@
       !presets.value.months.some((x: DateRange) => isSelectedPresetItem(x))
     );
   }
+  
+  /**
+   * Check if one of the custom titled items is selected.
+   */
+   function isSelectedTitledItem(item: TitledDateRange) {
+    return (
+      state.model.value &&
+      state.model.value[0] &&
+      state.model.value[1] &&
+      !props.customOptions?.some((x: TitledDateRange) => isSelectedPresetItem(x))
+    );
+  }
 </script>
 
 <template>
@@ -139,6 +189,10 @@
     <v-divider />
     <v-list-item v-for="(item, i) in presets.months" :key="i" :active="isSelectedPresetItem(item)" @click="updateModelValue(item)">
       <v-list-item-title> {{ formatPreset(item.start, item.end) }}</v-list-item-title>
+    </v-list-item>
+    <v-divider v-if="props.customOptions" />
+    <v-list-item v-for="(item, i) in props.customOptions" :key="i" :active="isSelectedTitledItem(item)" @click="updateModelValue(item)">
+      <v-list-item-title> {{ formatDateRange(item.start, item.end, item.title) }}</v-list-item-title>
     </v-list-item>
     <v-divider />
     <v-list-item :active="isSelectedCustomItem()" @click="openDatePicker">
