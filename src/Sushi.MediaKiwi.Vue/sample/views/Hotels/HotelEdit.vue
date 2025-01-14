@@ -4,6 +4,7 @@
 
   import { reactive, ref } from "vue";
   import MkNavigationDrawerInfo from "@/components/MkNavigation/MkNavigationDrawerInfo.vue";
+  import { useSnackbarStore } from "@/stores";
   import { useSampleApi, Country, HotelDto } from "@sample/services";
 
   // inject dependencies

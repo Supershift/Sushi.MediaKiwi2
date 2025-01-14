@@ -16,12 +16,7 @@ export async function useFilters(useI18next: ReturnType<typeof useI18nextComposa
    */
   function getFormatterFilterValue(tableFilterItem: TableFilterItem) {
     const value = tableFilterItem.selectedValue?.value;
-    const title = tableFilterItem.selectedValue?.title;
-
-    if (title) {
-      return title;
-    }
-
+ 
     if (!value) {
       return;
     }
@@ -36,7 +31,7 @@ export async function useFilters(useI18next: ReturnType<typeof useI18nextComposa
         return selectedOption?.title || "";
       }
       case TableFilterType.MultiSelect:
-      case TableFilterType.SelectMultipleCheckbox:
+      case TableFilterType.SelectMultipleCheckbox: 
       case TableFilterType.SelectMultiple: {
         const selectedOptions = tableFilterItem.options?.filter((o) => value?.includes(o.value));
         return selectedOptions?.map((o) => o.title).join(", ");
