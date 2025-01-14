@@ -1,19 +1,31 @@
 import "reflect-metadata";
-import { describe, it, beforeEach, vi, expect, assertType } from "vitest";
+import { describe, it, beforeEach, vi, expect } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
-import { IMediakiwiServiceRegistrations } from "@/models";
 import { container } from "tsyringe";
-import { registerServices } from "@/helpers/registerServices";
-import { MockedNavigationConnector, MockedRolesConnector } from "../__mocks__/mediakiwi";
 import { VuetifyOptions } from "vuetify/lib/framework.mjs";
-import { MediaKiwiState, useMediakiwiStore } from "../mediakiwi";
-import axios from "axios";
-import { ApiNavigationProvider, ObjectNavigationProvider, SimpleSection } from "@/navigation";
+import { useMediakiwiStore } from "../mediakiwi";
+import { ObjectNavigationProvider, SimpleSection } from "@/navigation";
+import { Api } from "@/services/api";
 
-vi.mock("axios");
+vi.mock('@/services/api', () => {
+  return {
+    Api: vi.fn().mockImplementation(() => {
+      return {
+        mediakiwi: {
+          roles: vi.fn().mockResolvedValue({ data: {} }),
+        },
+      };
+    }),
+  };
+});
+
 
 describe("Mediakiwi Store", () => {
-  container.register("MediakiwiAxiosInstance", { useValue: axios });
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  container.register("MediaKiwiApi", { useValue: new Api<any>() });
 
   // All the sections
   const sections: SimpleSection[] = [
@@ -33,7 +45,6 @@ describe("Mediakiwi Store", () => {
   provider.SetTree(sections);
 
   container.registerInstance("INavigationProvider", provider);
-  container.registerInstance("IRoleConnector", new MockedRolesConnector());
 
   beforeEach(() => {
     vi.clearAllMocks();

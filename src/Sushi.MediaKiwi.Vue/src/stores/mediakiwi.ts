@@ -2,11 +2,11 @@ import { defineStore } from "pinia";
 import type { Role } from "@/models/api";
 import type ListResult from "@/models/api/ListResult";
 import { container } from "tsyringe";
-import { IRoleConnector } from "@/services/IRoleConnector";
 import { VuetifyOptions } from "vuetify";
 import { INavigationProvider } from "@/navigation";
 import { NavigationTree } from "@/models/navigation";
 import { RouteLocationRaw } from "vue-router";
+import { useMediaKiwiApi } from "@/services";
 
 export interface MediaKiwiState {
   navigationTree: NavigationTree;
@@ -47,9 +47,14 @@ export const useMediakiwiStore = defineStore({
       this.navigationTree = await provider.GetTreeAsync();
     },
     async getRoles() {
-      const connector = container.resolve<IRoleConnector>("IRoleConnector");
-      const roles = await connector.GetRoles();
-      this.setRoles(roles);
+      const mediaKiwiApi = useMediaKiwiApi();
+      const response = await mediaKiwiApi.roles();
+      this.setRoles({
+        ...response.data,
+        result: response.data.result?.map((t) => ({ ...t, id: t.id ?? "" })) ?? [],
+        totalCount: response.data?.totalCount ?? undefined,
+        pageCount: response.data?.pageCount ?? undefined,
+      });
     },
     toggleDrawer() {
       this.drawer = !this.drawer;

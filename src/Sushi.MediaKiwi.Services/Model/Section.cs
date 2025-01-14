@@ -16,7 +16,7 @@ namespace Sushi.MediaKiwi.Services.Model
         /// <summary>
         /// Unique identifier for this section.
         /// </summary>
-        [SwaggerSchema(ReadOnly = true)]
+        [Required, SwaggerSchema(ReadOnly = true)]
         public string Id { get; set; } = null!;
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace Sushi.MediaKiwi.Services.Model
         /// <summary>
         /// Value used when sorting sections.
         /// </summary>
-        [SwaggerSchema(ReadOnly = true)]
+        [Required, SwaggerSchema(ReadOnly = true)]
         public int SortOrder { get; set; }
 
         /// <summary>

@@ -16,20 +16,20 @@ namespace Sushi.MediaKiwi.Services.Model
         /// <summary>
         /// Human-readable unique ID.
         /// </summary>
-        [SwaggerSchema(ReadOnly = true)]
-        public string? Id { get; set; }
+        [Required, SwaggerSchema(ReadOnly = true)]
+        public required string Id { get; set; }
 
         /// <summary>
         /// Name for this view.
         /// </summary>
         [Required, StringLength(128)]
-        public string Name { get; set; } = null!;
+        public required string Name { get; set; }
 
         /// <summary>
         /// The key of the Vue component implementing this view, e.g. ./views/myView.vue, MyKey
         /// </summary>
         [Required, StringLength(128)]
-        public string ComponentKey { get; set; } = null!;
+        public required string ComponentKey { get; set; }
 
         /// <summary>
         /// Name of the URL parameter required by this view.

@@ -1,17 +1,15 @@
 <script setup lang="ts">
-  import { Country } from "./../models/Country";
   import { SampleRooms } from "./../models/SampleRooms";
-  import { CountryConnector } from "./../services/CountryConnector";
 
   import { MkTable } from "@/components";
   import { Paging, TableFilter, TableFilterType, TableFilterValue, TableMap } from "@/models";
   import { useI18next } from "@/composables";
 
-  import { container } from "tsyringe";
   import { ref } from "vue";
+  import { useSampleApi, Country } from "@sample/services";
 
   // inject dependencies
-  const countriesConnector = container.resolve(CountryConnector);
+  const sampleApi = useSampleApi();
   const availableRooms = [
     {
       id: 1,
@@ -84,7 +82,7 @@
   }
 
   // Load countries
-  countries.value = (await countriesConnector.GetAll({ pageIndex: 0, pageSize: 9999 })).result;
+  countries.value = (await sampleApi.countries({ pageIndex: 0, pageSize: 9999 })).data.result;
 
   // Set filter options
   filters.value.countryCode.options = countries.value?.map(({ code, name }) => <TableFilterValue>{ title: name, value: code });

@@ -38,7 +38,7 @@ namespace Sushi.MediaKiwi.Services
             var itemsDto = _mapper.Map<List<Locale>>(items);
 
             // create result object
-            var result = new ListResult<Locale>(itemsDto, items);            
+            var result = new ListResult<Locale>(itemsDto, items);
 
             return result;
         }
@@ -89,8 +89,7 @@ namespace Sushi.MediaKiwi.Services
                 }
 
                 // create result
-                var result = new Locale();
-                _mapper.Map(repositoryLocale, result);
+                var result = _mapper.Map<Locale>(repositoryLocale);
 
                 // commit
                 ts.Complete();
@@ -126,7 +125,7 @@ namespace Sushi.MediaKiwi.Services
         public async Task<Result<Locale, Error>> UpdateAsync(string id, Locale locale)
         {
             // get existing local
-            var repositoryLocale = await _localeRepository.GetAsync(id);            
+            var repositoryLocale = await _localeRepository.GetAsync(id);
 
             if (repositoryLocale == null)
                 return new NotFoundError();
@@ -138,10 +137,7 @@ namespace Sushi.MediaKiwi.Services
             await _localeRepository.UpdateAsync(repositoryLocale);
 
             // create result
-            var result = new Locale();
-            _mapper.Map(repositoryLocale, result);
-
-            return result;
+            return _mapper.Map<Locale>(repositoryLocale);
         }
     }
 }
