@@ -36,16 +36,16 @@ export class NavigationBuilder {
     }
     // create navigation item
     const item: NavigationItem = {
-      id: id,
-      name: name,
+      id,
+      name,
       section: this.currentSection,
-      icon: icon,
+      icon,
       parent: this.currentParent,
-      componentKey: componentKey,
-      parameterName: parameterName,
+      componentKey,
+      parameterName,
       children: [],
       roles: undefined,
-      layout: layout ?? MkLayout.Default
+      layout
     };
 
     // add navigation item to collections    
@@ -66,16 +66,16 @@ export class NavigationBuilder {
     const localParent = this.siblings[this.siblings.length - 1];
 
     const item: NavigationItem = {
-      id: id,
-      name: name,
+      id,
+      name,
       section: localParent.section,
       icon: icon,
       parent: localParent,
-      componentKey: componentKey,
-      parameterName: parameterName,
+      componentKey,
+      parameterName,
       children: [],
       roles: undefined,
-      layout: layout ?? MkLayout.Default
+      layout
     };
 
     localParent.children!.push(item);
