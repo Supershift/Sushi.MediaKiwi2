@@ -2,7 +2,6 @@
   import { MkApplication } from "@/components";
   import { useDisplay } from "vuetify";
   import { useSectionRules } from "./composables/useSectionRules";
-  import { registerLayoutManager } from "./helpers/layoutManager";
 
   // Inject Dependencies
   const { xs } = useDisplay();
@@ -10,7 +9,6 @@
 
   // Force the hotel section to be disabled and the customer section to be hidden
   setHotelSectionDisplayState("disabled");
-  registerLayoutManager();
 </script>
 
 <template>
@@ -27,3 +25,11 @@
     </template>
   </mk-application>
 </template>
+
+<style lang="scss">
+  /* This css layout is conditionally set by providing a CustomLayout to the NavigationProvider entry. 
+  The class will be added to the MKScreen component. */
+  .CustomLayout {
+    max-width: 1280px;
+  }
+</style>
