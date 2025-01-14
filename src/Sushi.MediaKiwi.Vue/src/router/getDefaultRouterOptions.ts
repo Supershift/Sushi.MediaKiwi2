@@ -1,9 +1,10 @@
-import { createWebHistory, type RouteRecordRaw, type RouterOptions } from "vue-router";
+import { createWebHistory, LocationQuery, LocationQueryRaw, type RouteRecordRaw, type RouterOptions } from "vue-router";
 import SignIn from "@/views/SignIn.vue";
 import LoginRedirect from "@/views/LoginRedirect.vue";
+import QueryString from "qs";
 
 /** Creates default router options based on provided modules. */
-export function getDefaultRouterOptions(customRoutes?: RouteRecordRaw[]): RouterOptions {
+export function getDefaultRouterOptions(customRoutes?: RouteRecordRaw[], parseQueryStringArray?: boolean): RouterOptions {
   // create routes
   const routes = <RouteRecordRaw[]>[];
 
@@ -23,7 +24,7 @@ export function getDefaultRouterOptions(customRoutes?: RouteRecordRaw[]): Router
     },
   });
 
-  const routerOptions = <RouterOptions>{
+  let routerOptions = <RouterOptions>{
     routes: routes,
     history: createWebHistory(),
     scrollBehavior: function (to, _from, savedPosition) {
@@ -37,6 +38,18 @@ export function getDefaultRouterOptions(customRoutes?: RouteRecordRaw[]): Router
       }
     },
   };
+  // query parsing functions when parseQueryStringArray is true
+  if (parseQueryStringArray) {
+    routerOptions = <RouterOptions>{
+      ...routerOptions,
+      parseQuery: function (search: string): LocationQuery {
+        return QueryString.parse(search, { parseArrays: true, allowEmptyArrays: true, strictNullHandling: true }) as LocationQuery;
+      },
+      stringifyQuery: function (query: LocationQueryRaw): string {
+        return QueryString.stringify(query, { arrayFormat: "brackets", allowDots: true, strictNullHandling: true });
+      },
+    };
+  }
 
   return routerOptions;
 }

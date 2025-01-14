@@ -10,6 +10,7 @@ export * from "./useEntraSettings";
 export * from "./useErrorMessages";
 export * from "./useErrorProblemDetails";
 export * from "./useFilters";
+export * from "./useFilterInQuery";
 export * from "./useFormFields";
 export * from "./useI18next";
 export * from "./useIcons";

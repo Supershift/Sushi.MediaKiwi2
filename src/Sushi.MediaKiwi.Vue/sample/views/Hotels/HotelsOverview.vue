@@ -17,7 +17,7 @@
   } from "@/models";
 
   import { MkTable, MkTh, MkTd } from "@/components";
-  import { useI18next } from "@/composables";
+  import { useI18next, useFilterInQuery } from "@/composables";
 
   import { container } from "tsyringe";
   import { reactive, ref } from "vue";
@@ -33,7 +33,7 @@
   const snackbar = useSnackbarStore();
 
   // define reactive variables
-  const currentPagination = ref<Paging>();
+  const currentPagination = ref<Paging>({});
   const hotels = ref<ListResult<Hotel>>();
   const countries = ref<Country[]>();
   const selectedHotels = ref<Hotel[]>([]);
@@ -113,6 +113,17 @@
     if (result) {
       snackbar.showMessage(`Sucessfully saved ${hotel.name}`);
     }
+  }
+  useFilterInQuery(filters, currentPagination, sorting);
+
+  async function onNameChanged(hotel: Hotel, name: string) {
+    hotel.name = name;
+    await SaveData(hotel);
+  }
+
+  /** TODO Implement */
+  async function SaveData(hotel: Hotel) {
+    console.log(hotel);
   }
 </script>
 

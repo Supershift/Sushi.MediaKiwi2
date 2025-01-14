@@ -1,6 +1,5 @@
 import { NavigationItem as NavigationItemModel, NavigationTree, Section as SectionModel } from "@/models/navigation";
 import { INavigationProvider } from "./INavigationProvider";
-import { MkLayout } from "@/constants";
 
 export type NavigationItem = {
   /** Unique identifier for this item. */
