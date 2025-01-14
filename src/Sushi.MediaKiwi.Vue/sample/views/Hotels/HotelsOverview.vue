@@ -116,11 +116,6 @@
   }
   useFilterInQuery(filters, currentPagination, sorting);
 
-  async function onNameChanged(hotel: Hotel, name: string) {
-    hotel.name = name;
-    await SaveData(hotel);
-  }
-
   /** TODO Implement */
   async function SaveData(hotel: Hotel) {
     console.log(hotel);
