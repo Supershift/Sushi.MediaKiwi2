@@ -29,7 +29,7 @@
 <style lang="scss">
   /* This css layout is conditionally set by providing a CustomLayout to the NavigationProvider entry. 
   The class will be added to the MKScreen component. */
-  .CustomLayout {
+  .custom-css-layout {
     max-width: 1280px;
   }
 </style>
