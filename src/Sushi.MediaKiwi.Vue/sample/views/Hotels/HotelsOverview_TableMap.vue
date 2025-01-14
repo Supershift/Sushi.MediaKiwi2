@@ -5,9 +5,10 @@
   import { useI18next } from "@/composables";
 
   import { ref } from "vue";
-  import { sampleApi, Country, HotelDto } from "@sample/services";
+  import { useSampleApi, Country, HotelDto } from "@sample/services";
 
   // inject dependencies
+  const sampleApi = useSampleApi();
   const { formatDateTime, t } = await useI18next();
 
   // define reactive variables

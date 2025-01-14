@@ -1,9 +1,10 @@
 <script setup lang="ts">
-  import { reactive } from "vue";
+  import { reactive, ref } from "vue";
   import { useValidationRules } from "@/composables";
   import MkFormDialog from "@/components/MkForm/MkFormDialog.vue";
-  import { sampleApi, AccountDto } from "@sample/services";
+  import { AccountDto, useSampleApi } from "@sample/services";
 
+  const sampleApi = useSampleApi();
   const { required, minLength } = await useValidationRules();
 
   const state = reactive({

@@ -3,8 +3,9 @@
   import { reactive } from "vue";
   import { useValidationRules } from "@/composables";
   import { ErrorProblemDetails, TResult } from "@/models";
-  import { sampleApi } from "@sample/services";
+  import { useSampleApi } from "@sample/services";
 
+  const sampleApi = useSampleApi();
   const { required, minLength, maxLength, numeric, alphaNumericNoSpace, alphaNumericWithSpace, email } = await useValidationRules();
 
   const state = reactive({

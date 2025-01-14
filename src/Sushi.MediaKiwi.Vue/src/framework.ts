@@ -73,7 +73,7 @@ export default {
     app.use(msalPlugin, identity.msalInstance);
 
     // get default router options
-    const routerOptions = getDefaultRouterOptions(options?.customRoutes);
+    const routerOptions = getDefaultRouterOptions(options?.customRoutes, options?.parseQueryStringArray);
 
     // create the router
     const router = createRouter(routerOptions);

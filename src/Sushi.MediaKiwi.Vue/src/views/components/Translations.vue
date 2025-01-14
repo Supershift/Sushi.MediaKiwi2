@@ -140,7 +140,7 @@
     </template>
     <template #footer>
       <v-btn @click="onSave">{{ defaultT("Save") }}</v-btn>
-      <v-btn @click="state.showEditTranslation = false">{{ defaultT("Close") }}</v-btn>
+      <v-btn @click="(state.showEditTranslation = false)">{{ defaultT("Close") }}</v-btn>
     </template>
   </mk-side-sheet>
 </template>

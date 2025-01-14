@@ -6,9 +6,10 @@
   import { useI18next } from "@/composables";
 
   import { ref } from "vue";
-  import { sampleApi, Country } from "@sample/services";
+  import { useSampleApi, Country } from "@sample/services";
 
   // inject dependencies
+  const sampleApi = useSampleApi();
   const customerRooms = <ICustomerRooms[]>[
     {
       isActive: false,

@@ -31,7 +31,7 @@
   }>();
 
   // Create proxy model to prevent direct mutation
-  const model = ref(modelValue.value);
+  const model = ref(modelValue.value.map((e) => new Date(e))); // transform strings to Date so vuetify can work with it
 
   function close() {
     emit("click:close");

@@ -10,6 +10,16 @@ const exclude = ["sample", "cypress", "test", "**/__tests__/**", "**/__mocks__/*
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  css: {
+    preprocessorOptions: {
+      sass: {
+        api: 'modern-compiler',
+      },
+      scss: {
+        api: 'modern-compiler',
+      },
+    },
+  },
   plugins: [
     vue({
       exclude,

@@ -2,8 +2,9 @@
   import { reactive } from "vue";
   import { useValidationRules } from "@/composables";
   import MkFormDialog from "@/components/MkForm/MkFormDialog.vue";
-  import { sampleApi, TransferMoneyRequest } from "@sample/services";
+  import { useSampleApi, TransferMoneyRequest } from "@sample/services";
 
+  const sampleApi = useSampleApi();
   const { required } = await useValidationRules();
 
   const state = reactive({

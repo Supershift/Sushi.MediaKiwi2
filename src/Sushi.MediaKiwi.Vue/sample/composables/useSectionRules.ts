@@ -1,9 +1,11 @@
 import { useMediakiwiStore } from "@/stores";
 import { SectionDisplayState } from "@/models/navigation";
 import { useSections } from "@/composables";
-import { sampleApi } from "@sample/services";
+import { useSampleApi } from "@sample/services";
 
 export function useSectionRules() {
+  // Inject depecency
+  const sampleApi = useSampleApi();
   const mediakiwiStore = useMediakiwiStore();
   const { waitForSectionsToLoad } = useSections();
 

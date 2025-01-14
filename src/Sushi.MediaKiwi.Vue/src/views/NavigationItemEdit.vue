@@ -103,7 +103,7 @@
       :items="state.views"
       item-title="name"
       item-value="id"
-      :rules="[(v: string|undefined) => !!v]"
+      :rules="[(v: string | undefined) => !!v]"
     ></v-autocomplete>
     <v-text-field v-model="state.navigationItem.icon" label="Icon"></v-text-field>
     <v-text-field v-model="state.navigationItem.sortOrder" label="SortOrder" type="number"></v-text-field>

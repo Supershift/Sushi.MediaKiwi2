@@ -1,14 +1,26 @@
 <script setup lang="ts">
   import { useI18next } from "@/composables";
+  import { useSnackbarStore } from "@/stores";
   import { useSectionRules } from "@sample/composables/useSectionRules";
+  import { useRouter } from "vue-router";
 
   // inject dependecies
   const { t, defaultT } = await useI18next();
   const { setHotelSectionDisplayState } = useSectionRules();
+  const snackbar = useSnackbarStore();
 
   function enableTestSection() {
     setHotelSectionDisplayState();
   }
+
+  function triggerSnackbar() {
+    snackbar.showMessage("This is a test message");
+  }
+
+  const router = useRouter();
+
+  // proof that the router querystring is parsed as array
+  console.log(router.currentRoute.value.query);
 </script>
 
 <template>
@@ -22,6 +34,7 @@
       </v-card-text>
       <v-card-actions>
         <v-btn variant="flat" @click="enableTestSection">Enable Test Section</v-btn>
+        <v-btn variant="flat" @click="triggerSnackbar">Trigger snackbar</v-btn>
       </v-card-actions>
     </v-card>
   </v-lazy>

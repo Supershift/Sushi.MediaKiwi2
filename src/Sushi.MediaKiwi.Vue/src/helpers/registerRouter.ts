@@ -1,5 +1,4 @@
 import { MediakiwiVueOptions } from "@/models";
-import { layoutManager } from "@/router/layoutManager";
 import { RouterManager } from "@/router/routerManager";
 import { setPageTitle } from "@/router/setPageTitle";
 import { App } from "vue";
@@ -10,7 +9,4 @@ export function registerRouter(app: App<any>, router: Router, options: Mediakiwi
 
   // Add method to set page title
   setPageTitle(router);
-
-  // Load Layout Manager
-  layoutManager(router);
 }

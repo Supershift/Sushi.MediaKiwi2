@@ -6,10 +6,11 @@
   import { onDeactivated } from "vue";
   import { ref } from "vue";
   import AddCountry from "./AddCountry.vue";
-  import { sampleApi, Country } from "@sample/services";
+  import { useSampleApi, Country } from "@sample/services";
 
   // inject dependencies
   const { addKeyboardShortcuts, removeKeyboardShortcuts } = useKeyboardShortcuts();
+  const sampleApi = useSampleApi();
   const { t } = await useI18next();
 
   // define reactive variables

@@ -16,6 +16,8 @@ export interface MediakiwiVueOptions {
   navigationProvider?: INavigationProvider;
   modules: Record<string, RouteComponent>;
   customRoutes?: RouteRecordRaw[];
+  /** Whether to parse complex querystring for arrays, ex. "?pId[]=1&pId[]=2" => . Default is false. */
+  parseQueryStringArray?: boolean;
   msalConfig: Configuration;
   identity: MediakiwiIdentity;
   /** Override default vuetify options. Provided object will be merged with default vuetify options. */

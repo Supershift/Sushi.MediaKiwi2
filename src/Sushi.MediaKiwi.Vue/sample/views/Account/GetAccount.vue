@@ -3,8 +3,9 @@
   import { reactive } from "vue";
   import { useNavigation, useValidationRules } from "@/composables";
   import CreateAccountDialog from "./partials/CreateAccountDialog.vue";
-  import { sampleApi, AccountDto } from "@sample/services";
+  import { AccountDto, useSampleApi } from "@sample/services";
 
+  const sampleApi = useSampleApi();
   const { required } = await useValidationRules();
   const navigation = useNavigation();
 

@@ -6,7 +6,9 @@
   import { useI18next } from "@/composables";
 
   import { ref } from "vue";
-  import { sampleApi, Country } from "@sample/services";
+  import { useSampleApi, Country } from "@sample/services";
+
+  const sampleApi = useSampleApi();
 
   const availableRooms = [
     {

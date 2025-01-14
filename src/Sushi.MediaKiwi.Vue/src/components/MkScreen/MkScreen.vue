@@ -19,13 +19,18 @@
       "pt-md-4": !isPageOnSignIn.value,
     };
   });
+
+  const mkLayoutClasses = computed(() => ({
+    "mk-layout": true,
+    [<string>route.meta?.layout]: !!route.meta?.layout,
+  }));
 </script>
 
 <template>
   <v-main>
     <mk-breadcrumbs :sticky="true" />
     <div :class="mkScreenClasses">
-      <component :is="route.meta.layoutComponent || 'div'" class="mk-layout">
+      <div :class="mkLayoutClasses">
         <router-view v-slot="{ Component }">
           <suspense timeout="0">
             <template #default>
@@ -38,7 +43,7 @@
             </template>
           </suspense>
         </router-view>
-      </component>
+      </div>
     </div>
   </v-main>
 </template>

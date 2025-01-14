@@ -8,8 +8,14 @@ const mediakiwiApi = ref<Api<any>>();
 export function useMediaKiwiApi() {
 
   if (!mediakiwiApi.value) {
+    const baseUrl = inject<MediakiwiVueOptions>('mediakiwi')?.apiBaseUrl;
+
+    // Stripping the baseUrl so that it is backwards compatible 
+    // with the .env files and the environment variables on the live environments
+    const baseUrlStripped = inject<MediakiwiVueOptions>('mediakiwi')?.apiBaseUrl?.replace('mediakiwi/api', '') ?? '';
+
     const api = new Api<any>();
-    api.instance = createAxiosClient(inject<MediakiwiVueOptions>('mediakiwi')?.apiBaseUrl.replace('mediakiwi/api', '') ?? '');
+    api.instance = createAxiosClient(baseUrlStripped);
     mediakiwiApi.value = api;
   }
 

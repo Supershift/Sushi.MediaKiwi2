@@ -1,10 +1,11 @@
 <script setup lang="ts">
   import MkForm from "@/components/MkForm/MkForm.vue";
   import { useBreadcrumbs, useNavigation, useValidationRules } from "@/composables";
-  import { sampleApi, Country } from "@sample/services";
+  import { useSampleApi, Country } from "@sample/services";
   import { computed, reactive } from "vue";
 
   // Inject dependencies
+  const sampleApi = useSampleApi();
   const navigation = useNavigation();
   const countryCode = computed(() => navigation.currentRouteParamId.value?.toString());
   const { required } = await useValidationRules();

@@ -1,5 +1,5 @@
 import { computed } from "vue";
-import { DateRange } from "@/models/ranges/DateRange";
+import { DateRange } from "@/models/ranges";
 import { useDayjs } from "./useDayjs";
 import { useI18next } from "./useI18next";
 
@@ -86,11 +86,7 @@ export async function useDatePresets(options?: {
           const duration = getDifference.value(start, end, "day");
           return defaultT.value("LastXDays", "Last {{duration}} days", { duration });
         } else {
-          // Format the dates to a readable format
-          const result = [formatDate.value(start), formatDate.value(end)];
-
-          // Join the dates with a dash
-          return result.join(" - ");
+          return formatDateRange(start, end);
         }
       }
     }
@@ -98,9 +94,20 @@ export async function useDatePresets(options?: {
     return "";
   }
 
+  function formatDateRange(start: Date, end: Date, title?: string): string {
+    if (title) {
+      return title;
+    }
+
+    // Format the dates to a readable format
+    const result = [formatDate.value(start), formatDate.value(end)];
+    return result.join(" - ");
+  }
+
   return {
     currentDate,
     presets,
     formatPreset,
+    formatDateRange,
   };
 }
