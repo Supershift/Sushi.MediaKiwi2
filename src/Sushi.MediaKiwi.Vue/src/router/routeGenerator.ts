@@ -47,7 +47,6 @@ export class RouteGenerator {
               requiresRole: navigationItem.roles,
               navigationItem: navigationItem,
               layout: navigationItem.layout,
-              layoutComponent: navigationItem.layout ? modules[navigationItem.layout] : undefined,
             },
           };
 
