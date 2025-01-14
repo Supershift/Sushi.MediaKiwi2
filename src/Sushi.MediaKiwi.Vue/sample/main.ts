@@ -44,7 +44,7 @@ const mediakiwiOptions: MediakiwiVueOptions = {
   parseQueryStringArray: true,
   // import all views as models
   modules: {
-    ...import.meta.glob(["./views/**/*.vue", "./layouts/*.vue"]),
+    ...import.meta.glob("./views/**/*.vue"),
     ...modules,
   },
   dateFormatOptions: {
