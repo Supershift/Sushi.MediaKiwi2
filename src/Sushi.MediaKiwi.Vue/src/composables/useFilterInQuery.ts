@@ -42,7 +42,7 @@ export function useFilterInQuery<T>(filtersModel?: Ref<TableFilter>, pagingModel
   };
 
   const updateQueryAfterChange = () => {
-    router.replace({ name: route.name || undefined, params: route.params, query: desiredQuery() });
+    router.replace({ ...route, ...{ query: desiredQuery() } });
     configureBackControl();
   };
 
