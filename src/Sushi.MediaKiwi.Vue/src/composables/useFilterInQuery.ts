@@ -2,6 +2,7 @@ import { Ref, watch } from "vue";
 import { useRoute, useRouter } from "@/router";
 import { useMediakiwiStore } from "@/stores";
 import { Paging, SortDirection, Sorting, TableFilter } from "@/models";
+import { useNavigation } from "@/composables";
 
 /*
 Will try to fill the given filter+paging+sorting models from the query parameters.
@@ -41,7 +42,7 @@ export function useFilterInQuery<T>(filtersModel?: Ref<TableFilter>, pagingModel
   };
 
   const updateQueryAfterChange = () => {
-    router.replace({ name: route.name || undefined, query: desiredQuery() });
+    router.replace({ ...route, ...{ query: desiredQuery() } });
     configureBackControl();
   };
 
