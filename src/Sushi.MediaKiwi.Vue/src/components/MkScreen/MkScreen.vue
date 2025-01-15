@@ -20,18 +20,10 @@
     };
   });
 
-  const mkLayoutClasses = computed(() => {
-    if (route.meta?.layout) {
-      return {
-        "mk-layout": true,
-        [<string>route.meta.layout]: true,
-      };
-    } else {
-      return {
-        "mk-layout": true,
-      };
-    }
-  });
+  const mkLayoutClasses = computed(() => ({
+    "mk-layout": true,
+    [<string>route.meta?.layout]: !!route.meta?.layout,
+  }));
 </script>
 
 <template>
