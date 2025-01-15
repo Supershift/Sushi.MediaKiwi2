@@ -4,8 +4,7 @@
   import { MkTable, MkFormSideSheet } from "@/components";
   import { ref, reactive } from "vue";
   import { ListResult, Paging, TableFilter, TableFilterType, TableFilterValue, TableMap, Translation } from "@/models";
-  import { useI18next, useValidationRules } from "@/composables";
-  import { useSnackbarStore } from "@/stores/snackbar";
+  import { useI18next } from "@/composables";
 
   // define properties
   const props = defineProps({
@@ -19,13 +18,10 @@
   // inject dependencies
   const connector = container.resolve<IAdminTranslationConnector>("IAdminTranslationConnector");
   const { defaultT, t } = await useI18next("Translations");
-  const snackbar = useSnackbarStore();
-  const { required } = await useValidationRules();
 
   // define reactive variables
   const currentPagination = ref<Paging>({});
   const translations = ref<ListResult<Translation>>();
-  const inProgress = ref(false);
   const state = reactive({
     translation: <Translation>{},
     editTranslationValue: "",
@@ -77,12 +73,12 @@
 
   // handle events
   function onRowClick(item: Translation) {
-    state.translation = item;
+    state.translation = { ...item };
     state.editTranslationValue = item.value;
     state.showEditTranslation = true;
   }
 
-  async function onSave(): Promise<void> {
+  async function onSave() {
     await connector.Update({
       ...state.translation,
       value: state.editTranslationValue,
@@ -110,10 +106,9 @@
     @load="LoadData"
     :data="translations?.result"
     v-model:current-pagination="currentPagination"
-  >
-  </mk-table>
+  ></mk-table>
 
-  <MkFormSideSheet :title="t('EditTranslationTitle', 'Edit Translation')" v-model="state.showEditTranslation" @submit="onSave">
+  <MkFormSideSheet :title="t('EditTranslationTitle', 'Edit Translation')" v-model="state.showEditTranslation" @submit="onSave" edit-labels>
     <v-text-field disabled :label="defaultT('Namespace')" v-model="state.translation.namespace"></v-text-field>
     <v-text-field disabled :label="defaultT('Key')" v-model="state.translation.key"></v-text-field>
     <v-textarea :label="defaultT('Value')" v-model="state.editTranslationValue"></v-textarea>
