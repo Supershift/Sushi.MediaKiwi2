@@ -103,10 +103,10 @@
     <div id="mk-signin-bg" :class="cssClasses" :style="styles" v-cloak>
       <MkSignIn v-if="!isAuthenticated" class="mk-view--signin" :color="!isCssColor(currentSignInColor) ? currentSignInColor : undefined">
         <template #main>
-          {{ t("Main") }}
+          {{ t("Main", "Sign in to continue") }}
         </template>
         <template #footer>
-          {{ t("Footer") }}
+          {{ t("Footer", "Can't login? Contact your administrator") }}
         </template>
       </MkSignIn>
     </div>
