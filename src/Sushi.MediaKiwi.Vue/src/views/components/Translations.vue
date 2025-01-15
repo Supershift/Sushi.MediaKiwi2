@@ -1,10 +1,10 @@
 <script setup lang="ts">
   import { IAdminTranslationConnector } from "@/services/interfaces";
   import { container } from "tsyringe";
-  import { MkTable, MkSideSheet, MkForm } from "@/components";
+  import { MkTable, MkFormSideSheet } from "@/components";
   import { ref, reactive } from "vue";
   import { ListResult, Paging, TableFilter, TableFilterType, TableFilterValue, TableMap, Translation } from "@/models";
-  import { useI18next } from "@/composables";
+  import { useI18next, useValidationRules } from "@/composables";
   import { useSnackbarStore } from "@/stores/snackbar";
 
   // define properties
@@ -18,8 +18,9 @@
 
   // inject dependencies
   const connector = container.resolve<IAdminTranslationConnector>("IAdminTranslationConnector");
-  const { defaultT } = await useI18next();
+  const { defaultT, t } = await useI18next("Translations");
   const snackbar = useSnackbarStore();
+  const { required } = await useValidationRules();
 
   // define reactive variables
   const currentPagination = ref<Paging>({});
@@ -83,22 +84,17 @@
   }
 
   async function onSave(): Promise<void> {
-    inProgress.value = true;
-    try {
-      await connector.Update({
-        ...state.translation,
-        value: state.editTranslationValue,
-      });
+    await connector.Update({
+      ...state.translation,
+      value: state.editTranslationValue,
+    });
 
-      // update model value if successful
-      state.translation.value = state.editTranslationValue;
-      state.showEditTranslation = false;
-      snackbar.showMessage(defaultT.value("Saved successfully"));
-    } catch (error) {
-      snackbar.showMessage(defaultT.value("Failed to save"));
-    } finally {
-      inProgress.value = false;
-    }
+    // update model value if successful
+    state.translation = {
+      ...state.translation,
+      value: state.editTranslationValue,
+    };
+    state.showEditTranslation = false;
   }
 </script>
 
@@ -113,17 +109,9 @@
   >
   </mk-table>
 
-  <mk-side-sheet v-model="state.showEditTranslation" close-button>
-    <template #default>
-      <div class="mt-4">
-        <v-text-field disabled :label="defaultT('Namespace')" v-model="state.translation.namespace"></v-text-field>
-        <v-text-field disabled :label="defaultT('Key')" v-model="state.translation.key"></v-text-field>
-        <v-textarea :label="defaultT('Value')" v-model="state.editTranslationValue"></v-textarea>
-      </div>
-    </template>
-    <template #footer>
-      <v-btn @click="onSave">{{ defaultT("Save") }}</v-btn>
-      <v-btn @click="state.showEditTranslation = false">{{ defaultT("Close") }}</v-btn>
-    </template>
-  </mk-side-sheet>
+  <MkFormSideSheet :title="t('EditTranslationTitle', 'Edit Translation')" v-model="state.showEditTranslation" @submit="onSave">
+    <v-text-field disabled :label="defaultT('Namespace')" v-model="state.translation.namespace"></v-text-field>
+    <v-text-field disabled :label="defaultT('Key')" v-model="state.translation.key"></v-text-field>
+    <v-textarea :label="defaultT('Value')" v-model="state.editTranslationValue" :rules="[required]"></v-textarea>
+  </MkFormSideSheet>
 </template>
