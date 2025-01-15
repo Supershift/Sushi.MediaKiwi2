@@ -106,7 +106,7 @@
           {{ t("Main", "Sign in to continue") }}
         </template>
         <template #footer>
-          {{ t("Footer", "Can't login? Contact your administrator.") }}
+          {{ t("Footer", "Can't login? Contact your administrator") }}
         </template>
       </MkSignIn>
     </div>
