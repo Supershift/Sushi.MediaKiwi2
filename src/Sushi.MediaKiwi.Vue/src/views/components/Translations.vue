@@ -27,7 +27,7 @@
   const translations = ref<ListResult<Translation>>();
   const inProgress = ref(false);
   const state = reactive({
-    translation: {} as Translation,
+    translation: <Translation>{},
     editTranslationValue: "",
     showEditTranslation: false,
   });
@@ -45,12 +45,12 @@
   const filters = ref<TableFilter>({
     namespaces: {
       title: defaultT.value("Namespace"),
-      type: TableFilterType.Select,
+      type: TableFilterType.SingleSelect,
       options: [],
     },
     key: {
       title: defaultT.value("Key"),
-      type: TableFilterType.Select,
+      type: TableFilterType.SingleSelect,
       options: [],
     },
     value: {
@@ -76,8 +76,7 @@
   filters.value.key.options = keys.result.map((ns) => <TableFilterValue>{ title: ns, value: ns });
 
   // handle events
-  function onRowClick(item: any) {
-    console.log(item);
+  function onRowClick(item: Translation) {
     state.translation = item;
     state.editTranslationValue = item.value;
     state.showEditTranslation = true;
@@ -94,7 +93,12 @@
       ...state.translation,
       value: state.editTranslationValue,
     };
+
+    // close the side sheet
     state.showEditTranslation = false;
+
+    // Update the translations list
+    LoadData();
   }
 </script>
 
@@ -103,7 +107,7 @@
     @click:row="onRowClick"
     :table-map="tableMap"
     v-model:filters="filters"
-    :on-load="LoadData"
+    @load="LoadData"
     :data="translations?.result"
     v-model:current-pagination="currentPagination"
   >
@@ -112,6 +116,6 @@
   <MkFormSideSheet :title="t('EditTranslationTitle', 'Edit Translation')" v-model="state.showEditTranslation" @submit="onSave">
     <v-text-field disabled :label="defaultT('Namespace')" v-model="state.translation.namespace"></v-text-field>
     <v-text-field disabled :label="defaultT('Key')" v-model="state.translation.key"></v-text-field>
-    <v-textarea :label="defaultT('Value')" v-model="state.editTranslationValue" :rules="[required]"></v-textarea>
+    <v-textarea :label="defaultT('Value')" v-model="state.editTranslationValue"></v-textarea>
   </MkFormSideSheet>
 </template>
