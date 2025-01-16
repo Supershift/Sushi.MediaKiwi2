@@ -2,12 +2,14 @@ import { describe, it, expect } from "vitest";
 import { useFilterInQuery } from "@/composables/useFilterInQuery";
 import { ref } from "vue";
 import { TableFilter, Paging, Sorting, SortDirection, Locale } from "@/models";
+import { RouteLocationAsPathGeneric } from "vue-router";
 
 const routerReplaceMethod = vi.fn(() => { });
-let mediakiwiStore = { navigationBackUrlOverwrite: "a" };
+let mediakiwiStore = { navigationBackUrlOverwrite: new Map<string, RouteLocationAsPathGeneric>() };
 
 vi.mock("@/router", () => ({
   useRoute: () => ({
+    name: 'routeName',
     query: {
       id: "1337",
       name: "testname",
@@ -17,6 +19,7 @@ vi.mock("@/router", () => ({
       sortBy: "isEnabled",
       sortDirection: "desc",
     },
+    path: "/test/path",
   }),
   useRouter: () => ({
     replace: routerReplaceMethod,
@@ -30,7 +33,7 @@ vi.mock("@/stores", () => ({
 describe("useFilterInQuery", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mediakiwiStore = { navigationBackUrlOverwrite: "a" };
+    mediakiwiStore = { navigationBackUrlOverwrite: new Map<string, RouteLocationAsPathGeneric>() };
   });
 
   it("filters are set from query", () => {
@@ -124,7 +127,7 @@ describe("useFilterInQuery", () => {
     filtersModel.value["parents"].selectedValue = { value: [123, 456] };
 
     await vi.waitFor(() => {
-      expect(mediakiwiStore.navigationBackUrlOverwrite).toMatchObject({ query: { id: "1337", name: "blabla", parents: [123, 456] } });
+      expect(mediakiwiStore.navigationBackUrlOverwrite.get('routeName')).toMatchObject({ query: { id: "1337", name: "blabla", parents: [123, 456] }, path: "/test/path" });
     });
   });
 
@@ -137,7 +140,7 @@ describe("useFilterInQuery", () => {
     pagingModel.value.pageIndex = 5;
 
     await vi.waitFor(() => {
-      expect(mediakiwiStore.navigationBackUrlOverwrite).toMatchObject({ query: { pageIndex: "5" } });
+      expect(mediakiwiStore.navigationBackUrlOverwrite.get('routeName')).toMatchObject({ query: { pageIndex: "5" }, path: "/test/path" });
     });
   });
 
@@ -151,7 +154,7 @@ describe("useFilterInQuery", () => {
     sortingModel.value.sortDirection = SortDirection.Desc;
 
     await vi.waitFor(() => {
-      expect(mediakiwiStore.navigationBackUrlOverwrite).toMatchObject({ query: { sortBy: "id", sortDirection: "DESC" } });
+      expect(mediakiwiStore.navigationBackUrlOverwrite.get('routeName')).toMatchObject({ query: { sortBy: "id", sortDirection: "DESC" }, path: "/test/path" });
     });
   });
 });
