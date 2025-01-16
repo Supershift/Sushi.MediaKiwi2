@@ -7,7 +7,7 @@
   import { useBreadcrumbs } from "@/composables";
   import { watch } from "vue";
   import { NavigationItem } from "@/models/navigation";
-
+  import { RouteQueryAndHash } from "vue-router";
   const navigation = useNavigation(); // also calls store within this composable
   const { getEntityNavigationItem, getBreadcrumbLabel } = useBreadcrumbs(); // also calls store within this composable
   const router = useRouter();
@@ -21,8 +21,8 @@
     if (store.navigationBackUrlOverwrite) {
       const overwrite = store.navigationBackUrlOverwrite;
       store.navigationBackUrlOverwrite = undefined;
-
-      router.push(overwrite);
+      const { query } = overwrite as RouteQueryAndHash;
+      router.push({ query, path: history.state.back });
     } else if (customCurrentRootItem.value) {
       navigation.navigateTo(customCurrentRootItem.value);
     }

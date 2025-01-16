@@ -65,7 +65,6 @@ export function useFilterInQuery<T>(filtersModel?: Ref<TableFilter>, pagingModel
       sortingModel?.value.sortDirection
     ) {
       mediakiwiStore.navigationBackUrlOverwrite = {
-        name: route.name || undefined,
         query: desiredQuery(),
       };
     } else {
