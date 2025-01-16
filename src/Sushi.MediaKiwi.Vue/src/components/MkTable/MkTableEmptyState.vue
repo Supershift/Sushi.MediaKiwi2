@@ -4,8 +4,6 @@
   import { useI18next, useMediakiwiVueOptions } from "@/composables";
   import { MkTableProps } from "@/models/table/TableProps";
   import { computed } from "vue";
-  import { defineAsyncComponent } from "vue";
-  // const emptyStateAsset = defineAsyncComponent(() => import("@/assets/empty-state.svg"));
 
   // Inject dependencies
   const { defaultT } = await useI18next();

@@ -33,7 +33,7 @@ builder
   .addNavigationItem("CountryEdit", "Country", "./views/Country/CountryEdit.vue", "countryId")
   .left()
   .addNavigationItem("CountriesEmpty", "Countries Empty state", "./views/Country/CountriesEmpty.vue")
-  .addNavigationItem("CountriesEmptyCards", "Countries Empty state (card)", "./views/Country/CountriesEmptyCards.vue")
+  .addNavigationItem("CountriesEmptyCustomActions", "Countries Empty state (custom)", "./views/Country/CountriesEmptyCustomActions.vue")
   .endSection()
   .startSection("Account", "Account", "symbols:person")
   .addNavigationItem("Errors", "Errors", "./views/Account/ErrorSamples.vue")

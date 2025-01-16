@@ -3,9 +3,7 @@
   import { MkTable } from "@/components";
   import { useI18next } from "@/composables";
   import { ListResult, Paging } from "@/models";
-  import { reactive } from "vue";
-  import { ref, computed } from "vue";
-  import CountryEdit from "./AddCountry.vue";
+  import { reactive, ref } from "vue";
 
   // inject dependencies
   const { t } = await useI18next();
@@ -14,7 +12,6 @@
   const currentPagination = ref<Paging>({});
   const state = reactive({
     countries: <ListResult<Country>>{},
-    addCountry: false,
   });
 
   // load data
@@ -29,10 +26,6 @@
       }, 1000)
     );
   }
-
-  function openDialog() {
-    state.addCountry = true;
-  }
 </script>
 <template>
   <mk-table
@@ -45,7 +38,6 @@
     new
     :new-title="t('Add Country').toString()"
     new-emit
-    @click:new="openDialog"
   >
     <template #thead>
       <th>Code</th>
@@ -103,6 +95,4 @@
       </v-container>
     </template>
   </mk-table>
-
-  <CountryEdit v-model="state.addCountry" />
 </template>
