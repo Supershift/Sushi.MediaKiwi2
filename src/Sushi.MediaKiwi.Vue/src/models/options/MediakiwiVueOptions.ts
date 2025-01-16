@@ -9,6 +9,7 @@ import { MediaKiwiFormOptions } from "./MediaKiwiFormOptions";
 import { MediakiwiSigninConfigurations } from "./MediakiwiSignInConfigurations";
 import { INavigationProvider } from "@/navigation/INavigationProvider";
 import { ComponentPublicInstance } from "vue";
+import { MediaKiwiEmptyStateOptions } from "./MediakiwiEmptyStateOptions";
 
 export interface MediakiwiVueOptions {
   /** Base url for the MediaKiwi API, e.g. https://portal.mydomain.com/mediakiwi/api */
@@ -35,9 +36,8 @@ export interface MediakiwiVueOptions {
     month?: Intl.DateTimeFormatOptions;
   };
   emptyState?: {
-    image?: string;
-    filterImage?: string;
-    hideImage?: boolean;
+    default?: MediaKiwiEmptyStateOptions;
+    filter?: MediaKiwiEmptyStateOptions;
   };
   /** Options for the sign in screen background*/
   signIn?: {

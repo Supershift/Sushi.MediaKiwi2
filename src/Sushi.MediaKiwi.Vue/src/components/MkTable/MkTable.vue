@@ -24,12 +24,7 @@
   import MkTableCell from "./MkTableCell.vue"; // Mk-Td
   import MkDisplayOptions from "@/components/MkDisplayOptions/MkDisplayOptions.vue";
   import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
-  import { useI18next, useMediakiwiVueOptions } from "@/composables";
-  import MkNewItemButton from "../MkButton/MkNewItemButton.vue";
-
-  // Inject dependencies
-  const { t } = await useI18next();
-  const mediakiwiOptions = useMediakiwiVueOptions();
+  import MkTableEmptyState from "./MkTableEmptyState.vue";
 
   // define properties
   const props = withDefaults(defineProps<MkTableProps<T>>(), {
@@ -338,44 +333,11 @@
 
       <template v-if="showEmptyState">
         <slot v-if="slots.emptyState" name="emptyState"></slot>
-        <v-empty-state
-          v-else
-          class="mk-empty-state"
-          :headline="props.emptyStateHeadline"
-          :title="props.emptyStateTitle || t('EmptyStateTitle', 'No results')"
-          :text="props.emptyStateText || t('EmptyStateText', 'No data was found.')"
-        >
-          <template #media>
-            <template v-if="hasActiveFilters">
-              <img v-if="props.emptyStateFilterImage" :src="props.emptyStateFilterImage" />
-              <img v-else-if="mediakiwiOptions?.emptyState?.filterImage" />
-              <img v-else src="@/assets/empty-state.svg" />
-            </template>
-            <template v-else>
-              <img v-if="props.emptyStateImage" :src="props.emptyStateImage" />
-              <img v-else-if="mediakiwiOptions?.emptyState?.image" />
-              <img v-else src="@/assets/empty-state.svg" />
-            </template>
+        <MkTableEmptyState v-else v-bind="props" :hasActiveFilters="hasActiveFilters" @new="() => emit('click:new')" @reset-filters="clearFilterValues">
+          <template #actions v-if="slots.emptyStateActions">
+            <slot name="emptyStateActions"></slot>
           </template>
-          <template #actions>
-            <slot v-if="slots.emptyStateActions" name="emptyStateActions" />
-            <template v-else>
-              <v-btn v-if="hasActiveFilters" variant="flat" color="primary" @click="clearFilterValues">
-                <template #prepend>
-                  <v-icon icon="symbols:restart_alt" />
-                </template>
-                {{ t("ClearFilters", "Clear filters") }}
-              </v-btn>
-              <MkNewItemButton
-                v-else-if="props.new && (props.navigationItemId || props.newEmit)"
-                :navigation-item-id="props.navigationItemId"
-                :new-title="props.newTitle"
-                :new-emit="props.newEmit"
-                @click:new="() => emit('click:new')"
-              />
-            </template>
-          </template>
-        </v-empty-state>
+        </MkTableEmptyState>
       </template>
     </template>
 
@@ -400,12 +362,6 @@
       justify-content: flex-end;
       align-items: center;
       gap: 24px;
-    }
-  }
-
-  .mk-empty-state {
-    .v-btn {
-      text-transform: unset;
     }
   }
 </style>

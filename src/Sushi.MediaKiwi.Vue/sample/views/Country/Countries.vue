@@ -29,6 +29,9 @@
     name: {
       title: "Name",
       type: TableFilterType.TextField,
+      selectedValue: {
+        value: "bur",
+      },
     },
   });
 

@@ -20,6 +20,8 @@ import { Configuration } from "@azure/msal-browser";
 import navigation from "./navigation/NavigationProvider";
 import { globalConfiguration } from "./plugin/GlobalConfiguration";
 
+import emptyStateFilterSvg from "./assets/empty-state-filter.svg";
+
 // add mediakiwi
 const mediakiwiOptions: MediakiwiVueOptions = {
   // configure the vuetify options with the additional icon aliases
@@ -74,6 +76,14 @@ const mediakiwiOptions: MediakiwiVueOptions = {
     sideSheet: {
       resetOnSubmit: true,
       closeOnSubmit: true,
+    },
+  },
+  emptyState: {
+    filter: {
+      image: emptyStateFilterSvg,
+      headline: false,
+      title: "Oops! No results found matching your criteria.",
+      text: "Try changing your filter criteria to get more results.",
     },
   },
 };
