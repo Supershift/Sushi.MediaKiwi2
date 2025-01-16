@@ -18,12 +18,17 @@
   const customCurrentRootItem = ref<NavigationItem | undefined>(undefined);
 
   const navigate = () => {
+    if (!customCurrentRootItem.value) {
+      return;
+    }
+
     if (store.navigationBackUrlOverwrite) {
       const overwrite = store.navigationBackUrlOverwrite;
       store.navigationBackUrlOverwrite = undefined;
       const { query } = overwrite as RouteQueryAndHash;
-      router.push({ query, path: history.state.back });
-    } else if (customCurrentRootItem.value) {
+      // todo get data from pinia based on the navigation id and push the route
+      router.push({ name: customCurrentRootItem.value?.id, query });
+    } else {
       navigation.navigateTo(customCurrentRootItem.value);
     }
   };
