@@ -1,6 +1,7 @@
 import { NavigationItem } from "@/models/navigation";
 import { ObjectNavigationProvider, Section } from "@/navigation/ObjectNavigationProvider";
 import { MediaKiwiState } from "@/stores";
+import { RouteLocationAsPathGeneric, RouteLocationNormalizedLoadedGeneric, RouteLocationRaw, RouteQueryAndHash } from "vue-router";
 
 // create nav tree
 const sections: Section[] = 
@@ -48,9 +49,10 @@ const sections: Section[] =
 const provider = new ObjectNavigationProvider();
 provider.SetTree(sections);
 const tree = await provider.GetTreeAsync();
-export const mockMediakiwiStore : MediaKiwiState = {
+export const mockMediakiwiStore: MediaKiwiState = {
   navigationTree: tree,
-  roles: [{id: 'admin'}],
+  navigationBackUrlOverwrite: new Map<string, RouteLocationAsPathGeneric>(),
+  roles: [{ id: 'admin' }],
   isLocal: true,
   drawer: true,
   externalIcons: false

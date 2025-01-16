@@ -6,11 +6,11 @@ import { IRoleConnector } from "@/services/IRoleConnector";
 import { VuetifyOptions } from "vuetify";
 import { INavigationProvider } from "@/navigation";
 import { NavigationTree } from "@/models/navigation";
-import { RouteQueryAndHash } from "vue-router";
+import { RouteLocationAsPathGeneric, RouteQueryAndHash } from "vue-router";
 
 export interface MediaKiwiState {
   navigationTree: NavigationTree;
-  navigationBackUrlOverwrite?: RouteQueryAndHash | undefined;
+  navigationBackUrlOverwrite: Map<string, RouteLocationAsPathGeneric>;
   roles: Role[];
   isLocal: boolean;
   drawer: boolean;
@@ -24,6 +24,7 @@ export const useMediakiwiStore = defineStore({
   state: () =>
     ({
       navigationTree: new NavigationTree([]),
+      navigationBackUrlOverwrite: new Map<string, RouteLocationAsPathGeneric>(),
       roles: [],
       isLocal: true,
       drawer: true,

@@ -7,7 +7,6 @@
   import { useBreadcrumbs } from "@/composables";
   import { watch } from "vue";
   import { NavigationItem } from "@/models/navigation";
-  import { RouteQueryAndHash } from "vue-router";
   const navigation = useNavigation(); // also calls store within this composable
   const { getEntityNavigationItem, getBreadcrumbLabel } = useBreadcrumbs(); // also calls store within this composable
   const router = useRouter();
@@ -22,12 +21,10 @@
       return;
     }
 
-    if (store.navigationBackUrlOverwrite) {
-      const overwrite = store.navigationBackUrlOverwrite;
-      store.navigationBackUrlOverwrite = undefined;
-      const { query } = overwrite as RouteQueryAndHash;
-      // todo get data from pinia based on the navigation id and push the route
-      router.push({ name: customCurrentRootItem.value?.id, query });
+    const navigationBackUrlOverwrite = store.navigationBackUrlOverwrite.get(customCurrentRootItem.value?.id);
+    if (navigationBackUrlOverwrite) {
+      store.navigationBackUrlOverwrite.delete(customCurrentRootItem.value?.id);
+      router.push({ path: navigationBackUrlOverwrite.path, query: navigationBackUrlOverwrite.query });
     } else {
       navigation.navigateTo(customCurrentRootItem.value);
     }
