@@ -3,14 +3,6 @@ import { useRoute, useRouter } from "@/router";
 import { useMediakiwiStore } from "@/stores";
 import { Paging, SortDirection, Sorting, TableFilter } from "@/models";
 
-/*
-Will try to fill the given filter+paging+sorting models from the query parameters.
-After that, when the models are changed, it will update the query parameters.
-
-Will also save the full uri to pinia, so it can be used in certain 'back' scenarios.
-
-Please note that this function currently does not support nesting.
-*/
 export function useFilterInQuery<T>(filtersModel?: Ref<TableFilter>, pagingModel?: Ref<Paging>, sortingModel?: Ref<Sorting<T>>) {
   const mediakiwiStore = useMediakiwiStore();
   const router = useRouter();
