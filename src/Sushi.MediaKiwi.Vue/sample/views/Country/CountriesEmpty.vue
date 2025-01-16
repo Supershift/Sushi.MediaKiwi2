@@ -1,10 +1,10 @@
 <script setup lang="ts">
-  import { Country } from "./../models/Country";
+  import { Country } from "../../models/Country";
   import { MkTable } from "@/components";
   import { useI18next } from "@/composables";
   import { ListResult, Paging } from "@/models";
   import { reactive } from "vue";
-  import { ref } from "vue";
+  import { ref, computed } from "vue";
   import CountryEdit from "./AddCountry.vue";
 
   // inject dependencies
@@ -19,10 +19,15 @@
 
   // load data
   async function LoadData() {
-    state.countries = {
-      totalCount: 0,
-      result: [],
-    };
+    await new Promise((resolve) =>
+      setTimeout(() => {
+        state.countries = {
+          totalCount: 0,
+          result: [],
+        };
+        resolve(state.countries);
+      }, 1000)
+    );
   }
 
   function openDialog() {

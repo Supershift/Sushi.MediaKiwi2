@@ -36,6 +36,7 @@ export interface MediakiwiVueOptions {
   };
   emptyState?: {
     image?: string;
+    filterImage?: string;
     hideImage?: boolean;
   };
   /** Options for the sign in screen background*/

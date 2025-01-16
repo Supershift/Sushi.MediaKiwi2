@@ -1,9 +1,9 @@
 <script setup lang="ts">
-  import { Country } from "./../models/Country";
-  import { CountryConnector } from "./../services/CountryConnector";
+  import { Country } from "../../models/Country";
+  import { CountryConnector } from "../../services/CountryConnector";
   import { MkTable } from "@/components";
   import { useI18next } from "@/composables";
-  import { ListResult, Paging } from "@/models";
+  import { ListResult, Paging, TableFilter, TableFilterType } from "@/models";
   import { container } from "tsyringe";
   import { reactive } from "vue";
   import { ref } from "vue";
@@ -20,10 +20,21 @@
     addCountry: false,
   });
 
+  // define filters
+  const filters = ref<TableFilter>({
+    code: {
+      title: "Code",
+      type: TableFilterType.TextField,
+    },
+    name: {
+      title: "Name",
+      type: TableFilterType.TextField,
+    },
+  });
 
   // load data
   async function LoadData() {
-    state.countries = await connector.GetAll(currentPagination.value);
+    state.countries = await connector.GetAll(currentPagination.value, filters.value?.code?.selectedValue?.value, filters.value?.name?.selectedValue?.value);
   }
 
   function openDialog() {
@@ -33,6 +44,7 @@
 <template>
   <mk-table
     v-model:currentPagination="currentPagination"
+    v-model:filters="filters"
     :api-result="state.countries"
     :data="state.countries?.result"
     @load="LoadData"

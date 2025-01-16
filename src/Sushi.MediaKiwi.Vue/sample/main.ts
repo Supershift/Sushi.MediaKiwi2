@@ -18,6 +18,7 @@ import { useEntraSettings } from "@/composables/useEntraSettings";
 import { Configuration } from "@azure/msal-browser";
 
 import navigation from "./navigation/NavigationProvider";
+import { globalConfiguration } from "./plugin/GlobalConfiguration";
 
 // add mediakiwi
 const mediakiwiOptions: MediakiwiVueOptions = {
@@ -36,6 +37,7 @@ const mediakiwiOptions: MediakiwiVueOptions = {
         mdi,
       },
     },
+    ...globalConfiguration,
   },
   apiBaseUrl: import.meta.env.VITE_APP_MEDIAKIWI_APIBASEURL,
   navigationProvider: navigation,
@@ -73,7 +75,6 @@ const mediakiwiOptions: MediakiwiVueOptions = {
       resetOnSubmit: true,
       closeOnSubmit: true,
     },
-
   },
 };
 

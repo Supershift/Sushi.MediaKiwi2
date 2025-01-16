@@ -23,8 +23,13 @@
   import MkTableHead from "./MkTableHead.vue"; // Mk-Th
   import MkTableCell from "./MkTableCell.vue"; // Mk-Td
   import MkDisplayOptions from "@/components/MkDisplayOptions/MkDisplayOptions.vue";
-  import MkEmptyState from "../MkEmptyState/MkEmptyState.vue";
   import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
+  import { useI18next, useMediakiwiVueOptions } from "@/composables";
+  import MkNewItemButton from "../MkButton/MkNewItemButton.vue";
+
+  // Inject dependencies
+  const { t } = await useI18next();
+  const mediakiwiOptions = useMediakiwiVueOptions();
 
   // define properties
   const props = withDefaults(defineProps<MkTableProps<T>>(), {
@@ -54,6 +59,15 @@
   const sortDirection = computed(() => sorting.value?.sortDirection);
   const showBulkActionBar = computed(() => !!selection.value?.length && !props.hideBulkActionBar);
   const showFilterBar = computed(() => filters.value && !showBulkActionBar.value);
+  const showEmptyState = computed(() => !props.hideEmptyState && initialDataLoaded.value && !props.data?.length && !props.apiResult?.result?.length);
+
+  const hasActiveFilters = computed(() => {
+    if (!filters.value) return false;
+    // Check if there are any filters with a value
+    return Object.keys(filters.value).some((key) => filters.value![key] !== undefined && filters.value![key] !== null);
+  });
+
+  const showFullEmptyState = computed(() => showEmptyState.value && !hasActiveFilters.value);
 
   // define events
   const emit = defineEmits<{
@@ -87,6 +101,8 @@
     tbody?: (slotProps: MkTableBodySlotProps<T>) => never;
     /** Custom component for the empty state */
     emptyState?: () => never;
+    /** Custom Actions for the default empty state */
+    emptyStateActions?: () => never;
     /* Custom title */
     toolbarTitle?: () => never;
     /** Context menu slot */
@@ -173,6 +189,16 @@
     await loadData();
   }
 
+  async function clearFilterValues() {
+    // Clear the values of the filters
+    for (const key in filters.value) {
+      if (filters.value[key].closable !== false) {
+        filters.value[key].selectedValue = undefined;
+      }
+    }
+    await filterChanged(filters.value!);
+  }
+
   // local functions
   async function loadData() {
     // if a data callback is defined, call it so the parent can fetch data
@@ -203,7 +229,7 @@
     <v-progress-linear v-if="inProgress" indeterminate absolute></v-progress-linear>
     <slot name="header"></slot>
 
-    <template v-if="props.new || props.title || slots.toolbar || slots.overflowMenuActions">
+    <template v-if="(props.new || props.title || slots.toolbar || slots.overflowMenuActions) && !showFullEmptyState">
       <MkToolbar
         :navigation-item-id="props.navigationItemId"
         :title="props.title"
@@ -224,7 +250,7 @@
       </MkToolbar>
     </template>
 
-    <template v-if="showFilterBar">
+    <template v-if="showFilterBar && !showFullEmptyState">
       <MkTableFilter :model-value="filters!" @update:model-value="filterChanged" />
     </template>
 
@@ -241,6 +267,7 @@
     <slot v-if="slots.table" name="table" :data="apiResult ? apiResult.result : data" :item-id="itemId"></slot>
     <template v-else>
       <MkTableView
+        v-if="!showFullEmptyState"
         :table-map="tableMap"
         :data="apiResult ? apiResult.result : data"
         :navigation-item-id="navigationItemId"
@@ -287,7 +314,7 @@
         <template #bottom>
           <v-divider />
           <div class="mk-table__footer">
-            <div v-if="hasDisplayOptions" class="mk-table__footer-item">
+            <div v-if="hasDisplayOptions && !showEmptyState" class="mk-table__footer-item">
               <MkDisplayOptions v-model:display-options="displayOptions" v-model:table-reference="tableReference" />
             </div>
             <div v-if="showPagination" class="mk-table__footer-item">
@@ -309,18 +336,46 @@
         </template>
       </MkTableView>
 
-      <template v-if="!hideEmptyState && initialDataLoaded && !data?.length && !apiResult?.result?.length">
+      <template v-if="showEmptyState">
         <slot v-if="slots.emptyState" name="emptyState"></slot>
-        <MkEmptyState
+        <v-empty-state
           v-else
-          :new="props.new"
-          :navigation-item-id="props.navigationItemId"
-          :new-title="props.newTitle"
-          :new-emit="props.newEmit"
-          :headline="props.emptyStateTitle"
-          :text="props.emptyStateSubtitle"
-          @click:new="emit('click:new', $event)"
-        />
+          class="mk-empty-state"
+          :headline="props.emptyStateHeadline"
+          :title="props.emptyStateTitle || t('EmptyStateTitle', 'No results')"
+          :text="props.emptyStateText || t('EmptyStateText', 'No data was found.')"
+        >
+          <template #media>
+            <template v-if="hasActiveFilters">
+              <img v-if="props.emptyStateFilterImage" :src="props.emptyStateFilterImage" />
+              <img v-else-if="mediakiwiOptions?.emptyState?.filterImage" />
+              <img v-else src="@/assets/empty-state.svg" />
+            </template>
+            <template v-else>
+              <img v-if="props.emptyStateImage" :src="props.emptyStateImage" />
+              <img v-else-if="mediakiwiOptions?.emptyState?.image" />
+              <img v-else src="@/assets/empty-state.svg" />
+            </template>
+          </template>
+          <template #actions>
+            <slot v-if="slots.emptyStateActions" name="emptyStateActions" />
+            <template v-else>
+              <v-btn v-if="hasActiveFilters" variant="flat" color="primary" @click="clearFilterValues">
+                <template #prepend>
+                  <v-icon icon="symbols:restart_alt" />
+                </template>
+                {{ t("ClearFilters", "Clear filters") }}
+              </v-btn>
+              <MkNewItemButton
+                v-else-if="props.new && (props.navigationItemId || props.newEmit)"
+                :navigation-item-id="props.navigationItemId"
+                :new-title="props.newTitle"
+                :new-emit="props.newEmit"
+                @click:new="() => emit('click:new')"
+              />
+            </template>
+          </template>
+        </v-empty-state>
       </template>
     </template>
 
@@ -345,6 +400,12 @@
       justify-content: flex-end;
       align-items: center;
       gap: 24px;
+    }
+  }
+
+  .mk-empty-state {
+    .v-btn {
+      text-transform: unset;
     }
   }
 </style>
