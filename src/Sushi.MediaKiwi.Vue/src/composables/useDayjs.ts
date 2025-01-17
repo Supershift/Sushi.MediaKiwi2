@@ -1,9 +1,18 @@
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone"; // load on demand
+import utc from "dayjs/plugin/utc"; // load on demand
+dayjs.extend(timezone);
+dayjs.extend(utc);
+
+import { useTimeZones } from "./useTimeZones";
+const { currentTimeZone } = useTimeZones();
 
 export function useDayjs() {
+  dayjs.tz.setDefault(currentTimeZone.value);
+
   // refs
-  const currentDayjs = ref<dayjs.Dayjs>(dayjs());
+  const currentDayjs = ref<dayjs.Dayjs>(dayjs.tz());
   const currentDate = computed(() => currentDayjs.value.toDate());
 
   function addDateInternal(date: string | Date, value: number, unit: dayjs.ManipulateType) {

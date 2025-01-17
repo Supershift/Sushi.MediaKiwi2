@@ -1,20 +1,25 @@
 <script setup lang="ts">
   import SampleSideSheet from "./../components/SampleSideSheet.vue";
   import { reactive, ref, watch, computed } from "vue";
-  import { TableFilter, Sorting, Paging, TableFilterType, SortDirection, IconsLibrary, TableColumn, IListResult, DateRange, TableFilterValue } from "@/models";
+  import { TableFilter, Sorting, Paging, TableFilterType, SortDirection, IconsLibrary, IListResult, DateRange } from "@/models";
   import { MkTable, MkOverflowMenuIcon, MkTd, MkTh } from "@/components";
   import type { SampleData } from "@sample/models/SampleData";
   import { SampleDataConnector } from "@sample/services/SampleDataConnector";
   import { container } from "tsyringe";
   import { ICustomer } from "./../models/Customer";
   import { useI18next, useFilterInQuery, useDatePresets } from "@/composables";
+  import { useSnackbarStore } from "@/stores";
   import MkDatePresetMenu from "@/components/MkDatePresetMenu/MkDatePresetMenu.vue";
+  import { useTimeZones } from "@/composables/useTimeZones";
+
+  const snackbar = useSnackbarStore();
+  const { getTimeZones, currentTimeZone, setTimeZone } = useTimeZones();
 
   // inject dependencies
   const sampleDataConnector = container.resolve(SampleDataConnector);
   const { formatDate } = await useI18next();
 
-  const dayPresets = [7, 28, 90, 365];
+  const dayPresets = [1, 7, 28, 90, 365];
   const monthPresets = [0, 1];
 
   const { presets, formatPreset, formatDateRange } = await useDatePresets({
@@ -113,7 +118,7 @@
   const dateRangeFilter = ref<TableFilter>({
     dateRange: {
       title: "",
-      selectedValue: { title: dateOptions[1].title, value: dateOptions[1].value },
+      selectedValue: { title: dateOptions[0].title, value: dateOptions[0].value },
       options: dateOptions.map((o) => {
         return {
           title: o.title,
@@ -211,6 +216,11 @@
     state.showCustomerSideSheet = true;
   }
 
+  async function timeZoneUpdated(timeZone: string) {
+    setTimeZone(timeZone);
+    snackbar.showMessage(`Time zone has been set to ${timeZone}.`);
+  }
+
   // watch to close, othermethods not working
   watch(
     dateRangeFilter,
@@ -224,6 +234,15 @@
 <template>
   <div class="d-flex flex-row text-start align-start on-surface">
     <div class="flex-column">
+      <v-autocomplete
+        v-model="currentTimeZone"
+        :items="getTimeZones"
+        label="Time zone"
+        item-title="name"
+        item-value="value"
+        @update:model-value="timeZoneUpdated"
+      />
+
       <v-select
         v-model="dateRangeFilter.dateRange!.selectedValue"
         item-title="title"
