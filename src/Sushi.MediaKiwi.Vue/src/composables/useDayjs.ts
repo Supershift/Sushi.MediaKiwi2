@@ -91,21 +91,20 @@ export function useDayjs() {
     const d2 = dayjs(date2);
 
     // compare
-    return d2.diff(d1, unit, true);
+    return d2.diff(d1, unit);
   }
 
   function isFullMonthInternal(date1: string | Date, date2: string | Date) {
     // parse to dayjs
-    let d1 = dayjs(date1);
-    let d2 = dayjs(date2);
-
+    let d1 = dayjs(date1).tz();
+    let d2 = dayjs(date2).tz();
     return d1.isSame(d1.startOf("month")) && d2.isSame(d2.endOf("month"));
   }
 
   function isTodayInternal(date1: string | Date) {
     // parse to dayjs
-    const d1 = dayjs(date1).startOf("day");
-    const today = dayjs().startOf("day");
+    const d1 = dayjs(date1).tz().startOf("day");
+    const today = currentDayjs.value.startOf("day");
 
     // compare
     return d1.isSame(today);

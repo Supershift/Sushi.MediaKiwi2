@@ -38,10 +38,10 @@ export async function useDatePresets(options?: {
   function getPreset(type: "month"): DateRange[];
   function getPreset(type: "day" | "month") {
     const start = currentDayjs.value;
-    const end = currentDayjs.value.subtract(1, "day"); // we always want the last full day.
     const result = <DateRange[]>[];
 
     if (type === "day" && dayPresets) {
+      const end = currentDayjs.value;
       // Last x days
       for (const day of dayPresets) {
         const current = start.subtract(day, "day");
@@ -84,7 +84,7 @@ export async function useDatePresets(options?: {
           return formatMonth.value(start);
         } else if (isToday.value(end)) {
           const duration = getDifference.value(start, end, "day");
-          return defaultT.value("LastXDays", "Last {{duration}} days", { duration: Math.round(duration) });
+          return defaultT.value("LastXDays", "Last {{duration}} days", { duration });
         } else {
           return formatDateRange(start, end);
         }
