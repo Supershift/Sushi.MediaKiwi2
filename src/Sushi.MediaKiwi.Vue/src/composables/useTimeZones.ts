@@ -13,9 +13,7 @@ export type TimeZone = {
 
 export function useTimeZones() {
   // init current time zone
-  const storageKey = "timeZone";
-  const timeZoneFromStorage = localStorage.getItem(storageKey);
-  const currentTimeZone = ref<string>(timeZoneFromStorage || Intl.DateTimeFormat().resolvedOptions().timeZone);
+  const currentTimeZone = useStorage("timeZone", Intl.DateTimeFormat().resolvedOptions().timeZone);
 
   function timeZoneToName(timeZoneValue: string): string {
     return timeZoneValue.replace("_", " ");
