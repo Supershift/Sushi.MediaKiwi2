@@ -3,8 +3,9 @@
   import { useTableDisplayOptions } from "@/composables/useTableDisplayOptions";
   import { useSnackbarStore } from "@/stores";
   import { useI18next } from "@/composables/useI18next";
-  import { computed, reactive } from "vue";
+  import { computed, onBeforeMount, onUnmounted, reactive } from "vue";
   import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
+  import { watch } from "vue";
 
   // inject dependencies
   const { setColumnVisibility } = useTableDisplayOptions();
@@ -14,6 +15,7 @@
   const state = reactive({
     menuState: false,
     isEdited: false,
+    loadedColumns: <TableColumn[]>[],
   });
 
   /** Display Options */
@@ -21,7 +23,6 @@
   const hasDisplayOptions = computed(() => displayOptions.value !== undefined && displayOptions.value !== false);
   const hasColumns = computed(() => hasDisplayOptions.value && (displayOptions.value as TableDisplayOptions)?.columns?.length);
 
-  const loadedColumns = computed(() => (displayOptions.value as TableDisplayOptions).columns?.filter((column) => column.name) || []);
   /** TODO: Define Table Reference for when multiple tables are on one view */
   const tableReference = defineModel<string | undefined>("tableReference", { required: false });
 
@@ -44,6 +45,27 @@
       state.isEdited = false;
     }
   }
+
+  function loadColumns() {
+    state.loadedColumns = (displayOptions.value as TableDisplayOptions).columns?.filter((column) => column.name) || [];
+  }
+
+  /**
+   * Watch for changes in the display options, and reload the columns
+   * This is needed becasue the display options are reactive and can change on the MkTableView
+   */
+  watch(
+    () => displayOptions.value,
+    () => {
+      loadColumns();
+    }
+  );
+
+  onUnmounted(() => {
+    state.loadedColumns = [];
+  });
+
+  loadColumns();
 </script>
 <template>
   <div class="mk-display-options">
@@ -55,7 +77,7 @@
         </v-btn>
       </template>
       <v-list class="mk-display-options__list">
-        <v-list-item v-for="column in loadedColumns" :key="column.index" class="mk-display-options__list-item">
+        <v-list-item v-for="column in state.loadedColumns" :key="column.index" class="mk-display-options__list-item">
           <v-checkbox v-model="column.visible" @update:modelValue="updateDisplayColumns(column)" :label="column.name" hide-details></v-checkbox>
         </v-list-item>
       </v-list>
