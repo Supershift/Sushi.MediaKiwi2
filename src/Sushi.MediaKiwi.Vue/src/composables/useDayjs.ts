@@ -13,7 +13,6 @@ export function useDayjs() {
 
   // refs
   const currentDayjs = ref<dayjs.Dayjs>(dayjs.tz());
-  const currentDate = computed(() => currentDayjs.value.toDate());
 
   function addDateInternal(date: string | Date, value: number, unit: dayjs.ManipulateType) {
     // parse to dayjs
@@ -92,7 +91,7 @@ export function useDayjs() {
     const d2 = dayjs(date2);
 
     // compare
-    return d2.diff(d1, unit);
+    return d2.diff(d1, unit, true);
   }
 
   function isFullMonthInternal(date1: string | Date, date2: string | Date) {
@@ -125,7 +124,7 @@ export function useDayjs() {
   const isToday = computed(() => isTodayInternal);
 
   return {
-    currentDate,
+    currentDayjs,
     addDate,
     substractDate,
     startOf,

@@ -17,7 +17,7 @@ export async function useDatePresets(options?: {
   monthPresets: number[];
 }) {
   // refs
-  const { currentDate, substractDate, startOf, endOf, getDifference, isFullMonth, isToday } = useDayjs();
+  const { currentDayjs, getDifference, isFullMonth, isToday } = useDayjs();
   const { dayPresets, monthPresets } = options || {};
 
   const { formatMonth, defaultT, formatDate } = await useI18next();
@@ -37,29 +37,29 @@ export async function useDatePresets(options?: {
   function getPreset(type: "day"): DateRange[];
   function getPreset(type: "month"): DateRange[];
   function getPreset(type: "day" | "month") {
-    const start = currentDate.value;
-    const end = currentDate.value;
+    const start = currentDayjs.value;
+    const end = currentDayjs.value.subtract(1, "day"); // we always want the last full day.
     const result = <DateRange[]>[];
 
     if (type === "day" && dayPresets) {
       // Last x days
       for (const day of dayPresets) {
-        const current = substractDate.value(start, day, "day");
+        const current = start.subtract(day, "day");
         result.push({
-          start: startOf.value(current, "day"),
-          end: endOf.value(end, "day"),
+          start: current.startOf("day").toDate(),
+          end: end.endOf("day").toDate(),
           duration: day,
         });
       }
     } else if (type === "month" && monthPresets) {
       // Add current and last 2 months
       for (const month of monthPresets) {
-        const current = substractDate.value(start, month, "month");
-        const m = startOf.value(current, "month");
+        const current = start.subtract(month, "month");
+        const m = current.startOf("month");
 
         result.push({
-          start: m,
-          end: endOf.value(m, "month"),
+          start: m.toDate(),
+          end: m.endOf("month").toDate(),
         });
       }
     }
@@ -84,7 +84,7 @@ export async function useDatePresets(options?: {
           return formatMonth.value(start);
         } else if (isToday.value(end)) {
           const duration = getDifference.value(start, end, "day");
-          return defaultT.value("LastXDays", "Last {{duration}} days", { duration });
+          return defaultT.value("LastXDays", "Last {{duration}} days", { duration: Math.round(duration) });
         } else {
           return formatDateRange(start, end);
         }
@@ -105,7 +105,7 @@ export async function useDatePresets(options?: {
   }
 
   return {
-    currentDate,
+    currentDayjs,
     presets,
     formatPreset,
     formatDateRange,
