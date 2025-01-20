@@ -24,7 +24,7 @@ export function useTimeZones() {
     localStorage.setItem(storageKey, data);
   }
 
-  const getTimeZones = computed<TimeZone[]>(() => {
+  const timeZones = computed<TimeZone[]>(() => {
     const result = [
       { name: "Local", value: Intl.DateTimeFormat().resolvedOptions().timeZone },
       { name: "UTC", value: "UTC" },
