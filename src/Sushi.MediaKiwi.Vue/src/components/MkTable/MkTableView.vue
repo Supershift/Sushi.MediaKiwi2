@@ -10,7 +10,7 @@
   import MkTableCheckbox from "./MkTableCheckbox.vue";
   import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
   import { VTable } from "vuetify/lib/components/index.mjs";
-  import { onKeyDown, onKeyStroke, onKeyUp } from "@vueuse/core";
+  import { onKeyDown, onKeyStroke, onKeyUp, useMutationObserver } from "@vueuse/core";
 
   // inject dependencies
   const { initTableDisplayOptions } = useTableDisplayOptions();
@@ -31,9 +31,8 @@
   const hasDisplayOptions = computed(() => displayOptions.value !== undefined && displayOptions.value !== false);
 
   /** Ref to the table element */
-  const tbodyContainer = ref<any>(null);
-  const tbodyNode = computed(() => tbodyContainer.value! as Node);
   const myTable = useTemplateRef<VTable>("myTable");
+  const myTableBody = useTemplateRef("tbodyContainer");
   const rowMenuActive = reactive<{
     [key: string]: boolean;
   }>({});
@@ -270,8 +269,6 @@
     return fallback;
   }
 
-  const observer = new MutationObserver(loadDisplayOptions);
-
   function openContextMenuPreCheck(event: MouseEvent, dataItem: T) {
     // Close any open row menu
     if (rowMenuActive) {
@@ -287,15 +284,14 @@
     });
   }
 
+  const observer = ref<ReturnType<typeof useMutationObserver>>();
+
   onMounted(() => {
-    observer.observe(tbodyNode.value, {
-      childList: true,
-      subtree: true,
-    });
+    observer.value = useMutationObserver(myTableBody, loadDisplayOptions, { childList: true, subtree: true });
   });
 
   onUnmounted(() => {
-    observer.disconnect();
+    observer.value?.stop();
   });
 
   /**

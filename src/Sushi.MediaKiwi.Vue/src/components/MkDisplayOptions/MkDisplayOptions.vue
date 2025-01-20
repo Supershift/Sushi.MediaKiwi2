@@ -53,7 +53,6 @@
   /**
    * Watch for changes in the display options, and reload the columns
    * This is needed becasue the display options are reactive and can change on the MkTableView
-   *
    */
   watch(
     () => displayOptions.value,
