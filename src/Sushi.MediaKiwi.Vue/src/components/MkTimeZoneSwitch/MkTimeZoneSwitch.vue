@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { useTimeZones } from "@/composables/useTimeZones";
-  const { getTimeZones, currentTimeZone, setTimeZone } = await useTimeZones();
+  const { getTimeZones, currentTimeZone, setTimeZone } = useTimeZones();
 
   async function changeTimeZone(timeZone: string) {
     setTimeZone(timeZone);

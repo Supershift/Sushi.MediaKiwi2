@@ -12,8 +12,7 @@ export type TimeZone = {
   value: string;
 };
 
-export async function useTimeZones() {
-  const { t } = await useI18next("TimeZones");
+export function useTimeZones() {
   // init current time zone
   const storageKey = "timeZone";
   const timeZoneFromStorage = localStorage.getItem(storageKey);
@@ -30,8 +29,8 @@ export async function useTimeZones() {
 
   const getTimeZones = computed<TimeZone[]>(() => {
     const result = [
-      { name: t.value("Local", "Local").toString(), value: Intl.DateTimeFormat().resolvedOptions().timeZone },
-      { name: t.value("UTC", "UTC").toString(), value: "UTC" },
+      { name: "Local", value: Intl.DateTimeFormat().resolvedOptions().timeZone },
+      { name: "UTC", value: "UTC" },
     ];
     result.push(
       ...Intl.supportedValuesOf("timeZone")

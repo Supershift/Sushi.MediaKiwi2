@@ -15,7 +15,7 @@ import { useTimeZones } from "@/composables/useTimeZones";
 export async function useI18next(scope?: NavigationItem | string) {
   // inject dependencies
   const navigation = useNavigation();
-  const { currentTimeZone } = await useTimeZones();
+  const { currentTimeZone } = useTimeZones();
 
   // get i18next instance
   let i18next: Ref<i18n> | undefined;
