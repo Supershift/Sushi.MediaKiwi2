@@ -6,7 +6,7 @@ dayjs.extend(timezone);
 dayjs.extend(utc);
 
 import { useTimeZones } from "./useTimeZones";
-const { currentTimeZone } = useTimeZones();
+const { currentTimeZone } = await useTimeZones();
 
 export function useDayjs() {
   dayjs.tz.setDefault(currentTimeZone.value);

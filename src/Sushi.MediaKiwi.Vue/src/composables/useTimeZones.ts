@@ -1,4 +1,5 @@
 import { computed, ref } from "vue";
+import { useI18next } from "./useI18next";
 
 export type TimeZone = {
   /**
@@ -11,7 +12,8 @@ export type TimeZone = {
   value: string;
 };
 
-export function useTimeZones() {
+export async function useTimeZones() {
+  const { t } = await useI18next("TimeZones");
   // init current time zone
   const storageKey = "timeZone";
   const timeZoneFromStorage = localStorage.getItem(storageKey);
@@ -28,8 +30,8 @@ export function useTimeZones() {
 
   const getTimeZones = computed<TimeZone[]>(() => {
     const result = [
-      { name: "Local", value: Intl.DateTimeFormat().resolvedOptions().timeZone },
-      { name: "UTC", value: "UTC" },
+      { name: t.value("Local", "Local").toString(), value: Intl.DateTimeFormat().resolvedOptions().timeZone },
+      { name: t.value("UTC", "UTC").toString(), value: "UTC" },
     ];
     result.push(
       ...Intl.supportedValuesOf("timeZone")

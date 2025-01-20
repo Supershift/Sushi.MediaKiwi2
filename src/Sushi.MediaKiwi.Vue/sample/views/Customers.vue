@@ -10,10 +10,8 @@
   import { useI18next, useFilterInQuery, useDatePresets } from "@/composables";
   import { useSnackbarStore } from "@/stores";
   import MkDatePresetMenu from "@/components/MkDatePresetMenu/MkDatePresetMenu.vue";
-  import { useTimeZones } from "@/composables/useTimeZones";
 
   const snackbar = useSnackbarStore();
-  const { getTimeZones, currentTimeZone, setTimeZone } = useTimeZones();
 
   // inject dependencies
   const sampleDataConnector = container.resolve(SampleDataConnector);
@@ -216,11 +214,6 @@
     state.showCustomerSideSheet = true;
   }
 
-  async function timeZoneUpdated(timeZone: string) {
-    setTimeZone(timeZone);
-    snackbar.showMessage(`Time zone has been set to ${timeZone}.`);
-  }
-
   // watch to close, othermethods not working
   watch(
     dateRangeFilter,
@@ -234,15 +227,6 @@
 <template>
   <div class="d-flex flex-row text-start align-start on-surface">
     <div class="flex-column">
-      <v-autocomplete
-        v-model="currentTimeZone"
-        :items="getTimeZones"
-        label="Time zone"
-        item-title="name"
-        item-value="value"
-        @update:model-value="timeZoneUpdated"
-      />
-
       <v-select
         v-model="dateRangeFilter.dateRange!.selectedValue"
         item-title="title"
