@@ -16,7 +16,7 @@ export function useDayjs() {
 
   function addDateInternal(date: string | Date, value: number, unit: dayjs.ManipulateType) {
     // parse to dayjs
-    let d = dayjs(date);
+    let d = dayjs(date).tz();
 
     // manipulate
     d = d.add(value, unit);
@@ -27,7 +27,7 @@ export function useDayjs() {
 
   function substractDateInternal(date: string | Date, value: number, unit: dayjs.ManipulateType) {
     // parse to dayjs
-    let d = dayjs(date);
+    let d = dayjs(date).tz();
 
     // manipulate
     d = d.subtract(value, unit);
@@ -38,7 +38,7 @@ export function useDayjs() {
 
   function startOfInternal(date: string | Date, unit: dayjs.OpUnitType) {
     // parse to dayjs
-    let d = dayjs(date);
+    let d = dayjs(date).tz();
 
     // manipulate
     d = d.startOf(unit);
@@ -49,7 +49,7 @@ export function useDayjs() {
 
   function endOfInternal(date: string | Date, unit: dayjs.OpUnitType) {
     // parse to dayjs
-    let d = dayjs(date);
+    let d = dayjs(date).tz();
 
     // manipulate
     d = d.endOf(unit);
@@ -110,6 +110,12 @@ export function useDayjs() {
     return d1.isSame(today);
   }
 
+  function inConfiguredTimeZone(input: Date) {
+    const formatted = `${input.getFullYear()}-${input.getMonth() + 1}-${input.getDate()} ${input.getHours()}:${input.getMinutes()}:${input.getSeconds()}:${input.getMilliseconds()}`;
+    const result = dayjs.tz(formatted, "YYYY-M-D H:s:S", currentTimeZone.value);
+    return result.toDate();
+  }
+
   // Create computed to expose the internal functions
   const addDate = computed(() => addDateInternal);
   const substractDate = computed(() => substractDateInternal);
@@ -134,5 +140,6 @@ export function useDayjs() {
     getDifference,
     isFullMonth,
     isToday,
+    inConfiguredTimeZone,
   };
 }

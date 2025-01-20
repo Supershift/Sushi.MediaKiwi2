@@ -1,12 +1,12 @@
 <script setup lang="ts">
   import MkDialogCard from "../MkDialog/MkDialogCard.vue";
   import { ref } from "vue";
-  import { useI18next } from "@/composables";
+  import { useI18next, useDayjs } from "@/composables";
   import { useLocale } from "vuetify";
-
   // inject dependencies
   const { i18next, defaultT, t, formatDateTimeGeneric } = await useI18next("MkDatePicker");
   const { current } = useLocale();
+  const { inConfiguredTimeZone } = useDayjs();
   // TODO There needs to be a better way to set the locale through the custom i18n plugin
   current.value = i18next.value.language;
 
@@ -38,7 +38,8 @@
   }
 
   function apply() {
-    modelValue.value = model.value;
+    // set the model with dates that match the users configured time zone
+    modelValue.value = model.value.map((e) => inConfiguredTimeZone(e));
     close();
   }
 

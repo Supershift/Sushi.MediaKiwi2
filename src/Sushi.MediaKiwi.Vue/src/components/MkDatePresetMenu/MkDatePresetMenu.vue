@@ -43,7 +43,7 @@
   const modelValue = defineModel<{ value: any[]; title?: string }>({ required: true });
 
   // Inject dependencies
-  const { isSame, isBefore } = useDayjs();
+  const { isSame, isBefore, startOf, endOf } = useDayjs();
   const { defaultT } = await useI18next("MkDatePresetMenu");
   const { presets, formatPreset, formatDateRange } = await useDatePresets({
     dayPresets: props.days,
@@ -66,7 +66,6 @@
     let startDate, endDate, itemTitle;
 
     if (Array.isArray(value)) {
-
       // Deconstruct the array
       const [date1, date2] = value;
       let start, end;
@@ -83,25 +82,25 @@
       // Convert to dayjs,
       // Force the start date at the start of the DAY
       // And the endDate at the end of the DAY
-      startDate = dayjs(start).startOf("day").toDate();
-      endDate = dayjs(end).endOf("day").toDate();
+
+      startDate = startOf.value(start, "day");
+      endDate = endOf.value(end, "day");
       itemTitle = formatDateRange(startDate, endDate);
-    } 
-    else if ("title" in value) { // Deconstruct the TitledDateRange
+    } else if ("title" in value) {
+      // Deconstruct the TitledDateRange
 
       const { start, end, title } = value;
       startDate = start;
       endDate = end;
       itemTitle = formatDateRange(startDate, endDate, title);
-    
-    } else { // Deconstruct the DateRange
-      
+    } else {
+      // Deconstruct the DateRange
+
       const { start, end } = value;
       startDate = start;
       endDate = end;
       itemTitle = formatPreset(startDate, endDate);
     }
-  
 
     // Set the value
     state.model.value = [startDate, endDate];
@@ -167,17 +166,12 @@
       !presets.value.months.some((x: DateRange) => isSelectedPresetItem(x))
     );
   }
-  
+
   /**
    * Check if one of the custom titled items is selected.
    */
-   function isSelectedTitledItem(item: TitledDateRange) {
-    return (
-      state.model.value &&
-      state.model.value[0] &&
-      state.model.value[1] &&
-      !props.customOptions?.some((x: TitledDateRange) => isSelectedPresetItem(x))
-    );
+  function isSelectedTitledItem(item: TitledDateRange) {
+    return state.model.value && state.model.value[0] && state.model.value[1] && !props.customOptions?.some((x: TitledDateRange) => isSelectedPresetItem(x));
   }
 </script>
 
