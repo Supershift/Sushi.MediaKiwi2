@@ -1,5 +1,4 @@
 import { computed, ref } from "vue";
-import { useI18next } from "./useI18next";
 
 export type TimeZone = {
   /**
