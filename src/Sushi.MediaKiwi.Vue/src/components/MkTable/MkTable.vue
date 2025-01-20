@@ -275,11 +275,11 @@
           </template>
         </template>
 
-        <template #tbody="dataItem">
-          <slot v-if="slots.tbody" name="tbody" v-bind="dataItem"></slot>
+        <template #tbody="slotProps">
+          <slot v-if="slots.tbody" name="tbody" v-bind="slotProps"></slot>
           <template v-else>
             <!-- render a body cell for each mapping item -->
-            <MkTableCell v-for="(mapItem, cellIndex) in props.tableMap?.items" :key="cellIndex" :data="dataItem" :map-item="mapItem"></MkTableCell>
+            <MkTableCell v-for="(mapItem, cellIndex) in props.tableMap?.items" :key="cellIndex" :data="slotProps.dataItem" :map-item="mapItem"></MkTableCell>
           </template>
         </template>
 
