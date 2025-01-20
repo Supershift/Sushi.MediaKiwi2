@@ -110,8 +110,25 @@ export function useDayjs() {
     return d1.isSame(today);
   }
 
+  /**
+   * Converts a given Date object to a Date object in the configured time zone.
+   *
+   * @param {Date} input - The input Date object to be converted.
+   * @returns {Date} - A new Date object representing the input date and time in
+   *                   the configured time zone.
+   *
+   * @example
+   *
+   * // User has time zone configured as Europe/Amsterdam Time
+   * const input = new Date('2025-01-01T12:00:00Z');
+   * const output = inConfiguredTimeZone(input);
+   * console.log(input.toISOString());  // prints "2025-01-01T12:00:00.000Z"
+   * console.log(output.toISOString()); // prints "2025-01-01T11:00:00.000Z"
+   */
   function inConfiguredTimeZone(input: Date) {
+    // prepare date string without any time zone information
     const formatted = `${input.getFullYear()}-${input.getMonth() + 1}-${input.getDate()} ${input.getHours()}:${input.getMinutes()}:${input.getSeconds()}:${input.getMilliseconds()}`;
+    // parse the formatted string and treat it as it was in the configured time zone of the user
     const result = dayjs.tz(formatted, "YYYY-M-D H:s:S", currentTimeZone.value);
     return result.toDate();
   }
