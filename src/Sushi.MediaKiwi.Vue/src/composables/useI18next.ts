@@ -95,7 +95,7 @@ export async function useI18next(scope?: NavigationItem | string) {
     }
 
     // Use the custom provided options, or merge the date and time options
-    const formatOptions = options || { ...dateOptions.value, ...timeOptions.value, ...timeZoneOptions };
+    const formatOptions = options || { ...dateOptions.value, ...timeOptions.value, ...timeZoneOptions.value };
 
     return formatDateTimeGenericInternal(date, { ...formatOptions });
   };
@@ -106,7 +106,7 @@ export async function useI18next(scope?: NavigationItem | string) {
     }
 
     // Use the custom provided options, or merge the date options
-    const formatOptions = options || { ...dateOptions.value, ...timeZoneOptions };
+    const formatOptions = options || { ...dateOptions.value, ...timeZoneOptions.value };
 
     return formatDateTimeGenericInternal(date, { ...formatOptions });
   };
@@ -117,7 +117,7 @@ export async function useI18next(scope?: NavigationItem | string) {
     }
 
     // Use the custom provided options, or merge the time options
-    const formatOptions = options || { ...timeOptions.value, ...timeZoneOptions };
+    const formatOptions = options || { ...timeOptions.value, ...timeZoneOptions.value };
 
     return formatDateTimeGenericInternal(date, { ...formatOptions });
   };
@@ -128,7 +128,7 @@ export async function useI18next(scope?: NavigationItem | string) {
     }
 
     // Use the custom provided options, or merge the month options
-    const formatOptions = options || { ...monthOptions.value, ...timeZoneOptions };
+    const formatOptions = options || { ...monthOptions.value, ...timeZoneOptions.value };
 
     return formatDateTimeGenericInternal(date, { ...formatOptions });
   };
