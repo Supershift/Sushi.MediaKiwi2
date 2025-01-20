@@ -3,7 +3,7 @@
   import { useTableDisplayOptions } from "@/composables/useTableDisplayOptions";
   import { useSnackbarStore } from "@/stores";
   import { useI18next } from "@/composables/useI18next";
-  import { computed, onBeforeMount, onUnmounted, reactive } from "vue";
+  import { computed, reactive } from "vue";
   import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
   import { watch } from "vue";
 
@@ -53,6 +53,7 @@
   /**
    * Watch for changes in the display options, and reload the columns
    * This is needed becasue the display options are reactive and can change on the MkTableView
+   *
    */
   watch(
     () => displayOptions.value,
@@ -61,10 +62,7 @@
     }
   );
 
-  onUnmounted(() => {
-    state.loadedColumns = [];
-  });
-
+  // Load the columns when the component is mounted
   loadColumns();
 </script>
 <template>
