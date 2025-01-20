@@ -1,4 +1,5 @@
 import { computed, ref } from "vue";
+import { useStorage } from "@vueuse/core";
 
 export type TimeZone = {
   /**
@@ -21,7 +22,6 @@ export function useTimeZones() {
 
   function setTimeZone(data: string) {
     currentTimeZone.value = data;
-    localStorage.setItem(storageKey, data);
   }
 
   const timeZones = computed<TimeZone[]>(() => {
@@ -42,5 +42,5 @@ export function useTimeZones() {
     return result;
   });
 
-  return { getTimeZones, setTimeZone, currentTimeZone };
+  return { timeZones, setTimeZone, currentTimeZone };
 }
