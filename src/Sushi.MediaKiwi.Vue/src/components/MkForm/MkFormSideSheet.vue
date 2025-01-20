@@ -163,7 +163,7 @@
       </template>
 
       <template #default v-if="modelValue">
-        <div class="py-6">
+        <div class="pt-6">
           <slot name="intro"></slot>
           <MkErrorProblemDetails
             v-if="errorProblemDetails"

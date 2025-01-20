@@ -1,4 +1,3 @@
-import { MkLayout } from "@/constants";
 import { NavigationBuilder } from "@/navigation";
 import { FixedNavigationProvider } from "@/navigation/FixedNavigationProvider";
 
@@ -40,6 +39,11 @@ builder
   .addNavigationItem("Filters", "Filters", "./views/Demo/FiltersOverview.vue")
   .addNavigationItem("GetAccount", "Get Account", "./views/Account/GetAccount.vue")
   .addChild("EditAccount", "Edit Account", "./views/Account/EditAccount.vue", "accountId")
+  .endSection()
+  .startSection("Settings", "Settings", "symbols:settings")
+  .addNavigationItem("MkLocaleOverview", "Localization", "MkLocaleOverview")
+  .addChild("MkLocaleEdit", "Edit Localization", "MkLocaleEdit", "localeId")
+  .addNavigationItem("MkStyleGuideView", "Style Guide", "MkStyleGuideView")
   .endSection();
 
 // build provider
