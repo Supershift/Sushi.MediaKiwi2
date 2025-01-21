@@ -15,8 +15,5 @@
   "scripts": {
     "postinstall": "npm run install:mediakiwi.vue",
     "install:mediakiwi.vue": "cd src/Sushi.MediaKiwi.Vue && npm install --ignore-scripts"
-  },
-  "dependencies": {
-    "@vueuse/core": "^12.4.0"
   }
 }
