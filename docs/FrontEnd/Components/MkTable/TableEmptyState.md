@@ -1,7 +1,7 @@
 # Table empty state
 
 MkTable empty state will use the global emptyState option from the MediakiwiVueOptions.
-Their are 2 variant, default and filter. The filter variant will only be shown when the users uses the filters and the table yields no results.
+There are 2 variants: default and filter. The filter variant will only be shown when the user uses the filters and the table yields no results.
 
 ## Customization
 
