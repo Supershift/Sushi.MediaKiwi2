@@ -17,7 +17,7 @@ export function useTimeZones() {
   const currentTimeZone = useStorage("timeZone", Intl.DateTimeFormat().resolvedOptions().timeZone);
 
   function timeZoneToName(timeZoneValue: string): string {
-    return timeZoneValue.replace("_", " ");
+    return timeZoneValue.replace(/[-_]/g, " ");
   }
 
   function setTimeZone(data: string) {
