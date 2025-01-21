@@ -19,7 +19,7 @@
     items: [
       { headerTitle: "Id", value: (x) => x.id },
       { headerTitle: defaultT.value("Name"), value: (x) => x.name },
-      { headerTitle: defaultT.value("IsEnabled"), value: (x) => x.isEnabled },
+      { headerTitle: defaultT.value("Enabled"), value: (x) => x.isEnabled },
     ],
   };
 
