@@ -163,15 +163,9 @@
       state.model.value[0] &&
       state.model.value[1] &&
       !presets.value.days?.some((x: DateRange) => isSelectedPresetItem(x)) &&
-      !presets.value.months.some((x: DateRange) => isSelectedPresetItem(x))
+      !presets.value.months.some((x: DateRange) => isSelectedPresetItem(x)) &&
+      !props.customOptions?.some((x: DateRange) => isSelectedPresetItem(x))
     );
-  }
-
-  /**
-   * Check if one of the custom titled items is selected.
-   */
-  function isSelectedTitledItem(item: TitledDateRange) {
-    return state.model.value && state.model.value[0] && state.model.value[1] && !props.customOptions?.some((x: TitledDateRange) => isSelectedPresetItem(x));
   }
 </script>
 
@@ -185,7 +179,7 @@
       <v-list-item-title> {{ formatPreset(item.start, item.end) }}</v-list-item-title>
     </v-list-item>
     <v-divider v-if="props.customOptions" />
-    <v-list-item v-for="(item, i) in props.customOptions" :key="i" :active="isSelectedTitledItem(item)" @click="updateModelValue(item)">
+    <v-list-item v-for="(item, i) in props.customOptions" :key="i" :active="isSelectedPresetItem(item)" @click="updateModelValue(item)">
       <v-list-item-title> {{ formatDateRange(item.start, item.end, item.title) }}</v-list-item-title>
     </v-list-item>
     <v-divider />
