@@ -33,31 +33,41 @@ export type MkTableViewProps<T> = MkTableBaseProps<T> & {
   showHoverEffect: boolean;
 };
 
-export type MkTableProps<T> = MkTableBaseProps<T> & {
-  /** Sets data and paging properties based on the API's result. */
-  apiResult?: IListResult<T>;
-  /** When set, enables paging based on provided values. */
-  paging?: IPagingResult;
-  /** Determines if the toolbar has a new button, default: false. */
-  new?: boolean;
-  /** Determines if we only want to emit instead of navigating to the given navigationItemId */
-  newEmit?: boolean;
-  /** Overrides the "new item" button title */
-  newTitle?: string;
-  /** Callback invoked when the component needs new data, i.e. a filter changes, the current page changes, etc. */
-  onLoad?: () => Promise<void>;
-  /** Title specificly for the current table */
-  title?: string;
+export type MkTableProps<T> = MkTableBaseProps<T> &
+  MkTableEmptyStateProps & {
+    /** Sets data and paging properties based on the API's result. */
+    apiResult?: IListResult<T>;
+    /** When set, enables paging based on provided values. */
+    paging?: IPagingResult;
+    /** Determines if the toolbar has a new button, default: false. */
+    new?: boolean;
+    /** Determines if we only want to emit instead of navigating to the given navigationItemId */
+    newEmit?: boolean;
+    /** Overrides the "new item" button title */
+    newTitle?: string;
+    /** Callback invoked when the component needs new data, i.e. a filter changes, the current page changes, etc. */
+    onLoad?: () => Promise<void>;
+    /** Title specificly for the current table */
+    title?: string;
+    /** Hides the bulk action bar while keeing the checkboxes intact */
+    hideBulkActionBar?: boolean;
+    /** 'Tracks' the item the user viewed when changing pageSize, when true calculates this instead of resetting pageIndex to 0 */
+    pageTracking?: boolean;
+  };
+
+export type MkTableEmptyStateProps = {
   /** Hides the empty state component entirely */
   hideEmptyState?: boolean;
+  /** Headline for the Empty State component */
+  emptyStateHeadline?: string;
   /** Title for the Empty State component */
   emptyStateTitle?: string;
-  /** Subtitle for the Empty State component  */
-  emptyStateSubtitle?: string;
-  /** Hides the bulk action bar while keeing the checkboxes intact */
-  hideBulkActionBar?: boolean;
-  /** 'Tracks' the item the user viewed when changing pageSize, when true calculates this instead of resetting pageIndex to 0 */
-  pageTracking?: boolean;
+  /** Text for the Empty State component  */
+  emptyStateText?: string;
+  /** Path to the media file for the Empty State component. */
+  emptyStateImage?: string;
+  /** Path to the media file for the Empty State component. */
+  emptyStateFilterImage?: string;
 };
 
 export type MkTableTableSlotProps<T> = {

@@ -13,9 +13,15 @@ namespace Sushi.MediaKiwi.SampleAPI.DAL.Repository
             _connector = connector;
         }
 
-        public async Task<QueryListResult<Country>> GetAllAsync(PagingValues pagingValues)
+        public async Task<QueryListResult<Country>> GetAllAsync(string? countryCode, string? countryName, PagingValues pagingValues)
         {
             var query = _connector.CreateQuery();
+            if(!string.IsNullOrWhiteSpace(countryName))
+                query.Add(x => x.Name, $"%{countryName}%", ComparisonOperator.Like);
+            
+            if(!string.IsNullOrWhiteSpace(countryCode))
+                query.Add(x => x.Code, countryCode);
+
             query.AddPaging(pagingValues);
             query.AddOrder(x => x.Name);
             var result = await _connector.GetAllAsync(query);

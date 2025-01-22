@@ -18,6 +18,9 @@ import { useEntraSettings } from "@/composables/useEntraSettings";
 import { Configuration } from "@azure/msal-browser";
 
 import navigation from "./navigation/NavigationProvider";
+import { globalConfiguration } from "./plugin/GlobalConfiguration";
+
+import emptyStateFilterSvg from "./assets/empty-state-filter.svg";
 
 // add mediakiwi
 const mediakiwiOptions: MediakiwiVueOptions = {
@@ -36,6 +39,7 @@ const mediakiwiOptions: MediakiwiVueOptions = {
         mdi,
       },
     },
+    ...globalConfiguration,
   },
   apiBaseUrl: import.meta.env.VITE_APP_MEDIAKIWI_APIBASEURL,
   navigationProvider: navigation,
@@ -73,7 +77,14 @@ const mediakiwiOptions: MediakiwiVueOptions = {
       resetOnSubmit: true,
       closeOnSubmit: true,
     },
-
+  },
+  emptyState: {
+    filter: {
+      image: emptyStateFilterSvg,
+      headline: false,
+      title: "Oops! No results found matching your criteria.",
+      text: "Try changing your filter criteria to get more results.",
+    },
   },
 };
 

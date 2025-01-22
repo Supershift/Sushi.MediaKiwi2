@@ -1,29 +1,33 @@
 <script setup lang="ts">
-  import { Country } from "./../models/Country";
-  import { CountryConnector } from "./../services/CountryConnector";
+  import { Country } from "../../models/Country";
   import { MkTable } from "@/components";
   import { useI18next } from "@/composables";
   import { ListResult, Paging } from "@/models";
-  import { container } from "tsyringe";
   import { reactive } from "vue";
-  import { ref } from "vue";
-  import AddCountry from "./AddCountry.vue";
+  import { ref, computed } from "vue";
+  import CountryEdit from "./AddCountry.vue";
 
   // inject dependencies
-  const connector = container.resolve(CountryConnector);
   const { t } = await useI18next();
 
   // define reactive variables
-  const currentPagination = ref<Paging>({ pageSize: 8 }); // demos 8 items per page (lower than default 10)
+  const currentPagination = ref<Paging>({});
   const state = reactive({
     countries: <ListResult<Country>>{},
     addCountry: false,
   });
 
-
   // load data
   async function LoadData() {
-    state.countries = await connector.GetAll(currentPagination.value);
+    await new Promise((resolve) =>
+      setTimeout(() => {
+        state.countries = {
+          totalCount: 0,
+          result: [],
+        };
+        resolve(state.countries);
+      }, 1000)
+    );
   }
 
   function openDialog() {
@@ -41,7 +45,6 @@
     new
     :new-title="t('Add Country').toString()"
     new-emit
-    page-tracking
     @click:new="openDialog"
   >
     <template #thead>
@@ -55,5 +58,5 @@
     </template>
   </mk-table>
 
-  <AddCountry v-model="state.addCountry" />
+  <CountryEdit v-model="state.addCountry" />
 </template>

@@ -23,8 +23,8 @@
   import MkTableHead from "./MkTableHead.vue"; // Mk-Th
   import MkTableCell from "./MkTableCell.vue"; // Mk-Td
   import MkDisplayOptions from "@/components/MkDisplayOptions/MkDisplayOptions.vue";
-  import MkEmptyState from "../MkEmptyState/MkEmptyState.vue";
   import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
+  import MkTableEmptyState from "./MkTableEmptyState.vue";
 
   // define properties
   const props = withDefaults(defineProps<MkTableProps<T>>(), {
@@ -54,6 +54,15 @@
   const sortDirection = computed(() => sorting.value?.sortDirection);
   const showBulkActionBar = computed(() => !!selection.value?.length && !props.hideBulkActionBar);
   const showFilterBar = computed(() => filters.value && !showBulkActionBar.value);
+  const showEmptyState = computed(() => !props.hideEmptyState && initialDataLoaded.value && !props.data?.length && !props.apiResult?.result?.length);
+
+  const hasActiveFilters = computed(() => {
+    if (!filters.value) return false;
+    // Check if there are any filters with a value
+    return Object.keys(filters.value).some((key) => filters.value![key] !== undefined && filters.value![key] !== null);
+  });
+
+  const showFullEmptyState = computed(() => showEmptyState.value && !hasActiveFilters.value);
 
   // define events
   const emit = defineEmits<{
@@ -87,6 +96,8 @@
     tbody?: (slotProps: MkTableBodySlotProps<T>) => never;
     /** Custom component for the empty state */
     emptyState?: () => never;
+    /** Custom Actions for the default empty state */
+    emptyStateActions?: () => never;
     /* Custom title */
     toolbarTitle?: () => never;
     /** Context menu slot */
@@ -173,6 +184,16 @@
     await loadData();
   }
 
+  async function clearFilterValues() {
+    // Clear the values of the filters
+    for (const key in filters.value) {
+      if (filters.value[key].closable !== false) {
+        filters.value[key].selectedValue = undefined;
+      }
+    }
+    await filterChanged(filters.value!);
+  }
+
   // local functions
   async function loadData() {
     // if a data callback is defined, call it so the parent can fetch data
@@ -203,7 +224,7 @@
     <v-progress-linear v-if="inProgress" indeterminate absolute></v-progress-linear>
     <slot name="header"></slot>
 
-    <template v-if="props.new || props.title || slots.toolbar || slots.overflowMenuActions">
+    <template v-if="(props.new || props.title || slots.toolbar || slots.overflowMenuActions) && !showFullEmptyState">
       <MkToolbar
         :navigation-item-id="props.navigationItemId"
         :title="props.title"
@@ -224,7 +245,7 @@
       </MkToolbar>
     </template>
 
-    <template v-if="showFilterBar">
+    <template v-if="showFilterBar && !showFullEmptyState">
       <MkTableFilter :model-value="filters!" @update:model-value="filterChanged" />
     </template>
 
@@ -241,6 +262,7 @@
     <slot v-if="slots.table" name="table" :data="apiResult ? apiResult.result : data" :item-id="itemId"></slot>
     <template v-else>
       <MkTableView
+        v-if="!showFullEmptyState"
         :table-map="tableMap"
         :data="apiResult ? apiResult.result : data"
         :navigation-item-id="navigationItemId"
@@ -287,7 +309,7 @@
         <template #bottom>
           <v-divider />
           <div class="mk-table__footer">
-            <div v-if="hasDisplayOptions" class="mk-table__footer-item">
+            <div v-if="hasDisplayOptions && !showEmptyState" class="mk-table__footer-item">
               <MkDisplayOptions v-model:display-options="displayOptions" v-model:table-reference="tableReference" />
             </div>
             <div v-if="showPagination" class="mk-table__footer-item">
@@ -309,18 +331,13 @@
         </template>
       </MkTableView>
 
-      <template v-if="!hideEmptyState && initialDataLoaded && !data?.length && !apiResult?.result?.length">
+      <template v-if="showEmptyState">
         <slot v-if="slots.emptyState" name="emptyState"></slot>
-        <MkEmptyState
-          v-else
-          :new="props.new"
-          :navigation-item-id="props.navigationItemId"
-          :new-title="props.newTitle"
-          :new-emit="props.newEmit"
-          :headline="props.emptyStateTitle"
-          :text="props.emptyStateSubtitle"
-          @click:new="emit('click:new', $event)"
-        />
+        <MkTableEmptyState v-else v-bind="props" :hasActiveFilters="hasActiveFilters" @new="() => emit('click:new')" @reset-filters="clearFilterValues">
+          <template #actions v-if="slots.emptyStateActions">
+            <slot name="emptyStateActions"></slot>
+          </template>
+        </MkTableEmptyState>
       </template>
     </template>
 
