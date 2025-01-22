@@ -93,7 +93,7 @@
         width: !props.mobile ? props.width : "unset", // ensures the full width overlay based on the display size
         zIndex: props.zIndex !== "auto" ? props.zIndex : 1007, // (default: 1007, since drawer is 1006) layer positioning on the z-axis
         backgroundColor: props.sheetColor ?? "rgb(var(--v-theme-surface1))", // custom color for the sheet
-      }) as StyleValue
+      } as StyleValue)
   );
 
   const bodyHeight = computed<number | undefined>(() => {
@@ -107,7 +107,7 @@
   });
 </script>
 <template>
-  <v-sheet ref="side-sheet__sheet" class="side-sheet__sheet" :class="[modelValue && 'side-sheet__sheet--active']" :style="sheetStyles">
+  <v-sheet ref="side-sheet__sheet" class="side-sheet__sheet d-flex flex-column" :class="[modelValue && 'side-sheet__sheet--active']" :style="sheetStyles">
     <!-- Start header -->
     <v-card-item ref="side-sheet__header" :class="[headerClass, 'side-sheet__header']">
       <div :class="['side-sheet__header__content']">

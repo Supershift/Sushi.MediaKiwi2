@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { useI18next, useNavigation } from "@/composables";
+  import { useBreadcrumbs, useI18next, useNavigation, useValidationRules } from "@/composables";
   import { Locale } from "@/models";
   import { ref } from "vue";
   import { MkForm } from "@/components";
@@ -9,7 +9,9 @@
   // inject dependencies
   const mediaKiwiApi = useMediaKiwiApi();
   const navigation = useNavigation();
-  const { defaultT } = await useI18next();
+  const { defaultT, t } = await useI18next();
+  const { setCurrentBreadcrumbLabel } = useBreadcrumbs();
+  const { required, maxLength } = await useValidationRules();
 
   // get id of the view from the route
   const localeId = navigation.currentViewParameter;
@@ -25,6 +27,9 @@
         alert("No locale found!");
       } else {
         locale.value = { ...candidate.data, id: candidate.data.id ?? "" };
+        if (locale.value.name) {
+          setCurrentBreadcrumbLabel(locale.value.name);
+        }
       }
     }
   }
@@ -52,11 +57,17 @@
   }
 </script>
 <template>
-  <mk-form :on-load="onLoad" :onSubmit="onSave" :on-delete="onDelete">
-    <v-text-field v-model="locale.id" label="Id" hint="Unique human-readable id for the locale." :disabled="localeId ? true : false"></v-text-field>
-    <v-text-field v-model="locale.name" :label="defaultT('Name')"></v-text-field>
-    <v-checkbox v-model="locale.isEnabled" :label="defaultT('IsEnabled')"></v-checkbox>
+  <mk-form @load="onLoad" @submit="onSave" @delete="onDelete">
+    <v-text-field
+      v-model="locale.id"
+      :label="defaultT('Id')"
+      :hint="t('LocaleIdHint', 'Unique human-readable id for the locale.')"
+      :disabled="localeId ? true : false"
+      :rules="[required, maxLength(5)]"
+    ></v-text-field>
+    <v-text-field v-model="locale.name" :label="defaultT('Name')" :rules="[required, maxLength(128)]"></v-text-field>
+    <v-checkbox v-model="locale.isEnabled" :label="defaultT('Enabled')"></v-checkbox>
   </mk-form>
 
-  <translations :locale-id="locale.id"></translations>
+  <translations v-if="locale.id" :locale-id="locale.id"></translations>
 </template>
