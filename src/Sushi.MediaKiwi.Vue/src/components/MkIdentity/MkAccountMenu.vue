@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { useMsal } from "@/composables/useMsal";
   import { useIsAuthenticated } from "@/composables/useIsAuthenticated";
-  import { MkSignOutButton, MkLanguageSwitch } from "@/components";
+  import { MkSignOutButton, MkLanguageSwitch, MkTimeZoneSwitch } from "@/components";
   import { ref } from "vue";
   import { computed } from "vue";
   import { IconsLibrary } from "@/models";
@@ -68,7 +68,8 @@
           <slot name="default"></slot>
         </v-card-text>
         <v-card-text v-else>
-          <mk-language-switch></mk-language-switch>
+          <mk-time-zone-switch />
+          <mk-language-switch />
         </v-card-text>
 
         <template v-if="isAuthenticated">

@@ -6,7 +6,7 @@ import { Ref, computed, inject } from "vue";
 import { useNavigation } from "@/composables/useNavigation";
 import { container } from "tsyringe";
 import { NavigationItem } from "@/models/navigation";
-
+import { useTimeZones } from "@/composables/useTimeZones";
 /**
  * Adds i18next to the component.
  * @param scope If provided, the t function will be scoped to this namespace. If left undefined, it will be scoped to the current Navigation item's id.
@@ -15,6 +15,7 @@ import { NavigationItem } from "@/models/navigation";
 export async function useI18next(scope?: NavigationItem | string) {
   // inject dependencies
   const navigation = useNavigation();
+  const { currentTimeZone } = useTimeZones();
 
   // get i18next instance
   let i18next: Ref<i18n> | undefined;
@@ -86,6 +87,7 @@ export async function useI18next(scope?: NavigationItem | string) {
   const dateOptions = computed(() => mediakiwiOptions?.dateFormatOptions?.date || <Intl.DateTimeFormatOptions>{ dateStyle: "short" });
   const timeOptions = computed(() => mediakiwiOptions?.dateFormatOptions?.time || <Intl.DateTimeFormatOptions>{ timeStyle: "short" });
   const monthOptions = computed(() => mediakiwiOptions?.dateFormatOptions?.month || <Intl.DateTimeFormatOptions>{ month: "long" });
+  const timeZoneOptions = computed(() => <Intl.DateTimeFormatOptions>{ timeZone: currentTimeZone.value });
 
   const formatDateTimeInternal = (date: string | Date | undefined | null, options?: Intl.DateTimeFormatOptions): string => {
     if (!date) {
@@ -93,7 +95,7 @@ export async function useI18next(scope?: NavigationItem | string) {
     }
 
     // Use the custom provided options, or merge the date and time options
-    const formatOptions = options || { ...dateOptions.value, ...timeOptions.value };
+    const formatOptions = options || { ...dateOptions.value, ...timeOptions.value, ...timeZoneOptions.value };
 
     return formatDateTimeGenericInternal(date, { ...formatOptions });
   };
@@ -104,7 +106,7 @@ export async function useI18next(scope?: NavigationItem | string) {
     }
 
     // Use the custom provided options, or merge the date options
-    const formatOptions = options || { ...dateOptions.value };
+    const formatOptions = options || { ...dateOptions.value, ...timeZoneOptions.value };
 
     return formatDateTimeGenericInternal(date, { ...formatOptions });
   };
@@ -115,7 +117,7 @@ export async function useI18next(scope?: NavigationItem | string) {
     }
 
     // Use the custom provided options, or merge the time options
-    const formatOptions = options || { ...timeOptions.value };
+    const formatOptions = options || { ...timeOptions.value, ...timeZoneOptions.value };
 
     return formatDateTimeGenericInternal(date, { ...formatOptions });
   };
@@ -126,7 +128,7 @@ export async function useI18next(scope?: NavigationItem | string) {
     }
 
     // Use the custom provided options, or merge the month options
-    const formatOptions = options || { ...monthOptions.value };
+    const formatOptions = options || { ...monthOptions.value, ...timeZoneOptions.value };
 
     return formatDateTimeGenericInternal(date, { ...formatOptions });
   };
