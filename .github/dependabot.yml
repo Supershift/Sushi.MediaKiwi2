@@ -7,12 +7,7 @@ updates:
       interval: "weekly"
 
   - package-ecosystem: npm
-    directory: "/src"
-    schedule:
-      interval: "weekly"
-
-  - package-ecosystem: "docker"
-    directories: "/"
+    directory: "/src/Sushi.MediaKiwi.Vue"
     schedule:
       interval: "weekly"
 
