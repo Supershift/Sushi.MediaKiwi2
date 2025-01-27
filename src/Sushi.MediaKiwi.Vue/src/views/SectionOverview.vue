@@ -2,11 +2,10 @@
   import { MkTable } from "@/components";
   import { TableMap, ListResult, SectionDto, Paging } from "@/models";
   import { ref } from "vue";
-  import { container } from "tsyringe";
-  import { SectionConnector } from "@/services";
+  import { useMediaKiwiApi } from "@/services";
 
   // inject dependencies
-  const sectionConnector = container.resolve<SectionConnector>("ISectionConnector");
+  const mediaKiwiApi = useMediaKiwiApi();
 
   // define reactive variables
   const data = ref<ListResult<SectionDto>>();
@@ -26,7 +25,7 @@
 
   // get data
   async function onLoad() {
-    data.value = await sectionConnector.GetSections(currentPagination.value);
+    data.value = (await mediaKiwiApi.sections({ ...currentPagination.value })).data;
   }
 </script>
 <template>

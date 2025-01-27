@@ -1,18 +1,16 @@
 <script setup lang="ts">
-  import { Country } from "./../models/Country";
-  import { CountryConnector } from "./../services/CountryConnector";
   import { MkTable } from "@/components";
   import { useI18next, useKeyboardShortcuts } from "@/composables";
-  import { ListResult, TableMap, Paging, KeyboardShortcutCollection } from "@/models";
-  import { container } from "tsyringe";
+  import { ListResult, Paging, KeyboardShortcutCollection } from "@/models";
   import { reactive } from "vue";
   import { onDeactivated } from "vue";
   import { ref } from "vue";
   import AddCountry from "./AddCountry.vue";
+  import { useSampleApi, Country } from "@sample/services";
 
   // inject dependencies
   const { addKeyboardShortcuts, removeKeyboardShortcuts } = useKeyboardShortcuts();
-  const connector = container.resolve(CountryConnector);
+  const sampleApi = useSampleApi();
   const { t } = await useI18next();
 
   // define reactive variables
@@ -38,7 +36,7 @@
 
   // load data
   async function LoadData() {
-    state.countries = await connector.GetAll(currentPagination.value);
+    state.countries = (await sampleApi.countries(currentPagination.value)).data;
   }
 
   function openDialog() {

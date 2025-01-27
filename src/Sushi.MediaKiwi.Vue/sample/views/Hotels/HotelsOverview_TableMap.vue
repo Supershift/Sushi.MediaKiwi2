@@ -1,28 +1,23 @@
 <script setup lang="ts">
-  import { Country } from "./../../models/Country";
-  import { Hotel } from "./../../models/Hotel";
-  import { CountryConnector } from "./../../services/CountryConnector";
-  import { HotelConnector } from "./../../services/HotelConnector";
   import { ListResult, IconsLibrary, Paging, TableCellIcon, TableIconPosition, TableFilter, TableFilterType, TableFilterValue, TableMap } from "@/models";
 
   import { MkTable } from "@/components";
   import { useI18next } from "@/composables";
 
-  import { container } from "tsyringe";
   import { ref } from "vue";
+  import { useSampleApi, Country, HotelDto } from "@sample/services";
 
   // inject dependencies
-  const connector = container.resolve(HotelConnector);
-  const countriesConnector = container.resolve(CountryConnector);
+  const sampleApi = useSampleApi();
   const { formatDateTime, t } = await useI18next();
 
   // define reactive variables
   const currentPagination = ref<Paging>({});
-  const hotels = ref<ListResult<Hotel>>();
+  const hotels = ref<ListResult<HotelDto>>();
   const countries = ref<Country[]>();
 
   // define mapping
-  function srpIcon(item: Hotel): TableCellIcon {
+  function srpIcon(item: HotelDto): TableCellIcon {
     return {
       position: item.srp ? TableIconPosition.Append : TableIconPosition.Prepend,
       iconName: item.srp ? IconsLibrary.checkCircleOutline : IconsLibrary.accountCircle,
@@ -30,8 +25,8 @@
       label: item.srp ? "SRP correct" : "Define SRP",
     };
   }
-  const tableMap: TableMap<Hotel> = {
-    itemId: (item) => item.id,
+  const tableMap: TableMap<HotelDto> = {
+    itemId: (item) => item.id!,
     items: [
       { headerTitle: t.value("Name"), value: (item) => item.name },
       { headerTitle: t.value("Created"), value: (item) => formatDateTime.value(item.created) },
@@ -61,15 +56,17 @@
 
   // load data
   async function LoadData() {
-    hotels.value = await connector.GetAllAsync(
-      currentPagination.value,
-      filters.value.countryCode.selectedValue?.value,
-      filters.value.isActive.selectedValue?.value
-    );
+    hotels.value = (
+      await sampleApi.hotel({
+        countryCode: filters.value.countryCode.selectedValue?.value,
+        isActive: filters.value.isActive.selectedValue?.value,
+        ...currentPagination.value,
+      })
+    ).data;
   }
 
   // Load countries
-  countries.value = (await countriesConnector.GetAll({ pageIndex: 0, pageSize: 9999 })).result;
+  countries.value = (await sampleApi.countries({ pageIndex: 0, pageSize: 9999 })).data.result;
 
   // Set filter options
   filters.value.countryCode.options = countries.value?.map(({ code, name }) => <TableFilterValue>{ title: name, value: code });

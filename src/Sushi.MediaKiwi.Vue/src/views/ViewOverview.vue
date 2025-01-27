@@ -3,11 +3,10 @@
   import { TableMap, ListResult, Sorting, Paging } from "@/models";
   import { ViewDto } from "@/models";
   import { ref } from "vue";
-  import { container } from "tsyringe";
-  import { IViewConnector } from "@/services";
+  import { useMediaKiwiApi } from "@/services";
 
   // inject dependencies
-  const viewConnector = container.resolve<IViewConnector>("IViewConnector");
+  const mediaKiwiApi = useMediaKiwiApi();
 
   // define reactive variables
   const data = ref<ListResult<ViewDto>>();
@@ -28,7 +27,7 @@
 
   // get data
   async function onLoad() {
-    data.value = await viewConnector.GetViews(currentPagination.value, sorting.value);
+    data.value = (await mediaKiwiApi.views({ ...currentPagination.value, ...sorting.value, sortBy: "name" })).data;
   }
 </script>
 <template>

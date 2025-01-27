@@ -56,14 +56,14 @@ namespace Sushi.MediaKiwi.Services.UnitTests
                 Id = existingId,
                 Name = "Existing",
             };
-            var resultLocale = new Locale();
+            var resultLocale = new Locale { Id = "test", Name = "test" };
 
             var localeRepositoryMock = new Mock<ILocaleRepository>();
-            localeRepositoryMock.Setup(x => x.GetAsync(existingId)).ReturnsAsync(existingLocale);            
+            localeRepositoryMock.Setup(x => x.GetAsync(existingId)).ReturnsAsync(existingLocale);
 
             var translationRepositoryMock = new Mock<ITranslationRepository>();
 
-            var mapperMock = new Mock<IMapper>();                        
+            var mapperMock = new Mock<IMapper>();
             mapperMock.Setup(x => x.Map<Locale>(It.IsAny<Entities.Locale>())).Returns(resultLocale);
 
             var service = new LocaleService(localeRepositoryMock.Object, translationRepositoryMock.Object, mapperMock.Object);
@@ -88,13 +88,13 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             var translationRepositoryMock = new Mock<ITranslationRepository>();
 
-            var mapperMock = new Mock<IMapper>();            
+            var mapperMock = new Mock<IMapper>();
 
             var service = new LocaleService(localeRepositoryMock.Object, translationRepositoryMock.Object, mapperMock.Object);
 
             // act
             var result = await service.GetAsync(existingId);
-            
+
             Assert.NotNull(result.Error);
             Assert.IsType<NotFoundError>(result.Error);
             Assert.Null(result.Value);
@@ -106,6 +106,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             // arrange
             var locale = new Locale()
             {
+                Id = "test",
                 IsEnabled = true,
                 Name = "Test",
             };
@@ -120,7 +121,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             var localeRepositoryMock = new Mock<ILocaleRepository>();
             localeRepositoryMock.Setup(x => x.InsertAsync(It.IsAny<Entities.Locale>())).Verifiable();
-            localeRepositoryMock.Setup(x=>x.GetDefaultAsync()).ReturnsAsync(defaultLocale);
+            localeRepositoryMock.Setup(x => x.GetDefaultAsync()).ReturnsAsync(defaultLocale);
             var translationRepositoryMock = new Mock<ITranslationRepository>();
             translationRepositoryMock.Setup(x => x.DuplicateAsync(It.IsAny<string>(), It.IsAny<string>())).Verifiable();
 
@@ -143,11 +144,12 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             // arrange
             var locale = new Locale()
             {
+                Id = "test",
                 IsEnabled = true,
                 Name = "Test",
             };
 
-            Entities.Locale? defaultLocale = null;            
+            Entities.Locale? defaultLocale = null;
 
             string newId = "abc";
 
@@ -179,7 +181,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             {
                 Id = existingId,
                 Name = "Existing",
-            };            
+            };
 
             var localeRepositoryMock = new Mock<ILocaleRepository>();
             localeRepositoryMock.Setup(x => x.GetAsync(existingId)).ReturnsAsync(existingLocale);
@@ -187,7 +189,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             var translationRepositoryMock = new Mock<ITranslationRepository>();
 
-            var mapperMock = new Mock<IMapper>();            
+            var mapperMock = new Mock<IMapper>();
 
             var service = new LocaleService(localeRepositoryMock.Object, translationRepositoryMock.Object, mapperMock.Object);
 
@@ -196,7 +198,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             Assert.NotNull(result);
             Assert.Null(result.Error);
-            localeRepositoryMock.Verify(x=>x.DeleteAsync(existingLocale), Times.Once);
+            localeRepositoryMock.Verify(x => x.DeleteAsync(existingLocale), Times.Once);
         }
 
         [Fact]
@@ -205,6 +207,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             // arrange
             var locale = new Locale()
             {
+                Id = "test",
                 IsEnabled = true,
                 Name = "Test",
             };
@@ -223,20 +226,22 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var translationRepositoryMock = new Mock<ITranslationRepository>();
 
             var mapperMock = new Mock<IMapper>();
-            mapperMock.Setup(x => x.Map(It.IsAny<Locale>(), It.IsAny<Entities.Locale>())).Verifiable();
-            mapperMock.Setup(x => x.Map(It.IsAny<Entities.Locale>(), It.IsAny<Locale>())).Verifiable();
+            mapperMock
+                .Setup(x => x.Map<Locale>(It.Is<Entities.Locale>(l => l.Id == existingId)))
+                .Returns(new Locale { Id = "return", Name = "return" });
 
             var service = new LocaleService(localeRepositoryMock.Object, translationRepositoryMock.Object, mapperMock.Object);
 
             // act
             var result = await service.UpdateAsync(existingId, locale);
 
+            // assert
             Assert.NotNull(result);
             Assert.Null(result.Error);
-            Assert.NotNull(result.Value);            
+            Assert.NotNull(result.Value);
             localeRepositoryMock.Verify(x => x.UpdateAsync(existingLocale), Times.Once());
-            mapperMock.Verify(x => x.Map(locale, existingLocale), Times.Once());            
-            mapperMock.Verify(x => x.Map(existingLocale, It.IsAny<Locale>()), Times.Once());            
+
+            Assert.Equal("return", result.Value.Name);
         }
     }
 }
