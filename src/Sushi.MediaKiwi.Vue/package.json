@@ -28,9 +28,9 @@
   "module": "./dist/mediakiwi-vue.es.js",
   "exports": {
     ".": {
-      "import": "./dist/mediakiwi-vue.es.js",
       "require": "./dist/mediakiwi-vue.umd.js",
-      "types": "./dist/main.d.ts"
+      "types": "./dist/main.d.ts",
+      "import": "./dist/mediakiwi-vue.es.js"
     },
     "./styles": {
       "import": "./dist/mediakiwi-vue.css",
