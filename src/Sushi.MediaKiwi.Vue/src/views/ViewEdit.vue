@@ -2,15 +2,15 @@
   import { MkForm } from "@/components";
   import { ref } from "vue";
   import { container } from "tsyringe";
-  import { IViewConnector } from "@/services";
   import { ViewDto } from "@/models";
   import { useMediakiwiStore } from "@/stores";
   import { RouterManager } from "@/router/routerManager";
   import { useNavigation } from "@/composables/useNavigation";
   import { useValidationRules } from "@/composables";
+  import { useMediaKiwiApi } from "@/services";
 
   // inject dependencies
-  const viewConnector = container.resolve<IViewConnector>("IViewConnector");
+  const mediaKiwiApi = useMediaKiwiApi();
   const routerManager = container.resolve<RouterManager>("RouterManager");
   const { required } = await useValidationRules();
 
@@ -21,12 +21,12 @@
   const viewId = navigation.currentViewParameter;
 
   // declare reactive variables
-  const view = ref<ViewDto>({ id: viewId.value ?? "" });
+  const view = ref<ViewDto>({ id: viewId.value ?? "", name: "", componentKey: "", roles: [] });
 
   async function onLoad() {
     if (viewId.value) {
       // get existing view from api
-      const candidate = await viewConnector.GetView(viewId.value);
+      const candidate = (await mediaKiwiApi.viewsGet(viewId.value)).data;
       if (!candidate) {
         alert("No view found!");
       }
@@ -37,19 +37,19 @@
   async function onSave() {
     if (viewId.value) {
       // update existing view
-      await viewConnector.UpdateView(viewId.value, view.value);
+      await mediaKiwiApi.viewsUpdate(viewId.value, view.value);
 
       // refresh store (to update the view in the navigation)
       await routerManager.ForceInitialize();
     } else {
       // create new view
-      const newView = await viewConnector.CreateView(view.value.id, view.value);
+      const newView = await mediaKiwiApi.viewsCreate(view.value.id, view.value);
 
       // refresh store (to update the view in the navigation)
       await routerManager.ForceInitialize();
 
       // push user to the new view
-      navigation.navigateTo(navigation.currentNavigationItem.value, newView.id);
+      navigation.navigateTo(navigation.currentNavigationItem.value, newView.data.id);
     }
   }
 
@@ -57,7 +57,7 @@
   if (viewId.value) {
     onDelete = async () => {
       if (viewId.value) {
-        await viewConnector.DeleteView(viewId.value);
+        await mediaKiwiApi.viewsDelete(viewId.value);
 
         // refresh store (to update the view in the navigation)
         await routerManager.ForceInitialize();

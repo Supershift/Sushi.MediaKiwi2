@@ -1,8 +1,4 @@
 <script setup lang="ts">
-  import { Country } from "./../../models/Country";
-  import { Hotel } from "./../../models/Hotel";
-  import { CountryConnector } from "./../../services/CountryConnector";
-  import { HotelConnector } from "./../../services/HotelConnector";
   import {
     IconsLibrary,
     Paging,
@@ -19,13 +15,12 @@
   import { MkTable, MkTh, MkTd } from "@/components";
   import { useI18next, useFilterInQuery } from "@/composables";
 
-  import { container } from "tsyringe";
   import { ref } from "vue";
   import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
+  import { useSampleApi, Country, HotelDto } from "@sample/services";
 
   // inject dependencies
-  const connector = container.resolve(HotelConnector);
-  const countriesConnector = container.resolve(CountryConnector);
+  const sampleApi = useSampleApi();
   const { formatDateTime, t } = await useI18next();
 
   // define reactive variables
@@ -33,7 +28,7 @@
     pageIndex: 0,
     pageSize: 11,
   }); // demos 11 items per page (higher than default 10), also adds to the current list
-  const hotels = ref<ListResult<Hotel>>();
+  const hotels = ref<ListResult<HotelDto>>();
   const countries = ref<Country[]>();
 
   // Set the name column to be hidden by default, the user can change this in the display options
@@ -43,7 +38,7 @@
   });
 
   // define mapping
-  function srpIcon(item: Hotel): TableCellIcon {
+  function srpIcon(item: HotelDto): TableCellIcon {
     return {
       position: item.srp ? TableIconPosition.Append : TableIconPosition.Prepend,
       iconName: item.srp ? IconsLibrary.checkCircleOutline : IconsLibrary.accountCircle,
@@ -73,15 +68,17 @@
 
   // load data
   async function LoadData() {
-    hotels.value = await connector.GetAllAsync(
-      currentPagination.value,
-      filters.value.countryCode.selectedValue?.value,
-      filters.value.isActive.selectedValue?.value
-    );
+    hotels.value = (
+      await sampleApi.hotel({
+        countryCode: filters.value.countryCode.selectedValue?.value,
+        isActive: filters.value.isActive.selectedValue?.value,
+        ...currentPagination.value,
+      })
+    ).data;
   }
 
   // Load countries
-  countries.value = (await countriesConnector.GetAll({ pageIndex: 0, pageSize: 9999 })).result;
+  countries.value = (await sampleApi.countries({ pageIndex: 0, pageSize: 9999 })).data.result;
 
   // Set filter options
   filters.value.countryCode.options = countries.value?.map(({ code, name }) => <TableFilterValue>{ title: name, value: code });
@@ -95,18 +92,18 @@
 
   useFilterInQuery(filters, currentPagination, sorting);
 
-  async function onNameChanged(hotel: Hotel, name: string) {
+  async function onNameChanged(hotel: HotelDto, name: string) {
     hotel.name = name;
     await SaveData(hotel);
   }
 
-  async function onCountryCodeChanged(hotel: Hotel, code: string) {
+  async function onCountryCodeChanged(hotel: HotelDto, code: string) {
     hotel.countryCode = code;
     await SaveData(hotel);
   }
 
   /** TODO Implement */
-  async function SaveData(hotel: Hotel) {
+  async function SaveData(hotel: HotelDto) {
     console.log(hotel);
   }
 </script>
@@ -119,7 +116,7 @@
     :api-result="hotels"
     :on-load="LoadData"
     :data="hotels?.result"
-    :item-id="(item: Hotel) => item.id"
+    :item-id="(item: HotelDto) => item.id!"
     navigation-item-id="HotelEdit"
     new
     new-emit
@@ -146,7 +143,7 @@
       <th mk-column-id="srpValue" :mk-column-label="t('SRP Icon')"></th>
     </template>
 
-    <template #tbody="dataItem: Hotel">
+    <template #tbody="dataItem: HotelDto">
       <td>{{ dataItem.name }}</td>
       <td>{{ formatDateTime(dataItem.created) }}</td>
       <mk-td @click.stop>

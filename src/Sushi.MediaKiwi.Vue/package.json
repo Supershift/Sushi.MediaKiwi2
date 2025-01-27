@@ -15,7 +15,9 @@
     "cy:coverage:component": "cypress run --component",
     "build:sample": "vue-tsc && vite build --config ./vite.config.sample.ts",
     "preview:sample": "npm run build:sample && vite preview --config ./vite.config.sample.ts",
-    "build": "vue-tsc && vite build"
+    "build": "vue-tsc && vite build",
+    "update_api": "node ./src/services/generator/swagger-typescript-api.js",
+    "update_api_sample": "node ./sample/services/generator/swagger-typescript-api.js"
   },
   "type": "module",
   "files": [
@@ -89,6 +91,7 @@
     "rollup-plugin-typescript2": "^0.36.0",
     "sass": "^1.81.0",
     "start-server-and-test": "^2.0.8",
+    "swagger-typescript-api": "^13.0.23",
     "typescript": "^5.6.3",
     "vite": "^5.4.11",
     "vite-plugin-dts": "^4.3.0",
