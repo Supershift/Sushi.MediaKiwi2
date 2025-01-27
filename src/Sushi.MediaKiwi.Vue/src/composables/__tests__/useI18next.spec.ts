@@ -11,6 +11,14 @@ import { NavigationItem } from "../../models/navigation";
 vi.mock("i18next");
 vi.mock("@azure/msal-browser");
 vi.mock("vue-router");
+vi.mock("@composable/useTimeZones");
+
+vi.mock("@/composables/useTimeZones", () => ({
+  useTimeZones: () => ({
+    currentTimeZone: ref<string>("Europe/Amsterdam"),
+  }),
+}));
+const defaultTimeZone = "Europe/Amsterdam";
 
 describe("useI18next", () => {
   async function getComposable(ns?: string | NavigationItem): ReturnType<typeof useI18next> {
@@ -19,7 +27,7 @@ describe("useI18next", () => {
       setup() {
         result = useI18next(ns);
         // suppress missing template warning
-        return () => { };
+        return () => {};
       },
     });
     app.provide("i18next", ref(i18next));
@@ -37,7 +45,7 @@ describe("useI18next", () => {
     it("Should call i18next.t with view's id", async () => {
       // arrange
       const spy = vi.spyOn(i18next, "getFixedT").mockImplementation(() => vi.fn() as unknown as TFunction);
-      const composable = await getComposable({ id: "myView", children: [], name: 'view', section: { id: '3', name: '', items: [] } });
+      const composable = await getComposable({ id: "myView", children: [], name: "view", section: { id: "3", name: "", items: [] } });
 
       // act
       composable.t.value("test");
@@ -85,7 +93,7 @@ describe("useI18next", () => {
       const result = composable.formatDateTime.value(new Date(2021, 1, 1, 12, 0, 0));
 
       // assert
-      expect(spy).toHaveBeenCalledWith(language, { dateStyle: "short", timeStyle: "short" });
+      expect(spy).toHaveBeenCalledWith(language, { dateStyle: "short", timeStyle: "short", timeZone: defaultTimeZone });
       expect(result).not.toBeUndefined();
     });
     it("Should parse string", async () => {
@@ -99,7 +107,7 @@ describe("useI18next", () => {
       const result = composable.formatDateTime.value("2021-01-01T13:56:43Z");
 
       // assert
-      expect(spy).toHaveBeenCalledWith(language, { dateStyle: "short", timeStyle: "short" });
+      expect(spy).toHaveBeenCalledWith(language, { dateStyle: "short", timeStyle: "short", timeZone: defaultTimeZone });
       expect(result).not.toBeUndefined();
     });
 
@@ -131,7 +139,7 @@ describe("useI18next", () => {
       const result = composable.formatDate.value(new Date(2021, 1, 1, 12, 0, 0));
 
       // assert
-      expect(spy).toHaveBeenCalledWith(language, { dateStyle: "short" });
+      expect(spy).toHaveBeenCalledWith(language, { dateStyle: "short", timeZone: defaultTimeZone });
       expect(result).not.toBeUndefined();
     });
     it("Should parse string", async () => {
@@ -145,7 +153,7 @@ describe("useI18next", () => {
       const result = composable.formatDate.value("2021-01-01T13:56:43Z");
 
       // assert
-      expect(spy).toHaveBeenCalledWith(language, { dateStyle: "short" });
+      expect(spy).toHaveBeenCalledWith(language, { dateStyle: "short", timeZone: defaultTimeZone });
       expect(result).not.toBeUndefined();
     });
 
@@ -178,7 +186,7 @@ describe("useI18next", () => {
       const result = composable.formatTime.value(new Date(2021, 1, 1, 12, 0, 0));
 
       // assert
-      expect(spy).toHaveBeenCalledWith(language, { timeStyle: "short" });
+      expect(spy).toHaveBeenCalledWith(language, { timeStyle: "short", timeZone: defaultTimeZone });
       expect(result).not.toBeUndefined();
     });
     it("Should parse string", async () => {
@@ -192,7 +200,7 @@ describe("useI18next", () => {
       const result = composable.formatTime.value("2021-01-01T13:56:43Z");
 
       // assert
-      expect(spy).toHaveBeenCalledWith(language, { timeStyle: "short" });
+      expect(spy).toHaveBeenCalledWith(language, { timeStyle: "short", timeZone: defaultTimeZone });
       expect(result).not.toBeUndefined();
     });
 
@@ -225,7 +233,7 @@ describe("useI18next", () => {
       const result = composable.formatMonth.value(new Date(2021, 1, 1, 12, 0, 0));
 
       // assert
-      expect(spy).toHaveBeenCalledWith(language, { month: "long" });
+      expect(spy).toHaveBeenCalledWith(language, { month: "long", timeZone: defaultTimeZone });
       expect(result).not.toBeUndefined();
       expect(result).toBe("February");
     });
@@ -241,7 +249,7 @@ describe("useI18next", () => {
       const result = composable.formatMonth.value("2021-01-01T13:56:43Z");
 
       // assert
-      expect(spy).toHaveBeenCalledWith(language, { month: "long" });
+      expect(spy).toHaveBeenCalledWith(language, { month: "long", timeZone: defaultTimeZone });
       expect(result).toBe("January");
       expect(result).not.toBeUndefined();
     });

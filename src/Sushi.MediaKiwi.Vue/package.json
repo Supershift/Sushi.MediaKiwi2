@@ -47,6 +47,7 @@
   "dependencies": {
     "@azure/msal-browser": "^2.39.0",
     "@date-io/dayjs": "^3.0.0",
+    "@vueuse/core": "^12.4.0",
     "axios": "^1.7.7",
     "dayjs": "^1.11.13",
     "i18next": "^23.16.5",
@@ -126,5 +127,9 @@
     "builder",
     "vue",
     "vuetify"
-  ]
+  ],
+  "bugs": {
+    "url": "https://github.com/Supershift/Sushi.MediaKiwi2/issues"
+  },
+  "homepage": "https://github.com/Supershift/Sushi.MediaKiwi2#readme"
 }
