@@ -25,7 +25,7 @@
   function srpIcon(item: Hotel): TableCellIcon {
     return {
       position: item.srp ? TableIconPosition.Append : TableIconPosition.Prepend,
-      iconName: item.srp ? IconsLibrary.accountOutline : IconsLibrary.accountCircle,
+      iconName: item.srp ? IconsLibrary.checkCircleOutline : IconsLibrary.accountCircle,
       tooltip: item.srp ? "SRP" : "NoSRP",
       label: item.srp ? "SRP correct" : "Define SRP",
     };
@@ -84,7 +84,7 @@
     :table-map="tableMap"
     :on-load="LoadData"
     :data="hotels?.result"
-    item-view-id="HotelEdit"
+    navigation-item-id="HotelEdit"
     title="Subtitle for the hotel list"
   >
     <template #toolbar>

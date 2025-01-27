@@ -6,7 +6,7 @@ import { RouteGenerator } from "../routeGenerator";
 import { MediakiwiVueOptions } from "../../models";
 import { createRouter, RouteComponent, RouterOptions, RouteRecordRaw, createWebHistory } from "vue-router";
 import { Component } from "vue";
-import { type NavigationItem, type View } from "../../models";
+import { NavigationTree, Section, type NavigationItem } from "../../models/navigation";
 import { Configuration } from "@azure/msal-browser";
 import * as store from "../../stores/index";
 import { setActivePinia } from "pinia";
@@ -20,14 +20,14 @@ const modules: Record<string, RouteComponent> = {
   a: <Component>{},
   b: <Component>{},
 };
+const section : Section = { id: "1", name: "Admin Section", roles: ["admin"], items:[] };
 const navigationItems: NavigationItem[] = [
-  { id: 1, viewId: "a", path: "/orders", name: "", sectionId: 1 },
-  { id: 2, viewId: "b", path: "/customers", name: "", sectionId: 1 },
+  { id: "1", componentKey: "a", name: "", section: section, children: [] },
+  { id: "2", componentKey: "b", name: "", section: section, children: [] },
 ];
-const screens: View[] = [
-  { id: "a", sectionId: 1, componentKey: "a", name: "screen a" },
-  { id: "b", sectionId: 1, componentKey: "b", name: "screen b" },
-];
+section.items = navigationItems;
+const tree = new NavigationTree([section]);
+
 const options: MediakiwiVueOptions = {
   apiBaseUrl: "",
   modules: modules,
@@ -89,9 +89,9 @@ describe("RouterManager", () => {
     const routeGenerator = vi.mocked(new RouteGenerator());
     routeGenerator.generateRoutes.mockReturnValue([]);
     const routerManager = new RouterManager(options, router, routeGenerator);
-
+    
     // act
-    routerManager.updateRoutes(modules, navigationItems, screens);
+    routerManager.updateRoutes(modules, tree);
 
     // assert
     const routes = router.getRoutes();

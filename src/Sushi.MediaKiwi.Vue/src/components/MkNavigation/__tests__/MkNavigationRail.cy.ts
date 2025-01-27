@@ -1,14 +1,13 @@
 import "reflect-metadata";
 import MkNavigationRailComponent from "../MkNavigationRail.vue";
-import { Section } from "@/models";
+import { Section } from "@/models/navigation";
 
 // Declare the props to be used in all tests
 const props = {
   railItems: [
     {
       id: "Home",
-      name: "Section One",
-      sortOrder: 0,
+      name: "Section One",      
       icon: "$arrowLeft",
     },
   ] as Array<Section>,

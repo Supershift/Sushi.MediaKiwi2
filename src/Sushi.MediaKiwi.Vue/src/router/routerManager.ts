@@ -3,7 +3,7 @@ import { useMediakiwiStore } from "../stores/index";
 import { type MediakiwiVueOptions } from "../models/options/MediakiwiVueOptions";
 import type { RouteComponent } from "vue-router";
 import { type Router } from "vue-router";
-import { type NavigationItem, type View } from "@/models";
+import { NavigationTree, type NavigationItem } from "@/models/navigation";
 import type { RouteGenerator } from "./routeGenerator";
 import { modules } from "@/views/modules";
 export enum RouterManagerState {
@@ -46,7 +46,7 @@ export class RouterManager {
   }
 
   /** Updates the dynamic routes based on navigation items and modules */
-  public updateRoutes(modules: Record<string, RouteComponent>, navigationItems: NavigationItem[], screens: View[]): void {
+  public updateRoutes(modules: Record<string, RouteComponent>, navigationTree: NavigationTree): void {
     // remove existing dynamic routes
     const existingRoutes = this.router.getRoutes();
     existingRoutes.forEach((route) => {
@@ -56,7 +56,7 @@ export class RouterManager {
     });
 
     // add new routes for navigation items
-    const routes = this.routeGenerator.generateRoutes(modules, navigationItems, screens);
+    const routes = this.routeGenerator.generateRoutes(modules, navigationTree);
     routes.forEach((route) => this.router.addRoute(route));
   }
 
@@ -69,7 +69,7 @@ export class RouterManager {
 
       // apply loaded data to router
       const allModules = this.getModules();
-      this.updateRoutes(allModules, store.navigationItems, store.views);
+      this.updateRoutes(allModules, store.navigationTree as NavigationTree);
 
       this._isInitialized = RouterManagerState.Initialized;
     } catch (error) {

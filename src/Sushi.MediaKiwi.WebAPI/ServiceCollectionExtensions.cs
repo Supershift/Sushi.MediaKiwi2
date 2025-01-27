@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using Sushi.MediaKiwi.Services;
-using Sushi.MediaKiwi.WebAPI.Paging;
 using Sushi.MediaKiwi.WebAPI.Sorting;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
@@ -25,7 +24,9 @@ namespace Sushi.MediaKiwi.WebAPI
         /// Adds all services needed to run MediaKiwi to the <paramref name="services"/>, including Sushi.MicroOrm.
         /// </summary>        
         /// <returns></returns>
-        public static IServiceCollection AddMediaKiwiApi(this IServiceCollection services, IConfigurationSection? azureAdConfig,            
+        public static IServiceCollection AddMediaKiwiApi(
+            this IServiceCollection services, 
+            IConfigurationSection? azureAdConfig,
             Action<IMapperConfigurationExpression>? autoMapperConfig = null,
             Action<AuthorizationOptions>? authorizationOptions = null)
         {
@@ -36,30 +37,22 @@ namespace Sushi.MediaKiwi.WebAPI
             services.AddHttpContextAccessor();
 
             // add mk dependencies
-            services.TryAddTransient<Paging.PagingRetriever>();
             services.TryAddTransient<Sorting.SortingRetriever>();
 
-            // Define admin role policy
-            if (authorizationOptions == null)
+            services.AddAuthorization(options =>
             {
-                // Add default admin role policy
-                services.AddAuthorization(options =>
-                {
-                    options.AddPolicy(Constants.AdminPolicyName, policy => policy.RequireRole(Constants.AdminRoleName));                    
-                });
-            }
-            else
-            {
+                // Define admin role policy
+                options.AddPolicy(Constants.AdminPolicyName, policy => policy.RequireRole(Constants.AdminRoleName));
+
                 // Use custom authorization options
-                services.AddAuthorization(authorizationOptions);
-                
-            }
+                authorizationOptions?.Invoke(options);
+            });
 
             // add authentication
             var authenticationBuilder = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
             if (azureAdConfig != null)
                 authenticationBuilder.AddMicrosoftIdentityWebApi(azureAdConfig);
-            
+
             return services;
         }
 
@@ -79,15 +72,11 @@ namespace Sushi.MediaKiwi.WebAPI
             if (File.Exists(webModelFilename))
                 options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, webModelFilename));
 
-            // add paging parameters
-            options.OperationFilter<PagingSwaggerFilter>();
-            options.OperationFilter<ContinuationSwaggerFilter>();
-
             // add sorting parameters
             options.OperationFilter<SortingSwaggerFilter>();
 
             // add docs for mediakiw
-            options.SwaggerDoc("MediaKiwi", new OpenApiInfo { Title = "MediaKiwi" });            
+            options.SwaggerDoc("MediaKiwi", new OpenApiInfo { Title = "MediaKiwi" });
             options.EnableAnnotations();
 
             // add JWT bearer
@@ -127,9 +116,8 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         public static SwaggerUIOptions AddMediaKiwiSwaggerUI(this SwaggerUIOptions options)
         {
-            options.SwaggerEndpoint("../swagger/MediaKiwi/swagger.json", "MediaKiwi");            
+            options.SwaggerEndpoint("../swagger/MediaKiwi/swagger.json", "MediaKiwi");
             return options;
         }
     }
-
 }

@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Mvc;
+using Sushi.LanguageExtensions.Errors;
 using Sushi.MediaKiwi.Services;
-using Sushi.MediaKiwi.Services.Model;
-using Sushi.MediaKiwi.WebAPI.Paging;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
@@ -34,7 +32,7 @@ namespace Sushi.MediaKiwi.WebAPI
         {   
             var result = await _translationService.GetAllAsync(localeId, @namespace);
             
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -43,13 +41,14 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpPost]        
         [Route("{localeId}/{namespace}")]
+        [Authorize(Policy = Constants.AdminPolicyName)]
         public async Task<ActionResult> AddMissingTranslations(string localeId, string @namespace, [FromBody]Dictionary<string, string> data)
         {
             if (data.Any() == false) {
-                return this.CreateResponse(new Result(ResultCode.ValidationFailed));
+                return this.ToResponse(new ValidationError("Empty collection", nameof(data), null));
             }
             var result = await _translationService.AddMissingAsync(localeId, @namespace, data.First().Key, data.First().Value);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
     }
 }

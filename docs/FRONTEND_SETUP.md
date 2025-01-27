@@ -35,74 +35,12 @@ npm install
 
 ### Build the library
 
-Build the Sushi.MediaKiwi.Vue library once or keep a watch going. This will create the `/dist` folder.
+Run the following commands to run the application
 
 ```shell
 # Sushi.MediaKiwi.Vue
-npm run build
-
-# or
-
-# Sushi.MediaKiwi.Vue
-npm run build:watch
-```
-
-### Link your local build
-
-Use the npm link command in the `Sushi.MediaKiwi.Vue` folder to use your local codebase of Sushi.MediaKiwi.
-
-```shell
-# Sushi.MediaKiwi.Vue
-npm link @supershift/mediakiwi-vue
-```
-
-Check if the link was made successful by running the following command.
-
-```shell
-# Sushi.MediaKiwi.Vue
-npm ls -g --link=true
-
-# Output: @supershift/mediakiwi-vue@0.0.x -> [local_path]\Sushi.MediaKiwi2\src\Sushi.MediaKiwi.Vue
-```
-
-## Setup the Sushi.Mediakiwi.SampleWeb
-
-The Sushi.Mediakiwi.SampleWeb is an Azure Static Web App and therefore has a Client App and Azure Function.
-
-### Azure Function
-
-Add a `local.settings.json` file in the root of the Function folder. Here you can add application settings to use in the Client App. This file is excluded from source control.
-
-Example:
-
-```json
-{
-  "Values": {
-    "MediaKiwi.ApiBaseUrl": "[your_url]",
-    "MediaKiwi.msalConfig.auth.clientId": "[your_key]",
-    "MediaKiwi.msalConfig.auth.redirectUri": "/loginRedirect",
-    "MediaKiwi.msalConfig.auth.postLogoutRedirectUri": "/signIn",
-    "SampleApi.ApiBaseUrl": "[your_url]"
-  }
-}
-```
-
-You can now start hosting the Azure Function. See the [Client App](#client-app) section to host both the Azure Function and the Client App.
-
-To just host the Azure function, use the following command.
-
-```shell
-# Sushi.MediaKiwi.SampleWeb/Function
-func start --javascript
-```
-
-### Client App
-
-Run both the Azure Function and the Client App using the following command.
-
-```shell
-# Sushi.MediaKiwi.SampleWeb/ClientApp.
-npm run start:web
+npm run api
+npm run dev
 ```
 
 ## Read more

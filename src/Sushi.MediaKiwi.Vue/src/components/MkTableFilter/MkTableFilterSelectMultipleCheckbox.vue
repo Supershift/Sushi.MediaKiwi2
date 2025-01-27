@@ -1,61 +1,60 @@
 <script setup lang="ts">
-  import MkDialogCard from "../MkDialog/MkDialogCard.vue";
-  import { useI18next } from "@/composables/useI18next";
   import type { TableFilterItem, TableFilterValue } from "@/models/table";
-  import { ref } from "vue";
+  import { computed, ref } from "vue";
+  import MkTableFilterDialog from "./MkTableFilterDialog.vue";
+  import { useFilters, useI18next } from "@/composables";
 
-  // inject dependencies
-  const { defaultT, t } = await useI18next("MkTableFilterSelectMultipleCheckbox");
+  const { getFormatterFilterValue } = await useFilters(useI18next("MkFilter"));
 
   const props = defineProps<{
     tableFilterItem: TableFilterItem;
-    modelValue: TableFilterValue;
   }>();
 
+  const modelValue = defineModel<TableFilterValue>({ required: true });
+
   const emit = defineEmits<{
-    (e: "update:modelValue", value: TableFilterValue): void;
     (e: "click:close"): void;
   }>();
 
-  // state
-  const model = ref<Array<string>>(props.modelValue?.value || []);
+  // Create proxy model to prevent direct mutation
+  const model = ref<Array<string>>(modelValue.value?.value || []);
+
+  // Additional rules for the input field
+  const additionalRules = computed(() => props.tableFilterItem.rules || []);
 
   function applyFilter() {
-    // Find the titles for the selected values
-    const titles =
-      props.tableFilterItem?.options
-        ?.filter((x) => model.value.includes(x.value))
-        .map((x) => x.title)
-        .join(", ") || "";
+    if (model.value) {
+      // Create the new filter model
+      const newFilter = <TableFilterItem>{ ...props.tableFilterItem, selectedValue: { value: model.value } };
 
-    emit("update:modelValue", {
-      title: titles,
-      value: model.value,
-    });
+      // Get the titles of the selected options
+      const title = getFormatterFilterValue(newFilter);
+
+      // Bind the new filter model to the model value
+      modelValue.value = {
+        value: newFilter.selectedValue!.value,
+        title: title,
+      };
+    }
   }
 </script>
 
 <template>
-  <MkDialogCard :title="tableFilterItem.title" content-classes="py-2" class="mk-table-filter__item" @click:close="() => emit('click:close')">
-    <template #intro>
-      <p>{{ t("Select Filter intro", "Please choose the correct item") }}</p>
-    </template>
-    <template #default>
-      <template v-for="option in tableFilterItem.options" :key="option.value">
-        <v-checkbox
-          v-model="model"
-          :value="option.value"
-          :label="option.title"
-          density="comfortable"
-          class="mk-table-filter__item__checkbox px-6"
-          hide-details
-        />
-      </template>
-    </template>
-    <template #actions>
-      <v-btn @click="applyFilter">{{ defaultT("Apply") }}</v-btn>
-    </template>
-  </MkDialogCard>
+  <MkTableFilterDialog :table-filter-item="tableFilterItem" @close="emit('click:close')" @apply="applyFilter">
+    <div class="pl-0 py-4">
+      <v-checkbox
+        v-for="option in tableFilterItem.options"
+        :key="option.value"
+        v-model="model"
+        :value="option.value"
+        :label="option.title"
+        density="comfortable"
+        class="mk-table-filter__item__checkbox pl-3"
+        hide-details="auto"
+        :rules="[...additionalRules]"
+      />
+    </div>
+  </MkTableFilterDialog>
 </template>
 <style scoped lang="scss">
   @use "@/styles/abstracts/mixins" as mixins;

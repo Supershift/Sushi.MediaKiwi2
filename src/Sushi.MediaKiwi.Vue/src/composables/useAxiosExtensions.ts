@@ -1,5 +1,5 @@
 import Qs from "qs";
-import { AxiosInstance } from "axios";
+import { AxiosError, AxiosInstance } from "axios";
 
 export function useAxiosExtensions() {
   /**

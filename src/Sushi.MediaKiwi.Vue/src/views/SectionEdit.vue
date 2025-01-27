@@ -3,7 +3,7 @@
   import { reactive, computed } from "vue";
   import { container } from "tsyringe";
   import { ISectionConnector } from "@/services";
-  import { Section, IconsLibrary } from "@/models";
+  import { SectionDto, IconsLibrary } from "@/models";
   import { RouterManager } from "@/router/routerManager";
   import { useNavigation, useValidationRules } from "@/composables";
   import { adminSectionId } from "@/constants";
@@ -15,7 +15,7 @@
 
   const store = useMediakiwiStore();
   const navigation = useNavigation();
-  const { alphaNumericNoSpace } = useValidationRules();
+  const { alphaNumericNoSpace } = await useValidationRules();
 
   // get id of the section from the route
   const sectionId = navigation.currentViewParameter;
@@ -25,7 +25,7 @@
 
   // get data object from API
   const state = reactive({
-    section: {} as Section,
+    section: {} as SectionDto,
   });
 
   async function onLoad() {
@@ -76,7 +76,7 @@
 <template>
   <v-alert v-if="isAdminSection" :icon="IconsLibrary.informationOutline" color="info" text="You cannot edit the Admin section" class="my-2"></v-alert>
 
-  <MkForm title="Section" :on-save="onSave" :on-load="onLoad" :on-delete="onDelete">
+  <MkForm title="Section" :onSubmit="onSave" :on-load="onLoad" :on-delete="onDelete">
     <v-text-field v-model="state.section.id" label="Id" :disabled="sectionId ? true : false" :rules="[alphaNumericNoSpace]"></v-text-field>
     <v-text-field v-model="state.section.name" label="Name" :disabled="isAdminSection"></v-text-field>
     <v-text-field v-model="state.section.icon" label="Icon" :disabled="isAdminSection" :placeholder="IconsLibrary.home"></v-text-field>

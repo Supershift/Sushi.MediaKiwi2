@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
-using Sushi.MediaKiwi.WebAPI.Paging;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sushi.MediaKiwi.WebAPI
@@ -15,17 +14,14 @@ namespace Sushi.MediaKiwi.WebAPI
     public class AdminSectionController : MediaKiwiControllerBase
     {
         private readonly SectionService _sectionService;
-        private readonly PagingRetriever _pagingRetriever;
 
         /// <summary>
         /// Creates a new instance of the AdminSectionController.
         /// </summary>
         /// <param name="sectionService"></param>
-        /// <param name="pagingRetriever"></param>
-        public AdminSectionController(SectionService sectionService, PagingRetriever pagingRetriever)
+        public AdminSectionController(SectionService sectionService)
         {
             _sectionService = sectionService;
-            _pagingRetriever = pagingRetriever;
         }
 
         /// <summary>
@@ -38,7 +34,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<Section>> DeleteSection(string id)
         {
             var result = await _sectionService.DeleteAsync(id);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -52,7 +48,7 @@ namespace Sushi.MediaKiwi.WebAPI
             Section request)
         {   
             var result = await _sectionService.CreateAsync(id, request);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -64,7 +60,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<Section>> UpdateSection(string id, Section request)
         {
             var result = await _sectionService.UpdateAsync(id, request);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -78,7 +74,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<Section>> UpdateId(string id, [FromBody] string newId)
         {
             var result = await _sectionService.UpdateIdAsync(id, newId);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
     }
 }

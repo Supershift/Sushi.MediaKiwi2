@@ -1,22 +1,22 @@
 <script setup lang="ts">
   import MkDialogCard from "../MkDialog/MkDialogCard.vue";
   import { ref } from "vue";
-  import { useI18next } from "@/composables";
+  import { useI18next, useDayjs } from "@/composables";
   import { useLocale } from "vuetify";
-
   // inject dependencies
   const { i18next, defaultT, t, formatDateTimeGeneric } = await useI18next("MkDatePicker");
   const { current } = useLocale();
+  const { inConfiguredTimeZone } = useDayjs();
   // TODO There needs to be a better way to set the locale through the custom i18n plugin
   current.value = i18next.value.language;
 
   const props = withDefaults(
     defineProps<{
-      modelValue: Array<any>;
       /** Allow the selection of multiple dates */
       multiple?: boolean;
       /** Max amount of dates that should be selected */
       multipleAmount?: number;
+      title?: string;
     }>(),
     {
       multiple: false,
@@ -24,20 +24,22 @@
     }
   );
 
+  const modelValue = defineModel<Array<any>>({ required: true });
+
   const emit = defineEmits<{
-    (e: "update:modelValue", value: Array<any>): void;
     (e: "click:close"): void;
   }>();
 
-  // state
-  const model = ref(props.modelValue);
+  // Create proxy model to prevent direct mutation
+  const model = ref(modelValue.value?.map((e) => new Date(e)) ?? []); // transform strings to Date so vuetify can work with it
 
   function close() {
     emit("click:close");
   }
 
   function apply() {
-    emit("update:modelValue", model.value);
+    // set the model with dates that match the users configured time zone
+    modelValue.value = model.value.map((e) => inConfiguredTimeZone(e));
     close();
   }
 
@@ -63,7 +65,7 @@
 <template>
   <MkDialogCard hide-header remove-content-padding content-classes="py-2" v-bind="$attrs" @click:close="close">
     <template #default>
-      <v-date-picker v-model="model" :multiple="multiple" :title="t('DatePickerTitle', 'Select date').toString()" @update:model-value="validateModel">
+      <v-date-picker v-model="model" :multiple="multiple" :title="title || t('DatePickerTitle', 'Select date').toString()" @update:model-value="validateModel">
         <template #header>
           <div class="v-date-picker-header">
             <div class="v-date-picker-header__content">
@@ -84,9 +86,3 @@
     </template>
   </MkDialogCard>
 </template>
-
-<style>
-  .mk-dialog-card__content {
-    padding: 0;
-  }
-</style>

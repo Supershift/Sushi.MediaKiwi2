@@ -5,7 +5,7 @@
   const { defaultT } = await useI18next();
 
   // define properties and events
-  withDefaults(
+  const props = withDefaults(
     defineProps<{
       /** Title of the dialog */
       title?: string;
@@ -36,6 +36,7 @@
   const slots = defineSlots<{
     heroIcon?: (props: unknown) => any;
     default?: (props: unknown) => any;
+    title?: () => any;
     intro?: (props: unknown) => any;
     /** Slot for the visible buttons in the action obar */
     actions?: (props: unknown) => any;
@@ -48,7 +49,8 @@
   <v-card class="mk-dialog-card" :class="{ 'text-center': slots.heroIcon }" rounded="xl" variant="elevated">
     <div v-if="!hideHeader" class="mk-dialog-card__header pa-6">
       <slot name="heroIcon"></slot>
-      <v-card-title v-if="title" tag="h6" class="text-headline-small pa-0 mb-4"> {{ title }} </v-card-title>
+      <v-card-title v-if="props.title" tag="h6" class="text-headline-small pa-0 mb-4"> {{ title }} </v-card-title>
+      <slot v-else-if="slots.title" name="title"></slot>
       <slot name="intro"></slot>
       <v-progress-linear v-if="loading" class="mk-dialog-card__header__loader" absolute indeterminate></v-progress-linear>
     </div>

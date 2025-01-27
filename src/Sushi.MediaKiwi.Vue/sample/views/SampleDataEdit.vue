@@ -58,7 +58,7 @@
     state.data = candidate ? candidate : <SampleData>{};
   }
 
-  async function onDeleteAsync(event: Event): Promise<void> {
+  async function onDeleteAsync(event?: Event): Promise<void> {
     return await sampleDataConnector.DeleteAsync(state.data.id);
   }
 
@@ -67,7 +67,7 @@
 
 <template>
   <v-card>
-    <MkForm title="Sample data edit" @save="onSaveAsync" @undo="onUndo" @delete="onDeleteAsync">
+    <MkForm title="Sample data edit" @submit="onSaveAsync" @undo="onUndo" @delete="onDeleteAsync">
       <v-text-field label="Name" v-model="state.data.name"></v-text-field>
       <v-select label="Country Code" v-model="state.data.countryCode" :items="countries"></v-select>
     </MkForm>
@@ -77,7 +77,7 @@
       Manually go a level deeper: <v-btn @click="onButtonClick">Level deeper</v-btn>
       <v-divider></v-divider>
       Use a table to go a level deeper:
-      <MkTable :data="deepDataItems" :table-map="myMap" item-view-id="SampleDeepEdit"></MkTable>
+      <MkTable :data="deepDataItems" :table-map="myMap" navigation-item-id="SampleDeepEdit"></MkTable>
     </div>
   </v-card>
 </template>

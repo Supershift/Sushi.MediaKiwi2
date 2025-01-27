@@ -33,6 +33,13 @@ export function parseIconValue(icon?: string, external?: boolean): string {
       return icon;
     }
 
+    // Check if the alias is a symbols or mdi alias
+    if (alias.startsWith("symbols:")) {
+      return icon;
+    } else if (alias.startsWith("mdi:")) {
+      return icon;
+    }
+
     // Return the mdiUnknown icon when the alias is not present to prevent breaking the entire application
     return IconsLibrary.unknown;
   }

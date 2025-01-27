@@ -4,14 +4,15 @@
   import { Paging } from "@/models/api/Paging";
   import { ITableMapPaging } from "@/models/table/TableMapPaging";
   import { useI18next } from "@/composables/useI18next";
+  import { useMediakiwiVueOptions } from "@/composables/useMediakiwiVueOptions";
 
   // Components
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
-  import { computed } from "vue";
-  import { reactive } from "vue";
+  import { computed, reactive } from "vue";
 
   // inject dependencies
   const { defaultT } = await useI18next();
+  const { tableOptions } = useMediakiwiVueOptions();
 
   // define properties
   const props = withDefaults(
@@ -20,6 +21,9 @@
       pagingResult?: ITableMapPaging | null;
       mode?: MediakiwiPaginationMode;
       pageSizeOptions?: number[];
+      hidePagination?: boolean;
+      /** when true the pageindex is calculated, so we 'track' which page to use based on the first item viewed  */
+      pageTracking?: boolean;
     }>(),
     {
       modelValue: () => ({ pageIndex: 0, pageSize: defaultPageSize }),
@@ -39,9 +43,13 @@
    */
   const state = reactive({
     pageIndex: props.modelValue.pageIndex || 0,
-    pageSize: props.modelValue.pageSize || defaultPageSize,
+    pageSize: props.modelValue.pageSize && props.modelValue.pageSize > defaultPageSize ? props.modelValue.pageSize : defaultPageSize,
   });
 
+  /** Uses tracking from overridden value comming from props, otherwise use standard mediakiwiVueOptions */
+  const pageTrackingOption = computed(() => {
+    return (props?.pageTracking != undefined ? props?.pageTracking : tableOptions?.pageTracking) || false;
+  });
   /**
    * Page sizes to display in the select
    */
@@ -82,6 +90,13 @@
   async function updatePageSize(value: number) {
     // Update local values
     if (value !== null && value !== undefined) {
+      if (!pageTrackingOption.value) {
+        state.pageIndex = 0; // reset to first page
+      } else {
+        const firstItem = state.pageIndex * state.pageSize;
+        const currentPage = Math.abs(Math.floor(firstItem / value));
+        state.pageIndex = currentPage; // Use the page index and calculate the new page index based on the first item in the list
+      }
       state.pageSize = value;
       applyPaging();
     }
@@ -128,16 +143,15 @@
       const startPage = start.value + 1;
 
       const resultSet = { start: startPage, end: end.value, total: props.pagingResult?.totalCount };
-      return defaultT.value("PagingInfo", { resultSet });
+      return defaultT.value("PagingInfo", "{{resultSet.start}}-{{resultSet.end}} of {{resultSet.total}}", { resultSet });
     }
     return null;
   });
 </script>
 
 <template>
-  <v-divider />
   <div class="mk-pagination">
-    <div class="mk-pagination__items-per-page">
+    <div class="mk-pagination__items-per-page" v-if="!props.hidePagination">
       <span class="mk-pagination__items-per-page__label">
         {{ defaultT("Rows per page") }}
       </span>
@@ -150,12 +164,12 @@
         @update:model-value="updatePageSize"
       ></VSelect>
     </div>
-    <div class="mk-pagination__info">
+    <div class="mk-pagination__info" v-if="!props.hidePagination">
       <template v-if="resultSetLabel">
         {{ resultSetLabel }}
       </template>
     </div>
-    <div class="mk-pagination__pagination">
+    <div class="mk-pagination__pagination" v-if="!props.hidePagination">
       <VPagination
         total-visible=""
         density="compact"
@@ -166,7 +180,6 @@
       />
     </div>
   </div>
-  <v-divider />
 </template>
 <style scoped lang="scss">
   @use "@/styles/abstracts";

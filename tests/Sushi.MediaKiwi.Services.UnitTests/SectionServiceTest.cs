@@ -1,5 +1,6 @@
 using AutoMapper;
 using Moq;
+using Sushi.LanguageExtensions.Errors;
 using Sushi.MediaKiwi.Services.Interfaces;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MicroORM;
@@ -40,7 +41,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             sectionRepositoryMock.Verify(x => x.DeleteAsync(sectionStub.Id), Times.Once);
         }
 
@@ -60,8 +61,8 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.NotFound, result.Code);
-
+            Assert.NotNull(result.Error);
+            Assert.IsType<NotFoundError>(result.Error);
         }
 
         [Fact]
@@ -86,7 +87,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             Assert.NotNull(result.Value);
             Assert.NotNull(result.Value.Result);
             Assert.Equal(2, result.Value.Result.Count);
@@ -113,7 +114,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             Assert.NotNull(result.Value);
             Assert.Equal(sectionStub.Id, result.Value.Id);
         }
@@ -134,7 +135,8 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.NotFound, result.Code);
+            Assert.NotNull(result.Error);
+            Assert.IsType<NotFoundError>(result.Error);
         }
 
         [Fact]
@@ -153,7 +155,8 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.NotFound, result.Code);
+            Assert.NotNull(result.Error);
+            Assert.IsType<NotFoundError>(result.Error);
         }
 
         [Fact]
@@ -182,7 +185,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var result = await service.CreateAsync(newId, section);
 
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             Assert.NotNull(result.Value);
             Assert.Equal(newId, result.Value.Id);
             sectionRoleRepository.Verify();
@@ -217,7 +220,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var result = await service.UpdateAsync(existingId, section);
 
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             Assert.NotNull(result.Value);
             Assert.Equal(existingId, result.Value.Id);
             sectionRepositoryMock.Verify(x => x.GetAsync(existingId), Times.Once);
@@ -247,7 +250,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var result = await service.UpdateIdAsync(oldId, newId);
 
             Assert.NotNull(result);
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             Assert.NotNull(result.Value);
             Assert.Equal(newId, result.Value.Id);            
             sectionRoleRepository.Verify();

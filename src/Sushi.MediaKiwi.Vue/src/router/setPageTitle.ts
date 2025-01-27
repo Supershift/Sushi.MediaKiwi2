@@ -1,6 +1,13 @@
-import { NavigationItem } from "@/models";
-import { useMediakiwiStore } from "@/stores";
+import { NavigationItem } from "@/models/navigation";
 import { type RouteLocationNormalized, type Router } from "vue-router";
+
+function getParentName(navigationItem: NavigationItem): string {
+  if (navigationItem.parent) {
+    return getParentName(navigationItem.parent);
+  }
+
+  return navigationItem.name;
+}
 
 /**
  * Add a beforeEach method to set the page title
@@ -18,18 +25,12 @@ export function setPageTitle(router: Router): void {
       const navigationItem = <NavigationItem>to.meta?.navigationItem;
 
       if (navigationItem) {
-        // Get the sections from the store
-        const { sections, getParentName } = useMediakiwiStore();
-
-        // Find the matching section
-        const section = sections?.find((x) => x.id === navigationItem.sectionId);
-
         let pageTitle = navigationItem.name;
 
         // Prepend the section name to the title
         // Example: Admin - MediaKiwi 2.0
-        if (section?.name) {
-          pageTitle = `${section.name} - ${pageTitle}`;
+        if (navigationItem.section.name) {
+          pageTitle = `${navigationItem.section.name} - ${pageTitle}`;
         }
 
         // Prepend the navigation item name to the title
@@ -44,6 +45,9 @@ export function setPageTitle(router: Router): void {
           document.title = pageTitle;
         }
       }
+    } else if (to.meta?.title) {
+      // Set the document title
+      document.title = to.meta.title.toString();
     }
   });
 }

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Sushi.MediaKiwi;
+using Sushi.MediaKiwi.Core;
 using Sushi.MicroORM;
 using System.Reflection;
 
@@ -15,15 +16,18 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddMicroORM(new ConnectionString("", null));
             serviceCollection.AddMediaKiwi();
-            
+
+            var configuration = new ConfigurationBuilder().AddInMemoryCollection().Build();
+            serviceCollection.AddSingleton<IConfiguration>(configuration);
+
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
             // get all controllers
-            var asm = Assembly.GetAssembly(typeof(MediaKiwiControllerBase));
+            var assembly = Assembly.GetAssembly(typeof(MediaKiwiControllerBase));
 
-            Assert.NotNull(asm);
+            Assert.NotNull(assembly);
 
-            var controllers = asm.GetTypes().Where(type => typeof(ControllerBase).IsAssignableFrom(type) && !type.IsAbstract);
+            var controllers = assembly.GetTypes().Where(type => typeof(ControllerBase).IsAssignableFrom(type) && !type.IsAbstract);
 
             // try to create instances of all controllers
             foreach (var controller in controllers)

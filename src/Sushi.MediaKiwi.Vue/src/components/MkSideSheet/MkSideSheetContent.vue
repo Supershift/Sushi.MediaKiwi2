@@ -107,21 +107,19 @@
   });
 </script>
 <template>
-  <v-sheet ref="side-sheet__sheet" class="side-sheet__sheet" :class="[modelValue && 'side-sheet__sheet--active']" :style="sheetStyles">
+  <v-sheet ref="side-sheet__sheet" class="side-sheet__sheet d-flex flex-column" :class="[modelValue && 'side-sheet__sheet--active']" :style="sheetStyles">
     <!-- Start header -->
     <v-card-item ref="side-sheet__header" :class="[headerClass, 'side-sheet__header']">
       <div :class="['side-sheet__header__content']">
-        <v-card-title v-if="slots.title">
+        <v-card-title v-if="slots.title" class="d-flex">
           <slot name="title"></slot>
+          <v-spacer />
+          <v-icon v-if="props.closeButton" :aria-hidden="!props.closeButton" aria-label="close" :icon="IconsLibrary.close" @click="emits('closed')"></v-icon>
         </v-card-title>
         <v-card-subtitle v-if="slots.subtitle">
           <slot name="subtitle"></slot>
         </v-card-subtitle>
       </div>
-
-      <template #append>
-        <v-icon v-if="props.closeButton" :aria-hidden="!props.closeButton" aria-label="close" :icon="IconsLibrary.close" @click="emits('closed')"></v-icon>
-      </template>
 
       <div :class="['side-sheet__header__footer']">
         <v-progress-linear v-if="loading" absolute indeterminate></v-progress-linear>
@@ -141,7 +139,7 @@
   </v-sheet>
 </template>
 <style lang="scss">
-  @import "../../styles/themes/variables.scss";
+  @use "../../styles/themes/variables.scss";
   .side-sheet {
     &__sheet {
       display: flex;
@@ -172,7 +170,7 @@
     }
 
     &__header {
-      @media (min-width: $breakpoints-lg) {
+      @media (min-width: variables.$breakpoints-lg) {
         border-top-left-radius: 16px;
         border-top-right-radius: 16px;
       }
@@ -190,7 +188,7 @@
     &__body {
       text-align: left;
       height: calc(100% - 150px); // so the content is scrollable ( accounting for margins top and bottom)
-      @media (min-width: $breakpoints-lg) {
+      @media (min-width: variables.$breakpoints-lg) {
         height: calc(100vh - 220px); // so the content is scrollable ( accounting for margins top and bottom)
       }
     }

@@ -19,6 +19,9 @@ import i18next from "./plugins/i18next";
 import { registerIcons } from "./helpers/registerIcons";
 import { registerDirectives } from "./helpers/registerDirectives";
 import { createVuetify } from "./plugins/vuetify";
+import { registerErrorHandler } from "./helpers/registerErrorHandler";
+import { ApiNavigationProvider } from "./navigation";
+import "material-symbols/outlined.css";
 
 export default {
   install(app: App, options: MediakiwiVueOptions): void {
@@ -28,8 +31,15 @@ export default {
     // register dependencies
     registerServices(container, options.serviceRegistrations);
 
+    // register navigation provdider
+    const navigationProvider = options.navigationProvider ?? new ApiNavigationProvider();
+    container.registerInstance("INavigationProvider", navigationProvider);
+
     // register axios
     registerAxios(container, options);
+
+    // register global error handler
+    registerErrorHandler(app, options);
 
     // add i18n
     app.use(
@@ -81,7 +91,7 @@ export default {
     app.use(msalPlugin, identity.msalInstance);
 
     // get default router options
-    const routerOptions = getDefaultRouterOptions(options?.customRoutes);
+    const routerOptions = getDefaultRouterOptions(options?.customRoutes, options?.parseQueryStringArray);
 
     // create the router
     const router = createRouter(routerOptions);
@@ -117,6 +127,8 @@ export * from "@/components";
 
 export * from "@/composables";
 
+export * from "@/navigation";
+
 export * from "@/models";
 
 export * from "@/services";
@@ -124,6 +136,8 @@ export * from "@/services";
 export * from "@/stores";
 
 export * from "@/router";
+
+export * from "@/errorHandler";
 
 export * from "@/plugins/icons";
 

@@ -28,9 +28,9 @@ describe("useKeyboardShortcuts", () => {
       addKeyboardShortcuts(testShortcuts);
 
       // Expect all bindings to be added to the keyboard shortcuts with lowercase keys
-      expect(registerdKeyboardShortcuts.value).toContain({ arrowleft: testShortcuts.ArrowLeft });
-      expect(registerdKeyboardShortcuts.value).toContain({ arrowright: testShortcuts.ArrowRight });
-      expect(registerdKeyboardShortcuts.value).toContain({ "control+f": testShortcuts["control+f"] });
+      expect(registerdKeyboardShortcuts.value).toHaveProperty("arrowleft", testShortcuts.ArrowLeft);
+      expect(registerdKeyboardShortcuts.value).toHaveProperty("arrowright", testShortcuts.ArrowRight);
+      expect(registerdKeyboardShortcuts.value).toHaveProperty("control+f", testShortcuts["control+f"]);
 
       removeKeyboardShortcuts(testShortcuts);
     });
@@ -39,13 +39,19 @@ describe("useKeyboardShortcuts", () => {
       // Add all bindings to the keyboard shortcuts
       addKeyboardShortcuts(testShortcuts);
 
+      // Expect all bindings to be added to the keyboard shortcuts with lowercase keys
+      expect(registerdKeyboardShortcuts.value).toHaveProperty("arrowleft", testShortcuts.ArrowLeft);
+      expect(registerdKeyboardShortcuts.value).toHaveProperty("arrowright", testShortcuts.ArrowRight);
+      expect(registerdKeyboardShortcuts.value).toHaveProperty("control+f", testShortcuts["control+f"]);
+
       // Remove the control+f binding from the keyboard shortcuts
       removeKeyboardShortcuts(controlBindings);
 
       // Expect the control+f binding to be removed from the keyboard shortcuts
-      expect(registerdKeyboardShortcuts.value).toContain({ arrowleft: testShortcuts.ArrowLeft });
-      expect(registerdKeyboardShortcuts.value).toContain({ arrowright: testShortcuts.ArrowRight });
-      expect(registerdKeyboardShortcuts.value).not.toContain({ "control+f": testShortcuts["control+f"] });
+      expect(registerdKeyboardShortcuts.value).not.toHaveProperty("control+f");
+      // Expect the arrow bindings to still be present
+      expect(registerdKeyboardShortcuts.value).toHaveProperty("arrowleft", testShortcuts.ArrowLeft);
+      expect(registerdKeyboardShortcuts.value).toHaveProperty("arrowright", testShortcuts.ArrowRight);
 
       // Remove all bindings from the keyboard shortcuts
       removeKeyboardShortcuts(testShortcuts);

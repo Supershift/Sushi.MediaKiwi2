@@ -30,7 +30,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var result = await services.GetNamespacesAsync(localeId);
 
             // assert
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             Assert.NotNull(result.Value?.Result);
             Assert.Equal(namespaces, result.Value.Result);
         }
@@ -54,7 +54,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var result = await services.GetAllAsync(localeId, @namespace, key, value);
 
             // assert
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             Assert.NotNull(result.Value?.Result);
             Assert.Equal(translations.Count, result.Value.Result.Count);
             Assert.Equal(translations[0].Key, result.Value.Result[0].Key);
@@ -89,7 +89,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             var result = await services.UpdateTranslationAsync(localeId, @namespace, key, request);
 
             // assert
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             repository.Verify();
         }
 
@@ -115,9 +115,9 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             // act
             var result = await services.DeleteTranslationAsync(localeId, @namespace, key);
-            
+
             // assert
-            Assert.Equal(ResultCode.Success, result.Code);
+            Assert.Null(result.Error);
             repository.Verify();
 
         }

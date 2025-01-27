@@ -15,7 +15,6 @@ namespace Sushi.MediaKiwi.Services.Model
         /// <summary>
         /// Value of the translation.
         /// </summary>
-        [Required]
         public required string Value { get; set; }
     }
 }

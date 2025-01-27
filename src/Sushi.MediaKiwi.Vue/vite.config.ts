@@ -3,14 +3,23 @@ import { defineConfig, normalizePath } from "vite";
 import vuetify from "vite-plugin-vuetify";
 import vue from "@vitejs/plugin-vue";
 import dts from "vite-plugin-dts";
-import istanbul from "vite-plugin-istanbul";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 
 // Exclude folders from the build
-const exclude = ["sample", "cypress", "test"];
+const exclude = ["sample", "cypress", "test", "**/__tests__/**", "**/__mocks__/**"];
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  css: {
+    preprocessorOptions: {
+      sass: {
+        api: 'modern-compiler',
+      },
+      scss: {
+        api: 'modern-compiler',
+      },
+    },
+  },
   plugins: [
     vue({
       exclude,
@@ -25,13 +34,6 @@ export default defineConfig({
         // Generate a custom settings.scss file with all your modifications to override sass variables from vuetify
         configFile: path.resolve(__dirname, "./src/styles/settings.scss"),
       },
-    }),
-    istanbul({
-      include: "src/*",
-      exclude: ["node_modules", "dist", "sample", "cypress", "**/__tests__/**"],
-      extension: [".js", ".ts", ".vue"],
-      requireEnv: false,
-      cypress: true,
     }),
     viteStaticCopy({
       targets: [

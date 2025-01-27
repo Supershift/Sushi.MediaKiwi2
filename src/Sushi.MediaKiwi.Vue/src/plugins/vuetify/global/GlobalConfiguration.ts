@@ -161,6 +161,10 @@ export const GlobalConfiguration: VuetifyOptions = {
       color: "outline",
       class: "v-autocomplete--mediakiwi",
       menuIcon: IconsLibrary.menuDown,
+      VChip: {
+        variant: "outlined",
+        class: "",
+      },
     },
     VBreadcrumbs: {
       color: "primary",
@@ -177,6 +181,9 @@ export const GlobalConfiguration: VuetifyOptions = {
     },
     VDatePicker: {
       class: "v-date-picker--mediakiwi",
+    },
+    VEmptyState: {
+      class: "v-empty-state--mediakiwi",
     },
   },
 };

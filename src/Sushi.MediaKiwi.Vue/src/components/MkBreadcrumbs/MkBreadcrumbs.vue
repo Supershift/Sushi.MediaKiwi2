@@ -1,10 +1,11 @@
 <script setup lang="ts">
-  import { computed } from "vue";
-  import MkBackButton from "@/components/MkNavigation/MkBackButton.vue";
-  import { useDisplay } from "vuetify";
-  import { useNavigation } from "@/composables/useNavigation";
-  import { NavigationItem, IconsLibrary } from "@/models";
   import { useBreadcrumbs } from "@/composables/useBreadcrumbs";
+  import MkBreadcrumbItem from "./MkBreadcrumbItem.vue";
+  import { useNavigation } from "@/composables";
+
+  // inject dependencies
+  const { hasBreadcrumbs, breadcrumbs, showMobileBackButton, getBreadcrumbLabel } = useBreadcrumbs();
+  const navigation = useNavigation();
 
   // define props
   const props = defineProps({
@@ -14,83 +15,24 @@
       default: false,
     },
   });
-
-  // inject dependencies
-  const { xs } = useDisplay();
-  const navigation = useNavigation();
-  const { customPageTitle, setCustomPageTitle } = useBreadcrumbs();
-
-  // determine if we show the whole breadcrumb or only a back button
-  const showBackButton = computed(() => xs.value && breadcrumbs.value.length > 1);
-
-  // go up the navigation tree starting from the current item
-  const breadcrumbs = computed(() => {
-    const currentItem = navigation.currentNavigationItem.value;
-    const result: Array<NavigationItem> = [];
-    let candidate: NavigationItem | undefined = { ...currentItem };
-    while (candidate) {
-      result.unshift(candidate);
-      candidate = candidate.parent;
-    }
-
-    // Alter the title of the last item in the collection
-    if (customPageTitle.value && result && result[result.length - 1]) {
-      result[result.length - 1].name = customPageTitle.value ?? result[result.length - 1].name;
-    }
-
-    // Reset the custom title
-    setCustomPageTitle();
-
-    return result;
-  });
-
-  /** Return if the item is the last in the collection */
-  function isCurrentItem(index: number): boolean {
-    return index === breadcrumbs.value.length - 1;
-  }
-
-  function hasScreen(item: NavigationItem): boolean {
-    if (item?.viewId) {
-      return true;
-    }
-    return false;
-  }
-
-  // called to send user to target screen
-  function onItemClick(item: NavigationItem) {
-    if (item.viewId) {
-      navigation.navigateTo(item);
-    }
-    return false;
-  }
 </script>
 <template>
-  <v-card v-if="breadcrumbs?.length" :class="['breadcrumbs-container ml-0 pa-4 pa-md-10 pb-0', { 'v-breadcrumbs--sticky': props.sticky }]">
-    <div v-if="showBackButton" class="breadcrumb-title-container">
+  <v-card v-if="hasBreadcrumbs" :class="['breadcrumbs-container ml-0 pa-4 pa-md-10 pb-0', { 'v-breadcrumbs--sticky': props.sticky }]">
+    <div v-if="showMobileBackButton" class="breadcrumb-title-container">
       <mk-back-button />
       <div class="v-breadcrumbs-item text-title-large d-inline-block text-truncate">
-        {{ navigation.currentNavigationItem.value?.name }}
+        {{ getBreadcrumbLabel(navigation.currentNavigationItem.value) }}
       </div>
     </div>
     <div v-else>
       <v-breadcrumbs class="px-0 pt-0">
-        <template v-for="(item, index) in breadcrumbs" :key="item.id">
-          <li v-if="index" class="v-breadcrumbs-divider">
-            <v-icon :icon="IconsLibrary.chevronRight" />
-          </li>
-
-          <v-btn
-            :active="isCurrentItem(index)"
-            :disabled="isCurrentItem(index)"
-            class="text-title-large text-container"
-            :class="{ 'text-truncate d-inline-block': !isCurrentItem(index) }"
-            size="unset"
-            :title="item.name"
-            @click.stop="hasScreen(item) ? onItemClick(item) : {}"
-          >
-            {{ item.name }}
-          </v-btn>
-        </template>
+        <MkBreadcrumbItem
+          v-for="(item, index) in breadcrumbs"
+          :key="item.id"
+          :item="item"
+          :index="index"
+          :is-only-item="breadcrumbs.length === 1"
+        ></MkBreadcrumbItem>
       </v-breadcrumbs>
     </div>
   </v-card>

@@ -55,12 +55,22 @@ export function useColors(themeKey?: string) {
     return `bg-${key}`;
   }
 
+  /**
+   * Returns true if the color is a css color, false otherwise (e.g. rgba, hsla, etc.) - also used in the vuetify library, but not exported
+   * @param color color string given by the user ex. #00eb9b, var(--v-primary), rgb(0, 235, 155), hsl(160, 100%, 50%) or primary
+   * @returns true if the color is a css color, false otherwise (e.g. rgba, hsla, etc.)
+   */
+  function isCssColor(color?: string | null | false): boolean {
+    return !!color && /^(#|var\(--|(rgb|hsl)a?\()/.test(color);
+  }
+
   return {
     currentTheme,
     colors,
     variants,
     variables,
     cssVariables,
+    isCssColor,
     getColorBackgroundClasses,
   };
 }

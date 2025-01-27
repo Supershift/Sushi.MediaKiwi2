@@ -4,7 +4,7 @@
   // define properties
   const props = defineProps<{
     /** ExternalId of the view instance */
-    itemViewId?: string;
+    navigationItemId?: string;
     /** Title specificly for the current table */
     title?: string;
     /** Determines if the toolbar is disabled, default: false */
@@ -13,20 +13,12 @@
     delete?: boolean;
     /** Determines if the toolbar has a new button, default: false. */
     new?: boolean;
-    /** Determines if we only want to emit instead of navigating to the given itemViewId */
+    /** Determines if we only want to emit instead of navigating to the given navigationItemId */
     newEmit?: boolean;
     /** Overrides the "new item" button title */
     newTitle?: string;
-    /** Determines if the save button is shown, default: false */
-    save?: boolean;
-    /** Determines if the undo button is shown, default: false */
-    undo?: boolean;
     /** Determines if the toolbar becomes sticky at the top of the page, default: false */
     sticky?: boolean;
-    /** */
-    onSave?: (event?: Event) => Promise<void>;
-    onUndo?: (event?: Event) => Promise<void>;
-    onDelete?: (event: Event) => Promise<void>;
   }>();
 
   // define slots
@@ -53,11 +45,11 @@
       <v-row v-if="slots.header" class="justify-end">
         <slot name="header"></slot>
       </v-row>
-      <v-row v-if="slots.toolbar || slots.overflowMenuActions || props.title || (props.itemViewId && props.new)" class="pb-2 ml-0 align-center">
-        <v-card-title v-if="title" class="px-0 text-title-medium">{{ title }}</v-card-title>
-        <slot v-else-if="slots.title" name="title"></slot>
-
-        <v-spacer></v-spacer>
+      <v-row v-if="slots.toolbar || slots.overflowMenuActions || props.title || props.new" class="pb-2 ml-0 align-center d-flex flex-nowrap justify-end">
+        <div v-if="title || slots.title" class="flex-1-1 text-truncate" :title="title">
+          <v-card-title v-if="title" class="px-0 text-title-medium">{{ title }}</v-card-title>
+          <slot v-else-if="slots.title" name="title"></slot>
+        </div>
 
         <v-card-actions>
           <template v-if="slots.toolbar">
@@ -66,7 +58,12 @@
 
           <!-- Render the new button when the prop is set -->
           <template v-if="props.new">
-            <MkNewItemButton :item-view-id="props.itemViewId" :new-title="props.newTitle" :new-emit="props.newEmit" @click:new="emit('click:new', $event)" />
+            <MkNewItemButton
+              :navigation-item-id="props.navigationItemId"
+              :new-title="props.newTitle"
+              :new-emit="props.newEmit"
+              @click:new="emit('click:new', $event)"
+            />
           </template>
 
           <MkOverflowMenuIcon v-if="slots.overflowMenuActions">

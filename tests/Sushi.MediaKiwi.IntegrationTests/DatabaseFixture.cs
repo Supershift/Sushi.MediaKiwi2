@@ -19,7 +19,7 @@ namespace Sushi.MediaKiwi.IntegrationTests
 
         public DatabaseFixture()
         {
-            _msSqlContainer = new MsSqlBuilder().Build();
+            _msSqlContainer = new MsSqlBuilder().WithImage("mcr.microsoft.com/mssql/server:2022-latest").Build();
         }
 
         public async Task InitializeAsync()
@@ -51,10 +51,10 @@ namespace Sushi.MediaKiwi.IntegrationTests
                 connectionString = connectionStringBuilder.ToString();
             }
 
-            InitializeServices(configuration, connectionString);
+            InitializeServices(connectionString);
         }
 
-        private void InitializeServices(IConfigurationRoot configuration, string connectionString)
+        private void InitializeServices(string connectionString)
         {
             // create service collection
             IServiceCollection serviceCollection = new ServiceCollection();

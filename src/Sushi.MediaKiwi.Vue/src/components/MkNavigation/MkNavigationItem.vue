@@ -1,28 +1,26 @@
-<script setup lang="ts">
-  import type { NavigationItem } from "@/models/api/NavigationItem";
+<script setup lang="ts">  
   import { ref, computed } from "vue";
   import { useNavigation } from "@/composables/useNavigation";
+  import { NavigationItem } from "@/models/navigation";
 
-  const componentProps = defineProps<{
-    navigationItem: NavigationItem;
-    allItems: Array<NavigationItem>;
+  const props = defineProps<{
+    navigationItem: NavigationItem;    
   }>();
 
   const navigation = useNavigation();
 
   const groupOpened = ref(false);
-  const children = navigation.getChildren(componentProps.navigationItem);
 
   const icon = computed(() => {
-    if (componentProps.navigationItem?.icon) {
-      return componentProps.navigationItem.icon;
+    if (props.navigationItem?.icon) {
+      return props.navigationItem.icon;
     }
     return undefined;
   });
 
   // determine if navigation item has a screen
   function hasScreen(item: NavigationItem): boolean {
-    if (item?.viewId) {
+    if (item?.componentKey) {
       return true;
     }
     return false;
@@ -30,14 +28,17 @@
 
   // called to send user to target screen
   function onItemClick(item: NavigationItem) {
-    if (item.viewId) {
+    if (item.componentKey) {
       navigation.navigateTo(item);
     }
     return false;
   }
 
   // determine if navigation item is active
-  const isActive = computed(() => navigation.determineIfNavigationItemIsActive(componentProps.navigationItem));
+  const isActive = computed(() => navigation.determineIfNavigationItemIsActive(props.navigationItem));
+
+  // get all children we want to render (exclude children with parameters)
+  const children = computed(() => props.navigationItem.children.filter(x=>!x.parameterName));  
 </script>
 
 <template>
@@ -54,7 +55,7 @@
         @click.stop="hasScreen(navigationItem) ? onItemClick(navigationItem) : {}"
       />
     </template>
-    <mk-navigation-item v-for="child in children" :key="child.id" :navigation-item="child" :all-items="allItems" />
+    <mk-navigation-item v-for="child in children" :key="child.id" :navigation-item="child" />
   </v-list-group>
   <v-list-item
     v-else

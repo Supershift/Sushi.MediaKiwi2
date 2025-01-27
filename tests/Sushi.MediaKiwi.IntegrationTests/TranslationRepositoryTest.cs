@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
+using Sushi.LanguageExtensions;
 using Sushi.MediaKiwi.DAL.Repository;
-using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Entities;
 using Sushi.MediaKiwi.Services.Interfaces;
 using Xunit.Extensions.AssemblyFixture;
@@ -40,7 +40,7 @@ namespace Sushi.MediaKiwi.IntegrationTests
         public async Task DuplicateTest()
         {
             // start transaction to prevent test changing state permanently
-            using (var ts = Utility.CreateTransactionScope())
+            using (var ts = TransactionUtility.CreateTransactionScope())
             {
                 // create a new test locale
                 var targetLocale = new Locale() { Id = "test", IsEnabled = false, Name = "test" };
@@ -63,7 +63,7 @@ namespace Sushi.MediaKiwi.IntegrationTests
         public async Task InsertMissingTest()
         {
             // start transaction to prevent test changing state permanently
-            using (var ts = Utility.CreateTransactionScope())
+            using (var ts = TransactionUtility.CreateTransactionScope())
             {
                 // get all locales
                 var allLocales = await _localeRepository.GetAllAsync(false, null);

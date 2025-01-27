@@ -29,7 +29,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<ListResult<Role>>> GetRoles()
         {
             var result = await _roleService.GetAllAsync();
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
     }
 }

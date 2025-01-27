@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Sushi.LanguageExtensions;
+using Sushi.LanguageExtensions.Errors;
 using Sushi.MediaKiwi.Services.Interfaces;
 using Sushi.MediaKiwi.Services.Model;
 
@@ -27,7 +29,7 @@ namespace Sushi.MediaKiwi.Services
         /// Gets all <see cref="Locale"/> instances.
         /// </summary>        
         /// <returns></returns>
-        public async Task<Result<ListResult<Locale>>> GetAllAsync(bool onlyEnabled, PagingValues pagingValues)
+        public async Task<Result<ListResult<Locale>, Error>> GetAllAsync(bool onlyEnabled, PagingValues pagingValues)
         {
             // get locales from repository
             var items = await _localeRepository.GetAllAsync(onlyEnabled, pagingValues);
@@ -38,25 +40,25 @@ namespace Sushi.MediaKiwi.Services
             // create result object
             var result = new ListResult<Locale>(itemsDto, items);            
 
-            return new Result<ListResult<Locale>>(result);
+            return result;
         }
 
         /// <summary>
         /// Gets a <see cref="Locale"/> instance.
         /// </summary>        
         /// <returns></returns>
-        public async Task<Result<Locale>> GetAsync(string id)
+        public async Task<Result<Locale, Error>> GetAsync(string id)
         {
             // get locale from repository
             var locale = await _localeRepository.GetAsync(id);
 
             if (locale == null)
-                return new Result<Locale>(ResultCode.NotFound);
+                return new NotFoundError();
 
             // map to result            
             var result = _mapper.Map<Locale>(locale);
 
-            return new Result<Locale>(result);
+            return result;
         }
 
         /// <summary>
@@ -65,13 +67,13 @@ namespace Sushi.MediaKiwi.Services
         /// <param name="id"></param>
         /// <param name="locale"></param>
         /// <returns></returns>
-        public async Task<Result<Locale>> CreateAsync(string id, Locale locale)
+        public async Task<Result<Locale, Error>> CreateAsync(string id, Locale locale)
         {
             // get default locale
             var defaultLocale = await _localeRepository.GetDefaultAsync();
 
             // start transaction
-            using (var ts = Utility.CreateTransactionScope())
+            using (var ts = TransactionUtility.CreateTransactionScope())
             {
                 // map to repository model
                 var repositoryLocale = _mapper.Map<Locale, Entities.Locale>(locale);
@@ -93,7 +95,7 @@ namespace Sushi.MediaKiwi.Services
                 // commit
                 ts.Complete();
 
-                return new Result<Locale>(result);
+                return result;
             }
         }
 
@@ -101,18 +103,18 @@ namespace Sushi.MediaKiwi.Services
         /// Deletes a <see cref="Locale"/> instance.
         /// </summary>        
         /// <returns></returns>
-        public async Task<Result> DeleteAsync(string id)
+        public async Task<Result<Error>> DeleteAsync(string id)
         {
             // get locale from repository
             var locale = await _localeRepository.GetAsync(id);
 
             if (locale == null)
-                return new Result<Locale>(ResultCode.NotFound);
+                return new NotFoundError();
 
             // delete
             await _localeRepository.DeleteAsync(locale);
 
-            return new Result(ResultCode.Success);
+            return Result.Success<Error>();
         }
 
         /// <summary>
@@ -121,13 +123,13 @@ namespace Sushi.MediaKiwi.Services
         /// <param name="id"></param>
         /// <param name="locale"></param>
         /// <returns></returns>
-        public async Task<Result<Locale>> UpdateAsync(string id, Locale locale)
+        public async Task<Result<Locale, Error>> UpdateAsync(string id, Locale locale)
         {
             // get existing local
             var repositoryLocale = await _localeRepository.GetAsync(id);            
 
             if (repositoryLocale == null)
-                return new Result<Locale>(ResultCode.NotFound);
+                return new NotFoundError();
 
             // map to repository model
             _mapper.Map(locale, repositoryLocale);
@@ -139,7 +141,7 @@ namespace Sushi.MediaKiwi.Services
             var result = new Locale();
             _mapper.Map(repositoryLocale, result);
 
-            return new Result<Locale>(result);
+            return result;
         }
     }
 }

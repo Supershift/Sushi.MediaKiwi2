@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/require-default-prop -->
 <script setup lang="ts" generic="T">
-  import { TableMap, TableFilter } from "@/models/table";
+  import { TableMap, TableFilter, TableColumn } from "@/models/table";
   import { Paging, Sorting } from "@/models/api";
   import { ref, watch } from "vue";
   import MkTableFilter from "@/components/MkTableFilter/MkTableFilter.vue";
@@ -18,9 +18,11 @@
   import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
   import MkTableHead from "./MkTableHead.vue"; // Mk-Th
   import MkTableCell from "./MkTableCell.vue"; // Mk-Td
+  import MkDisplayOptions from "@/components/MkDisplayOptions/MkDisplayOptions.vue";
   import { defaultPageSizeOptions, defaultPageSize } from "@/constants";
   import { useComponentContext } from "@/composables/useComponentContext";
   import MkEmptyState from "../MkEmptyState/MkEmptyState.vue";
+  import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
 
   // define properties
   const props = withDefaults(
@@ -34,10 +36,10 @@
       /** When set, enables paging based on provided values. */
       paging?: IPagingResult;
       /** ExternalId of the view instance to which the user is pushed when clicking a row. */
-      itemViewId?: string;
+      navigationItemId?: string;
       /** Determines if the toolbar has a new button, default: false. */
       new?: boolean;
-      /** Determines if we only want to emit instead of navigating to the given itemViewId */
+      /** Determines if we only want to emit instead of navigating to the given navigationItemId */
       newEmit?: boolean;
       /** Overrides the "new item" button title */
       newTitle?: string;
@@ -57,6 +59,8 @@
       emptyStateSubtitle?: string;
       /** Hides the bulk action bar while keeing the checkboxes intact */
       hideBulkActionBar?: boolean;
+      /** 'Tracks' the item the user viewed when changing pageSize, when true calculates this instead of resetting pageIndex to 0 */
+      pageTracking?: boolean;
       /** Callback to disable the selection checkbox for a row based on specific criteria */
       disableItemSelection?: (entity: T) => boolean;
     }>(),
@@ -78,6 +82,11 @@
       pageSize: defaultPageSize,
     },
   });
+  /** Display options for the table */
+  const displayOptions = defineModel<TableDisplayOptions | boolean>("displayOptions", { required: false });
+  const hasDisplayOptions = computed(() => displayOptions.value !== undefined && displayOptions.value !== false);
+  /** Reference for multiple tables on one view */
+  const tableReference = defineModel<string>("tableReference", { required: false, default: "Table" });
 
   const sortBy = computed(() => sorting.value?.sortBy);
   const sortDirection = computed(() => sorting.value?.sortDirection);
@@ -121,7 +130,8 @@
   const inProgress = ref(false);
   const mkTableViewComponent = ref();
   const pageSizes = ref([...defaultPageSizeOptions]);
-  if (currentPagination.value?.pageSize) {
+  // Add the current page size if present to the pageSizes array, only if its above the defaultPageSize (10)
+  if (currentPagination.value?.pageSize && currentPagination.value?.pageSize > defaultPageSize) {
     pageSizes.value.push(currentPagination.value.pageSize);
   }
 
@@ -135,10 +145,10 @@
 
   /**
    * Returns if the component has click implementation
-   * Either by itemViewId or click:row event
+   * Either by navigationItemId or click:row event
    */
   const hasTableRowClickAction = computed<boolean>(() => {
-    return hasDefinedEmit("click:row") || props.itemViewId !== undefined;
+    return hasDefinedEmit("click:row") || props.navigationItemId !== undefined;
   });
 
   /**
@@ -157,8 +167,9 @@
     return undefined;
   });
 
+  /** Determines if the pagination should be displayed */
   const showPagination = computed(() => {
-    return currentPagination.value && pagingResult.value && pagingResult.value.pageCount;
+    return currentPagination.value && pagingResult.value && pagingResult.value.pageCount && props.paginationMode === "controls";
   });
 
   // event listeners
@@ -205,7 +216,6 @@
         initialDataLoaded.value = true;
       } catch (error) {
         snackbar.showMessage("Failed to fetch data");
-        throw error;
       } finally {
         // stop progress indicator
         inProgress.value = false;
@@ -224,7 +234,7 @@
 
     <template v-if="props.new || props.title || slots.toolbar || slots.overflowMenuActions">
       <MkToolbar
-        :item-view-id="props.itemViewId"
+        :navigation-item-id="props.navigationItemId"
         :title="props.title"
         :new="props.new"
         :new-emit="props.newEmit"
@@ -261,7 +271,7 @@
       ref="mkTableViewComponent"
       :table-map="tableMap"
       :data="apiResult ? apiResult.result : data"
-      :item-view-id="itemViewId"
+      :navigation-item-id="navigationItemId"
       v-model:sorting="sorting"
       v-model:selection="selection"
       :checkbox="selection ? true : false"
@@ -273,6 +283,8 @@
       @update:sorting="sortingChanged"
       @update:selection="(e) => emit('update:selection', e)"
       :disable-item-selection="props.disableItemSelection"
+      v-model:display-options="displayOptions"
+      v-model:tableReference="tableReference"
     >
       <template #thead>
         <slot v-if="slots.thead" name="thead"></slot>
@@ -298,15 +310,24 @@
       </template>
 
       <!-- Only show the controls if the pagination mode is unset or set to 'controls' -->
-      <template v-if="paginationMode === 'controls'" #bottom>
-        <MkPagination
-          v-if="showPagination"
-          :model-value="currentPagination"
-          :paging-result="pagingResult"
-          :mode="paginationMode"
-          :page-size-options="pageSizes"
-          @update:model-value="pageChanged"
-        />
+      <template #bottom>
+        <v-divider />
+        <div class="mk-table__footer">
+          <div v-if="hasDisplayOptions" class="mk-table__footer-item">
+            <MkDisplayOptions v-model:display-options="displayOptions" v-model:table-reference="tableReference" />
+          </div>
+          <div v-if="showPagination" class="mk-table__footer-item">
+            <MkPagination
+              :model-value="currentPagination"
+              :paging-result="pagingResult"
+              :mode="paginationMode"
+              :page-size-options="pageSizes"
+              :page-tracking="props?.pageTracking"
+              :hide-pagination="!showPagination"
+              @update:model-value="pageChanged"
+            />
+          </div>
+        </div>
       </template>
     </MkTableView>
 
@@ -315,11 +336,11 @@
       <MkEmptyState
         v-else
         :new="props.new"
-        :item-view-id="props.itemViewId"
+        :navigation-item-id="props.navigationItemId"
         :new-title="props.newTitle"
         :new-emit="props.newEmit"
-        :title="props.emptyStateTitle"
-        :subtitle="props.emptyStateSubtitle"
+        :headline="props.emptyStateTitle"
+        :text="props.emptyStateSubtitle"
         @click:new="emit('click:new', $event)"
       />
     </template>
@@ -338,6 +359,13 @@
         justify-content: flex-end;
         width: auto;
       }
+    }
+    &__footer {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 24px;
     }
   }
 </style>

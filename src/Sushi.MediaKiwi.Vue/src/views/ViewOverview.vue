@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { MkTable } from "@/components";
   import { TableMap, ListResult, Sorting, Paging } from "@/models";
-  import { View } from "@/models";
+  import { ViewDto } from "@/models";
   import { ref } from "vue";
   import { container } from "tsyringe";
   import { IViewConnector } from "@/services";
@@ -10,12 +10,12 @@
   const viewConnector = container.resolve<IViewConnector>("IViewConnector");
 
   // define reactive variables
-  const data = ref<ListResult<View>>();
+  const data = ref<ListResult<ViewDto>>();
   const currentPagination = ref<Paging>({});
   const sorting = ref<Sorting | undefined>();
 
   // define mapping
-  const tableMap: TableMap<View> = {
+  const tableMap: TableMap<ViewDto> = {
     itemId: (x) => x.id,
     items: [
       { headerTitle: "Id", value: (x) => x.id },
@@ -39,6 +39,6 @@
     :api-result="data"
     :on-load="onLoad"
     :table-map="tableMap"
-    item-view-id="MkViewEdit"
+    navigation-item-id="MkViewEdit"
   ></mk-table>
 </template>

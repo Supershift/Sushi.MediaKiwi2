@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-labels */
 import "reflect-metadata";
 import MkNavigationItemComponent from "../MkNavigationItem.vue";
-import { NavigationItem } from "@/models";
+import { NavigationItem, Section } from "@/models/navigation";
 import { createVuetify } from "vuetify";
 import { defaultVuetifyOptions } from "@/plugins/vuetify";
 
@@ -16,23 +16,20 @@ const withChildProps = {
   navigationItem: {
     id: "123",
     name: "Test Item",
-    sectionId: "Home",
+    section: {id: "Home"} as Section,
     path: "/home",
     children: [
       {
         id: "444",
         name: "Test Child Item",
-        sectionId: "Home",
-        parentNavigationItemId: "123",
+        section: {id: "Home"} as Section,        
         parent: {
           id: "123",
           name: "Test Item",
-          sectionId: "Home",
-          path: "/home",
+          section: {id: "Home"} as Section,          
           icon: "$ratingFull", // we use a default icon instead since we're testing the icon
         },
-        viewId: "home",
-        path: "/home/child",
+        componentKey: "home.vue",        
         icon: "$ratingFull", // we use a default icon instead since we're testing the icon
       },
     ] as Array<NavigationItem>,
@@ -41,24 +38,21 @@ const withChildProps = {
     {
       id: "123",
       name: "Test Item",
-      sectionId: "Home",
-      path: "/home",
+      section: {id: "Home"} as Section,      
       icon: "$home",
     },
     {
       id: "444",
       name: "Test Child Item",
-      sectionId: "Home",
-      parentNavigationItemId: "123",
+      section: {id: "Home"} as Section,      
       parent: {
         id: "123",
         name: "Test Item",
-        sectionId: "Home",
+        section: {id: "Home"} as Section,
         path: "/home",
         icon: "$home",
       },
-      viewId: "home",
-      path: "/home/child",
+      componentKey: "home.vue",      
     },
   ] as Array<NavigationItem>,
 };
@@ -67,7 +61,7 @@ const withOutChildProps = {
   navigationItem: {
     id: "123",
     name: "No Child Test Item",
-    sectionId: "Home",
+    section: {id: "Home"} as Section,
     path: "/ratings",
     icon: "$ratingFull", // we use a default icon instead since we're testing the icon
     children: [] as Array<NavigationItem>,
@@ -76,8 +70,7 @@ const withOutChildProps = {
     {
       id: "123",
       name: "No Child Test Item",
-      sectionId: "Home",
-      path: "/ratings",
+      section: {id: "Home"} as Section,      
       icon: "$ratingFull", // we use a default icon instead since we're testing the icon
     },
   ] as Array<NavigationItem>,

@@ -1,12 +1,11 @@
 <script setup lang="ts">
   import { MkNavigation, MkScreen, MkNavigationIcon, MkThemeToggle, MkAccountMenu, MkSuspense } from "@/components";
   import { useIsAuthenticated } from "@/composables/useIsAuthenticated";
-  import { useSnackbarStore } from "@/stores/snackbar";
   import MkLogoLockup from "./MkLogoLockup.vue";
+  import MkSnackbar from "../MkSnackbar/MkSnackbar.vue";
 
   // inject dependencies
   const isAuthenticated = useIsAuthenticated();
-  const snackbar = useSnackbarStore();
 
   defineProps<{
     /** Hide the avatar in the Account overflow menu */
@@ -65,7 +64,9 @@
         <mk-navigation v-if="isAuthenticated"></mk-navigation>
       </mk-suspense>
       <mk-screen></mk-screen>
-      <v-snackbar v-model="snackbar.show">{{ snackbar.message }}</v-snackbar>
+      <mk-suspense>
+        <mk-snackbar></mk-snackbar>
+      </mk-suspense>
     </v-layout>
   </v-card>
 </template>

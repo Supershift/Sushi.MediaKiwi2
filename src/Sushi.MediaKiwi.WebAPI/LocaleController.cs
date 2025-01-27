@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
-using Sushi.MediaKiwi.WebAPI.Paging;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
@@ -13,17 +12,14 @@ namespace Sushi.MediaKiwi.WebAPI
     public class LocaleController : MediaKiwiControllerBase
     {
         private readonly LocaleService _localeService;
-        private readonly PagingRetriever _pagingRetriever;
 
         /// <summary>
         /// Creates a new instance of <see cref="LocaleController"/>.
         /// </summary>
         /// <param name="localeService"></param>
-        /// <param name="pagingRetriever"></param>
-        public LocaleController(LocaleService localeService, PagingRetriever pagingRetriever)
+        public LocaleController(LocaleService localeService)
         {
-            _localeService = localeService;
-            _pagingRetriever = pagingRetriever;
+            _localeService = localeService;;
         }
 
         /// <summary>
@@ -36,21 +32,18 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<ListResult<Locale>>> GetEnabledLocales()
         {   
             var result = await _localeService.GetAllAsync(true, new PagingValues(0, 1000));
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
         /// Gets all locales.
         /// </summary>
-        /// <param name="onlyEnabled">If set to true, only locales with enabled set to true are returned.</param>
         /// <returns></returns>
         [HttpGet]
-        [QueryStringPaging]
-        public async Task<ActionResult<ListResult<Locale>>> GetLocales(bool? onlyEnabled)
+        public async Task<ActionResult<ListResult<Locale>>> GetLocales([FromQuery] PagingValues paging, bool onlyEnabled = false)
         {
-            var pagingValues = _pagingRetriever.GetPaging();
-            var result = await _localeService.GetAllAsync(onlyEnabled.GetValueOrDefault(), pagingValues);
-            return this.CreateResponse(result);
+            var result = await _localeService.GetAllAsync(onlyEnabled, paging);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -62,7 +55,7 @@ namespace Sushi.MediaKiwi.WebAPI
         public async Task<ActionResult<Locale>> GetLocale(string id)
         {
             var result = await _localeService.GetAsync(id);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -71,10 +64,11 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpPost]
         [Route("{id}")]
+        [Authorize(Policy = Constants.AdminPolicyName)]
         public async Task<ActionResult<Locale>> CreateLocale(string id, Locale request)
         {
             var result = await _localeService.CreateAsync(id, request);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -83,10 +77,11 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpDelete]
         [Route("{id}")]
+        [Authorize(Policy = Constants.AdminPolicyName)]
         public async Task<ActionResult> DeleteLocale(string id)
         {
             var result = await _localeService.DeleteAsync(id);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
 
         /// <summary>
@@ -95,10 +90,11 @@ namespace Sushi.MediaKiwi.WebAPI
         /// <returns></returns>
         [HttpPut]
         [Route("{id}")]
+        [Authorize(Policy = Constants.AdminPolicyName)]
         public async Task<ActionResult<Locale>> UpdateLocale(string id, Locale request)
         {
             var result = await _localeService.UpdateAsync(id, request);
-            return this.CreateResponse(result);
+            return this.ToResponse(result);
         }
     }
 }

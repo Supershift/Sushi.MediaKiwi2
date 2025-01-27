@@ -3,6 +3,7 @@ import { App, ref, triggerRef } from "vue";
 import LanguageDetector from "i18next-browser-languagedetector";
 import HttpApi from "i18next-http-backend";
 import { MediakiwiVueOptions } from "@/models";
+import { container } from "tsyringe";
 
 export const tokenStore = <
   {
@@ -57,5 +58,9 @@ export default {
     // add i18next to the app
     app.provide("i18next", instance);
     app.provide("i18initPromise", i18initPromise);
+
+    // register i18next with tsyringe
+    container.registerInstance("i18next", instance);
+    container.registerInstance("i18initPromise", i18initPromise);
   },
 };

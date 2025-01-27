@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Moq;
 using Sushi.MediaKiwi.WebAPI.Sorting;
@@ -43,6 +44,9 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests.Sorting
             // assert
             Assert.Contains(operation.Parameters, x => x.Name == "sortBy");
             Assert.Contains(operation.Parameters, x => x.Name == "sortDirection");
+
+            Assert.Equal("id", ((Microsoft.OpenApi.Any.OpenApiString)operation.Parameters[0].Schema.Enum[0]).Value);
+            Assert.Equal("name", ((Microsoft.OpenApi.Any.OpenApiString)operation.Parameters[0].Schema.Enum[1]).Value);
         }
 
         [Fact]

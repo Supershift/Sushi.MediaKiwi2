@@ -2,7 +2,7 @@
   import { ref } from "vue";
   import { container } from "tsyringe";
   import { SectionConnector } from "@/services";
-  import { ListResult, Paging, Section, TableMap } from "@/models";
+  import { ListResult, Paging, SectionDto, TableMap } from "@/models";
   import { MkTable } from "@/components";
   import { useColors, useTypography, useElevations } from "@/composables";
   import { IconsLibrary } from "@/models";
@@ -14,9 +14,9 @@
   // Table data
   const sectionConnector = container.resolve<SectionConnector>("ISectionConnector");
   const currentPagination = ref<Paging>({});
-  const data = ref<ListResult<Section>>();
+  const data = ref<ListResult<SectionDto>>();
   // define mapping
-  const tableMap: TableMap<Section> = {
+  const tableMap: TableMap<SectionDto> = {
     itemId: (x) => x.id,
     items: [
       { headerTitle: "Name", value: (x) => x.name },
