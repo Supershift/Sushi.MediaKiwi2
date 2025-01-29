@@ -308,7 +308,7 @@
       if (e.ctrlKey || e.metaKey) {
         // If the table part of an overlay and is that overlay NOT the active overlay, do nothing
         // Or if the table is not part of an overlay, but there IS an active overlay, do nothing
-        if (!isKeyStrokeForCurrentTable.value) return;
+        if (!props.checkbox || !isKeyStrokeForCurrentTable.value) return;
         e.preventDefault();
         onToggleAll(true);
       }
@@ -322,7 +322,7 @@
   onKeyStroke(
     ["Escape"],
     (e) => {
-      if (!isKeyStrokeForCurrentTable.value) return;
+      if (!props.checkbox || !isKeyStrokeForCurrentTable.value) return;
       e.preventDefault();
       clearSelection();
     },
@@ -332,7 +332,7 @@
   onKeyDown(
     ["Control", "Meta", "Shift"],
     () => {
-      if (!isKeyStrokeForCurrentTable.value) return;
+      if (!props.checkbox || !isKeyStrokeForCurrentTable.value) return;
       isSelectionKeyPressed.value = true;
     },
     { dedupe: true }
@@ -341,7 +341,7 @@
   onKeyUp(
     ["Control", "Meta", "Shift"],
     () => {
-      if (!isKeyStrokeForCurrentTable.value) return;
+      if (!props.checkbox || !isKeyStrokeForCurrentTable.value) return;
       isSelectionKeyPressed.value = false;
     },
     { dedupe: true }
