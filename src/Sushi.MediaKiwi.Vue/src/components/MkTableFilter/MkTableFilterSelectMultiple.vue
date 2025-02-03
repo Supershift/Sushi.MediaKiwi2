@@ -39,6 +39,10 @@
       };
     }
   }
+  function applyAndClose() {
+    applyFilter();
+    emit("click:close");
+  }
 </script>
 
 <template>
@@ -52,6 +56,7 @@
         :label="tableFilterItem.inputLabel || defaultT('Value')"
         :rules="[...additionalRules]"
         autofocus
+        @keydown.enter="applyAndClose"
       >
         <template #selection="{ item }">
           <v-chip v-if="item" v-text="item.title" />

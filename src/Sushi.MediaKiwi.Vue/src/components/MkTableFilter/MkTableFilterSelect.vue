@@ -28,6 +28,10 @@
       modelValue.value = model.value;
     }
   }
+  function applyAndClose() {
+    applyFilter();
+    emit("click:close");
+  }
 </script>
 
 <template>
@@ -41,6 +45,7 @@
         return-object
         :rules="[...additionalRules]"
         autofocus
+        @keydown.enter="applyAndClose"
       ></v-autocomplete>
     </div>
   </MkTableFilterDialog>
