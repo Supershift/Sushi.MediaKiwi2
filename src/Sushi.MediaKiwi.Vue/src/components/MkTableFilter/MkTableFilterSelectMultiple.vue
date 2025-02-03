@@ -20,6 +20,8 @@
 
   // Create proxy model to prevent direct mutation
   const model = ref<Array<string>>(modelValue.value?.value || []);
+  // Menu model for the dropdown context behaviour handling
+  const menuModelValue = ref(false);
 
   // Additional rules for the input field
   const additionalRules = computed(() => props.tableFilterItem.rules || []);
@@ -39,6 +41,17 @@
       };
     }
   }
+
+  // Close the menu or apply the filter
+  function closeOrApply(e: KeyboardEvent) {
+    if (!menuModelValue.value) {
+      // if menu closed, then apply filter
+      applyFilter();
+    } else {
+      // if menu open, then close it
+      menuModelValue.value = false;
+    }
+  }
 </script>
 
 <template>
@@ -52,6 +65,11 @@
         :label="tableFilterItem.inputLabel || defaultT('Value')"
         :rules="[...additionalRules]"
         autofocus
+        :menu-props="{ modelValue: menuModelValue, persistent: true }"
+        clear-on-select
+        @keydown.enter="closeOrApply"
+        @update:menu="(e) => (menuModelValue = e)"
+        @update:search="menuModelValue = true"
       >
         <template #selection="{ item }">
           <v-chip v-if="item" v-text="item.title" />
