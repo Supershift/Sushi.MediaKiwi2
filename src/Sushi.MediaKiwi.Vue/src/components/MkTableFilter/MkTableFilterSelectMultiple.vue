@@ -44,7 +44,7 @@
 
   // Close the menu or apply the filter
   function closeOrApply(e: KeyboardEvent) {
-    e.preventDefault();
+    // e.preventDefault();
     if (!menuModelValue.value) {
       // if menu closed, then apply filter
       applyFilter();
@@ -66,10 +66,11 @@
         :label="tableFilterItem.inputLabel || defaultT('Value')"
         :rules="[...additionalRules]"
         autofocus
-        :menu-props="{ modelValue: menuModelValue }"
+        :menu-props="{ modelValue: menuModelValue, persistent: true }"
         clear-on-select
         @keydown.enter="closeOrApply"
         @update:menu="(e) => (menuModelValue = e)"
+        @update:search="(e) => (e ? (menuModelValue = true) : (menuModelValue = false))"
       >
         <template #selection="{ item }">
           <v-chip v-if="item" v-text="item.title" />
