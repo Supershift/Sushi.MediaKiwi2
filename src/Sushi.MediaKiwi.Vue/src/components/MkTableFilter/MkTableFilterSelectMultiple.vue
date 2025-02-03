@@ -43,7 +43,8 @@
   }
 
   // Close the menu or apply the filter
-  function closeOrApply() {
+  function closeOrApply(e: KeyboardEvent) {
+    e.preventDefault();
     if (!menuModelValue.value) {
       // if menu closed, then apply filter
       applyFilter();
