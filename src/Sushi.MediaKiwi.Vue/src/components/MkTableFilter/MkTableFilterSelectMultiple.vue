@@ -70,7 +70,7 @@
         clear-on-select
         @keydown.enter="closeOrApply"
         @update:menu="(e) => (menuModelValue = e)"
-        @update:search="(e) => (e ? (menuModelValue = true) : (menuModelValue = false))"
+        @update:search="menuModelValue = true"
       >
         <template #selection="{ item }">
           <v-chip v-if="item" v-text="item.title" />
