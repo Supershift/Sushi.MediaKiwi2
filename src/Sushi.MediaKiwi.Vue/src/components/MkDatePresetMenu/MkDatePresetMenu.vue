@@ -3,7 +3,7 @@
   import { useDayjs } from "@/composables/useDayjs";
   import { useI18next } from "@/composables/useI18next";
   import { DateRange, TitledDateRange } from "@/models/ranges";
-  import { reactive } from "vue";
+  import { ref } from "vue";
   import { MkDatePicker } from "../MkDatePicker";
   import dayjs from "dayjs";
 
@@ -40,7 +40,7 @@
     }
   );
 
-  const modelValue = defineModel<{ value: any[]; title?: string }>({ required: true });
+  const modelValue = defineModel<{ value: Date[]; title?: string }>({ required: true });
 
   // Inject dependencies
   const { isSame, isBefore, startOf, endOf } = useDayjs();
@@ -50,11 +50,7 @@
     monthPresets: props.months,
   });
 
-  const state = reactive({
-    datePicker: false,
-    // Create proxy model to prevent direct mutation
-    model: modelValue.value || { value: [] },
-  });
+  const isDatePickerOpen = ref(false);
 
   const emit = defineEmits<{
     (e: "click:close"): void;
@@ -84,17 +80,7 @@
   }
 
   function apply(range: Date[], title: string) {
-    state.model.value = range;
-    state.model.title = title;
-    modelValue.value = { ...state.model };
-  }
-
-  function openDatePicker() {
-    state.datePicker = true;
-  }
-
-  function closeDatePicker() {
-    state.datePicker = false;
+    modelValue.value = { title, value: range };
   }
 
   /**
@@ -102,10 +88,10 @@
    * @param item
    */
   function isSameStart(item: DateRange | TitledDateRange) {
-    if (!state.model.value || !state.model.value[0]) {
+    if (!modelValue.value.value || !modelValue.value.value[0]) {
       return false;
     }
-    return isSame.value(item.start, state.model.value[0], "day");
+    return isSame.value(item.start, modelValue.value.value[0], "day");
   }
 
   /**
@@ -113,10 +99,10 @@
    * @param item
    */
   function isSameEnd(item: DateRange | TitledDateRange) {
-    if (!state.model.value || !state.model.value[1]) {
+    if (!modelValue.value.value || !modelValue.value.value[1]) {
       return false;
     }
-    return isSame.value(item.end, state.model.value[1], "day");
+    return isSame.value(item.end, modelValue.value.value[1], "day");
   }
 
   /**
@@ -132,9 +118,9 @@
    */
   function isSelectedCustomItem() {
     return (
-      state.model.value &&
-      state.model.value[0] &&
-      state.model.value[1] &&
+      modelValue.value.value &&
+      modelValue.value.value[0] &&
+      modelValue.value.value[1] &&
       !presets.value.days?.some((x: DateRange) => isSelectedPresetItem(x)) &&
       !presets.value.months.some((x: DateRange) => isSelectedPresetItem(x)) &&
       !props.customOptions?.some((x: DateRange) => isSelectedPresetItem(x))
@@ -143,7 +129,16 @@
 </script>
 
 <template>
-  <v-list v-if="!state.datePicker">
+  <MkDatePicker
+    v-if="isDatePickerOpen"
+    :modelValue="modelValue.value"
+    :class="datePickerClass"
+    multiple
+    @click:close="isDatePickerOpen = false"
+    @update:model-value="updateDateArray"
+    :title="datePickerTitle"
+  />
+  <v-list v-else>
     <v-list-item v-for="(item, i) in presets.days" :key="i" :active="isSelectedPresetItem(item)" @click="updateDateRange(item)">
       <v-list-item-title>{{ formatPreset(item.start, item.end) }}</v-list-item-title>
     </v-list-item>
@@ -156,17 +151,8 @@
       <v-list-item-title> {{ formatDateRange(item.start, item.end, item.title) }}</v-list-item-title>
     </v-list-item>
     <v-divider />
-    <v-list-item :active="isSelectedCustomItem()" @click="openDatePicker">
+    <v-list-item :active="isSelectedCustomItem()" @click="isDatePickerOpen = true">
       <v-list-item-title> {{ defaultT("Custom") }}</v-list-item-title>
     </v-list-item>
   </v-list>
-  <MkDatePicker
-    v-else-if="state.datePicker"
-    :modelValue="state.model.value"
-    :class="datePickerClass"
-    multiple
-    @click:close="closeDatePicker"
-    @update:model-value="updateDateArray"
-    :title="datePickerTitle"
-  />
 </template>
