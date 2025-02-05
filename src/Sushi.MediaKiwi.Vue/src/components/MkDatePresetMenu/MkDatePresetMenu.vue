@@ -60,59 +60,32 @@
     (e: "click:close"): void;
   }>();
 
-  function updateModelValue(value: DateRange | TitledDateRange): void;
-  function updateModelValue(value: any[]): void;
-  function updateModelValue(value: DateRange | TitledDateRange | any[]): void {
-    let startDate, endDate, itemTitle;
+  function updateDateArray(value: Date[]): void {
+    let [date1, date2] = value;
 
-    if (Array.isArray(value)) {
-      // Deconstruct the array
-      const [date1, date2] = value;
-      let start, end;
-
-      // determine the start and end date, based on the values, since the order can be the other way around
-      if (isBefore.value(new Date(date1), new Date(date2))) {
-        start = date1;
-        end = date2;
-      } else {
-        start = date2;
-        end = date1;
-      }
-
-      // Convert to dayjs,
-      // Force the start date at the start of the DAY
-      // And the endDate at the end of the DAY
-
-      startDate = startOf.value(start, "day");
-      endDate = endOf.value(end, "day");
-      itemTitle = formatDateRange(startDate, endDate);
-    } else if ("title" in value) {
-      // Deconstruct the TitledDateRange
-
-      const { start, end, title } = value;
-      startDate = start;
-      endDate = end;
-      itemTitle = formatDateRange(startDate, endDate, title);
-    } else {
-      // Deconstruct the DateRange
-
-      const { start, end } = value;
-      startDate = start;
-      endDate = end;
-      itemTitle = formatPreset(startDate, endDate);
+    if (isBefore.value(date2, date1)) {
+      [date1, date2] = [date2, date1];
     }
 
-    // Set the value
-    state.model.value = [startDate, endDate];
-
-    // Set the title
-    state.model.title = itemTitle;
-
-    // Apply the changes
-    apply();
+    const startDate = startOf.value(date1, "day");
+    const endDate = endOf.value(date2, "day");
+    const title = formatDateRange(startDate, endDate);
+    apply([startDate, endDate], title);
   }
 
-  function apply() {
+  function updateDateRange(value: DateRange): void {
+    const title = formatPreset(value.start, value.end);
+    apply([value.start, value.end], title);
+  }
+
+  function updateTitledDateRange(value: TitledDateRange): void {
+    const title = formatDateRange(value.start, value.end, value.title);
+    apply([value.start, value.end], title);
+  }
+
+  function apply(range: Date[], title: string) {
+    state.model.value = range;
+    state.model.title = title;
     modelValue.value = { ...state.model };
   }
 
@@ -171,15 +144,15 @@
 
 <template>
   <v-list v-if="!state.datePicker">
-    <v-list-item v-for="(item, i) in presets.days" :key="i" :active="isSelectedPresetItem(item)" @click="updateModelValue(item)">
+    <v-list-item v-for="(item, i) in presets.days" :key="i" :active="isSelectedPresetItem(item)" @click="updateDateRange(item)">
       <v-list-item-title>{{ formatPreset(item.start, item.end) }}</v-list-item-title>
     </v-list-item>
     <v-divider />
-    <v-list-item v-for="(item, i) in presets.months" :key="i" :active="isSelectedPresetItem(item)" @click="updateModelValue(item)">
+    <v-list-item v-for="(item, i) in presets.months" :key="i" :active="isSelectedPresetItem(item)" @click="updateDateRange(item)">
       <v-list-item-title> {{ formatPreset(item.start, item.end) }}</v-list-item-title>
     </v-list-item>
     <v-divider v-if="props.customOptions" />
-    <v-list-item v-for="(item, i) in props.customOptions" :key="i" :active="isSelectedPresetItem(item)" @click="updateModelValue(item)">
+    <v-list-item v-for="(item, i) in props.customOptions" :key="i" :active="isSelectedPresetItem(item)" @click="updateTitledDateRange(item)">
       <v-list-item-title> {{ formatDateRange(item.start, item.end, item.title) }}</v-list-item-title>
     </v-list-item>
     <v-divider />
@@ -193,7 +166,7 @@
     :class="datePickerClass"
     multiple
     @click:close="closeDatePicker"
-    @update:model-value="updateModelValue"
+    @update:model-value="updateDateArray"
     :title="datePickerTitle"
   />
 </template>
