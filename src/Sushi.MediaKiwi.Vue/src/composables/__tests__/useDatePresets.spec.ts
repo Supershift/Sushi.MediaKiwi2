@@ -50,7 +50,7 @@ vi.mock("./useDayjs", () => ({
 describe("useDatePresets", () => {
   it("should correctly calculate day presets", async () => {
     const { presets } = await useDatePresets({ dayPresets: [1, 7], monthPresets: [] });
-    const dayPresets = presets.value.days;
+    const dayPresets = presets.value.daysExcludingToday;
     expect(dayPresets.length).toBe(2);
   });
 
@@ -58,11 +58,5 @@ describe("useDatePresets", () => {
     const { presets } = await useDatePresets({ dayPresets: [], monthPresets: [0, 1] });
     const monthPresets = presets.value.months;
     expect(monthPresets.length).toBe(2);
-  });
-
-  it("presets should have correct structure", async () => {
-    const { presets } = await useDatePresets({ dayPresets: [1], monthPresets: [0] });
-    expect(presets.value).toHaveProperty("days");
-    expect(presets.value).toHaveProperty("months");
   });
 });

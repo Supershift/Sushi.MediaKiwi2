@@ -2,6 +2,7 @@ import { computed } from "vue";
 import { DateRange } from "@/models/ranges";
 import { useDayjs } from "./useDayjs";
 import { useI18next } from "./useI18next";
+import { Dayjs } from "dayjs";
 
 export async function useDatePresets(options?: {
   /**
@@ -20,53 +21,46 @@ export async function useDatePresets(options?: {
   const { currentDayjs, getDifference, isFullMonth, isToday } = useDayjs();
   const { dayPresets, monthPresets } = options || {};
 
+  const today = computed(() => currentDayjs.value);
+  const yesterday = computed(() => today.value.subtract(1, "day"));
+
   const { formatMonth, defaultT, formatDate } = await useI18next();
 
-  /** Preset ranges */
   const presets = computed(() => {
     return {
-      days: getPreset("day"),
-      months: getPreset("month"),
+      daysExcludingToday: getLastDaysPresets(yesterday.value),
+      months: getMonthPreset(today.value),
     };
   });
 
-  /**
-   * Returns a list of preset ranges
-   * @returns
-   */
-  function getPreset(type: "day"): DateRange[];
-  function getPreset(type: "month"): DateRange[];
-  function getPreset(type: "day" | "month") {
-    const start = currentDayjs.value;
-    const result = <DateRange[]>[];
+  function getLastDaysPresets(yesterday: Dayjs): DateRange[] {
+    const result: DateRange[] = [];
 
-    if (type === "day" && dayPresets) {
-      const end = currentDayjs.value;
-      // Last x days
-      for (const day of dayPresets) {
-        const current = start.subtract(day, "day");
-        result.push({
-          start: current.startOf("day").toDate(),
-          end: end.endOf("day").toDate(),
-          duration: day,
-        });
-      }
-    } else if (type === "month" && monthPresets) {
-      // Add current and last 2 months
-      for (const month of monthPresets) {
-        const current = start.subtract(month, "month");
-        const m = current.startOf("month");
-
-        result.push({
-          start: m.toDate(),
-          end: m.endOf("month").toDate(),
-        });
-      }
+    for (const dayOffset of dayPresets ?? []) {
+      result.push({
+        start: yesterday.subtract(dayOffset, "day").toDate(),
+        end: yesterday.toDate(),
+        duration: dayOffset,
+      });
     }
 
-    // Sort by start date descending
     result.sort((a, b) => b.start.getTime() - a.start.getTime());
+    return result;
+  }
 
+  function getMonthPreset(today: Dayjs) {
+    const result: DateRange[] = [];
+
+    for (const monthOffset of monthPresets ?? []) {
+      const month = today.subtract(monthOffset, "month");
+
+      result.push({
+        start: month.startOf("month").toDate(),
+        end: month.endOf("month").toDate(),
+      });
+    }
+
+    result.sort((a, b) => b.start.getTime() - a.start.getTime());
     return result;
   }
 
@@ -82,7 +76,7 @@ export async function useDatePresets(options?: {
         const start = dates;
         if (isFullMonth.value(start, end)) {
           return formatMonth.value(start);
-        } else if (isToday.value(end)) {
+        } else if (yesterday.value.isSame(end, "day")) {
           const duration = getDifference.value(start, end, "day");
           return defaultT.value("LastXDays", "Last {{duration}} days", { duration });
         } else {
@@ -105,7 +99,6 @@ export async function useDatePresets(options?: {
   }
 
   return {
-    currentDayjs,
     presets,
     formatPreset,
     formatDateRange,

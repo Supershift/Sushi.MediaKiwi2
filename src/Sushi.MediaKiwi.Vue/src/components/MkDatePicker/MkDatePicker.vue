@@ -24,7 +24,7 @@
     }
   );
 
-  const modelValue = defineModel<Array<any>>({ required: true });
+  const modelValue = defineModel<Date[]>({ required: true });
 
   const emit = defineEmits<{
     (e: "click:close"): void;
