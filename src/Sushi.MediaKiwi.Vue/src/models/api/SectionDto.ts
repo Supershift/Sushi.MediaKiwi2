@@ -2,9 +2,9 @@ export interface SectionDto {
   id: string;
   name: string;
   sortOrder: number;
-  icon?: string;
+  icon?: string | null;
   /** If not empty, access to this screen is restricted to these roles. */
-  roles?: string[];
+  roles: string[];
   /** Tooltip text */
   tooltip?: string;
   /** Visibility state of the section, leacvy  */

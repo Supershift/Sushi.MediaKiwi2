@@ -1,10 +1,10 @@
 <script setup lang="ts">
-  import { IAdminTranslationConnector } from "@/services/interfaces";
-  import { container } from "tsyringe";
   import { MkTable, MkFormSideSheet } from "@/components";
   import { ref, reactive } from "vue";
   import { ListResult, Paging, TableFilter, TableFilterType, TableFilterValue, TableMap, Translation } from "@/models";
   import { useI18next } from "@/composables";
+  import { useSnackbarStore } from "@/stores/snackbar";
+  import { useMediaKiwiApi } from "@/services";
 
   // define properties
   const props = defineProps({
@@ -16,8 +16,8 @@
   });
 
   // inject dependencies
-  const connector = container.resolve<IAdminTranslationConnector>("IAdminTranslationConnector");
-  const { defaultT, t } = await useI18next("Translations");
+  const mediaKiwiApi = useMediaKiwiApi();
+  const { defaultT, t } = await useI18next();
 
   // define reactive variables
   const currentPagination = ref<Paging>({});
@@ -60,16 +60,33 @@
     const selectedNamespace = filters.value.namespaces.selectedValue?.value;
     const selectedKey = filters.value.key.selectedValue?.value;
     const selectedValue = filters.value.value.selectedValue?.value;
-    translations.value = await connector.GetAll(props.localeId, selectedNamespace, selectedKey, selectedValue);
+
+    const response = await mediaKiwiApi.adminTranslations({
+      localeId: props.localeId,
+      namespace: selectedNamespace,
+      key: selectedKey,
+      value: selectedValue,
+    });
+    translations.value = {
+      ...response.data,
+      result:
+        response.data?.result?.map((t) => ({
+          ...t,
+          localeId: t.localeId ?? "",
+          namespace: t.namespace ?? "",
+          key: t.key ?? "",
+          value: t.value ?? "",
+        })) ?? [],
+    };
   }
 
   // get filter options
-  const namespaces = await connector.GetNamespaces(props.localeId);
-  const keys = await connector.GetKeys(props.localeId);
+  const namespaces = await mediaKiwiApi.adminTranslationsNamespaces({ localeId: props.localeId });
+  const keys = await mediaKiwiApi.adminTranslationsKeys({ localeId: props.localeId });
 
   // Set filter options
-  filters.value.namespaces.options = namespaces.result.map((ns) => <TableFilterValue>{ title: ns, value: ns });
-  filters.value.key.options = keys.result.map((ns) => <TableFilterValue>{ title: ns, value: ns });
+  filters.value.namespaces.options = (namespaces.data?.result ?? []).map((ns) => <TableFilterValue>{ title: ns, value: ns });
+  filters.value.key.options = (keys.data?.result ?? []).map((ns) => <TableFilterValue>{ title: ns, value: ns });
 
   // handle events
   function onRowClick(item: Translation) {
@@ -78,11 +95,12 @@
     state.showEditTranslation = true;
   }
 
-  async function onSave() {
-    await connector.Update({
+  async function onSave(): Promise<void> {
+    const item = {
       ...state.translation,
       value: state.editTranslationValue,
-    });
+    };
+    await mediaKiwiApi.adminTranslationsUpdate(item.localeId, item.namespace, item.key, item);
 
     // update model value if successful
     state.translation = {

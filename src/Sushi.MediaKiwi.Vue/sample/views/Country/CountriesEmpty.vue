@@ -1,11 +1,11 @@
 <script setup lang="ts">
-  import { Country } from "../../models/Country";
   import { MkTable } from "@/components";
   import { useI18next } from "@/composables";
   import { ListResult, Paging } from "@/models";
   import { reactive } from "vue";
   import { ref, computed } from "vue";
   import CountryEdit from "./AddCountry.vue";
+  import { Country } from "@sample/services";
 
   // inject dependencies
   const { t } = await useI18next();

@@ -1,6 +1,5 @@
 import { ListResult, NavigationItemDto, Paging, Role, SectionDto, Sorting, ViewDto } from "@/models";
-import { INavigationConnector, ISectionConnector, IViewConnector } from "@/services";
-import { IRoleConnector } from "@/services/IRoleConnector";
+import { INavigationConnector } from "@/services";
 import { AxiosResponse } from "axios";
 
 export const expectedResultNavItems = <AxiosResponse>{
@@ -101,59 +100,5 @@ export class MockedNavigationConnector implements INavigationConnector {
     _sorting?: Sorting<NavigationItemDto> | undefined
   ): Promise<ListResult<NavigationItemDto>> {
     return Promise.resolve(expectedResultNavItems.data);
-  }
-}
-
-export class MockedSectionsConnector implements ISectionConnector {
-  GetSections(paging?: Paging): Promise<ListResult<SectionDto>> {
-    return Promise.resolve(expectedResultSections.data);
-  }
-  GetSection(id: string): Promise<SectionDto | undefined> {
-    throw new Error("Method not implemented.");
-  }
-  CreateSection(id: string, request: SectionDto): Promise<SectionDto> {
-    throw new Error("Method not implemented.");
-  }
-  UpdateSection(id: string, request: SectionDto): Promise<SectionDto> {
-    throw new Error("Method not implemented.");
-  }
-  DeleteSection(id: string): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-}
-
-export class MockedViewsConnector implements IViewConnector {
-  GetViews(paging?: Paging): Promise<ListResult<SectionDto>> {
-    return Promise.resolve(expectedResultViews.data);
-  }
-  GetView(id: string): Promise<SectionDto | undefined> {
-    throw new Error("Method not implemented.");
-  }
-  CreateView(id: string, request: SectionDto): Promise<SectionDto> {
-    throw new Error("Method not implemented.");
-  }
-  UpdateView(id: string, request: SectionDto): Promise<SectionDto> {
-    throw new Error("Method not implemented.");
-  }
-  DeleteView(id: string): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-}
-
-export class MockedRolesConnector implements IRoleConnector {
-  GetRoles(): Promise<ListResult<SectionDto>> {
-    return Promise.resolve(expectedResultRoles.data);
-  }
-  GetRole(id: string): Promise<SectionDto | undefined> {
-    throw new Error("Method not implemented.");
-  }
-  CreateRole(id: string, request: SectionDto): Promise<SectionDto> {
-    throw new Error("Method not implemented.");
-  }
-  UpdateRole(id: string, request: SectionDto): Promise<SectionDto> {
-    throw new Error("Method not implemented.");
-  }
-  DeleteRole(id: string): Promise<void> {
-    throw new Error("Method not implemented.");
   }
 }

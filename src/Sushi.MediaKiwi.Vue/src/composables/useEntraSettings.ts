@@ -1,18 +1,17 @@
 import { MediakiwiVueOptions } from "@/models";
+import { Api } from "@/services";
 import { createPublicAxiosClient } from "@/services/axios/createAxiosClient";
-import { IdentityProviderConnector } from "@/services/IdentityProviderConnector";
 
 export function useEntraSettings(apiBaseUrl: string) {
-  const axiosClient = createPublicAxiosClient(apiBaseUrl);
-
-  const identityProviderConnector = new IdentityProviderConnector(axiosClient);
+  const mediaKiwiApi = new Api<any>();
+  mediaKiwiApi.instance = createPublicAxiosClient(apiBaseUrl.replace("mediakiwi/api", ""));
 
   async function getEntraSettings() {
-    const entraSettings = await identityProviderConnector.GetEntraSettings();
+    const entraSettings = await mediaKiwiApi.mediakiwi.identityproviderEntra();
 
-    entraSettings.authority = `${entraSettings.instance}${entraSettings.tenantId}`;
+    const authority = `${entraSettings.data.instance}${entraSettings.data.tenantId}`;
 
-    return entraSettings;
+    return { ...entraSettings.data, authority };
   }
 
   async function fillEntraSettings(options: MediakiwiVueOptions): Promise<MediakiwiVueOptions> {

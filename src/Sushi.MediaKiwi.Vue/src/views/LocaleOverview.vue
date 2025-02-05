@@ -1,12 +1,12 @@
 <script setup lang="ts">
   import { TableMap, Locale, ListResult, Paging } from "@/models";
   import { useI18next } from "@/composables";
-  import { container } from "tsyringe";
-  import { ILocaleConnector } from "@/services";
   import { ref } from "vue";
   import { MkTable } from "@/components";
+  import { useMediaKiwiApi } from "@/services";
+
   // inject dependencies
-  const localeConnector = container.resolve<ILocaleConnector>("ILocaleConnector");
+  const mediaKiwiApi = useMediaKiwiApi();
   const { defaultT } = await useI18next();
 
   // define reactive variables
@@ -25,7 +25,7 @@
 
   // get data
   async function onLoad() {
-    data.value = await localeConnector.GetAll(false, currentPagination.value);
+    data.value = (await mediaKiwiApi.locales({ ...currentPagination.value, onlyEnabled: false })).data;
   }
 </script>
 <template>

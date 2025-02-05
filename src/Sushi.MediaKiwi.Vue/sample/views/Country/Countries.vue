@@ -1,16 +1,14 @@
 <script setup lang="ts">
-  import { Country } from "../../models/Country";
-  import { CountryConnector } from "../../services/CountryConnector";
   import { MkTable } from "@/components";
   import { useI18next } from "@/composables";
   import { ListResult, Paging, TableFilter, TableFilterType } from "@/models";
-  import { container } from "tsyringe";
   import { reactive } from "vue";
   import { ref } from "vue";
   import AddCountry from "./AddCountry.vue";
+  import { useSampleApi, Country } from "@sample/services";
 
   // inject dependencies
-  const connector = container.resolve(CountryConnector);
+  const sampleApi = useSampleApi();
   const { t } = await useI18next();
 
   // define reactive variables
@@ -37,7 +35,13 @@
 
   // load data
   async function LoadData() {
-    state.countries = await connector.GetAll(currentPagination.value, filters.value?.code?.selectedValue?.value, filters.value?.name?.selectedValue?.value);
+    state.countries = (
+      await sampleApi.countries({
+        ...currentPagination.value,
+        countryCode: filters.value?.code?.selectedValue?.value,
+        countryName: filters.value?.name?.selectedValue?.value,
+      })
+    ).data;
   }
 
   function openDialog() {

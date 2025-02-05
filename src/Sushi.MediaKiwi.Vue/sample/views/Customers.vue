@@ -110,7 +110,7 @@
   });
 
   // setup date range filter
-  const dateOptions = [...presets.value.days, ...presets.value.months].map((o) => {
+  const dateOptions = [...presets.value.daysExcludingToday, ...presets.value.months].map((o) => {
     return { title: formatPreset([o.start, o.end]), value: [o.start, o.end] };
   });
   const dateRangeFilter = ref<TableFilter>({

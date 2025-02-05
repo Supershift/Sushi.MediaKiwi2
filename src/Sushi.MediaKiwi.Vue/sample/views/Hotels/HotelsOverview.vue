@@ -1,8 +1,4 @@
 <script setup lang="ts">
-  import { Country } from "./../../models/Country";
-  import { Hotel } from "./../../models/Hotel";
-  import { CountryConnector } from "./../../services/CountryConnector";
-  import { HotelConnector } from "./../../services/HotelConnector";
   import {
     IconsLibrary,
     Paging,
@@ -19,24 +15,23 @@
   import { MkTable, MkTh, MkTd } from "@/components";
   import { useI18next, useFilterInQuery } from "@/composables";
 
-  import { container } from "tsyringe";
   import { reactive, ref } from "vue";
   import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
+  import { useSampleApi, Country, HotelDto, MoneyValue } from "@sample/services";
   import { useSnackbarStore } from "@/stores";
   import AddHotelDialog from "./AddHotelDialog.vue";
   import HotelsOverviewDialog from "./HotelsOverviewDialog.vue";
 
   // inject dependencies
-  const connector = container.resolve(HotelConnector);
-  const countriesConnector = container.resolve(CountryConnector);
+  const sampleApi = useSampleApi();
   const { formatDateTime, t } = await useI18next();
   const snackbar = useSnackbarStore();
 
   // define reactive variables
   const currentPagination = ref<Paging>({});
-  const hotels = ref<ListResult<Hotel>>();
+  const hotels = ref<ListResult<HotelDto>>();
   const countries = ref<Country[]>();
-  const selectedHotels = ref<Hotel[]>([]);
+  const selectedHotels = ref<HotelDto[]>([]);
 
   const state = reactive({
     addDialog: false,
@@ -50,7 +45,7 @@
   });
 
   // define mapping
-  function srpIcon(item: Hotel): TableCellIcon {
+  function srpIcon(item: HotelDto): TableCellIcon {
     return {
       position: item.srp ? TableIconPosition.Append : TableIconPosition.Prepend,
       iconName: item.srp ? IconsLibrary.checkCircleOutline : IconsLibrary.accountCircle,
@@ -80,22 +75,17 @@
 
   // load data
   async function LoadData() {
-    const response = await connector.GetAllAsync(
-      currentPagination.value,
-      filters.value.countryCode.selectedValue?.value,
-      filters.value.isActive.selectedValue?.value
-    );
-
-    const hotelItems = response.result.map((item) => {
-      // convert to Hotel class
-      return new Hotel(item);
-    });
-
-    hotels.value = { ...response, result: hotelItems };
+    hotels.value = (
+      await sampleApi.hotel({
+        countryCode: filters.value.countryCode.selectedValue?.value,
+        isActive: filters.value.isActive.selectedValue?.value,
+        ...currentPagination.value,
+      })
+    ).data;
   }
 
   // Load countries
-  countries.value = (await countriesConnector.GetAll({ pageIndex: 0, pageSize: 9999 })).result;
+  countries.value = (await sampleApi.countries({ pageIndex: 0, pageSize: 9999 })).data.result;
 
   // Set filter options
   filters.value.countryCode.options = countries.value?.map(({ code, name }) => <TableFilterValue>{ title: name, value: code });
@@ -107,19 +97,20 @@
     sortDirection: SortDirection.Desc,
   });
 
-  async function onCountryCodeChanged(hotel: Hotel) {
+  async function onCountryCodeChanged(hotel: HotelDto) {
     // Update the hotel object
-    const result = await connector.SaveAsync(hotel);
+    const result = await sampleApi.hotelUpdate(hotel.id!, hotel);
     if (result) {
       snackbar.showMessage(`Sucessfully saved ${hotel.name}`);
     }
   }
-  useFilterInQuery(filters, currentPagination, sorting);
 
-  /** TODO Implement */
-  async function SaveData(hotel: Hotel) {
-    console.log(hotel);
+  function srpFormatted(srp?: MoneyValue): string {
+    if (srp) return Intl.NumberFormat("en", { style: "currency", currency: srp.currency }).format(srp.amount);
+    else return "";
   }
+
+  useFilterInQuery(filters, currentPagination, sorting);
 </script>
 
 <template>
@@ -130,7 +121,7 @@
     :api-result="hotels"
     v-model:selection="selectedHotels"
     :on-load="LoadData"
-    :item-id="(item) => item.id"
+    :item-id="(item) => item.id!"
     navigation-item-id="HotelEdit"
     new
     new-emit
@@ -170,7 +161,7 @@
         <v-autocomplete v-model="dataItem.countryCode" :items="countryOptions" hide-details @update:model-value="() => onCountryCodeChanged(dataItem)" />
       </mk-td>
       <mk-td :value="dataItem.isActive" />
-      <td>{{ dataItem.srpFormatted }}</td>
+      <td>{{ srpFormatted(dataItem.srp) }}</td>
       <mk-td :value="srpIcon(dataItem)" />
     </template>
 

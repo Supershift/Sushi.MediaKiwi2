@@ -41,7 +41,8 @@
         return-object
         :rules="[...additionalRules]"
         autofocus
-      ></v-autocomplete>
+        @keydown.enter="applyFilter"
+      />
     </div>
   </MkTableFilterDialog>
 </template>

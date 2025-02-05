@@ -1,12 +1,10 @@
 <script setup lang="ts">
   import { reactive } from "vue";
-  import { AccountConnector } from "@sample/services/AccountConnector";
-  import { container } from "tsyringe";
   import { useValidationRules } from "@/composables";
   import MkFormDialog from "@/components/MkForm/MkFormDialog.vue";
-  import { TransferMoneyRequest } from "@sample/models/Account/TransferMoneyRequest";
+  import { useSampleApi, TransferMoneyRequest } from "@sample/services";
 
-  const connector = container.resolve(AccountConnector);
+  const sampleApi = useSampleApi();
   const { required } = await useValidationRules();
 
   const state = reactive({
@@ -24,7 +22,7 @@
       sourceAccountNumber: state.form.source!,
       targetAccountNumber: state.form.target!,
     };
-    await connector.TransferMoneyAsync(request);
+    await sampleApi.accountTransferMoneyCreate(request);
   }
 </script>
 <template>

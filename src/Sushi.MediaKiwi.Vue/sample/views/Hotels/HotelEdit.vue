@@ -2,21 +2,13 @@
   import { MkForm, MkMoneyValue, MkFileInput } from "@/components";
   import { useBreadcrumbs, useNavigation, useValidationRules } from "@/composables";
 
-  import { HotelConnector } from "./../../services/HotelConnector";
-  import { CountryConnector } from "./../../services/CountryConnector";
-  import { FileUploadConnector } from "./../../services/FileUploadConnector";
   import { reactive, ref } from "vue";
-  import { Hotel } from "./../../models/Hotel";
-  import { container } from "tsyringe";
-  import { Country } from "./../../models/Country";
   import MkNavigationDrawerInfo from "@/components/MkNavigation/MkNavigationDrawerInfo.vue";
-  import { useSnackbarStore } from "@/stores";
+  import { useSampleApi, Country, HotelDto } from "@sample/services";
 
   // inject dependencies
-  const hotelConnector = container.resolve(HotelConnector);
-  const countriesConnector = container.resolve(CountryConnector);
+  const sampleApi = useSampleApi();
   const { required } = await useValidationRules();
-  const fileUploadConnector = container.resolve(FileUploadConnector);
   const { setCurrentBreadcrumbLabel } = useBreadcrumbs();
 
   const navigation = useNavigation();
@@ -27,15 +19,15 @@
 
   // declare reactive variables
   var state = reactive({
-    hotel: <Hotel>{},
+    hotel: <HotelDto>{},
     countries: <Country[]>{},
     files: <File[]>[],
   });
 
   // Load countries for selection at dropdown
   async function LoadCountries() {
-    const countries = await countriesConnector.GetAll({ pageIndex: 0, pageSize: 9999 });
-    state.countries = countries.result!;
+    const countries = await sampleApi.countries({ pageIndex: 0, pageSize: 9999 });
+    state.countries = countries.data.result;
   }
 
   async function onLoad() {
@@ -43,30 +35,29 @@
 
     if (navigation.currentViewParameterNumber.value > 0) {
       // get existing hotel from api
-      const candidate = await hotelConnector.GetAsync(navigation.currentViewParameterNumber.value);
-      state.hotel = new Hotel(candidate!);
+      state.hotel = (await sampleApi.hotelGet(navigation.currentViewParameterNumber.value)).data;
       setCurrentBreadcrumbLabel(state.hotel.name);
     } else {
       // create a new hotel
-      state.hotel = <Hotel>{ id: 0 };
+      state.hotel = <HotelDto>{ id: 0 };
     }
   }
 
   async function onUndo() {
-    const hotel = await hotelConnector.GetAsync(navigation.currentViewParameterNumber.value);
-    state.hotel = new Hotel(hotel!);
+    state.hotel = (await sampleApi.hotelGet(navigation.currentViewParameterNumber.value)).data;
   }
 
   async function onSave() {
+    console.log({ h: state.hotel });
     if (navigation.currentViewParameterNumber.value > 0) {
       // update existing hotel
-      await hotelConnector.SaveAsync(state.hotel);
+      await sampleApi.hotelUpdate(state.hotel.id!, state.hotel);
     } else {
       // create new hotel
-      const newHotel = await hotelConnector.SaveAsync(state.hotel);
+      const newHotel = await sampleApi.hotelCreate(state.hotel);
 
       // push user to the new hotel
-      navigation.navigateTo(navigation.currentNavigationItem.value, newHotel.id);
+      navigation.navigateTo(navigation.currentNavigationItem.value, newHotel.data.id);
     }
   }
 
@@ -74,7 +65,7 @@
 
   onDelete = async () => {
     if (navigation.currentViewParameterNumber.value > 0) {
-      await hotelConnector.DeleteAsync(navigation.currentViewParameterNumber.value);
+      await sampleApi.hotelDelete(navigation.currentViewParameterNumber.value);
     }
   };
 
@@ -90,7 +81,7 @@
   async function onFilesSave() {
     if (navigation.currentViewParameterNumber.value > 0) {
       // upload files
-      await fileUploadConnector.PostFiles(state.files);
+      await sampleApi.uploadCreate(state.files);
     }
   }
 

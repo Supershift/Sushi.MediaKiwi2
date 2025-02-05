@@ -41,7 +41,7 @@ namespace Sushi.MediaKiwi.Services
             // todo: check if view is used by any navigation items?
 
             if (view != null)
-            {   
+            {
                 // delete item
                 await _viewRepository.DeleteAsync(view.Id);
                 return Result.Success<Error>();
@@ -57,10 +57,10 @@ namespace Sushi.MediaKiwi.Services
         /// </summary>        
         /// <returns></returns>
         public async Task<Result<ListResult<View>, Error>> GetAllAsync(PagingValues pagingValues, SortValues<View>? sortValues = null)
-        {   
+        {
             // map sort values to dal
             var sortValuesDal = _mapper.MapSortValues<Entities.View>(sortValues);
-            
+
             // get items from datastore
             var views = await _viewRepository.GetAllAsync(pagingValues, sortValuesDal);
             var viewsRoles = await _viewRoleRepository.GetAllAsync(null);
@@ -69,12 +69,12 @@ namespace Sushi.MediaKiwi.Services
             var viewsDto = _mapper.Map<List<View>>(views);
 
             // create result object
-            var result = new ListResult<View>(viewsDto, views);            
+            var result = new ListResult<View>(viewsDto, views);
 
             // add roles
-            foreach(var view in result.Result)
+            foreach (var view in result.Result)
             {
-                view.Roles = viewsRoles.Where(x => x.ViewId == view.Id).Select(x=>x.Role).ToList();
+                view.Roles = viewsRoles.Where(x => x.ViewId == view.Id).Select(x => x.Role).ToList();
             }
 
             return result;
@@ -89,15 +89,14 @@ namespace Sushi.MediaKiwi.Services
         {
             // get item from datastore
             var view = await _viewRepository.GetAsync(id);
-            
+
 
             if (view != null)
             {
                 var viewsRoles = await _viewRoleRepository.GetAllAsync(view.Id);
 
                 // map to result
-                var result = new View();
-                _mapper.Map(view, result);
+                var result = _mapper.Map<View>(view);
                 // add roles                
                 result.Roles = viewsRoles.Select(x => x.Role).ToList();
 
@@ -141,12 +140,12 @@ namespace Sushi.MediaKiwi.Services
             }
             // return view
             var viewsRoles = await _viewRoleRepository.GetAllAsync(view.Id);
-            var result = new View();
-            _mapper.Map(view, result);
+            var result = _mapper.Map<View>(view);
+
             // add roles                
             result.Roles = viewsRoles.Select(x => x.Role).ToList();
 
-            return result;            
+            return result;
         }
 
         /// <summary>
@@ -187,11 +186,11 @@ namespace Sushi.MediaKiwi.Services
                 // commit transaction
                 ts.Complete();
             }
-            
+
             // return view
             var viewsRoles = await _viewRoleRepository.GetAllAsync(view.Id);
-            var result = new View();
-            _mapper.Map(view, result);
+            var result = _mapper.Map<View>(view);
+
             // add roles                
             result.Roles = viewsRoles.Select(x => x.Role).ToList();
 
