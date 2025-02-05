@@ -5,7 +5,6 @@
   import { DateRange, TitledDateRange } from "@/models/ranges";
   import { computed, ref } from "vue";
   import { MkDatePicker } from "../MkDatePicker";
-  import dayjs from "dayjs";
 
   const props = withDefaults(
     defineProps<{
@@ -42,7 +41,6 @@
 
   const modelValue = defineModel<{ value: Date[]; title?: string }>({ required: true });
 
-  // Inject dependencies
   const { isSame, isBefore, startOf, endOf } = useDayjs();
   const { defaultT } = await useI18next("MkDatePresetMenu");
   const { presets, formatPreset, formatDateRange } = await useDatePresets({
@@ -51,10 +49,6 @@
   });
 
   const isDatePickerOpen = ref(false);
-
-  const emit = defineEmits<{
-    (e: "click:close"): void;
-  }>();
 
   function updateDateArray(value: Date[]): void {
     let [date1, date2] = value;
@@ -102,10 +96,10 @@
     v-if="isDatePickerOpen"
     :modelValue="modelValue.value"
     :class="datePickerClass"
+    :title="datePickerTitle"
     multiple
     @click:close="isDatePickerOpen = false"
     @update:model-value="updateDateArray"
-    :title="datePickerTitle"
   />
   <v-list v-else>
     <v-list-item v-for="(item, i) in presets.days" :key="i" :active="hasSameStartAndEndDateAsModel(item)" @click="updateDateRange(item)">
