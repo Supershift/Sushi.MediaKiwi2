@@ -84,7 +84,7 @@
   const isPreset = computed(() => {
     return (
       modelValue.value.value.length == 2 &&
-      (presets.value.days.some(hasSameStartAndEndDateAsModel.value) ||
+      (presets.value.daysExcludingToday.some(hasSameStartAndEndDateAsModel.value) ||
         presets.value.months.some(hasSameStartAndEndDateAsModel.value) ||
         props.customOptions?.some(hasSameStartAndEndDateAsModel.value))
     );
@@ -102,7 +102,7 @@
     @update:model-value="updateDateArray"
   />
   <v-list v-else>
-    <v-list-item v-for="(item, i) in presets.days" :key="i" :active="hasSameStartAndEndDateAsModel(item)" @click="updateDateRange(item)">
+    <v-list-item v-for="(item, i) in presets.daysExcludingToday" :key="i" :active="hasSameStartAndEndDateAsModel(item)" @click="updateDateRange(item)">
       <v-list-item-title>{{ formatPreset(item.start, item.end) }}</v-list-item-title>
     </v-list-item>
     <v-divider />
