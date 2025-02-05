@@ -31,6 +31,7 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: ./src/Sushi.MediaKiwi.Vue
 
       - name: Update package.json version
         run: |
@@ -38,14 +39,12 @@ jobs:
           jq '.version = $new_version' --arg new_version "${VERSION}" package.json > package.json.tmp && mv package.json.tmp package.json
           cd ../..
 
-      - name: Build package
-        run: |
-          cd src/Sushi.MediaKiwi.Vue
-          npm run build
+      - name: Run Vite Build
+        run: npm run build
+        working-directory: ./src/Sushi.MediaKiwi.Vue
 
       - name: Publish package to NPM
-        run: |
-          cd src/Sushi.MediaKiwi.Vue
-          npm publish
+        run: npm publish
+        working-directory: ./src/Sushi.MediaKiwi.Vue
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
