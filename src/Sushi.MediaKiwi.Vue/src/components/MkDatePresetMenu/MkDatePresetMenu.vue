@@ -3,7 +3,7 @@
   import { useDayjs } from "@/composables/useDayjs";
   import { useI18next } from "@/composables/useI18next";
   import { DateRange, TitledDateRange } from "@/models/ranges";
-  import { ref } from "vue";
+  import { computed, ref } from "vue";
   import { MkDatePicker } from "../MkDatePicker";
   import dayjs from "dayjs";
 
@@ -83,49 +83,18 @@
     modelValue.value = { title, value: range };
   }
 
-  /**
-   * Compare the start date of the item with the start date of the model
-   * @param item
-   */
-  function isSameStart(item: DateRange | TitledDateRange) {
-    if (!modelValue.value.value || !modelValue.value.value[0]) {
-      return false;
-    }
-    return isSame.value(item.start, modelValue.value.value[0], "day");
-  }
+  const hasSameStartAndEndDateAsModel = computed(
+    () => (item: DateRange) => isSame.value(item.start, modelValue.value.value[0], "day") && isSame.value(item.end, modelValue.value.value[1], "day")
+  );
 
-  /**
-   * Compare the end date of the item with the end date of the model
-   * @param item
-   */
-  function isSameEnd(item: DateRange | TitledDateRange) {
-    if (!modelValue.value.value || !modelValue.value.value[1]) {
-      return false;
-    }
-    return isSame.value(item.end, modelValue.value.value[1], "day");
-  }
-
-  /**
-   * Check if the item is selected. This is the case when the start and end date are the same
-   * @param item
-   */
-  function isSelectedPresetItem(item: DateRange | TitledDateRange) {
-    return isSameStart(item) && isSameEnd(item);
-  }
-
-  /**
-   * Check if the custom item is selected. This is the case when the model has a value, but it is not in the presets
-   */
-  function isSelectedCustomItem() {
+  const isPreset = computed(() => {
     return (
-      modelValue.value.value &&
-      modelValue.value.value[0] &&
-      modelValue.value.value[1] &&
-      !presets.value.days?.some((x: DateRange) => isSelectedPresetItem(x)) &&
-      !presets.value.months.some((x: DateRange) => isSelectedPresetItem(x)) &&
-      !props.customOptions?.some((x: DateRange) => isSelectedPresetItem(x))
+      modelValue.value.value.length == 2 &&
+      (presets.value.days.some(hasSameStartAndEndDateAsModel.value) ||
+        presets.value.months.some(hasSameStartAndEndDateAsModel.value) ||
+        props.customOptions?.some(hasSameStartAndEndDateAsModel.value))
     );
-  }
+  });
 </script>
 
 <template>
@@ -139,19 +108,19 @@
     :title="datePickerTitle"
   />
   <v-list v-else>
-    <v-list-item v-for="(item, i) in presets.days" :key="i" :active="isSelectedPresetItem(item)" @click="updateDateRange(item)">
+    <v-list-item v-for="(item, i) in presets.days" :key="i" :active="hasSameStartAndEndDateAsModel(item)" @click="updateDateRange(item)">
       <v-list-item-title>{{ formatPreset(item.start, item.end) }}</v-list-item-title>
     </v-list-item>
     <v-divider />
-    <v-list-item v-for="(item, i) in presets.months" :key="i" :active="isSelectedPresetItem(item)" @click="updateDateRange(item)">
+    <v-list-item v-for="(item, i) in presets.months" :key="i" :active="hasSameStartAndEndDateAsModel(item)" @click="updateDateRange(item)">
       <v-list-item-title> {{ formatPreset(item.start, item.end) }}</v-list-item-title>
     </v-list-item>
     <v-divider v-if="props.customOptions" />
-    <v-list-item v-for="(item, i) in props.customOptions" :key="i" :active="isSelectedPresetItem(item)" @click="updateTitledDateRange(item)">
+    <v-list-item v-for="(item, i) in props.customOptions" :key="i" :active="hasSameStartAndEndDateAsModel(item)" @click="updateTitledDateRange(item)">
       <v-list-item-title> {{ formatDateRange(item.start, item.end, item.title) }}</v-list-item-title>
     </v-list-item>
     <v-divider />
-    <v-list-item :active="isSelectedCustomItem()" @click="isDatePickerOpen = true">
+    <v-list-item :active="!isPreset" @click="isDatePickerOpen = true">
       <v-list-item-title> {{ defaultT("Custom") }}</v-list-item-title>
     </v-list-item>
   </v-list>
