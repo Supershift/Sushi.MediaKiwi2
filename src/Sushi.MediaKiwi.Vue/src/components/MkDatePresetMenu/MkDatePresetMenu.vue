@@ -29,7 +29,7 @@
       datePickerTitle?: string;
       /**
        * Custom date ranges
-       * @example [{ title: "Last 7 days", start: new Date(), end: new Date() }]
+       * @example [{ title: "Last 11 days", start: DateTime.now().minus({ days: 12 }), end: DateTime.now().minus({ days: 1 }) }]
        */
       customOptions?: Array<TitledDateRange>;
     }>(),

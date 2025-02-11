@@ -26,8 +26,6 @@
     monthPresets,
   });
 
-  const currentYear = new Date().getFullYear();
-
   // define state
   const currentPagination = ref<Paging>({
     pageIndex: 0,
@@ -54,6 +52,7 @@
     openPreselectMenu: <boolean>false,
   });
 
+  const currentYear = DateTime.now().year;
   const quarterOptions = [
     { title: `Q1 ${currentYear}`, value: getQuarter(1) },
     { title: `Q2 ${currentYear}`, value: getQuarter(2) },

@@ -88,26 +88,21 @@ export async function useI18next(scope?: NavigationItem | string) {
   const dateOptions = computed(() => mediakiwiOptions?.dateFormatOptions?.date || DateTime.DATE_SHORT);
   const timeOptions = computed(() => mediakiwiOptions?.dateFormatOptions?.time || DateTime.TIME_SIMPLE);
   const monthOptions = computed(() => mediakiwiOptions?.dateFormatOptions?.month || <Intl.DateTimeFormatOptions>{ month: "long" });
-  const timeZoneOptions = computed(() => <Intl.DateTimeFormatOptions>{ timeZone: currentTimeZone.value });
 
   const formatDateTimeInternal = (date: string | Date | DateTime | undefined | null, options?: DateTimeFormatOptions): string => {
-    const formatOptions = { ...dateOptions.value, ...timeOptions.value, ...timeZoneOptions.value, ...options };
-    return formatDateTimeGenericInternal(date, { ...formatOptions });
+    return formatDateTimeGenericInternal(date, { ...dateOptions.value, ...timeOptions.value, ...options });
   };
 
   const formatDateInternal = (date: string | Date | DateTime | undefined | null, options?: DateTimeFormatOptions): string => {
-    const formatOptions = { ...dateOptions.value, ...timeZoneOptions.value, ...options };
-    return formatDateTimeGenericInternal(date, { ...formatOptions });
+    return formatDateTimeGenericInternal(date, { ...dateOptions.value, ...options });
   };
 
   const formatTimeInternal = (date: string | Date | DateTime | undefined | null, options?: DateTimeFormatOptions): string => {
-    const formatOptions = { ...timeOptions.value, ...timeZoneOptions.value, ...options };
-    return formatDateTimeGenericInternal(date, { ...formatOptions });
+    return formatDateTimeGenericInternal(date, { ...timeOptions.value, ...options });
   };
 
   const formatMonthInternal = (date: string | Date | DateTime | undefined | null, options?: DateTimeFormatOptions): string => {
-    const formatOptions = { ...monthOptions.value, ...timeZoneOptions.value, ...options };
-    return formatDateTimeGenericInternal(date, { ...formatOptions });
+    return formatDateTimeGenericInternal(date, { ...monthOptions.value, ...options });
   };
 
   const inputToDateTime = (date: string | Date | DateTime | undefined | null) => {

@@ -7,7 +7,7 @@ import { createTestingPinia } from "@pinia/testing";
 import { PublicClientApplication } from "@azure/msal-browser";
 import { identity } from "../../identity";
 import { NavigationItem } from "../../models/navigation";
-import { DateTime } from "luxon";
+import { DateTime, Settings } from "luxon";
 // mock libraries
 vi.mock("i18next");
 vi.mock("@azure/msal-browser");
@@ -16,9 +16,10 @@ vi.mock("@composable/useTimeZones");
 
 vi.mock("@/composables/useTimeZones", () => ({
   useTimeZones: () => ({
-    currentTimeZone: ref<string>("Europe/Amsterdam"),
+    currentTimeZone: ref<string>("America/Caracas"),
   }),
 }));
+Settings.defaultZone = "America/Caracas";
 
 describe("useI18next", () => {
   async function getComposable(ns?: string | NavigationItem): ReturnType<typeof useI18next> {
@@ -96,7 +97,19 @@ describe("useI18next", () => {
       const result = composable.formatDateTime.value(new Date(Date.UTC(2021, 1, 11, 12, 0, 0)));
 
       // assert
-      expect(result).toBe("11-2-2021, 13:00");
+      expect(result).toBe("11-2-2021, 08:00");
+    });
+
+    it("Should correctly show UTC time in local timezone", async () => {
+      // arrange
+      i18next.resolvedLanguage = "nl";
+      const composable = await getComposable("myNamespace");
+
+      // act
+      const result = composable.formatDateTime.value(new Date(Date.UTC(2021, 1, 11, 15, 53, 0)));
+
+      // assert
+      expect(result).toBe("11-2-2021, 11:53");
     });
 
     it("Should parse Date object in alternative timezone", async () => {
@@ -105,10 +118,10 @@ describe("useI18next", () => {
       const composable = await getComposable("myNamespace");
 
       // act
-      const result = composable.formatDateTime.value(new Date(Date.UTC(2021, 1, 11, 12, 0, 0)), { timeZone: "America/Adak" });
+      const result = composable.formatDateTime.value(new Date(Date.UTC(2025, 1, 11, 16, 3, 0)), { timeZone: "America/Adak" });
 
       // assert
-      expect(result).toBe("11-2-2021, 02:00");
+      expect(result).toBe("11-2-2025, 06:03");
     });
 
     it("Should parse string", async () => {
@@ -120,7 +133,7 @@ describe("useI18next", () => {
       const result = composable.formatDateTime.value("2021-01-11T13:56:43Z");
 
       // assert
-      expect(result).toBe("11/01/2021 14:56");
+      expect(result).toBe("11/01/2021 09:56");
     });
 
     it("Should format correctly in local format", async () => {
@@ -132,7 +145,7 @@ describe("useI18next", () => {
       const result = composable.formatDateTime.value("2021-01-11T13:56:43Z", DateTime.DATETIME_FULL);
 
       // assert
-      expect(result).toBe("January 11, 2021 at 2:56 PM GMT+1");
+      expect(result).toBe("January 11, 2021 at 9:56 AM GMT-4");
     });
 
     it("Should parse nullable Date object", async () => {
@@ -196,7 +209,7 @@ describe("useI18next", () => {
       const result = composable.formatTime.value(new Date(Date.UTC(2021, 1, 1, 12, 0, 0)));
 
       // assert
-      expect(result).toBe("1:00 PM");
+      expect(result).toBe("8:00 AM");
     });
 
     it("Should format correctly in local format", async () => {
@@ -208,7 +221,7 @@ describe("useI18next", () => {
       const result = composable.formatTime.value(new Date(Date.UTC(2021, 1, 1, 12, 0, 0)), DateTime.TIME_24_WITH_LONG_OFFSET);
 
       // assert
-      expect(result).toBe("13:00:00 Midden-Europese standaardtijd");
+      expect(result).toBe("8:00:00 Venezolaanse tijd");
     });
 
 
@@ -221,7 +234,7 @@ describe("useI18next", () => {
       const result = composable.formatTime.value("2021-01-01T13:56:43Z");
 
       // assert
-      expect(result).toBe("2:56 PM");
+      expect(result).toBe("9:56 AM");
     });
 
     it("Should parse nullable time", async () => {

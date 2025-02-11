@@ -1,5 +1,6 @@
 import { computed, ref } from "vue";
 import { useStorage } from "@vueuse/core";
+import { Settings } from "luxon";
 
 export type TimeZone = {
   /**
@@ -22,6 +23,7 @@ export function useTimeZones() {
 
   function setTimeZone(data: string) {
     currentTimeZone.value = data;
+    Settings.defaultZone = data;
   }
 
   const timeZones = computed<TimeZone[]>(() => {
