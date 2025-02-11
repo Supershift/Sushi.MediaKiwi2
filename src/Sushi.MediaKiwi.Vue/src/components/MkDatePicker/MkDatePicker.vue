@@ -38,7 +38,6 @@
   }
 
   function apply() {
-    // set the model with dates that match the users configured time zone
     modelValue.value = model.value.map((e) => DateTime.fromJSDate(e));
     close();
   }
