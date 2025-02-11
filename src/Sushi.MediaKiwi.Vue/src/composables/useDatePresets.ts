@@ -55,6 +55,7 @@ export async function useDatePresets(options?: {
       result.push({
         start: month.startOf("month"),
         end: month.endOf("month"),
+        duration: Duration.fromDurationLike({ months: 1 }),
       });
     }
 
