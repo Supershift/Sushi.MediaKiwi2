@@ -131,7 +131,6 @@ export async function useI18next(scope?: NavigationItem | string) {
       return "";
     }
 
-    console.log({ options })
     return dateTime.setLocale(i18next.value.resolvedLanguage || 'en-US').toLocaleString(options);
   };
 
