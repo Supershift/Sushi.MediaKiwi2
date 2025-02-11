@@ -93,10 +93,10 @@ describe("useI18next", () => {
       const composable = await getComposable("myNamespace");
 
       // act
-      const result = composable.formatDateTime.value(new Date(2021, 1, 11, 12, 0, 0));
+      const result = composable.formatDateTime.value(new Date(Date.UTC(2021, 1, 11, 12, 0, 0)));
 
       // assert
-      expect(result).toBe("11-2-2021, 12:00");
+      expect(result).toBe("11-2-2021, 13:00");
     });
 
     it("Should parse Date object in alternative timezone", async () => {
@@ -105,10 +105,10 @@ describe("useI18next", () => {
       const composable = await getComposable("myNamespace");
 
       // act
-      const result = composable.formatDateTime.value(new Date(2021, 1, 11, 12, 0, 0), { timeZone: "America/Adak" });
+      const result = composable.formatDateTime.value(new Date(Date.UTC(2021, 1, 11, 12, 0, 0)), { timeZone: "America/Adak" });
 
       // assert
-      expect(result).toBe("11-2-2021, 01:00");
+      expect(result).toBe("11-2-2021, 02:00");
     });
 
     it("Should parse string", async () => {
@@ -155,7 +155,7 @@ describe("useI18next", () => {
       const composable = await getComposable("myNamespace");
 
       // act
-      const result = composable.formatDate.value(new Date(2021, 1, 1, 12, 0, 0));
+      const result = composable.formatDate.value(new Date(Date.UTC(2021, 1, 1, 12, 0, 0)));
 
       // assert
       expect(result).toBe("2/1/2021");
@@ -193,10 +193,10 @@ describe("useI18next", () => {
       const composable = await getComposable("myNamespace");
 
       // act
-      const result = composable.formatTime.value(new Date(2021, 1, 1, 12, 0, 0));
+      const result = composable.formatTime.value(new Date(Date.UTC(2021, 1, 1, 12, 0, 0)));
 
       // assert
-      expect(result).toBe("12:00 PM");
+      expect(result).toBe("1:00 PM");
     });
 
     it("Should format correctly in local format", async () => {
@@ -205,10 +205,10 @@ describe("useI18next", () => {
       const composable = await getComposable("myNamespace");
 
       // act
-      const result = composable.formatTime.value(new Date(2021, 1, 1, 12, 0, 0), DateTime.TIME_24_WITH_LONG_OFFSET);
+      const result = composable.formatTime.value(new Date(Date.UTC(2021, 1, 1, 12, 0, 0)), DateTime.TIME_24_WITH_LONG_OFFSET);
 
       // assert
-      expect(result).toBe("12:00:00 Midden-Europese standaardtijd");
+      expect(result).toBe("13:00:00 Midden-Europese standaardtijd");
     });
 
 
@@ -244,7 +244,7 @@ describe("useI18next", () => {
       const composable = await getComposable("myNamespace");
 
       // act
-      const result = composable.formatMonth.value(DateTime.local(2021, 2, 1, 12, 0, 0));
+      const result = composable.formatMonth.value(DateTime.utc(2021, 2, 1, 12, 0, 0));
 
       // assert
       expect(result).toBe("February");
