@@ -39,7 +39,9 @@
     }
   );
 
-  const modelValue = defineModel<{ value: DateTime[]; title?: string }>({ default: { value: [DateTime.local(), DateTime.local()], title: "" } });
+  const modelValue = defineModel<{ value: DateTime[]; title?: string }>({
+    default: { title: "", value: [DateTime.local().minus({ days: 2 }), DateTime.local()] },
+  });
 
   const { defaultT } = await useI18next("MkDatePresetMenu");
   const { presets, formatPreset, formatDateRange } = await useDatePresets({
