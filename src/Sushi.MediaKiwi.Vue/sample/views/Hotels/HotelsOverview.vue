@@ -14,6 +14,7 @@
 
   import { MkTable, MkTh, MkTd } from "@/components";
   import { useI18next, useFilterInQuery } from "@/composables";
+  import { DateTime } from "luxon";
 
   import { ref } from "vue";
   import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
@@ -145,7 +146,7 @@
 
     <template #tbody="dataItem: HotelDto">
       <td>{{ dataItem.name }}</td>
-      <td>{{ formatDateTime(dataItem.created) }}</td>
+      <td>{{ formatDateTime(dataItem.created, DateTime.DATETIME_MED_WITH_SECONDS) }}</td>
       <mk-td @click.stop>
         <v-autocomplete
           v-model="dataItem.countryCode"

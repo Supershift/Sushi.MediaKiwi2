@@ -7,7 +7,7 @@
     tableFilterItem: TableFilterItem;
   }>();
 
-  const modelValue = defineModel<TableFilterValue>({ required: true });
+  const modelValue = defineModel<TableFilterValue>({ required: true, default: { title: "", value: ["2020", "2020"] } });
 
   const customDateRangeOptions = computed(() => {
     return props.tableFilterItem.options?.map((x) => {
@@ -32,12 +32,13 @@
 </script>
 
 <template>
-  <MkDatePresetMenu 
-    v-model="model" 
-    date-picker-class="mk-table-filter__item" 
-    @update:model-value="applyFilter" 
+  <MkDatePresetMenu
+    v-model="model"
+    date-picker-class="mk-table-filter__item"
+    @update:model-value="applyFilter"
     :datePickerTitle="tableFilterItem.inputLabel"
-    :customOptions="customDateRangeOptions" />
+    :customOptions="customDateRangeOptions"
+  />
 </template>
 
 <style>

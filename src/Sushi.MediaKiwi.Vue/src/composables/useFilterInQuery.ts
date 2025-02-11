@@ -2,6 +2,7 @@ import { Ref, watch } from "vue";
 import { useRoute, useRouter } from "@/router";
 import { useMediakiwiStore } from "@/stores";
 import { Paging, SortDirection, Sorting, TableFilter } from "@/models";
+import { LocationQuery, LocationQueryValue } from "vue-router";
 
 export function useFilterInQuery<T>(filtersModel?: Ref<TableFilter>, pagingModel?: Ref<Paging>, sortingModel?: Ref<Sorting<T>>) {
   const mediakiwiStore = useMediakiwiStore();
@@ -9,42 +10,37 @@ export function useFilterInQuery<T>(filtersModel?: Ref<TableFilter>, pagingModel
   const route = useRoute();
 
   const desiredQuery = () => {
-    const query = queryToMap();
+    let query = Object.assign({}, route.query);;
 
     for (const name in filtersModel?.value) {
-      const filterValue = filtersModel?.value[name].selectedValue?.value;
-      updateQueryWithValue(query, name, filterValue);
+      const filter = filtersModel?.value[name];
+      const selectedValue = filter.selectedValue;
+
+      const filterValue = filter?.toUrl && selectedValue ? filter.toUrl(selectedValue) : selectedValue?.value;
+
+      query = updateQueryWithValue(query, name, filterValue);
     }
 
-    updateQueryWithValue(query, "pageIndex", pagingModel?.value.pageIndex?.toString());
-    updateQueryWithValue(query, "pageSize", pagingModel?.value.pageSize?.toString());
-    updateQueryWithValue(query, "sortBy", sortingModel?.value.sortBy?.toString());
-    updateQueryWithValue(query, "sortDirection", sortingModel?.value.sortDirection?.toString());
+    query = updateQueryWithValue(query, "pageIndex", pagingModel?.value.pageIndex?.toString());
+    query = updateQueryWithValue(query, "pageSize", pagingModel?.value.pageSize?.toString());
+    query = updateQueryWithValue(query, "sortBy", sortingModel?.value.sortBy?.toString());
+    query = updateQueryWithValue(query, "sortDirection", sortingModel?.value.sortDirection?.toString());
 
-    return Object.fromEntries(query);
+    return query;
   };
 
-  const updateQueryWithValue = (query: Map<string, string | null | undefined>, name: string, value: string | undefined) => {
+  const updateQueryWithValue = (query: LocationQuery, name: string, value: string | undefined) => {
     if (value) {
-      query.set(name, value);
+      query[name] = value;
     } else {
-      query.delete(name);
+      delete query[name];
     }
+    return query;
   };
 
-  const updateQueryAfterChange = () => {
-    router.replace({ ...route, ...{ query: desiredQuery() } });
+  const updateQueryAfterChange = async () => {
+    await router.replace({ ...route, query: desiredQuery() });
     configureBackControl();
-  };
-
-  const queryToMap = () => {
-    const queryAsMap = new Map<string, string | null | undefined>();
-
-    for (const query in route.query) {
-      queryAsMap.set(query, route.query[query]?.toString() ?? "");
-    }
-
-    return queryAsMap;
   };
 
   const configureBackControl = () => {
@@ -61,14 +57,27 @@ export function useFilterInQuery<T>(filtersModel?: Ref<TableFilter>, pagingModel
     }
   };
 
+  const toString = (queryValue: LocationQueryValue | LocationQueryValue[]): string | string[] => {
+    return Array.isArray(queryValue) ? queryValue.filter(q => !!q).map(q => q!.toString()) : queryValue?.toString() ?? '';
+  }
+
   const loadFromQuery = () => {
     const query = route.query;
 
     for (const filterName in filtersModel?.value) {
       if (filterName in query) {
-        const filterValue = query[filterName];
-        const option = filtersModel.value[filterName].options?.find((x) => x.value.toString() == filterValue!.toString());
-        filtersModel.value[filterName].selectedValue = option ? option : { value: filterValue };
+        const filter = filtersModel.value[filterName];
+
+        if (filter?.fromUrl) {
+          const filterValue = filter.fromUrl(toString(query[filterName]));
+          filtersModel.value[filterName].selectedValue = filterValue;
+        }
+        else {
+          const filterValue = query[filterName];
+
+          const option = filtersModel.value[filterName].options?.find((x) => x.value.toString() == filterValue!.toString());
+          filtersModel.value[filterName].selectedValue = option ? option : { value: filterValue };
+        }
       }
     }
 

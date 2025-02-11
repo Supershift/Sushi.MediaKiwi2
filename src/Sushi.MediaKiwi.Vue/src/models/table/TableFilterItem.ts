@@ -31,4 +31,10 @@ export type TableFilterItem = {
   rules?: any[];
   /** Indicates if the user can close the filter. When not set, the user can close the filter */
   closable?: boolean;
+
+  /** Override default behavior to save the filter in the url (default: toString()) */
+  toUrl?: (value: TableFilterValue) => string | string[];
+
+  /** Override default behavior to get the filter in the url (default: toString()) */
+  fromUrl?: (value: string | string[]) => TableFilterValue | undefined;
 };

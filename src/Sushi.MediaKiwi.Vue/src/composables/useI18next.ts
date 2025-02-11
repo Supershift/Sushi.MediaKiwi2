@@ -7,6 +7,7 @@ import { useNavigation } from "@/composables/useNavigation";
 import { container } from "tsyringe";
 import { NavigationItem } from "@/models/navigation";
 import { useTimeZones } from "@/composables/useTimeZones";
+import { DateTime, DateTimeFormatOptions } from "luxon";
 /**
  * Adds i18next to the component.
  * @param scope If provided, the t function will be scoped to this namespace. If left undefined, it will be scoped to the current Navigation item's id.
@@ -84,69 +85,54 @@ export async function useI18next(scope?: NavigationItem | string) {
   const defaultT = computed(() => i18next.value.t);
 
   // format datetime
-  const dateOptions = computed(() => mediakiwiOptions?.dateFormatOptions?.date || <Intl.DateTimeFormatOptions>{ dateStyle: "short" });
-  const timeOptions = computed(() => mediakiwiOptions?.dateFormatOptions?.time || <Intl.DateTimeFormatOptions>{ timeStyle: "short" });
+  const dateOptions = computed(() => mediakiwiOptions?.dateFormatOptions?.date || DateTime.DATE_SHORT);
+  const timeOptions = computed(() => mediakiwiOptions?.dateFormatOptions?.time || DateTime.TIME_SIMPLE);
   const monthOptions = computed(() => mediakiwiOptions?.dateFormatOptions?.month || <Intl.DateTimeFormatOptions>{ month: "long" });
   const timeZoneOptions = computed(() => <Intl.DateTimeFormatOptions>{ timeZone: currentTimeZone.value });
 
-  const formatDateTimeInternal = (date: string | Date | undefined | null, options?: Intl.DateTimeFormatOptions): string => {
-    if (!date) {
-      return "";
-    }
-
-    // Use the custom provided options, or merge the date and time options
-    const formatOptions = options || { ...dateOptions.value, ...timeOptions.value, ...timeZoneOptions.value };
-
+  const formatDateTimeInternal = (date: string | Date | DateTime | undefined | null, options?: DateTimeFormatOptions): string => {
+    const formatOptions = { ...dateOptions.value, ...timeOptions.value, ...timeZoneOptions.value, ...options };
     return formatDateTimeGenericInternal(date, { ...formatOptions });
   };
 
-  const formatDateInternal = (date: string | Date | undefined | null, options?: Intl.DateTimeFormatOptions): string => {
-    if (!date) {
-      return "";
-    }
-
-    // Use the custom provided options, or merge the date options
-    const formatOptions = options || { ...dateOptions.value, ...timeZoneOptions.value };
-
+  const formatDateInternal = (date: string | Date | DateTime | undefined | null, options?: DateTimeFormatOptions): string => {
+    const formatOptions = { ...dateOptions.value, ...timeZoneOptions.value, ...options };
     return formatDateTimeGenericInternal(date, { ...formatOptions });
   };
 
-  const formatTimeInternal = (date: string | Date | undefined | null, options?: Intl.DateTimeFormatOptions): string => {
-    if (!date) {
-      return "";
-    }
-
-    // Use the custom provided options, or merge the time options
-    const formatOptions = options || { ...timeOptions.value, ...timeZoneOptions.value };
-
+  const formatTimeInternal = (date: string | Date | DateTime | undefined | null, options?: DateTimeFormatOptions): string => {
+    const formatOptions = { ...timeOptions.value, ...timeZoneOptions.value, ...options };
     return formatDateTimeGenericInternal(date, { ...formatOptions });
   };
 
-  const formatMonthInternal = (date: string | Date | undefined | null, options?: Intl.DateTimeFormatOptions): string => {
-    if (!date) {
-      return "";
-    }
-
-    // Use the custom provided options, or merge the month options
-    const formatOptions = options || { ...monthOptions.value, ...timeZoneOptions.value };
-
+  const formatMonthInternal = (date: string | Date | DateTime | undefined | null, options?: DateTimeFormatOptions): string => {
+    const formatOptions = { ...monthOptions.value, ...timeZoneOptions.value, ...options };
     return formatDateTimeGenericInternal(date, { ...formatOptions });
   };
 
-  const formatDateTimeGenericInternal = (date: string | Date | undefined | null, options: Intl.DateTimeFormatOptions): string => {
-    if (!date) {
+  const inputToDateTime = (date: string | Date | DateTime | undefined | null) => {
+    if (!date) return undefined;
+
+    if (date instanceof Date) {
+      return DateTime.fromJSDate(date);
+    }
+
+    if (typeof date === 'string') {
+      return DateTime.fromISO(date);
+    }
+
+    return date;
+  }
+
+  const formatDateTimeGenericInternal = (date: string | Date | DateTime | undefined | null, options?: DateTimeFormatOptions): string => {
+    const dateTime = inputToDateTime(date);
+
+    if (!dateTime) {
       return "";
     }
 
-    // parse or cast to date, depending on parameter type
-    let dateValue: Date;
-    if (typeof date === "string") {
-      dateValue = new Date(date);
-    } else {
-      dateValue = date as Date;
-    }
-    const result = Intl.DateTimeFormat(i18next.value.resolvedLanguage, options).format(dateValue);
-    return result;
+    console.log({ options })
+    return dateTime.setLocale(i18next.value.resolvedLanguage || 'en-US').toLocaleString(options);
   };
 
   const formatDateTime = computed(() => formatDateTimeInternal);

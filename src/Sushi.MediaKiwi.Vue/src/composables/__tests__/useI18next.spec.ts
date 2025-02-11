@@ -7,6 +7,7 @@ import { createTestingPinia } from "@pinia/testing";
 import { PublicClientApplication } from "@azure/msal-browser";
 import { identity } from "../../identity";
 import { NavigationItem } from "../../models/navigation";
+import { DateTime } from "luxon";
 // mock libraries
 vi.mock("i18next");
 vi.mock("@azure/msal-browser");
@@ -18,7 +19,6 @@ vi.mock("@/composables/useTimeZones", () => ({
     currentTimeZone: ref<string>("Europe/Amsterdam"),
   }),
 }));
-const defaultTimeZone = "Europe/Amsterdam";
 
 describe("useI18next", () => {
   async function getComposable(ns?: string | NavigationItem): ReturnType<typeof useI18next> {
@@ -27,7 +27,7 @@ describe("useI18next", () => {
       setup() {
         result = useI18next(ns);
         // suppress missing template warning
-        return () => {};
+        return () => { };
       },
     });
     app.provide("i18next", ref(i18next));
@@ -38,9 +38,11 @@ describe("useI18next", () => {
     identity.msalInstance = new PublicClientApplication({ auth: { clientId: "test" } });
     return await result;
   }
+
   beforeEach(() => {
     vi.clearAllMocks();
   });
+
   describe("t", () => {
     it("Should call i18next.t with view's id", async () => {
       // arrange
@@ -54,6 +56,7 @@ describe("useI18next", () => {
       expect(spy).toHaveBeenCalledOnce();
       expect(spy).toHaveBeenCalledWith(null, "myView");
     });
+
     it("Should call i18next.getFixedT with namespace", async () => {
       // arrange
       const spy = vi.spyOn(i18next, "getFixedT").mockImplementation(() => vi.fn() as unknown as TFunction);
@@ -67,6 +70,7 @@ describe("useI18next", () => {
       expect(spy).toHaveBeenCalledWith(null, "myNamespace");
     });
   });
+
   describe("defaultT", () => {
     it("Should call i18next.t", async () => {
       // arrange
@@ -81,95 +85,103 @@ describe("useI18next", () => {
       expect(spy).toHaveBeenCalledWith("test");
     });
   });
+
   describe("dateTime", () => {
     it("Should parse Date object", async () => {
       // arrange
-      const language = "en";
-      i18next.resolvedLanguage = language;
-      const spy = vi.spyOn(Intl, "DateTimeFormat");
+      i18next.resolvedLanguage = "nl";
       const composable = await getComposable("myNamespace");
 
       // act
-      const result = composable.formatDateTime.value(new Date(2021, 1, 1, 12, 0, 0));
+      const result = composable.formatDateTime.value(new Date(2021, 1, 11, 12, 0, 0));
 
       // assert
-      expect(spy).toHaveBeenCalledWith(language, { dateStyle: "short", timeStyle: "short", timeZone: defaultTimeZone });
-      expect(result).not.toBeUndefined();
+      expect(result).toBe("11-2-2021, 12:00");
     });
+
+    it("Should parse Date object in alternative timezone", async () => {
+      // arrange
+      i18next.resolvedLanguage = "nl";
+      const composable = await getComposable("myNamespace");
+
+      // act
+      const result = composable.formatDateTime.value(new Date(2021, 1, 11, 12, 0, 0), { timeZone: "America/Adak" });
+
+      // assert
+      expect(result).toBe("11-2-2021, 01:00");
+    });
+
     it("Should parse string", async () => {
       // arrange
-      const language = "en";
-      i18next.resolvedLanguage = language;
-      const spy = vi.spyOn(Intl, "DateTimeFormat");
+      i18next.resolvedLanguage = "fr";
       const composable = await getComposable("myNamespace");
 
       // act
-      const result = composable.formatDateTime.value("2021-01-01T13:56:43Z");
+      const result = composable.formatDateTime.value("2021-01-11T13:56:43Z");
 
       // assert
-      expect(spy).toHaveBeenCalledWith(language, { dateStyle: "short", timeStyle: "short", timeZone: defaultTimeZone });
-      expect(result).not.toBeUndefined();
+      expect(result).toBe("11/01/2021 14:56");
+    });
+
+    it("Should format correctly in local format", async () => {
+      // arrange
+      i18next.resolvedLanguage = "en-US";
+      const composable = await getComposable("myNamespace");
+
+      // act
+      const result = composable.formatDateTime.value("2021-01-11T13:56:43Z", DateTime.DATETIME_FULL);
+
+      // assert
+      expect(result).toBe("January 11, 2021 at 2:56 PM GMT+1");
     });
 
     it("Should parse nullable Date object", async () => {
       // arrange
-      const language = "en";
-      i18next.resolvedLanguage = language;
-      const spy = vi.spyOn(Intl, "DateTimeFormat");
+      i18next.resolvedLanguage = "en";
       const composable = await getComposable("myNamespace");
-      const date: Date | undefined = undefined;
 
       // act
-      const result = composable.formatDateTime.value(date);
+      const result = composable.formatDateTime.value(undefined);
 
       // assert
-      expect(spy).not.toHaveBeenCalled();
       expect(result).toBe("");
     });
   });
+
   describe("date", () => {
     it("Should parse Date object", async () => {
       // arrange
-      const language = "en";
-      i18next.resolvedLanguage = language;
-      const spy = vi.spyOn(Intl, "DateTimeFormat");
+      i18next.resolvedLanguage = "en";
       const composable = await getComposable("myNamespace");
 
       // act
       const result = composable.formatDate.value(new Date(2021, 1, 1, 12, 0, 0));
 
       // assert
-      expect(spy).toHaveBeenCalledWith(language, { dateStyle: "short", timeZone: defaultTimeZone });
-      expect(result).not.toBeUndefined();
+      expect(result).toBe("2/1/2021");
     });
+
     it("Should parse string", async () => {
       // arrange
-      const language = "en";
-      i18next.resolvedLanguage = language;
-      const spy = vi.spyOn(Intl, "DateTimeFormat");
+      i18next.resolvedLanguage = "en";
       const composable = await getComposable("myNamespace");
 
       // act
-      const result = composable.formatDate.value("2021-01-01T13:56:43Z");
+      const result = composable.formatDate.value("2021-01-11T13:56:43Z");
 
       // assert
-      expect(spy).toHaveBeenCalledWith(language, { dateStyle: "short", timeZone: defaultTimeZone });
-      expect(result).not.toBeUndefined();
+      expect(result).toBe("1/11/2021");
     });
 
     it("Should parse nullable Date", async () => {
       // arrange
-      const language = "en";
-      i18next.resolvedLanguage = language;
-      const spy = vi.spyOn(Intl, "DateTimeFormat");
+      i18next.resolvedLanguage = "en";
       const composable = await getComposable("myNamespace");
-      const date: Date | undefined = undefined;
 
       // act
-      const result = composable.formatDate.value(date);
+      const result = composable.formatDate.value(undefined);
 
       // assert
-      expect(spy).not.toHaveBeenCalled();
       expect(result).toBe("");
     });
   });
@@ -177,46 +189,50 @@ describe("useI18next", () => {
   describe("time", () => {
     it("Should parse Date object", async () => {
       // arrange
-      const language = "en";
-      i18next.resolvedLanguage = language;
-      const spy = vi.spyOn(Intl, "DateTimeFormat");
+      i18next.resolvedLanguage = "en";
       const composable = await getComposable("myNamespace");
 
       // act
       const result = composable.formatTime.value(new Date(2021, 1, 1, 12, 0, 0));
 
       // assert
-      expect(spy).toHaveBeenCalledWith(language, { timeStyle: "short", timeZone: defaultTimeZone });
-      expect(result).not.toBeUndefined();
+      expect(result).toBe("12:00 PM");
     });
+
+    it("Should format correctly in local format", async () => {
+      // arrange
+      i18next.resolvedLanguage = "nl";
+      const composable = await getComposable("myNamespace");
+
+      // act
+      const result = composable.formatTime.value(new Date(2021, 1, 1, 12, 0, 0), DateTime.TIME_24_WITH_LONG_OFFSET);
+
+      // assert
+      expect(result).toBe("12:00:00 Midden-Europese standaardtijd");
+    });
+
+
     it("Should parse string", async () => {
       // arrange
-      const language = "en";
-      i18next.resolvedLanguage = language;
-      const spy = vi.spyOn(Intl, "DateTimeFormat");
+      i18next.resolvedLanguage = "en";
       const composable = await getComposable("myNamespace");
 
       // act
       const result = composable.formatTime.value("2021-01-01T13:56:43Z");
 
       // assert
-      expect(spy).toHaveBeenCalledWith(language, { timeStyle: "short", timeZone: defaultTimeZone });
-      expect(result).not.toBeUndefined();
+      expect(result).toBe("2:56 PM");
     });
 
     it("Should parse nullable time", async () => {
       // arrange
-      const language = "en";
-      i18next.resolvedLanguage = language;
-      const spy = vi.spyOn(Intl, "DateTimeFormat");
+      i18next.resolvedLanguage = "en";
       const composable = await getComposable("myNamespace");
-      const date: Date | undefined = undefined;
 
       // act
-      const result = composable.formatTime.value(date);
+      const result = composable.formatTime.value(undefined);
 
       // assert
-      expect(spy).not.toHaveBeenCalled();
       expect(result).toBe("");
     });
   });
@@ -224,49 +240,37 @@ describe("useI18next", () => {
   describe("formatMonth", () => {
     it("Should parse Date object", async () => {
       // arrange
-      const language = "en";
-      i18next.resolvedLanguage = language;
-      const spy = vi.spyOn(Intl, "DateTimeFormat");
+      i18next.resolvedLanguage = "en";
       const composable = await getComposable("myNamespace");
 
       // act
-      const result = composable.formatMonth.value(new Date(2021, 1, 1, 12, 0, 0));
+      const result = composable.formatMonth.value(DateTime.local(2021, 2, 1, 12, 0, 0));
 
       // assert
-      expect(spy).toHaveBeenCalledWith(language, { month: "long", timeZone: defaultTimeZone });
-      expect(result).not.toBeUndefined();
       expect(result).toBe("February");
     });
 
     it("Should parse string", async () => {
       // arrange
-      const language = "en";
-      i18next.resolvedLanguage = language;
-      const spy = vi.spyOn(Intl, "DateTimeFormat");
+      i18next.resolvedLanguage = "nl";
       const composable = await getComposable("myNamespace");
 
       // act
       const result = composable.formatMonth.value("2021-01-01T13:56:43Z");
 
       // assert
-      expect(spy).toHaveBeenCalledWith(language, { month: "long", timeZone: defaultTimeZone });
-      expect(result).toBe("January");
-      expect(result).not.toBeUndefined();
+      expect(result).toBe("januari");
     });
 
     it("Should nullable Date", async () => {
       // arrange
-      const language = "en";
-      i18next.resolvedLanguage = language;
-      const spy = vi.spyOn(Intl, "DateTimeFormat");
+      i18next.resolvedLanguage = "en";
       const composable = await getComposable("myNamespace");
-      const date: Date | undefined = undefined;
 
       // act
-      const result = composable.formatMonth.value(date);
+      const result = composable.formatMonth.value(undefined);
 
       // assert
-      expect(spy).not.toHaveBeenCalled();
       expect(result).toBe("");
     });
   });
