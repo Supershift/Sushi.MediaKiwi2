@@ -145,9 +145,7 @@
     const range = dateRangeFilter.value.dateRange.selectedValue;
     if (!range) return;
 
-    if (!range.value[0].hasSame(dateRange.value.value[0], "day")) {
-      dateRange.value = { ...range, title: formatPreset([range.value[0], range.value[1]]) };
-    }
+    dateRange.value = { ...range, title: formatPreset([range.value[0], range.value[1]]) };
   };
   getFromUrl();
 
