@@ -4,10 +4,8 @@
   import { useI18next } from "@/composables";
   import { useLocale } from "vuetify";
   import { DateTime } from "luxon";
-  import { useTimeZones } from "@/composables/useTimeZones";
 
   const { i18next, defaultT, t, formatDateTimeGeneric } = await useI18next("MkDatePicker");
-  const { forceDateIntoTimeZone } = await useTimeZones();
   const { current } = useLocale();
   // TODO There needs to be a better way to set the locale through the custom i18n plugin
   current.value = i18next.value.language;
@@ -33,14 +31,14 @@
   }>();
 
   // Create proxy model to prevent direct mutation
-  const model = ref(modelValue.value?.map((e) => e.toJSDate()) ?? []); // transform strings to Date so vuetify can work with it
+  const model = ref(modelValue.value ?? []); // transform strings to Date so vuetify can work with it
 
   function close() {
     emit("click:close");
   }
 
   function apply() {
-    modelValue.value = model.value.map(forceDateIntoTimeZone);
+    modelValue.value = model.value;
     close();
   }
 

@@ -46,6 +46,7 @@
   "types": "./dist/main.d.ts",
   "dependencies": {
     "@azure/msal-browser": "^2.39.0",
+    "@date-io/luxon": "^3.2.0",
     "@vueuse/core": "^12.4.0",
     "axios": "^1.7.7",
     "i18next": "^23.16.5",
