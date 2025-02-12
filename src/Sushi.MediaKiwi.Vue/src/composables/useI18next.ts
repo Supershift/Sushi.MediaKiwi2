@@ -126,7 +126,10 @@ export async function useI18next(scope?: NavigationItem | string) {
       return "";
     }
 
-    return dateTime.setLocale(i18next.value.resolvedLanguage || 'en-US').toLocaleString(options);
+    return dateTime
+      .setLocale(i18next.value.resolvedLanguage || 'en-US')
+      .toLocal()
+      .toLocaleString(options);
   };
 
   const formatDateTime = computed(() => formatDateTimeInternal);

@@ -1,6 +1,6 @@
 import { computed, ref } from "vue";
 import { useStorage } from "@vueuse/core";
-import { Settings } from "luxon";
+import { DateTime, Settings } from "luxon";
 
 export type TimeZone = {
   /**
@@ -44,5 +44,13 @@ export function useTimeZones() {
     return result;
   });
 
-  return { timeZones, setTimeZone, currentTimeZone };
+  /**
+   * Used to force/hack a Date created in browser back to the specified time zone. 
+   * Do not use this for Dates that have a correct UTC time.
+   */
+  const forceDateIntoTimeZone = (date: Date): DateTime => {
+    return DateTime.local(date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes(), date.getMilliseconds());
+  }
+
+  return { timeZones, setTimeZone, currentTimeZone, forceDateIntoTimeZone };
 }

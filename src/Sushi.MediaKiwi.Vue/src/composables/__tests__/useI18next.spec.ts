@@ -88,16 +88,58 @@ describe("useI18next", () => {
   });
 
   describe("dateTime", () => {
-    it("Should parse Date object", async () => {
+    it("Should parse (UTC) Date object", async () => {
       // arrange
       i18next.resolvedLanguage = "nl";
       const composable = await getComposable("myNamespace");
 
       // act
-      const result = composable.formatDateTime.value(new Date(Date.UTC(2021, 1, 11, 12, 0, 0)));
+      const result = composable.formatDateTime.value(new Date(Date.UTC(2021, 1, 11, 7, 40, 0)));
 
       // assert
-      expect(result).toBe("11-2-2021, 08:00");
+      expect(result).toBe("11-2-2021, 03:40");
+    });
+
+    it("Should parse (UTC) DateTime object", async () => {
+      // arrange
+      i18next.resolvedLanguage = "nl";
+      const composable = await getComposable("myNamespace");
+
+      // act
+      const result = composable.formatDateTime.value(DateTime.utc(2021, 2, 11, 7, 40, 0));
+
+      // assert
+      expect(result).toBe("11-2-2021, 03:40");
+    });
+
+    it("Should parse (local) Date object", async () => {
+      // arrange
+      i18next.resolvedLanguage = "nl";
+      const composable = await getComposable("myNamespace");
+
+      // act
+      // NOTE: this is the local time of the browser, not the local time of M:C
+      //       doing this will internally set an incorrect UTC time
+      //       To workaround this issue, use `useTimezones().forceDateIntoTimeZone(date)`
+      const date = new Date("2021-02-11T08:40:00+01:00");
+      const result = composable.formatDateTime.value(date);
+
+      vi.resetAllMocks();
+
+      // assert
+      expect(result).toBe("11-2-2021, 03:40");
+    });
+
+    it("Should parse (local) DateTime object", async () => {
+      // arrange
+      i18next.resolvedLanguage = "nl";
+      const composable = await getComposable("myNamespace");
+
+      // act
+      const result = composable.formatDateTime.value(DateTime.local(2021, 2, 11, 3, 40, 0));
+
+      // assert
+      expect(result).toBe("11-2-2021, 03:40");
     });
 
     it("Should correctly show UTC time in local timezone", async () => {
