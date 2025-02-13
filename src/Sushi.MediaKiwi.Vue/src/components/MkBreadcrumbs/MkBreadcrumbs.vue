@@ -6,18 +6,9 @@
   // inject dependencies
   const { hasBreadcrumbs, breadcrumbs, showMobileBackButton, getBreadcrumbLabel } = useBreadcrumbs();
   const navigation = useNavigation();
-
-  // define props
-  const props = defineProps({
-    /** Determines if the breadcrumbs become sticky at the top of the page, default: false */
-    sticky: {
-      type: Boolean,
-      default: false,
-    },
-  });
 </script>
 <template>
-  <v-card v-if="hasBreadcrumbs" :class="['breadcrumbs-container ml-0 pa-4 pa-md-10 pb-0', { 'v-breadcrumbs--sticky': props.sticky }]">
+  <v-card v-if="hasBreadcrumbs" :class="['breadcrumbs-container ml-0 pa-4 pa-md-10 pb-0']">
     <div v-if="showMobileBackButton" class="breadcrumb-title-container">
       <mk-back-button />
       <div class="v-breadcrumbs-item text-title-large d-inline-block text-truncate">
