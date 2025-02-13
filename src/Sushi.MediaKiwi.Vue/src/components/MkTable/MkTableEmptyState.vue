@@ -45,8 +45,8 @@
 <template>
   <v-empty-state :headline="headline" :title="title" :text="text">
     <template #media v-if="!hideImage">
-      <img v-if="image" :src="image" :alt="defaultT('Empty state image')" />
-      <img v-else src="@/assets/empty-state.svg" :alt="defaultT('Empty state image')" />
+      <img v-if="image" :src="image" :alt="defaultT('EmptyStateImage', 'Empty state image')" />
+      <img v-else src="@/assets/empty-state.svg" :alt="defaultT('EmptyStateImage', 'Empty state image')" />
     </template>
     <template #actions>
       <slot v-if="slots.actions" name="actions" />
