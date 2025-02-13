@@ -16,10 +16,76 @@ export function useFilterInQuery<T>(filtersModel?: Ref<TableFilter>, pagingModel
   const mediakiwiStore = useMediakiwiStore();
   const router = useRouter();
   const route = useRoute();
+  const query = route.query;
 
-  const isTableFilterItemWithExplicitQueryConversion = (item: TableFilterItem): item is TableFilterItemQueryConverter => true;
+  loadFiltersFromQuery(query);
+  loadPagingFromQuery(query);
+  loadSortingFromQuery(query);
 
-  const desiredQuery = () => {
+  configureBackControl();
+
+  if (filtersModel) {
+    watch(filtersModel, updateQueryAfterChange, { deep: true });
+  }
+
+  if (pagingModel) {
+    watch(pagingModel, updateQueryAfterChange, { deep: true });
+  }
+
+  if (sortingModel) {
+    watch(sortingModel, updateQueryAfterChange, { deep: true });
+  }
+
+
+  function loadFiltersFromQuery(query: LocationQuery) {
+    for (const filterName in filtersModel?.value) {
+      if (filterName in query) {
+        const filter = filtersModel.value[filterName];
+
+        if (isTableFilterItemWithExplicitQueryConversion(filter) && filter?.fromUrl) {
+          const filterValue = filter.fromUrl(toString(query[filterName]));
+          filtersModel.value[filterName].selectedValue = filterValue;
+        }
+        else {
+          const filterValue = query[filterName];
+
+          const option = filtersModel.value[filterName].options?.find((x) => x.value.toString() == filterValue!.toString());
+          filtersModel.value[filterName].selectedValue = option ?? { value: filterValue };
+        }
+      }
+    }
+  }
+
+  function loadPagingFromQuery(query: LocationQuery) {
+    if (pagingModel) {
+      if ("pageIndex" in query) {
+        pagingModel.value.pageIndex = parseInt((query["pageIndex"] as string) ?? "0");
+      }
+
+      if ("pageSize" in query) {
+        pagingModel.value.pageSize = parseInt((query["pageSize"] as string) ?? "0");
+      }
+    }
+  }
+
+  function loadSortingFromQuery(query: LocationQuery) {
+    if (sortingModel) {
+      if ("sortBy" in query) {
+        sortingModel.value.sortBy = query["sortBy"] as keyof T;
+      }
+
+      if ("sortDirection" in query) {
+        sortingModel.value.sortDirection = query["sortDirection"] as SortDirection;
+      }
+    }
+  }
+
+  async function updateQueryAfterChange() {
+    await router.replace({ ...route, query: desiredQuery() });
+    configureBackControl();
+  };
+
+  function desiredQuery() {
     let query = { ...route.query };;
 
     for (const name in filtersModel?.value) {
@@ -39,7 +105,11 @@ export function useFilterInQuery<T>(filtersModel?: Ref<TableFilter>, pagingModel
     return query;
   };
 
-  const updateQueryWithValue = (query: LocationQuery, name: string, value: string | undefined) => {
+  function isTableFilterItemWithExplicitQueryConversion(item: TableFilterItem): item is TableFilterItemQueryConverter {
+    return true
+  };
+
+  function updateQueryWithValue(query: LocationQuery, name: string, value: string | undefined) {
     if (value) {
       query[name] = value;
     } else {
@@ -48,12 +118,7 @@ export function useFilterInQuery<T>(filtersModel?: Ref<TableFilter>, pagingModel
     return query;
   };
 
-  const updateQueryAfterChange = async () => {
-    await router.replace({ ...route, query: desiredQuery() });
-    configureBackControl();
-  };
-
-  const configureBackControl = () => {
+  function configureBackControl() {
     if (
       Object.values(filtersModel?.value ?? []).filter((f) => !!f.selectedValue).length !== 0 ||
       pagingModel?.value.pageIndex !== 0 ||
@@ -61,65 +126,13 @@ export function useFilterInQuery<T>(filtersModel?: Ref<TableFilter>, pagingModel
       sortingModel?.value.sortBy ||
       sortingModel?.value.sortDirection
     ) {
-      mediakiwiStore.navigationBackUrlOverwrite.set(route.name?.toString() || "", { ...route, query: desiredQuery() });
+      mediakiwiStore.navigationBackUrlOverwrite.set(route.name?.toString() ?? "", { ...route, query: desiredQuery() });
     } else {
-      mediakiwiStore.navigationBackUrlOverwrite.delete(route.name?.toString() || "");
+      mediakiwiStore.navigationBackUrlOverwrite.delete(route.name?.toString() ?? "");
     }
   };
 
-  const toString = (queryValue: LocationQueryValue | LocationQueryValue[]): string | string[] => {
+  function toString(queryValue: LocationQueryValue | LocationQueryValue[]): string | string[] {
     return Array.isArray(queryValue) ? queryValue.filter(q => !!q).map(q => q!.toString()) : queryValue?.toString() ?? '';
-  }
-
-  const loadFromQuery = () => {
-    const query = route.query;
-
-    for (const filterName in filtersModel?.value) {
-      if (filterName in query) {
-        const filter = filtersModel.value[filterName];
-
-        if (isTableFilterItemWithExplicitQueryConversion(filter) && filter?.fromUrl) {
-          const filterValue = filter.fromUrl(toString(query[filterName]));
-          filtersModel.value[filterName].selectedValue = filterValue;
-        }
-        else {
-          const filterValue = query[filterName];
-
-          const option = filtersModel.value[filterName].options?.find((x) => x.value.toString() == filterValue!.toString());
-          filtersModel.value[filterName].selectedValue = option ?? { value: filterValue };
-        }
-      }
-    }
-
-    if (pagingModel && "pageIndex" in query) {
-      pagingModel.value.pageIndex = parseInt((query["pageIndex"] as string) ?? "0");
-    }
-
-    if (pagingModel && "pageSize" in query) {
-      pagingModel.value.pageSize = parseInt((query["pageSize"] as string) ?? "0");
-    }
-
-    if (sortingModel && "sortBy" in query) {
-      sortingModel.value.sortBy = query["sortBy"] as keyof T;
-    }
-
-    if (sortingModel && "sortDirection" in query) {
-      sortingModel.value.sortDirection = query["sortDirection"] as SortDirection;
-    }
-    configureBackControl();
-  };
-
-  loadFromQuery();
-
-  if (filtersModel) {
-    watch(filtersModel, updateQueryAfterChange, { deep: true });
-  }
-
-  if (pagingModel) {
-    watch(pagingModel, updateQueryAfterChange, { deep: true });
-  }
-
-  if (sortingModel) {
-    watch(sortingModel, updateQueryAfterChange, { deep: true });
   }
 }

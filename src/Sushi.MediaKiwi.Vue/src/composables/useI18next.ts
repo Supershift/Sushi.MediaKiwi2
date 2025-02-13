@@ -6,7 +6,6 @@ import { Ref, computed, inject } from "vue";
 import { useNavigation } from "@/composables/useNavigation";
 import { container } from "tsyringe";
 import { NavigationItem } from "@/models/navigation";
-import { useTimeZones } from "@/composables/useTimeZones";
 import { DateTime, DateTimeFormatOptions } from "luxon";
 /**
  * Adds i18next to the component.
@@ -16,7 +15,6 @@ import { DateTime, DateTimeFormatOptions } from "luxon";
 export async function useI18next(scope?: NavigationItem | string) {
   // inject dependencies
   const navigation = useNavigation();
-  const { currentTimeZone } = useTimeZones();
 
   // get i18next instance
   let i18next: Ref<i18n> | undefined;
@@ -56,12 +54,7 @@ export async function useI18next(scope?: NavigationItem | string) {
     if (!scope) scope = "common";
   }
 
-  let namespace: string;
-  if (typeof scope === "string") {
-    namespace = scope;
-  } else {
-    namespace = (scope as NavigationItem).id;
-  }
+  const namespace = typeof scope === "string" ? scope : scope.id;
 
   // if a namespace is provided, check if it already exists on i18next and if not, add it
   if (namespace && !i18next.value.hasLoadedNamespace(namespace)) {
@@ -89,23 +82,25 @@ export async function useI18next(scope?: NavigationItem | string) {
   const timeOptions = computed(() => mediakiwiOptions?.dateFormatOptions?.time || DateTime.TIME_SIMPLE);
   const monthOptions = computed(() => mediakiwiOptions?.dateFormatOptions?.month || <Intl.DateTimeFormatOptions>{ month: "long" });
 
-  const formatDateTimeInternal = (date: string | Date | DateTime | undefined | null, options?: DateTimeFormatOptions): string => {
+  type DateTypes = string | Date | DateTime | undefined | null;
+
+  const formatDateTimeInternal = (date: DateTypes, options?: DateTimeFormatOptions): string => {
     return formatDateTimeGenericInternal(date, { ...dateOptions.value, ...timeOptions.value, ...options });
   };
 
-  const formatDateInternal = (date: string | Date | DateTime | undefined | null, options?: DateTimeFormatOptions): string => {
+  const formatDateInternal = (date: DateTypes, options?: DateTimeFormatOptions): string => {
     return formatDateTimeGenericInternal(date, { ...dateOptions.value, ...options });
   };
 
-  const formatTimeInternal = (date: string | Date | DateTime | undefined | null, options?: DateTimeFormatOptions): string => {
+  const formatTimeInternal = (date: DateTypes, options?: DateTimeFormatOptions): string => {
     return formatDateTimeGenericInternal(date, { ...timeOptions.value, ...options });
   };
 
-  const formatMonthInternal = (date: string | Date | DateTime | undefined | null, options?: DateTimeFormatOptions): string => {
+  const formatMonthInternal = (date: DateTypes, options?: DateTimeFormatOptions): string => {
     return formatDateTimeGenericInternal(date, { ...monthOptions.value, ...options });
   };
 
-  const inputToDateTime = (date: string | Date | DateTime | undefined | null) => {
+  const inputToDateTime = (date: DateTypes) => {
     if (!date) return undefined;
 
     if (date instanceof Date) {
@@ -119,7 +114,7 @@ export async function useI18next(scope?: NavigationItem | string) {
     return date;
   }
 
-  const formatDateTimeGenericInternal = (date: string | Date | DateTime | undefined | null, options?: DateTimeFormatOptions): string => {
+  const formatDateTimeGenericInternal = (date: DateTypes, options?: DateTimeFormatOptions): string => {
     const dateTime = inputToDateTime(date);
 
     if (!dateTime) {
@@ -127,7 +122,7 @@ export async function useI18next(scope?: NavigationItem | string) {
     }
 
     return dateTime
-      .setLocale(i18next.value.resolvedLanguage || 'en-US')
+      .setLocale(i18next.value.resolvedLanguage ?? 'en-US')
       .toLocal()
       .toLocaleString(options);
   };
