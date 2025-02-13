@@ -356,11 +356,11 @@
   <v-table ref="myTable" class="mk-table mk-table-view" :class="{ 'mk-table-display-options': hasDisplayOptions }" :data-table-ref="tableReference">
     <thead class="mk-table-view__header-container">
       <tr>
-        <th v-if="checkbox && !props.hideSelectionCheckbox" width="65" class="mk-table-view__checkbox-container--header">
+        <th v-if="checkbox && !props.hideSelectionCheckbox" class="mk-table-view__checkbox-container--header">
           <MkTableCheckbox :disabled="allItemsDisabled" :is-indeterminate="isIndeterminate" :is-selected="isAllSelected" @update:selected="onToggleAll" />
         </th>
         <slot name="thead"></slot>
-        <th width="75" v-if="slots.contextmenu && !props.hideTableRowActions">&nbsp;</th>
+        <th v-if="slots.contextmenu && !props.hideTableRowActions" class="hide-table-row-actions">&nbsp;</th>
       </tr>
     </thead>
     <tbody ref="tbodyContainer" class="mk-table-view__body-container">
@@ -415,6 +415,18 @@
   .v-table {
     .v-table__wrapper {
       table {
+        thead {
+          tr {
+            th {
+              &.mk-table-view__checkbox-container--header {
+                width: 65px;
+              }
+              &.hide-table-row-actions {
+                width: 75px;
+              }
+            }
+          }
+        }
         tbody {
           tr {
             transition: 0.2s background-color;
@@ -430,7 +442,7 @@
             }
 
             &.mk-table-view__row--selected {
-              background-color: rgb(var(--v-theme-secondary-container)) !important; //, var(--v-disabled-opacity)) !important;
+              background-color: rgb(var(--v-theme-secondary-container)) !important;
               color: var(--v-theme-on-secondary-container) !important;
             }
           }
