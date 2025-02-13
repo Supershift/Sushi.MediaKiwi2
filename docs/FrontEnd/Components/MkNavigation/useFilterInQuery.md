@@ -38,3 +38,38 @@ Nested scenarios are also supported, meaning "page with table" <-> "details page
 
 </script>
 ```
+
+## Custom conversions
+
+The default url->filter action will match filter option values as strings and use that option that matches. If this fails, a new (temporary) option is created with the value from the url.
+
+To overwrite this behavior, you can use `TableFilterItemQueryConverter`, in which you can specify the conversions.
+
+```tsx
+<script setup lang="ts">
+  import { TableFilter, TableFilterType, SortDirection, TableFilterValue, useFilterInQuery, TableFilterItemQueryConverter } from "@supershift/mediakiwi-vue";
+
+  const countries = [
+    { title: "Nederland", value: "NL" },
+    { title: "België", value: "BE" },
+  ];
+
+  const filters = ref<TableFilter>({
+    name: {
+      title: "Name",
+      type: TableFilterType.TextField,
+      searchable: true,
+    },
+    country: <TableFilterItemQueryConverter>{
+      title: "Land",
+      options: countries,
+      type: TableFilterType.Select,
+
+      toUrl: (objectValue: TableFilterValue) => objectValue.value.toLowerCase(),
+      fromUrl: (urlValue: string | string[]) => countries.first(c => c.value == urlValue.toUpperCase())
+    }
+  });
+
+  useFilterInQuery(filters);
+</script>
+```

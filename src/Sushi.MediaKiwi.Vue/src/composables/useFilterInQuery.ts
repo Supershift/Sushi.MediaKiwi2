@@ -1,22 +1,32 @@
 import { Ref, watch } from "vue";
 import { useRoute, useRouter } from "@/router";
 import { useMediakiwiStore } from "@/stores";
-import { Paging, SortDirection, Sorting, TableFilter } from "@/models";
+import { Paging, SortDirection, Sorting, TableFilter, TableFilterItem, TableFilterValue } from "@/models";
 import { LocationQuery, LocationQueryValue } from "vue-router";
+
+export type TableFilterItemQueryConverter = TableFilterItem & {
+  /** Override default behavior to save the filter in the url (default: toString()) */
+  toUrl?: (value: TableFilterValue) => string | string[];
+
+  /** Override default behavior to get the filter in the url (default: toString()) */
+  fromUrl?: (value: string | string[]) => TableFilterValue | undefined;
+}
 
 export function useFilterInQuery<T>(filtersModel?: Ref<TableFilter>, pagingModel?: Ref<Paging>, sortingModel?: Ref<Sorting<T>>) {
   const mediakiwiStore = useMediakiwiStore();
   const router = useRouter();
   const route = useRoute();
 
+  const isTableFilterItemWithExplicitQueryConversion = (item: TableFilterItem): item is TableFilterItemQueryConverter => true;
+
   const desiredQuery = () => {
-    let query = Object.assign({}, route.query);;
+    let query = { ...route.query };;
 
     for (const name in filtersModel?.value) {
       const filter = filtersModel?.value[name];
       const selectedValue = filter.selectedValue;
 
-      const filterValue = filter?.toUrl && selectedValue ? filter.toUrl(selectedValue) : selectedValue?.value;
+      const filterValue = isTableFilterItemWithExplicitQueryConversion(filter) && filter?.toUrl && selectedValue ? filter.toUrl(selectedValue) : selectedValue?.value;
 
       query = updateQueryWithValue(query, name, filterValue);
     }
@@ -68,7 +78,7 @@ export function useFilterInQuery<T>(filtersModel?: Ref<TableFilter>, pagingModel
       if (filterName in query) {
         const filter = filtersModel.value[filterName];
 
-        if (filter?.fromUrl) {
+        if (isTableFilterItemWithExplicitQueryConversion(filter) && filter?.fromUrl) {
           const filterValue = filter.fromUrl(toString(query[filterName]));
           filtersModel.value[filterName].selectedValue = filterValue;
         }
@@ -76,7 +86,7 @@ export function useFilterInQuery<T>(filtersModel?: Ref<TableFilter>, pagingModel
           const filterValue = query[filterName];
 
           const option = filtersModel.value[filterName].options?.find((x) => x.value.toString() == filterValue!.toString());
-          filtersModel.value[filterName].selectedValue = option ? option : { value: filterValue };
+          filtersModel.value[filterName].selectedValue = option ?? { value: filterValue };
         }
       }
     }

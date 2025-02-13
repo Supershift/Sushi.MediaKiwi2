@@ -7,7 +7,7 @@
   import { SampleDataConnector } from "@sample/services/SampleDataConnector";
   import { container } from "tsyringe";
   import { ICustomer } from "./../models/Customer";
-  import { useI18next, useFilterInQuery, useDatePresets } from "@/composables";
+  import { useI18next, useFilterInQuery, useDatePresets, TableFilterItemQueryConverter } from "@/composables";
   import { useSnackbarStore } from "@/stores";
   import MkDatePresetMenu from "@/components/MkDatePresetMenu/MkDatePresetMenu.vue";
   import { DateTime, MonthNumbers } from "luxon";
@@ -87,7 +87,7 @@
       ],
       type: TableFilterType.RadioGroup,
     },
-    dates: {
+    dates: <TableFilterItemQueryConverter>{
       title: "Dates",
       type: TableFilterType.DateRange,
       options: quarterOptions,
@@ -99,7 +99,7 @@
         return { title: quarter ? quarter.title : formatPreset(values), value: values };
       },
     },
-    date: {
+    date: <TableFilterItemQueryConverter>{
       title: "Date",
       type: TableFilterType.DatePicker,
       toUrl: (objectValue: TableFilterValue) => objectValue.value.toISO(),
@@ -127,7 +127,7 @@
   const dateRange = ref<TableFilterValue>(dateOptions[0]);
 
   const dateRangeFilter = ref<TableFilter>({
-    dateRange: {
+    dateRange: <TableFilterItemQueryConverter>{
       title: "",
       options: dateOptions,
       toUrl: (objectValue: TableFilterValue) => objectValue.value.map((v: DateTime) => v.toISO()),
