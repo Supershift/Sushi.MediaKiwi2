@@ -150,7 +150,7 @@
       <mk-th mk-column-id="createdDate" v-model:sorting="sorting" :sorting-options="{ id: 'created' }">{{ t("Created") }}</mk-th>
       <th mk-column-id="countryName">{{ t("Country") }}</th>
       <th mk-column-id="isActive">{{ t("Active") }}</th>
-      <th mk-column-id="srp" width="100">{{ t("SRP") }}</th>
+      <th mk-column-id="srp" class="srp-column">{{ t("SRP") }}</th>
       <th mk-column-id="srpValue" :mk-column-label="t('SRP Icon')"></th>
     </template>
 
@@ -180,3 +180,9 @@
   <AddHotelDialog v-model="state.addDialog" @update:model-value="LoadData" />
   <HotelsOverviewDialog v-model="state.selectionDialog"></HotelsOverviewDialog>
 </template>
+
+<style scoped lang="scss">
+  .srp-column {
+    width: 100px;
+  }
+</style>

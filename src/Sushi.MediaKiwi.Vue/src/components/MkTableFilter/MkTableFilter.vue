@@ -32,7 +32,6 @@
 
   // inject dependencies
   const { t, defaultT } = await useI18next("MkFilter");
-  // const { addKeyboardShortcuts, removeKeyboardShortcuts } = useKeyboardShortcuts();
   const { appliedFilterChip } = await useFilters(useI18next("MkFilter"));
 
   // define reactive variables

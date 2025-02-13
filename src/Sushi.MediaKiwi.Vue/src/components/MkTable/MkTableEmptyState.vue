@@ -45,8 +45,8 @@
 <template>
   <v-empty-state :headline="headline" :title="title" :text="text">
     <template #media v-if="!hideImage">
-      <img v-if="image" :src="image" />
-      <img v-else src="@/assets/empty-state.svg" />
+      <img v-if="image" :src="image" :alt="defaultT('EmptyStateAltText', 'Visual showing that the table is empty')" />
+      <img v-else src="@/assets/empty-state.svg" :alt="defaultT('EmptyStateAltText', 'Visual showing that the table is empty')" />
     </template>
     <template #actions>
       <slot v-if="slots.actions" name="actions" />
