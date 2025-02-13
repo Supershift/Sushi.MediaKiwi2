@@ -9,6 +9,7 @@ import { ThemeComfiguration } from "./themes";
 import { GlobalConfiguration } from "./global";
 import { useDeepMerge } from "@/composables/useDeepMerge";
 import { loadTheme } from "./themes/ThemeProvider";
+import LuxonAdapter from "@date-io/luxon"
 
 export const defaultVuetifyOptions = <VuetifyOptions>{
   ...GlobalConfiguration,
@@ -45,6 +46,8 @@ export function createVuetify(options?: VuetifyOptions) {
   if (storedTheme && vuetifyOptions?.theme) {
     vuetifyOptions.theme.defaultTheme = storedTheme;
   }
+
+  vuetifyOptions.date = { adapter: LuxonAdapter };
 
   // create the vuetify instance
   const vuetify = actualCreateVuetify(vuetifyOptions);

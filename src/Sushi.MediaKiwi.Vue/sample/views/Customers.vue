@@ -1,15 +1,16 @@
 <script setup lang="ts">
   import SampleSideSheet from "./../components/SampleSideSheet.vue";
   import { reactive, ref, watch, computed } from "vue";
-  import { TableFilter, Sorting, Paging, TableFilterType, SortDirection, IconsLibrary, IListResult, DateRange } from "@/models";
+  import { TableFilter, Sorting, Paging, TableFilterType, SortDirection, IconsLibrary, IListResult, DateRange, TableFilterValue } from "@/models";
   import { MkTable, MkOverflowMenuIcon, MkTd, MkTh } from "@/components";
   import type { SampleData } from "@sample/models/SampleData";
   import { SampleDataConnector } from "@sample/services/SampleDataConnector";
   import { container } from "tsyringe";
   import { ICustomer } from "./../models/Customer";
-  import { useI18next, useFilterInQuery, useDatePresets } from "@/composables";
+  import { useI18next, useFilterInQuery, useDatePresets, TableFilterItemQueryConverter } from "@/composables";
   import { useSnackbarStore } from "@/stores";
   import MkDatePresetMenu from "@/components/MkDatePresetMenu/MkDatePresetMenu.vue";
+  import { DateTime, MonthNumbers } from "luxon";
 
   const snackbar = useSnackbarStore();
 
@@ -24,8 +25,6 @@
     dayPresets,
     monthPresets,
   });
-
-  const currentYear = new Date().getFullYear();
 
   // define state
   const currentPagination = ref<Paging>({
@@ -53,7 +52,14 @@
     openPreselectMenu: <boolean>false,
   });
 
-  // define filters
+  const currentYear = DateTime.now().year;
+  const quarterOptions = [
+    { title: `Q1 ${currentYear}`, value: getQuarter(1) },
+    { title: `Q2 ${currentYear}`, value: getQuarter(2) },
+    { title: `Q3 ${currentYear}`, value: getQuarter(3) },
+    { title: `Q4 ${currentYear}`, value: getQuarter(4) },
+  ];
+
   const filters = ref<TableFilter>({
     name: {
       title: "Name",
@@ -81,19 +87,23 @@
       ],
       type: TableFilterType.RadioGroup,
     },
-    dates: {
+    dates: <TableFilterItemQueryConverter>{
       title: "Dates",
       type: TableFilterType.DateRange,
-      options: [
-        { title: `Q1 ${currentYear}`, value: getQuarter("Q1") },
-        { title: `Q2 ${currentYear}`, value: getQuarter("Q2") },
-        { title: `Q3 ${currentYear}`, value: getQuarter("Q3") },
-        { title: `Q4 ${currentYear}`, value: getQuarter("Q4") },
-      ],
+      options: quarterOptions,
+      toUrl: (objectValue: TableFilterValue) => objectValue.value.map((v: DateTime) => v.toISO()),
+      fromUrl: (urlValue: string | string[]) => {
+        if (!Array.isArray(urlValue)) return undefined;
+        const values = [DateTime.fromISO(urlValue[0]), DateTime.fromISO(urlValue[1])];
+        const quarter = quarterOptions.find((q) => q.value.start.hasSame(values[0], "day") && q.value.end.hasSame(values[1], "day"));
+        return { title: quarter ? quarter.title : formatPreset(values), value: values };
+      },
     },
-    date: {
+    date: <TableFilterItemQueryConverter>{
       title: "Date",
       type: TableFilterType.DatePicker,
+      toUrl: (objectValue: TableFilterValue) => objectValue.value.toISO(),
+      fromUrl: (urlValue: string | string[]) => ({ title: "", value: DateTime.fromISO(Array.isArray(urlValue) ? urlValue[0] : urlValue) }),
     },
     countries: {
       title: "Landen",
@@ -108,79 +118,46 @@
       type: TableFilterType.MultiSelect,
     },
   });
+  useFilterInQuery(filters, currentPagination, sorting);
 
-  // setup date range filter
   const dateOptions = [...presets.value.daysExcludingToday, ...presets.value.months].map((o) => {
     return { title: formatPreset([o.start, o.end]), value: [o.start, o.end] };
   });
+
+  const dateRange = ref<TableFilterValue>(dateOptions[0]);
+
   const dateRangeFilter = ref<TableFilter>({
-    dateRange: {
+    dateRange: <TableFilterItemQueryConverter>{
       title: "",
-      selectedValue: { title: dateOptions[0].title, value: dateOptions[0].value },
-      options: dateOptions.map((o) => {
-        return {
-          title: o.title,
-          value: o.value.map((a) => a.toISOString()), // needs to be iso so it can play nice with url values
-        };
-      }),
+      options: dateOptions,
+      toUrl: (objectValue: TableFilterValue) => objectValue.value.map((v: DateTime) => v.toISO()),
+      fromUrl: (urlValue: string | string[]) => {
+        if (!Array.isArray(urlValue)) return undefined;
+        const values = [DateTime.fromISO(urlValue[0]), DateTime.fromISO(urlValue[1])];
+        return { title: formatPreset(values), value: values };
+      },
     },
   });
+  useFilterInQuery(dateRangeFilter);
 
-  // keep filters and query params in sync
-  const allFilters = ref<TableFilter>({ ...filters.value, ...dateRangeFilter.value });
-  useFilterInQuery(allFilters, currentPagination, sorting);
+  const getFromUrl = () => {
+    const range = dateRangeFilter.value.dateRange.selectedValue;
+    if (!range) return;
 
-  // setup date range label and title
+    dateRange.value = { ...range, title: formatPreset([range.value[0], range.value[1]]) };
+  };
+  getFromUrl();
+
+  const setToUrl = (nv: TableFilterValue) => (dateRangeFilter.value.dateRange.selectedValue = nv);
+  watch(dateRange, setToUrl, { deep: true });
+
   const dataRangeLabel = computed<string>(() => {
-    const dateRange = dateRangeFilter.value.dateRange.selectedValue!.value;
-    return formatDateRange(dateRange[0], dateRange[1]);
+    return formatDateRange(dateRange.value.value[0], dateRange.value.value[1]);
   });
-  if (!dateRangeFilter.value.dateRange.selectedValue!.title) {
-    dateRangeFilter.value.dateRange.selectedValue!.title = dataRangeLabel.value;
-  }
 
-  function getQuarter(quarterTitle: string): DateRange {
-    //if you are using current year
-    const todayDate = new Date();
-
-    let startMonth = todayDate.getMonth();
-    let startDay = 1;
-
-    let endMonth = todayDate.getMonth();
-    let endDay = 0;
-
-    switch (quarterTitle) {
-      case "Q1":
-        startMonth = 0;
-        endMonth = 2;
-        endDay = 31;
-        break;
-      case "Q2":
-        startMonth = 3;
-        endMonth = 5;
-        endDay = 30;
-        break;
-      case "Q3":
-        startMonth = 6;
-        endMonth = 8;
-        endDay = 30;
-        break;
-      case "Q4":
-        startMonth = 9;
-        endMonth = 11;
-        endDay = 31;
-        break;
-    }
-
-    todayDate.setMonth(startMonth);
-    todayDate.setDate(startDay);
-    const startDate = new Date(todayDate);
-
-    todayDate.setMonth(endMonth);
-    todayDate.setDate(endDay);
-    const endDate = new Date(todayDate);
-
-    return { start: startDate, end: endDate } as DateRange;
+  function getQuarter(quarterNumber: number): DateRange {
+    let quarter = DateTime.fromFormat(quarterNumber.toString(), "q");
+    return { start: quarter.startOf("quarter"), end: quarter.endOf("quarter") } as DateRange;
   }
 
   function download() {
@@ -215,20 +192,14 @@
   }
 
   // watch to close, othermethods not working
-  watch(
-    dateRangeFilter,
-    () => {
-      state.openPreselectMenu = false;
-    },
-    { deep: true }
-  );
+  watch(dateRange, () => (state.openPreselectMenu = false), { deep: true });
 </script>
 
 <template>
   <div class="d-flex flex-row text-start align-start on-surface">
     <div class="flex-column">
       <v-select
-        v-model="dateRangeFilter.dateRange!.selectedValue"
+        v-model="dateRange"
         item-title="title"
         item-value="value"
         :label="dataRangeLabel"
@@ -239,7 +210,7 @@
       />
       <MkDatePresetMenu
         v-show="state.openPreselectMenu"
-        v-model="dateRangeFilter.dateRange!.selectedValue!"
+        v-model="dateRange"
         elevation="3"
         item-title="title"
         item-value="value"

@@ -14,6 +14,7 @@
 
   import { MkTable, MkTh, MkTd } from "@/components";
   import { useI18next, useFilterInQuery } from "@/composables";
+  import { DateTime } from "luxon";
 
   import { reactive, ref } from "vue";
   import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
@@ -156,7 +157,7 @@
 
     <template #tbody="{ dataItem }">
       <td>{{ dataItem.name }}</td>
-      <td>{{ formatDateTime(dataItem.created) }}</td>
+      <td>{{ formatDateTime(dataItem.created, DateTime.DATETIME_MED_WITH_SECONDS) }}</td>
       <mk-td @click.stop>
         <v-autocomplete v-model="dataItem.countryCode" :items="countryOptions" hide-details @update:model-value="() => onCountryCodeChanged(dataItem)" />
       </mk-td>

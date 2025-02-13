@@ -1,62 +1,46 @@
 import "reflect-metadata";
 import { describe, it, expect, vi } from "vitest";
 import { useDatePresets } from "@/composables/useDatePresets";
+import { DateTime } from "luxon";
 
 vi.mock("@/composables/useI18next");
 
-// Mock useDayjs and its methods
-vi.mock("./useDayjs", () => ({
-  useDayjs: () => ({
-    currentDate: { value: new Date(2023, 3, 15) }, // Mock current date as April 15, 2023
-    substractDate: {
-      value: (date: string, amount: number, unit: string) => {
-        const newDate = new Date(date);
-        if (unit === "day") {
-          newDate.setDate(newDate.getDate() - amount);
-        } else if (unit === "month") {
-          newDate.setMonth(newDate.getMonth() - amount);
-        }
-        return newDate;
-      },
-    },
-    startOf: {
-      value: (date: string, unit: string) => {
-        const newDate = new Date(date);
-        if (unit === "day") {
-          newDate.setHours(0, 0, 0, 0);
-        } else if (unit === "month") {
-          newDate.setDate(1);
-          newDate.setHours(0, 0, 0, 0);
-        }
-        return newDate;
-      },
-    },
-    endOf: {
-      value: (date: string, unit: string) => {
-        const newDate = new Date(date);
-        if (unit === "day") {
-          newDate.setHours(23, 59, 59, 999);
-        } else if (unit === "month") {
-          newDate.setMonth(newDate.getMonth() + 1);
-          newDate.setDate(0);
-          newDate.setHours(23, 59, 59, 999);
-        }
-        return newDate;
-      },
-    },
-  }),
-}));
-
 describe("useDatePresets", () => {
   it("should correctly calculate day presets", async () => {
+    // arrange
+
+    // act
     const { presets } = await useDatePresets({ dayPresets: [1, 7], monthPresets: [] });
     const dayPresets = presets.value.daysExcludingToday;
+
+    // assert
     expect(dayPresets.length).toBe(2);
+
+    expect(dayPresets[0].start.toISODate()).toBe(DateTime.local().minus({ days: 1 }).toISODate());
+    expect(dayPresets[0].end.toISODate()).toBe(DateTime.local().minus({ days: 1 }).toISODate());
+    expect(dayPresets[0].duration!.toISO()).toBe("P1D");
+
+    expect(dayPresets[1].start.toISODate()).toBe(DateTime.local().minus({ days: 7 }).toISODate());
+    expect(dayPresets[1].end.toISODate()).toBe(DateTime.local().minus({ days: 1 }).toISODate());
+    expect(dayPresets[1].duration!.toISO()).toBe("P7D");
   });
 
   it("should correctly calculate month presets", async () => {
+    // arrange
+
+    // act
     const { presets } = await useDatePresets({ dayPresets: [], monthPresets: [0, 1] });
     const monthPresets = presets.value.months;
+
+    // assert
     expect(monthPresets.length).toBe(2);
+
+    expect(monthPresets[0].start.toISODate()).toBe(DateTime.local().startOf("month").toISODate());
+    expect(monthPresets[0].end.toISODate()).toBe(DateTime.local().endOf("month").toISODate());
+    expect(monthPresets[0].duration!.toISO()).toBe("P1M");
+
+    expect(monthPresets[1].start.toISODate()).toBe(DateTime.local().minus({ month: 1 }).startOf("month").toISODate());
+    expect(monthPresets[1].end.toISODate()).toBe(DateTime.local().minus({ month: 1 }).endOf("month").toISODate());
+    expect(monthPresets[1].duration!.toISO()).toBe("P1M");
   });
 });

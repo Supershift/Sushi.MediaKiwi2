@@ -1,12 +1,12 @@
 <script setup lang="ts">
   import MkDialogCard from "../MkDialog/MkDialogCard.vue";
   import { ref } from "vue";
-  import { useI18next, useDayjs } from "@/composables";
+  import { useI18next } from "@/composables";
   import { useLocale } from "vuetify";
-  // inject dependencies
+  import { DateTime } from "luxon";
+
   const { i18next, defaultT, t, formatDateTimeGeneric } = await useI18next("MkDatePicker");
   const { current } = useLocale();
-  const { inConfiguredTimeZone } = useDayjs();
   // TODO There needs to be a better way to set the locale through the custom i18n plugin
   current.value = i18next.value.language;
 
@@ -24,22 +24,21 @@
     }
   );
 
-  const modelValue = defineModel<Date[]>({ required: true });
+  const modelValue = defineModel<DateTime[]>({ required: true });
 
   const emit = defineEmits<{
     (e: "click:close"): void;
   }>();
 
   // Create proxy model to prevent direct mutation
-  const model = ref(modelValue.value?.map((e) => new Date(e)) ?? []); // transform strings to Date so vuetify can work with it
+  const model = ref(modelValue.value ?? []); // transform strings to Date so vuetify can work with it
 
   function close() {
     emit("click:close");
   }
 
   function apply() {
-    // set the model with dates that match the users configured time zone
-    modelValue.value = model.value.map((e) => inConfiguredTimeZone(e));
+    modelValue.value = model.value;
     close();
   }
 
@@ -73,7 +72,7 @@
                 {{ t("DatePickerHeader", "Enter Date") }}
               </template>
               <template v-else-if="model.length === 1">
-                {{ formatDateTimeGeneric(model[0], { dateStyle: "medium" }) }}
+                {{ formatDateTimeGeneric(model[0], DateTime.DATE_MED) }}
               </template>
               <template v-else> {{ model.length }} {{ defaultT("Selected") }}</template>
             </div>

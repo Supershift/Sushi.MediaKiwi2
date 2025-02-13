@@ -2,12 +2,16 @@
   import { DateRange, TableFilterItem, TableFilterValue, TitledDateRange } from "@/models";
   import { computed, ref } from "vue";
   import { MkDatePresetMenu } from "../MkDatePresetMenu";
+  import { DateTime } from "luxon";
 
   const props = defineProps<{
     tableFilterItem: TableFilterItem;
   }>();
 
-  const modelValue = defineModel<TableFilterValue>({ required: true });
+  const modelValue = defineModel<TableFilterValue>({
+    required: true,
+    default: { title: "", value: [DateTime.local().minus({ days: 2 }), DateTime.local()] },
+  });
 
   const customDateRangeOptions = computed(() => {
     return props.tableFilterItem.options?.map((x) => {
@@ -32,12 +36,13 @@
 </script>
 
 <template>
-  <MkDatePresetMenu 
-    v-model="model" 
-    date-picker-class="mk-table-filter__item" 
-    @update:model-value="applyFilter" 
+  <MkDatePresetMenu
+    v-model="model"
+    date-picker-class="mk-table-filter__item"
+    @update:model-value="applyFilter"
     :datePickerTitle="tableFilterItem.inputLabel"
-    :customOptions="customDateRangeOptions" />
+    :customOptions="customDateRangeOptions"
+  />
 </template>
 
 <style>

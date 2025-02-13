@@ -6,7 +6,7 @@ import { FilterOperatorValue } from "@/models/table/filter/FilterOperatorValue";
 
 /** This composable provides filters for the table. */
 export async function useFilters(useI18next: ReturnType<typeof useI18nextComposable>) {
-  const { formatPreset } = await useDatePresets();
+  const { formatDateRange } = await useDatePresets();
   const { formatDate, t } = await useI18next;
 
   /**
@@ -16,7 +16,7 @@ export async function useFilters(useI18next: ReturnType<typeof useI18nextComposa
    */
   function getFormatterFilterValue(tableFilterItem: TableFilterItem) {
     const value = tableFilterItem.selectedValue?.value;
- 
+
     if (!value) {
       return;
     }
@@ -31,7 +31,7 @@ export async function useFilters(useI18next: ReturnType<typeof useI18nextComposa
         return selectedOption?.title || "";
       }
       case TableFilterType.MultiSelect:
-      case TableFilterType.SelectMultipleCheckbox: 
+      case TableFilterType.SelectMultipleCheckbox:
       case TableFilterType.SelectMultiple: {
         const selectedOptions = tableFilterItem.options?.filter((o) => value?.includes(o.value));
         return selectedOptions?.map((o) => o.title).join(", ");
@@ -40,7 +40,7 @@ export async function useFilters(useI18next: ReturnType<typeof useI18nextComposa
         return formatDate.value(value);
       case TableFilterType.DateRange: {
         // Get the start and end //date
-        return formatPreset(value);
+        return formatDateRange(value[0], value[1], tableFilterItem.selectedValue?.title);
       }
       case TableFilterType.Operator: {
         const operatorValue = value as FilterOperatorValue<any>;

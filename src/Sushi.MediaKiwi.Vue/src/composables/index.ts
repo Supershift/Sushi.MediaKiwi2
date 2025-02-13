@@ -3,7 +3,6 @@ export * from "./useBreadcrumbs";
 export * from "./useColors";
 export * from "./useComponentContext";
 export * from "./useDatePresets";
-export * from "./useDayjs";
 export * from "./useDeepMerge";
 export * from "./useElevations";
 export * from "./useEntraSettings";
