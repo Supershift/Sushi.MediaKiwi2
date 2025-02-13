@@ -2,8 +2,8 @@ import { ErrorProblemDetails } from "../errors/ErrorProblemDetails";
 import { TResult } from "./TResult";
 
 export type FormViewProps = FormProps & {
-  /** If true, the toolbar will be sticky on top of the page. */
-  sticky?: boolean;
+  /** If true, the toolbar will be sticky on top of the page. Defaults to true on MkToolbar */
+  stickyToolbar?: boolean;
   /** if true, the toolbar will be hidden */
   hideToolbar?: boolean;
 };

@@ -29,6 +29,7 @@
   // define properties
   const props = withDefaults(defineProps<MkTableProps<T>>(), {
     paginationMode: "controls",
+    stickyToolbar: undefined,
   });
 
   /** Use Sorting<T> for typesafety  */
