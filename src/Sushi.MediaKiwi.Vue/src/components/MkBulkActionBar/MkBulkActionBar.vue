@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T">
   import { IconsLibrary } from "@/models";
   import { useI18next } from "@/composables/useI18next";
   import { ref } from "vue";
@@ -6,13 +6,12 @@
   // inject dependencies
   const { defaultT } = await useI18next();
 
-  defineProps<{
-    selection: unknown[];
+  const props = defineProps<{
+    /** Callback function to execute when the close button is clicked */
+    onClose?: () => void;
   }>();
 
-  const emit = defineEmits<{
-    (e: "click:close"): void;
-  }>();
+  const modelValue = defineModel<Array<T>>({ required: true });
 
   const confirmState = ref<{
     show?: boolean;
@@ -55,11 +54,16 @@
     }
     clearConfirmState();
   }
+
+  function onCloseClick() {
+    modelValue.value = [];
+    props.onClose?.();
+  }
 </script>
 
 <template>
-  <v-toolbar class="mk-bulk-action-bar" color="inverse-surface">
-    <v-label class="ms-5 me-4"> {{ selection.length }} {{ defaultT("selected") }} </v-label>
+  <v-toolbar class="mk-bulk-action-bar d-flex justify-center align-center mb-4" color="inverse-surface">
+    <v-label class="ms-5 me-4"> {{ modelValue.length }} {{ defaultT("selected") }} </v-label>
     <v-divider class="mx-2" inset vertical></v-divider>
 
     <template v-if="!confirmState?.show">
@@ -74,13 +78,20 @@
       </div>
     </template>
 
-    <v-btn v-if="!confirmState?.show" :icon="IconsLibrary.close" @click="emit('click:close')"></v-btn>
+    <v-btn v-if="!confirmState?.show" :icon="IconsLibrary.close" @click="onCloseClick"></v-btn>
   </v-toolbar>
 </template>
-<style>
+<style scoped lang="scss">
   .mk-bulk-action-bar {
+    height: 56px;
+
     * {
       color: rgb(var(--v-theme-inverse-on-surface));
+    }
+
+    // Override the toolbar content height, this is hardcoded in the Vuetify CSS
+    :deep(.v-toolbar__content) {
+      height: auto !important;
     }
   }
 </style>

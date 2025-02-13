@@ -1,0 +1,14 @@
+@use "../../abstracts";
+
+.v-empty-state {
+  &__headline {
+    @include abstracts.typography("display", "medium");
+    color: rgb(var(--v-theme-primary));
+  }
+
+  &__actions {
+    .v-btn {
+      text-transform: unset;
+    }
+  }
+}

@@ -26,6 +26,8 @@
     accountMenu?: () => never;
     /** Slot to override the actions in the account menu */
     accountMenuActions?: () => never;
+    /** Additional actions for the app bar */
+    appBarActions: () => never;
   }>();
 </script>
 <template>
@@ -43,6 +45,7 @@
             </template>
           </mk-logo-lockup>
           <v-spacer></v-spacer>
+          <slot name="appBarActions"></slot>
           <mk-theme-toggle></mk-theme-toggle>
           <mk-account-menu :hide-avatar="hideAvatar">
             <template v-if="slots.avatar" #avatar>

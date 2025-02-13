@@ -68,7 +68,7 @@
       <th>{{ t("Active") }}</th>
     </template>
 
-    <template #tbody="dataItem">
+    <template #tbody="{ dataItem }">
       <td>{{ dataItem.name }}</td>
       <MkTd :value="dataItem.active"></MkTd>
     </template>

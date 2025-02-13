@@ -137,7 +137,7 @@
       <th>Type</th>
     </template>
 
-    <template #tbody="dataItem">
+    <template #tbody="{ dataItem }">
       <td width="250">{{ dataItem.title }}</td>
       <td>{{ dataItem.selectedValue?.value || "-" }}</td>
       <td>{{ dataItem.selectedValue?.title || "-" }}</td>

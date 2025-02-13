@@ -254,7 +254,7 @@
       <MkTh>Checked</MkTh>
     </template>
 
-    <template #tbody="dataItem">
+    <template #tbody="{ dataItem }">
       <td>{{ dataItem.id }}</td>
       <td>{{ dataItem.name }}</td>
       <td>{{ dataItem.countryName }}</td>
