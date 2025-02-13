@@ -2,24 +2,29 @@
   import { MkNewItemButton, MkOverflowMenuIcon } from "@/components";
 
   // define properties
-  const props = defineProps<{
-    /** ExternalId of the view instance */
-    navigationItemId?: string;
-    /** Title specificly for the current table */
-    title?: string;
-    /** Determines if the toolbar is disabled, default: false */
-    disabled?: boolean;
-    /** Determines if the delete button is shown, default: false */
-    delete?: boolean;
-    /** Determines if the toolbar has a new button, default: false. */
-    new?: boolean;
-    /** Determines if we only want to emit instead of navigating to the given navigationItemId */
-    newEmit?: boolean;
-    /** Overrides the "new item" button title */
-    newTitle?: string;
-    /** Determines if the toolbar becomes sticky at the top of the page, default: false */
-    sticky?: boolean;
-  }>();
+  const props = withDefaults(
+    defineProps<{
+      /** ExternalId of the view instance */
+      navigationItemId?: string;
+      /** Title specificly for the current table */
+      title?: string;
+      /** Determines if the toolbar is disabled, default: false */
+      disabled?: boolean;
+      /** Determines if the delete button is shown, default: false */
+      delete?: boolean;
+      /** Determines if the toolbar has a new button, default: false. */
+      new?: boolean;
+      /** Determines if we only want to emit instead of navigating to the given navigationItemId */
+      newEmit?: boolean;
+      /** Overrides the "new item" button title */
+      newTitle?: string;
+      /** Determines if the toolbar becomes sticky at the top of the page, default: false */
+      sticky?: boolean;
+    }>(),
+    {
+      sticky: true, // default to true
+    }
+  );
 
   // define slots
   const slots = defineSlots<{

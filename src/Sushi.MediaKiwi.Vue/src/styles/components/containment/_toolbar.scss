@@ -5,7 +5,7 @@
   &--mediakiwi {
     &.v-toolbar--sticky {
       position: sticky;
-      top: 80px;
+      top: var(--v-layout-top);
       z-index: 10;
       background-color: rgb(var(--v-theme-background));
     }

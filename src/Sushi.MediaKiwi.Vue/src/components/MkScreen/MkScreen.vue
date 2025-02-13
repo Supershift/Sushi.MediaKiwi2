@@ -28,7 +28,7 @@
 
 <template>
   <v-main>
-    <mk-breadcrumbs :sticky="true" />
+    <mk-breadcrumbs />
     <div :class="mkScreenClasses">
       <div :class="mkLayoutClasses">
         <router-view v-slot="{ Component }">
@@ -47,16 +47,3 @@
     </div>
   </v-main>
 </template>
-
-<style lang="scss" scoped>
-  .mk-screen {
-    height: 100%;
-
-    &__content {
-      height: inherit;
-    }
-    .mk-layout {
-      height: inherit;
-    }
-  }
-</style>

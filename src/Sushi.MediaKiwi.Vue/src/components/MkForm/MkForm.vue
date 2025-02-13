@@ -145,7 +145,7 @@
       :navigation-item-id="navigation.currentNavigationItem.value.id"
       :title="computedProps.title"
       :new="false"
-      :sticky="computedProps.sticky ? true : false"
+      :sticky="computedProps.sticky"
     >
       <template v-if="slots.title" #title>
         <slot name="title" v-bind="formSlotProps"></slot>
