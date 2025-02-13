@@ -44,7 +44,7 @@
     >
       <template #thead>
         <th>{{ t("Name") }}</th>
-        <th width="100" mk-column-id="isActive">{{ t("Active") }}</th>
+        <th mk-column-id="isActive" class="isactive-column">{{ t("Active") }}</th>
       </template>
 
       <template #tbody="{ dataItem }">
@@ -54,3 +54,9 @@
     </mk-table>
   </MkFormDialog>
 </template>
+
+<style scoped lang="scss">
+  .isactive-column {
+    width: 100px;
+  }
+</style>
