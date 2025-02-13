@@ -1,73 +1,35 @@
 <!-- eslint-disable vue/require-default-prop -->
 <script setup lang="ts" generic="T">
-  import { TableMap, TableFilter, TableColumn } from "@/models/table";
+  import { TableFilter } from "@/models/table";
   import { Paging, Sorting } from "@/models/api";
   import { ref, watch } from "vue";
-  import MkTableFilter from "@/components/MkTableFilter/MkTableFilter.vue";
-  import MkTableView from "./MkTableView.vue";
-
-  import MkBulkActionBar from "@/components/MkBulkActionBar/MkBulkActionBar.vue";
-  import MkToolbar from "@/components/MkToolbar/MkToolbar.vue";
-
-  import MkPagination from "@/components/MkPagination/MkPagination.vue";
-  import { IListResult, IPagingResult } from "@/models";
   import { useSnackbarStore } from "@/stores/snackbar";
   import { onMounted, computed } from "vue";
-
   import { ITableMapPaging } from "@/models/table/TableMapPaging";
-  import { MediakiwiPaginationMode } from "@/models/pagination/MediakiwiPaginationMode";
+  import { defaultPageSizeOptions, defaultPageSize } from "@/constants";
+  import { useComponentContext } from "@/composables/useComponentContext";
+  import {
+    MkTableContextMenuSlotProps,
+    MkTableBodySlotProps,
+    MkTableBulkActionBarSlotProps,
+    MkTableProps,
+    MkTableTableSlotProps,
+  } from "@/models/table/TableProps";
+  import MkTableFilter from "@/components/MkTableFilter/MkTableFilter.vue";
+  import MkTableView from "./MkTableView.vue";
+  import MkBulkActionBar from "@/components/MkBulkActionBar/MkBulkActionBar.vue";
+  import MkToolbar from "@/components/MkToolbar/MkToolbar.vue";
+  import MkPagination from "@/components/MkPagination/MkPagination.vue";
   import MkTableHead from "./MkTableHead.vue"; // Mk-Th
   import MkTableCell from "./MkTableCell.vue"; // Mk-Td
   import MkDisplayOptions from "@/components/MkDisplayOptions/MkDisplayOptions.vue";
-  import { defaultPageSizeOptions, defaultPageSize } from "@/constants";
-  import { useComponentContext } from "@/composables/useComponentContext";
-  import MkEmptyState from "../MkEmptyState/MkEmptyState.vue";
   import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
+  import MkTableEmptyState from "./MkTableEmptyState.vue";
 
   // define properties
-  const props = withDefaults(
-    defineProps<{
-      /** Defines mapping between data and the table. */
-      tableMap?: TableMap<T>;
-      /** Sets data and paging properties based on the API's result. */
-      apiResult?: IListResult<T>;
-      /** An array of objects used for automatically generating rows. */
-      data?: T[];
-      /** When set, enables paging based on provided values. */
-      paging?: IPagingResult;
-      /** ExternalId of the view instance to which the user is pushed when clicking a row. */
-      navigationItemId?: string;
-      /** Determines if the toolbar has a new button, default: false. */
-      new?: boolean;
-      /** Determines if we only want to emit instead of navigating to the given navigationItemId */
-      newEmit?: boolean;
-      /** Overrides the "new item" button title */
-      newTitle?: string;
-      /** Callback invoked when the component needs new data, i.e. a filter changes, the current page changes, etc. */
-      onLoad?: () => Promise<void>;
-      /** Title specificly for the current table */
-      title?: string;
-      /** Defines the pagination mode */
-      paginationMode?: MediakiwiPaginationMode;
-      /** */
-      itemId?: (entity: T) => string | number;
-      /** Hides the empty state component entirely */
-      hideEmptyState?: boolean;
-      /** Title for the Empty State component */
-      emptyStateTitle?: string;
-      /** Subtitle for the Empty State component  */
-      emptyStateSubtitle?: string;
-      /** Hides the bulk action bar while keeing the checkboxes intact */
-      hideBulkActionBar?: boolean;
-      /** 'Tracks' the item the user viewed when changing pageSize, when true calculates this instead of resetting pageIndex to 0 */
-      pageTracking?: boolean;
-      /** Callback to disable the selection checkbox for a row based on specific criteria */
-      disableItemSelection?: (entity: T) => boolean;
-    }>(),
-    {
-      paginationMode: "controls",
-    }
-  );
+  const props = withDefaults(defineProps<MkTableProps<T>>(), {
+    paginationMode: "controls",
+  });
 
   /** Use Sorting<T> for typesafety  */
   const sorting = defineModel<Sorting | Sorting<T>>("sorting");
@@ -90,6 +52,17 @@
 
   const sortBy = computed(() => sorting.value?.sortBy);
   const sortDirection = computed(() => sorting.value?.sortDirection);
+  const showBulkActionBar = computed(() => !!selection.value?.length && !props.hideBulkActionBar);
+  const showFilterBar = computed(() => filters.value && !showBulkActionBar.value);
+  const showEmptyState = computed(() => !props.hideEmptyState && initialDataLoaded.value && !props.data?.length && !props.apiResult?.result?.length);
+
+  const hasActiveFilters = computed(() => {
+    if (!filters.value) return false;
+    // Check if there are any filters with a value
+    return Object.keys(filters.value).some((key) => filters.value![key] !== undefined && filters.value![key] !== null);
+  });
+
+  const showFullEmptyState = computed(() => showEmptyState.value && !hasActiveFilters.value);
 
   // define events
   const emit = defineEmits<{
@@ -103,22 +76,32 @@
 
   // define slots
   const slots = defineSlots<{
+    /** Add markup above the entire component */
     header?: () => never;
+    /** Add markup below the entire component */
     footer?: () => never;
     /** Visible action slot for the MkToolbar */
     toolbar?: () => never;
-    /** Menu actions for the MkToolbar */
+    /** Add actions behind an overflow menu (kebab-menu) */
     overflowMenuActions?: () => never;
-    /** Action slot for the MkBulkActionBar */
-    bulkActionBar?: (props: { confirm: (callback: () => void) => void }) => never;
-    /** table templating  */
+    /** Add action for when the bulk action bar appears */
+    bulkActionBar?: (slotProps: MkTableBulkActionBarSlotProps) => never;
+    /** Add markup between the filterbar and table */
+    prependTable?: () => never;
+    /** Replace the table with you're own component */
+    table?: (slotProps: MkTableTableSlotProps<T>) => never;
+    /** Header for the table body using templating */
     thead?: () => never;
-    /** table templating */
-    tbody?: (dataItem: T) => never;
+    /** Body for the table body using templating */
+    tbody?: (slotProps: MkTableBodySlotProps<T>) => never;
     /** Custom component for the empty state */
     emptyState?: () => never;
+    /** Custom Actions for the default empty state */
+    emptyStateActions?: () => never;
     /* Custom title */
     toolbarTitle?: () => never;
+    /** Context menu slot */
+    contextmenu?: (slotProps: MkTableContextMenuSlotProps<T>) => never;
   }>();
 
   // inject dependencies
@@ -128,7 +111,6 @@
   // define reactive variables
   const initialDataLoaded = ref(false);
   const inProgress = ref(false);
-  const mkTableViewComponent = ref();
   const pageSizes = ref([...defaultPageSizeOptions]);
   // Add the current page size if present to the pageSizes array, only if its above the defaultPageSize (10)
   if (currentPagination.value?.pageSize && currentPagination.value?.pageSize > defaultPageSize) {
@@ -202,6 +184,16 @@
     await loadData();
   }
 
+  async function clearFilterValues() {
+    // Clear the values of the filters
+    for (const key in filters.value) {
+      if (filters.value[key].closable !== false) {
+        filters.value[key].selectedValue = undefined;
+      }
+    }
+    await filterChanged(filters.value!);
+  }
+
   // local functions
   async function loadData() {
     // if a data callback is defined, call it so the parent can fetch data
@@ -232,7 +224,7 @@
     <v-progress-linear v-if="inProgress" indeterminate absolute></v-progress-linear>
     <slot name="header"></slot>
 
-    <template v-if="props.new || props.title || slots.toolbar || slots.overflowMenuActions">
+    <template v-if="(props.new || props.title || slots.toolbar || slots.overflowMenuActions) && !showFullEmptyState">
       <MkToolbar
         :navigation-item-id="props.navigationItemId"
         :title="props.title"
@@ -253,96 +245,100 @@
       </MkToolbar>
     </template>
 
-    <template v-if="filters">
-      <MkTableFilter :model-value="filters" @update:model-value="filterChanged" />
+    <template v-if="showFilterBar && !showFullEmptyState">
+      <MkTableFilter :model-value="filters!" @update:model-value="filterChanged" />
     </template>
 
-    <template v-if="selection && !props.hideBulkActionBar">
-      <v-expand-transition>
-        <MkBulkActionBar v-if="selection?.length" :selection="selection" @click:close="mkTableViewComponent.clearSelection">
-          <template #default="{ confirm }">
-            <slot name="bulkActionBar" :confirm="confirm"></slot>
-          </template>
-        </MkBulkActionBar>
-      </v-expand-transition>
+    <template v-if="showBulkActionBar">
+      <MkBulkActionBar v-if="selection?.length" v-model="selection">
+        <template #default="{ confirm }">
+          <slot name="bulkActionBar" :confirm="confirm"></slot>
+        </template>
+      </MkBulkActionBar>
     </template>
 
-    <MkTableView
-      ref="mkTableViewComponent"
-      :table-map="tableMap"
-      :data="apiResult ? apiResult.result : data"
-      :navigation-item-id="navigationItemId"
-      v-model:sorting="sorting"
-      v-model:selection="selection"
-      :checkbox="selection ? true : false"
-      class="mk-table"
-      :pagination-mode="paginationMode"
-      :item-id="itemId"
-      :show-hover-effect="hasTableRowClickAction"
-      @click:row="(e) => emit('click:row', e)"
-      @update:sorting="sortingChanged"
-      @update:selection="(e) => emit('update:selection', e)"
-      :disable-item-selection="props.disableItemSelection"
-      v-model:display-options="displayOptions"
-      v-model:tableReference="tableReference"
-    >
-      <template #thead>
-        <slot v-if="slots.thead" name="thead"></slot>
-        <template v-else>
-          <!-- render a head cell for each mapping item -->
-          <MkTableHead
-            v-for="(mapItem, index) in props.tableMap?.items"
-            :key="index"
-            :sorting="sorting"
-            :map-item="mapItem"
-            :truncate="!isBooleanColumn"
-            @update:sorting="(value) => emit('update:sorting', value)"
-          />
-        </template>
-      </template>
+    <slot v-if="slots.prependTable" name="prependTable"></slot>
 
-      <template #tbody="dataItem">
-        <slot v-if="slots.tbody" name="tbody" v-bind="dataItem"></slot>
-        <template v-else>
-          <!-- render a body cell for each mapping item -->
-          <MkTableCell v-for="(mapItem, cellIndex) in props.tableMap?.items" :key="cellIndex" :data="dataItem" :map-item="mapItem"></MkTableCell>
-        </template>
-      </template>
-
-      <!-- Only show the controls if the pagination mode is unset or set to 'controls' -->
-      <template #bottom>
-        <v-divider />
-        <div class="mk-table__footer">
-          <div v-if="hasDisplayOptions" class="mk-table__footer-item">
-            <MkDisplayOptions v-model:display-options="displayOptions" v-model:table-reference="tableReference" />
-          </div>
-          <div v-if="showPagination" class="mk-table__footer-item">
-            <MkPagination
-              :model-value="currentPagination"
-              :paging-result="pagingResult"
-              :mode="paginationMode"
-              :page-size-options="pageSizes"
-              :page-tracking="props?.pageTracking"
-              :hide-pagination="!showPagination"
-              @update:model-value="pageChanged"
+    <slot v-if="slots.table" name="table" :data="apiResult ? apiResult.result : data" :item-id="itemId"></slot>
+    <template v-else>
+      <MkTableView
+        v-if="!showFullEmptyState"
+        :table-map="tableMap"
+        :data="apiResult ? apiResult.result : data"
+        :navigation-item-id="navigationItemId"
+        v-model:sorting="sorting"
+        v-model:selection="selection"
+        :checkbox="selection ? true : false"
+        :pagination-mode="paginationMode"
+        :item-id="itemId"
+        :show-hover-effect="hasTableRowClickAction"
+        :hide-table-row-actions="hideTableRowActions"
+        :hide-selection-checkbox="hideSelectionCheckbox"
+        @click:row="(e) => emit('click:row', e)"
+        @update:sorting="sortingChanged"
+        @update:selection="(e) => emit('update:selection', e)"
+        :disable-item-selection="props.disableItemSelection"
+        :remove-item-selection="props.removeItemSelection"
+        v-model:display-options="displayOptions"
+        v-model:tableReference="tableReference"
+      >
+        <template #thead>
+          <slot v-if="slots.thead" name="thead"></slot>
+          <template v-else>
+            <!-- render a head cell for each mapping item -->
+            <MkTableHead
+              v-for="(mapItem, index) in props.tableMap?.items"
+              :key="index"
+              :sorting="sorting"
+              :map-item="mapItem"
+              :truncate="!isBooleanColumn"
+              @update:sorting="(value) => emit('update:sorting', value)"
             />
-          </div>
-        </div>
-      </template>
-    </MkTableView>
+          </template>
+        </template>
 
-    <template v-if="!hideEmptyState && initialDataLoaded && !data?.length && !apiResult?.result?.length">
-      <slot v-if="slots.emptyState" name="emptyState"></slot>
-      <MkEmptyState
-        v-else
-        :new="props.new"
-        :navigation-item-id="props.navigationItemId"
-        :new-title="props.newTitle"
-        :new-emit="props.newEmit"
-        :headline="props.emptyStateTitle"
-        :text="props.emptyStateSubtitle"
-        @click:new="emit('click:new', $event)"
-      />
+        <template #tbody="slotProps">
+          <slot v-if="slots.tbody" name="tbody" v-bind="slotProps"></slot>
+          <template v-else>
+            <!-- render a body cell for each mapping item -->
+            <MkTableCell v-for="(mapItem, cellIndex) in props.tableMap?.items" :key="cellIndex" :data="slotProps.dataItem" :map-item="mapItem"></MkTableCell>
+          </template>
+        </template>
+
+        <!-- Only show the controls if the pagination mode is unset or set to 'controls' -->
+        <template #bottom>
+          <v-divider />
+          <div class="mk-table__footer">
+            <div v-if="hasDisplayOptions && !showEmptyState" class="mk-table__footer-item">
+              <MkDisplayOptions v-model:display-options="displayOptions" v-model:table-reference="tableReference" />
+            </div>
+            <div v-if="showPagination" class="mk-table__footer-item">
+              <MkPagination
+                :model-value="currentPagination"
+                :paging-result="pagingResult"
+                :mode="paginationMode"
+                :page-size-options="pageSizes"
+                :page-tracking="props?.pageTracking"
+                :hide-pagination="!showPagination"
+                @update:model-value="pageChanged"
+              />
+            </div>
+          </div>
+        </template>
+
+        <template #contextmenu="props" v-if="slots.contextmenu">
+          <slot name="contextmenu" v-bind="props"></slot>
+        </template>
+      </MkTableView>
+
+      <template v-if="showEmptyState">
+        <slot v-if="slots.emptyState" name="emptyState"></slot>
+        <MkTableEmptyState v-else v-bind="props" :hasActiveFilters="hasActiveFilters" @new="() => emit('click:new')" @reset-filters="clearFilterValues">
+          <template #actions v-if="slots.emptyStateActions">
+            <slot name="emptyStateActions"></slot>
+          </template>
+        </MkTableEmptyState>
+      </template>
     </template>
 
     <slot name="footer"></slot>

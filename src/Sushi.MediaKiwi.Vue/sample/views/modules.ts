@@ -1,7 +1,7 @@
 import { RouteComponent } from "vue-router";
-import Countries from "./Countries.vue";
-import CountriesEmpty from "./CountriesEmpty.vue";
-import CountryEdit from "./AddCountry.vue";
+import Countries from "./Country/Countries.vue";
+import CountriesEmpty from "./Country/CountriesEmpty.vue";
+import CountryEdit from "./Country/AddCountry.vue";
 import Customers from "./Customers.vue";
 import CustomersTableMap from "./Customers_tableMap.vue";
 import Home from "./Home.vue";

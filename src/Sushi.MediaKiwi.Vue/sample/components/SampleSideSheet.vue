@@ -1,7 +1,5 @@
 <script setup lang="ts">
   import { computed, reactive, ref, watch } from "vue";
-  import { MkSideSheet } from "@/components";
-  import type { ICustomer } from "./../models/Customer";
   import { container } from "tsyringe";
   import { SampleDataConnector } from "@sample/services/SampleDataConnector";
   import MkFormSideSheet from "@/components/MkForm/MkFormSideSheet.vue";

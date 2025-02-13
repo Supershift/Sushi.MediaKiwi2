@@ -34,6 +34,20 @@ namespace Sushi.MediaKiwi.SampleAPI.Domain
             return hotel;
         }
 
+         public static Result<Hotel, Error> Update(Hotel hotel, CreateHotelRequest request)
+        {
+            hotel.Name = request.Name;
+            hotel.CountryCode = request.CountryCode;
+            hotel.IsActive = request.IsActive;
+                                 
+            var setSrpResult = hotel.SetSrp(request.SRP);
+
+            if (setSrpResult.Error != null)
+                return setSrpResult.Error;
+
+            return hotel;
+        }
+
         public Result<Error> SetSrp(MoneyValue? srp)
         {   
             SRP = srp;

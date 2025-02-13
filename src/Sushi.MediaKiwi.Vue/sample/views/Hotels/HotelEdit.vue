@@ -4,7 +4,6 @@
 
   import { reactive, ref } from "vue";
   import MkNavigationDrawerInfo from "@/components/MkNavigation/MkNavigationDrawerInfo.vue";
-  import { useSnackbarStore } from "@/stores";
   import { useSampleApi, Country, HotelDto } from "@sample/services";
 
   // inject dependencies
@@ -36,8 +35,7 @@
 
     if (navigation.currentViewParameterNumber.value > 0) {
       // get existing hotel from api
-      const candidate = (await sampleApi.hotelGet(navigation.currentViewParameterNumber.value)).data;
-      state.hotel = candidate!;
+      state.hotel = (await sampleApi.hotelGet(navigation.currentViewParameterNumber.value)).data;
       setCurrentBreadcrumbLabel(state.hotel.name);
     } else {
       // create a new hotel
