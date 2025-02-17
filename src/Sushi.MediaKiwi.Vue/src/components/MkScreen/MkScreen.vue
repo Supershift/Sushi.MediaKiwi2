@@ -22,6 +22,7 @@
 
   const mkLayoutClasses = computed(() => ({
     "mk-layout": true,
+    "mk-layout__sign-in": isPageOnSignIn.value,
     [<string>route.meta?.layout]: !!route.meta?.layout,
   }));
 </script>
@@ -47,3 +48,22 @@
     </div>
   </v-main>
 </template>
+<style lang="scss" scoped>
+  .mk-screen {
+    &__sign-in {
+      height: calc(100vh - var(--v-layout-top));
+    }
+
+    .mk-layout {
+      &__sign-in {
+        height: 100%;
+      }
+
+      .mk-screen {
+        &__content {
+          height: 100%;
+        }
+      }
+    }
+  }
+</style>
