@@ -1,5 +1,8 @@
 <script setup lang="ts">
   import { MkNewItemButton, MkOverflowMenuIcon } from "@/components";
+  import { onMounted, useTemplateRef, watch } from "vue";
+  import { useWindowScroll } from "@vueuse/core";
+  import { useLayout } from "vuetify/lib/framework.mjs";
 
   // define properties
   const props = withDefaults(
@@ -42,10 +45,34 @@
   const emit = defineEmits<{
     (e: "click:new", value?: string): void;
   }>();
+
+  const toolbar = useTemplateRef("toolbar");
+
+  function applyStuckClass() {
+    if (props.sticky) {
+      const { y } = useWindowScroll();
+      const layout = useLayout();
+      const offsetTop = layout.mainRect.value.top;
+
+      // watch the scroll position
+      watch(
+        () => y.value,
+        () => {
+          // get the position of our toolbar
+          const toolbarPosition = toolbar.value?.$el.getBoundingClientRect().top;
+
+          // add the stuck class when the toolbar is at the top of the page
+          toolbar.value?.$el.classList.toggle("v-toolbar--mediakiwi--stuck", toolbarPosition <= offsetTop);
+        }
+      );
+    }
+  }
+
+  onMounted(applyStuckClass);
 </script>
 
 <template>
-  <v-card variant="text" :class="['v-toolbar--mediakiwi', { 'v-toolbar--sticky': props.sticky }]">
+  <v-card variant="text" :class="['v-toolbar--mediakiwi', { 'v-toolbar--sticky': props.sticky }]" ref="toolbar">
     <v-container class="pl-0" fluid>
       <v-row v-if="slots.header" class="justify-end">
         <slot name="header"></slot>
@@ -84,5 +111,9 @@
   .v-list {
     display: flex;
     flex-flow: column;
+  }
+
+  .v-toolbar--mediakiwi--stuck {
+    border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
   }
 </style>
