@@ -53,6 +53,8 @@ export type MkTableProps<T> = MkTableBaseProps<T> &
     hideBulkActionBar?: boolean;
     /** 'Tracks' the item the user viewed when changing pageSize, when true calculates this instead of resetting pageIndex to 0 */
     pageTracking?: boolean;
+    /** Sets the toolbar as a sticky element when scrolling. Defaults to true on MkToolbar */
+    stickyToolbar?: boolean;
   };
 
 export type MkTableEmptyStateProps = {

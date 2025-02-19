@@ -20,7 +20,7 @@
 
   // Define props
   const props = withDefaults(defineProps<FormViewProps>(), {
-    sticky: undefined,
+    stickyToolbar: undefined,
     hideToolbar: undefined,
     closeOnSubmit: undefined,
     showProblemDetailsDetailField: undefined,
@@ -145,7 +145,7 @@
       :navigation-item-id="navigation.currentNavigationItem.value.id"
       :title="computedProps.title"
       :new="false"
-      :sticky="computedProps.sticky ? true : false"
+      :sticky="computedProps.stickyToolbar"
     >
       <template v-if="slots.title" #title>
         <slot name="title" v-bind="formSlotProps"></slot>

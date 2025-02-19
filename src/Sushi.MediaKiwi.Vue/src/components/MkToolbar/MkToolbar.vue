@@ -1,25 +1,33 @@
 <script setup lang="ts">
   import { MkNewItemButton, MkOverflowMenuIcon } from "@/components";
+  import { onMounted, useTemplateRef, watch } from "vue";
+  import { useWindowScroll } from "@vueuse/core";
+  import { useLayout } from "vuetify/lib/framework.mjs";
 
   // define properties
-  const props = defineProps<{
-    /** ExternalId of the view instance */
-    navigationItemId?: string;
-    /** Title specificly for the current table */
-    title?: string;
-    /** Determines if the toolbar is disabled, default: false */
-    disabled?: boolean;
-    /** Determines if the delete button is shown, default: false */
-    delete?: boolean;
-    /** Determines if the toolbar has a new button, default: false. */
-    new?: boolean;
-    /** Determines if we only want to emit instead of navigating to the given navigationItemId */
-    newEmit?: boolean;
-    /** Overrides the "new item" button title */
-    newTitle?: string;
-    /** Determines if the toolbar becomes sticky at the top of the page, default: false */
-    sticky?: boolean;
-  }>();
+  const props = withDefaults(
+    defineProps<{
+      /** ExternalId of the view instance */
+      navigationItemId?: string;
+      /** Title specificly for the current table */
+      title?: string;
+      /** Determines if the toolbar is disabled, default: false */
+      disabled?: boolean;
+      /** Determines if the delete button is shown, default: false */
+      delete?: boolean;
+      /** Determines if the toolbar has a new button, default: false. */
+      new?: boolean;
+      /** Determines if we only want to emit instead of navigating to the given navigationItemId */
+      newEmit?: boolean;
+      /** Overrides the "new item" button title */
+      newTitle?: string;
+      /** Determines if the toolbar becomes sticky at the top of the page, default: false */
+      sticky?: boolean;
+    }>(),
+    {
+      sticky: true, // default to true
+    }
+  );
 
   // define slots
   const slots = defineSlots<{
@@ -37,10 +45,34 @@
   const emit = defineEmits<{
     (e: "click:new", value?: string): void;
   }>();
+
+  const toolbar = useTemplateRef("toolbar");
+
+  function applyStuckClass() {
+    if (props.sticky) {
+      const { y } = useWindowScroll();
+      const layout = useLayout();
+      const offsetTop = layout.mainRect.value.top;
+
+      // watch the scroll position
+      watch(
+        () => y.value,
+        () => {
+          // get the position of our toolbar
+          const toolbarPosition = toolbar.value?.$el.getBoundingClientRect().top;
+
+          // add the stuck class when the toolbar is at the top of the page
+          toolbar.value?.$el.classList.toggle("v-toolbar--mediakiwi--stuck", toolbarPosition <= offsetTop);
+        }
+      );
+    }
+  }
+
+  onMounted(applyStuckClass);
 </script>
 
 <template>
-  <v-card variant="text" :class="['v-toolbar--mediakiwi', { 'v-toolbar--sticky': props.sticky }]">
+  <v-card variant="text" :class="['v-toolbar--mediakiwi', { 'v-toolbar--sticky': props.sticky }]" ref="toolbar">
     <v-container class="pl-0" fluid>
       <v-row v-if="slots.header" class="justify-end">
         <slot name="header"></slot>
@@ -79,5 +111,9 @@
   .v-list {
     display: flex;
     flex-flow: column;
+  }
+
+  .v-toolbar--mediakiwi--stuck {
+    border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
   }
 </style>

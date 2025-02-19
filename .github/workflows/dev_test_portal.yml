@@ -31,7 +31,7 @@ jobs:
       VITE_APP_MEDIAKIWI_MSALCONFIG_AUTH_AUTHORITY: https://login.microsoftonline.com/95c90a04-5ea8-465e-ac3e-1aae3b29b0c9
       VITE_APP_MEDIAKIWI_MSALCONFIG_AUTH_REDIRECTURI: /loginRedirect
       VITE_APP_MEDIAKIWI_MSALCONFIG_AUTH_POSTLOGOUTREDIRECTURI: /signIn
-      VITE_APP_SAMPLEAPI_APIBASEURL: https://mediakiwi-sample-api-dev.azurewebsites.net/sample
+      VITE_APP_SAMPLEAPI_APIBASEURL: https://mediakiwi-sample-api-dev.azurewebsites.net/
     name: Dev - Build and Deploy Portal
     steps:
       # Checkout the repository
