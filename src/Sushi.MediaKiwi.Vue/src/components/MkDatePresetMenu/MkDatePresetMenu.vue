@@ -49,6 +49,8 @@
     },
   });
 
+  const emit = defineEmits<(e: "click:close") => void>();
+
   const { defaultT } = await useI18next("MkDatePresetMenu");
   const { presets, formatPreset, formatDateRange } = await useDatePresets({
     dayPresets: props.days,
@@ -56,6 +58,11 @@
   });
 
   const isDatePickerOpen = ref(false);
+
+  const close = () => {
+    isDatePickerOpen.value = false;
+    emit("click:close");
+  };
 
   function updateFromPicker(value: DateTime[]): void {
     let [date1, date2] = value;
@@ -104,7 +111,7 @@
     :class="datePickerClass"
     :title="datePickerTitle"
     multiple
-    @click:close="isDatePickerOpen = false"
+    @click:close="close"
     @update:model-value="updateFromPicker"
   />
   <v-list v-else>
