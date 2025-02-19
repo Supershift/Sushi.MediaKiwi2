@@ -19,8 +19,8 @@ export async function useDatePresets(options?: {
 
   const { dayPresets, monthPresets } = options || {};
 
-  const today = computed(() => DateTime.local());
-  const yesterday = computed(() => today.value.minus({ days: 1 }));
+  const today = computed(() => DateTime.now().startOf("day").plus({ minutes: DateTime.now().offset }));
+  const yesterday = computed(() => today.value.minus({ days: 1 }).endOf("day").plus({ minutes: today.value.offset }));
 
   const { formatMonth, defaultT, formatDate } = await useI18next();
 
@@ -53,8 +53,8 @@ export async function useDatePresets(options?: {
       const month = today.minus({ months: monthOffset });
 
       result.push({
-        start: month.startOf("month"),
-        end: month.endOf("month"),
+        start: month.startOf("month").startOf("day",).plus({ minutes: today.offset }),
+        end: month.endOf("month").endOf("day").plus({ minutes: today.offset }),
         duration: Duration.fromDurationLike({ months: 1 }),
       });
     }
@@ -66,6 +66,7 @@ export async function useDatePresets(options?: {
   function formatPreset(dates: DateTime[]): string;
   function formatPreset(start: DateTime, end: DateTime): string;
   function formatPreset(dates: DateTime[] | DateTime, end?: DateTime): string {
+
     // determine mode
     if (Array.isArray(dates)) {
       const [start, end] = dates;
@@ -76,7 +77,7 @@ export async function useDatePresets(options?: {
         if (isFullMonth(start, end)) {
           return formatMonth.value(start);
         } else if (yesterday.value.hasSame(end, "day")) {
-          const duration = end.diff(start, "days").plus({ days: 1 }).days;
+          const duration = Math.floor(end.diff(start, "days").plus({ days: 1 }).days);
           return defaultT.value("LastXDays", "Last {{duration}} days", { duration });
         } else {
           return formatDateRange(start, end);
@@ -92,13 +93,16 @@ export async function useDatePresets(options?: {
       return title;
     }
 
-    // Format the dates to a readable format
-    const result = [formatDate.value(start), formatDate.value(end)];
-    return result.join(" - ");
+    return [formatDate.value(start), formatDate.value(end)].join(" - ");
   }
 
   function isFullMonth(start: DateTime, end: DateTime) {
-    return start.hasSame(start.startOf("month"), "day") && end.hasSame(end.endOf("month"), "day") && start.hasSame(end, "month");
+    const startWithoutTimezone = start.setZone('utc');
+    const endWithoutTimezone = end.setZone('utc');
+
+    return startWithoutTimezone.hasSame(startWithoutTimezone.startOf("month"), "day")
+      && endWithoutTimezone.hasSame(endWithoutTimezone.endOf("month"), "day")
+      && startWithoutTimezone.hasSame(endWithoutTimezone, "month");
   }
 
   return {
