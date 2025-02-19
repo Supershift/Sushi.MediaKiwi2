@@ -40,7 +40,13 @@
   );
 
   const modelValue = defineModel<{ value: DateTime[]; title?: string }>({
-    default: { title: "", value: [DateTime.local().minus({ days: 2 }), DateTime.local()] },
+    default: {
+      title: "Last 2 days",
+      value: [
+        DateTime.now().startOf("day").plus({ minutes: DateTime.now().offset }).minus({ days: 2 }),
+        DateTime.now().startOf("day").plus({ minutes: DateTime.now().offset }),
+      ],
+    },
   });
 
   const { defaultT } = await useI18next("MkDatePresetMenu");
