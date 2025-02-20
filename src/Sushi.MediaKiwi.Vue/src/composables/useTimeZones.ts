@@ -1,4 +1,4 @@
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { useStorage } from "@vueuse/core";
 import { DateTime, Settings } from "luxon";
 
@@ -16,6 +16,13 @@ export type TimeZone = {
 export function useTimeZones() {
   // init current time zone
   const currentTimeZone = useStorage("timeZone", Intl.DateTimeFormat().resolvedOptions().timeZone);
+  setLuxonDefaultZone();
+
+  function setLuxonDefaultZone() {
+    if (currentTimeZone.value != Settings.defaultZone.name) {
+      setTimeZone(currentTimeZone.value);
+    }
+  }
 
   function timeZoneToName(timeZoneValue: string): string {
     return timeZoneValue.replace(/[-_]/g, " ");
@@ -52,5 +59,5 @@ export function useTimeZones() {
     return DateTime.local(date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes(), date.getMilliseconds());
   }
 
-  return { timeZones, setTimeZone, currentTimeZone, forceDateIntoTimeZone };
+  return { timeZones, setTimeZone, currentTimeZone, forceDateIntoTimeZone, setLuxonDefaultZone };
 }
