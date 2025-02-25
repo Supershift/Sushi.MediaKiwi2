@@ -8,7 +8,7 @@ namespace Sushi.MediaKiwi.Services;
 /// </summary>
 public record SortingValues(
     [property: FromQuery(Name = "sortBy")] string? SortBy,
-    [property: FromQuery(Name = "sortDirection")] SortDirection? SortDirection)
+    [property: FromQuery(Name = "sortDirection")] string? SortDirection)
 {
     /// <summary>
     /// Extract sorting matched with a type
@@ -18,5 +18,5 @@ public record SortingValues(
     /// <summary>
     /// Gets a <see cref="SortingValues"/> instance with no values.
     /// </summary>
-    public static readonly SortingValues Default = new SortingValues(null, null);
+    public static readonly SortingValues Default = new(null, null);
 }

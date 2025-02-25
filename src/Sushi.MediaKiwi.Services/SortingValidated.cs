@@ -26,7 +26,7 @@ public class SortingValidated<T>
         if (IsValid)
         {
             By = by;
-            Direction = sort.SortDirection ?? SortDirection.ASC;
+            Direction = Enum.TryParse<SortDirection>(sort.SortDirection?.ToUpperInvariant(), out var direction) ? direction : SortDirection.ASC;
         }
         else
         {

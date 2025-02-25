@@ -112,12 +112,6 @@ export interface SectionListResult {
   pageCount: number;
 }
 
-/** @format int32 */
-export enum SortDirection {
-  Value0 = 0,
-  Value1 = 1,
-}
-
 export interface StringListResult {
   result: string[];
   /** @format int32 */
@@ -732,7 +726,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         /** @format int32 */
         pageSize?: number;
         sortBy?: string;
-        sortDirection?: SortDirection;
+        sortDirection?: string;
       },
       params: RequestParams = {}
     ) =>
@@ -910,7 +904,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         /** @format int32 */
         pageSize?: number;
         sortBy?: string;
-        sortDirection?: SortDirection;
+        sortDirection?: string;
       },
       params: RequestParams = {}
     ) =>
