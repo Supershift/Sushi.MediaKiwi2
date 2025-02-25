@@ -14,11 +14,11 @@ namespace Sushi.MediaKiwi.SampleAPI.DAL.Repository
             _connector = connector;
         }
 
-        public async Task<QueryListResult<Hotel>> GetAllAsync(PagingValues pagingValues, string? countryCode, bool? isActive)
+        public async Task<QueryListResult<Hotel>> GetAllAsync(PagingValues pagingValues, string? countryCode, bool? isActive, SortingValidated<Hotel> sortValues)
         {
             var query = _connector.CreateQuery();
             query.AddPaging(pagingValues);
-            query.AddOrder(x => x.Name);
+            query.AddOrderWithDefault(sortValues, x => x.Name);
 
             if (string.IsNullOrWhiteSpace(countryCode) == false)
             {

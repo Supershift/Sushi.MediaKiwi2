@@ -56,13 +56,10 @@ namespace Sushi.MediaKiwi.Services
         /// Gets all views matching the provided filter parameters.
         /// </summary>        
         /// <returns></returns>
-        public async Task<Result<ListResult<View>, Error>> GetAllAsync(PagingValues pagingValues, SortValues<View>? sortValues = null)
+        public async Task<Result<ListResult<View>, Error>> GetAllAsync(PagingValues pagingValues, SortingValues sortValues)
         {
-            // map sort values to dal
-            var sortValuesDal = _mapper.MapSortValues<Entities.View>(sortValues);
-
             // get items from datastore
-            var views = await _viewRepository.GetAllAsync(pagingValues, sortValuesDal);
+            var views = await _viewRepository.GetAllAsync(pagingValues, sortValues.Allow<Entities.View>(x => x.Name));
             var viewsRoles = await _viewRoleRepository.GetAllAsync(null);
 
             // map to result

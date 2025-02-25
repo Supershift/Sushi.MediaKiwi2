@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Model;
-using Sushi.MediaKiwi.WebAPI.Sorting;
 
 namespace Sushi.MediaKiwi.WebAPI
 {
@@ -14,29 +13,14 @@ namespace Sushi.MediaKiwi.WebAPI
     public class NavigationItemController : MediaKiwiControllerBase
     {
         private readonly NavigationItemService _navigationItemService;
-        private readonly SortingRetriever _sortingRetriever;
-        
-        internal class NavigationItemsSortMap : SortMap<NavigationItem>
-        {
-            public NavigationItemsSortMap()
-            {
-                Add(x => x.Name);
-                Add(x => x.SortOrder);
-                Add(x => x.Id);
-                Add(x => x.SectionId);
-                Add(x => x.ParentNavigationItemId);
-            }
-        }
 
         /// <summary>
         /// Creates a new instance of the NavigationItemController.
         /// </summary>
         /// <param name="screenService"></param>
-        /// <param name="sortingRetriever"></param>
-        public NavigationItemController(NavigationItemService screenService, SortingRetriever sortingRetriever)
+        public NavigationItemController(NavigationItemService screenService)
         {
             _navigationItemService = screenService;
-            _sortingRetriever = sortingRetriever;
         }
 
 
@@ -45,21 +29,19 @@ namespace Sushi.MediaKiwi.WebAPI
         /// </summary>        
         /// <returns></returns>
         [HttpGet]
-        [QueryStringSorting<NavigationItemsSortMap>()]
-        public async Task<ActionResult<ListResult<NavigationItem>>> GetNavigationItems(string? sectionId, [FromQuery] PagingValues pagingValues)
+        public async Task<ActionResult<ListResult<NavigationItem>>> GetNavigationItems(string? sectionId, [FromQuery] PagingValues pagingValues, [FromQuery] SortingValues sorting)
         {
-            var sortValues = _sortingRetriever.GetSorting<NavigationItem>();
-            var result = await _navigationItemService.GetAllAsync(sectionId, pagingValues, sortValues);
+            var result = await _navigationItemService.GetAllAsync(sectionId, pagingValues, sorting);
             return this.ToResponse(result);
         }
-        
+
         /// <summary>
         /// Gets a NavigationItem.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("{id}")]        
+        [Route("{id}")]
         public async Task<ActionResult<NavigationItem>> GetNavigationItem(string id)
         {
             var result = await _navigationItemService.GetAsync(id);

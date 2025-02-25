@@ -20,7 +20,7 @@ namespace Sushi.MediaKiwi.IntegrationTests
         [Fact]
         public async Task GetAllTest()
         {
-            var screens = await _repository.GetAllAsync(PagingValues.Default);
+            var screens = await _repository.GetAllAsync(PagingValues.Default, SortingValidated<Services.Entities.View>.Default);
 
             Assert.NotEqual(1, screens.Count);
         }

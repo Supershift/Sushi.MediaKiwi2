@@ -1,5 +1,6 @@
 ﻿using Sushi.MediaKiwi.Services;
 using Sushi.MicroORM;
+using System.Linq.Expressions;
 
 namespace Sushi.MediaKiwi.DAL
 {
@@ -20,14 +21,36 @@ namespace Sushi.MediaKiwi.DAL
         }
 
         /// <summary>
-        /// Adds sorting to a query, taking values from <see cref="SortValues"/>.
+        /// Adds sorting to a query, taking values from <see cref="SortingValues"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="query"></param>
         /// <param name="sortingValues"></param>
-        public static void AddOrder<T>(this DataQuery<T> query, SortValues<T> sortingValues)
+        public static void AddOrder<T>(this DataQuery<T> query, SortingValidated<T> sortingValues)
         {
-            query.AddOrder(sortingValues.SortField, sortingValues.Direction == SortDirection.DESC ? SortOrder.DESC : SortOrder.ASC);
+            if (sortingValues.By is not null)
+            {
+                query.AddOrder(sortingValues.By, sortingValues.Direction == SortDirection.DESC ? SortOrder.DESC : SortOrder.ASC);
+            }
+        }
+
+        /// <summary>
+        /// Adds sorting to a query, taking values from <see cref="SortingValues"/>.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public static void AddOrderWithDefault<T>(this DataQuery<T> query, SortingValidated<T> sortingValues, params Expression<Func<T, object?>>[] defaults)
+        {
+            if (sortingValues.By is not null)
+            {
+                query.AddOrder(sortingValues.By, sortingValues.Direction == SortDirection.DESC ? SortOrder.DESC : SortOrder.ASC);
+            }
+            else
+            {
+                foreach (var defaultOrder in defaults)
+                {
+                    query.AddOrder(defaultOrder);
+                }
+            }
         }
     }
 }

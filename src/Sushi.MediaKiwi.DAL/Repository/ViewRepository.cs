@@ -28,19 +28,11 @@ namespace Sushi.MediaKiwi.DAL.Repository
         }
 
         /// <inheritdoc/>    
-        public async Task<QueryListResult<View>> GetAllAsync(PagingValues pagingValues, SortValues<View>? sortValues = null)
+        public async Task<QueryListResult<View>> GetAllAsync(PagingValues pagingValues, SortingValidated<View> sortValues)
         {
             var query = _connector.CreateQuery();
 
-            if(sortValues != null)
-            {
-                query.AddOrder(sortValues);
-            }
-            else
-            {
-                query.AddOrder(x => x.Name);
-            }
-            
+            query.AddOrderWithDefault(sortValues, x => x.Name);
             query.AddPaging(pagingValues);
 
             var result = await _connector.GetAllAsync(query);
@@ -52,14 +44,14 @@ namespace Sushi.MediaKiwi.DAL.Repository
         {
             var query = _connector.CreateQuery();
             query.Add(x => x.Id, id);
-            var result = await _connector.GetFirstAsync(query); 
+            var result = await _connector.GetFirstAsync(query);
             return result;
         }
 
         /// <inheritdoc/>    
         public async Task InsertAsync(View view)
         {
-            await _connector.InsertAsync(view);            
+            await _connector.InsertAsync(view);
         }
 
         /// <inheritdoc/>    

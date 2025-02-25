@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Sushi.LanguageExtensions;
 using Sushi.LanguageExtensions.Errors;
-using Sushi.MediaKiwi.SampleAPI.Controllers;
 using Sushi.MediaKiwi.SampleAPI.DAL.Repository;
 using Sushi.MediaKiwi.SampleAPI.Domain;
 using Sushi.MediaKiwi.SampleAPI.Service.Model;
@@ -18,7 +17,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
         public HotelService(
             HotelRepository hotelRepository,
             IMapper mapper)
-        {   
+        {
             _hotelRepository = hotelRepository;
             _mapper = mapper;
         }
@@ -30,10 +29,12 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
         /// <param name="countryCode">Limit results to supplied country codes</param>
         /// <param name="isActive">Limit results to supplied isactive state</param>
         /// <returns></returns>
-        public async Task<Result<ListResult<HotelDto>, Error>> GetAllAsync(string? countryCode, bool? isActive, PagingValues pagingValues)
+        public async Task<Result<ListResult<HotelDto>, Error>> GetAllAsync(string? countryCode, bool? isActive, PagingValues pagingValues, SortingValues sort)
         {
+            var allowedSort = sort.Allow<Hotel>(x => x.Name, x => x.Created);
+
             // get hotels from datastore
-            var items = await _hotelRepository.GetAllAsync(pagingValues, countryCode, isActive);
+            var items = await _hotelRepository.GetAllAsync(pagingValues, countryCode, isActive, allowedSort);
 
             // map to result
             var itemsDto = _mapper.Map<List<HotelDto>>(items);
@@ -105,7 +106,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
             {
                 return new NotFoundError();
             }
-             
+
             Hotel.Update(hotel, request);
 
             // save hotel
@@ -117,9 +118,9 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
         }
 
         public async Task<Result<HotelDto, Error>> CreateAsync(CreateHotelRequest request)
-        {   
+        {
             var createHotelResult = Domain.Hotel.Create(request);
-            if(createHotelResult.IsSuccess)
+            if (createHotelResult.IsSuccess)
             {
                 var hotel = createHotelResult.Value!;
                 await _hotelRepository.SaveAsync(hotel);

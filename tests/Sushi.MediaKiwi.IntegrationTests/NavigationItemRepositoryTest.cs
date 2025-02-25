@@ -12,18 +12,18 @@ using Xunit.Extensions.AssemblyFixture;
 namespace Sushi.MediaKiwi.IntegrationTests
 {
     public class NavigationItemRepositoryTest : IAssemblyFixture<DatabaseFixture>
-    {        
+    {
         private readonly INavigationItemRepository _repository;
 
         public NavigationItemRepositoryTest(DatabaseFixture configFixture)
-        {   
+        {
             _repository = configFixture.Services.GetRequiredService<INavigationItemRepository>();
         }
 
         [Fact]
         public async Task GetAllTest()
         {
-            var items = await _repository.GetAllAsync(null, PagingValues.Default);
+            var items = await _repository.GetAllAsync(null, PagingValues.Default, SortingValidated<Services.Entities.NavigationItem>.Default);
 
             Assert.NotEqual(1, items.Count);
         }
@@ -31,7 +31,7 @@ namespace Sushi.MediaKiwi.IntegrationTests
         [Fact]
         public async Task GetAllTest_BySectionID()
         {
-            var items = await _repository.GetAllAsync("Admin", PagingValues.Default);
+            var items = await _repository.GetAllAsync("Admin", PagingValues.Default, SortingValidated<Services.Entities.NavigationItem>.Default);
 
             Assert.All(items, screen => Assert.Equal("Admin", screen.SectionId));
         }

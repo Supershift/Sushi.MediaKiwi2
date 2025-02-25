@@ -12,7 +12,7 @@ namespace Sushi.MediaKiwi.Services.Interfaces
         /// Gets all <see cref="View"/> objects for the given filter parameters.
         /// </summary>        
         /// <returns></returns>
-        Task<QueryListResult<View>> GetAllAsync(PagingValues pagingValues, SortValues<View>? sortValues = null);
+        Task<QueryListResult<View>> GetAllAsync(PagingValues pagingValues, SortingValidated<View> sortValues);
 
         /// <summary>
         /// Gets a <see cref="View"/> by id.

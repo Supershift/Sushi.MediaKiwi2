@@ -74,12 +74,19 @@
     },
   });
 
+  const sorting = ref<Sorting>({
+    sortBy: "name",
+    sortDirection: SortDirection.Desc,
+  });
+
   // load data
   async function LoadData() {
     hotels.value = (
       await sampleApi.hotel({
         countryCode: filters.value.countryCode.selectedValue?.value,
         isActive: filters.value.isActive.selectedValue?.value,
+        sortBy: sorting.value.sortBy?.toString(),
+        sortDirection: sorting.value.sortDirection,
         ...currentPagination.value,
       })
     ).data;
@@ -91,12 +98,6 @@
   // Set filter options
   filters.value.countryCode.options = countries.value?.map(({ code, name }) => <TableFilterValue>{ title: name, value: code });
   const countryOptions = countries.value?.map(({ code, name }) => <TableFilterValue>{ title: name, value: code });
-
-  // create a sorting option object with a default value
-  const sorting = ref<Sorting>({
-    sortBy: "name",
-    sortDirection: SortDirection.Desc,
-  });
 
   async function onCountryCodeChanged(hotel: HotelDto) {
     // Update the hotel object

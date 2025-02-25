@@ -4,11 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using Sushi.MediaKiwi.Services;
-using Sushi.MediaKiwi.WebAPI.Sorting;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Reflection;
@@ -25,7 +23,7 @@ namespace Sushi.MediaKiwi.WebAPI
         /// </summary>        
         /// <returns></returns>
         public static IServiceCollection AddMediaKiwiApi(
-            this IServiceCollection services, 
+            this IServiceCollection services,
             IConfigurationSection? azureAdConfig,
             Action<IMapperConfigurationExpression>? autoMapperConfig = null,
             Action<AuthorizationOptions>? authorizationOptions = null)
@@ -35,9 +33,6 @@ namespace Sushi.MediaKiwi.WebAPI
 
             // add context accessor
             services.AddHttpContextAccessor();
-
-            // add mk dependencies
-            services.TryAddTransient<Sorting.SortingRetriever>();
 
             services.AddAuthorization(options =>
             {
@@ -71,9 +66,6 @@ namespace Sushi.MediaKiwi.WebAPI
             var webModelFilename = $"{Assembly.GetAssembly(typeof(SectionService))?.GetName().Name}.xml";
             if (File.Exists(webModelFilename))
                 options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, webModelFilename));
-
-            // add sorting parameters
-            options.OperationFilter<SortingSwaggerFilter>();
 
             // add docs for mediakiw
             options.SwaggerDoc("MediaKiwi", new OpenApiInfo { Title = "MediaKiwi" });

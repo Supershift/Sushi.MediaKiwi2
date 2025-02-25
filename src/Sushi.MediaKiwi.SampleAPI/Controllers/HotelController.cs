@@ -24,12 +24,11 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<ListResult<HotelDto>>> GetHotels(string? countryCode, bool? isActive, [FromQuery] PagingValues pagingValues)
+        public async Task<ActionResult<ListResult<HotelDto>>> GetHotels(string? countryCode, bool? isActive, [FromQuery] PagingValues pagingValues, [FromQuery] SortingValues sort)
         {
-            var result = await _hotelService.GetAllAsync(countryCode, isActive, pagingValues);
+            var result = await _hotelService.GetAllAsync(countryCode, isActive, pagingValues, sort);
             return this.ToResponse(result);
         }
-
 
         /// <summary>
         /// Gets a single Hotel.
@@ -65,7 +64,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
         /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<HotelDto>> CreateHotel(CreateHotelRequest request)
-        {   
+        {
             var validationResult = await _createHotelValidator.ValidateAsync(request);
 
             if (validationResult.IsValid == false)

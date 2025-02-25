@@ -79,14 +79,14 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             };
 
             var viewRepositoryMock = new Mock<IViewRepository>();
-            viewRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<PagingValues>(), null)).ReturnsAsync(viewStubs);
+            viewRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<PagingValues>(), It.IsAny<SortingValidated<Entities.View>>())).ReturnsAsync(viewStubs);
             var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();
             viewRoleRepositoryMock.Setup(x => x.GetAllAsync(null)).ReturnsAsync(new QueryListResult<Entities.ViewRole>());
 
             var service = new ViewService(viewRepositoryMock.Object, viewRoleRepositoryMock.Object, _mapper);
 
             // act
-            var result = await service.GetAllAsync(PagingValues.Default);
+            var result = await service.GetAllAsync(PagingValues.Default, SortingValues.Default);
 
             // assert
             Assert.NotNull(result);
@@ -113,14 +113,14 @@ namespace Sushi.MediaKiwi.Services.UnitTests
             };
 
             var viewRepositoryMock = new Mock<IViewRepository>();
-            viewRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<PagingValues>(), null)).ReturnsAsync(viewStubs);
+            viewRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<PagingValues>(), It.IsAny<SortingValidated<Entities.View>>())).ReturnsAsync(viewStubs);
             var viewRoleRepositoryMock = new Mock<IViewRoleRepository>();
             viewRoleRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<string?>())).ReturnsAsync(roleStubs);
 
             var service = new ViewService(viewRepositoryMock.Object, viewRoleRepositoryMock.Object, _mapper);
 
             // act
-            var result = await service.GetAllAsync(PagingValues.Default);
+            var result = await service.GetAllAsync(PagingValues.Default, SortingValues.Default);
 
             // assert
             Assert.NotNull(result.Value);
