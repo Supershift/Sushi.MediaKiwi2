@@ -8,11 +8,8 @@
   import { container } from "tsyringe";
   import { ICustomer } from "./../models/Customer";
   import { useI18next, useFilterInQuery, useDatePresets, TableFilterItemQueryConverter } from "@/composables";
-  import { useSnackbarStore } from "@/stores";
   import MkDatePresetMenu from "@/components/MkDatePresetMenu/MkDatePresetMenu.vue";
-  import { DateTime, MonthNumbers } from "luxon";
-
-  const snackbar = useSnackbarStore();
+  import { DateTime } from "luxon";
 
   // inject dependencies
   const sampleDataConnector = container.resolve(SampleDataConnector);
@@ -25,6 +22,8 @@
     dayPresets,
     monthPresets,
   });
+
+  const date = ref<DateTime>();
 
   // define state
   const currentPagination = ref<Paging>({
@@ -198,30 +197,33 @@
 <template>
   <div class="d-flex flex-row text-start align-start on-surface">
     <div class="flex-column">
-      <v-select
-        v-model="dateRange"
-        item-title="title"
-        item-value="value"
-        :label="dataRangeLabel"
-        hide-details
-        readonly
-        :width="350"
-        @click="state.openPreselectMenu = !state.openPreselectMenu"
-      />
-      <MkDatePresetMenu
-        v-show="state.openPreselectMenu"
-        v-model="dateRange"
-        elevation="3"
-        item-title="title"
-        item-value="value"
-        :days="dayPresets"
-        :months="monthPresets"
-        hide-details
-        date-picker-title="date range picker title"
-      />
+      <v-menu :close-on-content-click="false" location-strategy="connected" location="bottom">
+        <template #activator="{ props }">
+          <v-select
+            v-bind="props"
+            v-model="dateRange"
+            item-title="title"
+            item-value="value"
+            :label="dataRangeLabel"
+            hide-details
+            readonly
+            :width="350"
+            @click="state.openPreselectMenu = !state.openPreselectMenu"
+          />
+        </template>
+        <MkDatePresetMenu
+          v-model="dateRange"
+          @update:model-value="state.openPreselectMenu = !state.openPreselectMenu"
+          elevation="3"
+          item-title="title"
+          item-value="value"
+          :days="dayPresets"
+          :months="monthPresets"
+          hide-details
+        />
+      </v-menu>
     </div>
   </div>
-
   <MkTable
     v-model:sorting="sorting"
     v-model:selection="state.selectedTableRows"
