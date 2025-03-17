@@ -17,16 +17,14 @@ export async function useDatePresets(options?: {
    */
   monthPresets: number[];
 }) {
-
   const { formatMonth, defaultT, formatDate } = await useI18next();
 
   const { dayPresets, monthPresets } = options || {};
 
-  useTimeZones().setLuxonDefaultZone();
+  (await useTimeZones()).setLuxonDefaultZone();
 
   const today = DateTime.now();
   const yesterday = today.minus({ days: 1 });
-
 
   const presets = computed(() => {
     return {
@@ -70,7 +68,6 @@ export async function useDatePresets(options?: {
   function formatPreset(dates: DateTime[]): string;
   function formatPreset(start: DateTime, end: DateTime): string;
   function formatPreset(dates: DateTime[] | DateTime, end?: DateTime): string {
-
     // determine mode
     if (Array.isArray(dates)) {
       const [start, end] = dates;
@@ -101,9 +98,7 @@ export async function useDatePresets(options?: {
   }
 
   function isFullMonth(start: DateTime, end: DateTime) {
-    return start.hasSame(start.startOf("month"), "day")
-      && end.hasSame(end.endOf("month"), "day")
-      && start.hasSame(end, "month");
+    return start.hasSame(start.startOf("month"), "day") && end.hasSame(end.endOf("month"), "day") && start.hasSame(end, "month");
   }
 
   return {
