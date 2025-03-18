@@ -17,11 +17,11 @@ export async function useDatePresets(options?: {
    */
   monthPresets: number[];
 }) {
-  const { formatMonth, defaultT, formatDate } = await useI18next();
+  const { formatMonth, defaultT, formatDate, t } = await useI18next();
 
   const { dayPresets, monthPresets } = options || {};
 
-  (await useTimeZones()).setLuxonDefaultZone();
+  useTimeZones(t).setLuxonDefaultZone();
 
   const today = DateTime.now();
   const yesterday = today.minus({ days: 1 });

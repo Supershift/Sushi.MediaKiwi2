@@ -1,7 +1,7 @@
-import { computed } from "vue";
+import { computed, ComputedRef } from "vue";
 import { useStorage } from "@vueuse/core";
 import { DateTime, Settings } from "luxon";
-import { useI18next } from "@/composables/useI18next";
+import { TFunction } from "i18next";
 
 export type TimeZone = {
   /**
@@ -28,8 +28,7 @@ export type TimeZone = {
   offsetName: string;
 };
 
-export async function useTimeZones() {
-  const { t } = await useI18next("TimeZones");
+export function useTimeZones(t: ComputedRef<TFunction<string, undefined>>) {
   // init current time zone
   const currentTimeZone = useStorage("timeZone", Intl.DateTimeFormat().resolvedOptions().timeZone);
   setLuxonDefaultZone();
