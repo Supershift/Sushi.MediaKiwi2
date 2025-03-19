@@ -1,21 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Sushi.MediaKiwi.DAL.Repository;
 using Sushi.MediaKiwi.Services;
 using Sushi.MediaKiwi.Services.Interfaces;
 using Xunit.Extensions.AssemblyFixture;
 
 namespace Sushi.MediaKiwi.IntegrationTests
 {
-    public class ViewRepositoryTest : IAssemblyFixture<DatabaseFixture>
+    [Collection("Database collection")]
+    public class ViewRepositoryTest(DatabaseFixture configFixture) : IAssemblyFixture<DatabaseFixture>
     {
-        private readonly DatabaseFixture _configFixture;
-        private readonly IViewRepository _repository;
-
-        public ViewRepositoryTest(DatabaseFixture configFixture)
-        {
-            _configFixture = configFixture;
-            _repository = configFixture.Services.GetRequiredService<IViewRepository>();
-        }
+        private readonly IViewRepository _repository = configFixture.Services.GetRequiredService<IViewRepository>();
 
         [Fact]
         public async Task GetAllTest()

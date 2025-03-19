@@ -75,5 +75,26 @@ namespace Sushi.MediaKiwi.IntegrationTests
         }
 
         public ServiceProvider Services { get; private set; } = null!;
+
+
+        [CollectionDefinition("Database collection")]
+        public class DatabaseCollection : ICollectionFixture<DatabaseFixture>
+        {
+            // This class has no code, and is never created. Its purpose is simply
+            // to be the place to apply [CollectionDefinition] and all the
+            // ICollectionFixture<> interfaces.
+        }
+
+        [Collection("Database collection")]
+        public class DatabaseInitialization
+        {
+            public DatabaseInitialization(DatabaseFixture fixture) { }
+
+            [Fact]
+            public void InitializeDatabase()
+            {
+                // this method exists so that the fixture is initialized
+            }
+        }
     }
 }

@@ -7,18 +7,11 @@ using Xunit.Extensions.AssemblyFixture;
 
 namespace Sushi.MediaKiwi.IntegrationTests
 {
-    public class TranslationRepositoryTest : IAssemblyFixture<DatabaseFixture>
+    [Collection("Database collection")]
+    public class TranslationRepositoryTest(DatabaseFixture configFixture) : IAssemblyFixture<DatabaseFixture>
     {
-        private readonly DatabaseFixture _configFixture;
-        private readonly ITranslationRepository _repository;
-        private readonly ILocaleRepository _localeRepository;
-
-        public TranslationRepositoryTest(DatabaseFixture configFixture)
-        {
-            _configFixture = configFixture;
-            _repository = _configFixture.Services.GetRequiredService<ITranslationRepository>();
-            _localeRepository = _configFixture.Services.GetRequiredService<ILocaleRepository>();
-        }
+        private readonly ITranslationRepository _repository = configFixture.Services.GetRequiredService<ITranslationRepository>();
+        private readonly ILocaleRepository _localeRepository = configFixture.Services.GetRequiredService<ILocaleRepository>();
 
         [Fact]
         public async Task GetAllTest()

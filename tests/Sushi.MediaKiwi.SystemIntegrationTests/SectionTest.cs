@@ -3,19 +3,13 @@ using Xunit.Extensions.AssemblyFixture;
 
 namespace Sushi.MediaKiwi.SystemIntegrationTests
 {
-    public class SectionTest : IAssemblyFixture<ApiConnectionFixture>
+    [Collection("Api collection")]
+    public class SectionTest(ApiConnectionFixture fixture) : IAssemblyFixture<ApiConnectionFixture>
     {
-        private readonly ApiConnectionFixture _fixture;
-
-        public SectionTest(ApiConnectionFixture fixture)
-        {
-            _fixture = fixture;
-        }
-
         [Fact]
         public async Task GetAllSections()
         {
-            var connector = _fixture.GetConnector();
+            var connector = fixture.GetConnector();
             var response = await connector.GetSectionsAsync();
 
             Assert.Null(response.Error);

@@ -13,7 +13,7 @@ namespace Sushi.MediaKiwi.DAL.UnitTests
         [InlineData("my id", false)]
         [InlineData("myId@", false)]
         [InlineData("123456789012345678901234567890123456789012345678901234567890toolongastring", false)]
-        public void ValidateId(string id, bool isValid)
+        public void ValidateId(string? id, bool isValid)
         {
             // act
             var result = Section.ValidateSectionId(id);
