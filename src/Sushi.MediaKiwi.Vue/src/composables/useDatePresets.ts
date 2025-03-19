@@ -2,6 +2,7 @@ import { computed } from "vue";
 import { DateRange } from "@/models/ranges";
 import { DateTime, Duration } from "luxon";
 import { useI18next } from "./useI18next";
+import { useTimeZones } from "./useTimeZones";
 
 export async function useDatePresets(options?: {
   /**
@@ -16,28 +17,29 @@ export async function useDatePresets(options?: {
    */
   monthPresets: number[];
 }) {
+  const { formatMonth, defaultT, formatDate, t } = await useI18next();
 
   const { dayPresets, monthPresets } = options || {};
 
-  const today = computed(() => DateTime.local());
-  const yesterday = computed(() => today.value.minus({ days: 1 }));
+  useTimeZones(t).setLuxonDefaultZone();
 
-  const { formatMonth, defaultT, formatDate } = await useI18next();
+  const today = DateTime.now();
+  const yesterday = today.minus({ days: 1 });
 
   const presets = computed(() => {
     return {
-      daysExcludingToday: getLastDaysPresets(today.value, yesterday.value),
-      months: getMonthPreset(today.value),
+      daysExcludingToday: getLastDaysPresets(),
+      months: getMonthPreset(),
     };
   });
 
-  function getLastDaysPresets(today: DateTime, yesterday: DateTime): DateRange[] {
+  function getLastDaysPresets(): DateRange[] {
     const result: DateRange[] = [];
 
     for (const dayOffset of dayPresets ?? []) {
       result.push({
-        start: today.minus({ days: dayOffset }),
-        end: yesterday,
+        start: today.minus({ days: dayOffset }).startOf("day"),
+        end: yesterday.endOf("day"),
         duration: Duration.fromDurationLike({ days: dayOffset }),
       });
     }
@@ -46,15 +48,15 @@ export async function useDatePresets(options?: {
     return result;
   }
 
-  function getMonthPreset(today: DateTime) {
+  function getMonthPreset() {
     const result: DateRange[] = [];
 
     for (const monthOffset of monthPresets ?? []) {
       const month = today.minus({ months: monthOffset });
 
       result.push({
-        start: month.startOf("month"),
-        end: month.endOf("month"),
+        start: month.startOf("month").startOf("day"),
+        end: month.endOf("month").endOf("day"),
         duration: Duration.fromDurationLike({ months: 1 }),
       });
     }
@@ -75,8 +77,8 @@ export async function useDatePresets(options?: {
         const start = dates;
         if (isFullMonth(start, end)) {
           return formatMonth.value(start);
-        } else if (yesterday.value.hasSame(end, "day")) {
-          const duration = end.diff(start, "days").plus({ days: 1 }).days;
+        } else if (yesterday.hasSame(end, "day")) {
+          const duration = Math.floor(end.diff(start, "days").plus({ days: 1 }).days);
           return defaultT.value("LastXDays", "Last {{duration}} days", { duration });
         } else {
           return formatDateRange(start, end);
@@ -92,9 +94,7 @@ export async function useDatePresets(options?: {
       return title;
     }
 
-    // Format the dates to a readable format
-    const result = [formatDate.value(start), formatDate.value(end)];
-    return result.join(" - ");
+    return [formatDate.value(start), formatDate.value(end)].join(" - ");
   }
 
   function isFullMonth(start: DateTime, end: DateTime) {

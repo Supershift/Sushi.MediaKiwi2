@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import MkDialogCard from "../MkDialog/MkDialogCard.vue";
-  import { ref } from "vue";
+  import { computed, ref } from "vue";
   import { useI18next } from "@/composables";
   import { useLocale } from "vuetify";
   import { DateTime } from "luxon";
@@ -26,9 +26,7 @@
 
   const modelValue = defineModel<DateTime[]>({ required: true });
 
-  const emit = defineEmits<{
-    (e: "click:close"): void;
-  }>();
+  const emit = defineEmits<(e: "click:close") => void>();
 
   // Create proxy model to prevent direct mutation
   const model = ref(modelValue.value ?? []); // transform strings to Date so vuetify can work with it
@@ -41,6 +39,11 @@
     modelValue.value = model.value;
     close();
   }
+
+  const isValid = computed(() => {
+    const amount = props.multiple ? props.multipleAmount : 1;
+    return model.value?.length >= amount;
+  });
 
   function validateModel() {
     // Multiple allows for multiple dates to be selected
@@ -81,7 +84,7 @@
       </v-date-picker>
     </template>
     <template #actions>
-      <v-btn @click="apply">{{ defaultT("Apply") }}</v-btn>
+      <v-btn @click="apply" :disabled="!isValid">{{ defaultT("Apply") }}</v-btn>
     </template>
   </MkDialogCard>
 </template>

@@ -31,45 +31,43 @@
   }>();
 </script>
 <template>
-  <v-card>
-    <v-layout v-side-sheet :full-height="true" class="mk-layout">
-      <mk-suspense>
-        <v-app-bar>
-          <mk-navigation-icon />
-          <mk-logo-lockup>
-            <template v-if="slots.logo" #logo>
-              <slot name="logo"></slot>
-            </template>
-            <template v-if="slots.title" #title>
-              <slot name="title"></slot>
-            </template>
-          </mk-logo-lockup>
-          <v-spacer></v-spacer>
-          <slot name="appBarActions"></slot>
-          <mk-theme-toggle></mk-theme-toggle>
-          <mk-account-menu :hide-avatar="hideAvatar">
-            <template v-if="slots.avatar" #avatar>
-              <slot name="avatar"></slot>
-            </template>
-            <template v-if="slots.accountMenuHeader" #header>
-              <slot name="accountMenuHeader"></slot>
-            </template>
-            <template v-if="slots.accountMenu" #default>
-              <slot name="accountMenu"></slot>
-            </template>
-            <template v-if="slots.accountMenuActions" #actions>
-              <slot name="accountMenuActions"></slot>
-            </template>
-          </mk-account-menu>
-        </v-app-bar>
-      </mk-suspense>
-      <mk-suspense>
-        <mk-navigation v-if="isAuthenticated"></mk-navigation>
-      </mk-suspense>
-      <mk-screen></mk-screen>
-      <mk-suspense>
-        <mk-snackbar></mk-snackbar>
-      </mk-suspense>
-    </v-layout>
-  </v-card>
+  <v-layout v-side-sheet :full-height="true">
+    <mk-suspense>
+      <v-app-bar>
+        <mk-navigation-icon />
+        <mk-logo-lockup>
+          <template v-if="slots.logo" #logo>
+            <slot name="logo"></slot>
+          </template>
+          <template v-if="slots.title" #title>
+            <slot name="title"></slot>
+          </template>
+        </mk-logo-lockup>
+        <v-spacer></v-spacer>
+        <slot name="appBarActions"></slot>
+        <mk-theme-toggle></mk-theme-toggle>
+        <mk-account-menu :hide-avatar="hideAvatar">
+          <template v-if="slots.avatar" #avatar>
+            <slot name="avatar"></slot>
+          </template>
+          <template v-if="slots.accountMenuHeader" #header>
+            <slot name="accountMenuHeader"></slot>
+          </template>
+          <template v-if="slots.accountMenu" #default>
+            <slot name="accountMenu"></slot>
+          </template>
+          <template v-if="slots.accountMenuActions" #actions>
+            <slot name="accountMenuActions"></slot>
+          </template>
+        </mk-account-menu>
+      </v-app-bar>
+    </mk-suspense>
+    <mk-suspense>
+      <mk-navigation v-if="isAuthenticated"></mk-navigation>
+    </mk-suspense>
+    <mk-screen></mk-screen>
+    <mk-suspense>
+      <mk-snackbar></mk-snackbar>
+    </mk-suspense>
+  </v-layout>
 </template>

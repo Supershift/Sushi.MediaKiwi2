@@ -40,8 +40,16 @@
   );
 
   const modelValue = defineModel<{ value: DateTime[]; title?: string }>({
-    default: { title: "", value: [DateTime.local().minus({ days: 2 }), DateTime.local()] },
+    default: {
+      title: "Last 2 days",
+      value: [
+        DateTime.now().startOf("day").plus({ minutes: DateTime.now().offset }).minus({ days: 2 }),
+        DateTime.now().startOf("day").plus({ minutes: DateTime.now().offset }),
+      ],
+    },
   });
+
+  const emit = defineEmits<(e: "click:close") => void>();
 
   const { defaultT } = await useI18next("MkDatePresetMenu");
   const { presets, formatPreset, formatDateRange } = await useDatePresets({
@@ -50,6 +58,11 @@
   });
 
   const isDatePickerOpen = ref(false);
+
+  const close = () => {
+    isDatePickerOpen.value = false;
+    emit("click:close");
+  };
 
   function updateFromPicker(value: DateTime[]): void {
     let [date1, date2] = value;
@@ -98,7 +111,7 @@
     :class="datePickerClass"
     :title="datePickerTitle"
     multiple
-    @click:close="isDatePickerOpen = false"
+    @click:close="close"
     @update:model-value="updateFromPicker"
   />
   <v-list v-else>

@@ -22,13 +22,14 @@
 
   const mkLayoutClasses = computed(() => ({
     "mk-layout": true,
+    "mk-layout__sign-in": isPageOnSignIn.value,
     [<string>route.meta?.layout]: !!route.meta?.layout,
   }));
 </script>
 
 <template>
   <v-main>
-    <mk-breadcrumbs :sticky="true" />
+    <mk-breadcrumbs />
     <div :class="mkScreenClasses">
       <div :class="mkLayoutClasses">
         <router-view v-slot="{ Component }">
@@ -47,16 +48,22 @@
     </div>
   </v-main>
 </template>
-
 <style lang="scss" scoped>
   .mk-screen {
-    height: 100%;
-
-    &__content {
-      height: inherit;
+    &__sign-in {
+      height: calc(100vh - var(--v-layout-top));
     }
+
     .mk-layout {
-      height: inherit;
+      &__sign-in {
+        height: 100%;
+      }
+
+      .mk-screen {
+        &__content {
+          height: 100%;
+        }
+      }
     }
   }
 </style>
