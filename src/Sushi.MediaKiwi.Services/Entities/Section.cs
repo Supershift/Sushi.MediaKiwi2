@@ -61,7 +61,7 @@ namespace Sushi.MediaKiwi.Services.Entities
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Null if valid, error message if invalid.</returns>
-        public static string? ValidateSectionId(string id)
+        public static string? ValidateSectionId(string? id)
         {
             if (string.IsNullOrWhiteSpace(id))
                 return "New ID is empty";

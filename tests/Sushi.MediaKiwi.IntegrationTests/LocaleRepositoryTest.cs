@@ -8,16 +8,10 @@ using Xunit.Extensions.AssemblyFixture;
 
 namespace Sushi.MediaKiwi.IntegrationTests
 {
-    public class LocaleRepositoryTest : IAssemblyFixture<DatabaseFixture>
+    [Collection("Database collection")]
+    public class LocaleRepositoryTest(DatabaseFixture configFixture) : IAssemblyFixture<DatabaseFixture>
     {
-        private readonly DatabaseFixture _configFixture;
-        private readonly ILocaleRepository _repository;
-
-        public LocaleRepositoryTest(DatabaseFixture configFixture)
-        {
-            _configFixture = configFixture;
-            _repository = _configFixture.Services.GetRequiredService<ILocaleRepository>();
-        }
+        private readonly ILocaleRepository _repository = configFixture.Services.GetRequiredService<ILocaleRepository>();
 
         [Fact]
         public async Task GetAllTest()

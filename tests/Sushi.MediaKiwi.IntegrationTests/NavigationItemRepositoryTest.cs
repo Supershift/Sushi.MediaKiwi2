@@ -11,14 +11,10 @@ using Xunit.Extensions.AssemblyFixture;
 
 namespace Sushi.MediaKiwi.IntegrationTests
 {
-    public class NavigationItemRepositoryTest : IAssemblyFixture<DatabaseFixture>
-    {        
-        private readonly INavigationItemRepository _repository;
-
-        public NavigationItemRepositoryTest(DatabaseFixture configFixture)
-        {   
-            _repository = configFixture.Services.GetRequiredService<INavigationItemRepository>();
-        }
+    [Collection("Database collection")]
+    public class NavigationItemRepositoryTest(DatabaseFixture configFixture) : IAssemblyFixture<DatabaseFixture>
+    {
+        private readonly INavigationItemRepository _repository = configFixture.Services.GetRequiredService<INavigationItemRepository>();
 
         [Fact]
         public async Task GetAllTest()

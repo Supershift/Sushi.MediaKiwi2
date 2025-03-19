@@ -20,11 +20,11 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests.Sorting
             map.Add(x => x.Id);
             map.Add(x => x.Name);
             var result = map.GetSortFields();
-            
+
             // assert
             Assert.Equal(2, result.Count());
-            Assert.Contains("Name", result);
-            Assert.Contains("Id", result);
+            Assert.Contains("name", result);
+            Assert.Contains("id", result);
         }
 
         [Fact]
@@ -35,11 +35,11 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests.Sorting
             Expression<Func<TestFake, object>> expression = x => x.Id;
 
             // act
-            map.Add(expression);                        
+            map.Add(expression);
             var result = map.GetSortFields();
-            
+
             // assert            
-            Assert.Contains("Id", result);
+            Assert.Contains("id", result);
         }
 
         [Fact]
@@ -70,7 +70,7 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests.Sorting
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(expression, result);            
+            Assert.Equal(expression, result);
         }
 
         [Fact]
@@ -103,7 +103,7 @@ namespace Sushi.MediaKiwi.WebAPI.UnitTests.Sorting
             var result = map.GetItem("does not exist");
 
             // assert
-            Assert.Null(result);            
+            Assert.Null(result);
         }
     }
 }

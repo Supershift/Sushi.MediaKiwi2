@@ -1,6 +1,5 @@
 using AutoMapper;
 using Moq;
-using NuGet.Frameworks;
 using Sushi.MediaKiwi.Services.Interfaces;
 using Sushi.MediaKiwi.Services.Model;
 using Sushi.MicroORM;
@@ -8,7 +7,7 @@ using Sushi.MicroORM;
 namespace Sushi.MediaKiwi.Services.UnitTests
 {
     public class RoleServiceTest
-    {        
+    {
         [Fact]
         public async Task GetAllRolesTest()
         {
@@ -35,7 +34,7 @@ namespace Sushi.MediaKiwi.Services.UnitTests
 
             // assert
             Assert.NotNull(result);
-            Assert.Null(result.Error);            
+            Assert.Null(result.Error);
             Assert.NotNull(result.Value);
             Assert.NotNull(result.Value.Result);
             Assert.Equal(2, result.Value.Result.Count);

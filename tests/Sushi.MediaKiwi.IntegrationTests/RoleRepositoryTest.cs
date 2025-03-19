@@ -5,16 +5,10 @@ using Xunit.Extensions.AssemblyFixture;
 
 namespace Sushi.MediaKiwi.IntegrationTests
 {
-    public class RoleRepositoryTest : IAssemblyFixture<DatabaseFixture>
+    [Collection("Database collection")]
+    public class RoleRepositoryTest(DatabaseFixture configFixture) : IAssemblyFixture<DatabaseFixture>
     {
-        private readonly DatabaseFixture _configFixture;
-        private readonly IRoleRepository _repository;
-
-        public RoleRepositoryTest(DatabaseFixture configFixture)
-        {
-            _configFixture = configFixture;
-            _repository = _configFixture.Services.GetRequiredService<IRoleRepository>();
-        }
+        private readonly IRoleRepository _repository = configFixture.Services.GetRequiredService<IRoleRepository>();
 
         [Fact]
         public async Task GetAllTest()
