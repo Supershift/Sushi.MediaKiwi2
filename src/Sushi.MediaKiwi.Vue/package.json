@@ -55,7 +55,7 @@
     "i18next-http-backend": "^2.6.2",
     "luxon": "^3.5.0",
     "material-symbols": "^0.27.0",
-    "pinia": "^2.2.6",
+    "pinia": "^3.0.1",
     "qs": "^6.13.1",
     "reflect-metadata": "^0.2.2",
     "tsyringe": "^4.8.0",

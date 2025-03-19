@@ -17,10 +17,9 @@ export interface MediaKiwiState {
   externalIcons: boolean;
 }
 
-var isInitialized: Promise<void> | undefined = undefined;
+let isInitialized: Promise<void> | undefined = undefined;
 
-export const useMediakiwiStore = defineStore({
-  id: "mediaKiwiStore",
+export const useMediakiwiStore = defineStore("mediaKiwiStore", {
   state: () =>
     ({
       navigationTree: new NavigationTree([]),
@@ -29,7 +28,7 @@ export const useMediakiwiStore = defineStore({
       isLocal: true,
       drawer: true,
       externalIcons: false,
-    } as MediaKiwiState),
+    }) as MediaKiwiState,
   actions: {
     async init() {
       // check if this is the first call
