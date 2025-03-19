@@ -84,17 +84,5 @@ namespace Sushi.MediaKiwi.IntegrationTests
             // to be the place to apply [CollectionDefinition] and all the
             // ICollectionFixture<> interfaces.
         }
-
-        [Collection("Database collection")]
-        public class DatabaseInitialization
-        {
-            public DatabaseInitialization(DatabaseFixture fixture) { }
-
-            [Fact]
-            public void InitializeDatabase()
-            {
-                // this method exists so that the fixture is initialized
-            }
-        }
     }
 }
