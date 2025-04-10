@@ -99,6 +99,7 @@
       modelValue.value?.value?.length == 2 &&
       (presets.value.daysExcludingToday.some(hasSameStartAndEndDateAsModel.value) ||
         presets.value.months.some(hasSameStartAndEndDateAsModel.value) ||
+        hasSameStartAndEndDateAsModel.value(presets.value.today) ||
         props.customOptions?.some(hasSameStartAndEndDateAsModel.value))
     );
   });
@@ -115,6 +116,10 @@
     @update:model-value="updateFromPicker"
   />
   <v-list v-else>
+    <v-list-item :active="hasSameStartAndEndDateAsModel(presets.today)" @click="updateFromPreset(presets.today)">
+      <v-list-item-title>{{ formatPreset(presets.today.start, presets.today.end) }}</v-list-item-title>
+    </v-list-item>
+    <v-divider />
     <v-list-item v-for="(item, i) in presets.daysExcludingToday" :key="i" :active="hasSameStartAndEndDateAsModel(item)" @click="updateFromPreset(item)">
       <v-list-item-title>{{ formatPreset(item.start, item.end) }}</v-list-item-title>
     </v-list-item>
