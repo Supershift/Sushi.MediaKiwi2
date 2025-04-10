@@ -32,10 +32,16 @@
        * @example [{ title: "Last 11 days", start: DateTime.now().minus({ days: 12 }), end: DateTime.now().minus({ days: 1 }) }]
        */
       customOptions?: Array<TitledDateRange>;
+      /**
+       * Whether to include today in the date picker
+       * @default true
+       */
+      includeToday?: boolean;
     }>(),
     {
       days: () => [7, 28, 90, 365],
       months: () => [0, 1, 2],
+      includeToday: true,
     }
   );
 
@@ -116,10 +122,10 @@
     @update:model-value="updateFromPicker"
   />
   <v-list v-else>
-    <v-list-item :active="hasSameStartAndEndDateAsModel(presets.today)" @click="updateFromPreset(presets.today)">
+    <v-list-item v-if="includeToday" :active="hasSameStartAndEndDateAsModel(presets.today)" @click="updateFromPreset(presets.today)">
       <v-list-item-title>{{ formatPreset(presets.today.start, presets.today.end) }}</v-list-item-title>
     </v-list-item>
-    <v-divider />
+    <v-divider v-if="includeToday" />
     <v-list-item v-for="(item, i) in presets.daysExcludingToday" :key="i" :active="hasSameStartAndEndDateAsModel(item)" @click="updateFromPreset(item)">
       <v-list-item-title>{{ formatPreset(item.start, item.end) }}</v-list-item-title>
     </v-list-item>
