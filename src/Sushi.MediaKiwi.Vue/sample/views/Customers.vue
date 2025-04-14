@@ -219,6 +219,7 @@
           item-value="value"
           :days="dayPresets"
           :months="monthPresets"
+          include-today
           hide-details
         />
       </v-menu>
