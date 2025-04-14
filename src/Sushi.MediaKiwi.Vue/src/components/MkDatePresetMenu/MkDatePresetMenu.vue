@@ -34,7 +34,7 @@
       customOptions?: Array<TitledDateRange>;
       /**
        * Whether to include today in the date picker
-       * @default true
+       * @default false
        */
       includeToday?: boolean;
     }>(),
