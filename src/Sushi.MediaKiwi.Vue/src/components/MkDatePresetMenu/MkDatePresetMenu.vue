@@ -41,7 +41,7 @@
     {
       days: () => [7, 28, 90, 365],
       months: () => [0, 1, 2],
-      includeToday: true,
+      includeToday: false,
     }
   );
 
