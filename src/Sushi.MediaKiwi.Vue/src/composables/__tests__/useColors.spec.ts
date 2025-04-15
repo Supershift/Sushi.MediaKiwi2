@@ -33,7 +33,7 @@ const hoisted = vi.hoisted(() => {
   };
 });
 
-vi.mock("vuetify/lib/framework.mjs", async () => {
+vi.mock("vuetify", async () => {
   return {
     useTheme: () => {
       return hoisted.theme;

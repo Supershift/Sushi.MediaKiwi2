@@ -2,7 +2,7 @@
   import { MkNewItemButton, MkOverflowMenuIcon } from "@/components";
   import { onMounted, useTemplateRef, watch } from "vue";
   import { useWindowScroll } from "@vueuse/core";
-  import { useLayout } from "vuetify/lib/framework.mjs";
+  import { useLayout } from "vuetify";
 
   // define properties
   const props = withDefaults(

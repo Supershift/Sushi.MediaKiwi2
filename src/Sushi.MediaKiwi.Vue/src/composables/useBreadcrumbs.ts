@@ -1,7 +1,7 @@
 import { computed } from "vue";
 import { useNavigation } from "@/composables/useNavigation";
 import { NavigationItem } from "@/models/navigation";
-import { useDisplay } from "vuetify/lib/framework.mjs";
+import { useDisplay } from "vuetify";
 
 export function useBreadcrumbs() {
   // Inject dependencies.
