@@ -1,7 +1,7 @@
 import { InitOptions, createInstance, i18n } from "i18next";
 import { App, ref, triggerRef } from "vue";
 import LanguageDetector from "i18next-browser-languagedetector";
-import HttpApi from "i18next-http-backend";
+import HttpApi from "i18next-http-backend/cjs";
 import { MediakiwiVueOptions } from "@/models";
 import { container } from "tsyringe";
 
