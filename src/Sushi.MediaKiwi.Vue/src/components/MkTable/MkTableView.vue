@@ -9,7 +9,6 @@
   import { useContextmenu } from "@/composables/useContextmenu";
   import MkTableCheckbox from "./MkTableCheckbox.vue";
   import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
-  import { VTable } from "vuetify/lib/components/index.mjs";
   import { onKeyDown, onKeyStroke, onKeyUp } from "@vueuse/core";
 
   // inject dependencies
@@ -33,7 +32,7 @@
   /** Ref to the table element */
   const tbodyContainer = ref<any>(null);
   const tbodyNode = computed(() => tbodyContainer.value! as Node);
-  const myTable = useTemplateRef<VTable>("myTable");
+  const myTable = useTemplateRef("myTable");
   const rowMenuActive = reactive<{
     [key: string]: boolean;
   }>({});

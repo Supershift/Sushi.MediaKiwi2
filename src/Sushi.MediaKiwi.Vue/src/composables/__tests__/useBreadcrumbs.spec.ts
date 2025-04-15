@@ -15,7 +15,7 @@ let { isMobile, currentRootItem, currentNavigationItem, currentViewParameter, ge
 });
 
 // mock useDisplay
-vi.mock("vuetify/lib/framework.mjs", () => ({
+vi.mock("vuetify", () => ({
   useDisplay: () => {
     return {
       xs: {

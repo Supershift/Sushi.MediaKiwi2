@@ -1,5 +1,5 @@
 import { mdiMicrosoftAzure } from "@mdi/js";
-import { IconAliases } from "vuetify/lib/framework.mjs";
+import { IconAliases } from "vuetify";
 
 /** aliases that directly correlates to the icons available for use in mediakiwi
  * [LA]: last updated: 01-08-2023

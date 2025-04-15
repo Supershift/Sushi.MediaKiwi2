@@ -2,12 +2,12 @@ import "reflect-metadata";
 import { describe, it, beforeEach, vi, expect } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import { container } from "tsyringe";
-import { VuetifyOptions } from "vuetify/lib/framework.mjs";
+import { VuetifyOptions } from "vuetify";
 import { useMediakiwiStore } from "../mediakiwi";
 import { ObjectNavigationProvider, SimpleSection } from "@/navigation";
 import { Api } from "@/services/api";
 
-vi.mock('@/services/api', () => {
+vi.mock("@/services/api", () => {
   return {
     Api: vi.fn().mockImplementation(() => {
       return {
@@ -18,7 +18,6 @@ vi.mock('@/services/api', () => {
     }),
   };
 });
-
 
 describe("Mediakiwi Store", () => {
   beforeEach(() => {
