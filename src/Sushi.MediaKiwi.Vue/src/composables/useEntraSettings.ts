@@ -7,17 +7,23 @@ export function useEntraSettings(apiBaseUrl: string) {
   mediaKiwiApi.instance = createPublicAxiosClient(apiBaseUrl.replace("mediakiwi/api", ""));
 
   async function getEntraSettings() {
-    const entraSettings = await mediaKiwiApi.mediakiwi.identityproviderEntra();
+    try {
+      const entraSettings = await mediaKiwiApi.mediakiwi.identityproviderEntra();
 
-    const authority = `${entraSettings.data.instance}${entraSettings.data.tenantId}`;
+      const authority = `${entraSettings.data.instance}${entraSettings.data.tenantId}`;
 
-    return { ...entraSettings.data, authority };
+      return { ...entraSettings.data, authority };
+    }
+    catch (error) {
+      console.error("Error fetching Entra settings:", error);
+      return { clientId: "", authority: "" };
+    }
   }
 
   async function fillEntraSettings(options: MediakiwiVueOptions): Promise<MediakiwiVueOptions> {
     const entraSettings = await getEntraSettings();
 
-    var clientId = entraSettings.clientId ?? options.msalConfig?.auth?.clientId ?? "useEntraSettings: clientId not configured";
+    const clientId = entraSettings.clientId ?? options.msalConfig?.auth?.clientId ?? "useEntraSettings: clientId not configured";
 
     return {
       ...options,
