@@ -3,9 +3,11 @@
   import { useIsAuthenticated } from "@/composables/useIsAuthenticated";
   import MkLogoLockup from "./MkLogoLockup.vue";
   import MkSnackbar from "../MkSnackbar/MkSnackbar.vue";
+  import { useMediakiwiVueOptions } from "@/composables";
 
   // inject dependencies
   const isAuthenticated = useIsAuthenticated();
+  const { msalConfig } = useMediakiwiVueOptions();
 
   defineProps<{
     /** Hide the avatar in the Account overflow menu */
@@ -65,7 +67,8 @@
     <mk-suspense>
       <mk-navigation v-if="isAuthenticated"></mk-navigation>
     </mk-suspense>
-    <mk-screen></mk-screen>
+    <v-main v-if="!msalConfig.auth.clientId"><v-card>Service offline</v-card></v-main>
+    <mk-screen v-else></mk-screen>
     <mk-suspense>
       <mk-snackbar></mk-snackbar>
     </mk-suspense>
