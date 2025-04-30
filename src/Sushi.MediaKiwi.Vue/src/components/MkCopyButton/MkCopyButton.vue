@@ -35,7 +35,7 @@
       <slot name="default"></slot>
     </span>
     <v-btn v-bind="props && $attrs" class="v-btn--icon copy-button" density="comfortable" rounded="xl" @click.stop="copy(value)">
-      <v-icon icon="$copy" v-bind="$attrs" :wght="wght"></v-icon>
+      <v-icon icon="symbols:content_copy" v-bind="$attrs" :wght="wght"></v-icon>
     </v-btn>
     <v-tooltip v-model="copied" location="top" :open-on-hover="false">
       <template #activator="{ props }">
