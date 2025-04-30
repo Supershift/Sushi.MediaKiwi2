@@ -22,6 +22,7 @@ export * from "./MkDialog";
 export * from "./MkDatePresetMenu";
 export * from "./MkDatePicker";
 export * from "./MkConfirmDialog";
+export * from "./MkCopyButton";
 export * from "./MkErrorProblemDetails";
 export * from "./MkSnackbar";
 export * from "./MkTimeZoneSwitch";
