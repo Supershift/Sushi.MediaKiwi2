@@ -13,9 +13,7 @@
 
   const modelValue = defineModel<TableFilterValue>({ required: true });
 
-  const emit = defineEmits<{
-    (e: "click:close"): void;
-  }>();
+  const emit = defineEmits<(e: "click:close") => void>();
 
   // Create proxy model to prevent direct mutation
   const model = ref(modelValue.value);
@@ -33,8 +31,14 @@
 <template>
   <MkTableFilterDialog :table-filter-item="tableFilterItem" @close="emit('click:close')" @apply="applyFilter">
     <div class="pl-3 pr-4 py-4">
-      <v-radio-group v-model="model" hide-details="auto" density="default" :rules="[...additionalRules]">
-        <v-radio v-for="(option, index) in tableFilterItem.options" :key="index" :label="option.title" :value="option" />
+      <v-radio-group v-bind="tableFilterItem.componentProps" v-model="model" hide-details="auto" density="default" :rules="[...additionalRules]">
+        <v-radio
+          v-for="(option, index) in tableFilterItem.options"
+          :key="index"
+          :label="option.title"
+          :value="option"
+          v-bind="tableFilterItem.componentProps"
+        />
       </v-radio-group>
     </div>
   </MkTableFilterDialog>

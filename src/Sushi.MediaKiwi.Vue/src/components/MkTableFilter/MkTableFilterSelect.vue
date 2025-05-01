@@ -13,9 +13,7 @@
 
   const modelValue = defineModel<TableFilterValue>({ required: true });
 
-  const emit = defineEmits<{
-    (e: "click:close"): void;
-  }>();
+  const emit = defineEmits<(e: "click:close") => void>();
 
   // Create proxy model to prevent direct mutation
   const model = ref(modelValue.value);
@@ -42,6 +40,7 @@
         :rules="[...additionalRules]"
         autofocus
         @keydown.enter="applyFilter"
+        v-bind="tableFilterItem.componentProps"
       />
     </div>
   </MkTableFilterDialog>

@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import { useI18next } from "@/composables";
-  import MkDialogCard from "../MkDialog/MkDialogCard.vue";
-  import type { TableFilterItem, TableFilterValue } from "@/models/table";
+  import type { TableFilterItem } from "@/models/table";
   import { reactive } from "vue";
 
   // inject dependencies
@@ -21,9 +20,7 @@
     actions?: () => never;
   }>();
 
-  const emit = defineEmits<{
-    (e: "click:close"): void;
-  }>();
+  defineEmits<(e: "click:close") => void>();
 
   const state = reactive({
     isValid: false,

@@ -52,6 +52,7 @@
         class="mk-table-filter__item__checkbox pl-3"
         hide-details="auto"
         :rules="[...additionalRules]"
+        v-bind="tableFilterItem.componentProps"
       />
     </div>
   </MkTableFilterDialog>

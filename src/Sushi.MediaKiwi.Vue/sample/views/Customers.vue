@@ -10,10 +10,12 @@
   import { useI18next, useFilterInQuery, useDatePresets, TableFilterItemQueryConverter } from "@/composables";
   import MkDatePresetMenu from "@/components/MkDatePresetMenu/MkDatePresetMenu.vue";
   import { DateTime } from "luxon";
+  import { useValidationRules } from "@/composables";
 
   // inject dependencies
   const sampleDataConnector = container.resolve(SampleDataConnector);
   const { formatDate } = await useI18next();
+  const { required } = await useValidationRules();
 
   const dayPresets = [1, 7, 28, 90, 365];
   const monthPresets = [0, 1];
@@ -59,6 +61,11 @@
     { title: `Q4 ${currentYear}`, value: getQuarter(4) },
   ];
 
+  const countryFilterDisabled = ref<boolean>(false);
+  function toggleCountryFilter() {
+    countryFilterDisabled.value = !countryFilterDisabled.value;
+  }
+
   const filters = ref<TableFilter>({
     name: {
       title: "Name",
@@ -70,8 +77,27 @@
       options: [
         { title: "Nederland", value: "NL" },
         { title: "België", value: "BE" },
+        { title: "United Kingdom", value: "UK" },
+        { title: "Duitsland", value: "DE" },
+        { title: "Frankrijk", value: "FR" },
+        { title: "Nieuw-Zeeland", value: "NZ" },
+        { title: "Polen", value: "PL" },
+        { title: "Amerika", value: "US" },
+        { title: "Australië", value: "AU" },
+        { title: "Canada", value: "CA" },
+        { title: "Zuid-Afrika", value: "ZA" },
+        { title: "Japan", value: "JP" },
+        { title: "China", value: "CN" },
+        { title: "India", value: "IN" },
+        { title: "Brazilië", value: "BR" },
+        { title: "Mexico", value: "MX" },
       ],
-      type: TableFilterType.Select,
+      type: TableFilterType.SingleSelect,
+      disabled: () => countryFilterDisabled.value,
+      componentProps: {
+        clearable: true,
+        rules: [required],
+      },
     },
     fullName: {
       title: "Volledige naam",
@@ -84,7 +110,7 @@
         { title: "Rijswijk", value: "RSWK" },
         { title: "Delft", value: "DLFT" },
       ],
-      type: TableFilterType.RadioGroup,
+      type: TableFilterType.SingleSelect,
     },
     dates: <TableFilterItemQueryConverter>{
       title: "Dates",
@@ -195,7 +221,7 @@
 </script>
 
 <template>
-  <div class="d-flex flex-row text-start align-start on-surface">
+  <div class="d-flex flex-row text-start align-start on-surface ga-2 align-center mb-4">
     <div class="flex-column">
       <v-menu :close-on-content-click="false" location-strategy="connected" location="bottom">
         <template #activator="{ props }">
@@ -224,7 +250,9 @@
         />
       </v-menu>
     </div>
+    <v-btn @click="toggleCountryFilter">Toggle country filter</v-btn>
   </div>
+
   <MkTable
     v-model:sorting="sorting"
     v-model:selection="state.selectedTableRows"

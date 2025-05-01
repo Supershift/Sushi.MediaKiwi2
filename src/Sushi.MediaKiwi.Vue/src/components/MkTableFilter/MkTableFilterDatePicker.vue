@@ -13,9 +13,7 @@
 
   const modelValue = defineModel<TableFilterValue>({ required: true });
 
-  const emit = defineEmits<{
-    (e: "click:close"): void;
-  }>();
+  const emit = defineEmits<(e: "click:close") => void>();
 
   // Create proxy model to prevent direct mutation
   const model = ref(modelValue.value?.value);
@@ -42,6 +40,7 @@
     @update:model-value="applyFilter"
     @click:close="() => emit('click:close')"
     :title="tableFilterItem.inputLabel"
+    v-bind="tableFilterItem.componentProps"
   />
 </template>
 

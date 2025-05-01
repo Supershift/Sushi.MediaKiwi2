@@ -13,10 +13,9 @@
     MkTableFilterDatePicker,
     MkTableFilterOperator,
   } from ".";
-  import { DefineComponent } from "vue";
+  import { DefineComponent, defineAsyncComponent } from "vue";
   import { TableFilterType, IconsLibrary } from "@/models";
   import { MkInputChip } from "@/components/MkChip";
-  import { defineAsyncComponent } from "vue";
   import { useI18next } from "@/composables/useI18next";
   import { useFilters } from "@/composables/useFilters";
   import { onKeyStroke } from "@vueuse/core";
@@ -26,9 +25,7 @@
     modelValue: TableFilter;
   }>();
 
-  const emit = defineEmits<{
-    (e: "update:modelValue", value: TableFilter): void;
-  }>();
+  const emit = defineEmits<(e: "update:modelValue", value: TableFilter) => void>();
 
   // inject dependencies
   const { t, defaultT } = await useI18next("MkFilter");
@@ -238,6 +235,16 @@
     }
   }
 
+  function getDisabledState(item: TableFilterItem): boolean {
+    if (typeof item.disabled === "function") {
+      return item.disabled(item);
+    } else if (typeof item.disabled === "boolean") {
+      return item.disabled;
+    } else {
+      return false;
+    }
+  }
+
   /**
    * Watch for the menu ref
    * Closes the filter when updated to false in any way (ie. click next to it)
@@ -272,11 +279,11 @@
             <!-- Context menu -->
             <v-list v-if="!state.currentFilter" class="mk-table-filter__context-menu">
               <template v-if="searchableFilterKey && state.currentSearchText">
-                <v-list-item @click="applySearch">{{ searchFilterItemLabel }}</v-list-item>
+                <v-list-item @click="applySearch" :disabled="getDisabledState(modelValue[searchableFilterKey])">{{ searchFilterItemLabel }}</v-list-item>
                 <v-divider></v-divider>
               </template>
               <template v-for="key in Object.keys(modelValue)" :key="key">
-                <v-list-item :value="modelValue[key]" @click="changeCurrentFilter(key, modelValue[key])">
+                <v-list-item :value="modelValue[key]" @click="changeCurrentFilter(key, modelValue[key])" :disabled="getDisabledState(modelValue[key])">
                   <v-list-item-title>{{ modelValue[key].title }}</v-list-item-title>
                 </v-list-item>
                 <v-divider v-if="modelValue[key].divider" />
@@ -315,7 +322,7 @@
               :placeholder="!containsFilterValue ? defaultT('Filter') : ''"
               variant="plain"
               :hide-details="true"
-              :readonly="!searchableFilterKey"
+              :readonly="!searchableFilterKey || getDisabledState(modelValue[searchableFilterKey])"
               density="compact"
               class="mk-table-filter__input pa-0"
               color="on-surface1"
