@@ -10,10 +10,12 @@
   import { useI18next, useFilterInQuery, useDatePresets, TableFilterItemQueryConverter } from "@/composables";
   import MkDatePresetMenu from "@/components/MkDatePresetMenu/MkDatePresetMenu.vue";
   import { DateTime } from "luxon";
+  import { useValidationRules } from "@/composables";
 
   // inject dependencies
   const sampleDataConnector = container.resolve(SampleDataConnector);
   const { formatDate } = await useI18next();
+  const { required } = await useValidationRules();
 
   const dayPresets = [1, 7, 28, 90, 365];
   const monthPresets = [0, 1];
@@ -93,7 +95,8 @@
       type: TableFilterType.SingleSelect,
       disabled: () => countryFilterDisabled.value,
       componentProps: {
-        messages: "Select a country",
+        clearable: true,
+        rules: [required],
       },
     },
     fullName: {
