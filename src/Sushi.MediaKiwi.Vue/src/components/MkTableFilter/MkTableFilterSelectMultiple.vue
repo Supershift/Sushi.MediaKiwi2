@@ -70,6 +70,7 @@
         @keydown.enter="closeOrApply"
         @update:menu="(e) => (menuModelValue = e)"
         @update:search="menuModelValue = true"
+        v-bind="tableFilterItem.componentProps"
       >
         <template #selection="{ item }">
           <v-chip v-if="item" v-text="item.title" />

@@ -33,4 +33,6 @@ export type TableFilterItem = {
   closable?: boolean;
   /** Disable the filter in the menu */
   disabled?: boolean | ((item: TableFilterItem) => boolean);
+  /** Custom component props to be passed to the filter component. */
+  componentProps?: Record<string, any>;
 };

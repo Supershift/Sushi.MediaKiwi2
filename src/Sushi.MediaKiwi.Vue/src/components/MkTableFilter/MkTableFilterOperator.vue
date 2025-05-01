@@ -77,9 +77,8 @@
             hide-details="auto"
             :items="operators"
             :label="tableFilterItem.inputLabel || defaultT('Operator')"
-            :rules="[
-                (v: any) => v != undefined && v != null || t(`EmptyFilterError`, `This field is required`),  
-              ]"
+            :rules="[(v: any) => (v != undefined && v != null) || t(`EmptyFilterError`, `This field is required`)]"
+            v-bind="tableFilterItem.componentProps"
           ></v-select>
         </v-col>
         <v-col>
@@ -87,11 +86,9 @@
             v-model="state.value"
             hide-details="auto"
             :type="inputType"
-            :rules="[
-              (v: any) => v != undefined && v != null || t(`EmptyFilterError`, `This field is required`),
-              ...additionalRules
-              ]"
+            :rules="[(v: any) => (v != undefined && v != null) || t(`EmptyFilterError`, `This field is required`), ...additionalRules]"
             :label="tableFilterItem.inputLabel || defaultT('Value')"
+            v-bind="tableFilterItem.componentProps"
           />
         </v-col>
       </v-row>

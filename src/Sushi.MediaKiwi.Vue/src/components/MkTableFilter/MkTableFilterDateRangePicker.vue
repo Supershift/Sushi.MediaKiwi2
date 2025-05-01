@@ -23,9 +23,7 @@
     });
   });
 
-  const emit = defineEmits<{
-    (e: "click:close"): void;
-  }>();
+  defineEmits<(e: "click:close") => void>();
 
   // Create proxy model to prevent direct mutation
   const model = ref(modelValue.value);
@@ -42,6 +40,7 @@
     @update:model-value="applyFilter"
     :datePickerTitle="tableFilterItem.inputLabel"
     :customOptions="customDateRangeOptions"
+    v-bind="tableFilterItem.componentProps"
   />
 </template>
 

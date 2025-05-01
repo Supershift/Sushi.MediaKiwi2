@@ -17,9 +17,7 @@
   // Create proxy model to prevent direct mutation
   const model = ref(modelValue.value?.value || "");
 
-  const emit = defineEmits<{
-    (e: "click:close"): void;
-  }>();
+  const emit = defineEmits<(e: "click:close") => void>();
 
   const inputLabel = computed(() => {
     if (props.tableFilterItem.inputLabel) {
@@ -44,7 +42,7 @@
 <template>
   <MkTableFilterDialog :table-filter-item="tableFilterItem" @close="emit('click:close')" @apply="applyFilter">
     <div class="pa-6">
-      <v-text-field v-model="model" :label="inputLabel" hide-details="auto" :rules="[...additionalRules]" autofocus> </v-text-field>
+      <v-text-field v-model="model" :label="inputLabel" hide-details="auto" :rules="[...additionalRules]" autofocus v-bind="tableFilterItem.componentProps" />
     </div>
   </MkTableFilterDialog>
 </template>
