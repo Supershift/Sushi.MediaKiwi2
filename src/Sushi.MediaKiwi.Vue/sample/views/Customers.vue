@@ -59,6 +59,11 @@
     { title: `Q4 ${currentYear}`, value: getQuarter(4) },
   ];
 
+  const countryFilterDisabled = ref<boolean>(false);
+  function toggleCountryFilter() {
+    countryFilterDisabled.value = !countryFilterDisabled.value;
+  }
+
   const filters = ref<TableFilter>({
     name: {
       title: "Name",
@@ -72,6 +77,7 @@
         { title: "België", value: "BE" },
       ],
       type: TableFilterType.Select,
+      disabled: () => countryFilterDisabled.value,
     },
     fullName: {
       title: "Volledige naam",
@@ -195,7 +201,7 @@
 </script>
 
 <template>
-  <div class="d-flex flex-row text-start align-start on-surface">
+  <div class="d-flex flex-row text-start align-start on-surface ga-2 align-center mb-4">
     <div class="flex-column">
       <v-menu :close-on-content-click="false" location-strategy="connected" location="bottom">
         <template #activator="{ props }">
@@ -224,7 +230,9 @@
         />
       </v-menu>
     </div>
+    <v-btn @click="toggleCountryFilter">Toggle country filter</v-btn>
   </div>
+
   <MkTable
     v-model:sorting="sorting"
     v-model:selection="state.selectedTableRows"

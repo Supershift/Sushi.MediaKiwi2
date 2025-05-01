@@ -31,4 +31,6 @@ export type TableFilterItem = {
   rules?: any[];
   /** Indicates if the user can close the filter. When not set, the user can close the filter */
   closable?: boolean;
+  /** Disable the filter in the menu */
+  disabled?: boolean | ((item: TableFilterItem) => boolean);
 };
