@@ -72,45 +72,65 @@
       type: TableFilterType.TextField,
       searchable: true,
     },
-    country: {
-      title: "Land",
-      options: [
-        { title: "Nederland", value: "NL" },
-        { title: "België", value: "BE" },
-        { title: "United Kingdom", value: "UK" },
-        { title: "Duitsland", value: "DE" },
-        { title: "Frankrijk", value: "FR" },
-        { title: "Nieuw-Zeeland", value: "NZ" },
-        { title: "Polen", value: "PL" },
-        { title: "Amerika", value: "US" },
-        { title: "Australië", value: "AU" },
-        { title: "Canada", value: "CA" },
-        { title: "Zuid-Afrika", value: "ZA" },
-        { title: "Japan", value: "JP" },
-        { title: "China", value: "CN" },
-        { title: "India", value: "IN" },
-        { title: "Brazilië", value: "BR" },
-        { title: "Mexico", value: "MX" },
-      ],
-      type: TableFilterType.SingleSelect,
-      disabled: () => countryFilterDisabled.value,
-      componentProps: {
-        clearable: true,
-        rules: [required],
+    location: {
+      title: "Locatie",
+      children: {
+        city: {
+          title: "Stad",
+          options: [
+            { title: "Rijswijk", value: "RSWK" },
+            { title: "Delft", value: "DLFT" },
+          ],
+          type: TableFilterType.SingleSelect,
+        },
+        regions: {
+          title: "Regio",
+          options: [
+            { title: "Noord-Holland", value: "NH" },
+            { title: "Zuid-Holland", value: "ZH" },
+            { title: "Utrecht", value: "UT" },
+            { title: "Limburg", value: "LB" },
+            { title: "Overijssel", value: "OV" },
+            { title: "Gelderland", value: "GE" },
+            { title: "Flevoland", value: "FL" },
+            { title: "Friesland", value: "FR" },
+            { title: "Drenthe", value: "DR" },
+          ],
+          type: TableFilterType.MultiSelect,
+        },
+        country: {
+          title: "Land",
+          options: [
+            { title: "Nederland", value: "NL" },
+            { title: "België", value: "BE" },
+            { title: "United Kingdom", value: "UK" },
+            { title: "Duitsland", value: "DE" },
+            { title: "Frankrijk", value: "FR" },
+            { title: "Nieuw-Zeeland", value: "NZ" },
+            { title: "Polen", value: "PL" },
+            { title: "Amerika", value: "US" },
+            { title: "Australië", value: "AU" },
+            { title: "Canada", value: "CA" },
+            { title: "Zuid-Afrika", value: "ZA" },
+            { title: "Japan", value: "JP" },
+            { title: "China", value: "CN" },
+            { title: "India", value: "IN" },
+            { title: "Brazilië", value: "BR" },
+            { title: "Mexico", value: "MX" },
+          ],
+          type: TableFilterType.SingleSelect,
+          disabled: () => countryFilterDisabled.value,
+          componentProps: {
+            clearable: true,
+            rules: [required],
+          },
+        },
       },
     },
     fullName: {
       title: "Volledige naam",
       type: TableFilterType.Custom,
       component: () => import("@sample/components/SampleCustomTableFilterInput.vue"),
-    },
-    city: {
-      title: "Stad",
-      options: [
-        { title: "Rijswijk", value: "RSWK" },
-        { title: "Delft", value: "DLFT" },
-      ],
-      type: TableFilterType.SingleSelect,
     },
     dates: <TableFilterItemQueryConverter>{
       title: "Dates",
@@ -129,18 +149,6 @@
       type: TableFilterType.DatePicker,
       toUrl: (objectValue: TableFilterValue) => objectValue.value.toISO(),
       fromUrl: (urlValue: string | string[]) => ({ title: "", value: DateTime.fromISO(Array.isArray(urlValue) ? urlValue[0] : urlValue) }),
-    },
-    countries: {
-      title: "Landen",
-      options: [
-        { title: "Nederland", value: "NL" },
-        { title: "België", value: "BE" },
-        { title: "Duitsland", value: "DE" },
-        { title: "Amerika", value: "US" },
-        { title: "Frankrijk", value: "FR" },
-        { title: "Polen", value: "PL" },
-      ],
-      type: TableFilterType.MultiSelect,
     },
   });
   useFilterInQuery(filters, currentPagination, sorting);
@@ -199,7 +207,7 @@
 
   async function LoadData() {
     // get the data, using the sorting option
-    const result = await sampleDataConnector.GetAll(filters.value.country.selectedValue?.value, sorting.value);
+    const result = await sampleDataConnector.GetAll(filters.value.location.children!.country.selectedValue?.value, sorting.value);
     state.sampleData.result = result;
     // pagination and display options will only display when pageCount is not 0 !!!
     state.sampleData.pageCount = 1;

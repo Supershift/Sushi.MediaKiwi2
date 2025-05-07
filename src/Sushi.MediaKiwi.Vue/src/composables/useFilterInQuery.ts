@@ -3,6 +3,7 @@ import { useRoute, useRouter } from "@/router";
 import { useMediakiwiStore } from "@/stores";
 import { Paging, SortDirection, Sorting, TableFilter, TableFilterItem, TableFilterValue } from "@/models";
 import { LocationQuery, LocationQueryValue } from "vue-router";
+import { flattenFilter } from "@/helpers/filter/flattenFilter";
 
 export type TableFilterItemQueryConverter = TableFilterItem & {
   /** Override default behavior to save the filter in the url (default: toString()) */
@@ -10,7 +11,7 @@ export type TableFilterItemQueryConverter = TableFilterItem & {
 
   /** Override default behavior to get the filter in the url (default: toString()) */
   fromUrl?: (value: string | string[]) => TableFilterValue | undefined;
-}
+};
 
 export function useFilterInQuery<T>(filtersModel?: Ref<TableFilter>, pagingModel?: Ref<Paging>, sortingModel?: Ref<Sorting<T>>) {
   const mediakiwiStore = useMediakiwiStore();
@@ -36,21 +37,21 @@ export function useFilterInQuery<T>(filtersModel?: Ref<TableFilter>, pagingModel
     watch(sortingModel, updateQueryAfterChange, { deep: true });
   }
 
-
   function loadFiltersFromQuery(query: LocationQuery) {
-    for (const filterName in filtersModel?.value) {
+    const items = flattenFilter(filtersModel?.value ?? {});
+
+    for (const filterName in items) {
       if (filterName in query) {
-        const filter = filtersModel.value[filterName];
+        const filter = items[filterName];
 
         if (isTableFilterItemWithExplicitQueryConversion(filter) && filter?.fromUrl) {
           const filterValue = filter.fromUrl(toString(query[filterName]));
-          filtersModel.value[filterName].selectedValue = filterValue;
-        }
-        else {
+          items[filterName].selectedValue = filterValue;
+        } else {
           const filterValue = query[filterName];
 
-          const option = filtersModel.value[filterName].options?.find((x) => x.value.toString() == filterValue!.toString());
-          filtersModel.value[filterName].selectedValue = option ?? { value: filterValue };
+          const option = items[filterName].options?.find((x) => x.value.toString() == filterValue!.toString());
+          items[filterName].selectedValue = option ?? { value: filterValue };
         }
       }
     }
@@ -83,16 +84,18 @@ export function useFilterInQuery<T>(filtersModel?: Ref<TableFilter>, pagingModel
   async function updateQueryAfterChange() {
     await router.replace({ ...route, query: desiredQuery() });
     configureBackControl();
-  };
+  }
 
   function desiredQuery() {
-    let query = { ...route.query };;
+    let query = { ...route.query };
 
-    for (const name in filtersModel?.value) {
-      const filter = filtersModel?.value[name];
+    const items = flattenFilter(filtersModel?.value ?? {});
+    for (const name in items) {
+      const filter = items[name];
       const selectedValue = filter.selectedValue;
 
-      const filterValue = isTableFilterItemWithExplicitQueryConversion(filter) && filter?.toUrl && selectedValue ? filter.toUrl(selectedValue) : selectedValue?.value;
+      const filterValue =
+        isTableFilterItemWithExplicitQueryConversion(filter) && filter?.toUrl && selectedValue ? filter.toUrl(selectedValue) : selectedValue?.value;
 
       query = updateQueryWithValue(query, name, filterValue);
     }
@@ -103,11 +106,11 @@ export function useFilterInQuery<T>(filtersModel?: Ref<TableFilter>, pagingModel
     query = updateQueryWithValue(query, "sortDirection", sortingModel?.value.sortDirection?.toString());
 
     return query;
-  };
+  }
 
   function isTableFilterItemWithExplicitQueryConversion(item: TableFilterItem): item is TableFilterItemQueryConverter {
-    return true
-  };
+    return true;
+  }
 
   function updateQueryWithValue(query: LocationQuery, name: string, value: string | undefined) {
     if (value) {
@@ -116,7 +119,7 @@ export function useFilterInQuery<T>(filtersModel?: Ref<TableFilter>, pagingModel
       delete query[name];
     }
     return query;
-  };
+  }
 
   function configureBackControl() {
     if (
@@ -130,9 +133,9 @@ export function useFilterInQuery<T>(filtersModel?: Ref<TableFilter>, pagingModel
     } else {
       mediakiwiStore.navigationBackUrlOverwrite.delete(route.name?.toString() ?? "");
     }
-  };
+  }
 
   function toString(queryValue: LocationQueryValue | LocationQueryValue[]): string | string[] {
-    return Array.isArray(queryValue) ? queryValue.filter(q => !!q).map(q => q!.toString()) : queryValue?.toString() ?? '';
+    return Array.isArray(queryValue) ? queryValue.filter((q) => !!q).map((q) => q!.toString()) : (queryValue?.toString() ?? "");
   }
 }
