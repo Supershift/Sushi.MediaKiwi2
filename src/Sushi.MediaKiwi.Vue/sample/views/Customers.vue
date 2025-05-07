@@ -73,10 +73,10 @@
       searchable: true,
     },
     location: {
-      title: "Locatie",
+      title: "Location",
       children: {
         city: {
-          title: "Stad",
+          title: "City",
           options: [
             { title: "Rijswijk", value: "RSWK" },
             { title: "Delft", value: "DLFT" },
@@ -84,7 +84,7 @@
           type: TableFilterType.SingleSelect,
         },
         regions: {
-          title: "Regio",
+          title: "Regions",
           options: [
             { title: "Noord-Holland", value: "NH" },
             { title: "Zuid-Holland", value: "ZH" },
@@ -99,24 +99,13 @@
           type: TableFilterType.MultiSelect,
         },
         country: {
-          title: "Land",
+          title: "Country",
           options: [
-            { title: "Nederland", value: "NL" },
-            { title: "België", value: "BE" },
-            { title: "United Kingdom", value: "UK" },
-            { title: "Duitsland", value: "DE" },
-            { title: "Frankrijk", value: "FR" },
-            { title: "Nieuw-Zeeland", value: "NZ" },
-            { title: "Polen", value: "PL" },
-            { title: "Amerika", value: "US" },
-            { title: "Australië", value: "AU" },
-            { title: "Canada", value: "CA" },
-            { title: "Zuid-Afrika", value: "ZA" },
-            { title: "Japan", value: "JP" },
-            { title: "China", value: "CN" },
-            { title: "India", value: "IN" },
-            { title: "Brazilië", value: "BR" },
-            { title: "Mexico", value: "MX" },
+            { title: "Netherlands", value: "NL" },
+            { title: "Belgium", value: "BE" },
+            { title: "Germany", value: "DE" },
+            { title: "France", value: "FR" },
+            { title: "United Kingdom", value: "GB" },
           ],
           type: TableFilterType.SingleSelect,
           disabled: () => countryFilterDisabled.value,
@@ -128,7 +117,7 @@
       },
     },
     fullName: {
-      title: "Volledige naam",
+      title: "Full name",
       type: TableFilterType.Custom,
       component: () => import("@sample/components/SampleCustomTableFilterInput.vue"),
     },
