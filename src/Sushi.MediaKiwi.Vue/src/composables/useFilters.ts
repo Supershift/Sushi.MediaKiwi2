@@ -16,6 +16,7 @@ export async function useFilters(useI18next: ReturnType<typeof useI18nextComposa
    */
   function getFormatterFilterValue(tableFilterItem: TableFilterItem) {
     const value = tableFilterItem.selectedValue?.value;
+    const title = tableFilterItem.selectedValue?.title;
 
     if (!value) {
       return;
@@ -54,10 +55,11 @@ export async function useFilters(useI18next: ReturnType<typeof useI18nextComposa
 
         return `${operator} ${value.value}`;
       }
-      default:
       case TableFilterType.Custom:
+        return title ?? value;
       case TableFilterType.Contains:
       case TableFilterType.TextField:
+      default:
         return value;
     }
   }
