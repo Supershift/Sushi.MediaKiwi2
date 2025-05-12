@@ -236,7 +236,10 @@
 <template>
   <MkErrorProblemDetails v-if="props.showErrors && errorProblemDetails" v-model:problem-details="errorProblemDetails" class="mb-4" />
 
-  <v-progress-linear v-if="inProgress" indeterminate absolute></v-progress-linear>
+  <div class="mk-table__loader position-absolute w-100">
+    <v-progress-linear v-if="inProgress" indeterminate></v-progress-linear>
+  </div>
+
   <slot name="header"></slot>
 
   <template v-if="(props.new || props.title || slots.toolbar || slots.overflowMenuActions) && !showFullEmptyState">
@@ -377,6 +380,10 @@
       justify-content: flex-end;
       align-items: center;
       gap: 24px;
+    }
+
+    &__loader {
+      top: var(--v-layout-top) !important;
     }
   }
 </style>
