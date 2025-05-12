@@ -234,7 +234,7 @@
 </script>
 
 <template>
-  <MkErrorProblemDetails v-if="errorProblemDetails" v-model:problem-details="errorProblemDetails" class="mb-4" show-details />
+  <MkErrorProblemDetails v-if="props.showErrors && errorProblemDetails" v-model:problem-details="errorProblemDetails" class="mb-4" />
 
   <v-progress-linear v-if="inProgress" indeterminate absolute></v-progress-linear>
   <slot name="header"></slot>
