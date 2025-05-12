@@ -51,7 +51,7 @@
       @click:row="onItemClick"
     >
       <template #tbody="{ dataItem }">
-        <td><v-icon icon="symbols:imagesmode" color="secondary"></v-icon></td>
+        <td class="icon"><v-icon icon="symbols:imagesmode" color="secondary"></v-icon></td>
         <td>{{ dataItem.title }}</td>
       </template>
     </MkTable>
@@ -59,6 +59,10 @@
 </template>
 <style scoped lang="scss">
   .folder-tree {
+    .icon {
+      width: 50px;
+    }
+
     .disabled {
       color: rgba(var(--v-theme-on-surface), var(--v-disabled-opacity));
       cursor: default;
