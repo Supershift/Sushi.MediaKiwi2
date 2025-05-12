@@ -235,6 +235,13 @@
     }
   }
 
+  const currentFilterComponent = computed(() => {
+    if (state.currentFilter) {
+      return getComponentForFilterType(state.currentFilter);
+    }
+    return null;
+  });
+
   function getDisabledState(item: TableFilterItem): boolean {
     if (typeof item.disabled === "function") {
       return item.disabled(item);
@@ -293,7 +300,7 @@
             <!-- Filter compoment -->
             <template v-else-if="state.currentFilter">
               <component
-                :is="getComponentForFilterType(state.currentFilter)"
+                :is="currentFilterComponent"
                 v-model="state.currentFilterValue"
                 :table-filter-item="state.currentFilter"
                 @click:close="closeMenu"
