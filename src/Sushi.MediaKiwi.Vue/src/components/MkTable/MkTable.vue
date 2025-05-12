@@ -2,6 +2,9 @@
 <script setup lang="ts" generic="T">
   import { TableFilter } from "@/models/table";
   import { Paging, Sorting } from "@/models/api";
+  import MkErrorProblemDetails from "@/components/MkErrorProblemDetails/MkErrorProblemDetails.vue";
+  import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
+  import { createErrorProblemDetails } from "@/errorHandler/createErrorProblemDetails";
   import { ref, watch } from "vue";
   import { useSnackbarStore } from "@/stores/snackbar";
   import { onMounted, computed } from "vue";
@@ -48,6 +51,7 @@
   /** Display options for the table */
   const displayOptions = defineModel<TableDisplayOptions | boolean>("displayOptions", { required: false });
   const hasDisplayOptions = computed(() => displayOptions.value !== undefined && displayOptions.value !== false);
+  const errorProblemDetails = defineModel<ErrorProblemDetails | null | undefined>("error", { required: false });
   /** Reference for multiple tables on one view */
   const tableReference = defineModel<string>("tableReference", { required: false, default: "Table" });
 
@@ -203,11 +207,20 @@
       inProgress.value = true;
 
       try {
+        errorProblemDetails.value = null;
         await props.onLoad();
 
         // When the data is loaded, set the initialDataLoaded to true
         initialDataLoaded.value = true;
       } catch (error) {
+        let errorResult: ErrorProblemDetails;
+        if (error instanceof ErrorProblemDetails) {
+          errorResult = error as ErrorProblemDetails;
+        } else {
+          errorResult = await createErrorProblemDetails(error);
+        }
+        errorProblemDetails.value = errorResult;
+
         snackbar.showMessage("Failed to fetch data");
       } finally {
         // stop progress indicator
@@ -221,6 +234,8 @@
 </script>
 
 <template>
+  <MkErrorProblemDetails v-if="errorProblemDetails" v-model:problem-details="errorProblemDetails" class="mb-4" show-details />
+
   <v-progress-linear v-if="inProgress" indeterminate absolute></v-progress-linear>
   <slot name="header"></slot>
 
