@@ -3,15 +3,11 @@
   import { computed } from "vue";
   import { reactive } from "vue";
   import Tree from "./Tree.vue";
-  import { ref } from "process";
 
   // Inject dependencies
   const emit = defineEmits<(e: "click:close") => void>();
 
   const modelValue = defineModel<TableFilterValue>({ required: true });
-  const isCountry = (item: any) => {
-    return item && item.region && item.value;
-  };
   defineProps<{
     tableFilterItem?: TableFilterItem;
   }>();

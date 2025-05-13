@@ -302,6 +302,7 @@
               <component
                 :is="currentFilterComponent"
                 v-model="state.currentFilterValue"
+                v-bind="state.currentFilter.componentProps"
                 :table-filter-item="state.currentFilter"
                 @click:close="closeMenu"
                 @update:model-value="applyFilter"
