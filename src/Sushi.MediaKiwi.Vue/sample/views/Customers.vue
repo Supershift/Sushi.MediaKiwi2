@@ -72,6 +72,11 @@
       type: TableFilterType.TextField,
       searchable: true,
     },
+    custom: {
+      title: "Custom",
+      type: TableFilterType.Custom,
+      component: () => import("@sample/components/SampleCustomFilter.vue"),
+    },
     country: {
       title: "Land",
       options: [
