@@ -15,10 +15,11 @@
   } from ".";
   import { DefineComponent, defineAsyncComponent } from "vue";
   import { TableFilterType, IconsLibrary } from "@/models";
-  import { MkInputChip } from "@/components/MkChip";
   import { useI18next } from "@/composables/useI18next";
-  import { useFilters } from "@/composables/useFilters";
   import { onKeyStroke } from "@vueuse/core";
+  import MkTableFilterMenu from "./MkTableFilterMenu.vue";
+  import MkTableFilterChips from "./MkTableFilterChips.vue";
+  import { flattenFilter } from "@/helpers/filter/flattenFilter";
 
   // define properties and events
   const props = defineProps<{
@@ -29,14 +30,17 @@
 
   // inject dependencies
   const { t, defaultT } = await useI18next("MkFilter");
-  const { appliedFilterChip } = await useFilters(useI18next("MkFilter"));
 
   // define reactive variables
   const menu = ref(false);
 
   // check if we have a filter value
   const containsFilterValue = computed(() => {
-    return props.modelValue && Object.keys(props.modelValue).some((key) => props.modelValue[key].selectedValue !== undefined);
+    if (!props.modelValue) return false;
+
+    const filterItems = flattenFilter(props.modelValue);
+
+    return Object.values(filterItems)!.some((item) => !!item.selectedValue);
   });
 
   /** Get the searchable TableFilterItem */
@@ -126,19 +130,30 @@
     state.currentFilter = selectedFilter;
   }
 
-  /* Reads the value currently set in the filter input and sets it on the filter as the selected value. */
-  function applyFilter() {
-    const copy = { ...props.modelValue };
-
-    // get value and set it to selected filter values
-    if (state.currentFilter !== undefined) {
-      if (state.currentFilterValue !== undefined) {
-        copy[state.currentFilterKey!].selectedValue = state.currentFilterValue;
-      } else if (copy[state.currentFilterKey!]) {
-        // delete the filter value if we had a value, but it is now undefined
-        copy[state.currentFilterKey!].selectedValue = undefined;
+  function setSelectedValueRecursively(tableFilter: Record<string, TableFilterItem>, key: string, value: TableFilterValue | undefined) {
+    for (const currentKey in tableFilter) {
+      const filter = tableFilter[currentKey];
+      if (currentKey === key) {
+        // Set or unset selectedValue
+        filter.selectedValue = value;
+        return true; // Stop further searching once we've found it
+      } else if (filter.children && typeof filter.children === "object") {
+        if (setSelectedValueRecursively(filter.children, key, value)) {
+          return true;
+        }
       }
     }
+    return false;
+  }
+
+  /* Reads the value currently set in the filter input and sets it on the filter as the selected value. */
+  function applyFilter() {
+    const copy: Record<string, TableFilterItem> = { ...props.modelValue };
+
+    if (state.currentFilterKey) {
+      setSelectedValueRecursively(copy, state.currentFilterKey, state.currentFilterValue);
+    }
+
     // emit an event telling the selected filters have changed
     emit("update:modelValue", copy);
 
@@ -171,10 +186,10 @@
 
   /* Removed the filterItem id from the modelValue collection. */
   function removeFilter(key: string) {
-    const copy = { ...props.modelValue };
+    const copy: Record<string, TableFilterItem> = { ...props.modelValue };
 
     // delete the filter value if we had a value, but it is now undefined
-    copy[key].selectedValue = undefined;
+    setSelectedValueRecursively(copy, key, undefined);
 
     // emit an event telling the selected filters have changed
     emit("update:modelValue", copy);
@@ -284,18 +299,20 @@
             </template>
 
             <!-- Context menu -->
-            <v-list v-if="!state.currentFilter" class="mk-table-filter__context-menu">
-              <template v-if="searchableFilterKey && state.currentSearchText">
-                <v-list-item @click="applySearch" :disabled="getDisabledState(modelValue[searchableFilterKey])">{{ searchFilterItemLabel }}</v-list-item>
-                <v-divider></v-divider>
+            <MkTableFilterMenu
+              v-if="!state.currentFilter"
+              class="mk-table-filter__context-menu"
+              :table-filter="modelValue"
+              @getDisabledState="getDisabledState"
+              @changeCurrentFilter="changeCurrentFilter"
+            >
+              <template #search>
+                <template v-if="searchableFilterKey && state.currentSearchText">
+                  <v-list-item @click="applySearch" :disabled="getDisabledState(modelValue[searchableFilterKey])">{{ searchFilterItemLabel }}</v-list-item>
+                  <v-divider></v-divider>
+                </template>
               </template>
-              <template v-for="key in Object.keys(modelValue)" :key="key">
-                <v-list-item :value="modelValue[key]" @click="changeCurrentFilter(key, modelValue[key])" :disabled="getDisabledState(modelValue[key])">
-                  <v-list-item-title>{{ modelValue[key].title }}</v-list-item-title>
-                </v-list-item>
-                <v-divider v-if="modelValue[key].divider" />
-              </template>
-            </v-list>
+            </MkTableFilterMenu>
 
             <!-- Filter compoment -->
             <template v-else-if="state.currentFilter">
@@ -312,17 +329,7 @@
 
           <div class="flex-1-1 d-flex flex-wrap ga-2 my-2">
             <!-- Chips -->
-            <template v-for="key in Object.keys(modelValue)">
-              <MkInputChip
-                v-if="modelValue[key].selectedValue"
-                :key="key"
-                @click="setCurrentFilter(key, modelValue[key])"
-                @click:remove="removeFilter(key)"
-                :closable="modelValue[key].closable ?? true"
-              >
-                {{ appliedFilterChip(modelValue[key]) }}
-              </MkInputChip>
-            </template>
+            <MkTableFilterChips v-if="containsFilterValue" :table-filter="modelValue" @changeCurrentFilter="setCurrentFilter" @removeFilter="removeFilter" />
 
             <!-- Search box -->
             <v-text-field

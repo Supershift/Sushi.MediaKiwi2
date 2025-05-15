@@ -35,4 +35,8 @@ export type TableFilterItem = {
   disabled?: boolean | ((item: TableFilterItem) => boolean);
   /** Custom component props to be passed to the filter component. */
   componentProps?: Record<string, unknown>;
+  /**
+   * The filter item can have children, which will be displayed in the menu when the filter is opened.
+   */
+  children?: Record<string, TableFilterItem>;
 };
