@@ -116,6 +116,11 @@
         },
       },
     },
+    custom: {
+      title: "Custom",
+      type: TableFilterType.Custom,
+      component: () => import("@sample/components/SampleCustomFilter.vue"),
+    },
     fullName: {
       title: "Full name",
       type: TableFilterType.Custom,
@@ -194,6 +199,16 @@
     alert("move: " + state.selectedTableRows.length);
   }
 
+  async function wait(): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        LoadData().then(() => {
+          resolve(undefined);
+        });
+      }, 2000);
+    });
+  }
+
   async function LoadData() {
     // get the data, using the sorting option
     const result = await sampleDataConnector.GetAll(filters.value.location.children!.country.selectedValue?.value, sorting.value);
@@ -258,7 +273,7 @@
     :data="state.sampleData.result"
     :api-result="state.sampleData"
     :item-id="(item: ICustomer) => item.id"
-    @load="LoadData"
+    @load="wait"
     @click:row="onCustomerClick"
     hide-bulk-action-bar
     :disable-item-selection="(item) => item.id % 2 !== 0"

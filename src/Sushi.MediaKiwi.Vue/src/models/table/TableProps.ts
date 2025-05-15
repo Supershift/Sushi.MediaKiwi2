@@ -55,6 +55,8 @@ export type MkTableProps<T> = MkTableBaseProps<T> &
     pageTracking?: boolean;
     /** Sets the toolbar as a sticky element when scrolling. Defaults to true on MkToolbar */
     stickyToolbar?: boolean;
+    /** Shows a ErrorProblemDetails componenent on top of the MkTable when a error occurs in the load method, default: false */
+    showErrors?: boolean;
   };
 
 export type MkTableEmptyStateProps = {
