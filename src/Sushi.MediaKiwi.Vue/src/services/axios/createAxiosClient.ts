@@ -3,12 +3,19 @@ import { addAuthentication } from "./addAuthentication";
 import { registerInterceptor } from "./interceptor";
 import { MediakiwiVueOptions } from "@/models";
 import { addAbortController, clearAbortController } from "./addAbortController";
-import { inject } from "vue";
 
 /** Creates an Axios client with the specified base url, application/json as content type and authorization header added when an active account is found. */
-export function createAxiosClient(baseUrl: string): AxiosInstance {
-  // Inject the MediakiwiVueOptions to get the axiosClient options
-  const mediakiwiOptions = inject<MediakiwiVueOptions>("mediakiwi");
+export function createAxiosClient(baseUrl: string): AxiosInstance;
+export function createAxiosClient(options: MediakiwiVueOptions): AxiosInstance;
+export function createAxiosClient(value: string | MediakiwiVueOptions): AxiosInstance {
+  let mediakiwiOptions: MediakiwiVueOptions | undefined;
+
+  const baseUrl = typeof value === "string" ? value : value?.apiBaseUrl;
+
+  // If the value is an object, we assume it's a MediakiwiVueOptions object
+  if (value instanceof Object) {
+    mediakiwiOptions = value;
+  }
 
   const result = axios.create({
     baseURL: baseUrl,
