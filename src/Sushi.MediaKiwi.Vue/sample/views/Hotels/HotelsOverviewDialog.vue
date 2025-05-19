@@ -9,6 +9,7 @@
   import { Country, HotelDto, useSampleApi } from "@sample/services";
 
   // inject dependencies
+  const modelValue = defineModel({ type: Boolean, default: false });
   const sampleApi = useSampleApi();
   const { t } = await useI18next();
 
@@ -23,16 +24,18 @@
     hotels.value = (await sampleApi.hotel({ ...currentPagination.value })).data;
   }
 
-  // Load countries
-  countries.value = (await sampleApi.countries({ pageIndex: 0, pageSize: 9999 })).data.result;
-
   function onClose() {
     selectedHotels.value = [];
+  }
+
+  async function onOpen() {
+    // Load countries
+    countries.value = (await sampleApi.countries({ pageIndex: 0, pageSize: 9999 })).data.result;
   }
 </script>
 
 <template>
-  <MkFormDialog @close="onClose">
+  <MkFormDialog v-model="modelValue" @close="onClose" @update:modelValue="(value) => (value ? onOpen() : onClose())">
     <mk-table
       :api-result="hotels"
       v-model:selection="selectedHotels"

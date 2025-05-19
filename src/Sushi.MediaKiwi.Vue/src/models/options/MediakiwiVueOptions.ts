@@ -10,6 +10,7 @@ import { MediakiwiSigninConfigurations } from "./MediakiwiSignInConfigurations";
 import { INavigationProvider } from "@/navigation/INavigationProvider";
 import { ComponentPublicInstance } from "vue";
 import { MediaKiwiEmptyStateOptions } from "./MediakiwiEmptyStateOptions";
+import { InternalAxiosRequestConfig } from "axios";
 
 export interface MediakiwiVueOptions {
   /** Base url for the MediaKiwi API, e.g. https://portal.mydomain.com/mediakiwi/api */
@@ -48,4 +49,10 @@ export interface MediakiwiVueOptions {
   formOptions?: MediaKiwiFormOptions;
   /** Global errorhandler, see {@link https://vuejs.org/api/application.html#app-config-errorhandler} */
   globalErrorHandler?: (err: any, instance?: ComponentPublicInstance | null, info?: string) => Promise<void>;
+  axiosClient?: {
+    interceptors?: {
+      addAbortController?: (config: InternalAxiosRequestConfig) => InternalAxiosRequestConfig;
+      clearAbortController?: (response: any) => any;
+    };
+  };
 }
