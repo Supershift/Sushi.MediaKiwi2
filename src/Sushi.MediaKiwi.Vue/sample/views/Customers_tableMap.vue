@@ -61,7 +61,7 @@
         { title: "Nederland", value: "NL" },
         { title: "België", value: "BE" },
       ],
-      type: TableFilterType.Select,
+      type: TableFilterType.SingleSelect,
     },
     fullName: {
       title: "Volledige naam",
@@ -74,7 +74,7 @@
         { title: "Rijswijk", value: "RSWK" },
         { title: "Delft", value: "DLFT" },
       ],
-      type: TableFilterType.RadioGroup,
+      type: TableFilterType.SingleSelect,
     },
     dates: {
       title: "Dates",
@@ -90,7 +90,7 @@
         { title: "Nederland", value: "NL" },
         { title: "België", value: "BE" },
       ],
-      type: TableFilterType.SelectMultipleCheckbox,
+      type: TableFilterType.MultiSelect,
     },
   });
 

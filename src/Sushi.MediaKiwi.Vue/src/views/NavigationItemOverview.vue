@@ -30,7 +30,7 @@
     section: {
       title: "Section",
       options: sections.value.map((x) => ({ title: x.name, value: x.id })),
-      type: TableFilterType.Select,
+      type: TableFilterType.SingleSelect,
     },
   });
 
