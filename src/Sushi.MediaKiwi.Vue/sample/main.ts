@@ -15,7 +15,7 @@ import { modules } from "./views/modules";
 import { useEntraSettings } from "@/composables/useEntraSettings";
 import { Configuration } from "@azure/msal-browser";
 
-import NavigationProvider from "./navigation/NavigationProvider";
+import navigation from "./navigation/NavigationProvider";
 import { globalConfiguration } from "./plugin/GlobalConfiguration";
 
 import emptyStateFilterSvg from "./assets/empty-state-filter.svg";
@@ -40,7 +40,7 @@ const mediakiwiOptions: MediakiwiVueOptions = {
     ...globalConfiguration,
   },
   apiBaseUrl: import.meta.env.VITE_APP_MEDIAKIWI_APIBASEURL,
-  navigationProvider: NavigationProvider,
+  navigationProvider: navigation,
   msalConfig: <Configuration>{},
   identity: <MediakiwiIdentity>{},
   parseQueryStringArray: true,
