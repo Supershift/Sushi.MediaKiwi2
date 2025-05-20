@@ -2,10 +2,14 @@
   import { useBreadcrumbs } from "@/composables/useBreadcrumbs";
   import MkBreadcrumbItem from "./MkBreadcrumbItem.vue";
   import { useNavigation } from "@/composables";
+  import { computed } from "vue";
 
   // inject dependencies
   const { hasBreadcrumbs, breadcrumbs, showMobileBackButton, getBreadcrumbLabel } = useBreadcrumbs();
   const navigation = useNavigation();
+
+  /** Returns the active breadcrumbs, excluding the groups. */
+  const activeBreadcrumbs = computed(() => breadcrumbs.value.filter((item) => !item.isGroup));
 </script>
 <template>
   <v-card v-if="hasBreadcrumbs" :class="['breadcrumbs-container ml-0 pa-4 px-md-10 pt-md-10 pb-0']">
@@ -18,7 +22,7 @@
     <div v-else>
       <v-breadcrumbs class="px-0 pt-0">
         <MkBreadcrumbItem
-          v-for="(item, index) in breadcrumbs"
+          v-for="(item, index) in activeBreadcrumbs"
           :key="item.id"
           :item="item"
           :index="index"

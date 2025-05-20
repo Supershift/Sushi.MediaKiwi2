@@ -27,4 +27,11 @@ export type NavigationItem = {
     label: string;
     id: string;
   };
+  /**
+   * If defined, the navigation item is used to group items in the navigation hierarchy and can be toggled through the UI.
+   * Groups are not displayed in the breadcrumbs.
+   */
+  isGroup?: boolean;
+  /** Append a divider beneath the menu item */
+  appendDivider?: boolean;
 };

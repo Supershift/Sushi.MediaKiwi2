@@ -18,7 +18,14 @@ export type NavigationItem = {
   roles?: string[];
   /** If provided, the navigation item will have a layout with that name */
   layout?: string;
-}
+  /**
+   * If defined, the navigation item is used to group items in the navigation hierarchy and can be toggled through the UI.
+   * Groups are not displayed in the breadcrumbs.
+   */
+  isGroup?: boolean;
+  /** Append a divider beneath the menu item */
+  appendDivider?: boolean;
+};
 
 export type Section = {
   /** Unique identifier for this section. */
@@ -33,7 +40,7 @@ export type Section = {
   tooltip?: string;
   /** Items in this section */
   items: NavigationItem[];
-}
+};
 
 export class ObjectNavigationProvider implements INavigationProvider {
   private navigationTree: NavigationTree = new NavigationTree([]);
@@ -45,15 +52,15 @@ export class ObjectNavigationProvider implements INavigationProvider {
   SetTree(sections: Section[]) {
     // convert provided sections to tree
     const resultItems: SectionModel[] = [];
-    sections.forEach(section => {
+    sections.forEach((section) => {
       const resultItem: SectionModel = {
         id: section.id,
         name: section.name,
         icon: section.icon,
         roles: section.roles,
         tooltip: section.tooltip,
-        items: []
-      }
+        items: [],
+      };
 
       resultItem.items = this.convertNavigationItem(section.items, resultItem);
 
@@ -65,24 +72,26 @@ export class ObjectNavigationProvider implements INavigationProvider {
 
   private convertNavigationItem(items: NavigationItem[], section: SectionModel, parent?: NavigationItemModel): NavigationItemModel[] {
     const result: NavigationItemModel[] = [];
-    items.forEach(item => {
+    items.forEach((item) => {
       const resultItem: NavigationItemModel = {
         id: item.id,
         name: item.name,
         parameterName: item.parameterName,
         icon: item.icon,
-        componentKey: item.componentKey,
         roles: item.roles,
         section: section,
         parent: parent,
         children: [],
-        layout: item.layout
+        layout: item.layout,
+        appendDivider: item.appendDivider,
+        isGroup: item.isGroup,
       };
-      if (item.children)
-        resultItem.children = this.convertNavigationItem(item.children, section, resultItem);
+
+      if (!item.isGroup) resultItem.componentKey = item.componentKey;
+
+      if (item.children) resultItem.children = this.convertNavigationItem(item.children, section, resultItem);
       result.push(resultItem);
     });
     return result;
   }
 }
-
