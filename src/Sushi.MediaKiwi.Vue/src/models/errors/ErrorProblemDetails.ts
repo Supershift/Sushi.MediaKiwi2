@@ -1,7 +1,5 @@
-import { AxiosResponse, HttpStatusCode } from "axios";
+import { AxiosResponse } from "axios";
 import { ApiError } from "./ApiError";
-import { container } from "tsyringe";
-import { ErrorMessages } from "./ErrorMessages";
 
 /**
  * Implements Sushi.MediaKiwi.Services.Model.ErrorProblemDetails
@@ -13,6 +11,7 @@ export class ErrorProblemDetails extends Error {
   detail?: string;
   instance?: string;
   error?: ApiError | Record<string, string[]>;
+  silent?: boolean;
 
   constructor(detail?: string, type?: string, title?: string, status?: number) {
     super();
@@ -35,7 +34,7 @@ export class ErrorProblemDetails extends Error {
   static fromResponse(response: AxiosResponse): ErrorProblemDetails {
     const result = new ErrorProblemDetails();
 
-    if (response && response.data) {
+    if (response?.data) {
       result.type = response.data.type;
       result.title = response.data.title;
       result.status = response.status || response.data.status;

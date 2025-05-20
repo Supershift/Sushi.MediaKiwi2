@@ -3,6 +3,7 @@ import { ComponentPublicInstance } from "vue";
 import { useSnackbarStore } from "@/stores";
 import { useErrorProblemDetails } from "@/composables/useErrorProblemDetails";
 import { createErrorProblemDetails } from "./createErrorProblemDetails";
+import { error } from "console";
 
 /**
  * Vue global error handler, can be overridden by the user
@@ -23,13 +24,18 @@ export async function globalErrorHandler(err: any, instance?: ComponentPublicIns
     errorProblemDetails = await createErrorProblemDetails(err);
   }
 
+  if (errorProblemDetails.silent) {
+    // If the error is silent, we don't want to show it to the user
+    return;
+  }
+
   // If we have an instance, try to find the closest form, and set the error
   if (instance) {
     // find the closest form
     const mkForm = findParentMkForm(instance);
 
     // If we have a form, set the error on the form
-    if (mkForm && mkForm.setError) {
+    if (mkForm?.setError) {
       mkForm.setError(errorProblemDetails);
       // We set the error on the form, so we can leave
       return;
@@ -48,7 +54,7 @@ export async function setErrorSnackbar(error: ErrorProblemDetails) {
   const snackbar = useSnackbarStore();
 
   // define the messages
-  const message = getErrorMessages(error)?.join(", ") || "";
+  const message = getErrorMessages(error)?.join(", ") ?? "";
 
   // Show a snackbar message to the user
   snackbar.showMessage(message);
