@@ -26,3 +26,4 @@ export * from "./MkCopyButton";
 export * from "./MkErrorProblemDetails";
 export * from "./MkSnackbar";
 export * from "./MkTimeZoneSwitch";
+export * from "./MkFormCard";
