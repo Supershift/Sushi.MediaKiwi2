@@ -16,14 +16,17 @@
   const emit = defineEmits<(e: "click:close") => void>();
 
   // Create proxy model to prevent direct mutation
-  const model = ref(modelValue.value);
+  const model = ref(modelValue.value?.value);
 
   // Additional rules for the input field
   const additionalRules = computed(() => props.tableFilterItem.rules || []);
 
   function applyFilter() {
     if (model.value) {
-      modelValue.value = model.value;
+      modelValue.value = {
+        value: model.value,
+        title: props.tableFilterItem.options?.find((option) => option.value === model.value)?.title,
+      };
     }
   }
 </script>
@@ -36,7 +39,6 @@
         hide-details="auto"
         :items="tableFilterItem.options"
         :label="tableFilterItem.inputLabel || defaultT('Value')"
-        return-object
         :rules="[...additionalRules]"
         autofocus
         @keydown.enter="applyFilter"

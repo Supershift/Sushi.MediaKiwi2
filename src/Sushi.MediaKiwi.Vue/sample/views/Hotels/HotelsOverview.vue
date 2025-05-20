@@ -32,6 +32,7 @@
   const currentPagination = ref<Paging>({});
   const hotels = ref<ListResult<HotelDto>>();
   const countries = ref<Country[]>();
+  const countryOptions = ref<TableFilterValue[]>([]);
   const selectedHotels = ref<HotelDto[]>([]);
 
   const state = reactive({
@@ -83,14 +84,14 @@
         ...currentPagination.value,
       })
     ).data;
+
+    // Load countries
+    countries.value = (await sampleApi.countries({ pageIndex: 0, pageSize: 9999 })).data.result;
+
+    // Set filter options
+    filters.value.countryCode.options = countries.value?.map(({ code, name }) => <TableFilterValue>{ title: name, value: code });
+    countryOptions.value = countries.value?.map(({ code, name }) => <TableFilterValue>{ title: name, value: code });
   }
-
-  // Load countries
-  countries.value = (await sampleApi.countries({ pageIndex: 0, pageSize: 9999 })).data.result;
-
-  // Set filter options
-  filters.value.countryCode.options = countries.value?.map(({ code, name }) => <TableFilterValue>{ title: name, value: code });
-  const countryOptions = countries.value?.map(({ code, name }) => <TableFilterValue>{ title: name, value: code });
 
   // create a sorting option object with a default value
   const sorting = ref<Sorting>({
