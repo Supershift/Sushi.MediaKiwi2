@@ -1,3 +1,7 @@
+.v-list-group {
+  --prepend-width: 10px !important;
+}
+
 .v-list-item__prepend > .v-badge ~ .v-list-item__spacer,
 .v-list-item__prepend > .v-icon ~ .v-list-item__spacer,
 .v-list-item__prepend > .v-tooltip ~ .v-list-item__spacer {
