@@ -41,7 +41,7 @@
   const filters = ref<TableFilter>({
     isActive: {
       title: "Active",
-      type: TableFilterType.RadioGroup,
+      type: TableFilterType.SingleSelect,
       options: [
         { title: "Yes", value: true },
         { title: "No", value: false },
@@ -49,7 +49,7 @@
     },
     countryCode: {
       title: "Country",
-      type: TableFilterType.Select,
+      type: TableFilterType.SingleSelect,
       options: [],
     },
   });
