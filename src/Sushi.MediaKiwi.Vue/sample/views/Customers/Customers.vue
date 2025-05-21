@@ -1,12 +1,12 @@
 <script setup lang="ts">
-  import SampleSideSheet from "./../components/SampleSideSheet.vue";
+  import SampleSideSheet from "./../../components/SampleSideSheet.vue";
   import { reactive, ref, watch, computed } from "vue";
   import { TableFilter, Sorting, Paging, TableFilterType, SortDirection, IconsLibrary, IListResult, DateRange, TableFilterValue } from "@/models";
   import { MkTable, MkOverflowMenuIcon, MkTd, MkTh } from "@/components";
   import type { SampleData } from "@sample/models/SampleData";
   import { SampleDataConnector } from "@sample/services/SampleDataConnector";
   import { container } from "tsyringe";
-  import { ICustomer } from "./../models/Customer";
+  import { ICustomer } from "../../models/Customer";
   import { useI18next, useFilterInQuery, useDatePresets, TableFilterItemQueryConverter } from "@/composables";
   import MkDatePresetMenu from "@/components/MkDatePresetMenu/MkDatePresetMenu.vue";
   import { DateTime } from "luxon";
