@@ -1,10 +1,10 @@
-<script setup lang="ts">  
+<script setup lang="ts">
   import { ref, computed } from "vue";
   import { useNavigation } from "@/composables/useNavigation";
   import { NavigationItem } from "@/models/navigation";
 
   const props = defineProps<{
-    navigationItem: NavigationItem;    
+    navigationItem: NavigationItem;
   }>();
 
   const navigation = useNavigation();
@@ -38,7 +38,7 @@
   const isActive = computed(() => navigation.determineIfNavigationItemIsActive(props.navigationItem));
 
   // get all children we want to render (exclude children with parameters)
-  const children = computed(() => props.navigationItem.children.filter(x=>!x.parameterName));  
+  const children = computed(() => props.navigationItem.children.filter((x) => !x.parameterName || x.parent?.isGroup));
 </script>
 
 <template>
@@ -67,6 +67,7 @@
     :prepend-icon="icon"
     @click.stop="hasScreen(navigationItem) ? onItemClick(navigationItem) : {}"
   />
+  <v-divider v-if="navigationItem.appendDivider" class="mb-2" />
 </template>
 <style lang="scss">
   /** Used to override the spacing for icons vuetify that ships with */

@@ -1,15 +1,18 @@
 <script setup lang="ts">
   import { MkForm, MkMoneyValue, MkFileInput } from "@/components";
-  import { useBreadcrumbs, useNavigation, useValidationRules } from "@/composables";
+  import { useBreadcrumbs, useI18next, useNavigation, useValidationRules } from "@/composables";
 
   import { reactive, ref } from "vue";
   import MkNavigationDrawerInfo from "@/components/MkNavigation/MkNavigationDrawerInfo.vue";
   import { useSampleApi, Country, HotelDto } from "@sample/services";
+  import MkFormCard from "@/components/MkFormCard/MkFormCard.vue";
+  import MkFormCardLabel from "@/components/MkFormCard/MkFormCardLabel.vue";
 
   // inject dependencies
   const sampleApi = useSampleApi();
   const { required } = await useValidationRules();
   const { setCurrentBreadcrumbLabel } = useBreadcrumbs();
+  const { formatDate } = await useI18next();
 
   const navigation = useNavigation();
   const radioModel = ref("1");
@@ -98,34 +101,50 @@
   </MkNavigationDrawerInfo>
 
   <MkForm @submit="onSave" @delete="onDelete" @undo="onUndo" @load="onLoad">
-    <v-text-field v-model="state.hotel.name" label="Name" :rules="[required]"></v-text-field>
+    <MkFormCard>
+      <v-text-field v-model="state.hotel.name" label="Name" :rules="[required]" hide-details="auto"></v-text-field>
+    </MkFormCard>
 
-    <v-autocomplete
-      v-model="state.hotel.countryCode"
-      label="Country"
-      :items="state.countries"
-      item-title="name"
-      item-text="name"
-      item-value="code"
-    ></v-autocomplete>
-    <v-checkbox v-model="state.hotel.isActive" label="Is Active"></v-checkbox>
+    <MkFormCard>
+      <v-autocomplete
+        v-model="state.hotel.countryCode"
+        label="Country"
+        :items="state.countries"
+        item-title="name"
+        item-text="name"
+        item-value="code"
+      ></v-autocomplete>
 
-    <mk-money-value v-model="state.hotel.srp" label="SRP"></mk-money-value>
+      <v-checkbox v-model="state.hotel.isActive" label="Is Active"></v-checkbox>
 
-    <v-slider v-model="slider" show-ticks step="10" thumb-label="always"></v-slider>
+      <mk-money-value v-model="state.hotel.srp" label="SRP"></mk-money-value>
 
-    <v-radio-group v-model="radioModel" :rules="[() => radioModel === '2' || 'Show is the only option']">
-      <v-radio label="Hide" value="1" disabled></v-radio>
-      <v-radio label="Show" value="2"></v-radio>
-      <v-radio label="Is Featured" value="3"></v-radio>
-    </v-radio-group>
+      <v-slider v-model="slider" show-ticks step="10" thumb-label="always"></v-slider>
 
-    <v-select v-model:model-value="selectHotelType" multiple :items="['City', 'Hostel', 'Resort', 'Motel']" label="Hotel Type" chips closable-chips clearable />
+      <v-radio-group v-model="radioModel" :rules="[() => radioModel === '2' || 'Show is the only option']">
+        <v-radio label="Hide" value="1" disabled></v-radio>
+        <v-radio label="Show" value="2"></v-radio>
+        <v-radio label="Is Featured" value="3"></v-radio>
+      </v-radio-group>
+
+      <v-select
+        v-model:model-value="selectHotelType"
+        multiple
+        :items="['City', 'Hostel', 'Resort', 'Motel']"
+        label="Hotel Type"
+        chips
+        closable-chips
+        clearable
+      />
+    </MkFormCard>
   </MkForm>
+
   <MkForm title="Hotel files" @submit="onFilesSave" @undo="onFilesUndo" @delete="onFilesDelete" @load="onFilesLoad">
-    <template #toolbarHeader>
-      <v-card-text class="flex-1-1 w-75"> File Upload </v-card-text>
-    </template>
-    <mk-file-input :uploads="state.files" label="Pool blueprints" :multiple="true"></mk-file-input>
+    <MkFormCard label="Blueprints">
+      <template #toolbarHeader>
+        <v-card-text class="flex-1-1 w-75"> File Upload </v-card-text>
+      </template>
+      <mk-file-input :uploads="state.files" label="Pool blueprints" :multiple="true" hide-details="auto"></mk-file-input>
+    </MkFormCard>
   </MkForm>
 </template>
