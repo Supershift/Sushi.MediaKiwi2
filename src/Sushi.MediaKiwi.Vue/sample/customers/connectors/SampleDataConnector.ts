@@ -1,47 +1,24 @@
 import type { Sorting } from "@/models";
-import { SortDirection } from "@/models";
 import type { SampleData } from "../models/SampleData";
 import { injectable } from "tsyringe";
-
-const data = <SampleData[]>[
-  { id: 1, name: "Data A", countryCode: "NL", countryName: "Nederland", date: new Date("2023-03-14T12:00:00") },
-  { id: 2, name: "Data B", countryCode: "NL", countryName: "Nederland", date: new Date("2023-03-14T13:00:00") },
-  { id: 3, name: "Data C", countryCode: "BE", countryName: "België", date: new Date("2023-03-14T14:00:00") },
-  { id: 4, name: "Data D", countryCode: "NL", countryName: "Nederland", date: new Date("2023-03-14T15:00:00") },
-  { id: 5, name: "Data E", countryCode: "NL", countryName: "Nederland", date: new Date("2023-03-14T16:00:00") },
-  { id: 6, name: "Data F", countryCode: "BE", countryName: "België", date: new Date("2023-03-14T17:00:00") },
-  { id: 7, name: "Data G", countryCode: "NL", countryName: "Nederland", date: new Date("2023-03-14T18:00:00") },
-  { id: 8, name: "Data H", countryCode: "NL", countryName: "Nederland", date: new Date("2023-03-14T19:00:00") },
-  { id: 9, name: "Data I", countryCode: "BE", countryName: "België", date: new Date("2023-03-14T20:00:00") },
-  { id: 10, name: "Data J", countryCode: "BE", countryName: "België", date: new Date("2023-03-14T21:00:00") },
-];
+import { sortSampleData } from "../helpers/SortSampleData";
+import { mapCountryName } from "../helpers/MapCountryName";
+import { sampleData } from "../constants/SampleData";
 
 @injectable()
 export class SampleDataConnector {
   async GetAll(countryCode: string, sortOrder?: Sorting): Promise<SampleData[]> {
-    let result = [...data];
-    if (countryCode !== undefined) {
-      result = result.filter((x) => x.countryCode == countryCode);
-    }
+    let result = sampleData.filter((x) => countryCode === undefined || x.countryCode === countryCode);
 
     if (sortOrder) {
-      if (sortOrder.sortBy === "countryName") {
-        result = [...result.sort((a, b) => a.countryName.localeCompare(b.countryName))];
-      } else if (sortOrder.sortBy === "id") {
-        result = [...result.sort((a, b) => a.id - b.id)];
-      }
-
-      // Reverse sortorder
-      if (sortOrder.sortDirection === SortDirection.Desc) {
-        result = [...result.reverse()];
-      }
+      result = sortSampleData(result, sortOrder);
     }
 
     return result;
   }
 
   async Get(id: number): Promise<SampleData | undefined> {
-    let result = data.find((x) => x.id == id);
+    let result = sampleData.find((x) => x.id == id);
     if (result !== undefined) {
       // make a copy to emulate this entry coming from an API
       result = { ...result };
@@ -50,30 +27,26 @@ export class SampleDataConnector {
   }
 
   async SaveAsync(item: SampleData): Promise<void> {
-    // this would be some sort of FK in reality
-    if (item.countryCode == "NL") {
-      item.countryName = "Nederland";
-    } else if (item.countryCode == "BE") {
-      item.countryName = "België";
-    }
+    // Map countryCode to countryName
+    item.countryName = mapCountryName(item.countryCode);
 
-    // is this a new item or an existing?
-    const index = data.findIndex((x) => x.id == item.id);
-    if (index == -1) {
-      // new item, pseudo generate new id
-      const maxId = Math.max(...data.map((o) => o.id));
-      item.id == maxId + 1;
-      data.push(item);
+    const index = sampleData.findIndex((x) => x.id === item.id);
+
+    if (index === -1) {
+      // New item, generate new ID
+      const maxId = sampleData.length > 0 ? Math.max(...sampleData.map((o) => o.id)) : 0;
+      item.id = maxId + 1;
+      sampleData.push(item);
     } else {
-      // replace existing
-      data[index] = item;
+      // Update existing item
+      sampleData[index] = item;
     }
   }
 
   async DeleteAsync(id: number): Promise<void> {
-    const index = data.findIndex((x) => x.id == id);
+    const index = sampleData.findIndex((x) => x.id == id);
     if (index != -1) {
-      data.splice(index, 1);
+      sampleData.splice(index, 1);
     }
   }
 }
