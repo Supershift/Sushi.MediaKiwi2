@@ -1,11 +1,11 @@
 <script setup lang="ts">
   import { computed, reactive, ref, watch } from "vue";
   import { container } from "tsyringe";
-  import { SampleDataConnector } from "@sample/customers/connectors/SampleDataConnector";
+  import { CustomerConnector } from "@sample/customers/connectors/CustomerConnector";
   import MkFormSideSheet from "@/components/MkForm/MkFormSideSheet.vue";
-  import { SampleData } from "@sample/customers/models/SampleData";
+  import { Customer } from "@sample/customers/models/Customer";
 
-  const sampleDataConnector = container.resolve(SampleDataConnector);
+  const customerConnector = container.resolve(CustomerConnector);
 
   /** Model to open the dialog */
   const modelValue = defineModel<boolean>("modelValue", { required: false, default: false });
@@ -29,7 +29,7 @@
   };
 
   let state = reactive({
-    data: <SampleData | undefined>undefined,
+    data: <Customer | undefined>undefined,
     images: [],
     roles: ["Can view", "Can edit", "Admin"],
   });
@@ -51,7 +51,7 @@
 
   async function loadData() {
     // get the data, using the sorting option
-    const result = await sampleDataConnector.Get(props.customerId);
+    const result = await customerConnector.Get(props.customerId);
     state.data = result;
   }
 </script>

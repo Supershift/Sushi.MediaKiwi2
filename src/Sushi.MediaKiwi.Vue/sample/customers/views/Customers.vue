@@ -1,10 +1,9 @@
 <script setup lang="ts">
-  import SampleSideSheet from "./partials/SampleSideSheet.vue";
+  import CustomerDetailsSideSheet from "./partials/CustomerDetailsSideSheet.vue";
   import { reactive, ref, watch, computed } from "vue";
   import { TableFilter, Sorting, Paging, TableFilterType, SortDirection, IconsLibrary, IListResult, DateRange, TableFilterValue } from "@/models";
   import { MkTable, MkOverflowMenuIcon, MkTd, MkTh } from "@/components";
-  import type { SampleData } from "@sample/customers/models/SampleData";
-  import { SampleDataConnector } from "@sample/customers/connectors/SampleDataConnector";
+  import { CustomerConnector } from "@sample/customers/connectors/CustomerConnector";
   import { container } from "tsyringe";
   import { Customer } from "../models/Customer";
   import { useI18next, useFilterInQuery, useDatePresets, TableFilterItemQueryConverter } from "@/composables";
@@ -13,7 +12,7 @@
   import { useValidationRules } from "@/composables";
 
   // inject dependencies
-  const sampleDataConnector = container.resolve(SampleDataConnector);
+  const customerConnector = container.resolve(CustomerConnector);
   const { formatDate } = await useI18next();
   const { required } = await useValidationRules();
 
@@ -39,8 +38,8 @@
   });
 
   const state = reactive({
-    selectedTableRows: <SampleData[]>[],
-    sampleData: <IListResult<SampleData>>{},
+    selected: <Customer[]>[],
+    customers: <IListResult<Customer>>{},
     refData: <Customer>{
       id: 1,
       name: "Jane Doe",
@@ -183,15 +182,15 @@
   }
 
   function download() {
-    alert("Download: " + state.selectedTableRows.length);
+    alert("Download: " + state.selected.length);
   }
 
   function remove() {
-    console.log("Remove", state.selectedTableRows);
+    console.log("Remove", state.selected);
   }
 
   function move() {
-    alert("move: " + state.selectedTableRows.length);
+    alert("move: " + state.selected.length);
   }
 
   async function wait(): Promise<void> {
@@ -206,19 +205,19 @@
 
   async function LoadData() {
     // get the data, using the sorting option
-    const result = await sampleDataConnector.GetAll(filters.value.location.children!.country.selectedValue?.value, sorting.value);
-    state.sampleData.result = result;
+    const result = await customerConnector.GetAll(filters.value.location.children!.country.selectedValue?.value, sorting.value);
+    state.customers.result = result;
     // pagination and display options will only display when pageCount is not 0 !!!
-    state.sampleData.pageCount = 1;
-    state.sampleData.totalCount = result.length;
+    state.customers.pageCount = 1;
+    state.customers.totalCount = result.length;
 
     // Add item as pre-selection
-    if (state.sampleData?.result.length) {
-      state.selectedTableRows = [state.sampleData.result[0]];
+    if (state.customers?.result.length) {
+      state.selected = [state.customers.result[0]];
     }
   }
 
-  function onCustomerClick(value: SampleData) {
+  function onCustomerClick(value: Customer) {
     state.selectedCustomerId = value.id;
     state.showCustomerSideSheet = true;
   }
@@ -262,11 +261,11 @@
 
   <MkTable
     v-model:sorting="sorting"
-    v-model:selection="state.selectedTableRows"
+    v-model:selection="state.selected"
     v-model:filters="filters"
     v-model:current-pagination="currentPagination"
-    :data="state.sampleData.result"
-    :api-result="state.sampleData"
+    :data="state.customers.result"
+    :api-result="state.customers"
     :item-id="(item: Customer) => item.id"
     @load="wait"
     @click:row="onCustomerClick"
@@ -301,5 +300,5 @@
     </template>
   </MkTable>
 
-  <SampleSideSheet :customer-id="state.selectedCustomerId" v-model="state.showCustomerSideSheet"></SampleSideSheet>
+  <CustomerDetailsSideSheet :customer-id="state.selectedCustomerId" v-model="state.showCustomerSideSheet"></CustomerDetailsSideSheet>
 </template>

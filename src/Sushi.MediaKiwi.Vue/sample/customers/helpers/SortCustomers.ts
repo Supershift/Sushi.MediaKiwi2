@@ -1,7 +1,7 @@
 import { SortDirection, Sorting } from "@/models";
-import { SampleData } from "../models/SampleData";
+import { Customer } from "../models/Customer";
 
-export function sortSampleData(items: SampleData[], sortOrder: Sorting): SampleData[] {
+export function SortCustomers(items: Customer[], sortOrder: Sorting): Customer[] {
   const sorted = [...items];
 
   switch (sortOrder.sortBy) {
