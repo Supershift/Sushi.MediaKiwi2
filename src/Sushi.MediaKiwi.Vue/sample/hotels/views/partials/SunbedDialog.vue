@@ -5,9 +5,7 @@
   // inject dependencies
   const { t } = await useI18next();
 
-  const emit = defineEmits<{
-    (e: "click:close"): void;
-  }>();
+  const emit = defineEmits<(e: "click:close") => void>();
 </script>
 
 <template>

@@ -138,7 +138,7 @@
     </template>
 
     <template #tbody="{ dataItem }">
-      <td width="250">{{ dataItem.title }}</td>
+      <td>{{ dataItem.title }}</td>
       <td>{{ dataItem.selectedValue?.value || "-" }}</td>
       <td>{{ dataItem.selectedValue?.title || "-" }}</td>
       <td>{{ TableFilterType[dataItem.type!] }}</td>
