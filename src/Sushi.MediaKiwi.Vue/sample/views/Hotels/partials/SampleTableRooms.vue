@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { SampleRooms } from "./../models/SampleRooms";
+  import { SampleRooms } from "../../../models/SampleRooms";
 
   import { MkTable } from "@/components";
   import { Paging, TableFilter, TableFilterType, TableFilterValue, TableMap } from "@/models";

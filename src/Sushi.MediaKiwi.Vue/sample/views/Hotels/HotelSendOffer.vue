@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import { MkForm } from "@/components";
   import { ref } from "vue";
-  import SampleTableCustomers from "../../components/SampleTableCustomers.vue";
-  import SampleTableRooms from "../../components/SampleTableRooms.vue";
+  import SampleTableCustomers from "./partials/SampleTableCustomers.vue";
+  import SampleTableRooms from "./partials/SampleTableRooms.vue";
 
   const steps = ref(["Date Selection", "Room selection", "Customer selection", "Success"]);
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import SampleSideSheet from "./../../components/SampleSideSheet.vue";
+  import SampleSideSheet from "./partials/SampleSideSheet.vue";
   import { reactive, ref, watch, computed } from "vue";
   import { TableFilter, Sorting, Paging, TableFilterType, SortDirection, IconsLibrary, IListResult, DateRange, TableFilterValue } from "@/models";
   import { MkTable, MkOverflowMenuIcon, MkTd, MkTh } from "@/components";

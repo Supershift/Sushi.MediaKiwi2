@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import SunbedDialog from "./../../components/SunbedDialog.vue";
+  import SunbedDialog from "./partials/SunbedDialog.vue";
   import { MkToolbar } from "@/components";
   import { useI18next } from "@/composables";
   import { ref } from "vue";
