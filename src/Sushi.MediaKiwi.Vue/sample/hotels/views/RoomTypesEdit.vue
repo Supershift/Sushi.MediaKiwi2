@@ -2,8 +2,8 @@
   import MkForm from "@/components/MkForm/MkForm.vue";
   import { useBreadcrumbs, useNavigation } from "@/composables";
   import { ListResult } from "@/models";
-  import { useRoomTypes } from "@sample/composables/useRoomTypes";
-  import { RoomType } from "@sample/models/Hotel/RoomType";
+  import { useRoomTypes } from "@sample/hotels/composables/useRoomTypes";
+  import { RoomType } from "@sample/hotels/models/RoomType";
   import { computed, reactive } from "vue";
 
   // inject dependencies

@@ -1,16 +1,14 @@
 <script setup lang="ts">
-  import { ICustomerRooms } from "../../../models/SampleCustomerRooms";
-
+  import { CustomerRoom } from "../../../hotels/models/CustomerRoom";
   import { MkTable } from "@/components";
   import { Paging, TableFilter, TableFilterType, TableFilterValue, TableMap } from "@/models";
   import { useI18next } from "@/composables";
-
   import { ref } from "vue";
   import { useSampleApi, Country } from "@sample/services";
 
   // inject dependencies
   const sampleApi = useSampleApi();
-  const customerRooms = <ICustomerRooms[]>[
+  const customerRooms = <CustomerRoom[]>[
     {
       isActive: false,
       bookingId: 1,
@@ -55,7 +53,7 @@
   const countries = ref<Country[]>();
 
   // define mapping
-  const tableMap: TableMap<ICustomerRooms> = {
+  const tableMap: TableMap<CustomerRoom> = {
     itemId: (item) => item.id,
     items: [
       { headerTitle: t.value("Active"), value: (item) => item.isActive },

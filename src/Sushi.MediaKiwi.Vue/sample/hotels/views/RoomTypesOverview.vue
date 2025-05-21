@@ -4,8 +4,8 @@
   import { useI18next, useNavigation, useFilterInQuery } from "@/composables";
 
   import { reactive, ref, watch } from "vue";
-  import { RoomType } from "@sample/models/Hotel/RoomType";
-  import { useRoomTypes } from "@sample/composables/useRoomTypes";
+  import { RoomType } from "@sample/hotels/models/RoomType";
+  import { useRoomTypes } from "@sample/hotels/composables/useRoomTypes";
 
   // inject dependencies
   const { t } = await useI18next();

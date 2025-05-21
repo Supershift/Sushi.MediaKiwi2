@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import { computed, reactive, ref, watch } from "vue";
   import { container } from "tsyringe";
-  import { SampleDataConnector } from "@sample/services/SampleDataConnector";
+  import { SampleDataConnector } from "@sample/customers/connectors/SampleDataConnector";
   import MkFormSideSheet from "@/components/MkForm/MkFormSideSheet.vue";
-  import { SampleData } from "@sample/models/SampleData";
+  import { SampleData } from "@sample/customers/models/SampleData";
 
   const sampleDataConnector = container.resolve(SampleDataConnector);
 

@@ -2,10 +2,10 @@
   import { reactive, ref } from "vue";
   import { TableMap, TableFilter, Sorting, Paging, TableFilterType, SortDirection, IconsLibrary } from "@/models";
   import { MkTable, MkOverflowMenuIcon } from "@/components";
-  import type { SampleData } from "@sample/models/SampleData";
-  import { SampleDataConnector } from "@sample/services/SampleDataConnector";
+  import type { SampleData } from "@sample/customers/models/SampleData";
+  import { SampleDataConnector } from "@sample/customers/connectors/SampleDataConnector";
   import { container } from "tsyringe";
-  import { ICustomer } from "../../models/Customer";
+  import { Customer } from "../models/Customer";
 
   // inject dependencies
   const sampleDataConnector = container.resolve(SampleDataConnector);
@@ -38,7 +38,7 @@
     },
     selectedTableRows: [],
     sampleData: <SampleData[]>[],
-    refData: <ICustomer>{
+    refData: <Customer>{
       id: 1,
       name: "Jane Doe",
       countryCode: "NL",

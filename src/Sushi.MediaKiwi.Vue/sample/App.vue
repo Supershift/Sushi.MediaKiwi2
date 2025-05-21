@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { MkApplication } from "@/components";
   import { useDisplay } from "vuetify";
-  import { useSectionRules } from "./composables/useSectionRules";
+  import { useSectionRules } from "./home/composables/useSectionRules";
 
   // Inject Dependencies
   const { xs } = useDisplay();

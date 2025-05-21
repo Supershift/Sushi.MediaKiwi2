@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { SampleRooms } from "../../../models/SampleRooms";
+  import { Room } from "../../../hotels/models/Room";
 
   import { MkTable } from "@/components";
   import { Paging, TableFilter, TableFilterType, TableFilterValue, TableMap } from "@/models";
@@ -52,7 +52,7 @@
   const countries = ref<Country[]>();
 
   // define mapping
-  const tableMap: TableMap<SampleRooms> = {
+  const tableMap: TableMap<Room> = {
     itemId: (item) => item.id,
     items: [
       { headerTitle: t.value("Active"), value: (item) => item.isActive },

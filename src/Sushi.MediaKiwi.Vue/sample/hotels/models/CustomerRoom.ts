@@ -1,4 +1,4 @@
-export interface ICustomerRooms {
+export type CustomerRoom = {
   id: number;
   name: string;
   bookingId: number;
@@ -10,4 +10,4 @@ export interface ICustomerRooms {
   checkIn: string;
   checkOut: string;
   isActive: boolean;
-}
+};

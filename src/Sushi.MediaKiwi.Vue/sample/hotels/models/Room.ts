@@ -1,4 +1,4 @@
-export interface SampleRooms {
+export type Room = {
   id: number;
   roomNr: number;
   level: number;
@@ -8,4 +8,4 @@ export interface SampleRooms {
   roomCode: string;
   earlyCheckIn: string;
   isActive: boolean;
-}
+};

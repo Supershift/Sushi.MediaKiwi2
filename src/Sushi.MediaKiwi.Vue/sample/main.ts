@@ -11,7 +11,6 @@ import "./styles/main.scss";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
 import { mdiAccountCheckOutline, mdiTestTube } from "@mdi/js";
 
-import { modules } from "./views/modules";
 import { useEntraSettings } from "@/composables/useEntraSettings";
 import { Configuration } from "@azure/msal-browser";
 
@@ -46,8 +45,7 @@ const mediakiwiOptions: MediakiwiVueOptions = {
   parseQueryStringArray: true,
   // import all views as models
   modules: {
-    ...import.meta.glob("./views/**/*.vue"),
-    ...modules,
+    ...import.meta.glob("./**/views/**/*.vue"),
   },
   dateFormatOptions: {
     date: { year: "numeric", month: "2-digit", day: "2-digit" }, // Example "05/31/2023" or "05-31-2023"

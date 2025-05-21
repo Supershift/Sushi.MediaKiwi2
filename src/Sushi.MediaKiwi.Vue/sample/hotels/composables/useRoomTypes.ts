@@ -1,6 +1,5 @@
 import { ListResult } from "@/models";
-import { RoomType } from "@sample/models/Hotel/RoomType";
-import { ref } from "vue";
+import { RoomType } from "@sample/hotels/models/RoomType";
 
 export function useRoomTypes() {
   const roomTypes = <RoomType[]>[

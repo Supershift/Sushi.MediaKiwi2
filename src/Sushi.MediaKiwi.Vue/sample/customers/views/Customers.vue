@@ -3,10 +3,10 @@
   import { reactive, ref, watch, computed } from "vue";
   import { TableFilter, Sorting, Paging, TableFilterType, SortDirection, IconsLibrary, IListResult, DateRange, TableFilterValue } from "@/models";
   import { MkTable, MkOverflowMenuIcon, MkTd, MkTh } from "@/components";
-  import type { SampleData } from "@sample/models/SampleData";
-  import { SampleDataConnector } from "@sample/services/SampleDataConnector";
+  import type { SampleData } from "@sample/customers/models/SampleData";
+  import { SampleDataConnector } from "@sample/customers/connectors/SampleDataConnector";
   import { container } from "tsyringe";
-  import { ICustomer } from "../../models/Customer";
+  import { Customer } from "../models/Customer";
   import { useI18next, useFilterInQuery, useDatePresets, TableFilterItemQueryConverter } from "@/composables";
   import MkDatePresetMenu from "@/components/MkDatePresetMenu/MkDatePresetMenu.vue";
   import { DateTime } from "luxon";
@@ -41,7 +41,7 @@
   const state = reactive({
     selectedTableRows: <SampleData[]>[],
     sampleData: <IListResult<SampleData>>{},
-    refData: <ICustomer>{
+    refData: <Customer>{
       id: 1,
       name: "Jane Doe",
       countryCode: "NL",
@@ -267,7 +267,7 @@
     v-model:current-pagination="currentPagination"
     :data="state.sampleData.result"
     :api-result="state.sampleData"
-    :item-id="(item: ICustomer) => item.id"
+    :item-id="(item: Customer) => item.id"
     @load="wait"
     @click:row="onCustomerClick"
     hide-bulk-action-bar

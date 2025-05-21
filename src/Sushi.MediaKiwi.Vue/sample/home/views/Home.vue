@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { useI18next } from "@/composables";
   import { useSnackbarStore } from "@/stores";
-  import { useSectionRules } from "@sample/composables/useSectionRules";
+  import { useSectionRules } from "@sample/home/composables/useSectionRules";
   import { useRouter } from "vue-router";
 
   // inject dependecies
