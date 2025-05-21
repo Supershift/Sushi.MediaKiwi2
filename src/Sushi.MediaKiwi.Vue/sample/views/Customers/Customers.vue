@@ -121,11 +121,6 @@
       type: TableFilterType.Custom,
       component: () => import("@sample/components/SampleCustomFilter.vue"),
     },
-    fullName: {
-      title: "Full name",
-      type: TableFilterType.Custom,
-      component: () => import("@sample/components/SampleCustomTableFilterInput.vue"),
-    },
     dates: <TableFilterItemQueryConverter>{
       title: "Dates",
       type: TableFilterType.DateRange,

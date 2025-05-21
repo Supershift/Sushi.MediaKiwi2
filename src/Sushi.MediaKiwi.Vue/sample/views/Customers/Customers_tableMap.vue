@@ -62,11 +62,6 @@
       ],
       type: TableFilterType.Select,
     },
-    fullName: {
-      title: "Volledige naam",
-      type: TableFilterType.Custom,
-      component: () => import("@sample/components/SampleCustomTableFilterInput.vue"),
-    },
     city: {
       title: "Stad",
       options: [
