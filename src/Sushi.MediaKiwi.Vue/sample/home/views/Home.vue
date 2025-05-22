@@ -15,17 +15,12 @@
   function toggleSection() {
     if (!settingsSection.value) return;
 
-    const currentDisplay = settingsSection.value.displayState;
-
-    switch (currentDisplay) {
-      case "hidden":
-        settingsSection.value.setDisplayState("disabled", "The settings section is disabled");
-        break;
-      case "disabled":
-        settingsSection.value.setDisplayState(undefined);
-        break;
-      default:
-        settingsSection.value.setDisplayState("hidden");
+    if (settingsSection.value.isHidden) {
+      settingsSection.value.disable("The settings section is disabled");
+    } else if (settingsSection.value.isDisabled) {
+      settingsSection.value.show();
+    } else {
+      settingsSection.value.hide();
     }
   }
 

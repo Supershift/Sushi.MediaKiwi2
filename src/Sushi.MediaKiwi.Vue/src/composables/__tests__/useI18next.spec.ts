@@ -48,7 +48,7 @@ describe("useI18next", () => {
     it("Should call i18next.t with view's id", async () => {
       // arrange
       const spy = vi.spyOn(i18next, "getFixedT").mockImplementation(() => vi.fn() as unknown as TFunction);
-      const composable = await getComposable({ id: "myView", children: [], name: "view", section: new Section("3", "") });
+      const composable = await getComposable(new NavigationItem("myView", "view", new Section("3", ""), []));
 
       // act
       composable.t.value("test");

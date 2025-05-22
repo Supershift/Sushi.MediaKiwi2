@@ -34,17 +34,8 @@ export class ApiNavigationProvider implements INavigationProvider {
           const view: ViewDto | undefined = views.find((v) => v.id === item.viewId);
 
           // create item
-          const navigationItem: NavigationItem = {
-            id: item.id,
-            name: item.name,
-            icon: item.icon,
-            section: section,
-            roles: undefined,
-            componentKey: view?.componentKey,
-            parameterName: view?.parameterName ?? undefined,
-            children: [],
-            parent: parent,
-          };
+          const navigationItem = new NavigationItem(item.id, item.name, section, [], view?.parameterName, parent, item.icon, view?.componentKey);
+
           result.push(navigationItem);
 
           // get children

@@ -12,7 +12,7 @@ export function useBreadcrumbs() {
   const breadcrumbs = computed(() => {
     const currentItem = navigation.currentNavigationItem.value;
     const result: Array<NavigationItem> = [];
-    let candidate: NavigationItem | undefined = { ...currentItem };
+    let candidate: NavigationItem | undefined = { ...currentItem } as NavigationItem;
 
     // Adds all the parents of the current item to the breadcrumb path.
     while (candidate) {

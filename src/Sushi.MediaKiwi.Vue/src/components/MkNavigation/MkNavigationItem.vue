@@ -43,30 +43,46 @@
 
 <template>
   <v-list-group v-if="children.length > 0" v-model="groupOpened" :value="navigationItem.name">
-    <template #activator="{ props }">
-      <v-list-item
-        v-bind="props"
-        :exact="true"
-        :active="isActive"
-        :title="navigationItem.name"
-        rounded="pill"
-        class="mk-navigation-item mb-2"
-        :prepend-icon="icon"
-        @click.stop="hasScreen(navigationItem) ? onItemClick(navigationItem) : {}"
-      />
+    <template #activator="{ props: groupProps }">
+      <v-tooltip v-if="!navigationItem.isHidden" location="right bottom" :disabled="!navigationItem.tooltip">
+        <template #activator="{ props: tooltipProps }">
+          <span v-bind="tooltipProps">
+            <v-list-item
+              v-bind="groupProps"
+              :exact="true"
+              :active="isActive"
+              :title="navigationItem.name"
+              rounded="pill"
+              class="mk-navigation-item mb-2"
+              :prepend-icon="icon"
+              @click.stop="hasScreen(navigationItem) ? onItemClick(navigationItem) : {}"
+              :disabled="navigationItem.isDisabled"
+            />
+          </span>
+        </template>
+        <span v-if="navigationItem.tooltip"> {{ navigationItem.tooltip }}</span>
+      </v-tooltip>
     </template>
+
     <mk-navigation-item v-for="child in children" :key="child.id" :navigation-item="child" />
   </v-list-group>
-  <v-list-item
-    v-else
-    :active="isActive"
-    :title="navigationItem.name"
-    :exact="true"
-    rounded="pill"
-    class="mk-navigation-item mb-2"
-    :prepend-icon="icon"
-    @click.stop="hasScreen(navigationItem) ? onItemClick(navigationItem) : {}"
-  />
+  <v-tooltip v-else-if="!navigationItem.isHidden" location="right bottom" :disabled="!navigationItem.tooltip">
+    <template #activator="{ props: tooltipProps }">
+      <span v-bind="tooltipProps">
+        <v-list-item
+          :active="isActive"
+          :title="navigationItem.name"
+          :exact="true"
+          rounded="pill"
+          class="mk-navigation-item mb-2"
+          :prepend-icon="icon"
+          @click.stop="hasScreen(navigationItem) ? onItemClick(navigationItem) : {}"
+          :disabled="navigationItem.isDisabled"
+        />
+      </span>
+    </template>
+    <span v-if="navigationItem.tooltip"> {{ navigationItem.tooltip }}</span>
+  </v-tooltip>
   <v-divider v-if="navigationItem.appendDivider" class="mb-2" />
 </template>
 <style lang="scss">

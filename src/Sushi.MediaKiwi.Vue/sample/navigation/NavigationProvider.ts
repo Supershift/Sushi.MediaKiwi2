@@ -32,11 +32,10 @@ builder
   .right()
   .addNavigationItem("CountryEdit", "Country", "./countries/views/CountryEdit.vue", "countryId")
   .left()
-  .addNavigationItem("CountriesEmpty", "Countries (Empty state)", "./countries/views/CountriesEmpty.vue")
+  .addNavigationItem("CountriesEmpty", "Countries (Empty state)", "./countries/views/CountriesEmpty.vue", undefined, undefined, undefined, false, "", "hidden")
   .addNavigationItem("CountriesEmptyCustomActions", "Countries (Custom Empty state)", "./countries/views/CountriesEmptyCustomActions.vue")
   .endSection()
   .startSection("Account", "Account", "symbols:person")
-
   .addNavigationItem("GetAccount", "Get Account", "./crm/views/GetAccount.vue")
   .addChild("EditAccount", "Edit Account", "./crm/views/EditAccount.vue", "accountId")
   .endSection()

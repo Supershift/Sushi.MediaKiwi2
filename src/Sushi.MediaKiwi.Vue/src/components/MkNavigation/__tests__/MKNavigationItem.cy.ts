@@ -16,20 +16,19 @@ const withChildProps = {
   navigationItem: {
     id: "123",
     name: "Test Item",
-    section: {id: "Home"} as Section,
-    path: "/home",
+    section: { id: "Home" } as Section,
     children: [
       {
         id: "444",
         name: "Test Child Item",
-        section: {id: "Home"} as Section,        
+        section: { id: "Home" } as Section,
         parent: {
           id: "123",
           name: "Test Item",
-          section: {id: "Home"} as Section,          
+          section: { id: "Home" } as Section,
           icon: "$ratingFull", // we use a default icon instead since we're testing the icon
         },
-        componentKey: "home.vue",        
+        componentKey: "home.vue",
         icon: "$ratingFull", // we use a default icon instead since we're testing the icon
       },
     ] as Array<NavigationItem>,
@@ -38,21 +37,21 @@ const withChildProps = {
     {
       id: "123",
       name: "Test Item",
-      section: {id: "Home"} as Section,      
+      section: { id: "Home" } as Section,
       icon: "$home",
     },
     {
       id: "444",
       name: "Test Child Item",
-      section: {id: "Home"} as Section,      
+      section: { id: "Home" } as Section,
       parent: {
         id: "123",
         name: "Test Item",
-        section: {id: "Home"} as Section,
+        section: { id: "Home" } as Section,
         path: "/home",
         icon: "$home",
       },
-      componentKey: "home.vue",      
+      componentKey: "home.vue",
     },
   ] as Array<NavigationItem>,
 };
@@ -61,8 +60,7 @@ const withOutChildProps = {
   navigationItem: {
     id: "123",
     name: "No Child Test Item",
-    section: {id: "Home"} as Section,
-    path: "/ratings",
+    section: { id: "Home" } as Section,
     icon: "$ratingFull", // we use a default icon instead since we're testing the icon
     children: [] as Array<NavigationItem>,
   } as NavigationItem,
@@ -70,7 +68,7 @@ const withOutChildProps = {
     {
       id: "123",
       name: "No Child Test Item",
-      section: {id: "Home"} as Section,      
+      section: { id: "Home" } as Section,
       icon: "$ratingFull", // we use a default icon instead since we're testing the icon
     },
   ] as Array<NavigationItem>,

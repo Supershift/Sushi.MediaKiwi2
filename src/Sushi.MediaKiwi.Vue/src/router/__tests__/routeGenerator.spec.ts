@@ -4,7 +4,7 @@ import { container } from "tsyringe";
 import { RouteGenerator } from "../routeGenerator";
 import { RouteComponent } from "vue-router";
 import { Component } from "vue";
-import { NavigationTree, Section, type NavigationItem } from "@/models/navigation";
+import { NavigationItem, NavigationTree, Section } from "@/models/navigation";
 
 // mock libraries
 vi.mock("vue-router");
@@ -16,8 +16,8 @@ const modules: Record<string, RouteComponent> = {
 };
 const section = new Section("1", "Admin Section", null, ["admin"]);
 const navigationItems: NavigationItem[] = [
-  <NavigationItem>{ id: "1", componentKey: "a", name: "Order", section: section, children: [] },
-  <NavigationItem>{ id: "2", componentKey: "b", name: "Customers", section: section, children: [] },
+  new NavigationItem("1", "Order", section, [], undefined, undefined, undefined, "a.vue"),
+  new NavigationItem("2", "Customers", section, [], undefined, undefined, undefined, "b.vue"),
 ];
 section.items = navigationItems;
 const tree = new NavigationTree([section]);

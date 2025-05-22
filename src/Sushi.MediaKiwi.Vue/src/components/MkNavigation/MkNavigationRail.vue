@@ -37,7 +37,7 @@
                 rounded="lg"
                 :value="item.name"
                 @click.stop="onItemClick(item)"
-                :disabled="item.displayState === 'disabled'"
+                :disabled="item.isDisabled"
               >
                 <template #prepend>
                   <v-icon v-if="item?.icon" @click.stop="onItemClick(item)">{{ parseIconValue(item.icon, mediakiwiStore.externalIcons) }}</v-icon>

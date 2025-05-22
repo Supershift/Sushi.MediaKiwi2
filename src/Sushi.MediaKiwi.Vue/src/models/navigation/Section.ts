@@ -14,9 +14,26 @@ export class Section {
     public displayState?: SectionDisplayState
   ) {}
 
-  public setDisplayState(displayState: SectionDisplayState, tooltip?: string) {
-    this.displayState = displayState;
+  disable(tooltip?: string) {
+    this.displayState = "disabled";
     this.tooltip = tooltip;
+  }
+
+  hide() {
+    this.displayState = "hidden";
+  }
+
+  show(tooltip?: string) {
+    this.displayState = undefined;
+    this.tooltip = tooltip;
+  }
+
+  get isDisabled() {
+    return this.displayState === "disabled";
+  }
+
+  get isHidden() {
+    return this.displayState === "hidden";
   }
 }
 

@@ -176,7 +176,7 @@ export function useNavigation() {
       !section.roles?.length ? true : false || section.roles.some((role) => activeAccount?.idTokenClaims?.roles?.includes(role))
     );
     // remove sections without navigation items
-    sections = sections.filter((section) => section.items)?.filter((x) => x.displayState !== "hidden");
+    sections = sections.filter((section) => section.items)?.filter((x) => !x.isHidden);
     return sections;
   });
 
