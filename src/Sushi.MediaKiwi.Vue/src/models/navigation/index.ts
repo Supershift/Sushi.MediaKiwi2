@@ -1,3 +1,4 @@
-export type {NavigationItem} from './NavigationItem';
-export type {Section, SectionDisplayState} from './Section';
-export { NavigationTree } from './NavigationTree';
+export type { NavigationItem } from "./NavigationItem";
+export { Section } from "./Section";
+export type { SectionDisplayState } from "./Section";
+export { NavigationTree } from "./NavigationTree";

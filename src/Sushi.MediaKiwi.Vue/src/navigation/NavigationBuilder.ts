@@ -7,7 +7,7 @@ export class NavigationBuilder {
   private currentSection?: Section;
 
   public startSection(id: string, name: string, icon?: string): NavigationBuilder {
-    const section: Section = { id: id, name: name, icon: icon, roles: [], items: [] };
+    const section = new Section(id, name, icon);
 
     this.allSections.push(section);
     this.currentSection = section;

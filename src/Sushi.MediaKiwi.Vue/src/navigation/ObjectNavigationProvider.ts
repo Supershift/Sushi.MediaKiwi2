@@ -53,14 +53,7 @@ export class ObjectNavigationProvider implements INavigationProvider {
     // convert provided sections to tree
     const resultItems: SectionModel[] = [];
     sections.forEach((section) => {
-      const resultItem: SectionModel = {
-        id: section.id,
-        name: section.name,
-        icon: section.icon,
-        roles: section.roles,
-        tooltip: section.tooltip,
-        items: [],
-      };
+      const resultItem = new SectionModel(section.id, section.name, section.icon, section.roles, [], section.tooltip);
 
       resultItem.items = this.convertNavigationItem(section.items, resultItem);
 
