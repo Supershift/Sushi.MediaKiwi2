@@ -6,7 +6,7 @@ import i18next, { TFunction } from "i18next";
 import { createTestingPinia } from "@pinia/testing";
 import { PublicClientApplication } from "@azure/msal-browser";
 import { identity } from "../../identity";
-import { NavigationItem } from "../../models/navigation";
+import { NavigationItem, Section } from "../../models/navigation";
 import { DateTime, Settings } from "luxon";
 // mock libraries
 vi.mock("i18next");
@@ -28,7 +28,7 @@ describe("useI18next", () => {
       setup() {
         result = useI18next(ns);
         // suppress missing template warning
-        return () => { };
+        return () => {};
       },
     });
     app.provide("i18next", ref(i18next));
@@ -48,7 +48,7 @@ describe("useI18next", () => {
     it("Should call i18next.t with view's id", async () => {
       // arrange
       const spy = vi.spyOn(i18next, "getFixedT").mockImplementation(() => vi.fn() as unknown as TFunction);
-      const composable = await getComposable({ id: "myView", children: [], name: "view", section: { id: "3", name: "", items: [] } });
+      const composable = await getComposable({ id: "myView", children: [], name: "view", section: new Section("3", "") });
 
       // act
       composable.t.value("test");
@@ -265,7 +265,6 @@ describe("useI18next", () => {
       // assert
       expect(result).toBe("8:00:00 Venezolaanse tijd");
     });
-
 
     it("Should parse string", async () => {
       // arrange

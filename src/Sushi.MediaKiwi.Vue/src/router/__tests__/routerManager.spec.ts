@@ -20,7 +20,7 @@ const modules: Record<string, RouteComponent> = {
   a: <Component>{},
   b: <Component>{},
 };
-const section : Section = { id: "1", name: "Admin Section", roles: ["admin"], items:[] };
+const section = new Section("1", "Admin Section", null, ["admin"]);
 const navigationItems: NavigationItem[] = [
   { id: "1", componentKey: "a", name: "", section: section, children: [] },
   { id: "2", componentKey: "b", name: "", section: section, children: [] },
@@ -89,7 +89,7 @@ describe("RouterManager", () => {
     const routeGenerator = vi.mocked(new RouteGenerator());
     routeGenerator.generateRoutes.mockReturnValue([]);
     const routerManager = new RouterManager(options, router, routeGenerator);
-    
+
     // act
     routerManager.updateRoutes(modules, tree);
 

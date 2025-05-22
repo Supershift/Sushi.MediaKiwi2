@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { describe, it, expect } from "vitest";
 import { useBreadcrumbs } from "./../useBreadcrumbs";
-import { NavigationItem } from "@/models/navigation";
+import { NavigationItem, Section } from "@/models/navigation";
 import { createPinia, setActivePinia } from "pinia";
 
 let { isMobile, currentRootItem, currentNavigationItem, currentViewParameter, getViewParameter } = vi.hoisted(() => {
@@ -51,7 +51,7 @@ const mockNavigationItem = (id: string, name: string, parent?: NavigationItem): 
   name,
   parent,
   children: [],
-  section: { id: "section1", name: "Section 1", items: [] },
+  section: new Section("section1", "Section 1"),
 });
 
 describe("useBreadcrumbs", () => {
