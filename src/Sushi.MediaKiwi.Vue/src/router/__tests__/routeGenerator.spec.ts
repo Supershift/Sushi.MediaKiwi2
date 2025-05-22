@@ -14,10 +14,10 @@ const modules: Record<string, RouteComponent> = {
   a: <Component>{},
   b: <Component>{},
 };
-const section = new Section("1", "Admin Section", null, ["admin"]);
+const section = new Section("1", "Admin Section", undefined, ["admin"]);
 const navigationItems: NavigationItem[] = [
-  new NavigationItem("1", "Order", section, [], undefined, undefined, undefined, "a.vue"),
-  new NavigationItem("2", "Customers", section, [], undefined, undefined, undefined, "b.vue"),
+  new NavigationItem("1", "Order", section, [], undefined, undefined, undefined, "a"),
+  new NavigationItem("2", "Customers", section, [], undefined, undefined, undefined, "b"),
 ];
 section.items = navigationItems;
 const tree = new NavigationTree([section]);
