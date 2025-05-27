@@ -1,17 +1,40 @@
 import { NavigationItem } from "./NavigationItem";
 
-export type Section = {
-  id: string;
-  name: string;
-  icon?: string | null;
-  /** If not empty, access to this screen is restricted to these roles. */
-  roles?: string[];
-  /** Tooltip text */
-  tooltip?: string;
-  /** Visibility state of the section, leacvy  */
-  displayState?: SectionDisplayState;
+export class Section {
+  constructor(
+    readonly id: string,
+    readonly name: string,
+    readonly icon?: string | null,
+    readonly roles: string[] = [],
+    /** The Navigation items in this section. */
+    public items: NavigationItem[] = [],
+    /** Tooltip text */
+    public tooltip?: string,
+    /** Visibility state of the section, leacvy  */
+    public displayState?: SectionDisplayState
+  ) {}
 
-  items: NavigationItem[];
+  disable(tooltip?: string) {
+    this.displayState = "disabled";
+    this.tooltip = tooltip;
+  }
+
+  hide() {
+    this.displayState = "hidden";
+  }
+
+  show(tooltip?: string) {
+    this.displayState = undefined;
+    this.tooltip = tooltip;
+  }
+
+  get isDisabled() {
+    return this.displayState === "disabled";
+  }
+
+  get isHidden() {
+    return this.displayState === "hidden";
+  }
 }
 
 /**

@@ -1,4 +1,5 @@
 import { Section, NavigationItem, NavigationTree } from "@/models/navigation";
+import { NavigationItemDisplayState } from "@/models/navigation/NavigationItem";
 
 export class NavigationBuilder {
   private currentParent?: NavigationItem;
@@ -7,7 +8,7 @@ export class NavigationBuilder {
   private currentSection?: Section;
 
   public startSection(id: string, name: string, icon?: string): NavigationBuilder {
-    const section: Section = { id: id, name: name, icon: icon, roles: [], items: [] };
+    const section = new Section(id, name, icon);
 
     this.allSections.push(section);
     this.currentSection = section;
@@ -32,25 +33,31 @@ export class NavigationBuilder {
     parameterName?: string,
     icon?: string,
     layout?: string,
-    isGroup?: boolean
+    isGroup?: boolean,
+    tooltip?: string,
+    displayState: NavigationItemDisplayState = undefined
   ): NavigationBuilder {
     if (!this.currentSection) {
       throw new Error("No section started");
     }
     // create navigation item
-    const item: NavigationItem = {
+    const item = new NavigationItem(
       id,
       name,
-      section: this.currentSection,
-      icon,
-      parent: this.currentParent,
-      componentKey,
+      this.currentSection,
+      [],
       parameterName,
-      children: [],
-      roles: undefined,
+      this.currentParent,
+      icon,
+      componentKey,
+      undefined,
       layout,
+      undefined,
       isGroup,
-    };
+      false,
+      tooltip,
+      displayState
+    );
 
     // add navigation item to collections
     this.siblings.push(item);
@@ -67,18 +74,21 @@ export class NavigationBuilder {
     }
     const localParent = this.siblings[this.siblings.length - 1];
 
-    const item: NavigationItem = {
+    const item = new NavigationItem(
       id,
       name,
-      section: localParent.section,
-      icon: icon,
-      parent: localParent,
-      componentKey,
+      localParent.section,
+      [],
       parameterName,
-      children: [],
-      roles: undefined,
+      localParent,
+      icon,
+      componentKey,
+      undefined,
       layout,
-    };
+      undefined,
+      undefined,
+      false
+    );
 
     localParent.children!.push(item);
 

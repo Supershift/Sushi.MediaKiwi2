@@ -53,14 +53,7 @@ export class ObjectNavigationProvider implements INavigationProvider {
     // convert provided sections to tree
     const resultItems: SectionModel[] = [];
     sections.forEach((section) => {
-      const resultItem: SectionModel = {
-        id: section.id,
-        name: section.name,
-        icon: section.icon,
-        roles: section.roles,
-        tooltip: section.tooltip,
-        items: [],
-      };
+      const resultItem = new SectionModel(section.id, section.name, section.icon, section.roles, [], section.tooltip);
 
       resultItem.items = this.convertNavigationItem(section.items, resultItem);
 
@@ -73,19 +66,21 @@ export class ObjectNavigationProvider implements INavigationProvider {
   private convertNavigationItem(items: NavigationItem[], section: SectionModel, parent?: NavigationItemModel): NavigationItemModel[] {
     const result: NavigationItemModel[] = [];
     items.forEach((item) => {
-      const resultItem: NavigationItemModel = {
-        id: item.id,
-        name: item.name,
-        parameterName: item.parameterName,
-        icon: item.icon,
-        roles: item.roles,
-        section: section,
-        parent: parent,
-        children: [],
-        layout: item.layout,
-        appendDivider: item.appendDivider,
-        isGroup: item.isGroup,
-      };
+      const resultItem = new NavigationItemModel(
+        item.id,
+        item.name,
+        section,
+        [],
+        item.parameterName,
+        parent,
+        item.icon,
+        item.componentKey,
+        item.roles,
+        item.layout,
+        undefined,
+        item.isGroup,
+        item.appendDivider
+      );
 
       if (!item.isGroup) resultItem.componentKey = item.componentKey;
 

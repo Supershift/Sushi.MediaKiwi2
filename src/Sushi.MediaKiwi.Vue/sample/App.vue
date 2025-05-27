@@ -1,14 +1,9 @@
 <script setup lang="ts">
   import { MkApplication } from "@/components";
   import { useDisplay } from "vuetify";
-  import { useSectionRules } from "./home/composables/useSectionRules";
 
   // Inject Dependencies
   const { xs } = useDisplay();
-  const { setHotelSectionDisplayState } = useSectionRules();
-
-  // Force the hotel section to be disabled and the customer section to be hidden
-  setHotelSectionDisplayState("disabled");
 </script>
 
 <template>

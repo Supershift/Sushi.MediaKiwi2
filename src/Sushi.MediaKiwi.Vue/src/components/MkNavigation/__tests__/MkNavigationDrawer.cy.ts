@@ -5,15 +5,7 @@ import { NavigationItem, Section } from "@/models/navigation";
 
 // Declare the props to be used in all tests
 const props = {
-  listItems: [
-    {
-      id: "444",
-      name: "Test Item",
-      section: { id: "Home" } as Section,
-      componentKey: "home.vue",
-      children: []
-    },
-  ] as Array<NavigationItem>,
+  listItems: [new NavigationItem("444", "Test Item", new Section("Home", "Home"), [], "", undefined, "", "home.vue")] as Array<NavigationItem>,
 };
 
 describe("<MkNavigationDrawer />", () => {

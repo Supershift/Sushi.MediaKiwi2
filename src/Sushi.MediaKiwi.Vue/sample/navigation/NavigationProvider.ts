@@ -36,7 +36,6 @@ builder
   .addNavigationItem("CountriesEmptyCustomActions", "Countries (Custom Empty state)", "./countries/views/CountriesEmptyCustomActions.vue")
   .endSection()
   .startSection("Account", "Account", "symbols:person")
-
   .addNavigationItem("GetAccount", "Get Account", "./crm/views/GetAccount.vue")
   .addChild("EditAccount", "Edit Account", "./crm/views/EditAccount.vue", "accountId")
   .endSection()

@@ -1,26 +1,32 @@
 <script setup lang="ts">
   import { useI18next } from "@/composables";
-  import { useSnackbarStore } from "@/stores";
-  import { useSectionRules } from "@sample/home/composables/useSectionRules";
-  import { useRouter } from "vue-router";
+  import { Section } from "@/models/navigation";
+  import { useMediakiwiStore, useSnackbarStore } from "@/stores";
+  import { computed } from "vue";
 
   // inject dependecies
   const { t, defaultT } = await useI18next();
-  const { setHotelSectionDisplayState } = useSectionRules();
+  const mediakiwiStore = useMediakiwiStore();
   const snackbar = useSnackbarStore();
 
-  function enableTestSection() {
-    setHotelSectionDisplayState();
+  //
+  const settingsSection = computed<Section | undefined>(() => mediakiwiStore?.navigationTree?.sections?.find((x) => x.id === "Settings"));
+
+  function toggleSection() {
+    if (!settingsSection.value) return;
+
+    if (settingsSection.value.isHidden) {
+      settingsSection.value.disable("The settings section is disabled");
+    } else if (settingsSection.value.isDisabled) {
+      settingsSection.value.show();
+    } else {
+      settingsSection.value.hide();
+    }
   }
 
   function triggerSnackbar() {
     snackbar.showMessage("This is a test message");
   }
-
-  const router = useRouter();
-
-  // proof that the router querystring is parsed as array
-  console.log(router.currentRoute.value.query);
 </script>
 
 <template>
@@ -33,7 +39,7 @@
         <p>Some things are still {{ defaultT("N-A") }}</p>
       </v-card-text>
       <v-card-actions>
-        <v-btn variant="flat" @click="enableTestSection">Enable Test Section</v-btn>
+        <v-btn variant="flat" @click="toggleSection">Toggle Settings Section</v-btn>
         <v-btn variant="flat" @click="triggerSnackbar">Trigger snackbar</v-btn>
       </v-card-actions>
     </v-card>

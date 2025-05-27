@@ -6,7 +6,7 @@ import { RouteGenerator } from "../routeGenerator";
 import { MediakiwiVueOptions } from "../../models";
 import { createRouter, RouteComponent, RouterOptions, RouteRecordRaw, createWebHistory } from "vue-router";
 import { Component } from "vue";
-import { NavigationTree, Section, type NavigationItem } from "../../models/navigation";
+import { NavigationItem, NavigationTree, Section } from "../../models/navigation";
 import { Configuration } from "@azure/msal-browser";
 import * as store from "../../stores/index";
 import { setActivePinia } from "pinia";
@@ -20,10 +20,10 @@ const modules: Record<string, RouteComponent> = {
   a: <Component>{},
   b: <Component>{},
 };
-const section : Section = { id: "1", name: "Admin Section", roles: ["admin"], items:[] };
+const section = new Section("1", "Admin Section", null, ["admin"]);
 const navigationItems: NavigationItem[] = [
-  { id: "1", componentKey: "a", name: "", section: section, children: [] },
-  { id: "2", componentKey: "b", name: "", section: section, children: [] },
+  new NavigationItem("1", "Order", section, [], undefined, undefined, undefined, "a.vue"),
+  new NavigationItem("2", "Customers", section, [], undefined, undefined, undefined, "b.vue"),
 ];
 section.items = navigationItems;
 const tree = new NavigationTree([section]);
@@ -89,7 +89,7 @@ describe("RouterManager", () => {
     const routeGenerator = vi.mocked(new RouteGenerator());
     routeGenerator.generateRoutes.mockReturnValue([]);
     const routerManager = new RouterManager(options, router, routeGenerator);
-    
+
     // act
     routerManager.updateRoutes(modules, tree);
 
@@ -97,7 +97,7 @@ describe("RouterManager", () => {
     const routes = router.getRoutes();
 
     expect(routes).length(1);
-    expect(routes.some((x) => x.name == "temp") == false);
+    expect(routes.some((x) => x.name == "temp") === false);
     expect(routes.every((x) => x.name == "always"));
   });
 });
