@@ -6,30 +6,44 @@ import { useTimeZones } from "./useTimeZones";
 
 export async function useDatePresets(options?: {
   /**
-   * Collection of days representing days in the past
-   * @example [7, 28, 90, 365]
+   * Collection representing days
+   * For the future (Next x days) use negative numbers
+   * For the past (Last x days) use positive numbers
+   * @example [-7, -14, 7, 28, 90, 365]
    */
   dayPresets: number[];
   /**
-   * Collection of months representing months in the past
-   * Zero besed, representing the current month
-   * @example [0, 1, 2] Current month, last month, 2 months ago
+ * Collection representing weeks
+ * Zero besed, representing the current week, based on current locale
+ * @example [-1, 0, 1, 2] Next week, current week, last week, 2 week ago
+ */
+  weekPresets?: number[];
+  /**
+   * Collection representing months
+   * Zero based, representing the current month
+   * @example [-1, 0, 1, 2] Next month, current month, last month, 2 months ago
    */
   monthPresets: number[];
 }) {
-  const { formatMonth, defaultT, formatDate, t } = await useI18next();
+  const { formatWeek, formatMonth, defaultT, formatDate, t } = await useI18next();
 
-  const { dayPresets, monthPresets } = options || {};
+  const { dayPresets, weekPresets, monthPresets } = options ?? {
+    dayPresets: [],
+    weekPresets: [],
+    monthPresets: []
+  };
 
   useTimeZones(t).setLuxonDefaultZone();
 
   const today = DateTime.now();
   const yesterday = today.minus({ days: 1 });
+  const tomorrow = today.plus({ days: 1 });
 
   const presets = computed(() => {
     return {
       today: getTodayPreset(),
-      daysExcludingToday: getLastDaysPresets(),
+      daysExcludingToday: [...getLastDaysPresets(), ...getNextDaysPresets()],
+      weeks: getWeekPreset(),
       months: getMonthPreset(),
     };
   });
@@ -45,7 +59,7 @@ export async function useDatePresets(options?: {
   function getLastDaysPresets(): DateRange[] {
     const result: DateRange[] = [];
 
-    for (const dayOffset of dayPresets ?? []) {
+    for (const dayOffset of dayPresets.filter(d => d > 0)) {
       result.push({
         start: today.minus({ days: dayOffset }).startOf("day"),
         end: yesterday.endOf("day"),
@@ -57,15 +71,47 @@ export async function useDatePresets(options?: {
     return result;
   }
 
+  function getNextDaysPresets(): DateRange[] {
+    const result: DateRange[] = [];
+
+    for (const dayOffset of dayPresets.filter(d => d < 0)) {
+      result.push({
+        start: tomorrow.startOf("day"),
+        end: today.minus({ days: dayOffset }).endOf("day"),
+        duration: Duration.fromDurationLike({ days: dayOffset }),
+      });
+    }
+
+    result.sort((a, b) => a.start.toMillis() - b.start.toMillis());
+    return result;
+  }
+
+  function getWeekPreset() {
+    const result: DateRange[] = [];
+
+    for (const offset of weekPresets ?? []) {
+      const range = today.minus({ week: offset });
+
+      result.push({
+        start: range.startOf("week").startOf("day"),
+        end: range.endOf("week").endOf("day"),
+        duration: Duration.fromDurationLike({ week: 1 }),
+      });
+    }
+
+    result.sort((a, b) => b.start.toMillis() - a.start.toMillis());
+    return result;
+  }
+
   function getMonthPreset() {
     const result: DateRange[] = [];
 
-    for (const monthOffset of monthPresets ?? []) {
-      const month = today.minus({ months: monthOffset });
+    for (const offset of monthPresets) {
+      const range = today.minus({ months: offset });
 
       result.push({
-        start: month.startOf("month").startOf("day"),
-        end: month.endOf("month").endOf("day"),
+        start: range.startOf("month").startOf("day"),
+        end: range.endOf("month").endOf("day"),
         duration: Duration.fromDurationLike({ months: 1 }),
       });
     }
@@ -96,9 +142,14 @@ export async function useDatePresets(options?: {
       const start = dates;
       if (isFullMonth(start, end)) {
         return formatMonth.value(start);
+      } else if (isFullWeek(start, end)) {
+        return defaultT.value("WeekX", "Week {{weekNumber}}", { weekNumber: formatWeek.value(start) });
       } else if (yesterday.hasSame(end, "day")) {
         const duration = Math.floor(end.diff(start, "days").plus({ days: 1 }).days);
         return defaultT.value("LastXDays", "Last {{duration}} days", { duration });
+      } else if (tomorrow.hasSame(start, "day")) {
+        const duration = Math.floor(end.diff(start, "days").plus({ days: 1 }).days);
+        return defaultT.value("NextXDays", "Next {{duration}} days", { duration });
       } else if (isToday(start, end)) {
         return defaultT.value("Today", "Today");
       } else {
@@ -126,6 +177,10 @@ export async function useDatePresets(options?: {
     }
 
     return [formatDate.value(start), formatDate.value(end)].join(" - ");
+  }
+
+  function isFullWeek(start: DateTime, end: DateTime) {
+    return start.hasSame(start.startOf("week"), "day") && end.hasSame(end.endOf("week"), "day") && start.hasSame(end, "week");
   }
 
   function isFullMonth(start: DateTime, end: DateTime) {

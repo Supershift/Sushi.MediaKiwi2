@@ -96,6 +96,19 @@ export async function useI18next(scope?: NavigationItem | string) {
     return formatDateTimeGenericInternal(date, { ...timeOptions.value, ...options });
   };
 
+  const formatWeekInternal = (date: DateTypes, options?: DateTimeFormatOptions): string => {
+    const dateTime = inputToDateTime(date);
+
+    if (!dateTime) {
+      return "";
+    }
+
+    return dateTime
+      .setLocale(i18next.value.resolvedLanguage ?? 'en-US')
+      .toLocal()
+      .toFormat("n");
+  };
+
   const formatMonthInternal = (date: DateTypes, options?: DateTimeFormatOptions): string => {
     return formatDateTimeGenericInternal(date, { ...monthOptions.value, ...options });
   };
@@ -130,6 +143,7 @@ export async function useI18next(scope?: NavigationItem | string) {
   const formatDateTime = computed(() => formatDateTimeInternal);
   const formatDate = computed(() => formatDateInternal);
   const formatTime = computed(() => formatTimeInternal);
+  const formatWeek = computed(() => formatWeekInternal);
   const formatMonth = computed(() => formatMonthInternal);
   const formatDateTimeGeneric = computed(() => formatDateTimeGenericInternal);
 
@@ -189,6 +203,7 @@ export async function useI18next(scope?: NavigationItem | string) {
     formatNumber,
     formatMoneyValue,
     /**  */
+    formatWeek,
     formatMonth,
     formatDateTimeGeneric,
     formatBytes,
