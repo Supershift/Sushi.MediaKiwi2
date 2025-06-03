@@ -16,8 +16,8 @@
   const { formatDate } = await useI18next();
   const { required } = await useValidationRules();
 
-  const dayPresets = [1, 7, 28, 90, 365];
-  const monthPresets = [0, 1];
+  const dayPresets = [1, 7, 28, 90, 365, -7, -14];
+  const monthPresets = [0, 1, -1];
 
   const { presets, formatPreset, formatDateRange } = await useDatePresets({
     dayPresets,

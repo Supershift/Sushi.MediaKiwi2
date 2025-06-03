@@ -6,30 +6,33 @@ import { useTimeZones } from "./useTimeZones";
 
 export async function useDatePresets(options?: {
   /**
-   * Collection of days representing days in the past
-   * @example [7, 28, 90, 365]
+   * Collection representing days
+   * For the future (Next x days) use negative numbers
+   * For the past (Last x days) use positive numbers
+   * @example [-7, -14, 7, 28, 90, 365]
    */
   dayPresets: number[];
   /**
-   * Collection of months representing months in the past
-   * Zero besed, representing the current month
-   * @example [0, 1, 2] Current month, last month, 2 months ago
+   * Collection representing months
+   * Zero based, representing the current month
+   * @example [-1, 0, 1, 2] Next month, current month, last month, 2 months ago
    */
   monthPresets: number[];
 }) {
   const { formatMonth, defaultT, formatDate, t } = await useI18next();
 
-  const { dayPresets, monthPresets } = options || {};
+  const { dayPresets, monthPresets } = options ?? { dayPresets: [], monthPresets: [] };
 
   useTimeZones(t).setLuxonDefaultZone();
 
   const today = DateTime.now();
   const yesterday = today.minus({ days: 1 });
+  const tomorrow = today.plus({ days: 1 });
 
   const presets = computed(() => {
     return {
       today: getTodayPreset(),
-      daysExcludingToday: getLastDaysPresets(),
+      daysExcludingToday: [...getLastDaysPresets(), ...getNextDaysPresets()],
       months: getMonthPreset(),
     };
   });
@@ -45,7 +48,7 @@ export async function useDatePresets(options?: {
   function getLastDaysPresets(): DateRange[] {
     const result: DateRange[] = [];
 
-    for (const dayOffset of dayPresets ?? []) {
+    for (const dayOffset of dayPresets.filter(d => d > 0)) {
       result.push({
         start: today.minus({ days: dayOffset }).startOf("day"),
         end: yesterday.endOf("day"),
@@ -54,6 +57,21 @@ export async function useDatePresets(options?: {
     }
 
     result.sort((a, b) => b.start.toMillis() - a.start.toMillis());
+    return result;
+  }
+
+  function getNextDaysPresets(): DateRange[] {
+    const result: DateRange[] = [];
+
+    for (const dayOffset of dayPresets.filter(d => d < 0)) {
+      result.push({
+        start: tomorrow.startOf("day"),
+        end: today.minus({ days: dayOffset }).endOf("day"),
+        duration: Duration.fromDurationLike({ days: dayOffset }),
+      });
+    }
+
+    result.sort((a, b) => a.start.toMillis() - b.start.toMillis());
     return result;
   }
 
@@ -99,6 +117,9 @@ export async function useDatePresets(options?: {
       } else if (yesterday.hasSame(end, "day")) {
         const duration = Math.floor(end.diff(start, "days").plus({ days: 1 }).days);
         return defaultT.value("LastXDays", "Last {{duration}} days", { duration });
+      } else if (tomorrow.hasSame(start, "day")) {
+        const duration = Math.floor(end.diff(start, "days").plus({ days: 1 }).days);
+        return defaultT.value("NextXDays", "Next {{duration}} days", { duration });
       } else if (isToday(start, end)) {
         return defaultT.value("Today", "Today");
       } else {

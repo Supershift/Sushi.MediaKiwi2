@@ -9,14 +9,16 @@
   const props = withDefaults(
     defineProps<{
       /**
-       * Collection of days representing days in the past
-       * @example [7, 28, 90, 365]
+       * Collection representing days
+       * For the future (Next x days) use negative numbers
+       * For the past (Last x days) use positive numbers
+       * @example [-7, -14, 7, 28, 90, 365]
        */
       days?: Array<number>;
       /**
-       * Collection of months representing months in the past
-       * Zero representing the current month
-       * @example [0, 1, 2]
+       * Collection representing months
+       * Zero based, representing the current month
+       * @example [-1, 0, 1, 2] Next month, current month, last month, 2 months ago
        */
       months?: number[];
       /**
