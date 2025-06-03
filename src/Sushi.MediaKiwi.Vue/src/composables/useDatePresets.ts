@@ -13,15 +13,25 @@ export async function useDatePresets(options?: {
    */
   dayPresets: number[];
   /**
+ * Collection representing weeks
+ * Zero besed, representing the current week, based on current locale
+ * @example [-1, 0, 1, 2] Next week, current week, last week, 2 week ago
+ */
+  weekPresets?: number[];
+  /**
    * Collection representing months
    * Zero based, representing the current month
    * @example [-1, 0, 1, 2] Next month, current month, last month, 2 months ago
    */
   monthPresets: number[];
 }) {
-  const { formatMonth, defaultT, formatDate, t } = await useI18next();
+  const { formatWeek, formatMonth, defaultT, formatDate, t } = await useI18next();
 
-  const { dayPresets, monthPresets } = options ?? { dayPresets: [], monthPresets: [] };
+  const { dayPresets, weekPresets, monthPresets } = options ?? {
+    dayPresets: [],
+    weekPresets: [],
+    monthPresets: []
+  };
 
   useTimeZones(t).setLuxonDefaultZone();
 
@@ -33,6 +43,7 @@ export async function useDatePresets(options?: {
     return {
       today: getTodayPreset(),
       daysExcludingToday: [...getLastDaysPresets(), ...getNextDaysPresets()],
+      weeks: getWeekPreset(),
       months: getMonthPreset(),
     };
   });
@@ -75,15 +86,32 @@ export async function useDatePresets(options?: {
     return result;
   }
 
+  function getWeekPreset() {
+    const result: DateRange[] = [];
+
+    for (const offset of weekPresets ?? []) {
+      const range = today.minus({ week: offset });
+
+      result.push({
+        start: range.startOf("week").startOf("day"),
+        end: range.endOf("week").endOf("day"),
+        duration: Duration.fromDurationLike({ week: 1 }),
+      });
+    }
+
+    result.sort((a, b) => b.start.toMillis() - a.start.toMillis());
+    return result;
+  }
+
   function getMonthPreset() {
     const result: DateRange[] = [];
 
-    for (const monthOffset of monthPresets ?? []) {
-      const month = today.minus({ months: monthOffset });
+    for (const offset of monthPresets) {
+      const range = today.minus({ months: offset });
 
       result.push({
-        start: month.startOf("month").startOf("day"),
-        end: month.endOf("month").endOf("day"),
+        start: range.startOf("month").startOf("day"),
+        end: range.endOf("month").endOf("day"),
         duration: Duration.fromDurationLike({ months: 1 }),
       });
     }
@@ -114,6 +142,8 @@ export async function useDatePresets(options?: {
       const start = dates;
       if (isFullMonth(start, end)) {
         return formatMonth.value(start);
+      } else if (isFullWeek(start, end)) {
+        return defaultT.value("WeekX", "Week {{weekNumber}}", { weekNumber: formatWeek.value(start) });
       } else if (yesterday.hasSame(end, "day")) {
         const duration = Math.floor(end.diff(start, "days").plus({ days: 1 }).days);
         return defaultT.value("LastXDays", "Last {{duration}} days", { duration });
@@ -147,6 +177,10 @@ export async function useDatePresets(options?: {
     }
 
     return [formatDate.value(start), formatDate.value(end)].join(" - ");
+  }
+
+  function isFullWeek(start: DateTime, end: DateTime) {
+    return start.hasSame(start.startOf("week"), "day") && end.hasSame(end.endOf("week"), "day") && start.hasSame(end, "week");
   }
 
   function isFullMonth(start: DateTime, end: DateTime) {

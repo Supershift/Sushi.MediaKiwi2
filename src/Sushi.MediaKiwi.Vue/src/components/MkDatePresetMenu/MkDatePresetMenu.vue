@@ -16,6 +16,12 @@
        */
       days?: Array<number>;
       /**
+       * Collection representing weeks
+       * Zero based, representing the current month
+       * @example [-1, 0, 1, 2] Next month, current month, last month, 2 months ago
+       */
+      weeks?: number[];
+      /**
        * Collection representing months
        * Zero based, representing the current month
        * @example [-1, 0, 1, 2] Next month, current month, last month, 2 months ago
@@ -42,6 +48,7 @@
     }>(),
     {
       days: () => [7, 28, 90, 365],
+      weeks: () => [],
       months: () => [0, 1, 2],
       includeToday: false,
     }
@@ -62,6 +69,7 @@
   const { defaultT } = await useI18next("MkDatePresetMenu");
   const { presets, formatPreset, formatDateRange } = await useDatePresets({
     dayPresets: props.days,
+    weekPresets: props.weeks,
     monthPresets: props.months,
   });
 
@@ -106,6 +114,7 @@
     return (
       modelValue.value?.value?.length == 2 &&
       (presets.value.daysExcludingToday.some(hasSameStartAndEndDateAsModel.value) ||
+        presets.value.weeks.some(hasSameStartAndEndDateAsModel.value) ||
         presets.value.months.some(hasSameStartAndEndDateAsModel.value) ||
         hasSameStartAndEndDateAsModel.value(presets.value.today) ||
         props.customOptions?.some(hasSameStartAndEndDateAsModel.value))
@@ -131,7 +140,11 @@
     <v-list-item v-for="(item, i) in presets.daysExcludingToday" :key="i" :active="hasSameStartAndEndDateAsModel(item)" @click="updateFromPreset(item)">
       <v-list-item-title>{{ formatPreset(item.start, item.end) }}</v-list-item-title>
     </v-list-item>
-    <v-divider />
+    <v-divider v-if="props.weeks?.length" />
+    <v-list-item v-for="(item, i) in presets.weeks" :key="i" :active="hasSameStartAndEndDateAsModel(item)" @click="updateFromPreset(item)">
+      <v-list-item-title> {{ formatPreset(item.start, item.end) }}</v-list-item-title>
+    </v-list-item>
+    <v-divider v-if="props.months?.length" />
     <v-list-item v-for="(item, i) in presets.months" :key="i" :active="hasSameStartAndEndDateAsModel(item)" @click="updateFromPreset(item)">
       <v-list-item-title> {{ formatPreset(item.start, item.end) }}</v-list-item-title>
     </v-list-item>
