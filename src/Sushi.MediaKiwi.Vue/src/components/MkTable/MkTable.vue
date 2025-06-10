@@ -138,12 +138,38 @@
     return hasDefinedEmit("click:row") || props.navigationItemId !== undefined;
   });
 
+  const pageToDisplay = computed(() => {
+    if (props.clientSidePagination) {
+      // determine which part should be shown.
+      const { pageIndex = 0, pageSize = 10 } = currentPagination.value;
+
+      const items = props.data ?? [];
+      const startIndex = pageIndex * pageSize;
+      const endIndex = startIndex + pageSize;
+
+      return items.slice(startIndex, endIndex); // correctly handles out of bound cases.
+    } else if (props.apiResult) {
+      return props.apiResult.result;
+    } else {
+      return props.data ?? [];
+    }
+  });
+
   /**
    * Deconstruct the ApiResult or paging prop to an ITableMapPaging
    */
   const pagingResult = computed<ITableMapPaging | undefined | null>(() => {
-    const resultCount = props.apiResult?.result?.length;
+    if (props.clientSidePagination) {
+      const { pageSize } = currentPagination.value;
 
+      const totalCount = props.data?.length ?? 0;
+      const resultCount = pageToDisplay.value.length;
+      const pageCount = Math.ceil(totalCount / pageSize!);
+
+      return { pageCount, totalCount, resultCount };
+    }
+
+    const resultCount = props.apiResult?.result?.length;
     if (props.apiResult) {
       const { pageCount, totalCount } = props.apiResult;
       return { pageCount, totalCount, resultCount };
@@ -167,6 +193,11 @@
   async function pageChanged(value: Paging) {
     // Change the current page index
     emit("update:currentPagination", value);
+
+    if (props.clientSidePagination) {
+      // let the client side handle page changes
+      return;
+    }
     await loadData();
   }
 
@@ -185,6 +216,11 @@
   async function sortingChanged(value?: Sorting) {
     // update sorting
     emit("update:sorting", value);
+
+    if (props.clientSidePagination) {
+      // let the client side handle sorting changes
+      return;
+    }
     // fetch data
     await loadData();
   }
@@ -283,7 +319,7 @@
     <MkTableView
       v-if="!showFullEmptyState"
       :table-map="tableMap"
-      :data="apiResult ? apiResult.result : data"
+      :data="pageToDisplay"
       :navigation-item-id="navigationItemId"
       v-model:sorting="sorting"
       v-model:selection="selection"

@@ -12,7 +12,7 @@
   const { t } = await useI18next();
 
   // define reactive variables
-  const currentPagination = ref<Paging>({ pageSize: 8 }); // demos 8 items per page (lower than default 10)
+  const currentPagination = ref<Paging>({ pageSize: 11, pageIndex: 0 }); // demos 11 items per page (different from the default 10)
   const state = reactive({
     countries: <ListResult<Country>>{},
     addCountry: false,
@@ -33,11 +33,16 @@
     },
   });
 
+  const useClientSidePagination = true;
+
   // load data
   async function LoadData() {
+    // gets all countries in 1 request when client side pagination is enabled
+    const pagination = useClientSidePagination ? { pageSize: 9999, pageIndex: 0 } : currentPagination.value;
+
     state.countries = (
       await sampleApi.countries({
-        ...currentPagination.value,
+        ...pagination,
         countryCode: filters.value?.code?.selectedValue?.value,
         countryName: filters.value?.name?.selectedValue?.value,
       })
@@ -50,6 +55,7 @@
 </script>
 <template>
   <mk-table
+    :client-side-pagination="useClientSidePagination"
     v-model:currentPagination="currentPagination"
     v-model:filters="filters"
     :api-result="state.countries"

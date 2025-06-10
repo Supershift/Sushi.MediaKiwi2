@@ -57,6 +57,8 @@ export type MkTableProps<T> = MkTableBaseProps<T> &
     stickyToolbar?: boolean;
     /** Shows a ErrorProblemDetails componenent on top of the MkTable when a error occurs in the load method, default: false */
     showErrors?: boolean;
+    /** Handles paging on the client side rather than repeatedly querying the API for new pages */
+    clientSidePagination?: boolean;
   };
 
 export type MkTableEmptyStateProps = {
