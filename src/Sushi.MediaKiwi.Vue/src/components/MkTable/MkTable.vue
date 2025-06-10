@@ -140,6 +140,8 @@
 
   const pageToDisplay = computed(() => {
     if (props.clientSidePagination) {
+      // todo: handle sorting
+
       // determine which part should be shown.
       const { pageIndex = 0, pageSize = 10 } = currentPagination.value;
 
