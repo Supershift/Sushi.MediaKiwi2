@@ -121,7 +121,7 @@ export async function useI18next(scope?: NavigationItem | string) {
     }
 
     if (typeof date === 'string') {
-      return DateTime.fromISO(date);
+      return DateTime.fromISO(date, { setZone: true });
     }
 
     return date;
