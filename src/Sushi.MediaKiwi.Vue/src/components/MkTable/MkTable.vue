@@ -28,6 +28,8 @@
   import MkDisplayOptions from "@/components/MkDisplayOptions/MkDisplayOptions.vue";
   import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
   import MkTableEmptyState from "./MkTableEmptyState.vue";
+  import { SortDirection } from "@/models";
+  import { DateTime } from "luxon";
 
   // define properties
   const props = withDefaults(defineProps<MkTableProps<T>>(), {
@@ -138,51 +140,79 @@
     return hasDefinedEmit("click:row") || props.navigationItemId !== undefined;
   });
 
-  const pageToDisplay = computed(() => {
-    if (props.clientSidePaging) {
-      // todo: handle sorting
-
-      // determine which part should be shown.
-      const { pageIndex = 0, pageSize = 10 } = currentPagination.value;
-
-      const items = props.data ?? [];
-      const startIndex = pageIndex * pageSize;
-      const endIndex = startIndex + pageSize;
-
-      return items.slice(startIndex, endIndex); // correctly handles out of bound cases.
-    } else if (props.apiResult) {
-      return props.apiResult.result;
-    } else {
-      return props.data ?? [];
-    }
-  });
-
-  function sortObjects<T extends Record<string, any>>(array: T[], property: string, direction: Sorting.SortDirection = "ASC"): T[] {
+  function sortByProperty<T, K extends keyof T>(array: T[], property: K, direction: SortDirection = SortDirection.Asc): T[] {
+    // create copy of the array and sort it
     return array.sort((a, b) => {
       const aValue = a[property];
       const bValue = b[property];
 
-      if (aValue === undefined || bValue === undefined) return 0;
+      // handle any null/undefined cases
+      const isNullish = (v: T[K]) => v === null || v === undefined;
+      if (isNullish(aValue) && isNullish(bValue)) return 0;
+      if (isNullish(aValue)) return direction === SortDirection.Asc ? 1 : -1;
+      if (isNullish(bValue)) return direction === SortDirection.Asc ? -1 : 1;
 
-      if (aValue < bValue) {
-        return direction === "ASC" ? -1 : 1;
-      } else if (aValue > bValue) {
-        return direction === "ASC" ? 1 : -1;
-      } else {
+      // Handle Luxon DateTime
+      if (DateTime.isDateTime(aValue) && DateTime.isDateTime(bValue)) {
+        if (aValue < bValue) return direction === SortDirection.Asc ? -1 : 1;
+        if (aValue > bValue) return direction === SortDirection.Asc ? 1 : -1;
         return 0;
       }
+
+      // Handle strings (case-insensitive)
+      if (typeof aValue === "string" && typeof bValue === "string") {
+        const result = aValue.localeCompare(bValue, undefined, { sensitivity: "base" });
+        return direction === SortDirection.Asc ? result : -result;
+      }
+
+      // handle numbers and other simple to compare types
+      if (aValue < bValue) return direction === SortDirection.Asc ? -1 : 1;
+      if (aValue > bValue) return direction === SortDirection.Asc ? 1 : -1;
+
+      return 0;
     });
   }
 
   /**
-   * Deconstruct the ApiResult or paging prop to an ITableMapPaging
+   * Prepare all received items and performs any requested local processing
+   */
+  const items = computed(() => {
+    const data = props.apiResult?.result ?? props.data ?? [];
+
+    if (props.clientSideSorting) {
+      sortByProperty(data, <keyof T>sortBy.value, sortDirection.value);
+    }
+
+    return data;
+  });
+
+  /**
+   * Determine which items need to be shown
+   */
+  const itemsToDisplay = computed(() => {
+    if (props.clientSidePaging) {
+      // paging needs to be applied locally
+      const { pageIndex = 0, pageSize = 10 } = currentPagination.value;
+
+      const startIndex = pageIndex * pageSize;
+      const endIndex = startIndex + pageSize;
+
+      return items.value.slice(startIndex, endIndex); // correctly handles out of bound cases.
+    }
+
+    // Display the items as they are known
+    return items.value;
+  });
+
+  /**
+   * Deconstruct the ApiResult, local page or paging prop to an ITableMapPaging
    */
   const pagingResult = computed<ITableMapPaging | undefined | null>(() => {
     if (props.clientSidePaging) {
       const { pageSize } = currentPagination.value;
 
-      const totalCount = props.data?.length ?? 0;
-      const resultCount = pageToDisplay.value.length;
+      const totalCount = items.value.length;
+      const resultCount = itemsToDisplay.value.length;
       const pageCount = Math.ceil(totalCount / pageSize!);
 
       return { pageCount, totalCount, resultCount };
@@ -236,7 +266,7 @@
     // update sorting
     emit("update:sorting", value);
 
-    if (props.clientSidePaging) {
+    if (props.clientSideSorting) {
       // let the client side handle sorting changes
       return;
     }
@@ -286,7 +316,7 @@
 
   // Watch for changes in sorting and direction
   watch([sortBy, sortDirection], () => {
-    if (props.clientSidePagination) {
+    if (props.clientSideSorting) {
       // let the client side handle sorting changes
       return;
     }
@@ -344,7 +374,7 @@
     <MkTableView
       v-if="!showFullEmptyState"
       :table-map="tableMap"
-      :data="pageToDisplay"
+      :data="itemsToDisplay"
       :navigation-item-id="navigationItemId"
       v-model:sorting="sorting"
       v-model:selection="selection"

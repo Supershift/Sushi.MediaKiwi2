@@ -37,12 +37,13 @@
     },
   });
 
-  const useClientSidePagination = true;
+  const useClientSidePaging = true;
+  const useClientSideSorting = true;
 
   // load data
   async function LoadData() {
     // gets all countries in 1 request when client side pagination is enabled
-    const pagination = useClientSidePagination ? { pageSize: 9999, pageIndex: 0 } : currentPagination.value;
+    const pagination = useClientSidePaging ? { pageSize: 9999, pageIndex: 0 } : currentPagination.value;
 
     state.countries = (
       await sampleApi.countries({
@@ -59,7 +60,8 @@
 </script>
 <template>
   <mk-table
-    :client-side-pagination="useClientSidePagination"
+    :client-side-paging="useClientSidePaging"
+    :client-side-sorting="useClientSideSorting"
     v-model:currentPagination="currentPagination"
     v-model:filters="filters"
     v-model:sorting="sorting"
