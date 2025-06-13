@@ -1,7 +1,7 @@
 <script setup lang="ts">
-  import { MkTable } from "@/components";
+  import { MkTable, MkTh } from "@/components";
   import { useI18next } from "@/composables";
-  import { ListResult, Paging, TableFilter, TableFilterType } from "@/models";
+  import { ListResult, Paging, Sorting, SortDirection, TableFilter, TableFilterType } from "@/models";
   import { reactive } from "vue";
   import { ref } from "vue";
   import AddCountry from "./AddCountry.vue";
@@ -13,6 +13,10 @@
 
   // define reactive variables
   const currentPagination = ref<Paging>({ pageSize: 11, pageIndex: 0 }); // demos 11 items per page (different from the default 10)
+  const sorting = ref<Sorting>({
+    sortBy: "name",
+    sortDirection: SortDirection.Desc,
+  });
   const state = reactive({
     countries: <ListResult<Country>>{},
     addCountry: false,
@@ -58,6 +62,7 @@
     :client-side-pagination="useClientSidePagination"
     v-model:currentPagination="currentPagination"
     v-model:filters="filters"
+    v-model:sorting="sorting"
     :api-result="state.countries"
     :data="state.countries?.result"
     @load="LoadData"
@@ -70,8 +75,8 @@
     @click:new="openDialog"
   >
     <template #thead>
-      <th>Code</th>
-      <th>Name</th>
+      <mk-th v-model:sorting="sorting" :sorting-options="{ id: 'code' }">{{ t("Code") }}</mk-th>
+      <mk-th v-model:sorting="sorting" :sorting-options="{ id: 'name' }">{{ t("Name") }}</mk-th>
     </template>
 
     <template #tbody="{ dataItem }">
