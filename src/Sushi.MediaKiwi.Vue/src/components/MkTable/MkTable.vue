@@ -157,6 +157,23 @@
     }
   });
 
+  function sortObjects<T extends Record<string, any>>(array: T[], property: string, direction: Sorting.SortDirection = "ASC"): T[] {
+    return array.sort((a, b) => {
+      const aValue = a[property];
+      const bValue = b[property];
+
+      if (aValue === undefined || bValue === undefined) return 0;
+
+      if (aValue < bValue) {
+        return direction === "ASC" ? -1 : 1;
+      } else if (aValue > bValue) {
+        return direction === "ASC" ? 1 : -1;
+      } else {
+        return 0;
+      }
+    });
+  }
+
   /**
    * Deconstruct the ApiResult or paging prop to an ITableMapPaging
    */
@@ -268,7 +285,13 @@
   }
 
   // Watch for changes in sorting and direction
-  watch([sortBy, sortDirection], loadData);
+  watch([sortBy, sortDirection], () => {
+    if (props.clientSidePagination) {
+      // let the client side handle sorting changes
+      return;
+    }
+    loadData();
+  });
 </script>
 
 <template>
