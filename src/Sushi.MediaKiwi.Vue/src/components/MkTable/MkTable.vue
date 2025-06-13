@@ -139,7 +139,7 @@
   });
 
   const pageToDisplay = computed(() => {
-    if (props.clientSidePagination) {
+    if (props.clientSidePaging) {
       // todo: handle sorting
 
       // determine which part should be shown.
@@ -161,7 +161,7 @@
    * Deconstruct the ApiResult or paging prop to an ITableMapPaging
    */
   const pagingResult = computed<ITableMapPaging | undefined | null>(() => {
-    if (props.clientSidePagination) {
+    if (props.clientSidePaging) {
       const { pageSize } = currentPagination.value;
 
       const totalCount = props.data?.length ?? 0;
@@ -196,7 +196,7 @@
     // Change the current page index
     emit("update:currentPagination", value);
 
-    if (props.clientSidePagination) {
+    if (props.clientSidePaging) {
       // let the client side handle page changes
       return;
     }
@@ -219,7 +219,7 @@
     // update sorting
     emit("update:sorting", value);
 
-    if (props.clientSidePagination) {
+    if (props.clientSidePaging) {
       // let the client side handle sorting changes
       return;
     }

@@ -58,7 +58,9 @@ export type MkTableProps<T> = MkTableBaseProps<T> &
     /** Shows a ErrorProblemDetails componenent on top of the MkTable when a error occurs in the load method, default: false */
     showErrors?: boolean;
     /** Handles paging on the client side rather than repeatedly querying the API for new pages */
-    clientSidePagination?: boolean;
+    clientSidePaging?: boolean;
+    /** Handles sorting on the client side rather than repeatedly querying the API for the new order */
+    clientSideSorting?: boolean;
   };
 
 export type MkTableEmptyStateProps = {
