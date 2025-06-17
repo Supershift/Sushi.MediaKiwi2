@@ -33,12 +33,46 @@ export type MkTableViewProps<T> = MkTableBaseProps<T> & {
   showHoverEffect: boolean;
 };
 
+export type LoadDataEvent = {
+  /** Indicates the reason why onLoad is fired */
+  type: LoadDataEventType;
+}
+
+export enum LoadDataEventType{
+  /** The table is loaded for the first time */
+  InitialLoad = "InitialLoad",
+  /** The user has changed the page */
+  PagingChanged = "PagingChange",  
+  /** The user has changed the filter */
+  FilterChange = "FilterChange",
+  /** The user has changed the sort order */
+  SortChange = "SortChange",
+}
+
+export enum MkTablePagingMode {
+  /** Paging is controlled by the client. LoadData will be called for each paging event.  */
+  Manual = "Manual",
+  /** Paging is performed automatically by the MkTable component. LoadData is not fired for paging events.*/
+  Auto = "Auto",
+}
+
+export enum MkTableSortingMode {
+  /** Sorting is controlled by the client. LoadData will be called for each sorting event. */
+  Manual = "Manual",
+  /** Sorting is performed automatically by the MkTable component. LoadData is not fired for sorting events.*/
+  Auto = "Auto",
+}
+
 export type MkTableProps<T> = MkTableBaseProps<T> &
   MkTableEmptyStateProps & {
     /** Sets data and paging properties based on the API's result. */
     apiResult?: IListResult<T>;
     /** When set, enables paging based on provided values. */
     paging?: IPagingResult;
+    /** Who performs paging, MkTable or the caller. Defaults to 'Manual' */
+    pagingMode?: MkTablePagingMode;
+    /** Who performs sorting, MkTable or the caller. Defaults to 'Manual' */
+    sortingMode?: MkTableSortingMode;
     /** Determines if the toolbar has a new button, default: false. */
     new?: boolean;
     /** Determines if we only want to emit instead of navigating to the given navigationItemId */
@@ -46,7 +80,7 @@ export type MkTableProps<T> = MkTableBaseProps<T> &
     /** Overrides the "new item" button title */
     newTitle?: string;
     /** Callback invoked when the component needs new data, i.e. a filter changes, the current page changes, etc. */
-    onLoad?: () => Promise<void>;
+    onLoad?: (event: LoadDataEvent) => Promise<void>;
     /** Title specificly for the current table */
     title?: string;
     /** Hides the bulk action bar while keeing the checkboxes intact */
@@ -56,11 +90,7 @@ export type MkTableProps<T> = MkTableBaseProps<T> &
     /** Sets the toolbar as a sticky element when scrolling. Defaults to true on MkToolbar */
     stickyToolbar?: boolean;
     /** Shows a ErrorProblemDetails componenent on top of the MkTable when a error occurs in the load method, default: false */
-    showErrors?: boolean;
-    /** Handles paging on the client side rather than repeatedly querying the API for new pages */
-    clientSidePaging?: boolean;
-    /** Handles sorting on the client side rather than repeatedly querying the API for the new order */
-    clientSideSorting?: boolean;
+    showErrors?: boolean;    
   };
 
 export type MkTableEmptyStateProps = {

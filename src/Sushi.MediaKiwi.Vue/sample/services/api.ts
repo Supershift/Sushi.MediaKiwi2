@@ -395,6 +395,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         pageIndex?: number;
         /** @format int32 */
         pageSize?: number;
+        sortBy?: string;
+        sortDirection?: string;
       },
       params: RequestParams = {}
     ) =>

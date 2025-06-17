@@ -1,25 +1,29 @@
 <script setup lang="ts">
   import { MkTable, MkTh } from "@/components";
   import { useI18next } from "@/composables";
-  import { ListResult, Paging, Sorting, SortDirection, TableFilter, TableFilterType } from "@/models";
-  import { reactive } from "vue";
-  import { ref } from "vue";
+  import { Paging, Sorting, SortDirection, TableFilter, TableFilterType, IPagingResult, IListResult } from "@/models";
+  import { reactive, ref } from "vue";
   import AddCountry from "./AddCountry.vue";
   import { useSampleApi, Country } from "@sample/services";
+  import { LoadDataEvent } from "@/models/table/TableProps";  
 
   // inject dependencies
   const sampleApi = useSampleApi();
-  const { t } = await useI18next();
+  const { t } = await useI18next();  
 
   // define reactive variables
-  const currentPagination = ref<Paging>({ pageSize: 11, pageIndex: 0 }); // demos 11 items per page (different from the default 10)
-  const sorting = ref<Sorting>({
+  const sorting = ref<Sorting<Country>>({
     sortBy: "name",
-    sortDirection: SortDirection.Desc,
+    sortDirection: SortDirection.Asc,
   });
-  const state = reactive({
-    countries: <ListResult<Country>>{},
+  const state = reactive({    
     addCountry: false,
+  });
+  const countries = ref<IListResult<Country>>();    
+  const paging = ref<IPagingResult>();
+  const currentPagination = ref<Paging>({
+    pageSize: 11,
+    pageIndex: 0,
   });
 
   // define filters
@@ -31,42 +35,32 @@
     name: {
       title: "Name",
       type: TableFilterType.TextField,
-      selectedValue: {
-        value: "bur",
-      },
     },
   });
 
-  const useClientSidePaging = true;
-  const useClientSideSorting = true;
-
-  // load data
-  async function LoadData() {
-    // gets all countries in 1 request when client side pagination is enabled
-    const pagination = useClientSidePaging ? { pageSize: 9999, pageIndex: 0 } : currentPagination.value;
-
-    state.countries = (
-      await sampleApi.countries({
-        ...pagination,
-        countryCode: filters.value?.code?.selectedValue?.value,
-        countryName: filters.value?.name?.selectedValue?.value,
-      })
-    ).data;
+  // load data from source
+  async function LoadData(event: LoadDataEvent) {
+    // gets all countries in 1 request
+    const apiResponse = await sampleApi.countries({      
+      countryCode: filters.value?.code?.selectedValue?.value,
+      countryName: filters.value?.name?.selectedValue?.value,
+      ...currentPagination.value,
+      ...sorting.value,
+    });    
+    countries.value = apiResponse.data;
   }
-
+  
   function openDialog() {
     state.addCountry = true;
   }
 </script>
 <template>
   <mk-table
-    :client-side-paging="useClientSidePaging"
-    :client-side-sorting="useClientSideSorting"
     v-model:currentPagination="currentPagination"
     v-model:filters="filters"
     v-model:sorting="sorting"
-    :api-result="state.countries"
-    :data="state.countries?.result"
+    :api-result="countries"
+    :paging="paging"
     @load="LoadData"
     :item-id="(item: Country) => item.code"
     navigation-item-id="CountryEdit"
