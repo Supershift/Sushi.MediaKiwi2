@@ -51,4 +51,4 @@ jobs:
         working-directory: src/nupkgs
         run: dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_TOKEN}
         env:
-          NUGET_TOKEN: ${{ secrets.MEDIAKIWI_NUGET_2023 }}
+          NUGET_TOKEN: ${{ secrets.MEDIAKIWI_NUGET }}
