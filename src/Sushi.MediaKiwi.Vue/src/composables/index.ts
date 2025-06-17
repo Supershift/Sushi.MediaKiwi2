@@ -21,6 +21,7 @@ export * from "./useResponsiveHelpers";
 export * from "./useSections";
 export * from "./useSideSheet";
 export * from "./useTableDisplayOptions";
+export * from "./useTablePaging";
 export * from "./useTableSorting";
 export * from "./useTypography";
 export * from "./useValidationRules";
