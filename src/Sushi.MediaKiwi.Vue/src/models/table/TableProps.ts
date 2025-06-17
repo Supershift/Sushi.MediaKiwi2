@@ -28,7 +28,7 @@ export type MkTableBaseProps<T> = {
   hideSelectionCheckbox?: boolean;
   /**
    * Applies when {@link selection} is set.
-   * When true, the row won't have a 'seleceted' effect when the checkbox is checked.
+   * When true, the row won't have a 'selected' effect when the checkbox is checked.
    */
   hideSelectedEffect?: boolean;
 };
