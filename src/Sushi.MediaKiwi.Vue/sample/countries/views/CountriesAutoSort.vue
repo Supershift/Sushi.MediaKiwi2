@@ -5,13 +5,12 @@
   import { reactive, ref, computed } from "vue";
   import AddCountry from "./AddCountry.vue";
   import { useSampleApi, Country } from "@sample/services";
-  import { LoadDataEvent, LoadDataEventType, MkTablePagingSource } from "@/models/table/TableProps";
+  import { LoadDataEvent, LoadDataEventType, MkTablePagingSource, MkTableSortingMode } from "@/models/table/TableProps";
   import { useTableSorting } from "@/composables";
 
   // inject dependencies
   const sampleApi = useSampleApi();
   const { t } = await useI18next();
-  const { sortArray } = useTableSorting();
 
   // define reactive variables
   const sorting = ref<Sorting<Country>>({
@@ -59,6 +58,7 @@
     v-model:sorting="sorting"
     :data="countries"    
     :paging-source="MkTablePagingSource.Auto"
+    :sorting-mode="MkTableSortingMode.Auto"
     @load="LoadData"
     :item-id="(item: Country) => item.code"
     page-tracking

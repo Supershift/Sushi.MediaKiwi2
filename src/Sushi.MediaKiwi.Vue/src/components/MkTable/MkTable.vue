@@ -19,6 +19,7 @@
     LoadDataEventType,
     LoadDataEvent,
     MkTablePagingSource,
+    MkTableSortingMode,
   } from "@/models/table/TableProps";
   import MkTableFilter from "@/components/MkTableFilter/MkTableFilter.vue";
   import MkTableView from "./MkTableView.vue";
@@ -30,18 +31,20 @@
   import MkDisplayOptions from "@/components/MkDisplayOptions/MkDisplayOptions.vue";
   import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
   import MkTableEmptyState from "./MkTableEmptyState.vue";
-  import { useTablePaging } from "@/composables";
+  import { useTablePaging, useTableSorting } from "@/composables";
   import { IPagingResult } from "@/models/api";
 
   // define properties
   const props = withDefaults(defineProps<MkTableProps<T>>(), {
     paginationMode: "controls",
     pagingSource: MkTablePagingSource.Manual,
+    sortingMode: MkTableSortingMode.Manual,
     stickyToolbar: undefined,
   });
 
   /** Use Sorting<T> for typesafety  */
   const sorting = defineModel<Sorting | Sorting<T>>("sorting");
+
   /** Selected items */
   const selection = defineModel<Array<T>>("selection");
   /** Collection of filters to filter data. */
@@ -118,6 +121,7 @@
   const snackbar = useSnackbarStore();
   const { hasDefinedEmit } = useComponentContext();
   const { calculatePaging, pageArray } = useTablePaging();
+  const { sortArray } = useTableSorting();
 
   // define reactive variables
   const initialDataLoaded = ref(false);
@@ -154,7 +158,10 @@
    */
   const items = computed(() => {
     let data = props.apiResult?.result ?? props.data ?? [];
-    if(props.pagingSource == MkTablePagingSource.Auto){      
+    if (props.sortingMode == MkTableSortingMode.Auto && sorting.value) {
+      data = sortArray(data, <keyof T>sorting.value.sortBy, sorting.value.sortDirection);
+    }
+    if (props.pagingSource == MkTablePagingSource.Auto) {
       data = pageArray(data, currentPagination.value);
     }
     return data;
@@ -167,9 +174,8 @@
     const resultCount = props.apiResult?.result?.length;
     if (props.apiResult) {
       const { pageCount, totalCount } = props.apiResult;
-      return { pageCount, totalCount, resultCount };    
-    }
-    else if( props.pagingSource === MkTablePagingSource.Auto) {
+      return { pageCount, totalCount, resultCount };
+    } else if (props.pagingSource === MkTablePagingSource.Auto) {
       const { pageCount, totalCount } = autoPaging.value;
       return { pageCount, totalCount, resultCount };
     } else if (props.paging) {
@@ -191,7 +197,7 @@
 
   async function pageChanged(value: Paging) {
     // Change the current page index
-    emit("update:currentPagination", value);    
+    emit("update:currentPagination", value);
     if (props.pagingSource == MkTablePagingSource.Manual) {
       await loadData(LoadDataEventType.PagingChanged);
     }
@@ -210,10 +216,16 @@
   }
 
   async function sortingChanged(value?: Sorting) {
+    console.log("sortingChanged", value);
     // update sorting
     emit("update:sorting", value);
-    // fetch data
-    await loadData(LoadDataEventType.SortChange);
+    if (props.sortingMode == MkTableSortingMode.Manual) {
+      await loadData(LoadDataEventType.SortChange);
+    }
+    else if(props.sortingMode == MkTableSortingMode.Auto && props.data) {
+      // sort the items
+      sortArray(props.data, <keyof T>value?.sortBy, value?.sortDirection);
+    }
   }
 
   async function clearFilterValues() {
@@ -264,8 +276,8 @@
   }
 
   // Watch for changes in sorting and direction
-  watch([sortBy, sortDirection], () => {
-    loadData(LoadDataEventType.SortChange);
+  watch([sortBy, sortDirection], () => {    
+    sortingChanged(sorting.value);
   });
 </script>
 

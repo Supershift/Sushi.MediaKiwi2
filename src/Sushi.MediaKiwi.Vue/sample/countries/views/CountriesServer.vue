@@ -44,7 +44,8 @@
     const apiResponse = await sampleApi.countries({      
       countryCode: filters.value?.code?.selectedValue?.value,
       countryName: filters.value?.name?.selectedValue?.value,
-      ...currentPagination.value
+      ...currentPagination.value,
+      ...sorting.value,
     });    
     countries.value = apiResponse.data;
   }

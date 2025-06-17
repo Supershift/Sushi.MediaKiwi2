@@ -69,8 +69,10 @@ export type MkTableProps<T> = MkTableBaseProps<T> &
     apiResult?: IListResult<T>;
     /** When set, enables paging based on provided values. */
     paging?: IPagingResult;
-    /** Who performs paging, MkTable of the caller. Defaults to 'Manual' */
+    /** Who performs paging, MkTable or the caller. Defaults to 'Manual' */
     pagingSource?: MkTablePagingSource;
+    /** Who performs sorting, MkTable or the caller. Defaults to 'Manual' */
+    sortingMode?: MkTableSortingMode;
     /** Determines if the toolbar has a new button, default: false. */
     new?: boolean;
     /** Determines if we only want to emit instead of navigating to the given navigationItemId */
