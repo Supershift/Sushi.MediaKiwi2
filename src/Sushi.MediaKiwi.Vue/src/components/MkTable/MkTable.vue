@@ -5,9 +5,8 @@
   import MkErrorProblemDetails from "@/components/MkErrorProblemDetails/MkErrorProblemDetails.vue";
   import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
   import { createErrorProblemDetails } from "@/errorHandler/createErrorProblemDetails";
-  import { ref, watch } from "vue";
+  import { ref, watch, onMounted, computed } from "vue";
   import { useSnackbarStore } from "@/stores/snackbar";
-  import { onMounted, computed } from "vue";
   import { ITableMapPaging } from "@/models/table/TableMapPaging";
   import { defaultPageSizeOptions, defaultPageSize } from "@/constants";
   import { useComponentContext } from "@/composables/useComponentContext";
@@ -17,6 +16,10 @@
     MkTableBulkActionBarSlotProps,
     MkTableProps,
     MkTableTableSlotProps,
+    LoadDataEventType,
+    LoadDataEvent,
+    MkTablePagingMode,
+    MkTableSortingMode,
   } from "@/models/table/TableProps";
   import MkTableFilter from "@/components/MkTableFilter/MkTableFilter.vue";
   import MkTableView from "./MkTableView.vue";
@@ -28,15 +31,20 @@
   import MkDisplayOptions from "@/components/MkDisplayOptions/MkDisplayOptions.vue";
   import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
   import MkTableEmptyState from "./MkTableEmptyState.vue";
+  import { useTablePaging, useTableSorting } from "@/composables";
+  import { IPagingResult } from "@/models/api";
 
   // define properties
   const props = withDefaults(defineProps<MkTableProps<T>>(), {
     paginationMode: "controls",
+    pagingSource: MkTablePagingMode.Manual,
+    sortingMode: MkTableSortingMode.Manual,
     stickyToolbar: undefined,
   });
 
   /** Use Sorting<T> for typesafety  */
   const sorting = defineModel<Sorting | Sorting<T>>("sorting");
+
   /** Selected items */
   const selection = defineModel<Array<T>>("selection");
   /** Collection of filters to filter data. */
@@ -112,6 +120,8 @@
   // inject dependencies
   const snackbar = useSnackbarStore();
   const { hasDefinedEmit } = useComponentContext();
+  const { calculatePaging, pageArray } = useTablePaging();
+  const { sortArray } = useTableSorting();
 
   // define reactive variables
   const initialDataLoaded = ref(false);
@@ -120,6 +130,11 @@
   // Add the current page size if present to the pageSizes array, only if its above the defaultPageSize (10)
   if (currentPagination.value?.pageSize && currentPagination.value?.pageSize > defaultPageSize) {
     pageSizes.value.push(currentPagination.value.pageSize);
+  }
+  // used for automatic paging
+  const autoPaging = ref<IPagingResult>({ pageCount: 0, totalCount: 0 });
+  if (props.paging) {
+    autoPaging.value = { pageCount: props.paging.pageCount, totalCount: props.paging.totalCount };
   }
 
   const isBooleanColumn = computed(() => {
@@ -139,13 +154,29 @@
   });
 
   /**
-   * Deconstruct the ApiResult or paging prop to an ITableMapPaging
+   * Prepare all received items for display and performs any requested local processing
+   */
+  const items = computed(() => {
+    let data = props.apiResult?.result ?? props.data ?? [];
+    if (props.sortingMode == MkTableSortingMode.Auto && sorting.value) {
+      data = sortArray(data, <keyof T>sorting.value.sortBy, sorting.value.sortDirection);
+    }
+    if (props.pagingMode == MkTablePagingMode.Auto) {
+      data = pageArray(data, currentPagination.value);
+    }
+    return data;
+  });
+
+  /**
+   * Deconstruct the ApiResult, local page or paging prop to an ITableMapPaging
    */
   const pagingResult = computed<ITableMapPaging | undefined | null>(() => {
     const resultCount = props.apiResult?.result?.length;
-
     if (props.apiResult) {
       const { pageCount, totalCount } = props.apiResult;
+      return { pageCount, totalCount, resultCount };
+    } else if (props.pagingMode === MkTablePagingMode.Auto) {
+      const { pageCount, totalCount } = autoPaging.value;
       return { pageCount, totalCount, resultCount };
     } else if (props.paging) {
       const { pageCount, totalCount } = props.paging;
@@ -161,13 +192,15 @@
 
   // event listeners
   onMounted(async () => {
-    await loadData();
+    await loadData(LoadDataEventType.InitialLoad);
   });
 
   async function pageChanged(value: Paging) {
     // Change the current page index
     emit("update:currentPagination", value);
-    await loadData();
+    if (props.pagingMode == MkTablePagingMode.Manual) {
+      await loadData(LoadDataEventType.PagingChanged);
+    }
   }
 
   async function filterChanged(value: TableFilter) {
@@ -179,14 +212,20 @@
     // update filters
     emit("update:filters", value);
     // fetch data
-    await loadData();
+    await loadData(LoadDataEventType.FilterChange);
   }
 
   async function sortingChanged(value?: Sorting) {
+    console.log("sortingChanged", value);
     // update sorting
     emit("update:sorting", value);
-    // fetch data
-    await loadData();
+    if (props.sortingMode == MkTableSortingMode.Manual) {
+      await loadData(LoadDataEventType.SortChange);
+    }
+    else if(props.sortingMode == MkTableSortingMode.Auto && props.data) {
+      // sort the items
+      sortArray(props.data, <keyof T>value?.sortBy, value?.sortDirection);
+    }
   }
 
   async function clearFilterValues() {
@@ -200,7 +239,7 @@
   }
 
   // local functions
-  async function loadData() {
+  async function loadData(eventType: LoadDataEventType) {
     // if a data callback is defined, call it so the parent can fetch data
     if (props.onLoad) {
       // start progress indicator
@@ -208,7 +247,14 @@
 
       try {
         errorProblemDetails.value = null;
-        await props.onLoad();
+        // fire 'on load event'
+        const event: LoadDataEvent = { type: eventType };
+        await props.onLoad(event);
+
+        // calculate paging if the pagingMode is set to 'auto'
+        if (props.pagingMode === MkTablePagingMode.Auto) {
+          autoPaging.value = calculatePaging(props.data ?? [], currentPagination.value);
+        }
 
         // When the data is loaded, set the initialDataLoaded to true
         initialDataLoaded.value = true;
@@ -230,7 +276,9 @@
   }
 
   // Watch for changes in sorting and direction
-  watch([sortBy, sortDirection], loadData);
+  watch([sortBy, sortDirection], () => {    
+    sortingChanged(sorting.value);
+  });
 </script>
 
 <template>
@@ -283,7 +331,7 @@
     <MkTableView
       v-if="!showFullEmptyState"
       :table-map="tableMap"
-      :data="apiResult ? apiResult.result : data"
+      :data="items"
       :navigation-item-id="navigationItemId"
       v-model:sorting="sorting"
       v-model:selection="selection"
@@ -334,7 +382,7 @@
           </div>
           <div v-if="showPagination" class="mk-table__footer-item">
             <MkPagination
-              :model-value="currentPagination"
+              v-model:model-value="currentPagination"
               :paging-result="pagingResult"
               :mode="paginationMode"
               :page-size-options="pageSizes"

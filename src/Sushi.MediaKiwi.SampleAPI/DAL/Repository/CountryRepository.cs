@@ -13,7 +13,7 @@ namespace Sushi.MediaKiwi.SampleAPI.DAL.Repository
             _connector = connector;
         }
 
-        public async Task<QueryListResult<Country>> GetAllAsync(string? countryCode, string? countryName, PagingValues pagingValues)
+        public async Task<QueryListResult<Country>> GetAllAsync(string? countryCode, string? countryName, PagingValues pagingValues, SortValues<Country>? sortValues)
         {
             var query = _connector.CreateQuery();
             if(!string.IsNullOrWhiteSpace(countryName))
@@ -23,7 +23,8 @@ namespace Sushi.MediaKiwi.SampleAPI.DAL.Repository
                 query.Add(x => x.Code, countryCode);
 
             query.AddPaging(pagingValues);
-            query.AddOrder(x => x.Name);
+            if (sortValues != null)
+                query.AddOrder(sortValues);
             var result = await _connector.GetAllAsync(query);
             return result;
         }

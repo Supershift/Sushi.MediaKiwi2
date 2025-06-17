@@ -21,10 +21,13 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
             _mapper = mapper;
         }
 
-        public async Task<Result<ListResult<Country>, Error>> GetAllAsync(string? countryCode, string? countryName, PagingValues paging)
+        public async Task<Result<ListResult<Country>, Error>> GetAllAsync(string? countryCode, string? countryName, PagingValues paging, SortValues<Country>? sortValues)
         {
+            // map sort values to domain
+            var sortValuesDomain = _mapper.MapSortValues<DAL.Country>(sortValues);
+
             // get countries from datastore
-            var items = await _countryRepository.GetAllAsync(countryCode, countryName, paging);
+            var items = await _countryRepository.GetAllAsync(countryCode, countryName, paging, sortValuesDomain);
 
             // map to result
             var itemsDto = _mapper.Map<List<Country>>(items);
