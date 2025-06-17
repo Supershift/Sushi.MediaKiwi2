@@ -273,7 +273,7 @@
     :disable-item-selection="(item) => item.id % 2 !== 0"
     display-options
     pagination-mode="controls"
-    hide-selected-row
+    hideSelectedEffect
   >
     <template #bulkActionBar="{ confirm }">
       <v-btn @click="confirm(download)"><v-icon :icon="IconsLibrary.trayArrowDown"></v-icon> Download</v-btn>

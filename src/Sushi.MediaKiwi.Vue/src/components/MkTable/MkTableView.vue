@@ -88,7 +88,7 @@
   function tableRowClassses(dataItem: T) {
     return {
       "has-hover": props.showHoverEffect,
-      "mk-table-view__row--selected": isItemSelected.value(dataItem) && !props.hideSelectedRow,
+      "mk-table-view__row--selected": isItemSelected.value(dataItem) && !props.hideSelectedEffect,
       "cursor-not-allowed": props.checkbox && isSelectionKeyPressed.value && (isDisabledItemSelection(dataItem) || isRemovedItemSelection(dataItem)),
     };
   }
