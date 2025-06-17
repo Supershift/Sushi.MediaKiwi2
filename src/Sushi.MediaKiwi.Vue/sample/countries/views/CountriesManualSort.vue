@@ -5,7 +5,7 @@
   import { reactive, ref, computed } from "vue";  
   import AddCountry from "./AddCountry.vue";
   import { useSampleApi, Country } from "@sample/services";
-  import { LoadDataEvent, LoadDataEventType, MkTablePagingSource } from "@/models/table/TableProps";  
+  import { LoadDataEvent, LoadDataEventType, MkTablePagingMode } from "@/models/table/TableProps";  
   import { useTableSorting } from "@/composables";
 
   // inject dependencies

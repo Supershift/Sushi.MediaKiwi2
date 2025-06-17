@@ -49,7 +49,7 @@ export enum LoadDataEventType{
   SortChange = "SortChange",
 }
 
-export enum MkTablePagingSource {
+export enum MkTablePagingMode {
   /** Paging is controlled by the client. LoadData will be called for each paging event.  */
   Manual = "Manual",
   /** Paging is performed automatically by the MkTable component. LoadData is not fired for paging events.*/
@@ -70,7 +70,7 @@ export type MkTableProps<T> = MkTableBaseProps<T> &
     /** When set, enables paging based on provided values. */
     paging?: IPagingResult;
     /** Who performs paging, MkTable or the caller. Defaults to 'Manual' */
-    pagingSource?: MkTablePagingSource;
+    pagingMode?: MkTablePagingMode;
     /** Who performs sorting, MkTable or the caller. Defaults to 'Manual' */
     sortingMode?: MkTableSortingMode;
     /** Determines if the toolbar has a new button, default: false. */

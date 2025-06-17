@@ -18,7 +18,7 @@
     MkTableTableSlotProps,
     LoadDataEventType,
     LoadDataEvent,
-    MkTablePagingSource,
+    MkTablePagingMode,
     MkTableSortingMode,
   } from "@/models/table/TableProps";
   import MkTableFilter from "@/components/MkTableFilter/MkTableFilter.vue";
@@ -37,7 +37,7 @@
   // define properties
   const props = withDefaults(defineProps<MkTableProps<T>>(), {
     paginationMode: "controls",
-    pagingSource: MkTablePagingSource.Manual,
+    pagingSource: MkTablePagingMode.Manual,
     sortingMode: MkTableSortingMode.Manual,
     stickyToolbar: undefined,
   });
@@ -161,7 +161,7 @@
     if (props.sortingMode == MkTableSortingMode.Auto && sorting.value) {
       data = sortArray(data, <keyof T>sorting.value.sortBy, sorting.value.sortDirection);
     }
-    if (props.pagingSource == MkTablePagingSource.Auto) {
+    if (props.pagingMode == MkTablePagingMode.Auto) {
       data = pageArray(data, currentPagination.value);
     }
     return data;
@@ -175,7 +175,7 @@
     if (props.apiResult) {
       const { pageCount, totalCount } = props.apiResult;
       return { pageCount, totalCount, resultCount };
-    } else if (props.pagingSource === MkTablePagingSource.Auto) {
+    } else if (props.pagingMode === MkTablePagingMode.Auto) {
       const { pageCount, totalCount } = autoPaging.value;
       return { pageCount, totalCount, resultCount };
     } else if (props.paging) {
@@ -198,7 +198,7 @@
   async function pageChanged(value: Paging) {
     // Change the current page index
     emit("update:currentPagination", value);
-    if (props.pagingSource == MkTablePagingSource.Manual) {
+    if (props.pagingMode == MkTablePagingMode.Manual) {
       await loadData(LoadDataEventType.PagingChanged);
     }
   }
@@ -251,8 +251,8 @@
         const event: LoadDataEvent = { type: eventType };
         await props.onLoad(event);
 
-        // calculate paging if the pagingSource is set to 'auto'
-        if (props.pagingSource === MkTablePagingSource.Auto) {
+        // calculate paging if the pagingMode is set to 'auto'
+        if (props.pagingMode === MkTablePagingMode.Auto) {
           autoPaging.value = calculatePaging(props.data ?? [], currentPagination.value);
         }
 

@@ -5,7 +5,7 @@
   import { reactive, ref, computed } from "vue";
   import AddCountry from "./AddCountry.vue";
   import { useSampleApi, Country } from "@sample/services";
-  import { LoadDataEvent, LoadDataEventType, MkTablePagingSource, MkTableSortingMode } from "@/models/table/TableProps";
+  import { LoadDataEvent, LoadDataEventType, MkTablePagingMode, MkTableSortingMode } from "@/models/table/TableProps";
   import { useTableSorting } from "@/composables";
 
   // inject dependencies
@@ -57,7 +57,7 @@
     v-model:filters="filters"
     v-model:sorting="sorting"
     :data="countries"    
-    :paging-source="MkTablePagingSource.Auto"
+    :paging-mode="MkTablePagingMode.Auto"
     :sorting-mode="MkTableSortingMode.Auto"
     @load="LoadData"
     :item-id="(item: Country) => item.code"
