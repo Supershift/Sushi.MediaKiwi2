@@ -293,6 +293,7 @@
       :show-hover-effect="hasTableRowClickAction"
       :hide-table-row-actions="hideTableRowActions"
       :hide-selection-checkbox="hideSelectionCheckbox"
+      :hide-selected-row
       @click:row="(e) => emit('click:row', e)"
       @update:sorting="sortingChanged"
       @update:selection="(e) => emit('update:selection', e)"

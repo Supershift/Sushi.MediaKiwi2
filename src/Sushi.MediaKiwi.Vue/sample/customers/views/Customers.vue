@@ -256,7 +256,7 @@
         />
       </v-menu>
     </div>
-    <v-btn @click="toggleCountryFilter">Toggle country filter</v-btn>
+    <v-btn @click="toggleCountryFilter">Toggle country filter</v-btn>        
   </div>
 
   <MkTable
@@ -273,6 +273,7 @@
     :disable-item-selection="(item) => item.id % 2 !== 0"
     display-options
     pagination-mode="controls"
+    hide-selected-row
   >
     <template #bulkActionBar="{ confirm }">
       <v-btn @click="confirm(download)"><v-icon :icon="IconsLibrary.trayArrowDown"></v-icon> Download</v-btn>
