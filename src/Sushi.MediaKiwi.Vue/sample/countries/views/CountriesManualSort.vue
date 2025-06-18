@@ -2,19 +2,17 @@
   import { MkTable, MkTh } from "@/components";
   import { useI18next, useTablePaging } from "@/composables";
   import { Paging, Sorting, SortDirection, TableFilter, TableFilterType, IPagingResult } from "@/models";
-  import { reactive, ref, computed } from "vue";  
+  import { reactive, ref, computed } from "vue";
   import AddCountry from "./AddCountry.vue";
   import { useSampleApi, Country } from "@sample/services";
-  import { LoadDataEvent, LoadDataEventType, MkTablePagingMode } from "@/models/table/TableProps";  
-  import { useTableSorting } from "@/composables";
-
+  import { TableLoadDataEventType, TableLoadDataEvent } from "@/models/";
+  import { sortArrayByKey } from "@/helpers";
   // inject dependencies
   const sampleApi = useSampleApi();
   const { t } = await useI18next();
-  const { sortArray }= useTableSorting();
   const { pageArray, calculatePaging } = useTablePaging();
 
-  // define reactive variables  
+  // define reactive variables
   const sorting = ref<Sorting<Country>>({
     sortBy: "name",
     sortDirection: SortDirection.Asc,
@@ -23,7 +21,7 @@
     countries: <Country[]>[],
     addCountry: false,
   });
-  const paging = ref<IPagingResult>();    
+  const paging = ref<IPagingResult>();
   const currentPagination = ref<Paging>({
     pageSize: 11,
     pageIndex: 0,
@@ -37,13 +35,13 @@
     },
     name: {
       title: "Name",
-      type: TableFilterType.TextField,      
+      type: TableFilterType.TextField,
     },
   });
 
   // load data from source
-  async function LoadData(event: LoadDataEvent) {
-    if (event.type == LoadDataEventType.InitialLoad || event.type == LoadDataEventType.FilterChange) {
+  async function LoadData(event: TableLoadDataEvent) {
+    if (event.type == TableLoadDataEventType.InitialLoad || event.type == TableLoadDataEventType.FilterChange) {
       // gets all countries in 1 request
       const apiResponse = await sampleApi.countries({
         pageSize: 9999,
@@ -52,24 +50,22 @@
         countryName: filters.value?.name?.selectedValue?.value,
       });
       paging.value = calculatePaging(apiResponse.data.result, currentPagination.value);
-      sortArray(apiResponse.data.result, sorting.value.sortBy, sorting.value.sortDirection);
+      sortArrayByKey(apiResponse.data.result, sorting.value.sortBy, sorting.value.sortDirection);
       state.countries = apiResponse.data.result;
     }
-    if(event.type == LoadDataEventType.SortChange) {
-      sortArray(state.countries, sorting.value.sortBy, sorting.value.sortDirection);
+    if (event.type == TableLoadDataEventType.SortChange) {
+      sortArrayByKey(state.countries, sorting.value.sortBy, sorting.value.sortDirection);
     }
   }
 
   // get data to display in the table
-  const getData = computed(() => {    
+  const getData = computed(() => {
     return pageArray(state.countries, currentPagination.value);
   });
 
   function openDialog() {
     state.addCountry = true;
   }
-
-  
 </script>
 <template>
   <mk-table
@@ -77,7 +73,7 @@
     v-model:filters="filters"
     v-model:sorting="sorting"
     :data="getData"
-    :paging="paging"    
+    :paging="paging"
     @load="LoadData"
     :item-id="(item: Country) => item.code"
     navigation-item-id="CountryEdit"

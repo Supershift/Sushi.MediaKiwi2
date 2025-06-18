@@ -1,44 +1,41 @@
 <!-- eslint-disable vue/require-default-prop -->
 <script setup lang="ts" generic="T">
-  import { TableFilter } from "@/models/table";
-  import { Paging, Sorting } from "@/models/api";
-  import MkErrorProblemDetails from "@/components/MkErrorProblemDetails/MkErrorProblemDetails.vue";
-  import { ErrorProblemDetails } from "@/models/errors/ErrorProblemDetails";
-  import { createErrorProblemDetails } from "@/errorHandler/createErrorProblemDetails";
   import { ref, watch, onMounted, computed } from "vue";
   import { useSnackbarStore } from "@/stores/snackbar";
   import { ITableMapPaging } from "@/models/table/TableMapPaging";
   import { defaultPageSizeOptions, defaultPageSize } from "@/constants";
-  import { useComponentContext } from "@/composables/useComponentContext";
   import {
     MkTableContextMenuSlotProps,
     MkTableBodySlotProps,
     MkTableBulkActionBarSlotProps,
     MkTableProps,
     MkTableTableSlotProps,
-    LoadDataEventType,
-    LoadDataEvent,
-    MkTablePagingMode,
-    MkTableSortingMode,
   } from "@/models/table/TableProps";
-  import MkTableFilter from "@/components/MkTableFilter/MkTableFilter.vue";
-  import MkTableView from "./MkTableView.vue";
-  import MkBulkActionBar from "@/components/MkBulkActionBar/MkBulkActionBar.vue";
-  import MkToolbar from "@/components/MkToolbar/MkToolbar.vue";
+  import {
+    Paging,
+    Sorting,
+    TableFilter,
+    ErrorProblemDetails,
+    TableLoadDataEvent,
+    TableLoadDataEventType,
+    TableSortingMode,
+    TablePagingMode,
+    TableDisplayOptions,
+    IPagingResult,
+  } from "@/models/";
+  import { MkTableFilter, MkTableView, MkBulkActionBar, MkToolbar, MkTableHead, MkTableCell, MkErrorProblemDetails } from "@/components";
   import MkPagination from "@/components/MkPagination/MkPagination.vue";
-  import MkTableHead from "./MkTableHead.vue"; // Mk-Th
-  import MkTableCell from "./MkTableCell.vue"; // Mk-Td
   import MkDisplayOptions from "@/components/MkDisplayOptions/MkDisplayOptions.vue";
-  import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
   import MkTableEmptyState from "./MkTableEmptyState.vue";
-  import { useTablePaging, useTableSorting } from "@/composables";
-  import { IPagingResult } from "@/models/api";
+  import { useTablePaging, useTableSorting, useComponentContext } from "@/composables";
+  import { createErrorProblemDetails } from "@/errorHandler";
+  import { sortArrayByKey } from "@/helpers";
 
   // define properties
   const props = withDefaults(defineProps<MkTableProps<T>>(), {
     paginationMode: "controls",
-    pagingSource: MkTablePagingMode.Manual,
-    sortingMode: MkTableSortingMode.Manual,
+    pagingSource: TablePagingMode.Manual,
+    sortingMode: TableSortingMode.Manual,
     stickyToolbar: undefined,
   });
 
@@ -120,8 +117,7 @@
   // inject dependencies
   const snackbar = useSnackbarStore();
   const { hasDefinedEmit } = useComponentContext();
-  const { calculatePaging, pageArray } = useTablePaging();
-  const { sortArray } = useTableSorting();
+  const { calculatePaging, pageArray } = useTablePaging();  
 
   // define reactive variables
   const initialDataLoaded = ref(false);
@@ -158,10 +154,10 @@
    */
   const items = computed(() => {
     let data = props.apiResult?.result ?? props.data ?? [];
-    if (props.sortingMode == MkTableSortingMode.Auto && sorting.value) {
-      data = sortArray(data, <keyof T>sorting.value.sortBy, sorting.value.sortDirection);
+    if (props.sortingMode == TableSortingMode.Auto && sorting.value) {
+      data = sortArrayByKey(data, <keyof T>sorting.value.sortBy, sorting.value.sortDirection);
     }
-    if (props.pagingMode == MkTablePagingMode.Auto) {
+    if (props.pagingMode == TablePagingMode.Auto) {
       data = pageArray(data, currentPagination.value);
     }
     return data;
@@ -175,7 +171,7 @@
     if (props.apiResult) {
       const { pageCount, totalCount } = props.apiResult;
       return { pageCount, totalCount, resultCount };
-    } else if (props.pagingMode === MkTablePagingMode.Auto) {
+    } else if (props.pagingMode === TablePagingMode.Auto) {
       const { pageCount, totalCount } = autoPaging.value;
       return { pageCount, totalCount, resultCount };
     } else if (props.paging) {
@@ -192,14 +188,14 @@
 
   // event listeners
   onMounted(async () => {
-    await loadData(LoadDataEventType.InitialLoad);
+    await loadData(TableLoadDataEventType.InitialLoad);
   });
 
   async function pageChanged(value: Paging) {
     // Change the current page index
     emit("update:currentPagination", value);
-    if (props.pagingMode == MkTablePagingMode.Manual) {
-      await loadData(LoadDataEventType.PagingChanged);
+    if (props.pagingMode == TablePagingMode.Manual) {
+      await loadData(TableLoadDataEventType.PagingChanged);
     }
   }
 
@@ -212,19 +208,17 @@
     // update filters
     emit("update:filters", value);
     // fetch data
-    await loadData(LoadDataEventType.FilterChange);
+    await loadData(TableLoadDataEventType.FilterChange);
   }
 
   async function sortingChanged(value?: Sorting) {
-    console.log("sortingChanged", value);
     // update sorting
     emit("update:sorting", value);
-    if (props.sortingMode == MkTableSortingMode.Manual) {
-      await loadData(LoadDataEventType.SortChange);
-    }
-    else if(props.sortingMode == MkTableSortingMode.Auto && props.data) {
+    if (props.sortingMode == TableSortingMode.Manual) {
+      await loadData(TableLoadDataEventType.SortChange);
+    } else if (props.sortingMode == TableSortingMode.Auto && props.data) {
       // sort the items
-      sortArray(props.data, <keyof T>value?.sortBy, value?.sortDirection);
+      sortArrayByKey(props.data, <keyof T>value?.sortBy, value?.sortDirection);
     }
   }
 
@@ -239,7 +233,7 @@
   }
 
   // local functions
-  async function loadData(eventType: LoadDataEventType) {
+  async function loadData(eventType: TableLoadDataEventType) {
     // if a data callback is defined, call it so the parent can fetch data
     if (props.onLoad) {
       // start progress indicator
@@ -248,11 +242,11 @@
       try {
         errorProblemDetails.value = null;
         // fire 'on load event'
-        const event: LoadDataEvent = { type: eventType };
+        const event: TableLoadDataEvent = { type: eventType };
         await props.onLoad(event);
 
         // calculate paging if the pagingMode is set to 'auto'
-        if (props.pagingMode === MkTablePagingMode.Auto) {
+        if (props.pagingMode === TablePagingMode.Auto) {
           autoPaging.value = calculatePaging(props.data ?? [], currentPagination.value);
         }
 
@@ -276,7 +270,7 @@
   }
 
   // Watch for changes in sorting and direction
-  watch([sortBy, sortDirection], () => {    
+  watch([sortBy, sortDirection], () => {
     sortingChanged(sorting.value);
   });
 </script>
