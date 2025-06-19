@@ -1,11 +1,11 @@
 <script setup lang="ts">
   import { MkTable, MkTh } from "@/components";
   import { useI18next } from "@/composables";
-  import { Paging, Sorting, SortDirection, TableFilter, TableFilterType, IPagingResult, IListResult } from "@/models";
+  import { Paging, Sorting, SortDirection, TableFilter, TableFilterType, IPagingResult, IListResult, } from "@/models";
   import { reactive, ref } from "vue";
   import AddCountry from "./AddCountry.vue";
   import { useSampleApi, Country } from "@sample/services";
-  import { LoadDataEvent } from "@/models/table/TableProps";  
+  import { TableLoadDataEvent } from "@/models/";
 
   // inject dependencies
   const sampleApi = useSampleApi();
@@ -39,7 +39,7 @@
   });
 
   // load data from source
-  async function LoadData(event: LoadDataEvent) {
+  async function LoadData(event: TableLoadDataEvent) {
     // gets all countries in 1 request
     const apiResponse = await sampleApi.countries({      
       countryCode: filters.value?.code?.selectedValue?.value,

@@ -137,6 +137,8 @@ export * from "@/stores";
 
 export * from "@/router";
 
+export * from "@/helpers";
+
 export * from "@/errorHandler";
 
 export * from "@/plugins/icons";

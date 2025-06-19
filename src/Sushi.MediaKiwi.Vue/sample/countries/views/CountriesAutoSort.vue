@@ -1,12 +1,10 @@
 <script setup lang="ts">
   import { MkTable, MkTh } from "@/components";
-  import { useI18next, useTablePaging } from "@/composables";
-  import { Paging, Sorting, SortDirection, TableFilter, TableFilterType, IPagingResult } from "@/models";
-  import { reactive, ref, computed } from "vue";
+  import { useI18next } from "@/composables";
+  import { Sorting, SortDirection, TableFilter, TableFilterType, TableSortingMode, TablePagingMode, TableLoadDataEvent } from "@/models";
+  import { reactive, ref } from "vue";
   import AddCountry from "./AddCountry.vue";
   import { useSampleApi, Country } from "@sample/services";
-  import { LoadDataEvent, LoadDataEventType, MkTablePagingMode, MkTableSortingMode } from "@/models/table/TableProps";
-  import { useTableSorting } from "@/composables";
 
   // inject dependencies
   const sampleApi = useSampleApi();
@@ -17,7 +15,7 @@
     sortBy: "name",
     sortDirection: SortDirection.Asc,
   });
-  const state = reactive({    
+  const state = reactive({
     addCountry: false,
   });
 
@@ -36,7 +34,7 @@
   });
 
   // load data from source
-  async function LoadData(event: LoadDataEvent) {
+  async function LoadData(event: TableLoadDataEvent) {
     // gets all countries in 1 request
     const apiResponse = await sampleApi.countries({
       pageSize: 9999,
@@ -53,12 +51,12 @@
   }
 </script>
 <template>
-  <mk-table    
+  <mk-table
     v-model:filters="filters"
     v-model:sorting="sorting"
-    :data="countries"    
-    :paging-mode="MkTablePagingMode.Auto"
-    :sorting-mode="MkTableSortingMode.Auto"
+    :data="countries"
+    :paging-mode="TablePagingMode.Auto"
+    :sorting-mode="TableSortingMode.Auto"
     @load="LoadData"
     :item-id="(item: Country) => item.code"
     page-tracking

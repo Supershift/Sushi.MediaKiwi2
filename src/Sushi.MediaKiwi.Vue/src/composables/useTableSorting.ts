@@ -23,39 +23,6 @@ export function useTableSorting(options?: useTableSortingOptions) {
     currentSort.value = selectedSortOption;
   }
 
-  function sortArray<T, K extends keyof T>(array: T[], sortBy: K, direction: SortDirection = SortDirection.Asc): T[] {
-    // sort the array, returns the same array reference
-    return array.sort((a, b) => {
-      const aValue = a[sortBy];
-      const bValue = b[sortBy];
-
-      // handle any null/undefined cases
-      const isNullish = (v: T[K]) => v === null || v === undefined;
-      if (isNullish(aValue) && isNullish(bValue)) return 0;
-      if (isNullish(aValue)) return direction === SortDirection.Asc ? 1 : -1;
-      if (isNullish(bValue)) return direction === SortDirection.Asc ? -1 : 1;
-
-      // Handle Luxon DateTime
-      if (DateTime.isDateTime(aValue) && DateTime.isDateTime(bValue)) {
-        if (aValue < bValue) return direction === SortDirection.Asc ? -1 : 1;
-        if (aValue > bValue) return direction === SortDirection.Asc ? 1 : -1;
-        return 0;
-      }
-
-      // Handle strings (case-insensitive)
-      if (typeof aValue === "string" && typeof bValue === "string") {
-        const result = aValue.localeCompare(bValue, undefined, { sensitivity: "base" });
-        return direction === SortDirection.Asc ? result : -result;
-      }
-
-      // handle numbers and other simple to compare types
-      if (aValue < bValue) return direction === SortDirection.Asc ? -1 : 1;
-      if (aValue > bValue) return direction === SortDirection.Asc ? 1 : -1;
-
-      return 0;
-    });
-  }
-
   /**
    * Creates an ISorting result with a direction for the new tableMapItem
    * @param {TableSortingOptions<T>} sortingOptions
@@ -131,6 +98,5 @@ export function useTableSorting(options?: useTableSortingOptions) {
     getSortingClasses,
     selectedSorting,
     sortIcon,
-    sortArray
   };
 }

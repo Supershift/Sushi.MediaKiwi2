@@ -7,3 +7,7 @@ export type { TableMapItem } from "./TableMapItem";
 export type { TableSortingOptions } from "./TableSortingOptions";
 export { type TableCellIcon, TableIconPosition } from "./TableCellIcon";
 export type { TableDisplayOptions } from "./TableDisplayOptions";
+export { type TableLoadDataEvent, TableLoadDataEventType } from "./TableLoadDataEvent";
+export { TablePagingMode } from "./TablePagingMode";
+export { TableSortingMode } from "./TableSortingMode";
+
