@@ -29,7 +29,7 @@ export function compareValues<TValue>(a: TValue, b: TValue) {
   return 0;
 }
 
-/* Sort an array of objects in place. This method mutates the original array */
+/**  Sort an array of objects in place. This method mutates the original array */
 export function sortArray<TObject, TValue>(array: TObject[], sortBy: (item: TObject) => TValue, direction: SortDirection = SortDirection.Asc): TObject[] {  
   return array.sort((a, b) => {
     // get the values to compare
@@ -45,7 +45,7 @@ export function sortArray<TObject, TValue>(array: TObject[], sortBy: (item: TObj
   });
 }
 
-/* Sort an array of objects in place. This method mutates the original array */
+/** Sort an array of objects in place. This method mutates the original array */
 export function sortArrayByKey<T, K extends keyof T>(array: T[], sortBy: K, direction: SortDirection = SortDirection.Asc): T[] {
   return sortArray(array, (item) => item[sortBy], direction);
 }
