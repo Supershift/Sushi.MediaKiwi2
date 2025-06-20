@@ -34,7 +34,7 @@
   // define properties
   const props = withDefaults(defineProps<MkTableProps<T>>(), {
     paginationMode: "controls",
-    pagingSource: TablePagingMode.Manual,
+    pagingMode: TablePagingMode.Manual,
     sortingMode: TableSortingMode.Manual,
     stickyToolbar: undefined,
   });
@@ -117,7 +117,7 @@
   // inject dependencies
   const snackbar = useSnackbarStore();
   const { hasDefinedEmit } = useComponentContext();
-  const { calculatePaging, pageArray } = useTablePaging();  
+  const { calculatePaging, pageArray } = useTablePaging();
 
   // define reactive variables
   const initialDataLoaded = ref(false);
