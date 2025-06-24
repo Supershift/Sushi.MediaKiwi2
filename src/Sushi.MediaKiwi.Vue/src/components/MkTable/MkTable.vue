@@ -128,10 +128,7 @@
     pageSizes.value.push(currentPagination.value.pageSize);
   }
   // used for automatic paging
-  const autoPaging = ref<IPagingResult>({ pageCount: 0, totalCount: 0 });
-  if (props.paging) {
-    autoPaging.value = { pageCount: props.paging.pageCount, totalCount: props.paging.totalCount };
-  }
+  const autoPaging = computed<IPagingResult>(() => props.paging ?? calculatePaging(props.data ?? [], currentPagination.value));
 
   const isBooleanColumn = computed(() => {
     if (props.tableMap && props.tableMap.items && props.tableMap.items[0] && props.tableMap.items[0].value && props.data && props.data[0]) {
@@ -167,7 +164,7 @@
    * Deconstruct the ApiResult, local page or paging prop to an ITableMapPaging
    */
   const pagingResult = computed<ITableMapPaging | undefined | null>(() => {
-    const resultCount = props.apiResult?.result?.length;
+    const resultCount = items.value.length;
     if (props.apiResult) {
       const { pageCount, totalCount } = props.apiResult;
       return { pageCount, totalCount, resultCount };
@@ -244,11 +241,6 @@
         // fire 'on load event'
         const event: TableLoadDataEvent = { type: eventType };
         await props.onLoad(event);
-
-        // calculate paging if the pagingMode is set to 'auto'
-        if (props.pagingMode === TablePagingMode.Auto) {
-          autoPaging.value = calculatePaging(props.data ?? [], currentPagination.value);
-        }
 
         // When the data is loaded, set the initialDataLoaded to true
         initialDataLoaded.value = true;
