@@ -73,7 +73,7 @@
 
 <template>
   <v-card variant="text" :class="['v-toolbar--mediakiwi', { 'v-toolbar--sticky': props.sticky }]" ref="toolbar">
-    <v-container class="pl-0" fluid>
+    <v-container class="pl-0 pt-1" fluid>
       <v-row v-if="slots.header" class="justify-end">
         <slot name="header"></slot>
       </v-row>

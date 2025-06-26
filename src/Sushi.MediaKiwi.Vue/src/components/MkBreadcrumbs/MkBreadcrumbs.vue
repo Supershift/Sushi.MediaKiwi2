@@ -12,7 +12,7 @@
   const activeBreadcrumbs = computed(() => breadcrumbs.value.filter((item) => !item.isGroup));
 </script>
 <template>
-  <v-card v-if="hasBreadcrumbs" :class="['breadcrumbs-container ml-0 pa-4 px-md-10 pt-md-10 pb-0']">
+  <v-card v-if="hasBreadcrumbs" :class="['breadcrumbs-container ml-0 pa-4 px-md-10 pb-0']">
     <div v-if="showMobileBackButton" class="breadcrumb-title-container">
       <mk-back-button />
       <div class="v-breadcrumbs-item text-title-large d-inline-block text-truncate">
