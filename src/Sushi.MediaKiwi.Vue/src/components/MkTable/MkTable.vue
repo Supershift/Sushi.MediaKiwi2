@@ -52,7 +52,7 @@
       pageIndex: 0,
       pageSize: defaultPageSize,
     },
-  });
+  });  
   /** Display options for the table */
   const displayOptions = defineModel<TableDisplayOptions | boolean>("displayOptions", { required: false });
   const hasDisplayOptions = computed(() => displayOptions.value !== undefined && displayOptions.value !== false);
@@ -75,12 +75,8 @@
   const showFullEmptyState = computed(() => showEmptyState.value && !hasActiveFilters.value);
 
   // define events
-  const emit = defineEmits<{
-    (e: "update:filters", value: TableFilter): void;
-    (e: "click:row", value: T): void;
-    (e: "update:sorting", value?: Sorting<T> | Sorting): void;
-    (e: "update:selection", value?: T[]): void;
-    (e: "update:currentPagination", value: Paging): void;
+  const emit = defineEmits<{    
+    (e: "click:row", value: T): void;        
     (e: "click:new", value?: string): void;
   }>();
 
@@ -189,8 +185,7 @@
   });
 
   async function pageChanged(value: Paging) {
-    // Change the current page index
-    emit("update:currentPagination", value);
+    // the page has changes, request new data if it is supplied by the parent    
     if (props.pagingMode == TablePagingMode.Manual) {
       await loadData(TableLoadDataEventType.PagingChanged);
     }
@@ -198,19 +193,15 @@
 
   async function filterChanged(value: TableFilter) {
     // reset paging
-    emit("update:currentPagination", {
+    currentPagination.value = {
       pageIndex: 0,
-      pageSize: currentPagination.value?.pageSize,
-    });
-    // update filters
-    emit("update:filters", value);
+      pageSize: currentPagination.value?.pageSize ?? defaultPageSize,
+    };        
     // fetch data
     await loadData(TableLoadDataEventType.FilterChange);
   }
 
-  async function sortingChanged(value?: Sorting) {
-    // update sorting
-    emit("update:sorting", value);
+  async function sortingChanged(value?: Sorting) {    
     if (props.sortingMode == TableSortingMode.Manual) {
       await loadData(TableLoadDataEventType.SortChange);
     } else if (props.sortingMode == TableSortingMode.Auto && props.data) {
@@ -329,8 +320,7 @@
       :hide-selection-checkbox="hideSelectionCheckbox"
       :hideSelectedEffect
       @click:row="(e) => emit('click:row', e)"
-      @update:sorting="sortingChanged"
-      @update:selection="(e) => emit('update:selection', e)"
+      @update:sorting="sortingChanged"      
       :disable-item-selection="props.disableItemSelection"
       :remove-item-selection="props.removeItemSelection"
       v-model:display-options="displayOptions"
@@ -343,10 +333,9 @@
           <MkTableHead
             v-for="(mapItem, index) in props.tableMap?.items"
             :key="index"
-            :sorting="sorting"
+            v-model:sorting="sorting"
             :map-item="mapItem"
-            :truncate="!isBooleanColumn"
-            @update:sorting="(value) => emit('update:sorting', value)"
+            :truncate="!isBooleanColumn"            
           />
         </template>
       </template>

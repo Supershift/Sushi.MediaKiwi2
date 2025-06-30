@@ -66,6 +66,11 @@
   function openDialog() {
     state.addCountry = true;
   }
+
+  function onCurrentPaginationUpdate(pagination: Paging) {
+    console.log("onCurrentPaginationUpdate", pagination);
+    currentPagination.value = pagination;
+  }
 </script>
 <template>
   <mk-table
@@ -82,6 +87,7 @@
     new-emit
     page-tracking
     @click:new="openDialog"
+    @update:current-pagination="onCurrentPaginationUpdate"
   >
     <template #thead>
       <mk-th v-model:sorting="sorting" :sorting-options="{ id: 'code' }">{{ t("Code") }}</mk-th>
