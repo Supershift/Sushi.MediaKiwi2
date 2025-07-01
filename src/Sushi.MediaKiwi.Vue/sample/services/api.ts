@@ -26,7 +26,7 @@ export interface AccountDto {
 export interface ClassWithRequirement {
   requiredString?: string | null;
   /** @format int32 */
-  betweenOneAndTen?: number;
+  betweenOneAndTen?: number | null;
 }
 
 export interface Country {
