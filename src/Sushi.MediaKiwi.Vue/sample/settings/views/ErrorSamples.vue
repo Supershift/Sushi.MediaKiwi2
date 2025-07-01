@@ -62,6 +62,10 @@
     await sampleApi.errorStringError();
   }
 
+  async function getRequirementsError() {
+    await sampleApi.errorRequirementsCreate({ requiredString: undefined, betweenOneAndTen: 25 });
+  }
+
   async function onLoad() {
     //
   }
@@ -77,6 +81,7 @@
       <v-btn @click="getInternalServerError()"> Server Error</v-btn>
       <v-btn @click="getTimeoutError()">Timeout</v-btn>
       <v-btn @click="getStringError()">String error</v-btn>
+      <v-btn @click="getRequirementsError()">Requirements error</v-btn>
     </template>
     <v-text-field v-model="state.value1" :rules="[required]" />
   </MkForm>
@@ -91,6 +96,7 @@
     <v-btn @click="getGenericErrorFromApi()">Generic Error</v-btn>
     <v-btn @click="getInternalServerError()">Internal Server Error</v-btn>
     <v-btn @click="getTimeoutError()">Timeout</v-btn>
+    <v-btn @click="getRequirementsError()">Requirements error</v-btn>
   </v-card>
 
   <MkForm @submit="onLoad">
