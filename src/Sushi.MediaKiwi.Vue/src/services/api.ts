@@ -1,5 +1,6 @@
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /*
  * ---------------------------------------------------------------
  * ## THIS FILE WAS GENERATED VIA SWAGGER-TYPESCRIPT-API        ##
@@ -10,10 +11,10 @@
  */
 
 export interface EntraSettings {
-  clientId?: string | null;
-  tenantId?: string | null;
-  audience?: string | null;
-  instance?: string | null;
+  clientId: string | null;
+  tenantId: string | null;
+  audience: string | null;
+  instance: string | null;
 }
 
 export interface Locale {
@@ -121,10 +122,10 @@ export interface StringListResult {
 }
 
 export interface Translation {
-  localeId?: string | null;
-  namespace?: string | null;
-  key?: string | null;
-  value?: string | null;
+  localeId: string | null;
+  namespace: string | null;
+  key: string | null;
+  value: string | null;
 }
 
 export interface TranslationListResult {
@@ -136,7 +137,7 @@ export interface TranslationListResult {
 }
 
 export interface UpdateTranslationRequest {
-  value?: string | null;
+  value: string | null;
 }
 
 export interface View {
@@ -164,12 +165,19 @@ export interface ViewListResult {
   pageCount: number;
 }
 
-import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
+import type {
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+  HeadersDefaults,
+  ResponseType,
+} from "axios";
 import axios from "axios";
 
 export type QueryParamsType = Record<string | number, any>;
 
-export interface FullRequestParams extends Omit<AxiosRequestConfig, "data" | "params" | "url" | "responseType"> {
+export interface FullRequestParams
+  extends Omit<AxiosRequestConfig, "data" | "params" | "url" | "responseType"> {
   /** set parameter to `true` for call `securityWorker` for this request */
   secure?: boolean;
   /** request path */
@@ -184,10 +192,16 @@ export interface FullRequestParams extends Omit<AxiosRequestConfig, "data" | "pa
   body?: unknown;
 }
 
-export type RequestParams = Omit<FullRequestParams, "body" | "method" | "query" | "path">;
+export type RequestParams = Omit<
+  FullRequestParams,
+  "body" | "method" | "query" | "path"
+>;
 
-export interface ApiConfig<SecurityDataType = unknown> extends Omit<AxiosRequestConfig, "data" | "cancelToken"> {
-  securityWorker?: (securityData: SecurityDataType | null) => Promise<AxiosRequestConfig | void> | AxiosRequestConfig | void;
+export interface ApiConfig<SecurityDataType = unknown>
+  extends Omit<AxiosRequestConfig, "data" | "cancelToken"> {
+  securityWorker?: (
+    securityData: SecurityDataType | null,
+  ) => Promise<AxiosRequestConfig | void> | AxiosRequestConfig | void;
   secure?: boolean;
   format?: ResponseType;
 }
@@ -206,8 +220,16 @@ export class HttpClient<SecurityDataType = unknown> {
   private secure?: boolean;
   private format?: ResponseType;
 
-  constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
-    this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || "" });
+  constructor({
+    securityWorker,
+    secure,
+    format,
+    ...axiosConfig
+  }: ApiConfig<SecurityDataType> = {}) {
+    this.instance = axios.create({
+      ...axiosConfig,
+      baseURL: axiosConfig.baseURL || "",
+    });
     this.secure = secure;
     this.format = format;
     this.securityWorker = securityWorker;
@@ -217,7 +239,10 @@ export class HttpClient<SecurityDataType = unknown> {
     this.securityData = data;
   };
 
-  protected mergeRequestParams(params1: AxiosRequestConfig, params2?: AxiosRequestConfig): AxiosRequestConfig {
+  protected mergeRequestParams(
+    params1: AxiosRequestConfig,
+    params2?: AxiosRequestConfig,
+  ): AxiosRequestConfig {
     const method = params1.method || (params2 && params2.method);
 
     return {
@@ -225,7 +250,11 @@ export class HttpClient<SecurityDataType = unknown> {
       ...params1,
       ...(params2 || {}),
       headers: {
-        ...((method && this.instance.defaults.headers[method.toLowerCase() as keyof HeadersDefaults]) || {}),
+        ...((method &&
+          this.instance.defaults.headers[
+            method.toLowerCase() as keyof HeadersDefaults
+          ]) ||
+          {}),
         ...(params1.headers || {}),
         ...((params2 && params2.headers) || {}),
       },
@@ -246,27 +275,53 @@ export class HttpClient<SecurityDataType = unknown> {
     }
     return Object.keys(input || {}).reduce((formData, key) => {
       const property = input[key];
-      const propertyContent: any[] = property instanceof Array ? property : [property];
+      const propertyContent: any[] =
+        property instanceof Array ? property : [property];
 
       for (const formItem of propertyContent) {
         const isFileType = formItem instanceof Blob || formItem instanceof File;
-        formData.append(key, isFileType ? formItem : this.stringifyFormItem(formItem));
+        formData.append(
+          key,
+          isFileType ? formItem : this.stringifyFormItem(formItem),
+        );
       }
 
       return formData;
     }, new FormData());
   }
 
-  public request = async <T = any, _E = any>({ secure, path, type, query, format, body, ...params }: FullRequestParams): Promise<AxiosResponse<T>> => {
-    const secureParams = ((typeof secure === "boolean" ? secure : this.secure) && this.securityWorker && (await this.securityWorker(this.securityData))) || {};
+  public request = async <T = any, _E = any>({
+    secure,
+    path,
+    type,
+    query,
+    format,
+    body,
+    ...params
+  }: FullRequestParams): Promise<AxiosResponse<T>> => {
+    const secureParams =
+      ((typeof secure === "boolean" ? secure : this.secure) &&
+        this.securityWorker &&
+        (await this.securityWorker(this.securityData))) ||
+      {};
     const requestParams = this.mergeRequestParams(params, secureParams);
     const responseFormat = format || this.format || undefined;
 
-    if (type === ContentType.FormData && body && body !== null && typeof body === "object") {
+    if (
+      type === ContentType.FormData &&
+      body &&
+      body !== null &&
+      typeof body === "object"
+    ) {
       body = this.createFormData(body as Record<string, unknown>);
     }
 
-    if (type === ContentType.Text && body && body !== null && typeof body !== "string") {
+    if (
+      type === ContentType.Text &&
+      body &&
+      body !== null &&
+      typeof body !== "string"
+    ) {
       body = JSON.stringify(body);
     }
 
@@ -287,7 +342,9 @@ export class HttpClient<SecurityDataType = unknown> {
 /**
  * @title MediaKiwi
  */
-export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
+export class Api<
+  SecurityDataType extends unknown,
+> extends HttpClient<SecurityDataType> {
   mediakiwi = {
     /**
      * No description
@@ -314,7 +371,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/mediakiwi/api/navigationitems/{id}
      * @secure
      */
-    navigationitemsCreate: (id: string, data: NavigationItem, params: RequestParams = {}) =>
+    navigationitemsCreate: (
+      id: string,
+      data: NavigationItem,
+      params: RequestParams = {},
+    ) =>
       this.request<NavigationItem, any>({
         path: `/mediakiwi/api/navigationitems/${id}`,
         method: "POST",
@@ -333,7 +394,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PUT:/mediakiwi/api/navigationitems/{id}
      * @secure
      */
-    navigationitemsUpdate: (id: string, data: NavigationItem, params: RequestParams = {}) =>
+    navigationitemsUpdate: (
+      id: string,
+      data: NavigationItem,
+      params: RequestParams = {},
+    ) =>
       this.request<NavigationItem, any>({
         path: `/mediakiwi/api/navigationitems/${id}`,
         method: "PUT",
@@ -369,7 +434,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/mediakiwi/api/navigationitems/{id}/updateId
      * @secure
      */
-    navigationitemsUpdateIdCreate: (id: string, data: string, params: RequestParams = {}) =>
+    navigationitemsUpdateIdCreate: (
+      id: string,
+      data: string,
+      params: RequestParams = {},
+    ) =>
       this.request<NavigationItem, any>({
         path: `/mediakiwi/api/navigationitems/${id}/updateId`,
         method: "POST",
@@ -460,7 +529,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/mediakiwi/api/sections/{id}/updateId
      * @secure
      */
-    sectionsUpdateIdCreate: (id: string, data: string, params: RequestParams = {}) =>
+    sectionsUpdateIdCreate: (
+      id: string,
+      data: string,
+      params: RequestParams = {},
+    ) =>
       this.request<Section, any>({
         path: `/mediakiwi/api/sections/${id}/updateId`,
         method: "POST",
@@ -486,7 +559,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         key?: string;
         value?: string;
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<TranslationListResult, any>({
         path: `/mediakiwi/api/admin/translations`,
@@ -509,7 +582,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       query?: {
         localeId?: string;
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<StringListResult, any>({
         path: `/mediakiwi/api/admin/translations/namespaces`,
@@ -532,7 +605,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       query?: {
         localeId?: string;
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<StringListResult, any>({
         path: `/mediakiwi/api/admin/translations/keys`,
@@ -551,7 +624,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PUT:/mediakiwi/api/admin/translations/{localeId}/{namespace}/{key}
      * @secure
      */
-    adminTranslationsUpdate: (localeId: string, namespace: string, key: string, data: UpdateTranslationRequest, params: RequestParams = {}) =>
+    adminTranslationsUpdate: (
+      localeId: string,
+      namespace: string,
+      key: string,
+      data: UpdateTranslationRequest,
+      params: RequestParams = {},
+    ) =>
       this.request<void, any>({
         path: `/mediakiwi/api/admin/translations/${localeId}/${namespace}/${key}`,
         method: "PUT",
@@ -569,7 +648,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request DELETE:/mediakiwi/api/admin/translations/{localeId}/{namespace}/{key}
      * @secure
      */
-    adminTranslationsDelete: (localeId: string, namespace: string, key: string, params: RequestParams = {}) =>
+    adminTranslationsDelete: (
+      localeId: string,
+      namespace: string,
+      key: string,
+      params: RequestParams = {},
+    ) =>
       this.request<void, any>({
         path: `/mediakiwi/api/admin/translations/${localeId}/${namespace}/${key}`,
         method: "DELETE",
@@ -628,7 +712,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         /** @default false */
         onlyEnabled?: boolean;
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<LocaleListResult, any>({
         path: `/mediakiwi/api/locales`,
@@ -726,11 +810,16 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         /** @format int32 */
         pageSize?: number;
         /** Field to sort by */
-        sortBy?: "name" | "sortOrder" | "id" | "sectionId" | "parentNavigationItemId";
+        sortBy?:
+          | "name"
+          | "sortOrder"
+          | "id"
+          | "sectionId"
+          | "parentNavigationItemId";
         /** Direction to sort on */
         sortDirection?: "ASC" | "DESC";
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<NavigationItemListResult, any>({
         path: `/mediakiwi/api/navigationitems`,
@@ -773,7 +862,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         /** @format int32 */
         pageSize?: number;
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<SectionListResult, any>({
         path: `/mediakiwi/api/sections`,
@@ -792,7 +881,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/mediakiwi/api/translations/{localeId}/{namespace}
      * @secure
      */
-    translationsGet: (localeId: string, namespace: string, params: RequestParams = {}) =>
+    translationsGet: (
+      localeId: string,
+      namespace: string,
+      params: RequestParams = {},
+    ) =>
       this.request<Record<string, string>, any>({
         path: `/mediakiwi/api/translations/${localeId}/${namespace}`,
         method: "GET",
@@ -809,7 +902,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/mediakiwi/api/translations/{localeId}/{namespace}
      * @secure
      */
-    translationsCreate: (localeId: string, namespace: string, data: Record<string, string>, params: RequestParams = {}) =>
+    translationsCreate: (
+      localeId: string,
+      namespace: string,
+      data: Record<string, string>,
+      params: RequestParams = {},
+    ) =>
       this.request<void, any>({
         path: `/mediakiwi/api/translations/${localeId}/${namespace}`,
         method: "POST",
@@ -910,7 +1008,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         /** Direction to sort on */
         sortDirection?: "ASC" | "DESC";
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<ViewListResult, any>({
         path: `/mediakiwi/api/views`,
