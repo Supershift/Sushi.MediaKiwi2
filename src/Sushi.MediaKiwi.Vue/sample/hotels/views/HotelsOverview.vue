@@ -10,6 +10,7 @@
     TableFilterType,
     TableFilterValue,
     ListResult,
+    TableLoadDataEvent,
   } from "@/models";
 
   import { MkTable, MkTh, MkTd } from "@/components";
@@ -76,13 +77,16 @@
   });
 
   // load data
-  async function LoadData() {
+  async function LoadData(_tableDataEvent: TableLoadDataEvent, abortSignal: AbortSignal) {
     hotels.value = (
-      await sampleApi.hotel({
-        countryCode: filters.value.countryCode.selectedValue?.value,
-        isActive: filters.value.isActive.selectedValue?.value,
-        ...currentPagination.value,
-      })
+      await sampleApi.hotel(
+        {
+          countryCode: filters.value.countryCode.selectedValue?.value,
+          isActive: filters.value.isActive.selectedValue?.value,
+          ...currentPagination.value,
+        },
+        { signal: abortSignal }
+      )
     ).data;
 
     // Load countries

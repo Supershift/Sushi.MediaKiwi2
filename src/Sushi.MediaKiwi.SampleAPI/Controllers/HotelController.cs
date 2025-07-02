@@ -26,6 +26,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<ListResult<HotelDto>>> GetHotels(string? countryCode, bool? isActive, [FromQuery] PagingValues pagingValues)
         {
+            await Task.Delay(10000);
             var result = await _hotelService.GetAllAsync(countryCode, isActive, pagingValues);
             return this.ToResponse(result);
         }

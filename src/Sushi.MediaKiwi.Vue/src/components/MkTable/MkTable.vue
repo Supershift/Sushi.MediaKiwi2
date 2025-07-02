@@ -27,14 +27,11 @@
   import MkPagination from "@/components/MkPagination/MkPagination.vue";
   import MkDisplayOptions from "@/components/MkDisplayOptions/MkDisplayOptions.vue";
   import MkTableEmptyState from "./MkTableEmptyState.vue";
-  import { useTablePaging, useTableSorting, useComponentContext } from "@/composables";
+  import { useTablePaging, useComponentContext } from "@/composables";
   import { createErrorProblemDetails } from "@/errorHandler";
   import { sortArrayByKey } from "@/helpers";
-  import axios, { CancelToken, CancelTokenSource } from "axios";
 
-  // Create a source object for the cancellation
-  const CancelToken = axios.CancelToken;
-  let cancellationTokenSource: CancelTokenSource;
+  let abortController = new AbortController();
 
   // define properties
   const props = withDefaults(defineProps<MkTableProps<T>>(), {
@@ -233,18 +230,14 @@
       inProgress.value = true;
 
       try {
-        // There is already a call going on when source is defined, so cancel it
-        if (cancellationTokenSource) {
-          cancellationTokenSource.cancel("Operation canceled by the user.");
-        }
+        abortController.abort("Operation canceled by the user.");
 
-        // create a new canceltoken source
-        cancellationTokenSource = CancelToken.source();
+        abortController = new AbortController();
 
         errorProblemDetails.value = null;
         // fire 'on load event'
         const event: TableLoadDataEvent = { type: eventType };
-        await props.onLoad(event, cancellationTokenSource.token);
+        await props.onLoad(event, abortController.signal);
 
         // When the data is loaded, set the initialDataLoaded to true
         initialDataLoaded.value = true;

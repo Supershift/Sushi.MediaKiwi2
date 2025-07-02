@@ -7,7 +7,7 @@
   import { ref } from "vue";
   import MkFormDialog from "@/components/MkForm/MkFormDialog.vue";
   import { Country, HotelDto, useSampleApi } from "@sample/services";
-  import { CancelToken } from "axios";
+  import { GenericAbortSignal } from "axios";
 
   // inject dependencies
   const modelValue = defineModel({ type: Boolean, default: false });
@@ -21,8 +21,8 @@
   const selectedHotels = ref<HotelDto[]>([]);
 
   // load data with cancel token
-  async function LoadData(_tableDataEvent: TableLoadDataEvent, cancleToken?: CancelToken) {
-    hotels.value = (await sampleApi.hotel({ ...currentPagination.value }, { cancelToken: cancleToken })).data;
+  async function LoadData(_tableDataEvent: TableLoadDataEvent, abortSignal: GenericAbortSignal) {
+    hotels.value = (await sampleApi.hotel({ ...currentPagination.value }, { signal: abortSignal })).data;
   }
 
   function onClose() {
