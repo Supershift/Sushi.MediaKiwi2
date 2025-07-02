@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { Paging, ListResult } from "@/models";
+  import { Paging, ListResult, TableLoadDataEvent } from "@/models";
 
   import { MkTable, MkTd } from "@/components";
   import { useI18next } from "@/composables";
@@ -19,9 +19,9 @@
   const countries = ref<Country[]>();
   const selectedHotels = ref<HotelDto[]>([]);
 
-  // load data
-  async function LoadData() {
-    hotels.value = (await sampleApi.hotel({ ...currentPagination.value })).data;
+  // load data with cancel token
+  async function LoadData(_tableDataEvent: TableLoadDataEvent, abortSignal: AbortSignal) {
+    hotels.value = (await sampleApi.hotel({ ...currentPagination.value }, { signal: abortSignal })).data;
   }
 
   function onClose() {

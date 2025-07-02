@@ -49,10 +49,5 @@ export interface MediakiwiVueOptions {
   formOptions?: MediaKiwiFormOptions;
   /** Global errorhandler, see {@link https://vuejs.org/api/application.html#app-config-errorhandler} */
   globalErrorHandler?: (err: any, instance?: ComponentPublicInstance | null, info?: string) => Promise<void>;
-  axiosClient?: {
-    interceptors?: {
-      addAbortController?: (config: InternalAxiosRequestConfig) => InternalAxiosRequestConfig;
-      clearAbortController?: (response: any) => any;
-    };
-  };
+
 }
