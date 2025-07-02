@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { Paging, ListResult } from "@/models";
+  import { Paging, ListResult, TableLoadDataEvent } from "@/models";
 
   import { MkTable, MkTd } from "@/components";
   import { useI18next } from "@/composables";
@@ -7,6 +7,7 @@
   import { ref } from "vue";
   import MkFormDialog from "@/components/MkForm/MkFormDialog.vue";
   import { Country, HotelDto, useSampleApi } from "@sample/services";
+  import { CancelToken } from "axios";
 
   // inject dependencies
   const modelValue = defineModel({ type: Boolean, default: false });
@@ -19,9 +20,9 @@
   const countries = ref<Country[]>();
   const selectedHotels = ref<HotelDto[]>([]);
 
-  // load data
-  async function LoadData() {
-    hotels.value = (await sampleApi.hotel({ ...currentPagination.value })).data;
+  // load data with cancel token
+  async function LoadData(_tableDataEvent: TableLoadDataEvent, cancleToken?: CancelToken) {
+    hotels.value = (await sampleApi.hotel({ ...currentPagination.value }, { cancelToken: cancleToken })).data;
   }
 
   function onClose() {

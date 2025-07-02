@@ -30,6 +30,11 @@
   import { useTablePaging, useTableSorting, useComponentContext } from "@/composables";
   import { createErrorProblemDetails } from "@/errorHandler";
   import { sortArrayByKey } from "@/helpers";
+  import axios, { CancelToken, CancelTokenSource } from "axios";
+
+  // Create a source object for the cancellation
+  const CancelToken = axios.CancelToken;
+  let cancellationTokenSource: CancelTokenSource;
 
   // define properties
   const props = withDefaults(defineProps<MkTableProps<T>>(), {
@@ -52,7 +57,7 @@
       pageIndex: 0,
       pageSize: defaultPageSize,
     },
-  });  
+  });
   /** Display options for the table */
   const displayOptions = defineModel<TableDisplayOptions | boolean>("displayOptions", { required: false });
   const hasDisplayOptions = computed(() => displayOptions.value !== undefined && displayOptions.value !== false);
@@ -75,8 +80,8 @@
   const showFullEmptyState = computed(() => showEmptyState.value && !hasActiveFilters.value);
 
   // define events
-  const emit = defineEmits<{    
-    (e: "click:row", value: T): void;        
+  const emit = defineEmits<{
+    (e: "click:row", value: T): void;
     (e: "click:new", value?: string): void;
   }>();
 
@@ -185,7 +190,7 @@
   });
 
   async function pageChanged(value: Paging) {
-    // the page has changes, request new data if it is supplied by the parent    
+    // the page has changes, request new data if it is supplied by the parent
     if (props.pagingMode == TablePagingMode.Manual) {
       await loadData(TableLoadDataEventType.PagingChanged);
     }
@@ -196,12 +201,12 @@
     currentPagination.value = {
       pageIndex: 0,
       pageSize: currentPagination.value?.pageSize ?? defaultPageSize,
-    };        
+    };
     // fetch data
     await loadData(TableLoadDataEventType.FilterChange);
   }
 
-  async function sortingChanged(value?: Sorting) {    
+  async function sortingChanged(value?: Sorting) {
     if (props.sortingMode == TableSortingMode.Manual) {
       await loadData(TableLoadDataEventType.SortChange);
     } else if (props.sortingMode == TableSortingMode.Auto && props.data) {
@@ -228,10 +233,18 @@
       inProgress.value = true;
 
       try {
+        // There is already a call going on when source is defined, so cancel it
+        if (cancellationTokenSource) {
+          cancellationTokenSource.cancel("Operation canceled by the user.");
+        }
+
+        // create a new canceltoken source
+        cancellationTokenSource = CancelToken.source();
+
         errorProblemDetails.value = null;
         // fire 'on load event'
         const event: TableLoadDataEvent = { type: eventType };
-        await props.onLoad(event);
+        await props.onLoad(event, cancellationTokenSource.token);
 
         // When the data is loaded, set the initialDataLoaded to true
         initialDataLoaded.value = true;
@@ -320,7 +333,7 @@
       :hide-selection-checkbox="hideSelectionCheckbox"
       :hideSelectedEffect
       @click:row="(e) => emit('click:row', e)"
-      @update:sorting="sortingChanged"      
+      @update:sorting="sortingChanged"
       :disable-item-selection="props.disableItemSelection"
       :remove-item-selection="props.removeItemSelection"
       v-model:display-options="displayOptions"
@@ -335,7 +348,7 @@
             :key="index"
             v-model:sorting="sorting"
             :map-item="mapItem"
-            :truncate="!isBooleanColumn"            
+            :truncate="!isBooleanColumn"
           />
         </template>
       </template>
