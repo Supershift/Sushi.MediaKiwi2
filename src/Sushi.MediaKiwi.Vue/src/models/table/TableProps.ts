@@ -59,7 +59,7 @@ export type MkTableProps<T> = MkTableBaseProps<T> &
     /** Overrides the "new item" button title */
     newTitle?: string;
     /** Callback invoked when the component needs new data, i.e. a filter changes, the current page changes, etc. */
-    onLoad?: (event: TableLoadDataEvent, abortSignal: GenericAbortSignal) => Promise<void>;
+    onLoad?: (event: TableLoadDataEvent, abortSignal: AbortSignal) => Promise<void>;
     /** Title specificly for the current table */
     title?: string;
     /** Hides the bulk action bar while keeing the checkboxes intact */
