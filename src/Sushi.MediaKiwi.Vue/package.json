@@ -11,7 +11,7 @@
     "update_api": "node ./src/services/generator/swagger-typescript-api.js",
     "build": "vue-tsc && vite build",
     "vi": "vitest",
-    "vi:coverage": "vitest --coverage",
+    "vi:coverage": "vitest --coverage.enabled true",
     "vi:ui": "vitest --ui --api 9999",
     "vi:ui:coverage": "vitest --ui --coverage --api 9999",
     "cy:open": "cypress open",
