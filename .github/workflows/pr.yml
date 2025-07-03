@@ -1,8 +1,8 @@
-name: dotnet
+name: Mediakiwi PR
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]    
+    types: [opened, synchronize, reopened]
 
 # Add "id-token" with the intended permissions.
 permissions:
@@ -13,25 +13,25 @@ permissions:
   security-events: write
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     steps:
-
-      # Checkout current branch
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Setup .NET
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "8.0"
 
-      # Restore dependencies
-      - name: Restore dependencies
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Backend - Restore dependencies
         run: dotnet restore
 
-      # Build the solution
       - name: Build
         run: dotnet build --no-restore
 
@@ -51,17 +51,16 @@ jobs:
       #   with:
       #     sarif_file: 'trivy-results.sarif'
 
-      # Run tests
-      - name: Test
+      - name: Backend - Test
         run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --logger trx --results-directory coverage
 
-      - name: Merge Coverage Reports
+      - name: Backend - Merge Coverage Reports
         run: dotnet tool install -g dotnet-reportgenerator-globaltool
 
-      - name: Generate Merged Coverage Report
+      - name: Backend - Generate Merged Coverage Report
         run: reportgenerator "-reports:coverage/**/coverage.cobertura.xml" "-targetdir:mergedcoveragereport" "-reporttypes:Html;Cobertura"
 
-      - name: Code Coverage Summary Report
+      - name: Backend - Code Coverage Summary Report
         uses: irongut/CodeCoverageSummary@v1.3.0
         with:
           filename: "mergedcoveragereport/Cobertura.xml"
@@ -69,12 +68,42 @@ jobs:
           format: "markdown"
           output: "both"
 
-      - name: Add Coverage PR Comment
+      - name: Backend - Add Coverage PR Comment
         uses: marocchino/sticky-pull-request-comment@v2
         if: github.event_name == 'pull_request'
         with:
           recreate: true
           path: code-coverage-results.md
 
-      - name: Write to Job Summary
+      - name: Backend - Write to Job Summary
         run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
+
+      - name: Frontend - Install dependencies
+        run: npm install
+        working-directory: ./src/Sushi.MediaKiwi.Vue
+
+      - name: Frontend - Run Vite Test
+        run: npm run vi:coverage
+        working-directory: ./src/Sushi.MediaKiwi.Vue
+
+      - name: Frontend - Report Coverage
+        if: always() # Also generate the report if tests are failing
+        uses: davelosert/vitest-coverage-report-action@v2
+        with:
+          working-directory: ./src/Sushi.MediaKiwi.Vue
+
+      - name: Frontend - Check if API changed
+        run: npm run update_api
+        working-directory: ./src/Sushi.MediaKiwi.Vue
+
+      - name: Frontend - Run Vite Build
+        run: npm run build
+        working-directory: ./src/Sushi.MediaKiwi.Vue
+
+      - name: Frontend Sample - Check if API changed
+        run: npm run sample:update_api
+        working-directory: ./src/Sushi.MediaKiwi.Vue
+
+      - name: Frontend Sample - Run Vite Build
+        run: npm run sample:build
+        working-directory: ./src/Sushi.MediaKiwi.Vue

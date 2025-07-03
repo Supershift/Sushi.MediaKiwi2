@@ -3,7 +3,7 @@ import path from "path";
 import { generateApi } from "swagger-typescript-api";
 
 generateApi({
-  name: "api.ts",
+  name: "Api.ts",
   output: path.resolve(process.cwd(), "./src/services"),
   url: "",
   input: path.resolve(process.cwd(), "../Sushi.MediaKiwi.SampleAPI/swagger.mediakiwi.json.tmp"),

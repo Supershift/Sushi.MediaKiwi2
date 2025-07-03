@@ -5,7 +5,7 @@ import { MediakiwiVueOptions } from '@/models';
 vi.mock('@/services/axios/createAxiosClient', () => ({
   createPublicAxiosClient: vi.fn(),
 }));
-vi.mock('@/services/api', () => {
+vi.mock('@/services/Api', () => {
   return {
     Api: vi.fn().mockImplementation(() => {
       return {
