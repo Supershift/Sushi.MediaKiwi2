@@ -4,6 +4,7 @@ using Microsoft.Extensions.Localization;
 using Sushi.LanguageExtensions;
 using Sushi.LanguageExtensions.Errors;
 using Sushi.MediaKiwi.WebAPI;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sushi.MediaKiwi.SampleAPI.Controllers
 {
@@ -60,5 +61,16 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
             System.Threading.Thread.Sleep(10000);
             return BadRequest("This is a basic string response");
         }
+
+        [HttpPost]
+        [Route($"requirements")]
+        public ActionResult Requirements(ClassWithRequirement inputValue)
+        {
+            return Ok();
+        }
+
+        public record ClassWithRequirement(
+            [Required] string RequiredString,
+            [Range(1, 10)] int? BetweenOneAndTen);
     }
 }
