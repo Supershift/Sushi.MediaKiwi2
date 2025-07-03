@@ -137,6 +137,7 @@
     v-model:display-options="displayOptions"
     :remove-item-selection="(item) => item.countryCode !== 'NL'"
     hide-selection-checkbox
+    show-errors
   >
     <template #toolbar>
       <v-btn @click="state.selectionDialog = true">Open dialog</v-btn>

@@ -230,11 +230,11 @@
       inProgress.value = true;
 
       try {
-        abortController.abort("Operation canceled by the user.");
-
+        abortController.abort();
         abortController = new AbortController();
 
         errorProblemDetails.value = null;
+
         // fire 'on load event'
         const event: TableLoadDataEvent = { type: eventType };
         await props.onLoad(event, abortController.signal);
@@ -248,9 +248,13 @@
         } else {
           errorResult = await createErrorProblemDetails(error);
         }
-        errorProblemDetails.value = errorResult;
 
-        snackbar.showMessage("Failed to fetch data");
+        // This loadData method aborts previous calls, which could result in abort-errors.
+        // Don't show these abort-errors to the user, as we are causing this ourselfs.
+        if (errorResult.type !== "RequestAborted") {
+          errorProblemDetails.value = errorResult;
+          snackbar.showMessage("Failed to fetch data");
+        }
       } finally {
         // stop progress indicator
         inProgress.value = false;
