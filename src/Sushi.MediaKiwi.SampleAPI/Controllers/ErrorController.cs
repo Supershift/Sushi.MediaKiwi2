@@ -69,6 +69,8 @@ namespace Sushi.MediaKiwi.SampleAPI.Controllers
             return Ok();
         }
 
-        public record ClassWithRequirement(string RequiredString, [Range(1, 10)] int? BetweenOneAndTen);
+        public record ClassWithRequirement(
+            [Required] string RequiredString,
+            [Range(1, 10)] int? BetweenOneAndTen);
     }
 }
