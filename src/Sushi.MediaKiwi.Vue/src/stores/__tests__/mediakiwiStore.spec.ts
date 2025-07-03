@@ -5,7 +5,7 @@ import { container } from "tsyringe";
 import { VuetifyOptions } from "vuetify";
 import { useMediakiwiStore } from "../mediakiwi";
 import { ObjectNavigationProvider, SimpleSection } from "@/navigation";
-import { Api } from "@/services/api";
+import { Api } from "@/services";
 
 vi.mock("@/services/api", () => {
   return {

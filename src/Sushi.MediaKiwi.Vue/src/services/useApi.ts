@@ -1,5 +1,5 @@
 import { createAxiosClient } from "@/services";
-import { Api } from "./api";
+import { Api } from "./Api";
 import { inject, ref } from 'vue'
 import { MediakiwiVueOptions } from "@/models";
 
