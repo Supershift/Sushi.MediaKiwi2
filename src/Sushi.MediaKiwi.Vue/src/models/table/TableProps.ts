@@ -1,3 +1,4 @@
+import { GenericAbortSignal } from "axios";
 import { IListResult, IPagingResult } from "../api";
 import { MediakiwiPaginationMode } from "../pagination";
 import { TableLoadDataEvent } from "./TableLoadDataEvent";
@@ -58,7 +59,7 @@ export type MkTableProps<T> = MkTableBaseProps<T> &
     /** Overrides the "new item" button title */
     newTitle?: string;
     /** Callback invoked when the component needs new data, i.e. a filter changes, the current page changes, etc. */
-    onLoad?: (event: TableLoadDataEvent) => Promise<void>;
+    onLoad?: (event: TableLoadDataEvent, abortSignal: AbortSignal) => Promise<void>;
     /** Title specificly for the current table */
     title?: string;
     /** Hides the bulk action bar while keeing the checkboxes intact */
@@ -68,7 +69,7 @@ export type MkTableProps<T> = MkTableBaseProps<T> &
     /** Sets the toolbar as a sticky element when scrolling. Defaults to true on MkToolbar */
     stickyToolbar?: boolean;
     /** Shows a ErrorProblemDetails componenent on top of the MkTable when a error occurs in the load method, default: false */
-    showErrors?: boolean;    
+    showErrors?: boolean;
   };
 
 export type MkTableEmptyStateProps = {

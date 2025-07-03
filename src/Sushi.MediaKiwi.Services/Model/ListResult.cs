@@ -1,6 +1,7 @@
 ﻿using Sushi.MicroORM;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace Sushi.MediaKiwi.Services.Model
@@ -46,15 +47,15 @@ namespace Sushi.MediaKiwi.Services.Model
         /// <summary>
         /// The list of items.
         /// </summary>
-        [SwaggerSchema(Nullable = false, ReadOnly = true), ReadOnly(true)]
+        [SwaggerSchema(Nullable = false, ReadOnly = true), ReadOnly(true), Required]
         public IReadOnlyList<T> Result { get; private set; }
 
         /// <inheritdoc/>        
-        [SwaggerSchema(ReadOnly = true), ReadOnly(true)]
+        [SwaggerSchema(ReadOnly = true), ReadOnly(true), Required]
         public int? TotalCount { get; private set; }
 
         /// <inheritdoc/>
-        [SwaggerSchema(ReadOnly = true), ReadOnly(true)]
+        [SwaggerSchema(ReadOnly = true), ReadOnly(true), Required]
         public int? PageCount { get; private set; }
 
         /// <summary>

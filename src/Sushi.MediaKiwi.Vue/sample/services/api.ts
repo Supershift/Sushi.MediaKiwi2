@@ -43,11 +43,11 @@ export interface Country {
 }
 
 export interface CountryListResult {
-  result?: Country[];
+  result: Country[];
   /** @format int32 */
-  totalCount?: number | null;
+  totalCount: number;
   /** @format int32 */
-  pageCount?: number | null;
+  pageCount: number;
 }
 
 export interface CreateAccountRequest {
@@ -64,8 +64,10 @@ export interface CreateAccountRequest {
 }
 
 export interface CreateHotelRequest {
-  countryCode: string | null;
-  name: string | null;
+  /** @minLength 1 */
+  countryCode: string;
+  /** @minLength 1 */
+  name: string;
   isActive: boolean;
   srp?: MoneyValue;
 }
@@ -93,7 +95,7 @@ export interface FileUpload {
 
 export interface HotelDto {
   /** @format int32 */
-  id?: number;
+  id: number;
   /**
    * @minLength 2
    * @maxLength 2
@@ -104,18 +106,18 @@ export interface HotelDto {
    * @maxLength 256
    */
   name: string;
-  isActive?: boolean;
+  isActive: boolean;
   /** @format date-time */
   created?: Date;
   srp?: MoneyValue;
 }
 
 export interface HotelDtoListResult {
-  result?: HotelDto[];
+  result: HotelDto[];
   /** @format int32 */
-  totalCount?: number | null;
+  totalCount: number;
   /** @format int32 */
-  pageCount?: number | null;
+  pageCount: number;
 }
 
 export interface MoneyValue {
