@@ -23,6 +23,12 @@ export interface AccountDto {
   status: AccountStatus;
 }
 
+export interface ClassWithRequirement {
+  requiredString?: string | null;
+  /** @format int32 */
+  betweenOneAndTen?: number | null;
+}
+
 export interface Country {
   /**
    * @minLength 2
@@ -578,6 +584,27 @@ export class Api<
         path: `/sample/Error/slow`,
         method: "GET",
         secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Error
+     * @name ErrorRequirementsCreate
+     * @request POST:/sample/Error/requirements
+     * @secure
+     */
+    errorRequirementsCreate: (
+      data: ClassWithRequirement,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/sample/Error/requirements`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         ...params,
       }),
 

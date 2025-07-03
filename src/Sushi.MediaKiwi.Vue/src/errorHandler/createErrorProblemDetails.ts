@@ -25,6 +25,11 @@ export async function createErrorProblemDetails(error?: any) {
         // If we have a response with a status code, create a new error problem details object
         result = new ErrorProblemDetails(error.response.data, "UnknownError", "UnknownError", error.response.status);
       }
+      else if (error.response.data.title == "One or more validation errors occurred.") {
+        const validationErrorsList = Object.entries(error.response.data.errors);
+        const validationErrorsString = validationErrorsList.map(([key, value]) => `${key}: ${value}`).toString();
+        result = new ErrorProblemDetails(`One or more validation errors occurred. ${validationErrorsString}`, "ValidationError", "ValidationError", error.response.status);
+      }
     } else if (isNavigationFailure(error)) {
       // If we have a navigation failure, get the error message
       result = new ErrorProblemDetails(error.message, "NavigationFailure");
