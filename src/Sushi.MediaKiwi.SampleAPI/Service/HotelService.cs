@@ -18,7 +18,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
         public HotelService(
             HotelRepository hotelRepository,
             IMapper mapper)
-        {   
+        {
             _hotelRepository = hotelRepository;
             _mapper = mapper;
         }
@@ -79,10 +79,7 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
 
             if (section != null)
             {
-                // map to result
-                var result = new HotelDto();
-                _mapper.Map(section, result);
-                return result;
+                return _mapper.Map<HotelDto>(section);
             }
             else
             {
@@ -105,27 +102,24 @@ namespace Sushi.MediaKiwi.SampleAPI.Service
             {
                 return new NotFoundError();
             }
-             
+
             Hotel.Update(hotel, request);
 
             // save hotel
             await _hotelRepository.SaveAsync(hotel);
 
-            var result = new HotelDto();
-            _mapper.Map(hotel, result);
-            return result;
+            return _mapper.Map<HotelDto>(hotel);
         }
 
         public async Task<Result<HotelDto, Error>> CreateAsync(CreateHotelRequest request)
-        {   
+        {
             var createHotelResult = Domain.Hotel.Create(request);
-            if(createHotelResult.IsSuccess)
+            if (createHotelResult.IsSuccess)
             {
                 var hotel = createHotelResult.Value!;
                 await _hotelRepository.SaveAsync(hotel);
-                var result = new HotelDto();
-                _mapper.Map(hotel, result);
-                return result;
+
+                return _mapper.Map<HotelDto>(hotel);
             }
             else
             {

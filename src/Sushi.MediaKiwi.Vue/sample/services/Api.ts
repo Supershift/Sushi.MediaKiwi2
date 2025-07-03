@@ -1,5 +1,6 @@
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /*
  * ---------------------------------------------------------------
  * ## THIS FILE WAS GENERATED VIA SWAGGER-TYPESCRIPT-API        ##
@@ -9,17 +10,17 @@
  * ---------------------------------------------------------------
  */
 
-export interface AccountDto {
-  number?: string | null;
-  holderName?: string | null;
-  /** @format double */
-  balance?: number;
-  status?: AccountStatus;
-}
-
 export enum AccountStatus {
   Open = "Open",
   Closed = "Closed",
+}
+
+export interface AccountDto {
+  number: string | null;
+  holderName: string | null;
+  /** @format double */
+  balance: number;
+  status: AccountStatus;
 }
 
 export interface Country {
@@ -57,9 +58,11 @@ export interface CreateAccountRequest {
 }
 
 export interface CreateHotelRequest {
-  countryCode?: string | null;
-  name?: string | null;
-  isActive?: boolean;
+  /** @minLength 1 */
+  countryCode: string;
+  /** @minLength 1 */
+  name: string;
+  isActive: boolean;
   srp?: MoneyValue;
 }
 
@@ -86,7 +89,7 @@ export interface FileUpload {
 
 export interface HotelDto {
   /** @format int32 */
-  id?: number;
+  id: number;
   /**
    * @minLength 2
    * @maxLength 2
@@ -97,7 +100,7 @@ export interface HotelDto {
    * @maxLength 256
    */
   name: string;
-  isActive?: boolean;
+  isActive: boolean;
   /** @format date-time */
   created?: Date;
   srp?: MoneyValue;
@@ -144,12 +147,19 @@ export interface WithdrawMoneyRequest {
   amount: number;
 }
 
-import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
+import type {
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+  HeadersDefaults,
+  ResponseType,
+} from "axios";
 import axios from "axios";
 
 export type QueryParamsType = Record<string | number, any>;
 
-export interface FullRequestParams extends Omit<AxiosRequestConfig, "data" | "params" | "url" | "responseType"> {
+export interface FullRequestParams
+  extends Omit<AxiosRequestConfig, "data" | "params" | "url" | "responseType"> {
   /** set parameter to `true` for call `securityWorker` for this request */
   secure?: boolean;
   /** request path */
@@ -164,10 +174,16 @@ export interface FullRequestParams extends Omit<AxiosRequestConfig, "data" | "pa
   body?: unknown;
 }
 
-export type RequestParams = Omit<FullRequestParams, "body" | "method" | "query" | "path">;
+export type RequestParams = Omit<
+  FullRequestParams,
+  "body" | "method" | "query" | "path"
+>;
 
-export interface ApiConfig<SecurityDataType = unknown> extends Omit<AxiosRequestConfig, "data" | "cancelToken"> {
-  securityWorker?: (securityData: SecurityDataType | null) => Promise<AxiosRequestConfig | void> | AxiosRequestConfig | void;
+export interface ApiConfig<SecurityDataType = unknown>
+  extends Omit<AxiosRequestConfig, "data" | "cancelToken"> {
+  securityWorker?: (
+    securityData: SecurityDataType | null,
+  ) => Promise<AxiosRequestConfig | void> | AxiosRequestConfig | void;
   secure?: boolean;
   format?: ResponseType;
 }
@@ -186,8 +202,16 @@ export class HttpClient<SecurityDataType = unknown> {
   private secure?: boolean;
   private format?: ResponseType;
 
-  constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
-    this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || "" });
+  constructor({
+    securityWorker,
+    secure,
+    format,
+    ...axiosConfig
+  }: ApiConfig<SecurityDataType> = {}) {
+    this.instance = axios.create({
+      ...axiosConfig,
+      baseURL: axiosConfig.baseURL || "",
+    });
     this.secure = secure;
     this.format = format;
     this.securityWorker = securityWorker;
@@ -197,7 +221,10 @@ export class HttpClient<SecurityDataType = unknown> {
     this.securityData = data;
   };
 
-  protected mergeRequestParams(params1: AxiosRequestConfig, params2?: AxiosRequestConfig): AxiosRequestConfig {
+  protected mergeRequestParams(
+    params1: AxiosRequestConfig,
+    params2?: AxiosRequestConfig,
+  ): AxiosRequestConfig {
     const method = params1.method || (params2 && params2.method);
 
     return {
@@ -205,7 +232,11 @@ export class HttpClient<SecurityDataType = unknown> {
       ...params1,
       ...(params2 || {}),
       headers: {
-        ...((method && this.instance.defaults.headers[method.toLowerCase() as keyof HeadersDefaults]) || {}),
+        ...((method &&
+          this.instance.defaults.headers[
+            method.toLowerCase() as keyof HeadersDefaults
+          ]) ||
+          {}),
         ...(params1.headers || {}),
         ...((params2 && params2.headers) || {}),
       },
@@ -226,27 +257,53 @@ export class HttpClient<SecurityDataType = unknown> {
     }
     return Object.keys(input || {}).reduce((formData, key) => {
       const property = input[key];
-      const propertyContent: any[] = property instanceof Array ? property : [property];
+      const propertyContent: any[] =
+        property instanceof Array ? property : [property];
 
       for (const formItem of propertyContent) {
         const isFileType = formItem instanceof Blob || formItem instanceof File;
-        formData.append(key, isFileType ? formItem : this.stringifyFormItem(formItem));
+        formData.append(
+          key,
+          isFileType ? formItem : this.stringifyFormItem(formItem),
+        );
       }
 
       return formData;
     }, new FormData());
   }
 
-  public request = async <T = any, _E = any>({ secure, path, type, query, format, body, ...params }: FullRequestParams): Promise<AxiosResponse<T>> => {
-    const secureParams = ((typeof secure === "boolean" ? secure : this.secure) && this.securityWorker && (await this.securityWorker(this.securityData))) || {};
+  public request = async <T = any, _E = any>({
+    secure,
+    path,
+    type,
+    query,
+    format,
+    body,
+    ...params
+  }: FullRequestParams): Promise<AxiosResponse<T>> => {
+    const secureParams =
+      ((typeof secure === "boolean" ? secure : this.secure) &&
+        this.securityWorker &&
+        (await this.securityWorker(this.securityData))) ||
+      {};
     const requestParams = this.mergeRequestParams(params, secureParams);
     const responseFormat = format || this.format || undefined;
 
-    if (type === ContentType.FormData && body && body !== null && typeof body === "object") {
+    if (
+      type === ContentType.FormData &&
+      body &&
+      body !== null &&
+      typeof body === "object"
+    ) {
       body = this.createFormData(body as Record<string, unknown>);
     }
 
-    if (type === ContentType.Text && body && body !== null && typeof body !== "string") {
+    if (
+      type === ContentType.Text &&
+      body &&
+      body !== null &&
+      typeof body !== "string"
+    ) {
       body = JSON.stringify(body);
     }
 
@@ -267,7 +324,9 @@ export class HttpClient<SecurityDataType = unknown> {
 /**
  * @title SampleApi
  */
-export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
+export class Api<
+  SecurityDataType extends unknown,
+> extends HttpClient<SecurityDataType> {
   sample = {
     /**
      * No description
@@ -294,7 +353,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/sample/Account/CreateAccount
      * @secure
      */
-    accountCreateAccountCreate: (data: CreateAccountRequest, params: RequestParams = {}) =>
+    accountCreateAccountCreate: (
+      data: CreateAccountRequest,
+      params: RequestParams = {},
+    ) =>
       this.request<AccountDto, any>({
         path: `/sample/Account/CreateAccount`,
         method: "POST",
@@ -330,7 +392,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/sample/Account/TransferMoney
      * @secure
      */
-    accountTransferMoneyCreate: (data: TransferMoneyRequest, params: RequestParams = {}) =>
+    accountTransferMoneyCreate: (
+      data: TransferMoneyRequest,
+      params: RequestParams = {},
+    ) =>
       this.request<AccountDto, any>({
         path: `/sample/Account/TransferMoney`,
         method: "POST",
@@ -349,7 +414,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/sample/Account/{number}/Deposit
      * @secure
      */
-    accountDepositCreate: (number: string, data: DepositMoneyRequest, params: RequestParams = {}) =>
+    accountDepositCreate: (
+      number: string,
+      data: DepositMoneyRequest,
+      params: RequestParams = {},
+    ) =>
       this.request<AccountDto, any>({
         path: `/sample/Account/${number}/Deposit`,
         method: "POST",
@@ -368,7 +437,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/sample/Account/{number}/Withdraw
      * @secure
      */
-    accountWithdrawCreate: (number: string, data: WithdrawMoneyRequest, params: RequestParams = {}) =>
+    accountWithdrawCreate: (
+      number: string,
+      data: WithdrawMoneyRequest,
+      params: RequestParams = {},
+    ) =>
       this.request<AccountDto, any>({
         path: `/sample/Account/${number}/Withdraw`,
         method: "POST",
@@ -395,10 +468,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         pageIndex?: number;
         /** @format int32 */
         pageSize?: number;
-        sortBy?: string;
-        sortDirection?: string;
+        /** Field to sort by */
+        sortBy?: "code" | "name";
+        /** Direction to sort on */
+        sortDirection?: "ASC" | "DESC";
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<CountryListResult, any>({
         path: `/sample/countries`,
@@ -542,7 +617,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         /** @format int32 */
         pageSize?: number;
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<HotelDtoListResult, any>({
         path: `/sample/Hotel`,
@@ -614,7 +689,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PUT:/sample/Hotel/{id}
      * @secure
      */
-    hotelUpdate: (id: number, data: CreateHotelRequest, params: RequestParams = {}) =>
+    hotelUpdate: (
+      id: number,
+      data: CreateHotelRequest,
+      params: RequestParams = {},
+    ) =>
       this.request<HotelDto, any>({
         path: `/sample/Hotel/${id}`,
         method: "PUT",
