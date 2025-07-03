@@ -25,6 +25,7 @@ export default mergeConfig(
         provider: "istanbul",
         reporter: ["text", "json-summary", "json", "html"],
         exclude: [...coverageConfigDefaults.exclude, "**/*.vue", "**/*.test.ts", "**/*.spec.ts", "**/*.d.ts", "**/*.cy.ts"],
+        reportOnFailure: true,
       },
     },
   })
