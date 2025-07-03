@@ -7,7 +7,7 @@ import { useMediakiwiStore } from "../mediakiwi";
 import { ObjectNavigationProvider, SimpleSection } from "@/navigation";
 import { Api } from "@/services";
 
-vi.mock("@/services/api", () => {
+vi.mock("@/services", () => {
   return {
     Api: vi.fn().mockImplementation(() => {
       return {
