@@ -1,4 +1,4 @@
-name: dotnet
+name: Mediakiwi PR
 
 on:
   pull_request:
@@ -13,7 +13,7 @@ permissions:
   security-events: write
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     steps:
 
@@ -78,3 +78,38 @@ jobs:
 
       - name: Write to Job Summary
         run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./src/Sushi.MediaKiwi.Vue
+
+      - name: Check if API changed
+        run: npm run update_api
+        working-directory: ./src/Sushi.MediaKiwi.Vue
+
+      - name: Check if API changed (Sample)
+        run: npm run sample:update_api
+        working-directory: ./src/Sushi.MediaKiwi.Vue
+
+      - name: Run Vite Test
+        run: npm run vi:coverage
+        working-directory: ./src/Sushi.MediaKiwi.Vue
+
+      - name: "Report Coverage"
+        if: always() # Also generate the report if tests are failing
+        uses: davelosert/vitest-coverage-report-action@v2
+        with:
+          working-directory: ./src/Sushi.MediaKiwi.Vue
+
+      - name: Run Vite Build
+        run: npm run build
+        working-directory: ./src/Sushi.MediaKiwi.Vue
+
+      - name: Run Vite Build (Sample)
+        run: npm run sample:build
+        working-directory: ./src/Sushi.MediaKiwi.Vue

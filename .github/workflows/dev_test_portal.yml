@@ -48,4 +48,4 @@ jobs:
           app_location: ${{ env.APP_LOCATION }}
           output_location: ${{ env.OUTPUT_LOCATION }}
           skip_api_build: "true"
-          app_build_command: "npm run build:sample"
+          app_build_command: "npm run sample:build"
