@@ -82,14 +82,6 @@ jobs:
         run: npm install
         working-directory: ./src/Sushi.MediaKiwi.Vue
 
-      - name: Frontend - Check if API changed
-        run: npm run update_api
-        working-directory: ./src/Sushi.MediaKiwi.Vue
-
-      - name: Frontend - Run Vite Build
-        run: npm run build
-        working-directory: ./src/Sushi.MediaKiwi.Vue
-
       - name: Frontend - Run Vite Test
         run: npm run vi:coverage
         working-directory: ./src/Sushi.MediaKiwi.Vue
@@ -99,6 +91,14 @@ jobs:
         uses: davelosert/vitest-coverage-report-action@v2
         with:
           working-directory: ./src/Sushi.MediaKiwi.Vue
+
+      - name: Frontend - Check if API changed
+        run: npm run update_api
+        working-directory: ./src/Sushi.MediaKiwi.Vue
+
+      - name: Frontend - Run Vite Build
+        run: npm run build
+        working-directory: ./src/Sushi.MediaKiwi.Vue
 
       - name: Frontend Sample - Check if API changed
         run: npm run sample:update_api
