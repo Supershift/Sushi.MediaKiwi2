@@ -241,6 +241,8 @@
 
         // When the data is loaded, set the initialDataLoaded to true
         initialDataLoaded.value = true;
+
+        inProgress.value = false;
       } catch (error) {
         let errorResult: ErrorProblemDetails;
         if (error instanceof ErrorProblemDetails) {
@@ -254,10 +256,9 @@
         if (errorResult.type !== "RequestAborted") {
           errorProblemDetails.value = errorResult;
           snackbar.showMessage("Failed to fetch data");
+
+          inProgress.value = false;
         }
-      } finally {
-        // stop progress indicator
-        inProgress.value = false;
       }
     }
   }
