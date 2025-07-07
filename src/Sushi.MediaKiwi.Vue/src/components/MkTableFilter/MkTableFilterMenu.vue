@@ -21,7 +21,7 @@
     const events: Record<string, () => void> = {};
 
     // Only add the click event if the filter has a type defined
-    if (selectedFilter.type) {
+    if (selectedFilter.type !== undefined) {
       events["onClick"] = () => props.onChangeCurrentFilter(key, selectedFilter);
     }
 
