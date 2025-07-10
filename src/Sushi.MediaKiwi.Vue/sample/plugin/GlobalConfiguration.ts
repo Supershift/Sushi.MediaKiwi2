@@ -14,5 +14,8 @@ export const globalConfiguration = <VuetifyOptions>{
         },
       },
     },
+    VNavigationDrawer: {
+      temporary: true, // Lets the navigation drawer appear over the content
+    },
   },
 };
