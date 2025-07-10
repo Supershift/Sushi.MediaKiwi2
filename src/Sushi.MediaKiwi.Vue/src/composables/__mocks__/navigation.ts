@@ -54,6 +54,7 @@ export const mockMediakiwiStore: MediaKiwiState = {
   navigationBackUrlOverwrite: new Map<string, RouteLocationAsPathGeneric>(),
   roles: [{ id: 'admin' }],
   isLocal: true,
+  rail: true,
   drawer: true,
   externalIcons: false
 };
