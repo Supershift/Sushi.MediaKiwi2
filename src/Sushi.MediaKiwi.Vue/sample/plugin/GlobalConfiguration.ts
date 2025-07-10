@@ -17,8 +17,5 @@ export const globalConfiguration = <VuetifyOptions>{
     VNavigationDrawer: {
       temporary: true, // Lets the navigation drawer appear over the content
     },
-    VAppBarNavIcon: {
-      class: "d-xl-none", // Show the navigation icon only on screens smaller than extra large
-    },
   },
 };
