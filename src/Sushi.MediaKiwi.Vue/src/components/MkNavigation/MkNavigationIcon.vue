@@ -4,5 +4,5 @@
   const store = useMediakiwiStore();
 </script>
 <template>
-  <v-app-bar-nav-icon class="d-lg-none" @click.stop="store.toggleDrawer" variant="text"></v-app-bar-nav-icon>
+  <v-app-bar-nav-icon class="d-xl-none" @click.stop="store.toggleDrawer" variant="text"></v-app-bar-nav-icon>
 </template>
