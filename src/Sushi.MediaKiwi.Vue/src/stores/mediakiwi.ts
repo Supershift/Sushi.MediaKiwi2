@@ -14,6 +14,7 @@ export interface MediaKiwiState {
   roles: Role[];
   isLocal: boolean;
   drawer: boolean;
+  rail: boolean;
   externalIcons: boolean;
 }
 
@@ -27,6 +28,7 @@ export const useMediakiwiStore = defineStore("mediaKiwiStore", {
       roles: [],
       isLocal: true,
       drawer: true,
+      rail: true,
       externalIcons: false,
     }) as MediaKiwiState,
   actions: {
@@ -58,6 +60,9 @@ export const useMediakiwiStore = defineStore("mediaKiwiStore", {
     },
     toggleDrawer() {
       this.drawer = !this.drawer;
+    },
+    toggleRail() {
+      this.rail = !this.rail;
     },
     setRoles(payload: ListResult<Role>) {
       if (payload) {
