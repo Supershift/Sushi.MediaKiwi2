@@ -23,6 +23,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="14.0.0" />
     <PackageReference Include="AutoMapper.Extensions.ExpressionMapping" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.73.1" />
     <PackageReference Include="Sushi.LanguageExtensions" Version="0.3.2" />
     <PackageReference Include="Sushi.MicroORM" Version="3.3.0" />    
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="8.0.0" />
