@@ -14,5 +14,8 @@
   "volar.inlayHints.eventArgumentInInlineHandlers": false,
   "[vue]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always"
   }
 }
