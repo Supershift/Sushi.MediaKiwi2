@@ -7,8 +7,8 @@ const props = {
   railItems: [
     {
       id: "Home",
-      name: "Section One",      
-      icon: "$arrowLeft",
+      name: "Section One",
+      icon: "$arrowleft",
     },
   ] as Array<Section>,
 };

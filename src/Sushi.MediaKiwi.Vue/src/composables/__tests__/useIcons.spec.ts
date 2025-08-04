@@ -12,6 +12,6 @@ describe("useIcons", () => {
     expect(assertedFailure).toContain(IconsLibrary.unknown);
 
     const assertedSuccess = parseIconValue(IconsLibrary.arrowLeft);
-    expect(assertedSuccess).toBe("$arrowLeft");
+    expect(assertedSuccess).toBe("$arrowleft");
   });
 });
