@@ -35,5 +35,5 @@
 ## Update api client for "Sushi.MediaKiwi.SampleAPI"
 
 1. Build Sushi.MediaKiwi.SampleAPI C# project
-1. Run `npm run update_api` for the Mediakiwi client
-1. Run `npm run update_api_sample` for the sample client
+1. Run `npm run api:update` for the Mediakiwi client
+1. Run `npm run api:update:sample` for the sample client
