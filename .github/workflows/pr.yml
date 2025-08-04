@@ -93,7 +93,7 @@ jobs:
           working-directory: ./src/Sushi.MediaKiwi.Vue
 
       - name: Frontend - Check if API changed
-        run: npm run update_api
+        run: npm run api:update
         working-directory: ./src/Sushi.MediaKiwi.Vue
 
       - name: Frontend - Run Vite Build
@@ -101,7 +101,7 @@ jobs:
         working-directory: ./src/Sushi.MediaKiwi.Vue
 
       - name: Frontend Sample - Check if API changed
-        run: npm run sample:update_api
+        run: npm run api:update:sample
         working-directory: ./src/Sushi.MediaKiwi.Vue
 
       - name: Frontend Sample - Run Vite Build
