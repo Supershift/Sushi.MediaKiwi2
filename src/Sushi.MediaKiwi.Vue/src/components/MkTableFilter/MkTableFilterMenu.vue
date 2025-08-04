@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { TableFilter, TableFilterItem } from "@/models";
+  import type { TableFilter, TableFilterItem } from "@/models";
 
   // holds the current filter being edited and its value
   const props = defineProps<{
@@ -9,7 +9,7 @@
   }>();
 
   const slots = defineSlots<{
-    search: () => void;
+    search?: () => never;
   }>();
 
   /**
@@ -31,12 +31,12 @@
 
 <template>
   <v-list>
-    <slot name="search" v-if="slots.search"></slot>
+    <slot v-if="slots.search" name="search"></slot>
     <template v-for="key in Object.keys(tableFilter)" :key="key">
       <v-list-item :value="tableFilter[key]" v-bind="getEvents(key, tableFilter[key])" :disabled="onGetDisabledState(tableFilter[key])">
         <v-list-item-title>{{ tableFilter[key].title }}</v-list-item-title>
 
-        <template #append v-if="tableFilter[key].children">
+        <template v-if="tableFilter[key].children" #append>
           <v-icon icon="$menuRight" size="x-small"></v-icon>
         </template>
         <v-menu v-if="tableFilter[key].children" :open-on-focus="false" open-on-hover activator="parent" submenu :close-on-content-click="false">

@@ -124,6 +124,10 @@ export const symbolsAliases: IconAliases = {
   roomService: "symbols:room_service",
   vpnKey: "symbols:vpn_key",
   eyeDropper: "symbols:colorize",
+  treeviewCollapse: "symbols:arrow_drop_down",
+  treeviewExpand: "symbols:arrow_right",
+  upload: "symbols:cloud_upload",
+  color: "symbols:palette",
 
   // ToolBar
   weatherSunny: "symbols:light_mode",

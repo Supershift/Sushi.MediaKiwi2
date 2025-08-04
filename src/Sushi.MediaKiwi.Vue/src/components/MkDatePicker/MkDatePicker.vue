@@ -84,7 +84,7 @@
       </v-date-picker>
     </template>
     <template #actions>
-      <v-btn @click="apply" :disabled="!isValid">{{ defaultT("Apply") }}</v-btn>
+      <v-btn :disabled="!isValid" @click="apply">{{ defaultT("Apply") }}</v-btn>
     </template>
   </MkDialogCard>
 </template>

@@ -3,14 +3,14 @@
   "version": "0.1.3",
   "description": "Vue 3 Library for the MediaKiwi Portal Builder",
   "scripts": {
-    "sample:dev": "vue-tsc && vite --config ./vite.config.sample.ts",
-    "sample:update_api": "node ./sample/services/generator/swagger-typescript-api.js",
-    "sample:build": "vue-tsc && vite build --config ./vite.config.sample.ts",
-    "sample:preview": "npm run build:sample && vite preview --config ./vite.config.sample.ts",
-    "api": "cd ../Sushi.MediaKiwi.SampleAPI && dotnet build && dotnet watch run",
-    "update_api": "node ./src/services/generator/swagger-typescript-api.js",
+    "dev": "vue-tsc && vite --config ./vite.config.sample.ts",
+    "api:run": "cd ../Sushi.MediaKiwi.SampleAPI && dotnet build && dotnet watch run",
+    "api:update": "node ./src/services/generator/swagger-typescript-api.js",
+    "api:update:sample": "node ./sample/services/generator/swagger-typescript-api.js",
     "build": "vue-tsc && vite build",
+    "build:sample": "vue-tsc && vite build --config ./vite.config.sample.ts",
     "preview": "npm run build && vite preview",
+    "preview:sample": "npm run build:sample && vite preview --config ./vite.config.sample.ts",
     "vi": "vitest",
     "vi:coverage": "vitest --coverage.enabled true",
     "vi:ui": "vitest --ui --api 9999",
@@ -108,8 +108,12 @@
     "vitest": "^3.2.4",
     "vue": "^3.5.13",
     "vue-tsc": "^2.2.0",
-    "vuetify": "3.7.19",
+    "vuetify": "3.8.12",
     "webfontloader": "^1.6.28"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.13",
+    "vuetify": "^3.8.12"
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "4.9.5"
