@@ -105,5 +105,5 @@ jobs:
         working-directory: ./src/Sushi.MediaKiwi.Vue
 
       - name: Frontend Sample - Run Vite Build
-        run: npm run sample:build
+        run: npm run build:sample
         working-directory: ./src/Sushi.MediaKiwi.Vue
