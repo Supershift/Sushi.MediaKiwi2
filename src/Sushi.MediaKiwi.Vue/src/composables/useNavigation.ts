@@ -56,6 +56,31 @@ export function useNavigation() {
     }
   }
 
+  function findInSection(section: Section): NavigationItem | undefined {
+    for (const child of section.items) {
+      const found = findFirstNavigationItem(child);
+      if (found) return found;
+    }
+    return undefined;
+  }
+
+  function findInNavigationItem(navItem: NavigationItem): NavigationItem | undefined {
+    if (navItem.componentKey) {
+      return navItem;
+    }
+    if (navItem.children) {
+      for (const child of navItem.children) {
+        const found = findFirstNavigationItem(child);
+        if (found) return found;
+      }
+    }
+    return undefined;
+  }
+
+  function findFirstNavigationItem(item: NavigationTypeGuard): NavigationItem | undefined {
+    return checkTypeGuardIsSection(item) ? findInSection(item) : findInNavigationItem(item);
+  }
+
   /** Pushes the user to the provided navigation item
    * @param item The navigation item to navigate to
    * @param itemId The id of the item to navigate to. Only required if the navigation item is a dynamic route
@@ -64,8 +89,7 @@ export function useNavigation() {
   function navigateTo(item: NavigationTypeGuard, itemId?: RouteParamValueRaw, options?: RouteLocationOptions): Promise<NavigationFailure | void | undefined> {
     if (checkTypeGuardIsSection(item)) {
       // if it's the section, push to the first navigation item in the section which is not a folder
-      const section = item as Section;
-      const navigationItem = section.items.find((x) => x.componentKey);
+      const navigationItem = findFirstNavigationItem(item);
       if (navigationItem) {
         return router.push({ name: navigationItem.id.toString() });
       } else {
@@ -73,16 +97,15 @@ export function useNavigation() {
       }
     } else {
       // if it's navigationItem then we push to nav item's path
-      const navigationItem = item as NavigationItem;
       let routeParams: RouteParamsRaw | undefined = undefined;
-      if (navigationItem.parameterName) {
+      if (item.parameterName) {
         // if this is a dynamic route, try to resolve route parameter
         routeParams = route.params;
-        if (itemId) routeParams[navigationItem.parameterName] = itemId;
+        if (itemId) routeParams[item.parameterName] = itemId;
       }
 
       // called to send user to target screen
-      return router.push({ name: navigationItem.id.toString(), params: routeParams, ...options });
+      return router.push({ name: item.id.toString(), params: routeParams, ...options });
     }
   }
 
