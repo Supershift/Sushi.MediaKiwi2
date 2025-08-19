@@ -65,7 +65,7 @@ export function useNavigation() {
   }
 
   function findInNavigationItem(navItem: NavigationItem): NavigationItem | undefined {
-    if (navItem.componentKey) {
+    if (navItem.componentKey && !navItem.parameterName) {
       return navItem;
     }
     if (navItem.children) {
