@@ -6,7 +6,7 @@
 
   defineEmits(["change"]);
 
-  const opened = ref([]);
+  const opened = ref<string[]>([]);
 
   const { getItemsBasedOnRoot, currentRootItem } = useNavigation(); // also calls store within this composable
 </script>
