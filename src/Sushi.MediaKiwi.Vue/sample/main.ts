@@ -14,7 +14,7 @@ import { mdiAccountCheckOutline, mdiTestTube } from "@mdi/js";
 import { useEntraSettings } from "@/composables/useEntraSettings";
 import { Configuration } from "@azure/msal-browser";
 
-import navigation from "./navigation/NavigationProvider";
+import navigation from "./navigation/SimpleNavigationProvider";
 import { globalConfiguration } from "./plugin/GlobalConfiguration";
 
 import emptyStateFilterSvg from "./assets/empty-state-filter.svg";
