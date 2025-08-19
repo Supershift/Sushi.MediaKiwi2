@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref, computed } from "vue";
+  import { computed, onMounted } from "vue";
   import { useNavigation } from "@/composables/useNavigation";
   import { NavigationItem } from "@/models/navigation";
 
@@ -8,8 +8,10 @@
   }>();
 
   const navigation = useNavigation();
-
-  const groupOpened = ref(false);
+  const opened = defineModel("opened", {
+    type: Array as () => string[],
+    default: () => [],
+  });
 
   const icon = computed(() => {
     if (props.navigationItem?.icon) {
@@ -39,10 +41,17 @@
 
   // get all children we want to render (exclude children with parameters)
   const children = computed(() => props.navigationItem.children.filter((x) => !x.parameterName || x.parent?.isGroup));
+
+  onMounted(() => {
+    // Add the current item to the opened list if it is active
+    if (isActive.value && !opened.value.includes(props.navigationItem.name)) {
+      opened.value.push(props.navigationItem.name);
+    }
+  });
 </script>
 
 <template>
-  <v-list-group v-if="children.length > 0" v-model="groupOpened" :value="navigationItem.name">
+  <v-list-group v-if="children.length > 0" :value="navigationItem.name">
     <template #activator="{ props: groupProps }">
       <v-tooltip v-if="!navigationItem.isHidden" location="right bottom" :disabled="!navigationItem.tooltip">
         <template #activator="{ props: tooltipProps }">
