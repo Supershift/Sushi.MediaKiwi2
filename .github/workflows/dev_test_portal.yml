@@ -36,7 +36,7 @@ jobs:
     steps:
       # Checkout the repository
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # Build code and deploy to DEV
       - name: Build and Deploy
