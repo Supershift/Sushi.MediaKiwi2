@@ -51,8 +51,8 @@ export const symbolsAliases: IconAliases = {
 
   // Mediakiwi: Defaults (some might already be included in the above list)
   unknown: "symbols:check_box_outline_blank", // used for blank icon placeholder
-  arrowLeft: "symbols:arrow_back",
-  arrowRight: "symbols:arrow_forward",
+  arrowleft: "symbols:arrow_back",
+  arrowright: "symbols:arrow_forward",
   circle: "symbols:circle",
   triangle: "symbols:change_history",
   square: "symbols:crop_square",
@@ -124,6 +124,17 @@ export const symbolsAliases: IconAliases = {
   roomService: "symbols:room_service",
   vpnKey: "symbols:vpn_key",
   eyeDropper: "symbols:colorize",
+  treeviewCollapse: "symbols:arrow_drop_down",
+  treeviewExpand: "symbols:arrow_right",
+  upload: "symbols:cloud_upload",
+  color: "symbols:palette",
+  alt: "symbols:keyboard_option_key",
+  command: "symbols:keyboard_command_key",
+  backspace: "symbols:backspace",
+  ctrl: "symbols:keyboard_control_key",
+  enter: "symbols:keyboard_return",
+  shift: "symbols:shift",
+  space: "symbols:space_bar",
 
   // ToolBar
   weatherSunny: "symbols:light_mode",
@@ -133,8 +144,8 @@ export const symbolsAliases: IconAliases = {
   // Table
   checkCircleOutline: "symbols:check_circle",
   dotsVertical: "symbols:more_vert",
-  arrowUp: "symbols:arrow_upward",
-  arrowDown: "symbols:arrow_downward",
+  arrowup: "symbols:arrow_upward",
+  arrowdown: "symbols:arrow_downward",
   filterVariant: "symbols:filter_list",
 
   // SignIn

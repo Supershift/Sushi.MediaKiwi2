@@ -181,6 +181,7 @@ export const GlobalConfiguration: VuetifyOptions = {
     },
     VDatePicker: {
       class: "v-date-picker--mediakiwi",
+      elevation: 0, // Should be default in vuetify, but it's not
     },
     VEmptyState: {
       class: "v-empty-state--mediakiwi",

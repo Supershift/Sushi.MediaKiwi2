@@ -24,9 +24,7 @@ const axiosMock = axios.create();
 
 const hoist = vi.hoisted(() => {
   return {
-    onSubmit: vi.fn(),
     formReset: vi.fn(),
-    resetOnSubmit: false,
   };
 });
 
@@ -56,8 +54,8 @@ describe("useFormSubmit", async () => {
 
   // Arrange
   const props = computed<SubmitProps>(() => ({
-    onSubmit: hoist.onSubmit,
-    resetOnSubmit: hoist.resetOnSubmit,
+    onSubmit: undefined,
+    resetOnSubmit: false,
   }));
   const progressSpy = vi.spyOn(inProgress, "value", "set");
   const errorSpy = vi.spyOn(error, "value", "set");
@@ -73,7 +71,7 @@ describe("useFormSubmit", async () => {
   beforeEach(() => {
     // reset all defined mock functions
     vi.clearAllMocks();
-    hoist.onSubmit = vi.fn();
+    props.value.onSubmit = undefined;
   });
 
   afterEach(() => {
@@ -94,6 +92,7 @@ describe("useFormSubmit", async () => {
   describe("onSubmit handler", () => {
     it("should submit the form and return a success result", async () => {
       // Arrage
+      props.value.onSubmit = vi.fn().mockResolvedValueOnce(TResult.success());
       isValid.value = true;
 
       // Act
@@ -109,6 +108,7 @@ describe("useFormSubmit", async () => {
     it("should not submit the form if it is invalid", async () => {
       // Arrange
       isValid.value = false;
+      props.value.onSubmit = vi.fn().mockResolvedValueOnce(TResult.success());
 
       // Act
       await useFormSubmitInstance.onSubmit(undefined, true);
@@ -117,10 +117,11 @@ describe("useFormSubmit", async () => {
       expect(props.value.onSubmit).not.toHaveBeenCalled();
     });
 
-    it("should aks confirmation before submitting if configured", async () => {
+    it("should ask confirmation before submitting if configured", async () => {
       // Arrange
       isValid.value = true;
       props.value.confirmBeforeSubmit = true;
+      props.value.onSubmit = vi.fn().mockResolvedValueOnce(TResult.success());
 
       // Act
       await useFormSubmitInstance.onSubmit();
@@ -135,6 +136,7 @@ describe("useFormSubmit", async () => {
     it("should submit the form after confirmation", async () => {
       // Arrange
       isValid.value = true;
+      props.value.onSubmit = vi.fn().mockResolvedValueOnce(TResult.success());
 
       // Act
       await useFormSubmitInstance.onSubmit(undefined, true);
@@ -148,11 +150,8 @@ describe("useFormSubmit", async () => {
     it("should reset the form after successful submission if configured", async () => {
       // Arrange
       isValid.value = true;
-      hoist.resetOnSubmit = true;
-
-      hoist.onSubmit.mockImplementationOnce(() => {
-        return TResult.success();
-      });
+      props.value.resetOnSubmit = true;
+      props.value.onSubmit = vi.fn().mockResolvedValueOnce(TResult.success());
 
       // Act
       await useFormSubmitInstance.onSubmit(undefined, true);
@@ -167,6 +166,7 @@ describe("useFormSubmit", async () => {
     it("should show a success message after successful submission if not hidden", async () => {
       // Arrange
       isValid.value = true;
+      props.value.onSubmit = vi.fn().mockResolvedValueOnce(TResult.success());
 
       // Act
       await useFormSubmitInstance.onSubmit(undefined, true);
@@ -183,7 +183,7 @@ describe("useFormSubmit", async () => {
       isValid.value = true;
 
       // Mock the onSubmit function to throw an error
-      hoist.onSubmit.mockImplementationOnce(async () => {
+      props.value.onSubmit = vi.fn().mockImplementationOnce(async () => {
         return await axiosMock.get("/mocked-endpoint");
       });
 
@@ -202,7 +202,7 @@ describe("useFormSubmit", async () => {
       isValid.value = true;
 
       // Mock the onSubmit function to throw an error
-      hoist.onSubmit.mockImplementationOnce(async () => {
+      props.value.onSubmit = vi.fn().mockImplementationOnce(async () => {
         return TResult.failure(new ErrorProblemDetails("Submit succeeded, but there was an expected sub error"));
       });
 
