@@ -2,8 +2,8 @@ import "reflect-metadata";
 import App from "./App.vue";
 import { createApp } from "vue";
 import { mdiAliases, symbolsAliases } from "@/plugins/icons";
-import { MediakiwiVueOptions } from "@/models";
-import { MediakiwiIdentity } from "@/models/options/MediakiwiIdentity";
+import type { MediakiwiVueOptions } from "@/models";
+import type { MediakiwiIdentity } from "@/models/options/MediakiwiIdentity";
 import mediakiwi from "@/framework";
 
 // Import the mediakiwi stylesheet
@@ -12,7 +12,7 @@ import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
 import { mdiAccountCheckOutline, mdiTestTube } from "@mdi/js";
 
 import { useEntraSettings } from "@/composables/useEntraSettings";
-import { Configuration } from "@azure/msal-browser";
+import type { Configuration } from "@azure/msal-browser";
 
 import navigation from "./navigation/SimpleNavigationProvider";
 import { globalConfiguration } from "./plugin/GlobalConfiguration";
@@ -81,6 +81,9 @@ const mediakiwiOptions: MediakiwiVueOptions = {
       title: "Oops! No results found matching your criteria.",
       text: "Try changing your filter criteria to get more results.",
     },
+  },
+  filterOptions: {
+    shortKey: false, // Default is already true, this is for demo. It toggles CTRL+F shortcut usage. Set to false to disable.
   },
 };
 
