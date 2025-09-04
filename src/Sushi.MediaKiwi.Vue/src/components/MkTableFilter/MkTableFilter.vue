@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import { shallowReactive, ref, watch, type Component, computed } from "vue";
-  import { TableFilter } from "@/models/table/TableFilter.js";
-  import { TableFilterItem } from "@/models/table/TableFilterItem.js";
-  import { TableFilterValue } from "@/models/table/TableFilterValue.js";
+  import type { TableFilter } from "@/models/table/TableFilter.js";
+  import type { TableFilterItem } from "@/models/table/TableFilterItem.js";
+  import type { TableFilterValue } from "@/models/table/TableFilterValue.js";
   import {
     MkTableFilterDateRangePicker,
     MkTableFilterRadioGroup,
@@ -13,13 +13,15 @@
     MkTableFilterDatePicker,
     MkTableFilterOperator,
   } from ".";
-  import { DefineComponent, defineAsyncComponent } from "vue";
+  import type { DefineComponent } from "vue";
+  import { defineAsyncComponent } from "vue";
   import { TableFilterType, IconsLibrary } from "@/models";
   import { useI18next } from "@/composables/useI18next";
   import { onKeyStroke } from "@vueuse/core";
   import MkTableFilterMenu from "./MkTableFilterMenu.vue";
   import MkTableFilterChips from "./MkTableFilterChips.vue";
   import { flattenFilter } from "@/helpers/filter/flattenFilter";
+  import { useMediakiwiVueOptions } from "@/composables";
 
   // define properties and events
   const props = defineProps<{
@@ -30,6 +32,7 @@
 
   // inject dependencies
   const { t, defaultT } = await useI18next("MkFilter");
+  const mediakiwiVueOptions = useMediakiwiVueOptions();
 
   // define reactive variables
   const menu = ref(false);
@@ -277,12 +280,18 @@
     }
   });
 
-  onKeyStroke("f", (e) => {
-    if (e.ctrlKey || e.metaKey) {
-      e.preventDefault();
-      openMenu();
-    }
-  });
+  /**
+   * It allows MK2 to hijack the normal browser functions for searching
+   * Opens the menu for filters
+   * Default: true => When `filterOptions.shortKey` is `undefined` or `true` */
+  if (mediakiwiVueOptions?.filterOptions?.shortKey !== false) {
+    onKeyStroke("f", (e) => {
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+        openMenu();
+      }
+    });
+  }
 </script>
 
 <template>
@@ -303,12 +312,12 @@
               v-if="!state.currentFilter"
               class="mk-table-filter__context-menu"
               :table-filter="modelValue"
-              @getDisabledState="getDisabledState"
-              @changeCurrentFilter="changeCurrentFilter"
+              @get-disabled-state="getDisabledState"
+              @change-current-filter="changeCurrentFilter"
             >
               <template #search>
                 <template v-if="searchableFilterKey && state.currentSearchText">
-                  <v-list-item @click="applySearch" :disabled="getDisabledState(modelValue[searchableFilterKey])">{{ searchFilterItemLabel }}</v-list-item>
+                  <v-list-item :disabled="getDisabledState(modelValue[searchableFilterKey])" @click="applySearch">{{ searchFilterItemLabel }}</v-list-item>
                   <v-divider></v-divider>
                 </template>
               </template>
@@ -329,7 +338,7 @@
 
           <div class="flex-1-1 d-flex flex-wrap ga-2 my-2">
             <!-- Chips -->
-            <MkTableFilterChips v-if="containsFilterValue" :table-filter="modelValue" @changeCurrentFilter="setCurrentFilter" @removeFilter="removeFilter" />
+            <MkTableFilterChips v-if="containsFilterValue" :table-filter="modelValue" @change-current-filter="setCurrentFilter" @remove-filter="removeFilter" />
 
             <!-- Search box -->
             <v-text-field
