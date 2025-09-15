@@ -1,14 +1,14 @@
 <script setup lang="ts" generic="T">
   import type { Sorting } from "@/models";
-  import { RouteParamValueRaw } from "vue-router";
+  import type { RouteParamValueRaw } from "vue-router";
   import { useMediakiwiStore } from "@/stores/";
   import { useNavigation } from "@/composables/useNavigation";
   import { computed, onMounted, onUnmounted, onUpdated, reactive, ref, useTemplateRef } from "vue";
   import { useTableDisplayOptions } from "@/composables/useTableDisplayOptions";
-  import { MkTableContextMenuSlotProps, MkTableBodySlotProps, MkTableViewProps, MkTableBulkActionBarSlotProps } from "@/models/table/TableProps";
+  import type { MkTableContextMenuSlotProps, MkTableBodySlotProps, MkTableViewProps, MkTableBulkActionBarSlotProps } from "@/models/table/TableProps";
   import { useContextmenu } from "@/composables/useContextmenu";
   import MkTableCheckbox from "./MkTableCheckbox.vue";
-  import { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
+  import type { TableDisplayOptions } from "@/models/table/TableDisplayOptions";
   import { onKeyDown, onKeyStroke, onKeyUp } from "@vueuse/core";
 
   // inject dependencies
@@ -275,7 +275,7 @@
     // Close any open row menu
     if (rowMenuActive) {
       for (const key in rowMenuActive) {
-        if (!!rowMenuActive[key]) {
+        if (rowMenuActive[key]) {
           rowMenuActive[key] = false;
         }
       }
@@ -372,7 +372,7 @@
         @click.stop="(e) => onRowClick(e, dataItem)"
         @contextmenu.prevent="(e) => openContextMenuPreCheck(e, dataItem)"
       >
-        <td v-if="checkbox && !props.hideSelectionCheckbox" @click.stop class="mk-table-view__checkbox-container--body">
+        <td v-if="checkbox && !props.hideSelectionCheckbox" class="mk-table-view__checkbox-container--body" @click.stop>
           <MkTableCheckbox
             v-if="!isRemovedItemSelection(dataItem)"
             :item="dataItem"
@@ -387,7 +387,7 @@
             <template #activator="{ props }">
               <v-btn size="x-small" icon variant="text" v-bind="props"><v-icon icon="$dotsVertical" /> </v-btn>
             </template>
-            <slot name="contextmenu" v-bind:dataItem="dataItem"></slot>
+            <slot name="contextmenu" :data-item="dataItem"></slot>
           </v-menu>
         </td>
       </tr>
@@ -441,8 +441,14 @@
             }
 
             &.mk-table-view__row--selected {
-              background-color: rgb(var(--v-theme-secondary-container)) !important;
-              color: var(--v-theme-on-secondary-container) !important;
+              background-color: rgb(var(--v-theme-secondary-container));
+              color: var(--v-theme-on-secondary-container);
+
+              &.has-hover {
+                &:hover {
+                  background-color: rgb(var(--v-theme-secondary-container));
+                }
+              }
             }
           }
         }
