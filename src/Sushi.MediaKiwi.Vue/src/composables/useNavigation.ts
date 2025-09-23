@@ -1,8 +1,8 @@
 import { computed } from "vue";
-import { NavigationItem, Section } from "@/models/navigation";
+import type { NavigationItem, Section } from "@/models/navigation";
 import { useRoute, useRouter } from "@/router";
 import { useMediakiwiStore } from "@/stores";
-import { NavigationFailure, RouteLocationOptions, RouteParamValueRaw, RouteParamsRaw } from "vue-router";
+import type { NavigationFailure, RouteLocationOptions, RouteParamValueRaw, RouteParamsRaw } from "vue-router";
 import { identity } from "@/identity";
 
 /** Composable for navigation related functionality
@@ -106,6 +106,29 @@ export function useNavigation() {
 
       // called to send user to target screen
       return router.push({ name: item.id.toString(), params: routeParams, ...options });
+    }
+  }
+
+  function resolveUrl(item: NavigationTypeGuard, itemId?: RouteParamValueRaw, options?: RouteLocationOptions) {
+    if (checkTypeGuardIsSection(item)) {
+      // if it's the section, push to the first navigation item in the section which is not a folder
+      const navigationItem = findFirstNavigationItem(item);
+      if (navigationItem) {
+        return router.resolve({ name: navigationItem.id.toString() });
+      } else {
+        throw new Error("No default navigation item found for section");
+      }
+    } else {
+      // if it's navigationItem then we push to nav item's path
+      let routeParams: RouteParamsRaw | undefined = undefined;
+      if (item.parameterName) {
+        // if this is a dynamic route, try to resolve route parameter
+        routeParams = route.params;
+        if (itemId) routeParams[item.parameterName] = itemId;
+      }
+
+      // called to send user to target screen
+      return router.resolve({ name: item.id.toString(), params: routeParams, ...options });
     }
   }
 
@@ -264,6 +287,7 @@ export function useNavigation() {
     determineIfNavigationItemIsActive,
     determineIfSectionIsActive,
     getViewParameter,
+    resolveUrl,
     currentRouteParamId,
     /** Gets the id from the url for the current view, if the current view has a parameter. */
     currentViewParameter,

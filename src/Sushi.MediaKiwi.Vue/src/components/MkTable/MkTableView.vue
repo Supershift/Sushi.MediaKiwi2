@@ -93,7 +93,12 @@
     };
   }
 
-  function handleNavigation(dataItem: T) {
+  function handleNavigation(
+    dataItem: T,
+    args?: {
+      openInNewTab?: boolean;
+    }
+  ) {
     // emit event
     emit("click:row", dataItem);
 
@@ -115,6 +120,12 @@
         if (!itemId) {
           throw new Error(`No value returned by itemId function`);
         }
+      }
+
+      if (args?.openInNewTab) {
+        const url = navigation.resolveUrl(navigationItem, itemId);
+        window.open(url.href, "_blank", "noopener,noreferrer");
+        return;
       }
 
       // push user to target page
@@ -158,12 +169,12 @@
   }
 
   function onRowClick(e: MouseEvent, dataItem: T) {
-    if (e.ctrlKey || e.metaKey) {
+    if ((props.checkbox ?? isKeyStrokeForCurrentTable.value) && (e.ctrlKey || e.metaKey)) {
       onSelectItem(dataItem);
-    } else if (e.shiftKey) {
+    } else if ((props.checkbox ?? isKeyStrokeForCurrentTable.value) && e.shiftKey) {
       onSelectRangeItems(dataItem);
     } else {
-      handleNavigation(dataItem);
+      handleNavigation(dataItem, { openInNewTab: e.ctrlKey || e.metaKey });
     }
   }
 
