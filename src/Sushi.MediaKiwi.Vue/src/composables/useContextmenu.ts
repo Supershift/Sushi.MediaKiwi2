@@ -1,4 +1,4 @@
-import type { MkTableContextMenuSlotProps } from "@/models/table/TableProps";
+import { MkTableContextMenuSlotProps } from "@/models/table/TableProps";
 import { computed, ref } from "vue";
 
 export function useContextmenu<T>() {
