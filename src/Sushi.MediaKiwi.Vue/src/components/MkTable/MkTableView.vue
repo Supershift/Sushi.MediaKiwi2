@@ -352,7 +352,12 @@
 </script>
 
 <template>
-  <v-table ref="myTable" class="mk-table mk-table-view" :class="{ 'mk-table-display-options': hasDisplayOptions }" :data-table-ref="tableReference">
+  <v-table
+    ref="myTable"
+    class="mk-table mk-table-view user-select-text"
+    :class="{ 'mk-table-display-options': hasDisplayOptions }"
+    :data-table-ref="tableReference"
+  >
     <thead class="mk-table-view__header-container">
       <tr>
         <th v-if="checkbox && !props.hideSelectionCheckbox" class="mk-table-view__checkbox-container--header">
